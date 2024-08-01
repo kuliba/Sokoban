@@ -190,10 +190,18 @@ private extension ResponseMapper._DTO {
     
     enum OperationType: String, Decodable {
         
-        case credit = "CREDIT"
-        case debit = "DEBIT"
+        case credit = "CREDIT" // пополнение - со знаком плюс
+        case creditPlan = "CREDIT_PLAN" // пополнение (значок с часами - В обработке) - со знаком плюс
+        case creditFict = "CREDIT_FICT" // пополнение (значок с красным крестиком - Отказ) - со знаком плюс
+        
+        /// debiting money from an account
+        case debit = "DEBIT" // списание - со знаком минус
+        case debitPlan = "DEBIT_PLAN" // списание (значок с часами - В обработке) - со знаком минус
+        case debitFict = "DEBIT_FICT" // списание (значок с красным крестиком - Отказ) - со знаком минус
+        
         case open = "OPEN"
-        case demandDepositFromAccount = "DV"
+        
+        case demandDepositFromAccount = "DV" // not finance operation transfer account into demand deposit
     }
 }
 
@@ -202,10 +210,19 @@ private extension ResponseMapper._DTO.OperationType {
     var value: ProductStatementData.OperationType {
         
         switch self {
+            
         case .credit:
             return .credit
+        case .creditPlan:
+            return .creditPlan
+        case .creditFict:
+            return .creditFict
         case .debit:
             return .debit
+        case .debitPlan:
+            return .debitPlan
+        case .debitFict:
+            return .debitFict
         case .open:
             return .open
         case .demandDepositFromAccount:

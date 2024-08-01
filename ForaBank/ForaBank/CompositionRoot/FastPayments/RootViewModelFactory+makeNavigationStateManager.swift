@@ -11,9 +11,11 @@ import Foundation
 import GenericRemoteService
 import ManageSubscriptionsUI
 import OTPInputComponent
+import RemoteServices
 import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
+import ForaTools
 
 extension RootViewModelFactory {
     
@@ -30,6 +32,12 @@ extension RootViewModelFactory {
         
         let fpsReducer = ForaBank.UserAccountNavigationFPSReducer()
         let otpReducer = ForaBank.UserAccountNavigationOTPReducer()
+        
+        let codeObserver = NotificationCenter.default
+            .observe(
+                notificationName: "otpCode",
+                userInfoKey: "otp"
+            )
         
         let userAccountReducer = UserAccountReducer(
             fpsReduce: fpsReducer.reduce(_:_:),
@@ -51,6 +59,7 @@ extension RootViewModelFactory {
                         submitOTP: otpServices.submitOTP,
                         scheduler: $1
                     ),
+                    codeObserver: codeObserver,
                     scheduler: $1
                 )
             },
@@ -87,8 +96,10 @@ struct FastPaymentsSettingsOTPServices {
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) {
+        typealias ServiceFailure = OTPInputComponent.ServiceFailure
+
         typealias ForaRequestFactory = ForaBank.RequestFactory
-        typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
+        typealias FastResponseMapper = RemoteServices.ResponseMapper
         
         let initiateOTP = adaptedLoggingFetch(
             ForaRequestFactory.createPrepareSetBankDefaultRequest,
@@ -161,7 +172,7 @@ struct FastPaymentsSettingsOTPServices {
 private extension OTPInputComponent.ServiceFailure {
     
     init(
-        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+        error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
     ) {
         switch error {
         case .createRequest, .performRequest:

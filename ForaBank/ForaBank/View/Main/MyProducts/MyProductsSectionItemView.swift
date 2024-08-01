@@ -7,12 +7,13 @@
 //
 
 import SwiftUI
-import Shimmer
+import UIPrimitives
 
 struct MyProductsSectionItemView: View {
     
     @ObservedObject var viewModel: MyProductsSectionItemViewModel
     @Binding var editMode: EditMode
+    let openProfile: () -> Void
     
     private var contentOffset: CGFloat {
         
@@ -35,8 +36,12 @@ struct MyProductsSectionItemView: View {
                 SideButtonView(viewModel: sideButtonViewModel)
             }
             
-            BaseItemView(viewModel: viewModel, editMode: $editMode)
-                .offset(x: contentOffset)
+            BaseItemView(
+                viewModel: viewModel,
+                editMode: $editMode,
+                openProfile: openProfile
+            )
+            .offset(x: contentOffset)
         }
     }
 
@@ -48,7 +53,8 @@ extension MyProductsSectionItemView {
         
         @ObservedObject var viewModel: MyProductsSectionItemViewModel
         @Binding var editMode: EditMode
-        
+        let openProfile: () -> Void
+
         var body: some View {
             
             ZStack(alignment: .center) {
@@ -63,8 +69,11 @@ extension MyProductsSectionItemView {
                         
                         HStack {
                             
-                            if let paymentSystemIcon = viewModel.paymentSystemIcon {
-                                paymentSystemIcon.renderingMode(.original)
+                            viewModel.paymentSystemIcon.map {
+                                $0.renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .frame(width: 24, height: 24, alignment: .center)
                                     .accessibilityIdentifier("MyProductsProductPaymentSistemIcon")
                             }
                             
@@ -81,6 +90,13 @@ extension MyProductsSectionItemView {
                         .padding(.top, 12)
 
                         HStack(spacing: 8) {
+                            
+                            viewModel.clover().map {
+                                
+                                $0
+                                    .renderingMode(.template)
+                                    .foregroundColor(.mainColorsGray)
+                            }
                             
                             ForEach(viewModel.descriptions, id: \.self) { description in
                                 
@@ -99,9 +115,7 @@ extension MyProductsSectionItemView {
             .frame(height: 72)
             .padding(.leading, editMode == .active ? viewModel.orderModePadding : 12)
             .background(Color.barsBars)
-            .onTapGesture {
-                viewModel.action.send(MyProductsSectionItemAction.ItemTapped())
-            }
+            .onTapGesture(perform: openProfile)
         }
     }
     
@@ -170,7 +184,7 @@ extension MyProductsSectionItemView {
                             .padding(.trailing, 130)
                     }
                 }
-                .shimmering(active: true, bounce: true)
+                .shimmering(bounce: true)
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? 0 : 12)
@@ -235,17 +249,33 @@ struct MyProductsSectionItemView_Previews: PreviewProvider {
         Group {
             
             MyProductsSectionItemView
-                .BaseItemView(viewModel: .sample7, editMode: .constant(.inactive))
+                .BaseItemView(
+                    viewModel: .sample7,
+                    editMode: .constant(.inactive), 
+                    openProfile: { }
+                )
                 .previewDisplayName("BaseItem")
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample7, editMode: .constant(.inactive))
+            MyProductsSectionItemView(
+                viewModel: .sample7,
+                editMode: .constant(.inactive),
+                openProfile: { }
+            )
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample8, editMode: .constant(.inactive))
+            MyProductsSectionItemView(
+                viewModel: .sample8,
+                editMode: .constant(.inactive),
+                openProfile: { }
+            )
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample9, editMode: .constant(.inactive))
+            MyProductsSectionItemView(
+                viewModel: .sample9,
+                editMode: .constant(.inactive),
+                openProfile: { }
+            )
                 .previewLayout(.sizeThatFits)
             
         }

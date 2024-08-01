@@ -7,7 +7,7 @@
 
 @testable import ProductProfile
 import XCTest
-import Services
+import RemoteServices
 
 final class RequestFactory_userVisibilityProductsSettingsRequestTests: XCTestCase {
     

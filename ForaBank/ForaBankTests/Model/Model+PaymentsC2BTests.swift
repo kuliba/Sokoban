@@ -86,6 +86,17 @@ final class Model_PaymentsC2BTests: XCTestCase {
         ])
     }
     
+    func test_paymentsC2BReduceScenarioData_shouldReturnParameterSubscriber() {
+
+        let sut = Model.emptyMock
+        let parameter = try? sut.paymentsC2BReduceScenarioData(
+            data: [.init(PaymentParameterSubscriber.stub())],
+            c2b: .default
+        ).first
+        
+        XCTAssertNoDiff(parameter?.id, "id")
+    }
+    
     // MARK: - Helpers
     
     private func parameterProductStub(
@@ -232,6 +243,20 @@ extension ProductData {
     }
 }
 
+private extension PaymentParameterSubscriber {
+    
+    static func stub() -> Self {
+        .init(
+            id: "id",
+            value: "value",
+            icon: "icon",
+            legalName: "legalName",
+            subscriptionPurpose: "subscriptionPurpose",
+            style: .small
+        )
+    }
+}
+
 private extension ProductData.Filter {
 
     var rulesString: [FilterRules] {
@@ -248,10 +273,10 @@ private extension ProductData.Filter {
             case _ as ProductData.Filter.CurrencyRule:
                 return .currencyRule
             
-            case _ as ProductData.Filter.CardAdditionalOwnedRestrictedRule:
+            case _ as ProductData.Filter.CardAdditionalSelfAccOwnRule:
                 return .cardAdditionalOwnedRestrictedRule
             
-            case _ as ProductData.Filter.CardAdditionalNotOwnedRestrictedRule:
+            case _ as ProductData.Filter.CardAdditionalSelfRule:
                 return .cardAdditionalNotOwnedRestrictedRule
             
             case _ as ProductData.Filter.ProductActiveRule:

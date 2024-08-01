@@ -163,7 +163,8 @@ final class MapperTests: XCTestCase {
                         link: nil,
                         appStore: nil,
                         googlePlay: nil,
-                        detail: .init(groupId: "b", viewId: "c")
+                        detail: .init(groupId: "b", viewId: "c"), 
+                        action: nil
                     )
                 ]
             )
@@ -327,6 +328,181 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_limits_deliversHeader() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.header, [
+            .pageTitle(.init(
+                text: "Управление",
+                subtitle: nil,
+                transparency: false))
+        ])
+    }
+    
+    func test_map_limits_deliversLimitsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleLimits, [
+            .init(list: [
+                .init(
+                    action: .init(type: "changeLimit"),
+                    limitType: "DEBIT_OPERATIONS",
+                    md5hash: "7cc9921ddb97efc14a7de912106ea0d4",
+                    title: "Платежи и переводы",
+                    limits: [
+                        .init(id: "LMTTZ01", title: "Осталось сегодня", colorHEX: "#1C1C1C"),
+                        .init(id: "LMTTZ02", title: "Осталось в этом месяце", colorHEX: "#FF3636")
+                    ]),
+                .init(
+                    action: .init(type: "changeLimit"),
+                    limitType: "WITHDRAWAL",
+                    md5hash: "bec5d6f65faaea15f56cd46b86a78897",
+                    title: "Снятие наличных",
+                    limits: [
+                        .init(id: "LMTTZ03", title: "Осталось сегодня", colorHEX: "#1C1C1C"),
+                        .init(id: "LMTTZ04", title: "Осталось в этом месяце", colorHEX: "#FF3636")
+                    ])
+            ])
+        ])
+    }
+
+    func test_map_limits_deliversListHorizontalRectangleImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleImages, [
+            .init(list: [
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                    link: "https://www.forabank.ru/private/cards/",
+                    detail: .init(groupId: "QR_SCANNER", viewId: "")
+                ),
+                .init(
+                    imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                    link: "",
+                    detail: .init(groupId: "CONTACT_TRANSFER", viewId: "GE")
+                ),
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                    link: "",
+                    detail: .init(groupId: "LANDING", viewId: "abroadSticker")
+                )
+
+            ])
+        ])
+    }
+
+    func test_map_limits_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "Прочее",
+                displayedCount: nil,
+                dropButtonOpenTitle: nil,
+                dropButtonCloseTitle: nil,
+                list: [
+                    .init(
+                        md5hash: "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                        title: "Управление подписками",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: nil,
+                        action: .init(type: "subscriptionControl")
+                    )
+                ]
+            )
+        ])
+    }
+
+    func test_map_limitsWithErrors_deliversListHorizontalRectangleImagesWithDefaultValuesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitsWithErrorsInMain.utf8)))
+
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleImages, [
+            .init(list: [
+                .init(
+                    imageLink: "",
+                    link: "https://www.forabank.ru/private/cards/",
+                    detail: .init(groupId: "QR_SCANNER", viewId: "")
+                ),
+                .init(
+                    imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                    link: "",
+                    detail: .init(groupId: "", viewId: "GE")
+                ),
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                    link: "",
+                    detail: .init(groupId: "LANDING", viewId: "")
+                )
+
+            ])
+        ])
+    }
+
+    func test_map_limitsWithListHorizontalRectangleImagesError_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitsWithErrorsInMain.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "Прочее",
+                displayedCount: nil,
+                dropButtonOpenTitle: nil,
+                dropButtonCloseTitle: nil,
+                list: [
+                    .init(
+                        md5hash: "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                        title: "Управление подписками",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: nil,
+                        action: .init(type: "subscriptionControl")
+                    )
+                ]
+            )
+        ])
+    }
+    
+    func test_map_limitSettings_deliversHeader() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitSettings.utf8)))
+        
+        XCTAssertNoDiff(landing.header, [
+            .pageTitle(.init(
+                text: "Настройка лимитов",
+                subtitle: nil,
+                transparency: false))
+        ])
+    }
+
+    func test_map_limitSettings_deliversBlocksHorizontalRectangularInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitSettings.utf8)))
+        
+        XCTAssertNoDiff(landing.main.blocksHorizontalRectangular, [
+            .init(list: [
+                .init(limitType: "DEBIT_OPERATIONS", description: "Переводы себе, другим людям и организациям, оплата услуг в приложении", title: "Лимит платежей и переводов", limits: [
+                    .init(id: "LMTTZ01", title: "В день", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 999999999),
+                    .init(id: "LMTTZ02", title: "В месяц", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 999999999)
+                ]),
+                .init(limitType: "WITHDRAWAL", description: "Снятие наличных в банкоматах или операции приравненные к снятию наличных", title: "Лимит снятия наличных", limits: [
+                    .init(id: "LMTTZ03", title: "В день", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 150000),
+                    .init(id: "LMTTZ04", title: "В месяц", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 500000)
+                ])
+
+            ])
+        ])
+    }
+
     // MARK: - Helpers
     
     typealias Result = Swift.Result<Landing, LandingMapper.MapperError>
@@ -2610,6 +2786,340 @@ private extension String {
 
 """
     
+    static let limits: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Управление",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "NAILED_CARD_ACTIONS",
+            "data": {}
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_LIMITS",
+            "data": {
+              "list": [
+                {
+                  "md5hash": "7cc9921ddb97efc14a7de912106ea0d4",
+                  "title": "Платежи и переводы",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "id": "LMTTZ01",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ02",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                },
+                {
+                  "md5hash": "bec5d6f65faaea15f56cd46b86a78897",
+                  "title": "Снятие наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "id": "LMTTZ03",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ04",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+            "data": {
+              "list": [
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                  "link": "https://www.forabank.ru/private/cards/",
+                  "details": {
+                    "detailsGroupId": "QR_SCANNER",
+                    "detailViewId": null
+                  }
+                },
+                {
+                  "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "CONTACT_TRANSFER",
+                    "detailViewId": "GE"
+                  }
+                },
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "LANDING",
+                    "detailViewId": "abroadSticker"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_VERTICAL_ROUND_IMAGE",
+            "data": {
+              "title": "Прочее",
+              "list": [
+                {
+                  "md5hash": "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                  "title": "Управление подписками",
+                  "action": {
+                    "actionType": "subscriptionControl"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+      "serial": "d706714ec041828eadf4b46af8cdb662"
+      },
+    }
+    """
+   
+    static let limitsWithErrorsInMain: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Управление",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "NAILED_CARD_ACTIONS",
+            "data": {}
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_LIMITS",
+            "data": {
+              "list": [
+                {
+                  "md5hash": "7cc9921ddb97efc14a7de912106ea0d4",
+                  "title": "Платежи и переводы",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "id": "LMTTZ01",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ02",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                },
+                {
+                  "md5hash": "bec5d6f65faaea15f56cd46b86a78897",
+                  "title": "Снятие наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "id": "LMTTZ03",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ04",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+            "data": {
+              "list": [
+                {
+                  "image": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                  "link": "https://www.forabank.ru/private/cards/",
+                  "details": {
+                    "detailsGroupId": "QR_SCANNER",
+                    "detailViewId": null
+                  }
+                },
+                {
+                  "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                  "link": "",
+                  "details": {
+                    "details": "CONTACT_TRANSFER",
+                    "detailViewId": "GE"
+                  }
+                },
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "LANDING",
+                    "detai": "abroadSticker"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_VERTICAL_ROUND_IMAGE",
+            "data": {
+              "title": "Прочее",
+              "list": [
+                {
+                  "md5hash": "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                  "title": "Управление подписками",
+                  "action": {
+                    "actionType": "subscriptionControl"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+      "serial": "d706714ec041828eadf4b46af8cdb662"
+      },
+    }
+    """
+
+    static let limitSettings: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Настройка лимитов",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "BLOCK_HORIZONTAL_RECTANGULAR",
+            "data": {
+              "list": [
+                {
+                  "title": "Лимит платежей и переводов",
+                  "description": "Переводы себе, другим людям и организациям, оплата услуг в приложении",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ01",
+                      "title": "В день",
+                      "text": "Сумма",
+                      "maxSum": 999999999
+                    },
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ02",
+                      "title": "В месяц",
+                      "text": "Сумма",
+                      "maxSum": 999999999
+                    }
+                  ]
+                },
+                {
+                  "title": "Лимит снятия наличных",
+                  "description": "Снятие наличных в банкоматах или операции приравненные к снятию наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ03",
+                      "title": "В день",
+                      "text": "Сумма",
+                      "maxSum": 150000
+                    },
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ04",
+                      "title": "В месяц",
+                      "text": "Сумма",
+                      "maxSum": 500000
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_DROP_DOWN_TEXTS",
+            "data": {
+              "title": "Часто задаваемые вопросы",
+              "list": [
+                {
+                  "title": "Безопасность",
+                  "description": "Лимиты это очень безопасно. Благодаря им Вы можете контролировать свои траты."
+                },
+                {
+                  "title": "Двойная конвертация",
+                  "description": "Это двукратный обмен валют. Такое может случиться, если Вы рассчитываетесь своей рублевой картой в стране, чья валюта не является ни рублем, ни долларом или евро."
+                },
+                {
+                  "title": "В какой валюте можно оплатить картой?",
+                  "description": "Валюта зависит от страны оплаты."
+                },
+                {
+                  "title": "Какую сумму можно оплатить по моей карте в онлайн-магазинах?",
+                  "description": "Ту которая у вас указана в лимите для платежей и переводов."
+                },
+                {
+                  "title": "В каких банкоматах можно снимать деньги с моей карты?",
+                  "description": "Вы можете ознакомиться со списком банкоматов на главном экране мобильного приложения в блоке - Отделения и банкоматы."
+                }
+              ]
+            }
+          }
+        ],
+        "serial": "33c455e8b1f3d298dbb1d846885c176e"
+      }
+    }
+    """
+    
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
 """
@@ -2628,7 +3138,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiLineHeaders: [Landing.MultiLineHeader] {
+    var multiLineHeaders: [Landing.DataView.Multi.LineHeader] {
         
         compactMap {
             if case let .multi(.lineHeader(multiLineHeader)) = $0 {
@@ -2639,7 +3149,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiTexts: [Landing.MultiText] {
+    var multiTexts: [Landing.DataView.Multi.Text] {
         
         compactMap {
             if case let .multi(.text(multiText)) = $0 {
@@ -2650,7 +3160,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiMarkersTexts: [Landing.MultiMarkersText] {
+    var multiMarkersTexts: [Landing.DataView.Multi.MarkersText] {
         
         compactMap {
             if case let .multi(.markersText(multiMarkersText)) = $0 {
@@ -2661,7 +3171,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var muiltiTextsWithIconsHorizontals: [Landing.MuiltiTextsWithIconsHorizontal] {
+    var muiltiTextsWithIconsHorizontals: [Landing.DataView.Multi.TextsWithIconsHorizontal] {
         
         compactMap {
             if case let .multi(.textsWithIconsHorizontalArray(muiltiTextsWithIconsHorizontal)) = $0 {
@@ -2672,7 +3182,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listVerticalRoundImages: [Landing.ListVerticalRoundImage] {
+    var listVerticalRoundImages: [Landing.DataView.List.VerticalRoundImage] {
         
         compactMap {
             if case let .list(.verticalRoundImage(listVerticalRoundImage)) = $0 {
@@ -2683,7 +3193,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listHorizontalRoundImages: [Landing.ListHorizontalRoundImage] {
+    var listHorizontalRoundImages: [Landing.DataView.List.HorizontalRoundImage] {
         
         compactMap {
             if case let .list(.horizontalRoundImage(listHorizontalRoundImage)) = $0 {
@@ -2694,7 +3204,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listHorizontalRectangleImages: [Landing.ListHorizontalRectangleImage] {
+    var listHorizontalRectangleImages: [Landing.DataView.List.HorizontalRectangleImage] {
         
         compactMap {
             if case let .list(.horizontalRectangleImage(listHorizontalRectangleImage)) = $0 {
@@ -2705,7 +3215,18 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiButtons: [Landing.MultiButtons] {
+    var listHorizontalRectangleLimits: [Landing.DataView.List.HorizontalRectangleLimits] {
+        
+        compactMap {
+            if case let .list(.horizontalRectangleLimits(listHorizontalRectangleLimits)) = $0 {
+                return listHorizontalRectangleLimits
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiButtons: [Landing.DataView.Multi.Buttons] {
         
         compactMap {
             if case let .multi(.buttons(multiButtons)) = $0 {
@@ -2716,7 +3237,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiTypeButtons: [Landing.MultiTypeButtons] {
+    var multiTypeButtons: [Landing.DataView.Multi.TypeButtons] {
         
         compactMap {
             if case let .multi(.typeButtons(typeButtons)) = $0 {
@@ -2749,7 +3270,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listDropDownTexts: [Landing.ListDropDownTexts] {
+    var listDropDownTexts: [Landing.DataView.List.DropDownTexts] {
         
         compactMap {
             if case let .list(.dropDownTexts(texts)) = $0 {
@@ -2765,6 +3286,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .verticalSpacing(indents) = $0 {
                 return indents
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var blocksHorizontalRectangular: [Landing.BlockHorizontalRectangular] {
+        
+        compactMap {
+            if case let .blockHorizontalRectangular(blockHorizontalRectangular) = $0 {
+                return blockHorizontalRectangular
             } else {
                 return nil
             }

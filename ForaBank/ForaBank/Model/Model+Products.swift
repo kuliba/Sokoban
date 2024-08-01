@@ -5,10 +5,12 @@
 //  Created by Max Gribov on 09.03.2022.
 //
 
+import AccountInfoPanel
+import CardStatementAPI
 import CloudKit
+import ForaTools
 import Foundation
 import ServerAgent
-import CardStatementAPI
 
 //MARK: - Actions
 
@@ -24,8 +26,13 @@ extension Model {
     var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
-    
-    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
+        
+    var allProducts: [ProductData] {
+        
+        // получили все продукты
+        let currentProducts = products.value.values.flatMap{ $0 }
+        return currentProducts.groupingAndSortedProducts()
+    }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
         
@@ -57,6 +64,11 @@ extension Model {
     var productsTypes: [ProductType] {
         
         products.value.keys.map {$0}
+    }
+    
+    var cardsTypes: [ProductCardData.CardType] {
+        
+        return (products(.card) ?? []).compactMap(\.asCard?.cardType).uniqued()
     }
     
     func product() -> ProductData? {
@@ -266,7 +278,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(productDetails: ProductDetailsData)
+                case success(productDetails: AccountInfoPanel.ProductDetails)
                 case failure(message: String)
             }
         }
@@ -368,6 +380,32 @@ private extension ProductType {
 
 extension Model {
     
+    func handleProductUpdateDynamicParamsList(
+        _ productID: ProductCardData.ID,
+        productType: ProductType
+    ) {
+        Task { try? await handleProductUpdateDynamicParamsListAsync(productID, productType: productType) }
+    }
+
+    func handleProductUpdateDynamicParamsListAsync(
+        _ productID: ProductCardData.ID,
+        productType: ProductType
+    ) async throws {
+        
+        let payload: ProductDynamicParamsListPayload = .init(productList: [.init(productId: .init(productID), type: productType.typeValueForRequest)])
+        
+        let params = try await Services.makeGetProductDynamicParamsList(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: payload
+        )
+        let updatedProducts = Self.reduce(products: self.products.value, with: params)
+        self.products.value = updatedProducts
+        
+        // cache products
+        try self.productsCacheStore(productsData: updatedProducts)
+    }
+    
     func handleProductsUpdateFastAll() {
         Task { try? await handleProductsUpdateFastAllAsync() }
     }
@@ -397,77 +435,14 @@ extension Model {
         guard productsFastUpdating.value.contains(payload.productId) == false else {
             return
         }
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-              let command = createCommand(productId: product.id, productType: product.productType) else {
+                
+        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }), product.productType != .loan else {
             return
         }
         
         productsFastUpdating.value.insert(product.id)
-
-        serverAgent.executeCommand(command: command) { result in
-            
-            self.productsFastUpdating.value.remove(product.id)
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let params = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    // update products
-                    let updatedProducts = Self.reduce(products: self.products.value, with: params, productId: payload.productId)
-                    self.products.value = updatedProducts
-                    
-                    // cache products
-                    do {
-                        
-                        try self.productsCacheStore(productsData: updatedProducts)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                }
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
-            }
-        }
-        
-        func createCommand(productId: ProductData.ID, productType: ProductType) -> ServerCommands.ProductController.GetProductDynamicParams? {
-            
-            switch productType {
-            case .card:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: productId.description, depositId: nil))
-                return command
-                
-            case .account:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: productId.description, cardId: nil, depositId: nil))
-                return command
-                
-            case .deposit:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: nil, depositId: productId.description))
-                return command
-                
-            case .loan:
-                return nil
-            }
-        }
+        handleProductUpdateDynamicParamsList(product.id, productType: product.productType)
+        productsFastUpdating.value.remove(product.id)
     }
 
     func handleProductsUpdateTotalAll() {
@@ -485,75 +460,21 @@ extension Model {
             
             self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in ProductType.allCases {
+            let queue = DispatchQueue.global()
+            let interval: Int = 1 // seconds
+            
+            ProductType.allCases.enumerated().forEach { index, productType in
                 
-                guard productsAllowed.contains(productType) else {
-                    continue
-                }
-                
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                             
-                do {
-                    
-                    let result = try await productsFetchWithCommand(command: command)
-  
-                    // updating status
-                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                        
-                        self.productsUpdating.value.remove(at: index)
-                    }
-                    
-                    // update products
-                    let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: productType)
-                    self.products.send(updatedProducts)
-                    
-                    //md5hash -> image
-                    let md5Products = result.products.reduce(Set<String>(), {
-                        $0.union([$1.smallDesignMd5hash,
-                                  $1.smallBackgroundDesignHash]) })
-                    
-                    let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
-                    if !md5ToUpload.isEmpty {
-                        action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
-                    }
-                    
-                    // cache products
-                    do {
-                        
-                        try self.productsCacheStore(productsData: updatedProducts)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                    // update additional products data
-                    switch productType {
-                    case .deposit:
-                        self.action.send(ModelAction.Deposits.Info.All())
-                        
-                    case .loan:
-                        self.action.send(ModelAction.Loans.Update.All())
-                        
-                    default:
-                        break
-                    }
-
-                } catch {
-                    
-                    // updating status
-                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                        
-                        self.productsUpdating.value.remove(at: index)
-                    }
-                    
-                    self.handleServerCommandError(error: error, command: command)
-                    //TODO: show error message in UI
+                if productsAllowed.contains(productType) {
+                    let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
+                    queue.delay(
+                        for: .seconds((1 + index) * interval),
+                        execute: { self.updateProduct(command, productType: productType) })
                 }
             }
         }
     }
-
+    
     func handleProductsUpdateTotalProduct(_ payload: ModelAction.Products.Update.ForProductType) {
 
         guard productsUpdating.value.contains(payload.productType) == false,
@@ -572,21 +493,41 @@ extension Model {
 
             let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
 
-            do {
-
-                let result = try await productsFetchWithCommand(command: command)
-
+            updateProduct(command, productType: payload.productType)
+        }
+    }
+    
+    func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
+            
+        getProducts(productType) { response in
+            
+            if let response {
+                
+                let result = Services.mapProductResponse(response)
+                
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
-
-                    self.productsUpdating.value.remove(at: index)
-                }
-
+                self.productsUpdating.value.removeAll(where: { $0 == productType })
+                
                 // update products
-                let updatedProducts = Self.reduce(products: self.products.value, with: result.products, for: payload.productType)
+                let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
                 
-                //TODO: - hash image
+                self.updateInfo.value.setValue(true, for: productType)
+                
+                //md5hash -> image
+                let md5Products = result.productList.reduce(Set<String>(), {
+                    $0.union([$1.smallDesignMd5hash,
+                              $1.smallBackgroundDesignHash,
+                              $1.xlDesignMd5Hash,
+                              $1.largeDesignMd5Hash,
+                              $1.mediumDesignMd5Hash,
+                              $1.paymentSystemMd5Hash
+                             ]) })
+                
+                let md5ToUpload = Array(md5Products.subtracting(self.images.value.keys))
+                if !md5ToUpload.isEmpty {
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+                }
                 
                 // cache products
                 do {
@@ -599,7 +540,7 @@ extension Model {
                 }
                 
                 // update additional products data
-                switch payload.productType {
+                switch productType {
                 case .deposit:
                     self.action.send(ModelAction.Deposits.Info.All())
                     
@@ -609,17 +550,12 @@ extension Model {
                 default:
                     break
                 }
-
-            } catch {
-
+            }
+            else {
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: payload.productType) {
-
-                    self.productsUpdating.value.remove(at: index)
-                }
-
-                self.handleServerCommandError(error: error, command: command)
-                //TODO: show error message in UI
+                self.productsUpdating.value.removeAll(where: { $0 == productType })
+                
+                self.updateInfo.value.setValue(false, for: productType)
             }
         }
     }
@@ -697,13 +633,13 @@ extension Model {
                 
                 let _ = try await productsSetSettingsWithCommand(command: command)
                     
-                self.productsOrdersUpdating.value = false
-                
                 // update products
                 let updatedProducts = Self.reduce(productsData: self.products.value, newOrders: payload.orders)
                                                       
                 self.products.value = updatedProducts
-                    
+                 
+                self.productsOrdersUpdating.value = false
+
                 do { // update cache
                         
                     try self.productsCacheStore(productsData: updatedProducts)
@@ -773,34 +709,7 @@ extension Model {
             }
         }
     }
-    
-    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> (products: [ProductData], serial: String) {
         
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                switch result{
-                case .success(let response):
-                    switch response.statusCode {
-                    case .ok:
-                        
-                        guard let data = response.data else {
-                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
-                            return
-                        }
-                        
-                        continuation.resume(returning: (data.productList, data.serial))
-
-                    default:
-                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
-                    }
-                case .failure(let error):
-                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
-                }
-            }
-        }
-    }
-    
     func productsSetSettingsWithCommand<Command: ServerCommand>(command: Command) async throws -> Bool {
         
         try await withCheckedThrowingContinuation { continuation in
@@ -929,51 +838,45 @@ extension Model {
     }
     
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        var command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: nil))
-        
-        switch payload.type {
-        case .card:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: payload.id, depositId: nil))
-        case .deposit:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.id))
-        case .account:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
-        case .loan:
-            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
-                return
-            }
+        Task {
             
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
-        }
-        
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
+            if let productDetails = try? await handleProductDetailsAsync(payload) {
+                
+                if !productDetails.infoMd5hash.isEmpty {
                     
-                    guard let details = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
+                    if self.images.value[productDetails.infoMd5hash] == nil {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [productDetails.infoMd5hash] ))
                     }
-                    
-                    self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: details))
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetails))
             }
         }
+    }
+    
+    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws -> ProductDetails? {
+        
+        let productDetailsPayload: ProductDetailsPayload
+
+        switch payload.type {
+        case .card:
+            productDetailsPayload = .cardId(.init(payload.id))
+        case .deposit:
+            productDetailsPayload = .depositId(.init(payload.id))
+        case .account:
+            productDetailsPayload = .accountId(.init(payload.id))
+        case .loan:
+            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
+                return .none
+            }
+            productDetailsPayload = .accountId(.init(product.settlementAccountId))
+        }
+
+        return try await Services.makeGetProductDetails(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: productDetailsPayload
+        )
     }
     
     func handleProductsStatementPrintFormRequest(_ payload: ModelAction.Products.StatementPrintForm.Request) {

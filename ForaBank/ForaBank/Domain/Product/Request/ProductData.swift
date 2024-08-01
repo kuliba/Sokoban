@@ -51,7 +51,16 @@ class ProductData: Identifiable, Codable {
     let smallDesignMd5hash: String
     let smallBackgroundDesignHash: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+#warning("For compability with rest/v5/getProductListByType")
+    let mediumDesignMd5Hash: String
+    let largeDesignMd5Hash: String
+    let xlDesignMd5Hash: String
+    
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+        mediumDesignMd5Hash: String = "",
+        largeDesignMd5Hash: String = "",
+        xlDesignMd5Hash: String = ""
+    ) {
         
         self.id = id
         self.productType = productType
@@ -80,6 +89,9 @@ class ProductData: Identifiable, Codable {
         self.isVisible = isVisible
         self.smallDesignMd5hash = smallDesignMd5hash
         self.smallBackgroundDesignHash = smallBackgroundDesignHash
+        self.mediumDesignMd5Hash = mediumDesignMd5Hash
+        self.largeDesignMd5Hash = largeDesignMd5Hash
+        self.xlDesignMd5Hash = xlDesignMd5Hash
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -87,7 +99,8 @@ class ProductData: Identifiable, Codable {
         case extraLargeDesign = "XLDesign"
         case balanceRub = "balanceRUB"
         case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash,
+            mediumDesignMd5Hash, largeDesignMd5Hash, xlDesignMd5Hash
     }
     
     required init(from decoder: Decoder) throws {
@@ -126,6 +139,9 @@ class ProductData: Identifiable, Codable {
         isVisible = try container.decode(Bool.self, forKey: .visibility)
         smallDesignMd5hash = try container.decode(String.self, forKey: .smallDesignMd5hash)
         smallBackgroundDesignHash = try container.decode(String.self, forKey: .smallBackgroundDesignHash)
+        mediumDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .mediumDesignMd5Hash) ?? ""
+        largeDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .largeDesignMd5Hash) ?? ""
+        xlDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .xlDesignMd5Hash) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
@@ -160,6 +176,9 @@ class ProductData: Identifiable, Codable {
         try container.encode(order, forKey: .order)
         try container.encode(smallDesignMd5hash, forKey: .smallDesignMd5hash)
         try container.encode(smallBackgroundDesignHash, forKey: .smallBackgroundDesignHash)
+        try container.encodeIfPresent(mediumDesignMd5Hash, forKey: .mediumDesignMd5Hash)
+        try container.encodeIfPresent(largeDesignMd5Hash, forKey: .largeDesignMd5Hash)
+        try container.encodeIfPresent(xlDesignMd5Hash, forKey: .xlDesignMd5Hash)
     }
 }
 
@@ -167,9 +186,7 @@ extension ProductData {
     
     func update(with params: ProductDynamicParamsData) {
         
-        self.balance = params.balance
         self.customName = params.customName
-        self.balanceRub = params.balanceRub
     }
     
     func update(isVisible: Bool) {
@@ -184,9 +201,7 @@ extension ProductData {
     
     func update(with params: CardStatementAPI.DynamicParams) {
         
-        self.balance = params.variableParams.balance?.doubleValue
         self.customName = params.variableParams.customName
-        self.balanceRub = params.variableParams.balanceRub?.doubleValue
     }
 }
 
@@ -231,6 +246,8 @@ extension ProductData {
     }
     
     var displayName: String { customName ?? mainField }
+    var navigationBarName: String { customName ?? additionalField ?? mainField }
+    var navigationTitleForControlPanel: String { "\(navigationBarName)  •\(displayNumber ?? "")" }
     var balanceValue: Double { balance ?? 0 }
     var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
     var overlayImageColor: Color {
@@ -244,57 +261,20 @@ extension ProductData {
     
     var productStatus: ProductStatus {
         
-        if let cardProduct = self as? ProductCardData {
+        if let cardProduct = self.asCard, let statusCard = cardProduct.statusCard {
             
-            // only card product can be active
-            if cardProduct.isActivated {
+            switch statusCard {
+            case .active:
+                return cardProduct.isVisible ? .active : .notVisible
                 
-                // only active card product can be blocked
-                if cardProduct.isBlocked {
-                    
-                    if isVisible {
-                        
-                        return [.active, .blocked, .visible]
-                        
-                    } else {
-                        
-                        return [.active, .blocked]
-                    }
-                    
-                } else {
-                    
-                    if isVisible {
-                        
-                        return [.active, .visible]
-                        
-                    } else {
-                        
-                        return .active
-                    }
-                }
-
-            } else {
+            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
+                return cardProduct.isVisible ? .blocked : .blockedNotVisible
                 
-                if isVisible {
-                    
-                    return [.active, .visible]
-                    
-                } else {
-                    
-                    return .active
-                }
+            case .notActivated:
+                return .notActive
             }
-            
         } else {
-            
-            if isVisible {
-                
-                return [.active, .visible]
-                
-            } else {
-                
-                return .active
-            }
+            return isVisible ? .active : .notVisible
         }
     }
 }
@@ -337,12 +317,14 @@ extension ProductData {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
+        case notActivated = "Не активирована"
         case issuedToClient = "Выдано клиенту"
+        case blockedUnlockAvailable = "Карта блокирована, разблокировка доступна"
         case blockedByBank = "Заблокирована банком"
         case notBlocked = "NOT_BLOCKED"
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
-        case blocked = "BLOCKED"
+        case blocked = "BLOCKED" 
         case unknown
     }
     
@@ -356,6 +338,7 @@ extension ProductData {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
+        case blockedUnlockNotAvailable = "23"
         case unknown
     }
     
@@ -410,24 +393,15 @@ extension ProductData {
     
     var currencyValue: Currency { .init(description: currency) }
     
-    var paymentSystem: Image? {
+    var paymentSystemMd5Hash: String {
         
         guard let paymentSystem = self as? ProductCardData else {
-            return nil
+            return ""
         }
         
-        return paymentSystem.paymentSystemImage?.image
+        return paymentSystem.paymentSystemImageMd5Hash
     }
-    
-    var paymentSystemData: Data? {
         
-        guard let paymentSystem = self as? ProductCardData else {
-            return nil
-        }
-        
-        return paymentSystem.paymentSystemImage?.imageData
-    }
-    
     var description: [String] {
         
         [
@@ -468,4 +442,10 @@ extension ProductData {
         default: return nil
         }
     }
+}
+
+extension ProductData {
+
+   var asAccount: ProductAccountData? { self as? ProductAccountData }
+   var asCard: ProductCardData? { self as? ProductCardData }
 }

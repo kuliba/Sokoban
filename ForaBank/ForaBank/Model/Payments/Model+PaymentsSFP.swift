@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import PhoneNumberWrapper
 
 extension Model {
     
@@ -17,25 +18,56 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
-            // header              
+            // header
             let headerParameter: Payments.ParameterHeader = parameterHeader(
                 source: operation.source,
                 header: .init(
                     title: "Перевод по номеру телефона",
-                    icon: .name("ic24Sbp"))
+                    icon: .init(source: operation.source)
+                )
             )
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя", countryCode: .russian)
+            let phoneParameter = Self.phoneInput
             
             // bank
+            
+            var latestPaymentBankIds: [String]?
+            
+            switch operation.source {
+            case let .template(templateId):
+                await templatePhoneData(templateId, &latestPaymentBankIds)
+                
+            case let .latestPayment(latestPaymentId):
+                if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData,
+                    let token {
+                    
+                    latestPaymentBankIds = await getLatestPhonePayments(
+                        phone: latestPayment.phoneNumber,
+                        token: token
+                    )
+                }
+            case let .sfp(phone: phone, bankId: _):
+                if let token {
+                 
+                    latestPaymentBankIds = await getLatestPhonePayments(
+                        phone: phone,
+                        token: token
+                    )
+                }
+                
+            default: break
+            }
+            
+            let bankParameter = await createBankParameter(
+                latestPaymentBankIds: latestPaymentBankIds ?? nil,
+                operation,
+                operationPhone: nil,
+                banksIds: banksList(operation)
+            )
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-            
-            let options = self.bankList.value.map( { Payments.ParameterSelectBank.Option(id: $0.id, name: $0.memberNameRus, subtitle: nil, icon: .init(with: $0.svgImage), searchValue: $0.memberNameRus)} )
 
-            let bankParameter = Payments.ParameterSelectBank(.init(id: bankParameterId, value: nil), icon: .iconPlaceholder, title: "Банк получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banks), keyboardType: .normal)
-            
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
@@ -50,7 +82,12 @@ extension Model {
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
             let messageParameterIcon = ImageData(named: "ic24IconMessage") ?? .parameterSample
-            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Сообщение получателю", validator: .anyValue)
+            let messageParameter = Payments.ParameterInput(
+                .init(id: messageParameterId, value: sourceMessage(source: operation.source)),
+                icon: messageParameterIcon,
+                title: "Сообщение получателю",
+                validator: .anyValue
+            )
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
@@ -64,11 +101,16 @@ extension Model {
     }
     
     // update parameter value with source
-    func paymentsProcessSourceReducerSFP(phone: String, bankId: BankData.ID, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsProcessSourceReducerSFP(
+        phone: String,
+        bankId: BankData.ID,
+        parameterId: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value? {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
+            let phoneFormatted = phone.digits.addCodeRuIfNeeded()
+            return PhoneNumberKitFormater().format(phoneFormatted)
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
@@ -79,7 +121,11 @@ extension Model {
     }
     
     // update depependend parameters
-    func paymentsProcessDependencyReducerSFP(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducerSFP(
+        operation: Payments.Operation,
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable]
+    ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
         case Payments.Parameter.Identifier.amount.rawValue:
@@ -87,7 +133,7 @@ extension Model {
             guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
                 return nil
             }
-        
+            
             var currencySymbol = amountParameter.currencySymbol
             var maxAmount = amountParameter.validator.maxAmount
             
@@ -106,7 +152,7 @@ extension Model {
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
                let bankParameterValue = bankParameter.value {
-             
+                
                 isForaBankValue = isForaBank(bankId: bankParameterValue)
             }
             
@@ -117,14 +163,19 @@ extension Model {
             }
             
             return updatedAmountParameter
-
+            
         case Payments.Parameter.Identifier.header.rawValue:
+            
             let codeParameterId = Payments.Parameter.Identifier.code.rawValue
             let parametersIds = parameters.map{ $0.id }
-            guard parametersIds.contains(codeParameterId) else {
-                return nil
+           
+            if parametersIds.contains(codeParameterId) {
+                
+                return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .init(parameters: parameters))
+            } else {
+                
+                return Payments.ParameterHeader(title: "\(operation.service.name)", icon: .init(parameters: parameters))
             }
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .name("ic24Sbp"))
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             
@@ -134,14 +185,14 @@ extension Model {
             
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             guard let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
-               let bankParameterValue = bankParameter.value else {
+                  let bankParameterValue = bankParameter.value else {
                 return nil
             }
             
             if isForaBank(bankId: bankParameterValue) == true {
                 
                 return messageParameter.updated(isEditable: false)
-
+                
             } else {
                 
                 return messageParameter.updated(isEditable: true)
@@ -177,10 +228,10 @@ extension Model {
             return .remote(.start)
         }
     }
-
+    
     // process remote confirm step for payment to Fora clint
     func paymentsProcessRemoteStepSFP(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
-
+        
         var parameters = [PaymentsParameterRepresentable]()
         
         if let customerName = response.payeeName {
@@ -193,9 +244,9 @@ extension Model {
             
             parameters.append(customerParameter)
         }
-
+        
         if let amountValue = response.debitAmount,
-              let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
+           let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) {
             
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
@@ -266,7 +317,7 @@ extension Model {
                   let amountFormatted = paymentsAmountFormatted(amount: amountValue, parameters: operation.parameters) else {
                 return nil
             }
-
+            
             return Payments.ParameterInfo(
                 .init(id: additionalData.fieldName, value: amountFormatted),
                 icon: .local("ic24Coins"),
@@ -283,7 +334,7 @@ extension Model {
         }
     }
     
-    // resets visible items and order 
+    // resets visible items and order
     func paymentsProcessOperationResetVisibleSFP(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         // check if current step stage is confirm
@@ -304,7 +355,7 @@ extension Model {
                     Payments.Parameter.Identifier.code.rawValue]
             
         } else {
-
+            
             return [Payments.Parameter.Identifier.header.rawValue,
                     Payments.Parameter.Identifier.sfpPhone.rawValue,
                     Payments.Parameter.Identifier.sftRecipient.rawValue,
@@ -313,7 +364,6 @@ extension Model {
                     Payments.Parameter.Identifier.fee.rawValue,
                     Payments.Parameter.Identifier.code.rawValue]
         }
-
     }
     
     // debug mock
@@ -346,8 +396,185 @@ extension Payments.ParameterAmount {
 
 extension Model {
     
-    func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
+    func getLatestPhonePayments(
+        phone: String,
+        token: String
+    ) async -> [String]? {
+        
+        let phoneFormatted = PhoneNumberWrapper().format(phone.addCodeRuIfNeeded()).digits
+        let phoneContained = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
+        
+        if !phoneContained {
+            
+            let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
+                token: token,
+                payload: .init(phoneNumber: phoneFormatted.digits)
+            )
+            
+            let result = try? await serverAgent.executeCommand(command: command)
+            
+            if let result {
+                paymentsByPhone.value.updateValue(result, forKey: phoneFormatted.digits)
+                
+                return result.compactMap { $0.bankId }
+            } else {
+                
+                return nil
+            }
+            
+        } else {
+            
+            return nil
+        }
+    }
     
+    func paymentsByPhoneBankList(
+        _ phone: String
+    ) async -> [String]? {
+        
+        typealias BankListRequest = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments
+        
+        let banksByPhone = paymentsByPhone.value[phone.addCodeRuIfNeeded()]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+        
+        if banksByPhone == nil,
+           let token {
+            
+            let command = BankListRequest(token: token, payload: .init(phoneNumber: phone))
+            let result = try? await serverAgent.executeCommand(command: command)
+            
+            let bankIds = result?.compactMap { $0.bankId }
+            
+            return bankIds
+            
+        } else {
+            
+            return banksByPhone?.compactMap { $0.bankId }
+        }
+    }
+    
+    func banksList(
+        _ operation: Payments.Operation
+    ) async -> [String]? {
+        
+        switch operation.source {
+        case let .sfp(phone: phone, bankId: _):
+            let banksList = await paymentsByPhoneBankList(phone)
+            return banksList
+            
+        case let .latestPayment(latestPaymentId):
+            if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+                let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber).digits
+                
+                let banksList = await paymentsByPhoneBankList(phoneFormatted)
+                return banksList
+                
+            } else {
+                return nil
+            }
+        case let .template(templateId):
+            return await getBankListForTemplate(templateId)
+            
+        default:
+            return nil
+        }
+    }
+    
+    func createBankParameter(
+        latestPaymentBankIds: [String]?,
+        _ operation: Payments.Operation,
+        operationPhone: String?,
+        banksIds: [String]?
+    ) -> Payments.ParameterSelectBank {
+        
+        switch operation.source {
+        case let .latestPayment(latestPaymentId):
+            if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+                
+                return filterByPhone(
+                    operationPhone ?? latestPayment.phoneNumber.digits,
+                    bankId: latestPayment.bankId,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+                
+            } else {
+                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+            }
+        case let .template(templateId):
+            return createBankParameterForTemplate(templateId, operationPhone, banksIds, latestPaymentBankIds)
+            
+        case let .sfp(phone: phone, bankId: bankId):
+            return filterByPhone(operationPhone ?? phone, bankId: bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
+            
+        case let .mock(mock):
+            return filterByPhone(mock.parameters.first?.value, bankId: nil, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
+            
+        default:
+            return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+        }
+    }
+    
+    private func filterByPhone(
+        _ phone: String?,
+        bankId: String?,
+        banksIds: [String]?,
+        latestPaymentBankIds: [String]?
+    ) -> Payments.ParameterSelectBank{
+        
+        let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+        
+        let defaultBank = paymentsByPhone.value[phone?.digits ?? ""]?
+            .filter { $0.defaultBank == true }.first
+        
+        let banksID = banksByPhone?
+            .compactMap({ $0.bankId })
+        
+        let options = self.reduceBanks(
+            bankList: bankList.value.filter { $0.bankCountry == "RU" },
+            preferred: banksIds ?? banksID ?? latestPaymentBankIds ?? [],
+            defaultBankId: defaultBank?.bankId
+        )
+        
+        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+        return Payments.ParameterSelectBank(
+            .init(id: bankParameterId, value: bankId),
+            icon: .iconPlaceholder,
+            title: "Банк получателя",
+            options: options,
+            placeholder: "Начните ввод для поиска",
+            selectAll: .init(type: .banks),
+            keyboardType: .normal
+        )
+    }
+    
+    func sourceMessage(
+        source: Payments.Operation.Source?
+    ) -> String? {
+        
+        switch source {
+        case let .template(templateID):
+            let template = paymentTemplates.value.first { $0.id == templateID }
+            if let parameterList = template?.parameterList as? [TransferAnywayData] {
+                let message = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpMessage.rawValue })?.fieldvalue
+                
+                return (message == "" || message == nil) ? nil : message
+            } else {
+                
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+    
+    func productWithSource(
+        source: Payments.Operation.Source?,
+        productId: String
+    ) -> String? {
+        
         switch source {
         case let .template(templateID):
             let template = paymentTemplates.value.first { $0.id == templateID }
@@ -355,6 +582,134 @@ extension Model {
             
         default:
             return productId
+        }
+    }
+    
+    private func reduceBanks(
+        bankList: [BankData],
+        preferred: [String],
+        defaultBankId: String?
+    ) -> [Payments.ParameterSelectBank.Option] {
+        
+        let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
+        
+        if preferredBanks.isEmpty {
+            
+            return bankList
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+        } else {
+            
+            return preferredBanks
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+        }
+    }
+    
+    private static let phoneInput = Payments.ParameterInputPhone(
+        .init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: nil),
+        title: "Номер телефона получателя",
+        countryCode: .russian
+    )
+    
+    fileprivate func getBankListForTemplate(_ templateId: (PaymentTemplateData.ID)) async -> [String]? {
+        if let template = paymentTemplates.value.first(where: { $0.id == templateId }),
+           let phone = template.phoneNumber {
+            
+            let phoneFormatted = PhoneNumberWrapper().format(phone).digits
+            let banksList = await paymentsByPhoneBankList(phoneFormatted)
+            return banksList
+        } else {
+            return nil
+        }
+    }
+    
+    fileprivate func templatePhoneData(
+        _ templateId: (PaymentTemplateData.ID),
+        _ latestPaymentBankIds: inout [String]?
+    ) async {
+        
+        let template = paymentTemplates.value.first { $0.id == templateId }
+        
+        switch template?.parameterList.last {
+        case _ as TransferGeneralData:
+            
+            if let token,
+               let phone = template?.phoneNumber {
+                
+                latestPaymentBankIds = await getLatestPhonePayments(
+                    phone: phone,
+                    token: token
+                )
+            }
+            
+        default:
+            
+            if let token,
+               let phone = template?.sfpPhone {
+                
+                latestPaymentBankIds = await getLatestPhonePayments(
+                    phone: phone,
+                    token: token
+                )
+            }
+        }
+    }
+
+    func createBankParameterForTemplate(
+        _ templateId: (PaymentTemplateData.ID),
+        _ operationPhone: String?,
+        _ banksIds: [String]?,
+        _ latestPaymentBankIds: [String]?
+    ) -> Payments.ParameterSelectBank {
+        
+        if let template = paymentTemplates.value.first(where: { $0.id == templateId }) {
+            
+            if let parameterList = template.parameterList as? [TransferAnywayData] {
+                let bankID = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpBank.rawValue })?.fieldvalue
+                
+                return filterByPhone(
+                    operationPhone ?? template.sfpPhone?.digits,
+                    bankId: bankID,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+            } else if let parameterList = template.parameterList as? [TransferGeneralData] {
+                
+                let phone = parameterList.last?.payeeInternal?.phoneNumber
+                
+                return filterByPhone(
+                    operationPhone ?? phone,
+                    bankId: nil,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+                
+            } else {
+                
+                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+            }
+            
+        } else {
+            return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
         }
     }
 }

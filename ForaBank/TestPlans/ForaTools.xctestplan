@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7695D8C8-EB0C-4E66-A4C2-9455536A1021",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

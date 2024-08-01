@@ -7,7 +7,18 @@
 
 import Foundation
 
-public enum CarouselEvent: Equatable {
+public enum CarouselEvent<Product> {
     
-    case appear
+    case toggle(
+        id: ProductType,
+        screenwidth: CGFloat,
+        xOffset: CGFloat
+    )
+    case scrolledTo(ProductType)
+    case select(ProductType, delay: TimeInterval = 0.2)
+    case didScrollTo(CGFloat)
+    case update([Product])
+    case closeSticker
 }
+
+extension CarouselEvent: Equatable where Product: Equatable {}

@@ -115,7 +115,15 @@ extension DateFormatter {
         formatter.dateFormat =  "d MMMM yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         
-        formatter.timeZone = TimeZone(identifier: "Europe/Moscow")
+        return formatter
+    }()
+    
+    static let moscowTimeRuFormatter: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.timeZone = TimeZone(identifier: "Europe/Moscow")!
         
         return formatter
     }()
@@ -137,18 +145,6 @@ extension DateFormatter {
         
         return formatter
     }()
-}
-
-extension Date {
-    
-    var moscowTime: Date {
-        
-        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow")!
-        let localTimeZone = TimeZone.current
-        let seconds = TimeInterval(moscowTimeZone.secondsFromGMT(for: self) - localTimeZone.secondsFromGMT(for: self))
-        
-        return addingTimeInterval(seconds)
-    }
 }
 
 class DateFormatterISO8601: DateFormatter {

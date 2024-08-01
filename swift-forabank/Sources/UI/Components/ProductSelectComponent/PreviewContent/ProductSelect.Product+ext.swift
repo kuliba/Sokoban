@@ -10,11 +10,12 @@ import UIPrimitives
 public extension Array where Element == ProductSelect.Product {
     
     static let allProducts: Self = [
-        .accountPreview,
-        .account2Preview,
         .cardPreview,
         .card2Preview,
         .card3Preview,
+        .card4Preview,
+        .accountPreview,
+        .account2Preview,
     ]
 }
 
@@ -22,7 +23,8 @@ extension ProductSelect.Product {
     
     public static let accountPreview: Self = .init(
         id: 234567891,
-        type: .account,
+        type: .account, 
+        isAdditional: false,
         header: "Счет списания",
         title: "Текущий счет",
         footer: "7891",
@@ -30,7 +32,7 @@ extension ProductSelect.Product {
         balance: 123_456,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -38,6 +40,7 @@ extension ProductSelect.Product {
     static let account2Preview: Self = .init(
         id: 2345678912,
         type: .account,
+        isAdditional: false,
         header: "Счет списания",
         title: "Account 2",
         footer: "8912",
@@ -45,7 +48,7 @@ extension ProductSelect.Product {
         balance: 678.09,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -53,6 +56,7 @@ extension ProductSelect.Product {
     public static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
+        isAdditional: false,
         header: "Счет списания",
         title: "Card",
         footer: "6789",
@@ -60,7 +64,7 @@ extension ProductSelect.Product {
         balance: 1_234.56,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -68,6 +72,7 @@ extension ProductSelect.Product {
     static let card2Preview: Self = .init(
         id: 1234567892,
         type: .card,
+        isAdditional: true,
         header: "Счет списания",
         title: "Card 2",
         footer: "7892",
@@ -75,7 +80,7 @@ extension ProductSelect.Product {
         balance: 12_345,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -83,6 +88,7 @@ extension ProductSelect.Product {
     static let card3Preview: Self = .init(
         id: 1234567893,
         type: .card,
+        isAdditional: false,
         header: "Счет списания",
         title: "Card 3",
         footer: "7893",
@@ -90,7 +96,23 @@ extension ProductSelect.Product {
         balance: 123_456.78,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
+            icon: .svg("")
+        )
+    )
+    
+    static let card4Preview: Self = .init(
+        id: 1234567894,
+        type: .card,
+        isAdditional: true,
+        header: "Счет списания",
+        title: "Card 3",
+        footer: "7893",
+        amountFormatted: "123 456.78 ₽",
+        balance: 123_456.78,
+        look: .init(
+            background: .svg(""),
+            color: .orange,
             icon: .svg("")
         )
     )

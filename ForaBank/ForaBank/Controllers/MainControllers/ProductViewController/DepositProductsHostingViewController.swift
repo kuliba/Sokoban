@@ -15,10 +15,10 @@ class OpenProductHostingViewController: UIHostingController<OpenDepositListView>
     @ObservedObject var viewModel: OpenDepositListViewModel
     private var bindings = Set<AnyCancellable>()
     
-    init(with viewModel: OpenDepositListViewModel) {
+    init(with viewModel: OpenDepositListViewModel, getUImage: @escaping (Md5hash) -> UIImage?) {
         
         self.viewModel = viewModel
-        super.init(rootView: OpenDepositListView(viewModel: viewModel))
+        super.init(rootView: OpenDepositListView(viewModel: viewModel, getUImage: getUImage))
         
         bind()
     }

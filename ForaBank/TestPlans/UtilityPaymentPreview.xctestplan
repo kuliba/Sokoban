@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "ADD7D0BC-F529-424C-BC06-2F5ADF485233",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PrePaymentPickerTests",
+        "name" : "PrePaymentPickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

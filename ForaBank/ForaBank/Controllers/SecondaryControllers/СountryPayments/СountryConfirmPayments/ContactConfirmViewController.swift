@@ -212,7 +212,7 @@ class ConfirmViewControllerModel {
 class ContactConfurmViewController: UIViewController {
     
     var operatorsViewModel: OperatorsViewModel?
-    
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -391,6 +391,9 @@ class ContactConfurmViewController: UIViewController {
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
 
+        cardFromField.getUImage = getUImage
+        cardToField.getUImage = getUImage
+        
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }

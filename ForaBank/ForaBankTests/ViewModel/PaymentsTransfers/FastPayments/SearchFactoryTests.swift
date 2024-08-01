@@ -86,7 +86,7 @@ final class SearchFactoryTests: XCTestCase {
     
     func test_init_shouldSetInitialValues_select_banks() {
         
-        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.banks))
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance()
         
@@ -162,6 +162,57 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
         XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    // \u{FEFF} — неразрывный пробел нулевой ширины (BOM).
+    // \u{00a0} — неразрывный пробел.
+    func test_cleanup_shouldRemoveBOM_fastPayments_contacts() {
+        
+      let (sut, scheduler, textSpy, _) = makeSUT(.fastPayments(.contacts))
+
+      let textWithBOM = "\u{00a0}+7 919 123‑45‑67"
+      let expectedResult = "+7 919 123-45-67"
+
+      sut.setText(to: textWithBOM)
+      scheduler.advance()
+
+      XCTAssertEqual(textSpy.values, [nil, expectedResult])
+    }
+
+    func test_cleanup_shouldRemoveNewline_fastPayments_contacts() {
+      let (sut, scheduler, textSpy, _) = makeSUT(.fastPayments(.contacts))
+
+      let textWithNewline = "+7\n919 123‑45‑67"
+      let expectedResult = "+7 919 123-45-67"
+
+      sut.setText(to: textWithNewline)
+      scheduler.advance()
+
+      XCTAssertEqual(textSpy.values, [nil, expectedResult])
+    }
+
+    func test_cleanup_shouldReplaceOptionProbes_fastPayments_contacts() {
+      let (sut, scheduler, textSpy, _) = makeSUT(.fastPayments(.contacts))
+
+      let textWithOptionProbes = "+7\u{00a0}919\u{00a0}123‑45‑67"
+      let expectedResult = "+7 919 123-45-67"
+
+      sut.setText(to: textWithOptionProbes)
+      scheduler.advance()
+
+      XCTAssertEqual(textSpy.values, [nil, expectedResult])
+    }
+
+    func test_cleanup_shouldCombine_fastPayments_contacts() {
+      let (sut, scheduler, textSpy, _) = makeSUT(.fastPayments(.contacts))
+
+      let textWithAll = "\u{FEFF}+7\n 919 123‑45‑67"
+      let expectedResult = "+7 919 123-45-67"
+
+      sut.setText(to: textWithAll)
+      scheduler.advance()
+
+      XCTAssertEqual(textSpy.values, [nil, expectedResult])
     }
 
     // MARK: - select - contacts

@@ -15,10 +15,10 @@ extension PaymentsProductSelectorView.ViewModel {
     ) {
         self.init(categories: nil, products: [])
         
-        var products = [ProductView.ViewModel]()
+        var products = [ProductViewModel]()
         for product in productsData {
             // для маленьких карт action не нужны - нет функционал CVV/PIN
-            let productViewModel = ProductView.ViewModel(
+            let productViewModel = ProductViewModel(
                 with: product,
                 size: .small,
                 style: .main,

@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic48Telephone.svg"
+      "filename" : "ic48Telephone.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

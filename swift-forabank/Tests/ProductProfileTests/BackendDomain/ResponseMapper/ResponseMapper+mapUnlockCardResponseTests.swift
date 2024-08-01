@@ -7,7 +7,7 @@
 
 import ProductProfile
 import XCTest
-import Services
+import RemoteServices
 
 final class ResponseMapper_mapUnlockCardResponseTests: XCTestCase {
     
@@ -92,7 +92,7 @@ final class ResponseMapper_mapUnlockCardResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MappingResult<BlockUnblockData?> {
+    ) -> ResponseMapper.MappingResult<BlockUnblockData> {
         
         ResponseMapper.mapUnblockCardResponse(data, httpURLResponse)
     }

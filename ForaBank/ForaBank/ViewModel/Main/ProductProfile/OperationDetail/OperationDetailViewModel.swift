@@ -115,6 +115,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case let payload as ModelAction.Operation.Detail.Response:
+                    
                     withAnimation {
                         self.isLoading = false
                     }
@@ -124,11 +125,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                               let product = model.product(statementId: id) else {
                             return
                         }
-                        
+                
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
-                              details.shouldHaveTemplateButton
+                              details.shouldHaveTemplateButton,
+                              statement.shouldShowTemplateButton
                         else { return }
                         
                         self.templateButton = .init(
@@ -236,7 +238,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         switch productStatement.paymentDetailType {
             
         case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
-            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+            
+            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
@@ -248,14 +251,16 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
             //     featureButtonsUpdated.append(templateButtonViewModel)
             // }
-            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
             if operationDetail.transferReference != nil {
-                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: {[weak self] in self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())})
+                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
+                    self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                })
             }
             
         default:
@@ -299,22 +304,6 @@ enum OperationDetailViewModelAction {
     struct CloseSheet: Action {}
     
     struct CloseFullScreenSheet: Action {}
-}
-
-extension OperationDetailViewModel {
-    
-    func getSpacingForDocsInHStackForOldIPhones() -> CGFloat {
-        
-        let width = UIScreen.main.bounds.width
-        
-        if width <= 360 {
-            return 32
-        } else if width <= 375 {
-            return 37
-        } else {
-            return 52
-        }
-    }
 }
 
 //MARK: - Private helpers
@@ -418,20 +407,18 @@ extension OperationDetailViewModel {
         init(amount: Double, currencyCodeNumeric: Int, operationType: OperationType, payService: PayServiceViewModel?, model: Model) {
             
             switch operationType {
-            case .credit:
+            case .credit, .creditPlan, .creditFict:
                 self.amount = "+" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
-                self.colorHex = "1C1C1C"
                 
-            case .debit:
+            case .debit, .debitPlan, .debitFict:
                 self.amount = "-" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
-                self.colorHex = "1C1C1C"
                 
             default:
                 self.amount = ""
-                self.colorHex = "1C1C1C"
             }
             
             self.payService = payService
+            self.colorHex = "1C1C1C"
         }
     }
     
@@ -488,7 +475,7 @@ extension OperationDetailViewModel {
             case .reject: return "Отказ!"
             case .success: return "Успешно!"
             case .purchase_return: return "Возврат!"
-            case .processing: return "В обработке"
+            case .processing: return "В обработке!"
             }
         }
         

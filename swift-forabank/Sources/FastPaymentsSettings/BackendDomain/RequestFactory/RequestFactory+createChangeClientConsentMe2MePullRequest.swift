@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RemoteServices
 import Tagged
 
 public extension RequestFactory {

@@ -62,7 +62,8 @@ struct ActiveContractView: View {
         ) {
             ProductCardView(
                 productCard: .init(product: $0),
-                config: config.productSelect.card.productCardConfig
+                config: config.productSelect.card.productCardConfig,
+                isSelected: contractDetails.productSelect.selected?.id == $0.id
             )
         }
     }
@@ -77,6 +78,7 @@ private extension Product {
         .init(
             id: productSelectProductID,
             type: productSelectProductType,
+            isAdditional: isAdditional,
             header: header,
             title: title,
             footer: number,
@@ -127,6 +129,7 @@ private extension Product.Look.Icon {
         
         switch self {
         case let .svg(svg): return .svg(svg)
+        case let .image(image): return .image(image)
         }
     }
 }

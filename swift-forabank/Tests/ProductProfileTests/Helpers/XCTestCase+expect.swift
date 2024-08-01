@@ -14,7 +14,7 @@ extension XCTestCase {
         _ sut: any EffectHandler<Event, Effect>,
         with effect: Effect,
         toDeliver expectedEvent: Event,
-        timeout: TimeInterval = 1,
+        timeout: DispatchTimeInterval = .microseconds(300),
         file: StaticString = #file,
         line: UInt = #line
     ) where Event: Equatable, Effect: Equatable {
@@ -32,6 +32,6 @@ extension XCTestCase {
             exp.fulfill()
         }
                 
-        wait(for: [exp], timeout: timeout)
+        wait(for: [exp], timeout: 1)
     }
 }

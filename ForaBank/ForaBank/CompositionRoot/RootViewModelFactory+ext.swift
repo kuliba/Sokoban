@@ -6,24 +6,35 @@
 //
 
 import Foundation
+import ForaTools
 import ManageSubscriptionsUI
+import OperatorsListComponents
 import PaymentSticker
 import SberQR
 import SwiftUI
 
 extension RootViewModelFactory {
     
-    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
-        httpClient: HTTPClient,
         model: Model,
+        httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        historyFilterFlag: HistoryFilterFlag,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
+        
+        let httpClient: HTTPClient = model.authenticatedHTTPClient()
+        
+        let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
+        
+        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -72,7 +83,7 @@ extension RootViewModelFactory {
             }
         }()
         
-        let navigationStateManager = makeNavigationStateManager(
+        let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
@@ -97,93 +108,140 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
-        let makeUtilitiesViewModel = makeUtilitiesViewModel(
-            httpClient: httpClient,
-            model: model,
-            flag: utilitiesPaymentsFlag
+        let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
+        ? HTTPClientStub.utilityPayments()
+        : httpClient
+        
+        let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
+            model: model
+        )
+        let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
+            log: infoNetworkLog,
+            isActive: utilitiesPaymentsFlag.isActive
         )
         
+        let unblockCardServices = Services.makeUnblockCardServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let blockCardServices = Services.makeBlockCardServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
+        let userVisibilityProductsSettingsServices = Services.makeUserVisibilityProductsSettingsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let getSVCardLimitsServices = Services.makeGetSVCardLimitsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let changeSVCardLimitServices = Services.makeChangeSVCardLimitServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
+        let makeSVCardLandig = model.landingSVCardViewModelFactory
+        
+        let landingService = Services.makeSVCardLandingServices(
+            httpClient: httpClient,
+            log: infoNetworkLog)
+
+        let productProfileServices = ProductProfileServices(
+            createBlockCardService: blockCardServices,
+            createUnblockCardService: unblockCardServices,
+            createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
+            createCreateGetSVCardLimits: getSVCardLimitsServices,
+            createChangeSVCardLimit: changeSVCardLimitServices, 
+            createSVCardLanding: landingService,
+            makeSVCardLandingViewModel: makeSVCardLandig,
+            makeInformer: {                
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+            }
+        )
+        
+        let controlPanelModelEffectHandler = ControlPanelModelEffectHandler(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            })
+        
+        let productNavigationStateManager = ProductProfileFlowManager(
+            reduce: makeProductProfileFlowReducer().reduce(_:_:),
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleModelEffect: controlPanelModelEffectHandler.handleEffect
+        )
+        
+        let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
+                
+        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+            
+            .init(
+                model,
+                dismissAction: $0,
+                updateFastAll: {
+                    model.action.send(ModelAction.Products.Update.Fast.All())
+                },
+                flowManager: templatesFlowManager
+            )
+        }
+        
+        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
+            flag: utilitiesPaymentsFlag,
+            model: model,
+            httpClient: httpClient,
+            log: logger.log
+        )
+        
+        let makePaymentsTransfersFlowManager = ptfmComposer.compose
+
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
+            if changeSVCardLimitsFlag.isActive {
+                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
+            } else {
+                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
+            }
+        }
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            navigationStateManager: navigationStateManager,
+            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
-            cvvPINServicesClient: cvvPINServicesClient
+            cvvPINServicesClient: cvvPINServicesClient,
+            productNavigationStateManager: productNavigationStateManager,
+            makeCardGuardianPanel: makeCardGuardianPanel,
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            makeTemplatesListViewModel: makeTemplatesListViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            navigationStateManager: navigationStateManager,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation
-        )
-    }
-    
-    static func makeUtilitiesViewModel(
-        httpClient: HTTPClient,
-        model: Model,
-        flag: UtilitiesPaymentsFlag
-    ) -> MakeUtilitiesViewModel {
-        
-        return { payload, completion in
-            
-            switch payload.type {
-            case .internet:
-                makeLegacyUtilitiesViewModel(payload, model).map(completion)
-                
-            case .service:
-                switch flag.rawValue {
-                case .active:
-                    let utilitiesHTTPClient = flag.isStub
-                    ? HTTPClientStub.utilityPayments()
-                    : httpClient
-                    
-                    fatalError("unimplemented")
-                    
-                case .inactive:
-                    makeLegacyUtilitiesViewModel(payload, model).map(completion)
-                }
-                
-            default:
-                return
-            }
-        }
-    }
-    
-    static func makeLegacyUtilitiesViewModel(
-        _ payload: PaymentsTransfersFactory.MakeUtilitiesPayload,
-        _ model: Model
-    ) -> PaymentsServicesViewModel? {
-        
-        guard let operators = model.operators(for: payload.type)
-        else { return nil }
-        
-        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-            titleButtonAction: { [weak model] in
-                
-                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-            },
-            navLeadingAction: payload.navLeadingAction,
-            navTrailingAction: payload.navTrailingAction
-        )
-        
-        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
-        
-        return .init(
-            searchBar: .withText("Наименование или ИНН"),
-            navigationBar: navigationBarViewModel,
-            model: model,
-            latestPayments: latestPayments,
-            allOperators: operators,
-            addCompanyAction: payload.addCompany,
-            requisitesAction: payload.requisites
         )
     }
     
@@ -192,13 +250,13 @@ extension RootViewModelFactory {
         model: Model,
         dismissAll: @escaping() -> Void
     ) -> () -> some View {
-     
+        
         return makeNavigationOperationView
         
         func operationView(
             setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
         ) -> some View {
-         
+            
             let makeOperationStateViewModel = makeOperationStateViewModel(
                 httpClient,
                 model: model
@@ -291,7 +349,7 @@ extension RootViewModelFactory {
         
         let makeDocumentButton = makeDocumentButton(
             httpClient: httpClient,
-            model: model
+            printFormType: .sticker
         )
         
         return make
@@ -309,39 +367,15 @@ extension RootViewModelFactory {
     }
 }
 
-private extension NavigationBarView.ViewModel {
-    
-    static func allRegions(
-        titleButtonAction: @escaping () -> Void,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
-    ) -> NavigationBarView.ViewModel {
-        
-        .init(
-            title: PaymentsServicesViewModel.allRegion,
-            titleButton: .init(
-                icon: .ic24ChevronDown,
-                action: titleButtonAction
-            ),
-            leftItems: [
-                NavigationBarView.ViewModel.BackButtonItemViewModel(
-                    icon: .ic24ChevronLeft,
-                    action: navLeadingAction
-                )
-            ],
-            rightItems: [
-                NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: Image("qr_Icon"),
-                    action: navTrailingAction
-                )
-            ]
-        )
-    }
-}
-
 typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
 
 extension ProductProfileViewModel {
+    
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
@@ -349,10 +383,17 @@ extension ProductProfileViewModel {
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        navigationStateManager: UserAccountNavigationStateManager,
+        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
-        cvvPINServicesClient: CVVPINServicesClient
+        cvvPINServicesClient: CVVPINServicesClient,
+        productNavigationStateManager: ProductProfileFlowManager,
+        makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -361,26 +402,27 @@ extension ProductProfileViewModel {
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
-                navigationStateManager: navigationStateManager,
+                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
+                userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
-                cvvPINServicesClient: cvvPINServicesClient
+                cvvPINServicesClient: cvvPINServicesClient,
+                productNavigationStateManager: productNavigationStateManager,
+                makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                updateInfoStatusFlag: updateInfoStatusFlag
             )
-            
-            let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
-                
-                .init(
-                    model,
-                    dismissAction: $0,
-                    updateFastAll: {
-                        model.action.send(ModelAction.Products.Update.Fast.All())
-                    })
-            }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
-                makeTemplatesListViewModel: makeTemplatesListViewModel
+                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeAlertDataUpdateFailureViewModel: { 
+                    updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+                }
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -394,42 +436,56 @@ extension ProductProfileViewModel {
                     model: model
                 )
             }
-
+            
             let operationDetailFactory = OperationDetailFactory(
                 makeOperationDetailViewModel: makeOperationDetailViewModel
+            )
+            
+            let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(
+                makeInfoProductViewModel: {
+                    
+                    return .init(
+                        model: $0.model,
+                        product: $0.productData,
+                        info: $0.info,
+                        showCvv: $0.showCVV,
+                        event: $0.events,
+                        makeIconView: $0.model.imageCache().makeIconView(for:)
+                    )
+                },
+                makeAlert: {
+                    return .init(
+                        title: $0.title,
+                        message: $0.message,
+                        primary: $0.primaryButton,
+                        secondary: $0.secondaryButton)
+                },
+                makeInformerDataUpdateFailure: {
+                    updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
+                }, 
+                makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                model: model
             )
             
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
-                navigationStateManager: navigationStateManager,
+                makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
+                userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
-                paymentsTransfersFactory: paymentsTransfersFactory, 
+                paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product,
+                product: product, 
+                productNavigationStateManager: productNavigationStateManager,
+                productProfileViewModelFactory: makeProductProfileViewModelFactory,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         }
-    }
-}
-
-private extension Model {
-    
-    func operators(
-        for type: PTSectionPaymentsView.ViewModel.PaymentsType
-    ) -> [OperatorGroupData.OperatorData]? {
-        
-        guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
-              let operatorValue = Payments.operatorByPaymentsType(type)
-        else { return nil }
-        
-        return  dictionaryAnywayOperators
-            .filter { $0.parentCode == operatorValue.rawValue }
-            .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
-            .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
     }
 }
 
@@ -461,47 +517,48 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        navigationStateManager: UserAccountNavigationStateManager,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
-        
-        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
-            
-            .init(
-                model,
-                dismissAction: $0,
-                updateFastAll: {
-                    model.action.send(ModelAction.Products.Update.Fast.All())
-                })
-        }
-        
+                
         let paymentsTransfersFactory = PaymentsTransfersFactory(
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplatesListViewModel: makeTemplatesListViewModel
+            makeTemplatesListViewModel: makeTemplatesListViewModel, 
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeAlertDataUpdateFailureViewModel: {
+                updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+            }
         )
         
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            navigationStateManager: navigationStateManager,
+            navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            navigationStateManager: navigationStateManager,
+            makeFlowManager: makePaymentsTransfersFlowManager,
+            userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory
@@ -526,7 +583,8 @@ private extension RootViewModelFactory {
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
-            navigationStateManager: navigationStateManager,
+            navigationStateManager: userAccountNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager,
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,
@@ -561,3 +619,10 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
+//extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload {
+//    
+//    var state: UtilityPrepaymentState {
+//        
+//        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
+//    }
+//}

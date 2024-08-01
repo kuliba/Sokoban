@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+@testable import CardUI
 
 final class CardViewComponentTests: XCTestCase {
     
@@ -18,10 +19,10 @@ final class CardViewComponentTests: XCTestCase {
                           name: "Visa",
                           footer: .init(balance: "170 ₽"),
                           appearance: .init(
-                            textColor: .red,
                             background: .init(
                                 color: .green,
-                                image: .ic40Card)
+                                image: .ic40Card),
+                            colors: .init(text: .red, checkBackground: .gray)
                           ))
         
         XCTAssertEqual(sut.id, 1)
@@ -34,9 +35,11 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.header.number, "78")
         XCTAssertEqual(sut.footer.balance, "170 ₽")
         
-        XCTAssertEqual(sut.appearance.textColor, .red)
         XCTAssertEqual(sut.appearance.background.color, .green)
         XCTAssertEqual(sut.appearance.background.image, .ic40Card)
+        
+        XCTAssertEqual(sut.appearance.colors.text, .red)
+        XCTAssertEqual(sut.appearance.colors.checkBackground, .gray)
     }
     
     func test_convenience_init_account_shouldSetInitialValues() {
@@ -70,13 +73,108 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.appearance.style, .profile)
     }
     
+    // MARK: - Test name, as ProductCardData
+    
+    func testNameReturnsEmptyForEmptyProduct() {
+        
+        let product = ProductData(productType: .card)
+        
+        let str = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(str, "")
+    }
+    func testNameReturnsDisplayNameForMainStyle() {
+        
+        let productData = ProductData(productType: .card)
+        
+        let name = ProductViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+    }
+    
+    func testNameReturnsMainFieldNameForMainStyle() {
+        
+        let product = ProductCardData()
+        let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Visa")
+    }
+    
+    func testNameReturnsCustomNameForProfileStyle() {
+        
+        let product = ProductCardData.product
+        product.update(with: .init(balance: 100, balanceRub: 200, customName: "Кредитная полка"))
+        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная полка")
+    }
+    
+    func testNameReturnsEmptyForEmptyCustomName() {
+        
+        let product = ProductCardData.product
+        product.update(with: .init(balance: 100, balanceRub: 200, customName: ""))
+        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+    }
+    
+    func testNameReturnsEmptyForEmptyFields() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: "")
+        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+        
+    }
+    
+    func testNameUsesMainFieldWhenCustomNameIsNil() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "Visa Gold", customName: nil)
+        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Visa Gold")
+        
+    }
+    
+    func testNameUsesCustomNameOverMainField() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "mainField", customName: "customName")
+        let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "customName")
+    }
+    
+    func testNameAddsCreditForProfileAndCreditCard() {
+        
+        let product = ProductCardData.productWithLoan
+        let name = ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная\nVisa")
+    }
+    
+    func testNameReturnsDefaultCreditCardForEmptyFieldsAndMainStyle() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: "")
+        let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная карта")
+    }
+    
+    func testNameReturnsDefaultCreditCardForNilCustomNameAndMainStyle() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: nil)
+        let name = ProductViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная карта")
+    }
+    
     // MARK: - Test owner
     
     func test_owner_shouldEmptyIfDeposit() {
         
         let product = ProductData(productType: .deposit)
         
-        let str = ProductView.ViewModel.owner(from: product)
+        let str = ProductViewModel.owner(from: product)
         
         XCTAssertEqual(str, "")
     }
@@ -85,7 +183,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductData(productType: .account)
         
-        let str = ProductView.ViewModel.owner(from: product)
+        let str = ProductViewModel.owner(from: product)
         
         XCTAssertEqual(str, "")
     }
@@ -94,7 +192,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductCardData(holderName: nil)
         
-        let str = ProductView.ViewModel.owner(from: product)
+        let str = ProductViewModel.owner(from: product)
         
         XCTAssertEqual(str, "")
     }
@@ -103,7 +201,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductCardData(holderName: "Петров")
         
-        let str = ProductView.ViewModel.owner(from: product)
+        let str = ProductViewModel.owner(from: product)
         
         XCTAssertEqual(str, "Петров")
     }
@@ -114,7 +212,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductDepositData(interestRate: 10.45)
         
-        let str = ProductView.ViewModel.rateFormatted(product: product)
+        let str = ProductViewModel.rateFormatted(product: product)
         
         XCTAssertEqual(str, "10.45%")
     }
@@ -123,7 +221,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductData(productType: .account)
         
-        let str = ProductView.ViewModel.rateFormatted(product: product)
+        let str = ProductViewModel.rateFormatted(product: product)
         
         XCTAssertNil(str)
     }
@@ -132,7 +230,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let product = ProductData(productType: .card)
         
-        let str = ProductView.ViewModel.rateFormatted(product: product)
+        let str = ProductViewModel.rateFormatted(product: product)
         
         XCTAssertNil(str)
     }
@@ -143,7 +241,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let value: String? = nil
         
-        let str = ProductView.ViewModel.maskedValue(
+        let str = ProductViewModel.maskedValue(
             value,
             replacements: .replacements
         )
@@ -155,7 +253,7 @@ final class CardViewComponentTests: XCTestCase {
         
         let value = "4444-XXXX-XXXX-1122"
         
-        let str = ProductView.ViewModel.maskedValue(
+        let str = ProductViewModel.maskedValue(
             value,
             replacements: .replacements
         )
@@ -395,7 +493,7 @@ final class CardViewComponentTests: XCTestCase {
         
         // open CVV
         sut.showCVVButtonTap()
-                
+        
         // copy number to clipboard
         sut.copyCardNumberToClipboard()
         
@@ -457,23 +555,23 @@ final class CardViewComponentTests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias FullNumber = ProductView.ViewModel.CardInfo.FullNumber
-    typealias MaskedNumber = ProductView.ViewModel.CardInfo.MaskedNumber
+    typealias FullNumber = CardInfo.FullNumber
+    typealias MaskedNumber = CardInfo.MaskedNumber
     
     private func makeSUT(
         id: ProductData.ID,
         productType: ProductType,
-        header: ProductView.ViewModel.HeaderViewModel,
+        header: HeaderDetails,
         name: String,
-        footer:ProductView.ViewModel.FooterViewModel,
-        appearance: ProductView.ViewModel.Appearance,
-        cardAction: ProductView.ViewModel.CardAction? = { _ in },
-        showCVV: ProductView.ViewModel.ShowCVV? = nil,
+        footer:FooterDetails,
+        appearance: Appearance,
+        cardAction: ProductViewModel.CardAction? = { _ in },
+        showCVV: ShowCVV? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
-        let sut =  ProductView.ViewModel(
+        let sut =  ProductViewModel(
             id: id,
             header: header,
             cardInfo: .init(
@@ -490,7 +588,7 @@ final class CardViewComponentTests: XCTestCase {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            showCvv: showCVV
+            cvvInfo: .init(showCvv: showCVV, cardType: nil, cardStatus: nil)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -500,27 +598,33 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productType: ProductType = .card,
-        cardAction: ProductView.ViewModel.CardAction? = { _ in },
-        showCVV: ProductView.ViewModel.ShowCVV? = nil,
-        size: ProductView.ViewModel.Appearance.Size = .small,
+        cardStatus: ProductCardData.StatusCard? = .active,
+        cardType: ProductCardData.CardType? = .main,
+        cardAction: ProductViewModel.CardAction? = { _ in },
+        showCVV: ShowCVV? = nil,
+        size: Appearance.Size = .small,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
-        let sut =  ProductView.ViewModel(
+        let sut =  ProductViewModel(
             id: 1,
             header: .init(number: "7854"),
             cardInfo: .classicCard,
             footer: .init(balance: "170 897 ₽"),
             statusAction: .init(status: .unblock),
             appearance: .init(
-                textColor: .clear,
                 background: .init(color: .clear, image: nil),
+                colors: .init(text: .clear, checkBackground: .gray),
                 size: size),
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            showCvv: showCVV
+            cvvInfo: .init(
+                showCvv: showCVV,
+                cardType: cardType,
+                cardStatus: cardStatus
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -530,17 +634,17 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productData: ProductData,
-        size: ProductView.ViewModel.Appearance.Size,
-        style: ProductView.ViewModel.Appearance.Style,
+        size: Appearance.Size,
+        style: Appearance.Style,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         let model: Model = .mockWithEmptyExcept()
         
         model.handleResetProfileOnboardingSettings()
         
-        let sut =  ProductView.ViewModel(
+        let sut =  ProductViewModel(
             with: productData,
             size: size,
             style: style,
@@ -707,7 +811,7 @@ private extension ProductCardData {
     }
 }
 
-private extension ProductView.ViewModel.CardInfo {
+private extension CardInfo {
     
     static let defaultValueEmptyOwner: Self = .init(
         name: "Visa",
@@ -735,4 +839,42 @@ private extension ProductView.ViewModel.CardInfo {
         fullNumber: .number,
         numberMasked: .maskedNumber
     )
+}
+
+private  extension CardViewComponentTests {
+    
+    static let productWithLoan = ProductCardData(
+        holderName: "My Card",
+        loanBaseParam: .init(loanId: 1, clientId: 1, number: "1", currencyId: 1, currencyNumber: 1, currencyCode: "1", minimumPayment: 1, gracePeriodPayment: 1, overduePayment: 1, availableExceedLimit: 1, ownFunds: 1, debtAmount: 1, totalAvailableAmount: 1, totalDebtAmount: 1))
+}
+private extension ColorData {
+    
+}
+private extension ProductCardData {
+    
+    static let product = ProductCardData(id: 1, currency: .init(description: "qwe"), number: "1", numberMasked: "1", ownerId: 1, holderName: "1", allowCredit: true, allowDebit: true, status: .active, loanBaseParam: nil, statusPc: .active, isMain: true)
+    
+    static func productWithCustomFields(
+        mainField: String = "Visa",
+        customName: String? = nil
+    ) -> ProductCardData {
+        
+        return ProductCardData(
+            id: 1,
+            productType: .card,
+            number: "1234 5678 9012 3456",
+            numberMasked: "**** **** **** 3456",
+            accountNumber: "1234567890123456",
+            balance: 1000.0,
+            balanceRub: 75000.0,
+            currency: "USD",
+            mainField: mainField,
+            additionalField: "Additional Info",
+            customName: customName,
+            productName: "Visa Gold", openDate: Date(), ownerId: 123, branchId: 456, allowCredit: true, allowDebit: true, extraLargeDesign: .test, largeDesign: .test, mediumDesign: .test, smallDesign: .test, fontDesignColor: .init(description: "qwe"), background: [.init(description: "asd")], accountId: 789, cardId: 987, name: "John Doe", validThru: Date(), status: .active, expireDate: "12/25", holderName: "Andrew", product: "Credit Card", branch: "Main Branch", miniStatement: nil, paymentSystemName: "psn", paymentSystemImage: .test, loanBaseParam: nil, statusPc: .active, isMain: true, externalId: 321, order: 1, visibility: true, smallDesignMd5hash: "md5hash", smallBackgroundDesignHash: "backgroundHash")
+    }
+    
+    static let productWithLoan = ProductCardData(
+        holderName: "My Card",
+        loanBaseParam: .init(loanId: 1, clientId: 1, number: "1", currencyId: 1, currencyNumber: 1, currencyCode: "1", minimumPayment: 1, gracePeriodPayment: 1, overduePayment: 1, availableExceedLimit: 1, ownFunds: 1, debtAmount: 1, totalAvailableAmount: 1, totalDebtAmount: 1))
 }

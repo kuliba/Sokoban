@@ -38,6 +38,12 @@ class MyProductsMoneyViewModel: ObservableObject {
         self.currencyButtonVM = .init(currencySymbol: model.settingsProductsMoney.selectedCurrencySymbol,
                                       state: .disabled,
                                       model: model)
+        updateBalance(isUpdating: false,
+                      products: model.allProducts,
+                      rates: model.centralBankRates.value,
+                      selectedCurrency: (model.settingsProductsMoney.selectedCurrencyId,
+                                         model.settingsProductsMoney.selectedCurrencySymbol))
+
         bind()
         bind(currencyButtonVM)
     }
@@ -272,19 +278,13 @@ class MyProductsMoneyViewModel: ObservableObject {
             
             withAnimation {
                 
-                self.balanceVM = .placeholder
                 self.currencyButtonVM.state = .disabled
             }
             
         } else {
             
-            let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                                                    ProductData.Filter.CardAdditionalOwnedRestrictedRule(),
-                                                    ProductData.Filter.CardAdditionalNotOwnedRestrictedRule()])
-            
-            let filteredProducts = filter.filteredProducts(products)
-            let balanceRub = filteredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
-            
+            let balanceRub = products.balanceRub()
+                        
             if let currencyDataItem = rates.first(where: { $0.id == selectedCurrency.id }) {
             
                 withAnimation {
@@ -313,7 +313,6 @@ class MyProductsMoneyViewModel: ObservableObject {
         
         NumberFormatter.decimal().string(from: NSNumber(value: value)) ?? ""
     }
-    
 }
     
 enum MyProductsMoneyViewModelAction {

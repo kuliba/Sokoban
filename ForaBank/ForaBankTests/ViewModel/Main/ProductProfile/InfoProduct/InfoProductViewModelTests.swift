@@ -9,6 +9,7 @@ import Foundation
 
 import XCTest
 @testable import ForaBank
+import AccountInfoPanel
 
 final class InfoProductViewModelTests: XCTestCase {
     
@@ -876,7 +877,39 @@ final class InfoProductViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(result.count, 1)
     }
+    
+    // MARK: - Test Data
+    
+    func test_moscowTimeRuFormatter_shouldHaveCorrectTimeZoneAndLocale() {
+        
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
+        
+        XCTAssertEqual(dateFormatter.timeZone, .init(identifier: "Europe/Moscow"))
+        XCTAssertEqual(dateFormatter.locale, .init(identifier: "ru_RU"))
+    }
+    
+    func test_moscowTimeRuFormatter_shouldFormatDateCorrectly() {
+        
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
+        let formattedDate = dateFormatter.string(from: Date.testDateInMoscowTimezone)
+        
+        XCTAssertEqual(formattedDate, "20 марта 2023")
+    }
+    
+    func test_modelAction_shouldFormatDatesCorrectly() {
+        
+        let (sut, model) = makeSUT1(product: .firstValue())
+        let spy = ValueSpy(sut.$list)
+        
+        model.action.send(ResponseDeposits.success(data: .data))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата открытия", subtitle: "29 марта 2022"))})
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата закрытия", subtitle: "29 марта 2022"))})
+    }
 
+    
     // MARK: - Helpers
     
     typealias ResponseDeposits = ModelAction.Deposits.Info.Single.Response
@@ -898,7 +931,8 @@ final class InfoProductViewModelTests: XCTestCase {
             listWithAction: .items,
             additionalList: .cardItems,
             shareButton: .shareButton,
-            model: model)
+            model: model, 
+            makeIconView: model.imageCache().makeIconView(for:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -914,7 +948,8 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let sut: InfoProductViewModel = .init(
             model: model,
-            product: card
+            product: card,
+            makeIconView: model.imageCache().makeIconView(for:)
         )
         //TODO: test memoryleak
         return sut
@@ -936,7 +971,9 @@ final class InfoProductViewModelTests: XCTestCase {
             listWithAction: .items,
             additionalList: .cardItems,
             shareButton: .shareButton,
-            model: model)
+            model: model,
+            makeIconView: model.imageCache().makeIconView(for:)
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -958,7 +995,8 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let sut = InfoProductViewModel(
             model: model,
-            product: product
+            product: product,
+            makeIconView: model.imageCache().makeIconView(for:)
         )
         
         //TODO: trackMemoryLeak for model
@@ -983,7 +1021,7 @@ final class InfoProductViewModelTests: XCTestCase {
 
 private extension InfoProductViewModel.DocumentItemModel {
     
-    static let info = ProductDetailsData.productDetailsDataFull
+    static let info = AccountInfoPanel.ProductDetails.productDetailsDataFull
     
     static let payeeName: Self = .init(
         id: .payeeName,
@@ -1055,27 +1093,31 @@ private extension InfoProductViewModel.ButtonViewModel {
     static let shareButton: Self = .init(action: {})
 }
 
-private extension ProductDetailsData {
+private extension AccountInfoPanel.ProductDetails {
     
-    static let productDetailsData: Self = .init(
+    static let productDetailsData: Self = .accountDetails(.init(
         accountNumber: "4081781000000000001",
         bic: "044525341",
         corrAccount: "30101810300000000341",
         inn: "7704113772",
         kpp: "770401001",
-        payeeName: "Иванов Иван Иванович",
-        maskCardNumber: nil,
-        cardNumber: nil)
-    
-    static let productDetailsDataFull: Self = .init(
+        payeeName: "Иванов Иван Иванович")
+    )
+            
+    static let productDetailsDataFull: Self = .cardDetails(.init(
         accountNumber: productDetailsData.accountNumber,
         bic: productDetailsData.bic,
+        cardNumber: "4444 5555 6666 1122",
         corrAccount: productDetailsData.corrAccount,
+        expireDate: "11/22/02",
+        holderName: "holderName",
         inn: productDetailsData.inn,
         kpp: productDetailsData.kpp,
+        maskCardNumber: "4444 55** **** 1122", 
         payeeName: productDetailsData.payeeName,
-        maskCardNumber: "4444 55** **** 1122",
-        cardNumber: "4444 5555 6666 1122")
+        info: "info",
+        md5hash: "")
+    )
 }
 
 private extension InfoProductViewModelTests {
@@ -1310,17 +1352,15 @@ private extension ProductData {
     }
 }
 
-private extension ProductDetailsData {
+private extension AccountInfoPanel.ProductDetails {
     
-    static let data: Self = .init(
+    static let data: Self = .accountDetails(.init(
         accountNumber: "accountNumber",
         bic: "bic",
         corrAccount: "corrAccount",
         inn: "inn",
         kpp: "kpp",
-        payeeName: "payeeName",
-        maskCardNumber: "maskCardNumber",
-        cardNumber: "cardNumber"
+        payeeName: "payeeName")
     )
 }
 
@@ -1346,4 +1386,9 @@ extension Array where Element == String {
         "Корреспондентский счет: corrAccount",
         "ИНН: inn\nКПП: kpp"
     ]
+}
+
+private extension Date {
+    
+    static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
 }

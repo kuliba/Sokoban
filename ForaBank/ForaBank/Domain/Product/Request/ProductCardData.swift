@@ -20,6 +20,7 @@ class ProductCardData: ProductData {
     let branch: String
     let miniStatement: [PaymentDataItem]?
     let paymentSystemName: String?
+    #warning("use paymentSystemImageMd5Hash")
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
     private(set) var statusPc: StatusPC?
@@ -27,7 +28,21 @@ class ProductCardData: ProductData {
     let isMain: Bool?
     let externalId: Int?
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    #warning("For compability with rest/v5/getProductListByType")
+    let statusCard: StatusCard?
+    let cardType: CardType?
+    let idParent: Int?
+    let paymentSystemImageMd5Hash: String
+    
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+        mediumDesignMd5Hash: String = "",
+        largeDesignMd5Hash: String = "",
+        xlDesignMd5Hash: String = "",
+        statusCard: StatusCard? = nil,
+        cardType: CardType? = nil,
+        idParent: Int? = nil,
+        paymentSystemImageMd5Hash: String = ""
+    ) {
 
         self.accountId = accountId
         self.cardId = cardId
@@ -45,8 +60,12 @@ class ProductCardData: ProductData {
         self.statusPc = statusPc
         self.isMain = isMain
         self.externalId = externalId
+        self.statusCard = statusCard
+        self.cardType = cardType
+        self.idParent = idParent
+        self.paymentSystemImageMd5Hash = paymentSystemImageMd5Hash
         
-        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
+        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash, mediumDesignMd5Hash: mediumDesignMd5Hash, largeDesignMd5Hash: largeDesignMd5Hash, xlDesignMd5Hash: xlDesignMd5Hash)
     }
     
     private enum CodingKeys : String, CodingKey {
@@ -55,7 +74,8 @@ class ProductCardData: ProductData {
         case accountId = "accountID"
         case externalId = "externalID"
         case statusPc = "statusPC"
-        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain
+        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain,
+            statusCard, cardType, idParent, paymentSystemImageMd5Hash
     }
     
     required init(from decoder: Decoder) throws {
@@ -78,6 +98,10 @@ class ProductCardData: ProductData {
         statusPc = try container.decodeIfPresent(ProductData.StatusPC.self, forKey: .statusPc)
         isMain = try container.decodeIfPresent(Bool.self, forKey: .isMain)
         externalId = try container.decodeIfPresent(Int.self, forKey: .externalId)
+        statusCard = try container.decodeIfPresent(StatusCard.self, forKey: .statusCard)
+        cardType = try container.decodeIfPresent(CardType.self, forKey: .cardType)
+        idParent = try container.decodeIfPresent(Int.self, forKey: .idParent)
+        paymentSystemImageMd5Hash = try container.decodeIfPresent(String.self, forKey: .paymentSystemImageMd5Hash) ?? ""
 
         try super.init(from: decoder)
     }
@@ -101,6 +125,10 @@ class ProductCardData: ProductData {
         try container.encodeIfPresent(statusPc, forKey: .statusPc)
         try container.encodeIfPresent(isMain, forKey: .isMain)
         try container.encodeIfPresent(externalId, forKey: .externalId)
+        try container.encodeIfPresent(statusCard, forKey: .statusCard)
+        try container.encodeIfPresent(cardType, forKey: .cardType)
+        try container.encodeIfPresent(idParent, forKey: .idParent)
+        try container.encodeIfPresent(paymentSystemImageMd5Hash, forKey: .paymentSystemImageMd5Hash)
 
         try super.encode(to: encoder)
     }
@@ -231,17 +259,17 @@ extension ProductCardData {
 extension ProductCardData {
 
     var isNotActivated: Bool {
-
-        guard status == .active || status == .issuedToClient,
-              statusPc == .notActivated else {
-                  return false
-              }
-
-        return true
+        
+        guard let statusCard else {  return false }
+        
+        return statusCard == .notActivated
     }
     
     var isActivated: Bool {
-        isNotActivated == false
+        
+        guard let statusCard else {  return true }
+
+        return statusCard != .notActivated
     }
     
     func activate() {
@@ -252,22 +280,29 @@ extension ProductCardData {
 
     var isBlocked: Bool {
 
-        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient || status == .blockedByClient else {
-            return false
-        }
+        guard let statusCard else {  return false }
 
-        return true
+        return statusCard == .blockedUnlockAvailable || statusCard == .blockedUnlockNotAvailable
     }
   
     
     var canBeUnblocked: Bool {
 
-        return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
+        statusCard == .blockedUnlockAvailable
     }
     
     var isCreditCard: Bool {
         
         loanBaseParam != nil
+    }
+    
+    var isAdditional: Bool {
+        
+        guard let cardType else {  return false }
+        
+        return cardType == .additionalSelf ||
+        cardType == .additionalSelfAccOwn ||
+        cardType == .additionalOther
     }
 }
 
@@ -288,4 +323,70 @@ extension ProductCardData.LoanBaseParamInfoData {
     }
     var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
     var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
+}
+
+#warning("For compability with rest/v5/getProductListByType")
+extension ProductCardData {
+    
+    enum StatusCard: String, Codable {
+        
+        case active = "ACTIVE"
+        case blockedUnlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
+        case blockedUnlockNotAvailable = "BLOCKED_UNLOCK_NOT_AVAILABLE"
+        case notActivated = "NOT_ACTIVE"
+    }
+
+    enum CardType: String, Codable {
+        
+        case main = "MAIN"
+        case regular = "REGULAR"
+        case additionalSelf = "ADDITIONAL_SELF"
+        case additionalSelfAccOwn = "ADDITIONAL_SELF_ACC_OWN"
+        case additionalOther = "ADDITIONAL_OTHER"
+        
+        
+        var isMainOrRegularOrAdditionalSelfAccOwn: Bool {
+            
+            return self == .regular ||
+            self == .main ||
+            self == .additionalSelfAccOwn
+        }
+        
+        var controlAbroadType: AbroadType {
+            switch self {
+            case .main:
+                return .control(.main)
+            case .regular:
+                return .control(.regular)
+            case .additionalSelf:
+                return .control(.additionalSelf)
+            case .additionalSelfAccOwn:
+                return .control(.additionalSelfAccOwn)
+            case .additionalOther:
+                return .control(.additionalOther)
+            }
+        }
+        
+        var limitAbroadType: AbroadType {
+            switch self {
+            case .main:
+                return .limit(.main)
+            case .regular:
+                return .limit(.regular)
+            case .additionalSelf:
+                return .limit(.additionalSelf)
+            case .additionalSelfAccOwn:
+                return .limit(.additionalSelfAccOwn)
+            case .additionalOther:
+                return .limit(.additionalOther)
+            }
+        }
+    }
+}
+
+extension ProductCardData: CustomDebugStringConvertible {
+
+    var debugDescription: String {
+        return "\(numberMasked ?? "without number") - id \(id) order -\(order)"
+    }
 }

@@ -68,9 +68,6 @@ extension PaymentsInputPhoneView {
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
-            let validator = PhoneValidator()
-            let transformer = Transformers.phoneKit
-            
             if let phone = phone {
 #if DEBUG
                 if phone.digits != "70115110217" {
@@ -94,6 +91,21 @@ extension PaymentsInputPhoneView {
 
         private func bind() {
             
+            textView.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    
+                    if let phone = state.text,
+                       state.isEditing,
+                       value.last != value.current,
+                       value.id == Payments.Parameter.Identifier.sfpPhone.rawValue,
+                       PhoneValidator().isValid(phone) {
+                        
+                        model.action.send(ModelAction.LatestPayments.BanksList.Request(prePayment: false, phone: phone))
+                    }
+                    
+                }.store(in: &bindings)
+            
             textView.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] phone in
@@ -101,7 +113,7 @@ extension PaymentsInputPhoneView {
                     update(value: phone)
 
                 }.store(in: &bindings)
-            
+                
             textView.isEditing()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -132,9 +144,23 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
+                        self?.update(value: payload.phone)
+                        if let source = self?.source.updated(value: payload.phone) {
+                         
+                            self?.update(source: source)
+                        }
+                        
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
-    
+                        
+                        if self?.source.parameter.id == Payments.Parameter.Identifier.sfpPhone.rawValue {
+                            
+                            self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(
+                                prePayment: false,
+                                phone: payload.phone
+                            ))
+                        }
+                        
                     default:
                         break
                     }

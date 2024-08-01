@@ -14,20 +14,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var model: Model = AppDelegate.shared.model
+    private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
+        with: model, 
+        logger: logger
+    )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
-    private lazy var httpClient: HTTPClient = { model.authenticatedHTTPClient()
-    }()
+    private lazy var featureFlags = loadFeatureFlags()
     private lazy var rootViewModel = RootViewModelFactory.make(
-        httpClient: httpClient,
         model: model,
+        httpClient: httpClient,
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
-        utilitiesPaymentsFlag: .init(.inactive)
+        utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
+        historyFilterFlag: featureFlags.historyFilterFlag,
+        changeSVCardLimitsFlag: featureFlags.changeSVCardLimitsFlag,
+        updateInfoStatusFlag: .init(.active)
     )
-    private lazy var rootViewFactory = RootViewFactory(
-        with: model.imageCache()
-    )
+    private lazy var rootViewFactory = RootViewFactoryComposer(
+        model: model,
+        httpClient: httpClient,
+        historyFeatureFlag: featureFlags.historyFilterFlag
+    ).compose()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -67,6 +75,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
+//MARK: - helpers
+
+private extension SceneDelegate {
+    
+    func loadFeatureFlags() -> FeatureFlags {
+        
+        let retrieve = { UserDefaults.standard.string(forKey: $0) }
+        let loader = FeatureFlagsLoader(
+            retrieve: { retrieve($0.rawValue) }
+        )
+        
+        return loader.load()
+    }
+}
+
 //MARK: - Bindings
 
 extension SceneDelegate {
@@ -81,6 +104,7 @@ extension SceneDelegate {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
                     rootViewModel.resetLink()
+                    rootViewModel.reset()
                     
                 default:
                     break

@@ -66,16 +66,16 @@ extension Model {
 
     func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) async {
         
-            do {
-
-                let result = try await paymentsProcess(operation: payload.operation)
-                self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
-                
-            } catch {
-                
-                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
-            }
+        do {
+            
+            let result = try await paymentsProcess(operation: payload.operation)
+            self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
+            self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
+        }
     }
     
     func handlePaymentSubscriptionRequest(_ payload: ModelAction.Payment.Subscription.Request) async {
@@ -825,14 +825,22 @@ extension Model {
 extension Model {
     
     /// updates operation parameters with data in operation source
-    func paymentsProcessSourceReducer(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsProcessSourceReducer(
+        service: Payments.Service,
+        source: Payments.Operation.Source,
+        parameterId: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value? {
 
         switch source {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
         case let .sfp(phone: phone, bankId: bankId):
-            return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
+            return paymentsProcessSourceReducerSFP(
+                phone: phone,
+                bankId: bankId,
+                parameterId: parameterId
+            )
             
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
@@ -880,7 +888,11 @@ extension Model {
             return paymentsProcessDependencyReducerFSSP(parameterId: parameterId, parameters: parameters)
             
         case .sfp:
-            return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
+            return paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: parameterId,
+                parameters: parameters
+            )
         
         case .requisites:
             return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
@@ -1159,7 +1171,10 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentableSelectServiceOption(for service: Payments.Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
+    func paymentsParameterRepresentableSelectServiceOption(
+        for service: Payments.Service,
+        with operators: [OperatorGroupData.OperatorData]
+    ) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:
@@ -1230,11 +1245,18 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = paymentData.phoneNumber
+                let phoneNumber = PhoneNumberWrapper().format(paymentData.phoneNumber).digits
                 let bankId = paymentData.bankId
-                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
-                                                       bankId: bankId,
-                                                       parameterId: parameterId)
+                self.action.send(ModelAction.LatestPayments.BanksList.Request(
+                    prePayment: true,
+                    phone: phoneNumber.addCodeRuIfNeeded()
+                ))
+                
+                return paymentsProcessSourceReducerSFP(
+                    phone: phoneNumber,
+                    bankId: bankId,
+                    parameterId: parameterId
+                )
                 
             case .mobile:
                 guard let latestPayment = latestPayment as? PaymentServiceData else {
@@ -1317,7 +1339,8 @@ extension Model {
                         return payload.last?.additional.sfpPhone
                         
                     default:
-                        return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                        let additions = payload.flatMap { $0.additional }
+                        return additions.first(where: { $0.fieldname == parameterId })?.fieldvalue
                     }
                     
                 case let payload as [TransferGeneralData]:

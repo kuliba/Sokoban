@@ -8,6 +8,7 @@
 import SwiftUI
 import LandingUIComponent
 import Combine
+import LandingMapping
 
 extension Model {
     
@@ -33,6 +34,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -41,6 +43,8 @@ extension Model {
                     return landingActions(card)()
                     
                 case .sticker: break
+                case .bannerAction: break
+                case .listVerticalRoundImageAction: break
                 }
             }
         )
@@ -62,15 +66,37 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
             scheduler: .main,
             config: config,
             landingActions: { event in
                 switch event {
                 case .card: break
+                case .bannerAction: break
                 case let .sticker(sticker):
                     landingActions(sticker)()
+                case .listVerticalRoundImageAction: break
                 }
             }
+        )
+    }
+    
+    func landingSVCardViewModelFactory(
+        result: Landing,
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent) -> Void
+    ) -> LandingWrapperViewModel {
+        
+        return LandingWrapperViewModel(
+            initialState: .success(.init(result)),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            limitsViewModel: limitsViewModel,
+            scheduler: .main,
+            config: config,
+            landingActions: landingActions
         )
     }
 }
@@ -87,6 +113,8 @@ private extension Model {
                 return self.transferLanding
             case .sticker:
                 return self.stickerLanding
+            default:
+                return .init(.failure(NSError(domain: "", code: 0, userInfo: [ NSLocalizedDescriptionKey: "No CurrentValueSubject"])))
             }
         }()
         return currentValueSubject
@@ -171,16 +199,13 @@ private extension Model {
         
         let httpClient: HTTPClient = {
             switch abroadType {
-            case .sticker:
-                return self.authenticatedHTTPClient()
-            default:
+            case .orderCard, .transfer:
                 return HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
+            default:
+                return self.authenticatedHTTPClient()
             }
         }()
-        
-        // TODO:
-        /* let serial = localAgent.serial(for type: T.Type) -> String? {*/
-        
+                
         let cache: Services.Cache = { codableLanding in
             
             let landingUI = UILanding(codableLanding)
@@ -198,6 +223,35 @@ private extension Model {
                     return LocalAgentDomain.AbroadOrderCard(landing: codableLanding)
                 case .sticker:
                     return LocalAgentDomain.AbroadSticker(landing: codableLanding)
+                    
+                case let .control(cardType):
+                    switch cardType {
+                        
+                    case .additionalOther:
+                        return LocalAgentDomain.AdditionalOtherCard(landing: codableLanding)
+                    case .additionalSelf:
+                        return LocalAgentDomain.AdditionalSelfCard(landing: codableLanding)
+                    case .additionalSelfAccOwn:
+                        return LocalAgentDomain.AdditionalSelfAccOwnCard(landing: codableLanding)
+                    case .main:
+                        return LocalAgentDomain.MainCard(landing: codableLanding)
+                    case .regular:
+                        return LocalAgentDomain.RegularCard(landing: codableLanding)
+                    }
+                    
+                case let .limit(cardType):
+                    switch cardType {
+                    case .additionalOther:
+                        return LocalAgentDomain.LimitAdditionalOtherCard(landing: codableLanding)
+                    case .additionalSelf:
+                        return LocalAgentDomain.LimitAdditionalSelfCard(landing: codableLanding)
+                    case .additionalSelfAccOwn:
+                        return LocalAgentDomain.LimitAdditionalSelfAccOwnCard(landing: codableLanding)
+                    case .main:
+                        return LocalAgentDomain.LimitMainCard(landing: codableLanding)
+                    case .regular:
+                        return LocalAgentDomain.LimitRegularCard(landing: codableLanding)
+                    }
                 }
             }()
             
@@ -208,5 +262,4 @@ private extension Model {
             httpClient: httpClient,
             withCache: cache)
     }
-    
 }

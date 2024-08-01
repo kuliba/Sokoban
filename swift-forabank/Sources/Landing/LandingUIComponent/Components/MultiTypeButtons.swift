@@ -5,23 +5,25 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
+import Foundation
 import Tagged
 import SwiftUI
 import Combine
 
 public extension UILanding.Multi {
     
-    struct TypeButtons: Hashable {
+    struct TypeButtons: Equatable {
         
-        public let md5hash, backgroundColor, text: String
-        public let buttonText, buttonStyle: String
-        public let textLink: String?
-        public let action: Action?
-        public let detail: Detail?
+        let id: UUID
+        let md5hash, backgroundColor, text: String
+        let buttonText, buttonStyle: String
+        let textLink: String?
+        let action: Action?
+        let detail: Detail?
         
-        public struct Detail: Hashable {
-            public let groupId: GroupId
-            public let viewId: ViewId
+        public struct Detail: Equatable {
+            let groupId: GroupId
+            let viewId: ViewId
             
             public init(groupId: GroupId, viewId: ViewId) {
                 self.groupId = groupId
@@ -29,14 +31,14 @@ public extension UILanding.Multi {
             }
         }
         
-        public struct Action: Hashable {
+        public struct Action: Equatable {
             
-            public let type: String
-            public let outputData: OutputData?
+            let type: String
+            let outputData: OutputData?
             
             public struct OutputData: Hashable {
-                public let tarif: Tarif
-                public let type: TypeData
+                let tarif: Tarif
+                let type: TypeData
                 
                 public init(tarif: Tarif, type: TypeData) {
                     self.tarif = tarif
@@ -52,6 +54,7 @@ public extension UILanding.Multi {
             enum ActionType: String {
                 
                 case goMain
+                case openLink
                 case orderCard
                 case sticker
             }
@@ -63,6 +66,7 @@ public extension UILanding.Multi {
         }
         
         public init(
+            id: UUID = UUID(),
             md5hash: String,
             backgroundColor: String,
             text: String,
@@ -72,6 +76,7 @@ public extension UILanding.Multi {
             action: Action?,
             detail: Detail?
         ) {
+            self.id = id
             self.md5hash = md5hash
             self.backgroundColor = backgroundColor
             self.text = text
@@ -124,6 +129,12 @@ extension MultiTypeButtonsView {
             return images[byImageLink]
         }
         
+        func openUrl(for link: String?) {
+            
+            guard let link else { return }
+            action(.card(.openUrl(link)))
+        }
+        
         func handler(for item: UILanding.Multi.TypeButtons) {
             
             if let actionValue = item.action {
@@ -131,18 +142,19 @@ extension MultiTypeButtonsView {
                 actionValue.actionType.map {
                     
                     switch $0 {
-                        
                     case .goMain:
-                        
                         action(.card(.goToMain))
-                    case .orderCard:
                         
+                    case .orderCard:
                         if let outputData = actionValue.outputData {
                             self.orderCard(outputData.tarif.rawValue, outputData.type.rawValue)
                         }
-                    case .sticker:
                         
+                    case .sticker:
                         action(.sticker(.order))
+                        
+                    case .openLink:
+                        break
                     }
                 }
             } else if let detailDestination = item.detailDestination {
@@ -158,14 +170,6 @@ extension UILanding.Multi.TypeButtons {
     func imageRequests() -> [ImageRequest] {
         
         return [ImageRequest.md5Hash(self.md5hash)]
-    }
-    
-    func openUrl(
-        _ link: String?
-    )  {
-        if let link, let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
     }
 }
 

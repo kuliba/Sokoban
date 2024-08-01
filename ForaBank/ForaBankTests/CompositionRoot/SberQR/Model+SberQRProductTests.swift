@@ -19,7 +19,8 @@ extension Model {
         
         allProducts.mapToSberQRProducts(
             response: response,
-            formatBalance: formatBalance
+            formatBalance: formatBalance,
+            getImage: { _ in .none }
         )
     }
     
@@ -32,7 +33,8 @@ extension Model {
         allProducts.mapToSberQRProducts(
             productTypes: productTypes,
             currencies: currencies, 
-            formatBalance: formatBalance
+            formatBalance: formatBalance,
+            getImage: { _ in .none }
         )
     }
 }
@@ -207,7 +209,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         
         let loan = anyProduct(id: 1234, productType: .loan)
         
-        XCTAssertNil(loan.sberQRProduct { _ in "" })
+        XCTAssertNil(loan.productSelectProduct { _ in "" } getImage: { _ in .none })
     }
     
     func test_sberQRProduct_shouldReturnCardFromCard() throws {
@@ -215,7 +217,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeCardProduct(id: id)
         
-        let product = try XCTUnwrap(card.sberQRProduct { _ in "" })
+        let product = try XCTUnwrap(card.productSelectProduct { _ in "" } getImage: { _ in .none })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .card)
@@ -231,7 +233,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeAccountProduct(id: id)
         
-            let product = try XCTUnwrap(card.sberQRProduct { _ in "" })
+            let product = try XCTUnwrap(card.productSelectProduct { _ in "" } getImage: { _ in .none })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .account)
@@ -253,7 +255,8 @@ private extension Model {
         allProducts.mapToSberQRProducts(
             productTypes: productTypes,
             currencies: currencies,
-            formatBalance: { _ in "" }
+            formatBalance: { _ in "" },
+            getImage: { _ in .none }
         )
     }
 }

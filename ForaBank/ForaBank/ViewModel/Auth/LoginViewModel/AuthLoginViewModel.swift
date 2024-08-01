@@ -317,6 +317,12 @@ private extension AuthLoginViewModel {
                 return { [weak self] in
                     self?.orderCard(cardTarif, cardType) }
                 
+            case let .openUrl(link):
+                return {
+                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                }
             }
     }
     
@@ -376,15 +382,19 @@ private extension AuthLoginViewModel {
     }
     
     func makeCardNextButton(
-        with cardState: CardViewModel.State,
-        _ sessionState: SessionState,
-        fcmToken: String?
+       with cardState: CardViewModel.State,
+       _ sessionState: SessionState,
+       fcmToken: String?
     ) -> CardViewModel.NextButtonViewModel? {
         
         switch (cardState, sessionState, fcmToken) {
-        case (.ready(let cardNumber), .active, .some):
-            LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
+        case (.ready(let cardNumber), .active, .some), (.ready(let cardNumber), .active, .none),
+             (.ready(let cardNumber), .activating, .some), (.ready(let cardNumber), .activating, .none),
+             (.ready(let cardNumber), .expired, .some), (.ready(let cardNumber), .expired, .none),
+             (.ready(let cardNumber), .inactive, .some), (.ready(let cardNumber), .inactive, .none),
+             (.ready(let cardNumber), .failed(_), .some), (.ready(let cardNumber), .failed(_), .none):
             
+            LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: \(sessionState.debugDescription)")
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
             
             return CardViewModel.NextButtonViewModel(

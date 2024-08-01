@@ -27,7 +27,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
                 link: "7",
                 appStore: "8",
                 googlePlay: "9",
-                detail: .init(groupId: "10", viewId: "11"))],
+                detail: .init(groupId: "10", viewId: "11"), 
+                action: .init(type: "actionType"))],
             images: ["1":.bolt],
             selectDetail:  { _ in }
         )
@@ -46,7 +47,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(sut.data.list.first?.googlePlay, "9")
         XCTAssertEqual(sut.data.list.first?.detail?.groupId, "10")
         XCTAssertEqual(sut.data.list.first?.detail?.viewId, "11")
-        
+        XCTAssertEqual(sut.data.list.first?.action?.type, "actionType")
+
         XCTAssertEqual(sut.images.count, 1)
         XCTAssertEqual(sut.images.first?.key, "1")
         XCTAssertEqual(sut.images.first?.value, .bolt)
@@ -80,16 +82,32 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(startValue, .initinalValue)
     }
     
-    func test_itemAction_detailsNotNil_shouldCallDetails() {
+    func test_itemAction_detailsNotNilCanOpenTrue_shouldCallDetails() {
         
         var startValue: ActionType = .initinalValue
         
         ViewModel.action(
             item: createItem(detail: .init(groupId: "1", viewId: "2")),
-            selectDetail: { _ in startValue = .selectDetail }
+            selectDetail: { _ in startValue = .selectDetail }, 
+            action: { _ in },
+            canOpenDetail: { _ in true }
         )
         
         XCTAssertEqual(startValue, .selectDetail)
+    }
+    
+    func test_itemAction_detailsNotNilCanOpenFalse_shouldCallNothing() {
+        
+        var startValue: ActionType = .initinalValue
+        
+        ViewModel.action(
+            item: createItem(detail: .init(groupId: "1", viewId: "2")),
+            selectDetail: { _ in startValue = .selectDetail },
+            action: { _ in },
+            canOpenDetail: { _ in false }
+        )
+        
+        XCTAssertEqual(startValue, .initinalValue)
     }
     
     func test_itemAction_detailsNilLinkNotNil_shouldCallLink() {
@@ -98,7 +116,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         
         ViewModel.action(
             item: createItem(link: "aaa"),
-            selectDetail: { _ in startValue = .selectDetail }
+            selectDetail: { _ in startValue = .selectDetail },
+            action: { _ in },
+            canOpenDetail: { _ in false }
         )
         
         XCTAssertEqual(startValue, .initinalValue)
@@ -255,7 +275,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         link: String? = nil,
         appStore: String? = nil,
         googlePlay: String? = nil,
-        detail: Item.Detail? = nil
+        detail: Item.Detail? = nil,
+        action: Item.Action? = nil
     ) -> Item {
         
         .init(
@@ -265,7 +286,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
             link: link,
             appStore: appStore,
             googlePlay: googlePlay,
-            detail: detail)
+            detail: detail,
+            action: action
+        )
     }
         
     private func makeSUT(
@@ -275,7 +298,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         dropButtonCloseTitle: String? = "dropButtonCloseTitle",
         items: [Item] = [.default],
         images: [String : Image] = [:],
-        selectDetail: @escaping SelectDetail = { _ in }
+        action: @escaping (LandingEvent) -> Void = {_ in },
+        selectDetail: @escaping SelectDetail = { _ in },
+        canOpenDetail: @escaping UILanding.CanOpenDetail = {_ in false }
     ) -> ListVerticalRoundImageView.ViewModel {
         
         return .init(
@@ -286,7 +311,10 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
                 dropButtonCloseTitle: dropButtonCloseTitle,
                 list: items),
             images: images,
-            selectDetail: selectDetail)
+            action: action,
+            selectDetail: selectDetail,
+            canOpenDetail: canOpenDetail
+        )
     }
     
     private enum ActionType {
@@ -308,5 +336,6 @@ private extension UILanding.List.VerticalRoundImage.ListItem{
         link: "link",
         appStore: "appStore",
         googlePlay: "googlePlay",
-        detail: .init(groupId: "1", viewId: "2"))
+        detail: .init(groupId: "1", viewId: "2"), 
+        action: nil)
 }

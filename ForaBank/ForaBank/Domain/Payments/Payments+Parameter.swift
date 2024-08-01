@@ -47,6 +47,25 @@ extension PaymentsParameterRepresentable {
 //MARK: - Parameter Identifier
 
 extension Payments.Parameter {
+
+    static let systemIdentifiers: [Payments.Parameter.Identifier] = [
+        .category,
+        .service,
+        .`operator`,
+        .header,
+        .product,
+        .amount,
+        .code,
+        .fee,
+        .`continue`,
+        .mock,
+        .subscribe,
+        .productTemplate,
+        .productTemplateName,
+    ]
+}
+
+extension Payments.Parameter {
     
     enum Identifier: String {
         
@@ -274,9 +293,20 @@ extension Payments {
         let isEditable: Bool
         let description: String?
         let group: Payments.Parameter.Group?
+        let validator: Payments.Validation.RulesSystem?
+        let keyboardType: KeyboardType
         
-        init(_ parameter: Parameter, icon: Icon? = nil, title: String, placeholder: String, options: [Option], isEditable: Bool = true, description: String? = nil, group: Payments.Parameter.Group? = nil) {
-            
+        init(_ parameter: Parameter,
+             icon: Icon? = nil,
+             title: String,
+             placeholder: String,
+             options: [Option],
+             isEditable: Bool = true,
+             description: String? = nil,
+             group: Payments.Parameter.Group? = nil,
+             validator: Payments.Validation.RulesSystem? = nil,
+             keyboardType: KeyboardType = .default
+        ) {
             self.parameter = parameter
             self.icon = icon
             self.title = title
@@ -285,11 +315,17 @@ extension Payments {
             self.isEditable = isEditable
             self.description = description
             self.group = group
+            self.validator = validator
+            self.keyboardType = keyboardType
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
             ParameterSelect(.init(id: parameter.id, value: value), icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group)
+        }
+        
+        func updated(validator: Payments.Validation.RulesSystem, keyboardType: KeyboardType) -> PaymentsParameterRepresentable {
+            Payments.ParameterSelect(parameter, icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group, validator: validator, keyboardType: keyboardType)
         }
         
         enum Icon {
@@ -361,13 +397,18 @@ extension Payments {
             ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
         }
         
+        func updated(options: [ParameterSelectBank.Option]) -> PaymentsParameterRepresentable {
+            
+            ParameterSelectBank(.init(id: parameter.id, value: parameter.value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
+        }
+        
         struct Option: Identifiable, Equatable {
     
             let id: String
             let name: String
             let subtitle: String?
             let icon: ImageData?
-            
+            let isFavorite: Bool
             let searchValue: String
         }
         
@@ -1119,6 +1160,26 @@ extension Payments {
             
             case image(ImageData)
             case name(String)
+            
+            init?(source: Payments.Operation.Source?) {
+                
+                switch source {
+                    
+                    case .sfp(_, BankID.foraBankID.rawValue):
+                        return nil
+                    
+                    default:
+                        self = .sbpIcon
+                }
+            }
+            
+            init?(parameters: [PaymentsParameterRepresentable]) {
+                
+                guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+                      bankParameterValue != BankID.foraBankID.rawValue
+                else { return nil }
+                self = .sbpIcon
+            }
         }
         
         enum Style {
@@ -1180,12 +1241,22 @@ extension Payments {
         
         init(with subscriptionData: C2BSubscriptionData) {
             
-            self.init(.init(id: UUID().uuidString, value: subscriptionData.brandName), icon: subscriptionData.brandIcon, description: nil, style: .small)
+            self.init(
+                .init(id: UUID().uuidString, value: subscriptionData.brandName),
+                icon: subscriptionData.brandIcon,
+                description: subscriptionData.legalName,
+                style: .small
+            )
         }
         
         init(with parameter: PaymentParameterSubscriber) {
             
-            self.init(.init(id: parameter.id, value: parameter.value), icon: parameter.icon, description: parameter.subscriptionPurpose, style: parameter.style)
+            self.init(
+                .init(id: parameter.id, value: parameter.value),
+                icon: parameter.icon,
+                description: parameter.description,
+                style: parameter.style
+            )
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -1305,6 +1376,15 @@ extension Payments {
         }
     }
 }
+extension Payments.ParameterSelect {
+    
+    enum KeyboardType {
+        
+        case `default`
+        case number
+    }
+}
+
 
 extension Payments.ParameterSelect.Option {
 
@@ -1529,9 +1609,9 @@ extension Payments {
             self.url = url
         }
         
-        init?(with subsctiptionData: C2BSubscriptionData) {
+        init?(with subscriptionData: C2BSubscriptionData) {
             
-            guard let url = subsctiptionData.redirectUrl else {
+            guard let url = subscriptionData.redirectUrl else {
                 return nil
             }
             
@@ -1778,4 +1858,46 @@ extension Payments.ParameterButton.Style: Decodable {
             throw Payments.Error.unsupported
         }
     }
+}
+
+extension PaymentParameterSubscriber {
+    
+    var description: String? {
+        
+        if let legalName {
+            
+            if let subscriptionPurpose {
+                
+                return legalName + "\n" + subscriptionPurpose
+            }
+            return legalName
+            
+        } else {
+            
+            return subscriptionPurpose
+        }
+    }
+}
+
+extension Payments.ParameterSelectBank.Option {
+    
+    var text: String {
+        
+        switch subtitle {
+        case let .some(subtitle):
+            return subtitle
+        case .none:
+            return name
+        }
+    }
+}
+
+extension Payments.ParameterHeader.Icon {
+    
+    static let sbpIcon: Self = .name("ic24Sbp")
+}
+
+extension Payments.ParameterSelect {
+    
+    static let kppTitle: String = "КПП получателя"
 }

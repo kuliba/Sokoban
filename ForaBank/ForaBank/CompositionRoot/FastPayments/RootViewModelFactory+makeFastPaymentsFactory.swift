@@ -9,6 +9,8 @@ import C2BSubscriptionUI
 import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
+import SwiftUI
+import UIPrimitives
 
 extension RootViewModelFactory {
     
@@ -64,7 +66,7 @@ private extension Model {
         bankListFullInfo.value
             .filter {
                 $0.receiverList.contains("ME2MEPULL")
-                && $0.memberId != "100000000217"
+                && $0.memberId != BankID.foraBankID.rawValue
             }
             .compactMap(FastPaymentsSettings.Bank.init(info:))
             .sorted(by: \.name)
@@ -98,9 +100,31 @@ private extension Model {
             self?.formattedBalance(of: $0) ?? ""
         }
         
-        return allProducts.compactMap {
-            $0.fastPaymentsProduct(formatBalance: formatBalance)
+        let getLook = { [weak self] in
+                
+            self?.look(of: $0) ?? .default
         }
+        
+        return allProducts.compactMap {
+            $0.fastPaymentsProduct(formatBalance: formatBalance, getLook: getLook)
+        }
+    }
+    
+    func look(
+        of productData: ProductData
+    ) -> FastPaymentsSettings.Product.Look {
+       
+        .init(
+            background: .image(self.images.value[productData.largeDesignMd5Hash]?.image ?? .cardPlaceholder),
+            color: productData.backgroundColor, 
+            icon: {
+                if let image = productData.clover.image {
+                    return .image(image)
+                } else {
+                    return .svg("")
+                }
+            }()
+        )
     }
     
     func getC2BSubscriptionProducts(
@@ -112,17 +136,28 @@ private extension Model {
         }
         
         return allProducts.compactMap {
-            $0.c2bSubscriptionUIProduct(formatBalance: formatBalance)
+            $0.c2bSubscriptionUIProduct(formatBalance: formatBalance, getImage: { self.images.value[$0]?.image })
         }
     }
+}
+
+private extension FastPaymentsSettings.Product.Look {
+    
+    static let `default`: Self = .init(
+        background: .image(.cardPlaceholder),
+        color: .clear,
+        icon: .image(.cardPlaceholder))
 }
 
 private extension ProductData {
     
     func fastPaymentsProduct(
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getLook: @escaping (ProductData) -> FastPaymentsSettings.Product.Look
     ) -> FastPaymentsSettings.Product? {
      
+        let look = getLook(self)
+
         switch productType {
         case .account:
             guard let account = self as? ProductAccountData,
@@ -130,12 +165,16 @@ private extension ProductData {
                   account.currency == rub
             else { return nil }
             
-            return account.fpsProduct(formatBalance: formatBalance)
+            
+            return account.fpsProduct(
+                formatBalance: formatBalance,
+                look: look
+            )
             
         case .card:
             guard let card = self as? ProductCardData,
                   let accountID = card.accountId,
-                  (card.isMain ?? false),
+                  (card.cardType?.isMainOrRegularOrAdditionalSelfAccOwn ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub
@@ -143,7 +182,8 @@ private extension ProductData {
             
             return card.fpsProduct(
                 accountID: accountID,
-                formatBalance: formatBalance
+                formatBalance: formatBalance,
+                look: look
             )
             
         default:
@@ -152,7 +192,8 @@ private extension ProductData {
     }
     
     func c2bSubscriptionUIProduct(
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
     ) -> C2BSubscriptionUI.Product? {
         
         switch productType {
@@ -162,12 +203,12 @@ private extension ProductData {
                   account.currency == rub
             else { return nil }
             
-            return account.c2bProduct(formatBalance: formatBalance)
+            return account.c2bProduct(formatBalance: formatBalance, getImage: getImage)
             
         case .card:
             guard let card = self as? ProductCardData,
                   let accountID = card.accountId,
-                  (card.isMain ?? false),
+                  (card.cardType?.isMainOrRegularOrAdditionalSelfAccOwn ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub
@@ -175,7 +216,8 @@ private extension ProductData {
             
             return card.c2bProduct(
                 accountID: accountID,
-                formatBalance: formatBalance
+                formatBalance: formatBalance,
+                getImage: getImage
             )
             
         default:
@@ -189,26 +231,25 @@ private extension ProductData {
 private extension ProductAccountData {
     
     func fpsProduct(
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        look: FastPaymentsSettings.Product.Look
     ) -> FastPaymentsSettings.Product {
         
         .init(
             id: .account(.init(id)),
-            header: "Счет списания",
+            isAdditional: false,
+            header: "Счет списания и зачисления",
             title: displayName,
             number: displayNumber ?? "",
             amountFormatted: formatBalance(self),
             balance: .init(balanceValue),
-            look: .init(
-                background: .svg(largeDesign.description),
-                color: backgroundColor.description,
-                icon: .svg(smallDesign.description)
-            )
+            look: look
         )
     }
     
     func c2bProduct(
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
     ) -> C2BSubscriptionUI.Product {
         
         .init(
@@ -216,7 +257,7 @@ private extension ProductAccountData {
             title: "Счет списания",
             name: displayName,
             number: displayNumber ?? "",
-            icon: .svg(smallDesign.description),
+            icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
             balance: formatBalance(self)
         )
     }
@@ -226,27 +267,26 @@ private extension ProductCardData {
     
     func fpsProduct(
         accountID: Int,
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        look: FastPaymentsSettings.Product.Look
     ) -> FastPaymentsSettings.Product {
         
         .init(
             id: .card(.init(id), accountID: .init(accountID)),
-            header: "Счет списания",
+            isAdditional: isAdditional,
+            header: "Счет списания и зачисления",
             title: displayName,
             number: displayNumber ?? "",
             amountFormatted: formatBalance(self),
             balance: .init(balanceValue),
-            look: .init(
-                background: .svg(largeDesign.description),
-                color: backgroundColor.description,
-                icon: .svg(smallDesign.description)
-            )
+            look: look
         )
     }
     
     func c2bProduct(
         accountID: Int,
-        formatBalance: @escaping (ProductData) -> String
+        formatBalance: @escaping (ProductData) -> String,
+        getImage: @escaping (Md5hash) -> Image?
     ) -> C2BSubscriptionUI.Product {
         
         .init(
@@ -254,8 +294,45 @@ private extension ProductCardData {
             title: "Счет списания",
             name: displayName,
             number: displayNumber ?? "",
-            icon: .svg(smallDesign.description),
+            icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
             balance: formatBalance(self)
         )
+    }
+}
+
+extension ProductData {
+    
+    var clover: Icon {
+        
+        if let cloverImage {
+            return .image(cloverImage)
+        }
+        return .svg("")
+    }
+    
+    var cloverImage: Image? {
+        
+        if let cloverUIImage {
+            return .init(uiImage: cloverUIImage)
+        }
+        return nil
+    }
+    
+    var cloverUIImage: UIImage? {
+        
+        guard let card = self as? ProductCardData else { return nil }
+        
+        let isDark = (background.first?.description == "F6F6F7")
+        
+        switch card.cardType {
+        case .main:
+            return .init( named: isDark ? "ic16MainCardGreyFixed2" : "ic16MainCardWhiteFixed2")
+            
+        case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+            return .init(named: isDark ? "ic16AdditionalCardGrey" : "ic16AdditionalCardWhite")
+            
+        default:
+            return nil
+        }
     }
 }

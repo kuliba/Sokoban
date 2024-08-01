@@ -13,6 +13,7 @@ import os
 import ServerAgent
 import SymmetricEncryption
 import UserModel
+import GetProductListByTypeService
 
 class Model {
     
@@ -32,7 +33,7 @@ class Model {
     
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-
+    
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -123,6 +124,16 @@ class Model {
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
     
+    // MARK: GetProductListByTypev5
+    typealias GetProductListByTypeResponse = GetProductListByTypeService.ProductResponse
+    
+    typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
+    typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
+
+    let updateInfo: CurrentValueSubject<UpdateInfo, Never>
+
+    var getProducts: GetProductListByType
+
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol
@@ -228,6 +239,8 @@ class Model {
         self.clientInform = .init(.notRecieved)
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
+        self.getProducts = { _, _ in }
+        self.updateInfo = .init(.init())
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -1489,6 +1502,62 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadSticker.self)
                 .map(\.landing)
                 .map(UILanding.init)
+       
+        case let .control(cardType):
+            switch cardType {
+            case .main:
+                return load(type: LocalAgentDomain.MainCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .regular:
+                return load(type: LocalAgentDomain.RegularCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelf:
+                return load(type: LocalAgentDomain.AdditionalSelfCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelfAccOwn:
+                return load(type: LocalAgentDomain.AdditionalSelfAccOwnCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalOther:
+                return load(type: LocalAgentDomain.AdditionalOtherCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+            }
+            
+        case let .limit(cardType):
+            switch cardType {
+            case .main:
+                return load(type: LocalAgentDomain.LimitMainCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+
+            case .regular:
+                return load(type: LocalAgentDomain.LimitRegularCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelf:
+                return load(type: LocalAgentDomain.LimitAdditionalSelfCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelfAccOwn:
+                return load(type: LocalAgentDomain.LimitAdditionalSelfAccOwnCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+
+            case .additionalOther:
+                return load(type: LocalAgentDomain.LimitAdditionalOtherCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+            }
         }
     }
 }
@@ -1516,6 +1585,56 @@ extension LocalAgentDomain {
     }
     
     struct AbroadSticker: Codable {
+        
+        let landing: Landing
+    }
+
+    struct MainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct RegularCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AdditionalSelfCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalSelfAccOwnCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalOtherCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitMainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitRegularCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitAdditionalSelfCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitAdditionalSelfAccOwnCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitAdditionalOtherCard: Codable {
         
         let landing: Landing
     }

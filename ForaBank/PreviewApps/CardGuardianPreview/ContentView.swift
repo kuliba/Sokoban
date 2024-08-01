@@ -2,64 +2,148 @@
 //  ContentView.swift
 //  CardGuardianPreview
 //
-//  Created by Andryusina Nataly on 02.02.2024.
+//  Created by Andryusina Nataly on 01.03.2024.
 //
 
 import SwiftUI
-import CardGuardianModule
+import ProductProfileComponents
 import ProductProfile
+import RxViewModel
+
+typealias ProductProfileViewModel = RxViewModel<ProductProfileNavigation.State, ProductProfileNavigation.Event, ProductProfileNavigation.Effect>
 
 struct ContentView: View {
     
+    let buttons: [CardGuardianState._Button]
+    let topUpCardButtons: [TopUpCardState.PanelButton]
+    @StateObject private var viewModel: ProductProfileViewModel
+    
+    init(
+        buttons: [CardGuardianState._Button],
+        topUpCardButtons: [TopUpCardState.PanelButton],
+        accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
+        accountDetails: [ListItem],
+        cardDetails: [ListItem],
+        sheetButtons: [ProductDetailsSheetState.PanelButton]
+    ) {
+        self.buttons = buttons
+        self.topUpCardButtons = topUpCardButtons
+        self._viewModel = .init(
+            wrappedValue: .preview(
+                buttons: buttons,
+                topUpCardButtons: topUpCardButtons,
+                accountInfoPanelButtons: accountInfoPanelButtons,
+                accountDetails: accountDetails,
+                detailsSheetButtons: sheetButtons, 
+                cardDetails: cardDetails
+            )
+        )
+    }
+    
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             
-            ZStack {
+            VStack {
                 
-                NavigationLink(destination: destination()) {
+                VStack {
                     
-                    Image(systemName: "person.text.rectangle.fill")
-                        .renderingMode(.original)
-                        .foregroundColor(Color(.systemMint))
-                        .font(.system(size: 120))
+                    ActivateSliderWrapperView(
+                        viewModel: .init(
+                            initialState: .initialState,
+                            reduce: CardActivateReducer.reduceForPreview(),
+                            handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()),
+                        config: .default)
+                    .padding()
                 }
+                .background(.gray)
                 
-                CvvButtonView.cardUnblokedOnMain.offset(x: 40, y: 30)
-                CvvCardBlocked.card.offset(x: -40, y: 30)
+                VStack {
+                    
+                    ActivateSliderWrapperView(
+                        viewModel: .init(
+                            initialState: .initialState,
+                            reduce: CardActivateReducer.reduceForPreview(),
+                            handleEffect: CardActivateEffectHandler.handleEffectActivateFailure()),
+                        config: .default)
+                    .padding()
+                }
+                .background(.gray)
+                
+                ZStack {
+                    
+                    NavigationLink(destination: destination()) {
+                        
+                        Image(systemName: "person.text.rectangle.fill")
+                            .renderingMode(.original)
+                            .foregroundColor(Color(.systemMint))
+                            .font(.system(size: 120))
+                    }
+                    
+                    CvvButtonView(
+                        state: viewModel.state.alert,
+                        event: {
+                            
+                            switch $0 {
+                            case .showAlert:
+                                viewModel.event(.showAlert(.alertCVV()))
+                                
+                            case .closeAlert:
+                                viewModel.event(.closeAlert)
+                            }
+                        }
+                    )
+                    .offset(x: 40, y: 30)
+                    
+                    CvvCardBlockedView(
+                        state: viewModel.state.alert,
+                        event: {
+                            
+                            switch $0 {
+                            case .showAlert:
+                                viewModel.event(.showAlert(.alertCardBlocked()))
+                                
+                            case .closeAlert:
+                                viewModel.event(.closeAlert)
+                            }
+                        }
+                    )
+                    .offset(x: -40, y: 30)
+                }
             }
         }
     }
     
     private func destination() -> some View {
         
-        VStack(alignment: .leading) {
+        VStack() {
             
-            HStack {
-                Text("Aктивна, на главном")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.cardUnblokedOnMain
-            }
+            ControlButtonView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
             
-            HStack {
-                Text("Заблокирована (можно разблокировать)")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.cardBlockedHideOnMain
-            }
+            TopUpCardView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
             
-            HStack {
-                Text("Заблокирована (нельзя разблокировать)")
-                    .lineLimit(2)
-                Spacer()
-                ControlButtonView.cardBlockedUnlockNotAvailable
-            }
+            AccountInfoPanelView.init(
+                state: viewModel.state,
+                event: viewModel.event
+            )
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(
+        buttons: .preview,
+        topUpCardButtons: .previewRegular,
+        accountInfoPanelButtons: .previewRegular,
+        accountDetails: .accountItems,
+        cardDetails: .cardItems, 
+        sheetButtons: .previewRegular
+    )
 }

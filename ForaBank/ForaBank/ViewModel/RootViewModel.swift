@@ -28,6 +28,8 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
+    private let productNavigationStateManager: ProductProfileFlowManager
+
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -37,6 +39,7 @@ class RootViewModel: ObservableObject, Resetable {
     init(
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
@@ -47,6 +50,7 @@ class RootViewModel: ObservableObject, Resetable {
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
+        self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -289,15 +293,18 @@ class RootViewModel: ObservableObject, Resetable {
                         case let .success(appInfo):
                             LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.AppVersion.Response, success, info: \(appInfo)")
                             
-                            if let appVersion = self.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
+                            if let appVersion = self.infoDictionary?["CFBundleShortVersionString"] as? String {
                                 
-                                self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
-                                    guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
-                                        return
-                                    }
-                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                let compareVersion = appInfo.version.compareVersion(to: appVersion)
+                                
+                                switch compareVersion {
+                                case .orderedDescending:
                                     
-                                }))
+                                    self.alert = self.createAlertAppVersion(appInfo)
+                                    
+                                default:
+                                    break
+                                }
                             }
                             
                         case let .failure(error):
@@ -385,6 +392,27 @@ class RootViewModel: ObservableObject, Resetable {
         
         return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
+    
+    func createAlertAppVersion(
+        _ appInfo: AppInfo
+    ) -> Alert.ViewModel {
+        
+        .init(
+            title: "Новая версия",
+            message: "Доступна новая версия \(appInfo.version).",
+            primary: .init(type: .default, title: "Не сейчас", action: {}),
+            secondary: .init(
+                type: .default,
+                title: "Обновить",
+                action: {
+                    guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    
+                })
+        )
+    }
 }
 
 private extension Model {

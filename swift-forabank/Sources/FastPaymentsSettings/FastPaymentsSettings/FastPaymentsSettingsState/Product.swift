@@ -7,10 +7,12 @@
 
 import Foundation
 import Tagged
+import SwiftUI
 
 public struct Product: Equatable, Identifiable {
     
     public let id: ID
+    public let isAdditional: Bool
     public let header: String
     public let title: String
     public let number: String
@@ -20,6 +22,7 @@ public struct Product: Equatable, Identifiable {
     
     public init(
         id: ID,
+        isAdditional: Bool,
         header: String,
         title: String,
         number: String,
@@ -28,6 +31,7 @@ public struct Product: Equatable, Identifiable {
         look: Look
     ) {
         self.id = id
+        self.isAdditional = isAdditional
         self.header = header
         self.title = title
         self.number = number
@@ -53,12 +57,12 @@ public extension Product {
     struct Look: Equatable {
         
         public let background: Icon
-        public let color: String
+        public let color: Color
         public let icon: Icon
         
         public init(
             background: Icon,
-            color: String,
+            color: Color,
             icon: Icon
         ) {
             self.background = background
@@ -73,5 +77,6 @@ public extension Product.Look {
     enum Icon: Equatable {
         
         case svg(String)
+        case image(Image)
     }
 }

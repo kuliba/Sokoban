@@ -23,13 +23,21 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            productProfileServices: .preview,
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -46,13 +54,21 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            productProfileServices: .preview,
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
 }

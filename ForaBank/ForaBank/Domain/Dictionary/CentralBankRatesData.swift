@@ -14,6 +14,4 @@ struct CentralBankRatesData: Codable, Equatable, Identifiable {
     let name: String
     let rate: Double
     let unicode: String
-    
-    
 }

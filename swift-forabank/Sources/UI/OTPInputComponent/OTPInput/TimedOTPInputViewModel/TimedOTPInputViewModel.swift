@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import ForaTools
 import RxViewModel
 
 public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
@@ -16,17 +17,21 @@ public final class TimedOTPInputViewModel: ObservableObject {
     @Published public private(set) var state: State
     
     private let viewModel: OTPInputViewModel
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     
     public init(
         viewModel: OTPInputViewModel,
         timer: TimerProtocol = RealTimer(),
+        observe: @escaping Observe = { _ in },
+        codeObserver: AnyPublisher<String, Never>,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = viewModel.state
         self.viewModel = viewModel
         
-        cancellable = viewModel.$state
+        let statePublisher = viewModel.$state.share()
+        
+        statePublisher
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self, viewModel, timer] state in
@@ -53,6 +58,26 @@ public final class TimedOTPInputViewModel: ObservableObject {
                     }
                 }
             }
+            .store(in: &cancellables)
+        
+        statePublisher
+            .compactMap {
+                
+                guard case let .input(input) = $0.status else { return nil }
+                
+                return input.otpField.text
+            }
+            .removeDuplicates()
+            .sink(receiveValue: observe)
+            .store(in: &cancellables)
+        
+        codeObserver
+            .receive(on: scheduler)
+            .sink { [weak self] code in
+            
+                self?.event(.otpField(.edit(code)))
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -68,4 +93,5 @@ public extension TimedOTPInputViewModel {
     
     typealias State = OTPInputState
     typealias Event = OTPInputEvent
+    typealias Observe = (String) -> Void
 }

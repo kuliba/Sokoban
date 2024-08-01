@@ -10,20 +10,20 @@ import Combine
 
 extension UILanding.List {
     
-    public struct HorizontalRectangleImage: Hashable {
+    public struct HorizontalRectangleImage: Equatable {
         
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
-            public let imageLink: String
-            public let link: String
-            public let detail: Detail?
+            let imageLink: String
+            let link: String
+            let detail: Detail?
             
             public struct Detail: Hashable {
-                public let groupId: String
-                public let viewId: String
+                let groupId: String
+                let viewId: String
                 
                 public init(groupId: String, viewId: String) {
                     self.groupId = groupId
@@ -38,7 +38,8 @@ extension UILanding.List {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }
@@ -54,17 +55,69 @@ extension ListHorizontalRectangleImageView {
         
         @Published private(set) var images: [String: Image] = [:]
         
+        private let action: (LandingEvent) -> Void
+        private let selectDetail: SelectDetail
+        private let canOpenDetail: UILanding.CanOpenDetail
+
         init(
             data: HorizontalList,
-            images: [String: Image]
+            images: [String: Image],
+            action: @escaping (LandingEvent) -> Void,
+            selectDetail: @escaping SelectDetail,
+            canOpenDetail: @escaping UILanding.CanOpenDetail
         ) {
             self.data = data
             self.images = images
+            self.action = action
+            self.selectDetail = selectDetail
+            self.canOpenDetail = canOpenDetail
         }
         
         func image(byImageLink: String) -> Image? {
             
             return images[byImageLink]
+        }
+        
+        static func itemAction(
+            item: HorizontalList.Item,
+            selectDetail: SelectDetail,
+            action: (LandingEvent) -> Void,
+            canOpenDetail: UILanding.CanOpenDetail
+        ) {
+            let detailDestination = item.detailDestination
+            let linkIsEmpty = item.link.isEmpty
+            
+            switch detailDestination {
+            case .none:
+                if !linkIsEmpty { action(.card(.openUrl(item.link))) }
+                
+            case let .some(destination):
+                let canOpen = canOpenDetail(destination)
+                let bannerAction = destination.bannerAction
+                
+                switch (canOpen, bannerAction) {
+                case (true, _):
+                    selectDetail(destination)
+                    
+                case let (false, .some(bannerAction)):
+                    action(.bannerAction(bannerAction))
+                    
+                default:
+                    if !linkIsEmpty { action(.card(.openUrl(item.link))) }
+                }
+            }
+        }
+        
+        func itemAction(
+            item: HorizontalList.Item
+        ) {
+            
+           Self.itemAction(
+                item: item,
+                selectDetail: selectDetail,
+                action: action, 
+                canOpenDetail: canOpenDetail
+            )
         }
     }
 }
@@ -74,5 +127,30 @@ extension UILanding.List.HorizontalRectangleImage {
     func imageRequests() -> [ImageRequest] {
         
         return self.list.map(\.imageLink).map(ImageRequest.url)
+    }
+}
+
+private extension DetailDestination {
+    
+    var bannerAction: LandingEvent.BannerAction? {
+        
+        switch self.groupID {
+        case "DEPOSIT_OPEN":
+            return .openDeposit(.init(depositID: Int(viewID.rawValue) ?? -1))
+        case "DEPOSITS":
+            return .depositsList
+        case "MIG_TRANSFER":
+            return .migTransfer(.init(countryID: viewID.rawValue))
+        case "MIG_AUTH_TRANSFER":
+            return .migAuthTransfer
+        case "CONTACT_TRANSFER":
+            return .contact(.init(countryID: viewID.rawValue))
+        case "DEPOSIT_TRANSFER":
+            return .depositTransfer
+        case "LANDING":
+            return .landing
+        default:
+            return nil
+        }
     }
 }

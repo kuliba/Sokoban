@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     
     static func makeDocumentButton(
         httpClient: HTTPClient,
-        model: Model
+        printFormType: RequestFactory.PrintFormType
     ) -> (DocumentID) -> some View {
         
         return makeButton
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             let buttonLabel = { makeSuccessButtonLabel(option: .document) }
             
             let getDetailService = RemoteService(
-                createRequest: RequestFactory.createGetPrintFormRequest,
+                createRequest: RequestFactory.createGetPrintFormRequest(printFormType: printFormType),
                 performRequest: httpClient.performRequest(_:completion:),
                 mapResponse: ResponseMapper.mapGetPrintFormResponse
             )
@@ -69,50 +69,5 @@ extension RootViewModelFactory {
                 makeValueView: makePDFDocumentView
             )
         }
-    }
-}
-
-private struct PDFDocumentWrapperView: View {
-    
-    @State private var isShowingSheet = false
-    
-    let pdfDocument: PDFDocument
-    let dismissAction: () -> Void
-    
-    var body: some View {
-        
-        VStack {
-            
-            PDFDocumentView(document: pdfDocument)
-            
-            ButtonSimpleView(viewModel: .saveAndShare {
-                
-                isShowingSheet = true
-            })
-            .frame(height: 48)
-            .padding()
-        }
-        .sheet(isPresented: $isShowingSheet) {
-            
-            ActivityView(
-                viewModel: .init(
-                    activityItems: [pdfDocument.dataRepresentation() as Any]
-                )
-            )
-        }
-    }
-}
-
-private extension ButtonSimpleView.ViewModel {
-    
-    static func saveAndShare(
-        action: @escaping () -> Void
-    ) ->  ButtonSimpleView.ViewModel {
-        
-        .init(
-            title: "Сохранить или отправить",
-            style: .red,
-            action: action
-        )
     }
 }

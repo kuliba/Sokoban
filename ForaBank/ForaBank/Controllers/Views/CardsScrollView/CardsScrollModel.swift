@@ -10,7 +10,9 @@ import UIKit
 struct CardsScrollModel {
     
     let card: UserAllCardsModel
-    
+    var getUIImage: (Md5hash) -> UIImage? = { _ in UIImage() }
+    var isChecked: Bool = false
+
     var cardNumber: String? {
         return card.number
     }
@@ -59,15 +61,30 @@ struct CardsScrollModel {
     }
     
     var backgroundImage: UIImage {
-        if !(card.mediumDesign?.isEmpty ?? true)  {
-            return card.mediumDesign?.convertSVGStringToImage() ?? UIImage()
+        if let md5Hash = card.mediumDesignMd5Hash {
+            return getUIImage(md5Hash) ?? UIImage()
         } else {
             return UIImage()
         }
     }
     
-    init(card: UserAllCardsModel) {
+    var backgroundColor: UIColor {
+        if card.productType == "DEPOSIT" {
+            return .init(hexString: "F6F6F7")
+        }
+        
+        if let color = card.background.first?.color {
+            return .init(hexString: color)
+        }
+        return .clear
+    }
+
+    init(
+        card: UserAllCardsModel,
+        getUIImage: @escaping (Md5hash) -> UIImage?
+    ) {
         self.card = card
+        self.getUIImage = getUIImage
     }
     
     func hexStringToUIColor(hex: String) -> UIColor {

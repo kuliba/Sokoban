@@ -10,6 +10,7 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import ScrollViewProxy
+import ActivateSlider
 import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
@@ -19,6 +20,8 @@ struct MainView<NavigationOperationView: View>: View {
     
     let viewFactory: MainViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -112,6 +115,9 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch section {
+        case let updateInfoViewModel as UpdateInfoViewModel:
+            viewFactory.makeUpdateInfoView(updateInfoViewModel.content)
+            
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             MainSectionProductsView(viewModel: productsSectionViewModel)
                 .padding(.bottom, 19)
@@ -157,20 +163,22 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openCard(authProductsViewModel):
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
@@ -181,7 +189,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
             )
             
         case let .country(countyViewModel):
@@ -218,8 +228,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
-                .navigationBar(
-                    sberQRPaymentViewModel.navTitle,
+                .navigationBarWithBack(
+                    title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
         case let .landing(viewModel):
@@ -245,7 +255,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -404,28 +416,32 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
+            viewFactory: .preview,
+            paymentsTransfersViewFactory: .preview,
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: HistoryButtonView.init(event:)
             ),
-            paymentsTransfersViewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            getUImage: { _ in nil }
+        )
+    }
+}
+
+extension MainViewFactory {
+    
+    static var preview: Self {
+        
+        return .init(
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: PublishingInfo.preview(info:),
+                    config: .iFora
+                )
+            },
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeUpdateInfoView: UpdateInfoView.init(text:)
         )
     }
 }
@@ -438,15 +454,23 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            productProfileServices: .preview,
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -456,15 +480,23 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            productProfileServices: .preview,
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -474,15 +506,23 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            navigationStateManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            productProfileServices: .preview,
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
 }

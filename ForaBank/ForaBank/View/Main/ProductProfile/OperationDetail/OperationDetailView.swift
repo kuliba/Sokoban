@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Shimmer
+import UIPrimitives
 
 struct OperationDetailView: View {
     
@@ -15,72 +15,17 @@ struct OperationDetailView: View {
     var body: some View {
         
         VStack {
-                
-              if UIScreen.main.bounds.width <= 375 {
-                  
-                  ScrollView {
-                      ContentView(viewModel: viewModel)
-                  }
-                  
-              } else {
-                  
-                  VStack {
-                      ContentView(viewModel: viewModel)
-                  }
-              }
             
-            if viewModel.isLoading {
-                
-                LoadingPlaceholder()
-            }
-        }
-        .padding(.vertical, 40)
-        .edgesIgnoringSafeArea(.bottom)
-        .sheet(item: $viewModel.sheet) { item in
-
-            switch item.kind {
-            case .info(let operationDetailInfoViewModel):
-                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
-                
-            case .printForm(let printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            }
-        }
-        .fullScreenCoverLegacy(viewModel: $viewModel.fullScreenSheet) { item in
-            
-            switch item.type {
-            case let .payments(viewModel):
-                NavigationView {
-                    
-                    PaymentsView(viewModel: viewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                }
-            }
-        }
-    }
-}
-
-extension OperationDetailView {
- 
-    struct ContentView: View {
-     
-        @ObservedObject var viewModel: OperationDetailViewModel
-        
-        var body: some View {
-         
             // content
             VStack(spacing: 0) {
                 
                 HeaderView(viewModel: viewModel.header)
-                    .padding(.bottom, 24)
-                
                 OperationView(viewModel: viewModel.operation)
                     .padding(.top, 24)
-
+                
                 // template, document, details buttons
-                HStack(spacing: viewModel.getSpacingForDocsInHStackForOldIPhones()) {
+                HStack(spacing: 52) {
+                    
                     if let template = viewModel.templateButton {
                         
                         TemplateButtonView(viewModel: template)
@@ -107,8 +52,38 @@ extension OperationDetailView {
                             .buttonStyle(OperationDetailsActionButton(width: 160))
                             .frame(height: 40)
                         }
-                    }
-                    .padding(.top, 28)
+                        
+                    }.padding(.top, 28)
+                }
+            }
+            
+            if viewModel.isLoading {
+                
+                LoadingPlaceholder()
+            }
+        }
+        .padding(.vertical, 40)
+        .edgesIgnoringSafeArea(.bottom)
+        .sheet(item: $viewModel.sheet) { item in
+            
+            switch item.kind {
+            case .info(let operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+                
+            case .printForm(let printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            }
+        }
+        .fullScreenCoverLegacy(viewModel: $viewModel.fullScreenSheet) { item in
+            
+            switch item.type {
+            case let .payments(viewModel):
+                NavigationView {
+                    
+                    PaymentsView(viewModel: viewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
                 }
             }
         }
@@ -125,12 +100,13 @@ extension OperationDetailView {
             
             switch viewModel {
             case .singleRow(let name):
+                
                 Text(name)
                     .font(.system(size: 16, weight: .regular))
                     .multilineTextAlignment(.center)
                 
-                
             case .doubleRow(let name, let extra):
+                
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
@@ -141,6 +117,7 @@ extension OperationDetailView {
                 }
                 
             case .number(let name, let title, let number, let action):
+                
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
@@ -154,7 +131,6 @@ extension OperationDetailView {
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.black)
                             .padding(.leading, 6)
-                        
                         
                         Button {
                             
@@ -203,16 +179,15 @@ extension OperationDetailView {
         
         var body: some View {
             
-            VStack {
+            VStack(spacing: 1) {
                 
                 Text(viewModel.title)
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color(hex: "999999"))
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 1, trailing: 0))
-                Text(viewModel.amount)
-                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(.textPlaceholder)
                 
+                Text(viewModel.amount)
+                    .foregroundColor(.textSecondary)
             }
+            .font(.system(size: 16, weight: .regular))
         }
     }
     
@@ -227,7 +202,7 @@ extension OperationDetailView {
                     .frame(height: 20)
                     .padding()
                     .padding(.horizontal, 10)
-                    .shimmering(active: true, bounce: true)
+                    .shimmering(bounce: true)
             }
         }
     }
@@ -239,7 +214,7 @@ extension OperationDetailView {
         var body: some View {
             
             switch viewModel.kind {
-            case .template(let selected):
+            case .template:
                 EmptyView()
                     .frame(width: 10, height: 10, alignment: .center)
                 
@@ -276,8 +251,8 @@ struct CapsuleText: View {
         
         Text(text)
             .font(font)
-            .padding()
             .foregroundColor(color)
+            .padding(8)
             .background(bgColor)
             .clipShape(Capsule())
     }

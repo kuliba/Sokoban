@@ -1157,6 +1157,167 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertEqual(cell?.title, "Статус операции")
     }
     
+    // MARK: - SFP init case
+
+    func test_init_withCreditOperation_initializesSuccessfully() throws {
+        
+        let (vm, _) = try makeSUTWithStatement()
+        XCTAssertNotNil(vm)
+    }
+    
+    func test_init_withDebitOperation_initializesSuccessfully() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .debit))
+        XCTAssertNotNil(vm)
+    }
+    
+    func test_init_withCreditOperation_setsCellsCorrectlyWithPhoneNumber() throws {
+        
+        let (vm, _) = try makeSUTWithStatement()
+        XCTAssertEqual(vm.cells.first?.title, "Номер телефона отправителя")
+    }
+    
+    func test_init_withDebitOperation_setsCellsCorrectlyWithPhoneNumber() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .debit))
+        XCTAssertEqual(vm.cells.first?.title, "Номер телефона получателя")
+    }
+    
+    func test_init_withCreditOperation_setsCellsCorrectlyWithoutPhoneNumber() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(fastPayment: nil))
+        XCTAssertEqual(vm.cells.first?.title, "Отправитель")
+    }
+    
+    func test_init_withDebitOperation_setsCellsCorrectlyWithoutPhoneNumber() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(fastPayment: nil, operationType: .debit))
+        XCTAssertEqual(vm.cells.first?.title, "Получатель")
+    }
+    
+    func test_init_withCreditOperationAndNoFastPayment_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(fastPayment: nil))
+        
+        XCTAssertEqual(vm.cells.count, 3)
+        XCTAssertEqual(vm.cells[0].title, "Отправитель")
+        XCTAssertEqual(vm.cells[1].title, "Сумма перевода")
+        XCTAssertEqual(vm.cells[2].title, "Дата и время операции (МСК)")
+    }
+    
+    func test_init_withDebitOperationAndNoFastPayment_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(fastPayment: nil, operationType: .debit))
+        
+        XCTAssertEqual(vm.cells.count, 3)
+        XCTAssertEqual(vm.cells[0].title, "Получатель")
+        XCTAssertEqual(vm.cells[1].title, "Сумма перевода")
+        XCTAssertEqual(vm.cells[2].title, "Дата и время операции (МСК)")
+    }
+    func test_init_withCreditOperation_setsCellTitlesCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement()
+        
+        XCTAssertEqual(vm.cells.count, 7)
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона отправителя")
+        XCTAssertEqual(vm.cells[1].title, "Отправитель")
+        XCTAssertEqual(vm.cells[2].title, "Банк отправителя")
+        XCTAssertEqual(vm.cells[3].title, "Сумма перевода")
+        XCTAssertEqual(vm.cells[4].title, "Назначение платежа")
+        XCTAssertEqual(vm.cells[5].title, "Номер операции СБП")
+        XCTAssertEqual(vm.cells[6].title, "Дата и время операции (МСК)")
+    }
+    func test_init_withCreditFictOperation_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .creditFict))
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона отправителя")
+    }
+    func test_init_withCreditPlanOperation_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .creditPlan))
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона отправителя")
+    }
+    
+    func test_init_withDebitOperation_setsCellTitlesCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .debit))
+        
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона получателя")
+        XCTAssertEqual(vm.cells[1].title, "Получатель")
+        XCTAssertEqual(vm.cells[2].title, "Банк получателя")
+        XCTAssertEqual(vm.cells[3].title, "Сумма перевода")
+        XCTAssertEqual(vm.cells[4].title, "Назначение платежа")
+        XCTAssertEqual(vm.cells[5].title, "Номер операции СБП")
+        XCTAssertEqual(vm.cells[6].title, "Дата и время операции (МСК)")
+    }
+    
+    func test_init_withDebitFictOperation_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .debitFict))
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона получателя")
+    }
+    
+    func test_init_withDebitPlanOperation_setsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(operationType: .debitPlan))
+        XCTAssertEqual(vm.cells[0].title, "Номер телефона получателя")
+    }
+    
+    // MARK: - C2B init case
+    
+    func test_init_withC2bOperation_operationTypeCreditsetsCellsCorrectly() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(paymentDetailType: .c2b, operationType: .credit))
+        
+        XCTAssertEqual(vm.cells.count, 7)
+        XCTAssertEqual(vm.cells[0].title, "Сумма перевода")
+        XCTAssertEqual(vm.cells[1].title, "Дата и время операции (МСК)")
+        XCTAssertEqual(vm.cells[2].title, "Отправитель")
+        XCTAssertEqual(vm.cells[3].title, "Банк отправителя")
+        XCTAssertEqual(vm.cells[4].title, "Сообщение получателю")
+        XCTAssertEqual(vm.cells[5].title, "Идентификатор операции")
+    }
+
+    func test_init_withC2bOperation_setsCellsCorrectlyWithStatusComplete() throws {
+
+        let operation = makeOperationDetail(operationStatus: .complete)
+        let (vm, _) = try makeSUTWithStatement(detail: operation, statement: .makeStatementData(paymentDetailType: .c2b))
+        if let cell = vm.cells[2] as? OperationDetailInfoViewModel.BankCellViewModel {
+            XCTAssertEqual(cell.title, "Статус операции")
+            XCTAssertEqual(cell.name, "Успешно")
+        }
+    }
+    
+    func test_init_withC2bOperation_setsCellsCorrectlyWithStatusInProgress() throws {
+        
+        let operation = makeOperationDetail(operationStatus: .inProgress)
+        let (vm, _) = try makeSUTWithStatement(detail: operation, statement: .makeStatementData(paymentDetailType: .c2b))
+        if let cell = vm.cells[2] as? OperationDetailInfoViewModel.BankCellViewModel {
+            XCTAssertEqual(cell.title, "Статус операции")
+            XCTAssertEqual(cell.name, "В обработке")
+        }
+    }
+    
+    func test_init_withC2bOperation_setsCellsCorrectlyWithStatusRejected() throws {
+        
+        let operation = makeOperationDetail(operationStatus: .rejected)
+        let (vm, _) = try makeSUTWithStatement(detail: operation, statement: .makeStatementData(paymentDetailType: .c2b))
+        if let cell = vm.cells[2] as? OperationDetailInfoViewModel.BankCellViewModel {
+            XCTAssertEqual(cell.title, "Статус операции")
+            XCTAssertEqual(cell.name, "Отказ")
+        }
+    }
+
+    func test_init_withC2bOperation_setsCellsCorrectlyWithCancellation() throws {
+        
+        let (vm, _) = try makeSUTWithStatement(statement: .makeStatementData(paymentDetailType: .c2b, isCancellation: true))
+        if let cell = vm.cells[2] as? OperationDetailInfoViewModel.BankCellViewModel {
+            XCTAssertEqual(cell.title, "Детали операции")
+            XCTAssertEqual(cell.name, "Отказ")
+        }
+       
+    }
+    
     // MARK: - Helpers
     
     private func makeItemsForExternal(
@@ -1269,6 +1430,45 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         return (sut, model)
     }
+   
+    private func makeSUTWithStatement(
+        detail: OperationDetailData? = nil,
+        statement: ProductStatementData = .makeStatementData(),
+        externalTransferType: OperationDetailData.ExternalTransferType = .entity,
+        products: ProductsData = [:],
+        file: StaticString = #file,
+        line: UInt = #line
+    )  throws -> (
+        sut: OperationDetailInfoViewModel,
+        model: Model
+    ) {
+       
+        let model: Model = .mockWithEmptyExcept()
+        model.products.value = products
+        model.currencyList.value.append(.rub)
+        model.bankListFullInfo.value.append(.bank)
+        
+        let statement = ProductStatementData.makeStatementData(
+            fastPayment: statement.fastPayment,
+            paymentDetailType: statement.paymentDetailType,
+            operationType: statement.operationType,
+            currencyCodeNumeric: statement.currencyCodeNumeric,
+            isCancellation: statement.isCancellation
+        )
+       
+        let sut = try XCTUnwrap(OperationDetailInfoViewModel(
+                with: statement,
+                operation: detail,
+                product: .loanStub1,
+                dismissAction: {},
+                model: model
+            ))
+       
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+
+        return (sut, model)
+    }
     
     private func makeExternal(
         externalTransferType: OperationDetailData.ExternalTransferType?,
@@ -1360,7 +1560,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         model.products.value = products
         model.currencyList.value = currencyList
-        
+        model.images.value = ["1": .iconClose]
         let sut = OperationDetailInfoViewModel(
             model: model,
             operation: detail ?? makeOperationDetail(transferEnum: transferEnum),
@@ -1464,6 +1664,94 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
                 debitAccountViewModel,
                 comment,
                 dateString).map(\.testCell)
+    }
+    
+    private func makeProductStatementData(
+        mcc: Int? = 1234,
+        accountId: Int? = 12345,
+        accountNumber: String = "1234567890",
+        amount: Double = 100.0,
+        cardTranNumber: String? = "1234567890123456",
+        city: String? = "Test City",
+        comment: String = "Test Comment",
+        country: String? = "Test Country",
+        currencyCodeNumeric: Int = 840,
+        date: Date = Date(),
+        deviceCode: String? = "TestDevice",
+        documentAmount: Double? = 100.0,
+        documentId: Int? = 12345,
+        fastPayment: ProductStatementData.FastPayment? = .test,
+        groupName: String = "Test Group Name",
+        isCancellation: Bool? = true,
+        md5hash: String = "testmd5hash",
+        merchantName: String? = "Test Merchant Name",
+        merchantNameRus: String? = "Тестовое Имя Продавца",
+        opCode: Int? = 54321,
+        operationId: String = "testoperationid",
+        operationType: OperationType = .debit,
+        paymentDetailType: ProductStatementData.Kind = .betweenTheir,
+        svgImage: SVGImageData? = SVGImageData(description: "Test SVG Image"),
+        terminalCode: String? = "testTerminalCode",
+        tranDate: Date? = Date(),
+        type: OperationEnvironment = .inside
+    ) -> ProductStatementData {
+        
+        return ProductStatementData(
+            mcc: mcc,
+            accountId: accountId,
+            accountNumber: accountNumber,
+            amount: amount,
+            cardTranNumber: cardTranNumber,
+            city: city,
+            comment: comment,
+            country: country,
+            currencyCodeNumeric: currencyCodeNumeric,
+            date: date,
+            deviceCode: deviceCode,
+            documentAmount: documentAmount,
+            documentId: documentId,
+            fastPayment: fastPayment,
+            groupName: groupName,
+            isCancellation: isCancellation,
+            md5hash: md5hash,
+            merchantName: merchantName,
+            merchantNameRus: merchantNameRus,
+            opCode: opCode,
+            operationId: operationId,
+            operationType: operationType,
+            paymentDetailType: paymentDetailType,
+            svgImage: svgImage,
+            terminalCode: terminalCode,
+            tranDate: tranDate,
+            type: type
+        )
+    }
+    
+    private func makeFastPayment(
+        documentComment: String? = "Test FastPayment Comment",
+        foreignBankBIC: String? = "044525491",
+        foreignBankID: String? = "10000001153",
+        foreignBankName: String? = "Test Foreign Bank Name",
+        foreignName: String? = "Test Foreign Name",
+        foreignPhoneNumber: String? = "70115110217",
+        opkcid: String? = "A1355084612564010000057CAFC75755",
+        operTypeFP: String? = "string",
+        tradeName: String? = "Test Trade Name",
+        guid: String? = "testguid"
+    ) -> ProductStatementData.FastPayment {
+        
+        return ProductStatementData.FastPayment(
+            documentComment: documentComment ?? "",
+            foreignBankBIC: foreignBankBIC ?? "",
+            foreignBankID: foreignBankID ?? "",
+            foreignBankName: foreignBankName ?? "",
+            foreignName: foreignName ?? "",
+            foreignPhoneNumber: foreignPhoneNumber ?? "",
+            opkcid: opkcid ?? "",
+            operTypeFP: operTypeFP ?? "",
+            tradeName: tradeName ?? "",
+            guid: guid ?? ""
+        )
     }
 }
 
@@ -1720,4 +2008,55 @@ private extension Model {
     
     var amount: String? { self.amountFormatted(amount: 1141, currencyCode: "RUB", style: .fraction) }
     var commission: String? { self.amountFormatted(amount: 30, currencyCode: "RUB", style: .fraction) }
+}
+
+private extension ProductStatementData {
+    
+    static func makeStatementData(
+        fastPayment: FastPayment? = .test,
+        paymentDetailType: ProductStatementData.Kind = .sfp,
+        operationType: OperationType = .credit,
+        foreignPhoneNumber: String = "70115110217",
+        currencyCodeNumeric: Int = 810,
+        isCancellation: Bool? = false,
+        md5hash: String = "d46cb4ded97c143291ea3fab225b0e2f",
+        documentId: Int? = 1,
+        operationId: String = "1"
+    ) -> ProductStatementData {
+        
+        return .init(
+            mcc: nil,
+            accountId: nil,
+            accountNumber: "",
+            amount: 20,
+            cardTranNumber: nil,
+            city: nil,
+            comment: "",
+            country: nil,
+            currencyCodeNumeric: currencyCodeNumeric,
+            date: Date(),
+            deviceCode: nil,
+            documentAmount: 20,
+            documentId: documentId,
+            fastPayment: fastPayment,
+            groupName: "",
+            isCancellation: isCancellation,
+            md5hash: md5hash,
+            merchantName: nil,
+            merchantNameRus: nil,
+            opCode: nil,
+            operationId: operationId,
+            operationType: operationType,
+            paymentDetailType: paymentDetailType,
+            svgImage: nil,
+            terminalCode: nil,
+            tranDate: nil,
+            type: .inside
+        )
+    }
+}
+
+private extension ProductStatementData.FastPayment {
+
+static let test: Self = .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string")
 }

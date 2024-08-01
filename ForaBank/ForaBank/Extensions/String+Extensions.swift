@@ -199,23 +199,6 @@ extension String {
         
         return copy
     }
-    
-    func formatted(
-        withChunkSize chunkSize: Int = 4,
-        withSeparator separator: String = " "
-    ) -> String {
-        var stringWithAddedSpaces = ""
-        
-        for i in Swift.stride(from: 0, to: self.count, by: 1) {
-            if i > 0 && (i % chunkSize) == 0 {
-                stringWithAddedSpaces.append(contentsOf: separator)
-            }
-            let characterToAdd = self[self.index(self.startIndex, offsetBy: i)]
-            stringWithAddedSpaces.append(characterToAdd)
-        }
-        
-        return stringWithAddedSpaces
-    }
 }
 
 enum StringHelperError: Error {
@@ -291,4 +274,37 @@ extension String {
 extension String {
     
     static let isNeedOnboardingShow = "isNeedOnboardingShow"
+}
+
+extension String {
+    
+    func cardNumberMasked() -> Self {
+        
+        var resultString = String()
+        
+        self.enumerated().forEach { (index, character) in
+            
+            if index % 4 == 0 && index > 0 {
+                resultString += " "
+            }
+            
+            if index > 5, index < 12 {
+                resultString += "*"
+            } else {
+                resultString.append(character)
+            }
+        }
+        return resultString
+    }
+}
+
+extension String {
+    
+    func isValidate(regExp: String?) -> Bool {
+        
+        guard let pattern = regExp, !pattern.isEmpty else { return true }
+        
+        let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: self)
+        return isMatching
+    }
 }

@@ -7,17 +7,63 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
     
     private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
-  
+    
     var body: some View {
         
+        mainVStack()
+            .ignoresSafeArea(.container, edges: .bottom)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar(content: toolbar)
+            .modal(
+                modal: viewModel.route.modal,
+                dismiss: { viewModel.route.modal = nil },
+                bottomSheetContent: bottomSheetContent
+            )
+    }
+}
+ 
+private extension View {
+    
+    @ViewBuilder
+    func modal(
+        modal: TemplatesListViewModel.Modal?,
+        dismiss: @escaping () -> Void,
+        bottomSheetContent: @escaping (TemplatesListViewModel.Sheet) -> some View
+    ) -> some View {
+        
+        switch modal {
+        case .none:
+            self
+            
+        case let .alert(alertViewModel):
+            alert(item: alertViewModel, content: Alert.init(with:))
+            
+        case let .sheet(sheet):
+            bottomSheet(
+                item: .init(
+                    get: { sheet },
+                    set: { if $0 == nil { dismiss() }}
+                ),
+                content: bottomSheetContent
+            )
+        }
+    }
+}
+
+private extension TemplatesListView {
+    
+    func mainVStack() -> some View {
+        
         VStack {
-             
+            
             switch viewModel.state {
             case .normal, .select:
                 
@@ -38,18 +84,18 @@ struct TemplatesListView: View {
                             
                             switch item.kind {
                             case .regular, .deleting:
-                           
+                                
                                 TemplateItemView(viewModel: item,
                                                  style: .constant(.list),
                                                  editMode: $viewModel.editModeState)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowBackground(BackgroundListView())
-                                    .modifier(Self.listRowSeparatorTint())
-                                    .modifier(Self.trailingSwipeAction(
-                                                    viewModel: viewModel.getItemsMenuViewModel(),
-                                                    item: item))
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                .listRowBackground(BackgroundListView())
+                                .modifier(Self.listRowSeparatorTint())
+                                .modifier(Self.trailingSwipeAction(
+                                    viewModel: viewModel.getItemsMenuViewModel(),
+                                    item: item))
                             case .add:
-                               
+                                
                                 AddNewItemView(viewModel: item, style: .constant(.list))
                                     .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
                                     .listRowBackground(BackgroundListView())
@@ -59,15 +105,15 @@ struct TemplatesListView: View {
                                 
                                 PlaceholderItemView(style: .constant(.list))
                                     .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .shimmering(active: true, bounce: true)
-
+                                    .shimmering(bounce: true)
+                                
                             } //swich kind
                         }//ForEach
                         .onMove { indexes, destination in
                             
                             guard let first = indexes.first else { return }
                             viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
-                                                    .init(move: (first, destination)))
+                                .init(move: (first, destination)))
                         }
                         .moveDisabled(viewModel.editModeState != .active)
                     } //List
@@ -76,7 +122,7 @@ struct TemplatesListView: View {
                     .padding(.horizontal)
                     .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
                     
-                // TilesView
+                    // TilesView
                 case .tiles:
                     
                     ScrollView {
@@ -91,28 +137,28 @@ struct TemplatesListView: View {
                                     TemplateItemView(viewModel: item,
                                                      style: .constant(.tiles),
                                                      editMode: $viewModel.editModeState)
-                                        .contextMenu {
+                                    .contextMenu {
                                         
-                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
+                                        if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
                                             
-                                                ForEach(itemsMenuViewModel) { button in
+                                            ForEach(itemsMenuViewModel) { button in
                                                 
-                                                    Button(action: { button.action(item.id) }) {
-                                                        Text(button.subTitle)
-                                                        button.icon.renderingMode(.original)
-                                                    }
+                                                Button(action: { button.action(item.id) }) {
+                                                    Text(button.subTitle)
+                                                    button.icon.renderingMode(.original)
                                                 }
                                             }
                                         }
+                                    }
                                     
                                 case .add:
                                     
                                     AddNewItemView(viewModel: item, style: .constant(.tiles))
-                                
+                                    
                                 case .placeholder:
                                     
                                     PlaceholderItemView(style: .constant(.tiles))
-                                        .shimmering(active: true, bounce: true)
+                                        .shimmering(bounce: true)
                                     
                                 } //kind swith
                             }
@@ -140,60 +186,71 @@ struct TemplatesListView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case let .payment(paymentViewModel):
-                        PaymentsView(viewModel: paymentViewModel)
-                    }
-                }
-            }
-        } //mainVStack
-        .ignoresSafeArea(.container, edges: .bottom)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-
-            ToolbarItem(placement: .principal) {
-                    
-                switch viewModel.navBarState {
-                case let .regular(regViewModel):
-                    RegularNavBarView(viewModel: regViewModel)
-                   
-                case let .search(searchViewModel):
-                    SearchNavBarView(viewModel: searchViewModel)
-                
-                case let .delete(deleteViewModel):
-                    TwoButtonsNavBarView(viewModel: deleteViewModel)
-                
-                case let .reorder(reorderViewModel):
-                    TwoButtonsNavBarView(viewModel: reorderViewModel)
-                }
+                viewModel.link.map(destination)
             }
         }
-        .bottomSheet(item: $viewModel.sheet) { sheet in
+    }
+    
+    @ViewBuilder
+    func destination(
+        link: TemplatesListViewModel.Link?
+    ) -> some View {
+        
+        switch link {
+        case nil:
+            EmptyView()
             
-            switch sheet.type {
-            case let .meToMe(viewModel):
-                
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.success) { successViewModel in
-                
-                        PaymentsSuccessView(viewModel: successViewModel)
-                    }
-                    .transaction { transaction in
-
-                        transaction.disablesAnimations = false
-                    }
-                
-            case let .renameItem(renameViewModel):
-                
-                RenameTemplateItemView(viewModel: renameViewModel)
+        case let .payment(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
+        }
+    }
+    
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .principal) {
             
-            case let .productList(productListViewModel):
-            
-                ProductListView(viewModel: productListViewModel)
+            switch viewModel.navBarState {
+            case let .regular(regViewModel):
+                RegularNavBarView(viewModel: regViewModel)
+                
+            case let .search(searchViewModel):
+                SearchNavBarView(viewModel: searchViewModel)
+                
+            case let .delete(deleteViewModel):
+                TwoButtonsNavBarView(viewModel: deleteViewModel)
+                
+            case let .reorder(reorderViewModel):
+                TwoButtonsNavBarView(viewModel: reorderViewModel)
             }
+        }
+    }
+    
+    @ViewBuilder
+    func bottomSheetContent(
+        sheet: TemplatesListViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .meToMe(viewModel):
+            
+            PaymentsMeToMeView(viewModel: viewModel)
+                .fullScreenCover(item: $viewModel.success) { successViewModel in
+                    
+                    PaymentsSuccessView(viewModel: successViewModel)
+                }
+                .transaction { transaction in
+                    
+                    transaction.disablesAnimations = false
+                }
+            
+        case let .renameItem(renameViewModel):
+            
+            RenameTemplateItemView(viewModel: renameViewModel)
+            
+        case let .productList(productListViewModel):
+            
+            ProductListView(viewModel: productListViewModel)
         }
     }
 }
@@ -357,7 +414,7 @@ extension TemplatesListView {
                            
                         RoundedRectangle(cornerRadius: 90)
                             .frame(width: 100, height: 32)
-                            .shimmering(active: true, bounce: true)
+                            .shimmering(bounce: true)
                     }
                 }
                 .padding(.bottom, 20)
@@ -370,7 +427,7 @@ extension TemplatesListView {
                         RoundedRectangle(cornerRadius: 12)
                             .frame(height: 72)
                             .padding(.bottom, 12)
-                            .shimmering(active: true, bounce: true)
+                            .shimmering(bounce: true)
                     }
                     
                 case .tiles:
@@ -381,7 +438,7 @@ extension TemplatesListView {
                             
                             RoundedRectangle(cornerRadius: 12)
                                 .frame(height: 188)
-                                .shimmering(active: true, bounce: true)
+                                .shimmering(bounce: true)
                         }
                     }
                 }

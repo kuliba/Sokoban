@@ -82,7 +82,7 @@ extension DepositCalculateAmountViewModel {
             if value < self.lowerBound {
                 self.value = self.lowerBound
             } else {
-                self.value = value
+                self.value = min(value, self.bounds.upperBound)
             }
 
             self.isFirstResponder = false

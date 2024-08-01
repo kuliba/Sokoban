@@ -10,13 +10,19 @@ import Foundation
 
 class LatestPaymentData: Codable, Identifiable {
     
-    let id: Int = UUID().uuidString.hashValue
+    let id: Int
     let date: Date
     let paymentDate: String
     let type: Kind
     
-    init (date: Date, paymentDate: String, type: Kind) {
+    init(
+        id: Int = UUID().uuidString.hashValue,
+        date: Date,
+        paymentDate: String,
+        type: Kind
+    ) {
         
+        self.id = UUID().uuidString.hashValue
         self.date = date
         self.paymentDate = paymentDate
         self.type = type
@@ -28,6 +34,7 @@ class LatestPaymentData: Codable, Identifiable {
 
 	required init(from decoder: Decoder) throws {
 
+        id = UUID().uuidString.hashValue
 		let container = try decoder.container(keyedBy: CodingKeys.self)
         let dateValue = try container.decode(Int.self, forKey: .date)
         date = Date.dateUTC(with: dateValue)

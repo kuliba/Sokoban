@@ -7,12 +7,12 @@
 
 import Tagged
 
-enum StubbedFeatureFlag {
+enum StubbedFeatureFlag: Equatable {
     
     case active(Option)
     case inactive
     
-    enum Option {
+    enum Option: Equatable {
         
         case live, stub
     }
@@ -36,5 +36,16 @@ extension Tagged where RawValue == StubbedFeatureFlag {
         
         if case .active(.stub) = rawValue { return true }
         return false
+    }
+}
+
+extension Tagged where RawValue == StubbedFeatureFlag {
+
+    var optionOrStub: RawValue.Option {
+        
+        switch rawValue {
+        case .active(.live): return .live
+        default:             return .stub
+        }
     }
 }

@@ -286,16 +286,21 @@ extension ProductSelectorView.ViewModel {
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
             
-            let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
-            let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+            let name = ForaBank.ProductViewModel.name(
+                product: productData,
+                style: .main,
+                creditProductName: .cardTitle
+            )
+            let balance = ForaBank.ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
             
-            var paymentSystemImage: SVGImageData?
+            var paymentSystemImage: Image?
             
             if let product = productData as? ProductCardData {
-                paymentSystemImage = product.paymentSystemImage
+                paymentSystemImage = model.images.value[product.paymentSystemMd5Hash]?.image
             }
+            let cardIcon = model.images.value[productData.smallDesignMd5hash]?.image
             
-            self.init(id: productData.id, title: context.title, cardIcon: productData.smallDesign.image, paymentIcon: paymentSystemImage?.image, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
+            self.init(id: productData.id, title: context.title, cardIcon: cardIcon, paymentIcon: paymentSystemImage, name: name, balance: balance, numberCard: productData.displayNumber, description: productData.additionalField, isUserInteractionEnabled: context.isUserInteractionEnabled, style: context.style)
         }
         
         func update(context: ProductSelectorView.ViewModel.Context) {
@@ -572,19 +577,19 @@ extension ProductSelectorView {
 
 struct ProductSelectorView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: ProductSelectorView.ViewModel) -> some View {
+        ProductSelectorView(viewModel: viewModel)
+    }
+
     static func previewsGroup() -> some View {
         
         Group {
             
-            ProductSelectorView(viewModel: .sampleRegularCollapsed)
-            ProductSelectorView(
-                viewModel: .sampleRegularCollapsed(
-                    .sampleRegularLong
-                )
-            )
-            ProductSelectorView(viewModel: .sampleMe2MeCollapsed)
-            ProductSelectorView(viewModel: .sample2)
-            ProductSelectorView(viewModel: .sample3)
+            preview(.sampleRegularCollapsed)
+            preview(.sampleRegularCollapsed(.sampleRegularLong))
+            preview(.sampleMe2MeCollapsed)
+            preview(.sample2)
+            preview(.sample3)
         }
     }
     

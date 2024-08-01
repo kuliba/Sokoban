@@ -8,7 +8,7 @@
 import Foundation
 import ServerAgent
 
-//MARK: - Actions
+// MARK: - Actions
 
 extension ModelAction {
     
@@ -86,7 +86,7 @@ extension ModelAction {
     }
 }
 
-//MARK: - Cache
+// MARK: - Cache
 
 extension Model {
     
@@ -358,7 +358,7 @@ extension Model {
     }
 }
 
-//MARK: - Data Helpers
+// MARK: - Data Helpers
 
 extension Model {
     
@@ -377,7 +377,7 @@ extension Model {
         dictionaryCurrency(for: code)?.currencySymbol
     }
     
-    //MARK: BankList helper
+    // MARK: BankList helper
     
     var dictionaryBankList: [BankData] {
         
@@ -386,10 +386,10 @@ extension Model {
     
     func isForaBank(bankId: BankData.ID) -> Bool {
         
-        bankId == "100000000217"
+        bankId == BankID.foraBankID.rawValue
     }
     
-    //MARK: Operators & OperatorGroups
+    // MARK: Operators & OperatorGroups
     
     static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
                                                   "iFora||1051001",
@@ -566,7 +566,7 @@ extension Model {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
 
 extension Model {
     
@@ -610,7 +610,7 @@ extension Model {
     }
 }
 
-//MARK: - Handlers
+// MARK: - Handlers
 
 extension Model {
     
@@ -641,6 +641,22 @@ extension Model {
     
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
+        
+        Task {
+            
+            do {
+                let data = try await Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient()).process("").get()
+                
+                if !data.isEmpty {
+                    
+                    cache(data, serial: serial)
+                }
+            } catch {
+                
+                LoggerAgent().log(category: .cache, message: "Invalid data for getOperatorsListByParam")
+
+            }
+        }
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -734,7 +750,7 @@ extension Model {
         }
     }
     
-    //MARK: - Banks
+    // MARK: - Banks
     
     func handleDictionaryBanks(_ serial: String?) {
         
@@ -788,7 +804,7 @@ extension Model {
         }
     }
     
-    //MARK: - Preffered Banks
+    // MARK: - Preffered Banks
     
     func handleDictionaryPrefferedBanks(_ serial: String?) {
         
@@ -2092,6 +2108,8 @@ extension Model {
     //DownloadImages
     func handleDictionaryDownloadImages(payload: ModelAction.Dictionary.DownloadImages.Request) {
         
+        guard let payload = payload.cleaned() else { return }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -2168,8 +2186,25 @@ extension Model {
     }
 }
 
+// MARK: - Helper
 
-//MARK: - Error
+private extension ModelAction.Dictionary.DownloadImages.Request {
+    
+    // TODO: temp solution
+    // should implement HTTPClient blacklisting in the Composition Root
+    /// Returns an optional instance of `Request` with placeholder and empty image IDs removed.
+    ///
+    /// If the initial list of image IDs is empty or all IDs are placeholders or empty, the method returns `nil`.
+    ///
+    /// - Returns: An optional `Request` instance with cleaned image IDs, or `nil` if the initial list is empty or all IDs were placeholders or empty.
+    func cleaned() -> Self? {
+        
+        let filtered = imagesIds.filter { !$0.isEmpty && $0 != "placeholder" && $0 != "sms" }
+        return filtered.isEmpty ? nil : .init(imagesIds: filtered)
+    }
+}
+
+// MARK: - Error
 
 enum ModelDictionaryError: Swift.Error {
     
@@ -2177,4 +2212,3 @@ enum ModelDictionaryError: Swift.Error {
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: Error)
 }
-

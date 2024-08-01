@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 @testable import ForaBank
 import XCTest
 
@@ -63,7 +64,7 @@ final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTes
     }
 }
 
-private typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
+private typealias FastRequestFactory = RemoteServices.RequestFactory
 
 private func anyPayload(
     count: Int = 2

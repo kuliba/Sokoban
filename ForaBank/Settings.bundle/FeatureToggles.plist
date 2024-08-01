@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>StringsTable</key>
+	<string>FeatureToggles</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Фильтр Истории Операций</string>
+			<key>Key</key>
+			<string>history_filter</string>
+			<key>DefaultValue</key>
+			<string>NO</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>СБЕР-поставщики</string>
+			<key>Key</key>
+			<string>sber_providers</string>
+			<key>DefaultValue</key>
+			<string>sber_providers_off</string>
+			<key>Values</key>
+			<array>
+				<string>sber_providers_off</string>
+				<string>sber_providers_live</string>
+				<string>sber_providers_stub</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>выкл</string>
+				<string>вкл</string>
+				<string>вкл (стаб)</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Title</key>
+			<string>Установка лимитов для карт</string>
+			<key>Key</key>
+			<string>changeSVCardLimits</string>
+		</dict>
+	</array>
+</dict>
+</plist>

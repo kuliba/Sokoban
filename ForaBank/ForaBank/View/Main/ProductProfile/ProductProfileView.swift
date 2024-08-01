@@ -5,8 +5,11 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import ActivateSlider
+import ForaTools
 import InfoComponent
 import PinCodeUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
@@ -16,7 +19,9 @@ struct ProductProfileView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     let viewFactory: PaymentsTransfersViewFactory
-
+    let productProfileViewFactory: ProductProfileViewFactory
+    let getUImage: (Md5hash) -> UIImage?
+    
     var accentColor: some View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
@@ -57,7 +62,11 @@ struct ProductProfileView: View {
                     
                     VStack(spacing: 12) {
                         
-                        ProductProfileCardView(viewModel: viewModel.product)
+                        ProductProfileCardView(
+                            viewModel: viewModel.product,
+                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView,
+                            makeSliderViewModel: viewModel.makeSliderViewModel()
+                        )
                         
                         VStack(spacing: 32) {
                             
@@ -71,6 +80,20 @@ struct ProductProfileView: View {
                             }
                             
                             if let historyViewModel = viewModel.history {
+                                
+                                productProfileViewFactory.makeHistoryButton {
+                                    viewModel.event(.history($0))
+                                }
+                                
+                                if let selectedDate = viewModel.historyState?.date?.description {
+                                    
+                                    Text(selectedDate)
+                                }
+                                
+                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
+                                    
+                                    Text(filters)
+                                }
                                 
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
@@ -103,6 +126,11 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
+               
+            if viewModel.historyState?.showSheet == true {
+                
+                historySheet()
+            }
             
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
@@ -137,12 +165,72 @@ struct ProductProfileView: View {
         .sheet(item: $viewModel.sheet, content: sheetContent)
     }
     
+    private func historySheet() -> some View {
+        
+        Color.clear
+            .sheet(
+                modal: viewModel.historyState,
+                dismissModal: { viewModel.historyState?.showSheet = false },
+                content: { _ in historySheetContent() }
+            )
+    }
+    
+    private func historySheetContent() -> some View {
+        
+        VStack(spacing: 15) {
+            
+            if let state = viewModel.historyState {
+                
+                switch state.buttonAction {
+                case .calendar:
+                    
+                    calendarView()
+                    
+                case .filter:
+                    
+                    Text("Filter")
+                    
+                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
+                        Text("setup debit filter")
+                    }
+                    
+                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
+                        Text("clear filters")
+                    })
+                }
+            }
+        }
+    }
+    
+    private func calendarView() -> some View {
+        
+        VStack {
+            
+            Text("Calendar")
+            
+            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
+                Text("setup date")
+            })
+            
+            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
+                Text("clear date")
+            })
+        }
+    }
+    
     @ViewBuilder
     private func navLinkDestination(
         link: ProductProfileViewModel.Link
     ) -> some View {
         
         switch link {
+        case let .controlPanel(controlPanelViewModel):
+            ControlPanelWrapperView(
+                viewModel: controlPanelViewModel,
+                config: .default, 
+                getUImage: getUImage)
+            .edgesIgnoringSafeArea(.bottom)
+
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -165,13 +253,17 @@ struct ProductProfileView: View {
         case let .myProducts(viewModel):
             MyProductsView(
                 viewModel: viewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
             )
             
         case let .paymentsTransfers(viewModel):
             PaymentsTransfersView(
                 viewModel: viewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
             )
         }
     }
@@ -191,6 +283,13 @@ struct ProductProfileView: View {
                 .padding(.top, 26)
                 .padding(.bottom, 72)
             
+        case let .optionsPanelNew(items):
+            PanelView(items: items, event: viewModel.event)
+                .padding(.horizontal, 12)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+                .fixedSize(horizontal: false, vertical: true)
+
         case let .meToMeLegacy(viewModel):
             MeToMeView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -226,18 +325,21 @@ struct ProductProfileView: View {
         
         switch state {
         case let .changePin(changePIN):
-            
-            changePinCodeView(
-                cardId: changePIN.cardId,
-                actionType: .changePin(changePIN.displayNumber),
-                changePIN.model,
-                confirm: viewModel.confirmShowCVV,
-                confirmChangePin: viewModel.confirmChangePin,
-                showSpinner: {},
-                resendRequest: changePIN.request,
-                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-            ).transition(.move(edge: .leading))
-            
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                changePinCodeView(
+                    cardId: changePIN.cardId,
+                    actionType: .changePin(changePIN.displayNumber),
+                    changePIN.model,
+                    confirm: viewModel.confirmShowCVV,
+                    confirmChangePin: viewModel.confirmChangePin,
+                    showSpinner: {},
+                    resendRequest: changePIN.request,
+                    resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                )
+                .transition(.move(edge: .leading))
+            }
         case let .confirmOTP(confirm):
             
             confirmCodeView(
@@ -392,17 +494,12 @@ struct ProfileView_Previews: PreviewProvider {
         
         ProductProfileView(
             viewModel: viewModel,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            viewFactory: .preview,
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: HistoryButtonView.init(event:)
+            ),
+            getUImage: { _ in nil }
         )
     }
 }
@@ -418,12 +515,16 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        navigationStateManager: .preview,
+        makePaymentsTransfersFlowManager: { _ in .preview },
+        userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
+        productProfileServices: .preview,
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
     
@@ -434,12 +535,16 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        navigationStateManager: .preview,
+        makePaymentsTransfersFlowManager: { _ in .preview },
+        userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
+        productProfileServices: .preview,
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
 }

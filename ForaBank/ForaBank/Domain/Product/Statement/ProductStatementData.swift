@@ -217,8 +217,19 @@ extension ProductStatementData {
     var isMinusSign: Bool {
         
         switch operationType {
-        case .debit: return true
+        case .debit, .debitFict, .debitPlan: return true
         default: return false
+        }
+    }
+    
+    func operationSymbolsAndAmount(_ amountFormatted: String) -> String {
+        
+        switch operationType {
+        case .debit, .debitPlan, .debitFict:
+            return "- \(amountFormatted)"
+            
+        default:
+            return "+ \(amountFormatted)"
         }
     }
     
@@ -229,8 +240,38 @@ extension ProductStatementData {
     
     var fastPaymentComment: String? {
         
-        isReturn ? "Возврат по операции": fastPayment?.documentComment
+        isReturn ? "Возврат по операции" : fastPayment?.documentComment
     }
     
     var dateValue: Date { tranDate ?? date }
+    
+    var isCreditType: Bool {
+        
+        [.credit, .creditFict, .creditPlan].contains(operationType)
+    }
+    
+    var isDebitType: Bool {
+        
+        [.debit, .debitFict, .debitPlan].contains(operationType)
+    }
+    
+    var shouldShowTemplateButton: Bool {
+        
+        ![.creditPlan, .debitFict, .creditFict].contains(operationType)
+    }
+    
+    var shouldShowDocumentButton: Bool {
+        
+        ![.debitPlan, .creditPlan, .debitFict, .creditFict].contains(operationType)
+    }
+    
+    func formattedAmountWithSign(_ formatAmount: String) -> String {
+        
+        isCreditType ? "+ \(formatAmount)" : formatAmount
+    }
+    
+    func payeerTitle() -> String {
+        
+        isDebitType ? "Получатель" : "Отправитель"
+    }
 }

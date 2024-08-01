@@ -6,49 +6,106 @@
 //
 
 import SberQR
+import ActivateSlider
 import SwiftUI
 
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
+typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
 
 struct RootViewFactory {
     
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
+    let makeIconView: MakeIconView
+    let makeActivateSliderView: MakeActivateSliderView
+    let makeUpdateInfoView: MakeUpdateInfoView
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
+    let makePaymentCompleteView: MakePaymentCompleteView
+    let makeHistoryButtonView: MakeHistoryButtonView
 }
 
-struct MainViewFactory {
+extension RootViewFactory {
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
+    typealias MakeIconView = IconDomain.MakeIconView
+    typealias MakeAnywayPaymentFactory = PaymentsTransfersViewFactory.MakeAnywayPaymentFactory
+    typealias MakePaymentCompleteView = PaymentsTransfersViewFactory.MakePaymentCompleteView
 }
 
 extension RootViewFactory {
     
     var mainViewFactory: MainViewFactory {
         
-        .init(
+        return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeUpdateInfoView: makeUpdateInfoView
         )
     }
-}
-
-struct PaymentsTransfersViewFactory {
-    
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
 }
 
 extension RootViewFactory {
     
     var paymentsTransfersViewFactory: PaymentsTransfersViewFactory {
+        
+        return .init(
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeUserAccountView: makeUserAccountView,
+            makeIconView: makeIconView,
+            makeUpdateInfoView: makeUpdateInfoView,
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makePaymentCompleteView: makePaymentCompleteView
+        )
+    }
+}
+
+struct ProductProfileViewFactory {
+    
+    let makeActivateSliderView: MakeActivateSliderView
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+}
+
+extension RootViewFactory {
+    
+    var productProfileViewFactory: ProductProfileViewFactory {
  
         .init(
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeActivateSliderView: makeActivateSliderView,
+            makeHistoryButton: makeHistoryButtonView
         )
+    }
+}
+
+struct HistoryButtonView: View {
+    
+    let event: (HistoryEvent) -> Void
+    
+    var body: some View {
+        
+        HStack {
+            
+            Button(action: {
+                event(.button(.calendar))
+            }) {
+                
+                Text("Calendar")
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+                
+            }
+            
+            Button(action: {
+                event(.button(.filter))
+            }) {
+                
+                Text("Filter")
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+                
+            }
+        }
     }
 }

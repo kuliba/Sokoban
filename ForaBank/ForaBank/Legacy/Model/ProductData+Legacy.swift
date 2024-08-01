@@ -47,7 +47,7 @@ extension ProductData {
                                      paymentSystemImage: card.paymentSystemImage?.description,
                                      fontDesignColor: fontDesignColor.description,
                                      id: id,
-                                     background: [background.description],
+                                     background: background.map { $0.description },
                                      XLDesign: nil,
                                      statusPC: card.statusPc?.rawValue,
                                      interestRate: nil,
@@ -76,7 +76,13 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: card.loanBaseParam?.loanBaseParam(),
-                                     isMain: card.isMain)
+                                     smallDesignMd5Hash: card.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: card.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: card.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: card.paymentSystemImageMd5Hash,
+                                     cardType: card.cardType?.cardTypeLegacy,
+                                     isMain: card.isMain
+            )
         case let account as ProductAccountData:
               
             productListDatum = .init(number: number,
@@ -109,7 +115,7 @@ extension ProductData {
                                      paymentSystemImage: nil,
                                      fontDesignColor: fontDesignColor.description,
                                      id: id,
-                                     background: [background.description],
+                                     background: background.map { $0.description },
                                      XLDesign: nil,
                                      statusPC: nil,
                                      interestRate: nil,
@@ -138,7 +144,13 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: account.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: account.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: account.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     cardType: nil,
+                                     isMain: nil
+            )
 
         case let deposit as ProductDepositData:
             
@@ -172,7 +184,7 @@ extension ProductData {
                                      paymentSystemImage: nil,
                                      fontDesignColor: fontDesignColor.description,
                                      id: id,
-                                     background: [background.description],
+                                     background: background.map { $0.description },
                                      XLDesign: nil,
                                      statusPC: nil,
                                      interestRate: Float(deposit.interestRate),
@@ -201,7 +213,13 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: deposit.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: deposit.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: deposit.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     cardType: nil,
+                                     isMain: nil
+            )
         case let loan as ProductLoanData:
             
             productListDatum = .init(number: number,
@@ -234,7 +252,7 @@ extension ProductData {
                                      paymentSystemImage: nil,
                                      fontDesignColor: fontDesignColor.description,
                                      id: id,
-                                     background: [background.description],
+                                     background: background.map { $0.description },
                                      XLDesign: nil,
                                      statusPC: nil,
                                      interestRate: nil,
@@ -263,7 +281,13 @@ extension ProductData {
                                      settlementAccountId: loan.settlementAccountId,
                                      dateLong: Int(loan.dateLong.timeIntervalSince1970),
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: loan.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: loan.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: loan.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     cardType: nil,
+                                     isMain: nil
+)
         default:
             productListDatum = .init(number: number,
                                      numberMasked: numberMasked,
@@ -295,7 +319,7 @@ extension ProductData {
                                      paymentSystemImage: nil,
                                      fontDesignColor: fontDesignColor.description,
                                      id: id,
-                                     background: [background.description],
+                                     background: background.map { $0.description },
                                      XLDesign: nil,
                                      statusPC: nil,
                                      interestRate: nil,
@@ -324,6 +348,11 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
+                                     smallDesignMd5Hash: nil,
+                                     mediumDesignMd5Hash: nil,
+                                     largeDesignMd5Hash: nil,
+                                     paymentSystemImageMd5Hash: nil,
+                                     cardType: nil,
                                      isMain: nil)
         }
         
@@ -350,5 +379,23 @@ extension ProductCardData.LoanBaseParamInfoData {
     func loanBaseParam() -> GetProductListDatum.LoanBaseParam    {
         
         return .init(loanID: loanId, clientID: clientId, number: number, currencyID: currencyId, currencyNumber: currencyNumber, currencyCode: currencyCode, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, availableExceedLimit: availableExceedLimit, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount)
+    }
+}
+
+extension ProductCardData.CardType {
+    
+    var cardTypeLegacy: CardType {
+        switch self {
+        case .main:
+            return .main
+        case .regular:
+            return .regular
+        case .additionalSelf:
+            return .additionalSelf
+        case .additionalSelfAccOwn:
+            return .additionalSelfAccOwn
+        case .additionalOther:
+            return .additionalOther
+        }
     }
 }

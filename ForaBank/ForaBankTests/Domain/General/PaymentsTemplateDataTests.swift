@@ -53,7 +53,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
         
         XCTAssertEqual(
             template.foraBankId,
-            "100000000217")
+            BankID.foraBankID.rawValue)
     }
     
     func test_paymentsTemplate_typeInside_shouldReturnPhoneBankIdNil() throws {

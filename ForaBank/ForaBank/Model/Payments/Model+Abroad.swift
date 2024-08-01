@@ -44,7 +44,7 @@ extension Model {
             
             guard let defaultService = optionID ?? options.first?.id,
                   let operatorParameterValue: Payments.Operator = .init(rawValue: defaultService) else {
-                throw Payments.Error.missingValueForParameter(Payments.Parameter.Identifier.operator.rawValue)
+                throw Payments.Error.missingValueCountryForParameter(Payments.Parameter.Identifier.operator.rawValue)
             }
             
             let operatorParameter = Payments.ParameterOperator(operatorType: operatorParameterValue)
@@ -364,7 +364,7 @@ extension Model {
                 ProductData.Filter.RestrictedDepositRule(),
                 ProductData.Filter.CurrencyRule(Set(filterCurrencies)),
                 ProductData.Filter.CardActiveRule(),
-                ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                ProductData.Filter.CardAdditionalSelfRule(),
                 ProductData.Filter.AccountActiveRule()
             ])
             
@@ -505,7 +505,7 @@ extension Model {
                             return .init(with: svgImage)
                         }()
                         
-                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, searchValue: item.name))
+                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, isFavorite: false, searchValue: item.name))
                     }
                 }
                 

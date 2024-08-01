@@ -107,6 +107,7 @@ final class OperationDetailInfoViewModel: Identifiable {
         )
         
         switch statement.paymentDetailType {
+            
         case .otherBank:
             if let payeeCardNumber = operation?.payeeCardNumber {
                 
@@ -158,14 +159,14 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: card.currency,
                             style: .clipped
                            ),
-                           let icon = card.smallDesign.image,
+                           let icon = model.images.value[card.smallDesignMd5hash]?.image,
                            let additional = card.additionalField {
                             
                             cells.append(ProductCellViewModel(
                                 title: "Счет пополнения",
                                 icon: icon,
                                 name: card.displayName,
-                                iconPaymentService: card.paymentSystem,
+                                iconPaymentService: model.images.value[card.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -204,14 +205,14 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: card.currency,
                             style: .clipped
                            ),
-                           let icon = card.smallDesign.image,
+                           let icon = model.images.value[card.smallDesignMd5hash]?.image,
                            let additional = card.additionalField {
                             
                             cells.append(ProductCellViewModel(
                                 title: "Счет списания",
                                 icon: icon,
                                 name: card.displayName,
-                                iconPaymentService: card.paymentSystem,
+                                iconPaymentService: model.images.value[card.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -498,14 +499,14 @@ final class OperationDetailInfoViewModel: Identifiable {
                            let balanceFormatted = model.amountFormatted(amount: balance,
                                                                         currencyCode: productInfo.currency,
                                                                         style: .clipped),
-                           let icon = productInfo.smallDesign.image,
+                           let icon = model.images.value[productInfo.smallDesignMd5hash]?.image,
                            let additional = productInfo.additionalField {
                             
                             cells.append(ProductCellViewModel(
                                 title: "Счет пополнения",
                                 icon: icon,
                                 name: productInfo.displayName,
-                                iconPaymentService: productInfo.paymentSystem,
+                                iconPaymentService: model.images.value[productInfo.paymentSystemMd5Hash]?.image,
                                 balance: balanceFormatted,
                                 description: "· \(description) · \(additional)"
                             ))
@@ -775,7 +776,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 currencyCode: currency,
                 style: .fraction) {
                 
-                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                let amount = statement.formattedAmountWithSign(formattedAmount)
                 cells.append(PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
@@ -802,10 +803,10 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(dateTimeCell)
             
         case .sfp:
-            let sfpLogoImage = Image("sbp-logo")
-            logo = sfpLogoImage
             
-            if statement.operationType == .credit {
+            logo = Image("sbp-logo")
+            
+            if statement.isCreditType {
                 
                 if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
                     let phoneFormatter = PhoneNumberKitFormater()
@@ -822,7 +823,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.user.icon,
                     value: statement.merchant))
                 
-            } else if statement.operationType == .debit {
+            } else if statement.isDebitType {
                 
                 if let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber {
                     let phoneFormatter = PhoneNumberKitFormater()
@@ -839,21 +840,15 @@ final class OperationDetailInfoViewModel: Identifiable {
                     iconType: IconType.user.icon,
                     value: statement.merchant))
             }
-            
-            if let bankName = statement.fastPayment?.foreignBankName,
-               statement.operationType == .debit {
-                
-                cells.append(BankCellViewModel(
-                    title: "Банк получателя",
-                    icon: model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor,
-                    name: bankName))
-                
-            } else if let bankName = statement.fastPayment?.foreignBankName {
-                
-                cells.append(BankCellViewModel(
-                    title: "Банк отправителя",
-                    icon: model.images.value[statement.md5hash]?.image ?? Image.ic12LogoForaColor,
-                    name: bankName))
+
+            if let bankName = statement.fastPayment?.foreignBankName {
+
+              let bankCell = statement.getBankCell(
+                bankName: bankName,
+                icon: model.images.value[statement.md5hash]?.image
+              )
+
+              cells.append(bankCell)
             }
             
             if let formattedAmount = model.amountFormatted(
@@ -861,7 +856,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 currencyCode: currency,
                 style: .fraction) {
                 
-                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                let amount = statement.formattedAmountWithSign(formattedAmount)
                 cells.append(PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
@@ -968,7 +963,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 currencyCode: currency,
                 style: .fraction) {
                 
-                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                let amount = statement.formattedAmountWithSign(formattedAmount)
                 cells.append(PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
@@ -999,13 +994,13 @@ final class OperationDetailInfoViewModel: Identifiable {
                 case .inProgress:
                     cells.append(BankCellViewModel(
                         title: title,
-                        icon: Image("waiting"),
+                        icon: .ic16Waiting,
                         name: "В обработке"))
                     
                 case .rejected:
                     cells.append(BankCellViewModel(
                         title: title,
-                        icon: Image("rejected"),
+                        icon: .ic16Denied,
                         name: "Отказ"))
                     
                 case .unknown:
@@ -1017,7 +1012,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
                 cells.append(BankCellViewModel(
                     title: title,
-                    icon: Image("rejected"),
+                    icon: .ic16Denied,
                     name: "Отказ"))
                 
             } else if operation == nil,
@@ -1037,26 +1032,21 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(debitAccounCell)
             }
             
-            let payeerLabel = statement.operationType == .debit ? "Получатель" : "Отправитель"
+            let title = statement.payeerTitle()
             
             cells.append(BankCellViewModel(
-                title: payeerLabel,
+                title: title,
                 icon: Image("hash"),
                 name: statement.fastPayment?.foreignName ?? ""))
-            if let bankName = statement.fastPayment?.foreignBankName,
-               statement.operationType == .debit {
-                
-                cells.append(BankCellViewModel(
-                    title: "Банк получателя",
-                    icon:  bankImage ?? Image("BankIcon"),
-                    name: bankName))
-                
-            } else if let bankName = statement.fastPayment?.foreignBankName {
-                
-                cells.append(BankCellViewModel(
-                    title: "Банк отправителя",
-                    icon: bankImage ?? Image("BankIcon"),
-                    name: bankName))
+            
+            if let bankName = statement.fastPayment?.foreignBankName {
+
+              let bankCell = statement.getBankCell(
+                bankName: bankName,
+                icon: bankImage
+              )
+
+              cells.append(bankCell)
             }
             
             if let comment = statement.fastPayment?.documentComment {
@@ -1089,7 +1079,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 currencyCode: currency,
                 style: .clipped) {
                 
-                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                let amount = statement.formattedAmountWithSign(formattedAmount)
                 cells.append(PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
@@ -1122,7 +1112,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 currencyCode: currency,
                 style: .clipped) {
                 
-                let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
+                let amount = statement.formattedAmountWithSign(formattedAmount)
                 cells.append(PropertyCellViewModel(
                     title: "Сумма перевода",
                     iconType: IconType.balance.icon,
@@ -1152,10 +1142,11 @@ final class OperationDetailInfoViewModel: Identifiable {
                             currencyCode: productInfo.currency,
                             style: .clipped
                            ),
-                           let icon = productInfo.smallDesign.image,
+                           let icon = model.images.value[productInfo.smallDesignMd5hash]?.image,
                            let additional = productInfo.additionalField {
+                           let iconPaymentService = model.images.value[productInfo.paymentSystemMd5Hash]?.image
                             
-                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: productInfo.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: iconPaymentService, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                         }
                     }
                 }
@@ -1180,6 +1171,28 @@ final class OperationDetailInfoViewModel: Identifiable {
         //FIXME: why dismissAction is commented?
         //        self.dismissAction = dismissAction
     }
+}
+
+private extension ProductStatementData {
+    
+    typealias BankCellVM = OperationDetailInfoViewModel.BankCellViewModel
+    
+    func getBankCell(bankName: String, icon: Image? = nil) -> BankCellVM {
+        
+        if isDebitType {
+            
+          return BankCellVM(
+            title: "Банк получателя",
+            icon: icon ?? Image("BankIcon"),
+            name: bankName)
+        } else {
+            
+          return BankCellVM(
+            title: "Банк отправителя",
+            icon: icon ?? Image("BankIcon"),
+            name: bankName)
+        }
+      }
 }
 
 extension OperationDetailInfoViewModel {
@@ -1214,14 +1227,14 @@ extension OperationDetailInfoViewModel {
         )
         let merchant = merchant(statement: statement)
         let bank = bank(
-            operationType: statement.operationType, 
+            operationType: statement.operationType,
             operation: operation,
             bank: model.bank(memberID:)
         )
         
         return [
             amount,
-            statement.operationType == .debit ? payee : nil,
+            statement.isDebitType ? payee : nil,
             dateTimeCell,
             status,
             account,
@@ -1297,18 +1310,30 @@ extension OperationDetailInfoViewModel {
             case .inProgress:
                 return .init(
                     title: title,
-                    icon: Image("waiting"),
+                    icon: .ic16Waiting,
                     name: "В обработке")
                 
             case .rejected:
                 return .init(
                     title: title,
-                    icon: Image("rejected"),
+                    icon: .ic16Denied,
                     name: "Отказ")
                 
             case .none, .unknown:
                 return nil
             }
+            
+        case .creditPlan, .debitPlan:
+            return .init(
+                title: title,
+                icon: .ic16Waiting,
+                name: "В обработке")
+            
+        case .creditFict, .debitFict:
+            return .init(
+                title: title,
+                icon: .ic16Denied,
+                name: "Отказ")
             
         case .demandDepositFromAccount, .open, .unknown:
             return nil
@@ -1319,7 +1344,7 @@ extension OperationDetailInfoViewModel {
         statement: ProductStatementData
     ) -> BankCellViewModel {
         
-        let title = statement.operationType == .debit ? "Получатель" : "Отправитель"
+        let title = statement.payeerTitle()
         
         return .init(
             title: title,
@@ -1338,11 +1363,11 @@ extension OperationDetailInfoViewModel {
         let memberID: String
         
         switch operationType {
-        case .credit:
+        case .credit, .creditPlan, .creditFict:
             title = "Банк плательщика"
             memberID = "100000000111"
             
-        case .debit:
+        case .debit, .debitPlan, .debitFict:
             title = "Банк получателя"
             guard let id = operation?.memberId
             else { return nil }
@@ -1368,7 +1393,7 @@ extension OperationDetailInfoViewModel {
 
 private extension Model {
 
-    func bank(memberID: String) ->BankData? {
+    func bank(memberID: String) -> BankData? {
         
         bankList.value[memberID]
     }
@@ -1393,7 +1418,7 @@ private extension OperationDetailInfoViewModel {
         let productCurrency = product.currency
         let title = operationType == .debit ? "Счет списания" : "Счет зачисления"
         
-        guard let smallDesign = product.smallDesign.image,
+        guard let smallDesign = model.images.value[product.smallDesignMd5hash]?.image,
               let description = product.number?.suffix(4),
               let balanceString = model.amountFormatted(
                 amount: product.balanceValue,
@@ -1407,7 +1432,7 @@ private extension OperationDetailInfoViewModel {
                 title: title,
                 icon: smallDesign,
                 name: product.displayName,
-                iconPaymentService: product.paymentSystem,
+                iconPaymentService: model.images.value[product.paymentSystemMd5Hash]?.image,
                 balance: balanceString,
                 description: "· \(description) · \(additionalField)")
         } else {
@@ -1416,7 +1441,7 @@ private extension OperationDetailInfoViewModel {
                 title: title,
                 icon: smallDesign,
                 name: product.displayName,
-                iconPaymentService: product.paymentSystem,
+                iconPaymentService: model.images.value[product.paymentSystemMd5Hash]?.image,
                 balance: balanceString,
                 description: "· \(description)")
         }
@@ -1770,7 +1795,7 @@ extension OperationDetailInfoViewModel {
                 
                 let operatorViewModel = PropertyCellViewModel(
                     title: "Наименование получателя",
-                    iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                    iconType: operatorValue?.iconImageData?.image ?? .ic40ZkxServices,
                     value: payeeFullName
                 )
                 cells.insert(operatorViewModel, at: 0)
@@ -1900,12 +1925,12 @@ extension OperationDetailInfoViewModel {
             
         case .inProgress:
             return BankCellViewModel(title: title,
-                                     icon: Image("waiting"),
+                                     icon: .ic16Waiting,
                                      name: "В обработке")
             
         case .rejected:
             return BankCellViewModel(title: title,
-                                     icon: Image("rejected"),
+                                     icon: .ic16Denied,
                                      name: "Отказ")
             
         case .unknown:
@@ -2265,7 +2290,7 @@ extension OperationDetailInfoViewModel {
         
         guard let productId = productId,
               let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
-              let icon = productData.smallDesign.image,
+              let icon = model.images.value[productData.smallDesignMd5hash]?.image,
               let balance = productData.balance,
               let formattedBalance = model.amountFormatted(
                 amount: balance,
@@ -2277,16 +2302,18 @@ extension OperationDetailInfoViewModel {
         
         let productNumber = productNumber ?? ""
         let lastNumber = productNumber.isEmpty == false ? "• \(productNumber.suffix(4)) • " : ""
-        let name = ProductView.ViewModel.name(product: productData,
-                                              style: .main, 
-                                              creditProductName: .cardTitle)
+        let name = ProductViewModel.name(
+            product: productData,
+            style: .main,
+            creditProductName: .cardTitle
+        )
         let description = productData.additionalField ?? ""
         
         let viewModel: ProductCellViewModel = .init(
             title: title,
             icon: icon,
             name: name,
-            iconPaymentService: productData.paymentSystem,
+            iconPaymentService: model.images.value[productData.paymentSystemMd5Hash]?.image,
             balance: formattedBalance,
             description: "\(lastNumber)\(description)")
         

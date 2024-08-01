@@ -7,12 +7,14 @@
 
 import LandingUIComponent
 import SwiftUI
+import UIPrimitives
 
 extension UILanding.Component.Config {
     
     static let `default`: Self = .init(
         listHorizontalRoundImage: .default,
         listHorizontalRectangleImage: .default,
+        listHorizontalRectangleLimits: .default,
         listVerticalRoundImage: .default,
         listDropDownTexts: .default,
         multiLineHeader: .default,
@@ -27,6 +29,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .default,
+        blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100
     )
 }
@@ -379,6 +382,61 @@ extension UILanding.List.HorizontalRectangleImage.Config {
         spacing: 8
     )
 }
+
+extension UILanding.List.HorizontalRectangleLimits.Config {
+        
+    static let `default`: Self = .init(
+        colors: .init(
+            arc: .mainColorsGray,
+            background: .mainColorsGrayLightest,
+            divider: .blurMediumGray30,
+            title: .textSecondary,
+            subtitle: .textPlaceholder,
+            limitNotSet: .textTertiary
+        ),
+        cornerRadius: 12,
+        fonts: .init(title: .textBodyMR14180(), subTitle: .textBodySR12160(), limit: .textH4R16240()),
+        paddings: .init(horizontal: 12, vertical: 8),
+        sizes: .init(height: 176, icon: 20, width: 180),
+        spacing: 8,
+        navigationBarConfig: .default
+    )
+}
+
+extension NavigationBarConfig {
+    
+    static let `default`: Self = .init(
+        title: .init(textFont: .textH3M18240(), textColor: .textSecondary),
+        subTitle: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
+        colors: .init(foreground: .textSecondary, background: .white),
+        sizes: .init(heightBar: 45, padding: 16, widthBackButton: 24)
+    )
+}
+
+extension UILanding.BlockHorizontalRectangular.Config {
+        
+    static let `default`: Self = .init(
+        colors: .init(
+            background: .mainColorsGrayLightest,
+            divider: .blurMediumGray30,
+            title: .secondary,
+            subtitle: .textPlaceholder,
+            warning: .mainColorsRed
+        ),
+        cornerRadius: 12,
+        sizes: .init(
+            iconWidth: 24,
+            height: 124,
+            width: 272
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
+        spacing: 8
+    )
+}
+
 
 extension UILanding.Multi.TypeButtons.Config {
     

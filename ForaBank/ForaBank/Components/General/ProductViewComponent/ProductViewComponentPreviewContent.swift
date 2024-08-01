@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import CardUI
 
 //MARK: - Preview Content
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
     
-    static let notActivate = ProductView.ViewModel(
+    static let notActivate = ProductViewModel(
         id: 0,
         header: .make(period: nil),
         cardInfo: .classicCard,
@@ -21,7 +22,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
     static let blocked = blockedCard(id: 1, .whiteSample())
@@ -30,7 +31,7 @@ extension ProductView.ViewModel {
     private static func blockedCard(
         id: ProductData.ID,
         _ appearance: Appearance
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         .init(
             id: id,
@@ -42,7 +43,7 @@ extension ProductView.ViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            showCvv: nil
+            cvvInfo: nil
         )
     }
     
@@ -52,7 +53,7 @@ extension ProductView.ViewModel {
     private static func classicCard(
         id: ProductData.ID,
         _ appearance: Appearance
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         .init(
             id: id,
@@ -64,11 +65,11 @@ extension ProductView.ViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            showCvv: nil
+            cvvInfo: nil
         )
     }
     
-    static let account = ProductView.ViewModel(
+    static let account = ProductViewModel(
         id: 3,
         header: .make(period: nil),
         cardInfo: .salaryAccount,
@@ -78,10 +79,10 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let accountSmall = ProductView.ViewModel(
+    static let accountSmall = ProductViewModel(
         id: 13,
         header: .make(period: nil),
         cardInfo: .salaryAccount,
@@ -92,41 +93,41 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let notActivateProfile = ProductView.ViewModel(
+    static let notActivateProfile = ProductViewModel(
         id: 4, header: .make(),
         cardInfo: .classicCard,
         footer: .visa,
         statusAction: .init(status: .activation(.init(state: .notActivated))),
         appearance: .init(
-            textColor: .white,
             background: .infiniteLarge,
+            colors: .init(text: .white, checkBackground: .gray),
             style: .profile
         ),
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let blockedProfile = ProductView.ViewModel(
+    static let blockedProfile = ProductViewModel(
         id: 5,
         header: .make(),
         cardInfo: .classicCard,
         footer: .mastercard,
         statusAction: .init(status: .unblock),
         appearance: .init(
-            textColor: .white,
             background: .cardInfinite,
+            colors: .init(text: .white, checkBackground: .gray),
             style: .profile),
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
-    static let classicProfile = ProductView.ViewModel(
+    static let classicProfile = ProductViewModel(
         id: 6,
         header: .make(),
         cardInfo: .init(
@@ -143,10 +144,10 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let accountProfile = ProductView.ViewModel(
+    static let accountProfile = ProductViewModel(
         id: 7,
         header: .make(),
         cardInfo: .salaryAccount,
@@ -156,10 +157,10 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let depositProfile = ProductView.ViewModel(
+    static let depositProfile = ProductViewModel(
         id: 8,
         header: .make(),
         cardInfo: .init(
@@ -173,15 +174,15 @@ extension ProductView.ViewModel {
         footer: .mastercard,
         statusAction: nil,
         appearance: .init(
-            textColor: .mainColorsBlackMedium,
-            background: .init(color: .cardRio, image: Image( "Cover Deposit"))),
+            background: .init(color: .cardRio, image: Image( "Cover Deposit")),
+            colors: .init(text: .mainColorsBlackMedium, checkBackground: .gray)),
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
     
-    static let updating = ProductView.ViewModel(
+    static let updating = ProductViewModel(
         id: 9,
         header: .make(period: nil),
         cardInfo: .init(
@@ -198,7 +199,7 @@ extension ProductView.ViewModel {
         isUpdating: true,
         productType: .card,
         cardAction: { _ in },
-        showCvv: nil
+        cvvInfo: nil
     )
 }
 
@@ -208,26 +209,27 @@ private extension Image {
     static let mastercard: Self = .init("Payment System Mastercard")
 }
 
-private extension ProductView.ViewModel.HeaderViewModel {
+private extension HeaderDetails {
     
     static func make(period: String? = "12/24") -> Self {
-        .init(logo: .ic24LogoForaColor, number: "7854", period: period)
+        .init(number: "7854", period: period)
     }
 }
 
-private extension ProductView.ViewModel.FooterViewModel {
+private extension FooterDetails {
     
-    static let visa = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .visa)
-    static let mastercard = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .mastercard)
+    static let visa: Self = .init(balance: "170 897 ₽", paymentSystem: .visa)
+    static let mastercard: Self = .init(balance: "170 897 ₽", paymentSystem: .mastercard)
 }
 
-private extension ProductView.ViewModel.Appearance {
+private extension Appearance {
     
     static func whiteSample(_ size: Size = .normal) -> Self {
         
         .make(
             textColor: .white,
             background: .infiniteSample,
+            checkBackground: .gray,
             size: size
         )
     }
@@ -236,7 +238,8 @@ private extension ProductView.ViewModel.Appearance {
         
         .make(
             textColor: .white,
-            background: .red,
+            background: .red, 
+            checkBackground: .gray,
             size: size
         )
     }
@@ -246,6 +249,7 @@ private extension ProductView.ViewModel.Appearance {
         .make(
             textColor: .white,
             background: .cardRIO,
+            checkBackground: .gray,
             size: size
         )
     }
@@ -253,14 +257,15 @@ private extension ProductView.ViewModel.Appearance {
     static func make(
         textColor: Color = .white,
         background: Background = .cardInfinite,
+        checkBackground: Color,
         opacity: Double = 0.5,
         size: Size,
         style: Style = .main
     ) -> Self {
         
         .init(
-            textColor: textColor,
             background: background,
+            colors: .init(text: textColor, checkBackground: checkBackground),
             opacity: opacity,
             size: size,
             style: style
@@ -268,7 +273,7 @@ private extension ProductView.ViewModel.Appearance {
     }
 }
 
-private extension ProductView.ViewModel.Appearance.Background {
+private extension Appearance.Background {
     
     static let red: Self =          .init(color: .mainColorsRed, image: nil)
     static let cardRIO: Self =      .init(color: .cardRio,       image: nil)
@@ -285,7 +290,7 @@ private extension ProductView.ViewModel.Appearance.Background {
     )
 }
 
-extension ProductView.ViewModel.CardInfo {
+extension CardInfo {
     
     static let classicCard: Self = .init(
         name: "Classic",
@@ -311,19 +316,19 @@ extension String {
     static let cvvTitle = "CVV"
 }
 
-extension ProductView.ViewModel.CardInfo.CVVTitle {
+extension CardInfo.CVVTitle {
     
     static let cvvTitle: Self = .init(value: "CVV")
     static let emptyTitle: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.FullNumber {
+extension CardInfo.FullNumber {
     
     static let number: Self = .init(value: "4444 4444 4444 4444")
     static let emptyNumber: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.MaskedNumber {
+extension CardInfo.MaskedNumber {
     
     static let maskedNumber: Self = .init(value: "4444 **** **** **44")
     static let emptyMaskedNumber: Self = .init(value: "")

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AccountInfoPanel
 
 extension InfoProductViewModel {
     
@@ -28,6 +29,7 @@ extension InfoProductViewModel {
             case number
             case cvvMasked
             case cvv
+            case cvvDisable
         }
         
         var title: String {
@@ -52,7 +54,7 @@ extension InfoProductViewModel {
                 return "Держатель карты"
             case .expirationDate:
                 return "Карта действует до"
-            case .cvvMasked, .cvv:
+            case .cvvMasked, .cvv, .cvvDisable:
                 return .cvvTitle
             }
         }
@@ -132,7 +134,7 @@ extension InfoProductViewModel {
                 
                 switch $0.id {
                     
-                case .cvv, .cvvMasked:
+                case .cvv, .cvvMasked, .cvvDisable:
                     return nil
                     
                 default:
@@ -140,13 +142,24 @@ extension InfoProductViewModel {
                 }
             }.joined(separator: "\n")
         }
+        
+        var isAccountHolder: Bool {
+            
+            self.currentValues.first {
+                
+                if $0.id == .accountNumber {
+                    return !$0.subtitle.isEmpty
+                }
+                return false
+            } != nil
+        }
     }
 }
 
 extension InfoProductViewModel {
     
     static func reduceSingle(
-        data: ProductDetailsData
+        data: AccountInfoPanel.ProductDetails
     ) -> [DocumentItemModel] {
         
         return [
@@ -174,7 +187,7 @@ extension InfoProductViewModel {
     }
     
     static func reduceMultiple(
-        data: ProductDetailsData
+        data: AccountInfoPanel.ProductDetails
     ) -> [DocumentItemModel] {
         
         return [
@@ -302,13 +315,12 @@ extension InfoProductViewModel {
             }
         } else {
             
-            if let numberMask = data.numberMasked,
-               let number = data.number {
+            if let number = data.asCard?.number {
                 
                 list.append(
                     .init(
                         id: .numberMasked,
-                        subtitle: numberMask,
+                        subtitle: number.cardNumberMasked(),
                         valueForCopy: number.formatted()
                     )
                 )
@@ -334,11 +346,13 @@ extension InfoProductViewModel {
                     valueForCopy: expirationDate
                 )
             )
-            if needShowCvv {
+            
+            if data.cardType == .additionalOther {
+                
                 list.append(
                     .init(
-                        id: .cvv,
-                        subtitle: "***",
+                        id: .cvvDisable,
+                        subtitle: "Недоступно",
                         valueForCopy: "" // CVV не копируем!!!
                     )
                 )
@@ -346,7 +360,7 @@ extension InfoProductViewModel {
                 
                 list.append(
                     .init(
-                        id: .cvvMasked,
+                        id: needShowCvv ? .cvv : .cvvMasked,
                         subtitle: "***",
                         valueForCopy: "" // CVV не копируем!!!
                     )
@@ -397,5 +411,14 @@ extension Dictionary where Key == DocumentItemModel.ID, Value == Image {
         .cvvMasked : .ic24Eye,
         .number: .ic24EyeOff,
         .cvv : .ic24EyeOff,
+        .cvvDisable: .ic24Info
     ]
+}
+
+extension Array where Element == InfoProductViewModel.ItemViewModelForList {
+    
+    var isAccountHolder: Bool {
+        
+        (self.first(where: { $0.isAccountHolder }) != nil)
+    }
 }

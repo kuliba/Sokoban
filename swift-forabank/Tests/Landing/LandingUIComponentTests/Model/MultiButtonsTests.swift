@@ -57,21 +57,7 @@ final class MultiButtonsTests: XCTestCase {
         let sut = makeSUT(
             items: [item],
             selectDetail: { _ in startValue = .selectDetail },
-            action: {
-                switch $0 {
-                case let .card(card):
-                    switch card {
-                        
-                    case .goToMain:
-                        startValue = .goMain
-                    case .order:
-                        startValue = .orderCard
-                    }
-                case .sticker(_):
-                    break
-                }
-               
-            }
+            action: {_ in }
         )
         
         sut.itemAction(item: item)
@@ -147,12 +133,17 @@ final class MultiButtonsTests: XCTestCase {
                         received.append(.goMain)
                     case .order:
                         received.append(.orderCard)
+                    case .openUrl:
+                        received.append(.openLink)
                     }
                 case .sticker(_):
                     break
+                case .bannerAction:
+                    break
+                case .listVerticalRoundImageAction:
+                    break
                 }
-            },
-            openLink: { item.link.map { _ in received.append(.openLink) }}
+            }
         )
         
         XCTAssertEqual(received, expectedActionTypes)

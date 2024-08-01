@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Shimmer
+import UIPrimitives
 import Combine
 
 //MARK: - ViewModel
@@ -251,7 +251,7 @@ struct MainSectionPromoView: View {
                 Color.mainColorsGrayLightest
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 288, height: 124)
-                    .shimmering(active: true, bounce: false)
+                    .shimmering()
                     .accessibilityIdentifier("placeholderBanner")
                 
             case .image(let image):

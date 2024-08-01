@@ -28,16 +28,16 @@ extension Services {
                 switch self {
                 case let .processing(processing):
                     return "processing/\(processing.rawValue)"
-
+                    
                 case .dict:
                     return "dict"
-
+                    
                 case .binding:
                     return "rest/binding"
-
+                    
                 case .rest:
                     return "rest"
-
+                    
                 case .transfer:
                     return "rest/transfer"
                 }
@@ -57,40 +57,52 @@ extension Services {
             case v1
             case v2
             case v4
+            case v5
         }
         
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case blockCard
             case changeClientConsentMe2MePull
             case changePIN
+            case changeSVCardLimit
+            case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
-            case createStickerPayment
             case createSberQRPayment
+            case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
+            case getAllLatestPayments
             case getBankDefault
             case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getJsonAbroad
-            case makeSetBankDefault
-            case getSberQRData
             case getOperationDetailByPaymentId
+            case getOperatorsListByParam
             case getPINConfirmationCode
             case getPrintForm
-            case getProcessingSessionCode
+            case getProductDetails
             case getProductDynamicParamsList
-            case getSvgImageList
+            case getProductListByType
+            case getProcessingSessionCode
             case getScenarioQRData
+            case getSberQRData
             case getStickerPayment
+            case getSVCardLimits
+            case getSvgImageList
+            case getVerificationCode
+            case makeSetBankDefault
             case makeTransfer
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
+            case unblockCard
+            case userVisibilityProductsSettings
         }
     }
 }
@@ -166,6 +178,23 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let changeSVCardLimit: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .changeSVCardLimit
+    )
+
+    static func createAnywayTransfer(
+        version: Services.Endpoint.Version? = nil
+    ) -> Self {
+        
+        return .init(
+            pathPrefix: .transfer,
+            version: version,
+            serviceName: .createAnywayTransfer
+        )
+    }
+    
     static let createCommissionProductTransfer: Self = .init(
         pathPrefix: .transfer,
         version: nil,
@@ -213,25 +242,25 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .getBankDefault
     )
-
+    
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getC2BSub
     )
-
+    
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: nil,
-        serviceName: .getCardStatementForPeriod_V3
+        version: .v4,
+        serviceName: .getCardStatementForPeriod
     )
-
+    
     static let getClientConsentMe2MePull: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .getClientConsentMe2MePull
     )
-
+    
     static let getImageList: Self = .init(
         pathPrefix: .dict,
         version: nil,
@@ -262,10 +291,22 @@ extension Services.Endpoint {
         serviceName: .getProcessingSessionCode
     )
     
+    static let getProductDetails: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getProductDetails
+    )
+    
     static let getProductDynamicParamsList: Self = .init(
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getProductDynamicParamsList
+    )
+    
+    static let getProductListByType: Self = .init(
+        pathPrefix: .rest,
+        version: .v5,
+        serviceName: .getProductListByType
     )
 
     static let getSberQRData: Self = .init(
@@ -276,7 +317,7 @@ extension Services.Endpoint {
     
     static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
-        version: .v1,
+        version: .v2,
         serviceName: .getScenarioQRData
     )
     
@@ -284,6 +325,18 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getSVCardLimits: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getSVCardLimits
+    )
+
+    static let getVerificationCode: Self = .init(
+        pathPrefix: .transfer,
+        version: .v2,
+        serviceName: .getVerificationCode
     )
     
     static let makeSetBankDefault: Self = .init(
@@ -295,6 +348,12 @@ extension Services.Endpoint {
     static let makeTransfer: Self = .init(
         pathPrefix: .transfer,
         version: nil,
+        serviceName: .makeTransfer
+    )
+    
+    static let makeTransferV2: Self = .init(
+        pathPrefix: .transfer,
+        version: .v2,
         serviceName: .makeTransfer
     )
     
@@ -316,9 +375,39 @@ extension Services.Endpoint {
         serviceName: .showCVV
     )
     
+    static let blockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .blockCard
+    )
+
+    static let unblockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .unblockCard
+    )
+
+    static let userVisibilityProductsSettings: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .userVisibilityProductsSettings
+    )
+
     static let updateFastPaymentContract: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .updateFastPaymentContract
+    )
+    
+    static let getOperatorsListByParam: Self = .init(
+        pathPrefix: .dict,
+        version: .none,
+        serviceName: .getOperatorsListByParam
+    )
+    
+    static let getAllLatestPayments: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getAllLatestPayments
     )
 }

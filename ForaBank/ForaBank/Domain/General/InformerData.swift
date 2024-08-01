@@ -48,3 +48,8 @@ struct InformerData {
         case copyInfo
     }
 }
+
+extension InformerData {
+    
+    static let updateFailureInfo: Self = .init(message: "Не удалось обновить продукты\nПопробуйте позже.", icon: .close)
+}
