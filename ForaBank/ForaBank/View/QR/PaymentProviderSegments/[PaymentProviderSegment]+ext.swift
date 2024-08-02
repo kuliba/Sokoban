@@ -7,12 +7,12 @@
 
 import ForaTools
 
-extension Array where Element == PaymentProviderSegment {
+extension Array where Element == PaymentProviderSegment<SegmentedPaymentProvider> {
     
     init<T: Comparable, Value: Comparable>(
         with providers: [SegmentedPaymentProvider],
-        sortingSegmentsBy segmentKeyPath: KeyPath<PaymentProviderSegment, T> = \.title,
-        sortingProvidersByKeyPath providerKeyPath: KeyPath<PaymentProviderSegment.Provider, Value> = \.title
+        sortingSegmentsBy segmentKeyPath: KeyPath<PaymentProviderSegment<SegmentedPaymentProvider>, T> = \.title,
+        sortingProvidersByKeyPath providerKeyPath: KeyPath<SegmentedPaymentProvider, Value> = \.title
     ) {
         let groupedProviders = Dictionary(grouping: providers, by: \.segment)
         
@@ -21,7 +21,6 @@ extension Array where Element == PaymentProviderSegment {
             return .init(
                 title: segment,
                 providers: providers
-                    .map { .init($0) }
                     .sorted(by: providerKeyPath)
             )
         }
@@ -30,8 +29,8 @@ extension Array where Element == PaymentProviderSegment {
     
     init<T: Comparable, Value: Comparable>(
         with providers: [SegmentedPaymentProvider],
-        sortingSegmentsBy segmentKeyPath: KeyPath<PaymentProviderSegment, T> = \.title,
-        sortingProvidersByKeyPath providerKeyPath: KeyPath<PaymentProviderSegment.Provider, Value?>
+        sortingSegmentsBy segmentKeyPath: KeyPath<PaymentProviderSegment<SegmentedPaymentProvider>, T> = \.title,
+        sortingProvidersByKeyPath providerKeyPath: KeyPath<SegmentedPaymentProvider, Value?>
     ) {
         let groupedProviders = Dictionary(grouping: providers, by: \.segment)
         
@@ -40,23 +39,9 @@ extension Array where Element == PaymentProviderSegment {
             return .init(
                 title: segment,
                 providers: providers
-                    .map { .init($0) }
                     .sorted(by: providerKeyPath)
             )
         }
         .sorted(by: segmentKeyPath)
-    }
-}
-
-extension PaymentProviderSegment.Provider {
-    
-    init(_ provider: SegmentedPaymentProvider) {
-        
-        self.init(
-            id: provider.id,
-            icon: provider.icon,
-            inn: provider.inn,
-            title: provider.title
-        )
     }
 }

@@ -5,18 +5,12 @@
 //  Created by Igor Malyarov on 22.07.2024.
 //
 
-struct PaymentProviderSegment: Equatable, Identifiable {
+struct PaymentProviderSegment<Provider>: Identifiable {
     
     let title: String
     let providers: [Provider]
     
-    struct Provider: Equatable, Identifiable {
-        
-        let id: String
-        let icon: String?
-        let inn: String?
-        let title: String
-    }
-    
     var id: String { title }
 }
+
+extension PaymentProviderSegment: Equatable where Provider: Equatable {}

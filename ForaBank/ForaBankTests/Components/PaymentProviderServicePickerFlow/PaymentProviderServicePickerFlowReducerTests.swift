@@ -107,11 +107,18 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
         icon: String? = anyMessage(),
         inn: String? = anyMessage(),
         title: String = anyMessage(),
+        segment: String = anyMessage(),
         qrCode: QRCode = .init(original: "", rawData: [:])
     ) -> PaymentProviderServicePickerPayload {
         
         return .init(
-            provider: .init(id: id, icon: icon, inn: inn, title: title),
+            provider: .init(
+                id: id, 
+                icon: icon,
+                inn: inn,
+                title: title,
+                segment: segment
+            ),
             qrCode: qrCode
         )
     }

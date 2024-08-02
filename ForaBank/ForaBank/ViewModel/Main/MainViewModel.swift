@@ -227,7 +227,7 @@ extension MainViewModel {
     }
     
     func select(
-        provider: PaymentProviderSegment.Provider
+        provider: SegmentedPaymentProvider
     ) {
         guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
         else { return }
@@ -968,7 +968,7 @@ extension MainViewModel {
             
         case let (.none, .some(provider)):
             let pickerModel = makeServicePicker(with: .init(
-                provider: .init(provider),
+                provider: provider,
                 qrCode: qr
             ))
             route.destination = .providerServicePicker(pickerModel)

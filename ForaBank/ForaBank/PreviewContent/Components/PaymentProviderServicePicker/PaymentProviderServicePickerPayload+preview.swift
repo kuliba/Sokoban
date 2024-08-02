@@ -15,7 +15,8 @@ extension PaymentProviderServicePickerPayload {
             id: UUID().uuidString,
             icon: nil,
             inn: nil,
-            title: "Some Provider"
+            title: "Some Provider",
+            segment: "Services"
         ),
         qrCode: .init(original: "", rawData: [:])
     )

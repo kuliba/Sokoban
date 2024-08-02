@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct PaymentProviderSegmentsView<ProviderView, Footer>: View
-where ProviderView: View,
+struct PaymentProviderSegmentsView<Provider, ProviderView, Footer>: View
+where Provider: Identifiable,
+      ProviderView: View,
       Footer: View {
     
-    let segments: [Segment]
+    let segments: [Segment<Provider>]
     let providerView: (Provider) -> ProviderView
     let footer: () -> Footer
     let config: Config
@@ -37,14 +38,13 @@ where ProviderView: View,
 extension PaymentProviderSegmentsView {
     
     typealias Segment = PaymentProviderSegment
-    typealias Provider = PaymentProviderSegment.Provider
     typealias Config = PaymentProviderSegmentsViewConfig
 }
 
 private extension PaymentProviderSegmentsView {
     
     func segmentView(
-        segment: Segment
+        segment: Segment<Provider>
     ) -> some View {
         
         VStack(spacing: 13) {
@@ -66,14 +66,13 @@ private extension PaymentProviderSegmentsView {
     }
 }
 
-
 #Preview {
     PaymentProviderSegmentsView(
         segments: .init(with: [SegmentedPaymentProvider].preview),
         providerView: { provider in
             
             VStack(alignment: .leading) {
-             
+                
                 Text((provider.icon ?? "?") + " " + provider.title)
                 provider.inn.map(Text.init)
                     .foregroundColor(.secondary)

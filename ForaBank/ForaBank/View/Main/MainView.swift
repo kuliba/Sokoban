@@ -373,7 +373,7 @@ private extension MainView {
     }
     
     func paymentProviderView(
-        provider: PaymentProviderSegment.Provider
+        provider: SegmentedPaymentProvider
     ) -> some View {
         
         Button {
