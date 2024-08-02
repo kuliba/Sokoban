@@ -8,7 +8,7 @@
 extension Model {
     
     func paymentProducts() -> [ProductData] {
-     
+        
         // TODO: fix filtering according to https://shorturl.at/hIE5B
         allProducts
             .filter(\.allowDebit)
@@ -19,12 +19,12 @@ extension Model {
 
 extension Model {
     
-    func paymentProductsForSberQR() -> [ProductData] {
-     
+    func paymentEligibleProducts() -> [ProductData] {
+        
         allProducts
             .filter(\.allowDebit)
             .filter(\.isActive)
-            .filter(\.isMainOrAdditionalSelfAccOwnProduct)
+            .filter(\.isPaymentEligible)
     }
 }
 
@@ -74,5 +74,32 @@ private extension ProductData {
         }
         
         return false
+    }
+    
+    var isPaymentEligible: Bool {
+        
+        if let card = self as? ProductCardData,
+           let cardType = card.cardType {
+            
+            return cardType.isPaymentEligible
+        }
+        
+        if self is ProductAccountData {
+            
+            return true
+        }
+        
+        return false
+    }
+}
+
+extension ProductCardData.CardType {
+    
+    var isPaymentEligible: Bool {
+        
+        return self == .regular ||
+        self == .main ||
+        self == .additionalSelf ||
+        self == .additionalSelfAccOwn
     }
 }

@@ -311,7 +311,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let elementMapper = AnywayElementModelMapper(
             currencyOfProduct: currencyOfProduct,
             format: format,
-            getProducts: model.productSelectProducts,
+            getProducts: model.productSelectProductsForSberQR,
             flag: flag.optionOrStub
         )
         
