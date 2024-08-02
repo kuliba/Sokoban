@@ -28,7 +28,12 @@ extension QRScanResultHandlerComposer {
     
     func compose() -> QRScanResultHandler {
         
-        return .init(flag: flag, getMapping: model.getMapping, model: model)
+        return .init(
+            flag: flag,
+            getMapping: model.getMapping,
+            mapSingle: model.mapSingle(_:_:_:),
+            model: model
+        )
     }
 }
 
@@ -36,20 +41,24 @@ final class QRScanResultHandler {
     
     private let flag: Flag
     private let getMapping: GetMapping
+    private let mapSingle: MapSingle
     private let model: Model
     
     init(
         flag: Flag,
         getMapping: @escaping GetMapping,
+        mapSingle: @escaping MapSingle,
         model: Model
     ) {
         self.flag = flag
         self.getMapping = getMapping
+        self.mapSingle = mapSingle
         self.model = model
     }
     
     typealias Flag = UtilitiesPaymentsFlag
     typealias GetMapping = () -> QRMapping?
+    typealias MapSingle = (OperatorGroupData.OperatorData, QRCode, QRMapping) -> QRModelResult.Mapped
 }
 
 extension QRScanResultHandler {
@@ -110,7 +119,7 @@ private extension QRScanResultHandler {
                 completion(.none(qr))
                 
             case let .operator(`operator`):
-                completion(model.mapSingle(`operator`, qr, qrMapping))
+                completion(mapSingle(`operator`, qr, qrMapping))
                 
             case let .provider(provider):
                 handleSingle(provider, qr, qrMapping, completion)
