@@ -1275,6 +1275,8 @@
 		2ACFD6562C5CC751003F08AE /* QRModelWrapperEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6552C5CC751003F08AE /* QRModelWrapperEvent.swift */; };
 		2ACFD6582C5CC762003F08AE /* QRModelWrapperState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6572C5CC762003F08AE /* QRModelWrapperState.swift */; };
 		2ACFD65B2C5CC862003F08AE /* QRModelWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65A2C5CC862003F08AE /* QRModelWrapperTests.swift */; };
+		2ACFD6602C5CCAB7003F08AE /* LoadResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65F2C5CCAB7003F08AE /* LoadResultTests.swift */; };
+		2ACFD6612C5CCB2C003F08AE /* LoadResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
@@ -4454,6 +4456,8 @@
 		2ACFD6552C5CC751003F08AE /* QRModelWrapperEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapperEvent.swift; sourceTree = "<group>"; };
 		2ACFD6572C5CC762003F08AE /* QRModelWrapperState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapperState.swift; sourceTree = "<group>"; };
 		2ACFD65A2C5CC862003F08AE /* QRModelWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapperTests.swift; sourceTree = "<group>"; };
+		2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResult.swift; sourceTree = "<group>"; };
+		2ACFD65F2C5CCAB7003F08AE /* LoadResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResultTests.swift; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -7199,6 +7203,7 @@
 				0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */,
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
 				0BBC562229472CB600B95E6C /* ImagePackerController.swift */,
+				2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -9430,13 +9435,14 @@
 		2A7688D42AF3A72000045293 /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
-				2A9049492C32696F00313CB8 /* ImageLoader */,
 				2A0439C42BB405F40063B7AB /* AnywayPayment */,
-				2AD8E5462C116EE100C31E48 /* FeatureFlags */,
-				2A65FB442B4E862000A84F9E /* FastPayments */,
-				D4A5A79D2BAA58BD006EE7A5 /* GetProductListByType */,
 				2A7688D52AF3A73600045293 /* CVVPIN */,
+				2A65FB442B4E862000A84F9E /* FastPayments */,
+				2AD8E5462C116EE100C31E48 /* FeatureFlags */,
+				D4A5A79D2BAA58BD006EE7A5 /* GetProductListByType */,
+				2A9049492C32696F00313CB8 /* ImageLoader */,
 				2A35DDA62C021A5C00EFF0EB /* PaymentsTransfers */,
+				2ACFD65C2C5CCA65003F08AE /* QR */,
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 			);
@@ -10456,6 +10462,14 @@
 				2ACFD65A2C5CC862003F08AE /* QRModelWrapperTests.swift */,
 			);
 			path = QRModelWrapper;
+			sourceTree = "<group>";
+		};
+		2ACFD65C2C5CCA65003F08AE /* QR */ = {
+			isa = PBXGroup;
+			children = (
+				2ACFD65F2C5CCAB7003F08AE /* LoadResultTests.swift */,
+			);
+			path = QR;
 			sourceTree = "<group>";
 		};
 		2AD0928F2BFA30A100777EE4 /* TransactionPreview */ = {
@@ -19172,6 +19186,7 @@
 				77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */,
 				0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */,
 				77B6B35928509A0300E3001B /* ProductStatementsUpdateState.swift in Sources */,
+				2ACFD6612C5CCB2C003F08AE /* LoadResult.swift in Sources */,
 				77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */,
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
 				834E3F6A2AC2C77600E49C2B /* QRDataMapper.swift in Sources */,
@@ -20018,6 +20033,7 @@
 				2A51903E2A7E77B90014B0B7 /* Model+authorizedHTTPClientTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				2A0D9B7F2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift in Sources */,
+				2ACFD6602C5CCAB7003F08AE /* LoadResultTests.swift in Sources */,
 				2A6724102ADADA2A00FAD522 /* Crypto+anySecKey.swift in Sources */,
 				2AEDAD5C29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift in Sources */,
 				2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */,
