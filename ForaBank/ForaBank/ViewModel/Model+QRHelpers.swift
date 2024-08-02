@@ -30,17 +30,12 @@ extension Model {
     }
     
     func segmentedPaymentProviders(
-        matching code: QRCode,
-        mapping: QRMapping
+        matching qrCode: QRCode,
+        qrMapping: QRMapping
     ) -> [SegmentedPaymentProvider]? {
         
-        let cached = loadCached(matching: code, mapping: mapping)
-        let anyway = operatorsFromQR(code, mapping)?
-            .filter(\.isGroup)
-            .compactMap {
-                
-                SegmentedPaymentProvider(with: $0, segment: serviceName(for: $0))
-            }
+        let cached = loadCached(matching: qrCode, qrMapping: qrMapping)
+        let anyway = segmentedFromDictionary(matching: qrCode, qrMapping: qrMapping)
         
         switch (cached, anyway) {
         case (.none, .none):
@@ -57,12 +52,25 @@ extension Model {
         }
     }
     
-    func loadCached(
-        matching code: QRCode,
-        mapping: QRMapping
+    func segmentedFromDictionary(
+        matching qrCode: QRCode,
+        qrMapping: QRMapping
     ) -> [SegmentedPaymentProvider]? {
         
-        guard let inn = code.stringValue(type: .general(.inn), mapping: mapping)
+        return operatorsFromQR(qrCode, qrMapping)?
+            .filter(\.isGroup)
+            .compactMap {
+                
+                SegmentedPaymentProvider(with: $0, segment: serviceName(for: $0))
+            }
+    }
+    
+    func loadCached(
+        matching code: QRCode,
+        qrMapping: QRMapping
+    ) -> [SegmentedPaymentProvider]? {
+        
+        guard let inn = code.stringValue(type: .general(.inn), mapping: qrMapping)
         else { return nil }
         
         return loadCached(with: inn)
