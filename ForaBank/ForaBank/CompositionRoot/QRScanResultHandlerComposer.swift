@@ -77,9 +77,14 @@ private extension Model {
         _ qrMapping: QRMapping,
         _ completion: @escaping (LoadResult<Operator, Provider>) -> Void
     ) {
-        let operators = operatorsFromQR(qr, qrMapping) ?? []
-        let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
-        
-        completion(.init(operators: operators, providers: providers))
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            
+            guard let self else { return }
+            
+            let operators = operatorsFromQR(qr, qrMapping) ?? []
+            let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
+            
+            completion(.init(operators: operators, providers: providers))
+        }
     }
 }
