@@ -69,6 +69,8 @@ extension Model {
         with inn: String
     ) -> [SegmentedPaymentProvider]? {
         
+        // TODO: replace with loader with fallback to remote
+        // TODO: expensive! make async with QOS
         localAgent.load(type: [CachingSberOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedPaymentProvider.init)
@@ -79,6 +81,7 @@ private extension SegmentedPaymentProvider {
     
     init(with data: OperatorGroupData.OperatorData) {
         
+        // TODO: derive from data
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
         
         self.init(
@@ -92,6 +95,7 @@ private extension SegmentedPaymentProvider {
     
     init(with `operator`: CachingSberOperator) {
         
+        // TODO: add `segment` property to `CachingSberOperator`
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
         
         self.init(
