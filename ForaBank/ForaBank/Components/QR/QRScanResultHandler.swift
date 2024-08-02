@@ -31,6 +31,7 @@ extension QRScanResultHandlerComposer {
         return .init(
             flag: flag,
             getMapping: model.getMapping,
+            getOperators: model.operatorsFromQR(_:_:_:),
             mapSingle: model.mapSingle(_:_:_:),
             model: model
         )
@@ -41,24 +42,31 @@ final class QRScanResultHandler {
     
     private let flag: Flag
     private let getMapping: GetMapping
+    private let getOperators: GetOperators
     private let mapSingle: MapSingle
     private let model: Model
     
     init(
         flag: Flag,
         getMapping: @escaping GetMapping,
+        getOperators: @escaping GetOperators,
         mapSingle: @escaping MapSingle,
         model: Model
     ) {
         self.flag = flag
         self.getMapping = getMapping
+        self.getOperators = getOperators
         self.mapSingle = mapSingle
         self.model = model
     }
     
     typealias Flag = UtilitiesPaymentsFlag
     typealias GetMapping = () -> QRMapping?
+    typealias GetOperators = (QRCode, QRMapping, @escaping (LoadResult<Operator, Provider>) -> Void) -> Void
     typealias MapSingle = (OperatorGroupData.OperatorData, QRCode, QRMapping) -> QRModelResult.Mapped
+    
+    typealias Operator = OperatorGroupData.OperatorData
+    typealias Provider = PaymentProvider
 }
 
 extension QRScanResultHandler {
@@ -104,7 +112,7 @@ private extension QRScanResultHandler {
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
     ) {
-        operatorsFromQR(qr, qrMapping) { [weak self] loadResult in
+        getOperators(qr, qrMapping) { [weak self] loadResult in
             
             guard let self else { return }
             
@@ -126,20 +134,6 @@ private extension QRScanResultHandler {
             }
         }
     }
-    
-    private func operatorsFromQR(
-        _ qr: QRCode,
-        _ qrMapping: QRMapping,
-        _ completion: @escaping (LoadResult<Operator, Provider>) -> Void
-    ) {
-        let operators = model.operatorsFromQR(qr, qrMapping) ?? []
-        let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
-        
-        completion(.init(operators: operators, providers: providers))
-    }
-    
-    private typealias Operator = OperatorGroupData.OperatorData
-    private typealias Provider = PaymentProvider
     
     private func handleSingle(
         _ provider: Provider,
@@ -186,5 +180,19 @@ private extension Model {
         } else {
             return .single(qr, qrMapping)
         }
+    }
+    
+    typealias Operator = OperatorGroupData.OperatorData
+    typealias Provider = PaymentProvider
+    
+    func operatorsFromQR(
+        _ qr: QRCode,
+        _ qrMapping: QRMapping,
+        _ completion: @escaping (LoadResult<Operator, Provider>) -> Void
+    ) {
+        let operators = operatorsFromQR(qr, qrMapping) ?? []
+        let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
+        
+        completion(.init(operators: operators, providers: providers))
     }
 }
