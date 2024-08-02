@@ -21,7 +21,7 @@ final class PaymentProviderSegmentTests: XCTestCase {
         
         XCTAssertNoDiff(Segments(with: [
             .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
-        ], sortingProvidersByKeyPath: \.title), [
+        ]), [
             .init(title: segment, providers: [
                 .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
             ])
@@ -37,7 +37,7 @@ final class PaymentProviderSegmentTests: XCTestCase {
         XCTAssertNoDiff(Segments(with: [
             .init(id: id1, icon: icon1, inn: inn1, title: "b", segment: segment),
             .init(id: id2, icon: icon2, inn: inn2, title: "a", segment: segment)
-        ], sortingProvidersByKeyPath: \.title), [
+        ]), [
             .init(title: segment, providers: [
                 .init(id: id2, icon: icon2, inn: inn2, title: "a", segment: segment),
                 .init(id: id1, icon: icon1, inn: inn1, title: "b", segment: segment),
@@ -51,9 +51,9 @@ final class PaymentProviderSegmentTests: XCTestCase {
         let (id2, icon2, title2, inn2) = (anyMessage(), anyMessage(), anyMessage(), anyMessage())
         
         XCTAssertNoDiff(Segments(with: [
+            .init(id: id2, icon: icon2, inn: inn2, title: title2, segment: "b"),
             .init(id: id1, icon: icon1, inn: inn1, title: title1, segment: "a"),
-            .init(id: id2, icon: icon2, inn: inn2, title: title2, segment: "b")
-        ], sortingProvidersByKeyPath: \.title), [
+        ]), [
             .init(title: "a", providers: [
                 .init(id: id1, icon: icon1, inn: inn1, title: title1, segment: "a")
             ]),
@@ -73,7 +73,7 @@ final class PaymentProviderSegmentTests: XCTestCase {
             .init(id: id1, icon: icon1, inn: inn1, title: title1, segment: "2"),
             .init(id: id2, icon: icon2, inn: "2", title: "a", segment: "1"),
             .init(id: id3, icon: icon3, inn: "1", title: "b", segment: "1")
-        ], sortingProvidersByKeyPath: \.inn), [
+        ], providerKeyPath: \.inn), [
             .init(title: "1", providers: [
                 .init(id: id3, icon: icon3, inn: "1", title: "b", segment: "1"),
                 .init(id: id2, icon: icon2, inn: "2", title: "a", segment: "1"),
@@ -93,7 +93,7 @@ final class PaymentProviderSegmentTests: XCTestCase {
         XCTAssertNoDiff(Segments(with: [
             .init(id: id1, icon: icon1, inn: nil, title: title1, segment: segment),
             .init(id: id2, icon: icon2, inn: nil, title: title2, segment: segment)
-        ], sortingProvidersByKeyPath: \.inn), [
+        ], providerKeyPath: \.inn), [
             .init(title: segment, providers: [
                 .init(id: id1, icon: icon1, inn: nil, title: title1, segment: segment),
                 .init(id: id2, icon: icon2, inn: nil, title: title2, segment: segment),
