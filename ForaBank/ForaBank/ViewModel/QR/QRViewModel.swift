@@ -340,7 +340,7 @@ extension QRViewModel {
         case failedView(QRFailedViewModel)
     }
     
-    enum ScanResult {
+    enum ScanResult: Equatable {
         
         case qrCode(QRCode)
         case c2bURL(URL)
