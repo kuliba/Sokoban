@@ -353,37 +353,6 @@ extension QRViewModel {
 
 // MARK: - Resolvers
 
-extension QRViewModel.ScanResult {
-    
-    // TODO: add tests
-    init(string: String) {
-        
-        if let url = URL(string: string) {
-            
-            if url.absoluteString.contains("qr.nspk.ru") {
-                
-                self = .c2bURL(url)
-                
-            } else if url.absoluteString.contains("sub.nspk.ru") {
-                
-                self = .c2bSubscribeURL(url)
-                
-            } else {
-                
-                self = .url(url)
-            }
-            
-        } else if let qrCode = QRCode(string: string) {
-            
-            self = .qrCode(qrCode)
-            
-        } else {
-            
-            self = .unknown
-        }
-    }
-}
-
 extension QRViewModel {
     
     func qrFromPDF(path: URL) -> UIImage? {
@@ -530,7 +499,7 @@ enum QRViewModelAction {
     struct AccessCamera: Action {}
     struct AccessPhotoGallery: Action {}
     struct Flashlight: Action {}
-    struct Result: Action {
+    struct Result: Action & Equatable {
         
         let result: QRViewModel.ScanResult
     }
