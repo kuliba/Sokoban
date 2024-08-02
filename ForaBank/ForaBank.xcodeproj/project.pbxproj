@@ -1280,6 +1280,7 @@
 		2ACFD6632C5CCBCC003F08AE /* QRScanResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */; };
 		2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */; };
 		2ACFD6672C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6662C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift */; };
+		2ACFD6692C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6682C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
@@ -4464,6 +4465,7 @@
 		2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandler.swift; sourceTree = "<group>"; };
 		2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorProvider.swift; sourceTree = "<group>"; };
 		2ACFD6662C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandlerComposer.swift; sourceTree = "<group>"; };
+		2ACFD6682C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandlerMicroServices.swift; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -7212,6 +7214,7 @@
 				2ACFD65D2C5CCA8D003F08AE /* OperatorProviderLoadResult.swift */,
 				2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */,
 				2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */,
+				2ACFD6682C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -18826,6 +18829,7 @@
 				2A1E76B62AEE9B2500B33AF7 /* CVVPINJSONMaker.swift in Sources */,
 				775875472798C87B0080115D /* Option.swift in Sources */,
 				2ACFD6512C5CC700003F08AE /* QRModelWrapper.swift in Sources */,
+				2ACFD6692C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift in Sources */,
 				77448C0F2872FC05009EEEA8 /* PrintFormViewComponent.swift in Sources */,
 				68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */,
 				770E68B02902B03000586FC4 /* Model+PaymentsTransfer.swift in Sources */,

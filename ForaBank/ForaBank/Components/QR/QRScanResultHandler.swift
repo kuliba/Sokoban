@@ -10,26 +10,14 @@ import Foundation
 
 final class QRScanResultHandler {
     
-    private let getMapping: GetMapping
-    private let getOperators: GetOperators
-    private let mapSingle: MapSingle
+    private let microServices: MicroServices
     
-    init(
-        getMapping: @escaping GetMapping,
-        getOperators: @escaping GetOperators,
-        mapSingle: @escaping MapSingle
-    ) {
-        self.getMapping = getMapping
-        self.getOperators = getOperators
-        self.mapSingle = mapSingle
+    init(microServices: MicroServices) {
+        
+        self.microServices = microServices
     }
     
-    typealias GetMapping = () -> QRMapping?
-    typealias GetOperators = (QRCode, QRMapping, @escaping (OperatorProviderLoadResult<Operator, Provider>) -> Void) -> Void
-    typealias MapSingle = (OperatorGroupData.OperatorData, QRCode, QRMapping) -> QRModelResult.Mapped
-    
-    typealias Operator = OperatorGroupData.OperatorData
-    typealias Provider = PaymentProvider
+    typealias MicroServices = QRScanResultHandlerMicroServices
 }
 
 extension QRScanResultHandler {
@@ -42,7 +30,7 @@ extension QRScanResultHandler {
         
         switch scanResult {
         case let .qrCode(qrCode):
-            if let qrMapping = getMapping() {
+            if let qrMapping = microServices.getMapping() {
                 return handleMapped(qrCode, qrMapping) { completion(.mapped($0)) }
             } else {
                 qrModelResult = .failure(qrCode)
@@ -75,7 +63,7 @@ private extension QRScanResultHandler {
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
     ) {
-        getOperators(qr, qrMapping) { [weak self] loadResult in
+        microServices.getOperators(qr, qrMapping) { [weak self] loadResult in
             
             guard let self else { return }
             
@@ -90,7 +78,7 @@ private extension QRScanResultHandler {
                 completion(.none(qr))
                 
             case let .operator(`operator`):
-                completion(mapSingle(`operator`, qr, qrMapping))
+                completion(microServices.mapSingle(`operator`, qr, qrMapping))
                 
             case let .provider(provider):
                 handleSingle(provider, qr, qrMapping, completion)
@@ -110,4 +98,6 @@ private extension QRScanResultHandler {
             completion(.provider(provider))
         }
     }
+
+    private typealias Provider = PaymentProvider
 }

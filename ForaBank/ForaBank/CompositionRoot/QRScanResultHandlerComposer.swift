@@ -29,9 +29,11 @@ extension QRScanResultHandlerComposer {
     func compose() -> QRScanResultHandler {
         
         return .init(
-            getMapping: model.getMapping,
-            getOperators: model.operatorsFromQR(_:_:_:),
-            mapSingle: model.mapSingle(_:_:_:)
+            microServices: .init(
+                getMapping: model.getMapping,
+                getOperators: model.operatorsFromQR(_:_:_:),
+                mapSingle: model.mapSingle(_:_:_:)
+            )
         )
     }
 }
@@ -83,7 +85,7 @@ private extension Model {
             guard let self else { return }
             
             let operators = operatorsFromQR(qr, qrMapping)
-            let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
+            let providers: [Provider] = [.init(id: "1", type: .service)]//{ fatalError() }()
             
             completion(.init(operators: operators, providers: providers))
         }
