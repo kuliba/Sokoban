@@ -37,7 +37,10 @@ extension Model {
         let cached = loadCached(matching: code, mapping: mapping)
         let anyway = operatorsFromQR(code, mapping)?
             .filter(\.isGroup)
-            .map(SegmentedPaymentProvider.init)
+            .compactMap {
+                
+                SegmentedPaymentProvider(with: $0, segment: serviceName(for: $0))
+            }
         
         switch (cached, anyway) {
         case (.none, .none):
@@ -79,17 +82,18 @@ extension Model {
 
 private extension SegmentedPaymentProvider {
     
-    init(with data: OperatorGroupData.OperatorData) {
-        
-        // TODO: derive from data
-        let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
+    init?(
+        with data: OperatorGroupData.OperatorData,
+        segment: String?
+    ) {
+        guard let segment else { return nil }
         
         self.init(
             id: data.code,
             icon: data.logotypeList.first?.svgImage?.description,
             inn: data.synonymList.first,
             title: data.title,
-            segment: segment.apearance.title,
+            segment: segment,
             origin: .operator(data)
         )
     }
