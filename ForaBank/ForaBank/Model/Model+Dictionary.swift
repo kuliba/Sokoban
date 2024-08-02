@@ -2184,6 +2184,28 @@ extension Model {
         
         return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) }).filter({$0.parameterList.isEmpty == false})
     }
+    
+    func serviceName(
+        for inn: String
+    ) -> String? {
+        
+        guard let operators = dictionaryAnywayOperators(),
+              let first = operators.first(where: { $0.synonymList.first == inn })
+        else { return nil }
+        
+        return serviceName(for: first)
+    }
+    
+    func serviceName(
+        for `operator`: OperatorGroupData.OperatorData
+    ) -> String? {
+        
+        guard let groups = dictionaryAnywayOperatorGroups(),
+              let parent = groups.first(where: { $0.isGroup && $0.code == `operator`.parentCode })
+        else { return nil }
+        
+        return parent.name
+    }
 }
 
 // MARK: - Helper
