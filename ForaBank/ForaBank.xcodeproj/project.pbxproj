@@ -1281,6 +1281,7 @@
 		2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */; };
 		2ACFD6672C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6662C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift */; };
 		2ACFD6692C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6682C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift */; };
+		2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66A2C5D1F69003F08AE /* Node.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
@@ -4466,6 +4467,7 @@
 		2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorProvider.swift; sourceTree = "<group>"; };
 		2ACFD6662C5CDDF2003F08AE /* QRScanResultHandlerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandlerComposer.swift; sourceTree = "<group>"; };
 		2ACFD6682C5CE84F003F08AE /* QRScanResultHandlerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandlerMicroServices.swift; sourceTree = "<group>"; };
+		2ACFD66A2C5D1F69003F08AE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -13052,6 +13054,7 @@
 				0CCF9123281C1E5900C6322F /* Chat */,
 				834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */,
 				C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */,
+				2ACFD66A2C5D1F69003F08AE /* Node.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -18880,6 +18883,7 @@
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				2AB87C592C1360280013EFFE /* InputWrapperView.swift in Sources */,
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
+				2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
 				2A9E054B2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift in Sources */,
