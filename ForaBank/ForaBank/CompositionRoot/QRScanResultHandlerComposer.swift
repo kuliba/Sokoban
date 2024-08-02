@@ -75,7 +75,7 @@ private extension Model {
     func operatorsFromQR(
         _ qr: QRCode,
         _ qrMapping: QRMapping,
-        _ completion: @escaping (LoadResult<Operator, Provider>) -> Void
+        _ completion: @escaping (OperatorProviderLoadResult<Operator, Provider>) -> Void
     ) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             

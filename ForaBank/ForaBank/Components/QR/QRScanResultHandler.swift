@@ -25,7 +25,7 @@ final class QRScanResultHandler {
     }
     
     typealias GetMapping = () -> QRMapping?
-    typealias GetOperators = (QRCode, QRMapping, @escaping (LoadResult<Operator, Provider>) -> Void) -> Void
+    typealias GetOperators = (QRCode, QRMapping, @escaping (OperatorProviderLoadResult<Operator, Provider>) -> Void) -> Void
     typealias MapSingle = (OperatorGroupData.OperatorData, QRCode, QRMapping) -> QRModelResult.Mapped
     
     typealias Operator = OperatorGroupData.OperatorData
