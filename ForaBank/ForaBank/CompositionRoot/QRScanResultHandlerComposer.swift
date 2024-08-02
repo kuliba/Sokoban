@@ -72,6 +72,7 @@ private extension Model {
     typealias Operator = OperatorGroupData.OperatorData
     typealias Provider = PaymentProvider
     
+    // TODO: add fallback to remote
     func operatorsFromQR(
         _ qr: QRCode,
         _ qrMapping: QRMapping,
@@ -81,10 +82,21 @@ private extension Model {
             
             guard let self else { return }
             
-            let operators = operatorsFromQR(qr, qrMapping) ?? []
+            let operators = operatorsFromQR(qr, qrMapping)
             let providers: [PaymentProvider] = [.init(id: "1", type: .service)]//{ fatalError() }()
             
             completion(.init(operators: operators, providers: providers))
         }
+    }
+}
+
+private extension OperatorProviderLoadResult {
+    
+    init(operators: [Operator]?, providers: [Provider]?) {
+        
+        self.init(
+            operators: operators ?? [],
+            providers: providers ?? []
+        )
     }
 }
