@@ -16,7 +16,14 @@ extension PaymentProviderServicePickerPayload {
             icon: nil,
             inn: nil,
             title: "Some Provider",
-            segment: "Services"
+            segment: "Services",
+            origin: .provider(.init(
+                id: UUID().uuidString,
+                inn: UUID().uuidString,
+                md5Hash: nil,
+                title: UUID().uuidString,
+                sortedOrder: .random(in: 1...100)
+            ))
         ),
         qrCode: .init(original: "", rawData: [:])
     )

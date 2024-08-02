@@ -88,10 +88,36 @@ private extension PaymentProviderSegmentsView {
 private extension Array where Element == SegmentedPaymentProvider {
     
     static let preview: Self = [
-        .init(id: "1", icon: "i", inn: nil, title: "Service A", segment: "Services"),
-        .init(id: "2", icon: "i", inn: "123567890", title: "Service B", segment: "Services"),
-        .init(id: "3", icon: "i", inn: nil, title: "FastNet", segment: "Internet"),
-        .init(id: "4", icon: "i", inn: "234", title: "TV-D", segment: "TV"),
-        .init(id: "5", icon: "i", inn: "3456", title: "TV-F", segment: "TV"),
+        .init("1", icon: "i", inn: nil, title: "Service A", segment: "Services"),
+        .init("2", icon: "i", inn: "123567890", title: "Service B", segment: "Services"),
+        .init("3", icon: "i", inn: nil, title: "FastNet", segment: "Internet"),
+        .init("4", icon: "i", inn: "234", title: "TV-D", segment: "TV"),
+        .init("5", icon: "i", inn: "3456", title: "TV-F", segment: "TV"),
     ]
+}
+
+private extension SegmentedPaymentProvider {
+    
+    init(
+        _ id: String,
+        icon: String?,
+        inn: String?,
+        title: String,
+        segment: String
+    ) {
+        self.init(
+            id: id, 
+            icon: icon,
+            inn: inn,
+            title: title,
+            segment: segment,
+            origin: .provider(.init(
+                id: id, 
+                inn: inn ?? "",
+                md5Hash: icon,
+                title: title,
+                sortedOrder: .random(in: 1...100)
+            ))
+        )
+    }
 }
