@@ -41,6 +41,7 @@ let package = Package(
         .foraCrypto,
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        .getInfoRepeatPaymentService,
         .serverAgent,
         .symmetricEncryption,
         .transferPublicKey,
@@ -153,6 +154,8 @@ let package = Package(
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        .getInfoRepeatPaymentService,
+        .getInfoRepeatPaymentServiceTests,
         .serverAgent,
         .serverAgentTests,
         .symmetricEncryption,
@@ -659,6 +662,13 @@ private extension Product {
         name: .getProcessingSessionCodeService,
         targets: [
             .getProcessingSessionCodeService,
+        ]
+    )
+    
+    static let getInfoRepeatPaymentService = library(
+        name: .getInfoRepeatPaymentService,
+        targets: [
+            .getInfoRepeatPaymentService,
         ]
     )
     
@@ -1397,6 +1407,7 @@ private extension Target {
         name: .getProcessingSessionCodeService,
         path: "Sources/Services/\(String.getProcessingSessionCodeService)"
     )
+    
     static let getProcessingSessionCodeServiceTests = testTarget(
         name: .getProcessingSessionCodeServiceTests,
         dependencies: [
@@ -1406,6 +1417,22 @@ private extension Target {
             .getProcessingSessionCodeService,
         ],
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
+    )
+    
+    static let getInfoRepeatPaymentService = target(
+        name: .getInfoRepeatPaymentService,
+        path: "Sources/Services/\(String.getInfoRepeatPaymentService)"
+    )
+    
+    static let getInfoRepeatPaymentServiceTests = testTarget(
+        name: .getInfoRepeatPaymentServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getInfoRepeatPaymentService,
+        ],
+        path: "Tests/Services/\(String.getInfoRepeatPaymentServiceTests)"
     )
     
     static let serverAgent = target(
@@ -2202,6 +2229,7 @@ private extension Target {
             .cvvPin,
             .genericRemoteService,
             .getProcessingSessionCodeService,
+            .getInfoRepeatPaymentService,
             .rxViewModel,
             .transferPublicKey,
             .textFieldDomain,
@@ -2550,6 +2578,10 @@ private extension Target.Dependency {
         name: .getProcessingSessionCodeService
     )
     
+    static let getInfoRepeatPaymentService = byName(
+        name: .getInfoRepeatPaymentService
+    )
+    
     static let transferPublicKey = byName(
         name: .transferPublicKey
     )
@@ -2791,6 +2823,9 @@ private extension String {
     
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
+    
+    static let getInfoRepeatPaymentService = "GetInfoRepeatPaymentService"
+    static let getInfoRepeatPaymentServiceTests = "GetInfoRepeatPaymentServiceTests"
     
     static let serverAgent = "ServerAgent"
     static let serverAgentTests = "ServerAgentTests"
