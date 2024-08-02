@@ -170,12 +170,15 @@ extension PaymentsTransfersViewModel {
     
     func openScanner() {
         
-        let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
-            
-            self?.event(.dismiss(.modal))
-        }
-        bind(qrScannerModel)
-        self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
+        let qrModel = qrViewModelFactory.makeQRScannerModel()
+        let cancellable = bind(qrModel)
+        
+        self.route.modal = .fullScreenSheet(.init(
+            type: .qrScanner(.init(
+                model: qrModel,
+                cancellable: cancellable
+            ))
+        ))
     }
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
@@ -460,7 +463,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             
-            case qrScanner(QRViewModel)
+            case qrScanner(Node<QRModel>)
             case paymentCancelled(expired: Bool)
             case success(PaymentsSuccessViewModel)
         }
@@ -1452,17 +1455,27 @@ private extension PaymentsTransfersViewModel {
         )
     }
     
-    func bind(_ qrViewModel: QRViewModel) {
+    func bind(_ qrModel: QRModel) -> AnyCancellable {
         
-        qrViewModel.action
-            .compactMap { $0 as? QRViewModelAction.Result }
-            .map(\.result)
+        qrModel.$state
+            .compactMap { $0 }
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: scheduler)
-            .sink { [unowned self] in
+            .sink { [weak self] in
                 
-                self.handleQRViewModelActionResult($0)
+                switch $0 {
+                case .cancelled:
+                    self?.rootActions?.spinner.hide()
+                    self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+                    
+                case .inflight:
+                    self?.rootActions?.spinner.show()
+                    
+                case let .qrResult(qrResult):
+                    self?.rootActions?.spinner.hide()
+                    self?.handleQRResult(qrResult)
+                }
             }
-            .store(in: &bindings)
     }
     
     private func payByInstructions() {
@@ -1497,7 +1510,7 @@ private extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    private func handleQRViewModelActionResult(
+    private func handleQRResult(
         _ result: QRViewModel.ScanResult
     ) {
         event(.dismiss(.modal))

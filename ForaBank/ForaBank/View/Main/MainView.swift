@@ -166,7 +166,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -192,7 +192,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -264,7 +264,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -300,10 +300,10 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch fullScreenSheet.type {
-        case let .qrScanner(viewModel):
+        case let .qrScanner(node):
             NavigationView {
                 
-                QRView(viewModel: viewModel)
+                QRView(viewModel: node.model.qrModel)
                     .navigationBarHidden(true)
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)

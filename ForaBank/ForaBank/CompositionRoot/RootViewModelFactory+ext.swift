@@ -105,7 +105,8 @@ extension RootViewModelFactory {
         let qrViewModelFactory = makeQRViewModelFactory(
             model: model,
             logger: logger,
-            qrResolverFeatureFlag: qrResolverFeatureFlag
+            qrResolverFeatureFlag: qrResolverFeatureFlag,
+            scheduler: scheduler
         )
         
         let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub

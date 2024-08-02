@@ -9,14 +9,12 @@ import ForaTools
 import Foundation
 import SberQR
 
-typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
-
 typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, MappingRemoteServiceError<MappingError>>)
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
 typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel
 
-//typealias QRModel = QRModelWrapper<QRModelResult>
-//typealias MakeQRScannerModel = () -> QRModel
+typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
+typealias MakeQRScannerModel = () -> QRModel
 
 enum QRModelResult: Equatable {
     
