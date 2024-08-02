@@ -32,12 +32,13 @@ extension QRScanResultHandler {
     ) {
         let qrModelResult: QRModelResult
         
-        switch model.mapScanResult(scanResult) {
-        case let .mapped(qr, qrMapping):
-            return handleMapped(qr, qrMapping) { completion(.mapped($0)) }
-            
-        case let .failure(failure):
-            qrModelResult = .failure(failure)
+        switch scanResult {
+        case let .qrCode(qrCode):
+            if let qrMapping = model.getMapping() {
+                return handleMapped(qrCode, qrMapping) { completion(.mapped($0)) }
+            } else {
+                qrModelResult = .failure(qrCode)
+            }
             
         case let .c2bURL(c2bURL):
             qrModelResult = .c2bURL(c2bURL)
@@ -100,10 +101,8 @@ private extension QRScanResultHandler {
         completion(.init(operators: operators, providers: providers))
     }
     
-    typealias PaymentOperator = OperatorProvider<Operator, Provider>
-    
-    typealias Operator = OperatorGroupData.OperatorData
-    typealias Provider = PaymentProvider
+    private typealias Operator = OperatorGroupData.OperatorData
+    private typealias Provider = PaymentProvider
     
     private func handleSingle(
         _ provider: Provider,
@@ -121,44 +120,9 @@ private extension QRScanResultHandler {
 
 private extension Model {
     
-    enum _QRModelResult: Equatable {
+    func getMapping() -> QRMapping? {
         
-        case mapped(QRCode, QRMapping)
-        case failure(QRCode)
-        case c2bURL(URL)
-        case c2bSubscribeURL(URL)
-        case sberQR(URL)
-        case url(URL)
-        case unknown
-    }
-    
-    func mapScanResult(
-        _ result: QRViewModel.ScanResult
-    ) -> _QRModelResult {
-        
-        switch result {
-        case let .qrCode(qrCode):
-            if let qrMapping = qrMapping.value {
-                return .mapped(qrCode, qrMapping)
-            } else {
-                return .failure(qrCode)
-            }
-            
-        case let .c2bURL(c2bURL):
-            return .c2bURL(c2bURL)
-            
-        case let .c2bSubscribeURL(c2bSubscribeURL):
-            return .c2bSubscribeURL(c2bSubscribeURL)
-            
-        case let .sberQR(sberQR):
-            return .sberQR(sberQR)
-            
-        case let .url(url):
-            return .url(url)
-            
-        case .unknown:
-            return .unknown
-        }
+        return qrMapping.value
     }
     
     func mapSingle(
