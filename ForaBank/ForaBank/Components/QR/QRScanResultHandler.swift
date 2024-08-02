@@ -10,27 +10,20 @@ import Foundation
 
 final class QRScanResultHandler {
     
-    private let flag: Flag
     private let getMapping: GetMapping
     private let getOperators: GetOperators
     private let mapSingle: MapSingle
-    private let model: Model
     
     init(
-        flag: Flag,
         getMapping: @escaping GetMapping,
         getOperators: @escaping GetOperators,
-        mapSingle: @escaping MapSingle,
-        model: Model
+        mapSingle: @escaping MapSingle
     ) {
-        self.flag = flag
         self.getMapping = getMapping
         self.getOperators = getOperators
         self.mapSingle = mapSingle
-        self.model = model
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
     typealias GetMapping = () -> QRMapping?
     typealias GetOperators = (QRCode, QRMapping, @escaping (LoadResult<Operator, Provider>) -> Void) -> Void
     typealias MapSingle = (OperatorGroupData.OperatorData, QRCode, QRMapping) -> QRModelResult.Mapped

@@ -29,11 +29,9 @@ extension QRScanResultHandlerComposer {
     func compose() -> QRScanResultHandler {
         
         return .init(
-            flag: flag,
             getMapping: model.getMapping,
             getOperators: model.operatorsFromQR(_:_:_:),
-            mapSingle: model.mapSingle(_:_:_:),
-            model: model
+            mapSingle: model.mapSingle(_:_:_:)
         )
     }
 }
