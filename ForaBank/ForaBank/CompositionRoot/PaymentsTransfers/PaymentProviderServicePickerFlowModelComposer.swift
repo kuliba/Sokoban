@@ -115,7 +115,7 @@ extension PaymentProviderServicePickerFlowModelComposer {
     
     typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, Result>
     
-    typealias Provider = PaymentProviderSegment.Provider
+    typealias Provider = SegmentedPaymentProvider
     typealias Result = PaymentProviderServicePickerResult
 }
 
@@ -133,7 +133,7 @@ private extension PaymentProviderServicePickerFlowModelComposer {
     }
 }
 
-private extension PaymentProviderSegment.Provider {
+private extension SegmentedPaymentProvider {
     
     var `operator`: UtilityPaymentOperator {
         

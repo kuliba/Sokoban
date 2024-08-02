@@ -7,6 +7,6 @@
 
 struct PaymentProviderServicePickerPayload: Equatable {
     
-    let provider: PaymentProviderSegment.Provider
+    let provider: SegmentedPaymentProvider
     let qrCode: QRCode
 }
