@@ -8,7 +8,7 @@
 import ForaTools
 import Foundation
 
-final class QRScanResultHandler {
+final class QRScanResultHandlerComposer {
     
     private let flag: Flag
     private let model: Model
@@ -24,6 +24,34 @@ final class QRScanResultHandler {
     typealias Flag = UtilitiesPaymentsFlag
 }
 
+extension QRScanResultHandlerComposer {
+    
+    func compose() -> QRScanResultHandler {
+        
+        return .init(flag: flag, getMapping: model.getMapping, model: model)
+    }
+}
+
+final class QRScanResultHandler {
+    
+    private let flag: Flag
+    private let getMapping: GetMapping
+    private let model: Model
+    
+    init(
+        flag: Flag,
+        getMapping: @escaping GetMapping,
+        model: Model
+    ) {
+        self.flag = flag
+        self.getMapping = getMapping
+        self.model = model
+    }
+    
+    typealias Flag = UtilitiesPaymentsFlag
+    typealias GetMapping = () -> QRMapping?
+}
+
 extension QRScanResultHandler {
     
     func handleScanResult(
@@ -34,7 +62,7 @@ extension QRScanResultHandler {
         
         switch scanResult {
         case let .qrCode(qrCode):
-            if let qrMapping = model.getMapping() {
+            if let qrMapping = getMapping() {
                 return handleMapped(qrCode, qrMapping) { completion(.mapped($0)) }
             } else {
                 qrModelResult = .failure(qrCode)
