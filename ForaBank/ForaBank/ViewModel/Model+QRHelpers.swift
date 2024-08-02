@@ -69,6 +69,8 @@ extension Model {
         with inn: String
     ) -> [SegmentedPaymentProvider]? {
         
+        // TODO: replace with loader with fallback to remote
+        // TODO: expensive! make async with QOS
         localAgent.load(type: [CachingSberOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedPaymentProvider.init)
@@ -79,6 +81,7 @@ private extension SegmentedPaymentProvider {
     
     init(with data: OperatorGroupData.OperatorData) {
         
+        // TODO: derive from data
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
         
         self.init(
@@ -86,12 +89,14 @@ private extension SegmentedPaymentProvider {
             icon: data.logotypeList.first?.svgImage?.description,
             inn: data.synonymList.first,
             title: data.title,
-            segment: segment.apearance.title
+            segment: segment.apearance.title,
+            origin: .operator(data)
         )
     }
     
     init(with `operator`: CachingSberOperator) {
         
+        // TODO: add `segment` property to `CachingSberOperator`
         let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
         
         self.init(
@@ -99,7 +104,8 @@ private extension SegmentedPaymentProvider {
             icon: `operator`.md5Hash,
             inn: `operator`.inn,
             title: `operator`.title,
-            segment: segment.apearance.title
+            segment: segment.apearance.title,
+            origin: .provider(`operator`)
         )
     }
 }

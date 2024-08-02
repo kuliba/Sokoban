@@ -12,4 +12,11 @@ struct SegmentedPaymentProvider: Equatable, Identifiable {
     let inn: String?
     let title: String
     let segment: String
+    let origin: Origin
+    
+    enum Origin: Equatable {
+        
+        case `operator`(OperatorGroupData.OperatorData)
+        case provider(CachingSberOperator)
+    }
 }

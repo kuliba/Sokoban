@@ -567,7 +567,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: QRViewModel.ScanResult.init
+            qrResolve: { _ in .unknown }
         )
     }
 }

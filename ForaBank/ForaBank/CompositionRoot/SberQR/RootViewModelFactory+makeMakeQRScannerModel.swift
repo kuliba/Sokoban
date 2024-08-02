@@ -14,6 +14,7 @@ extension RootViewModelFactory {
         qrResolverFeatureFlag: QRResolverFeatureFlag
     ) -> MakeQRScannerModel {
         
+        // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
         let qrResolve: QRViewModel.QRResolve = { string in
             
             let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
