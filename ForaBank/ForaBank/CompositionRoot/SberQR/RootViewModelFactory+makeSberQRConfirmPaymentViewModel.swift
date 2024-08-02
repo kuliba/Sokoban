@@ -51,7 +51,7 @@ private extension Model {
         _ response: GetSberQRDataResponse
     ) -> [ProductSelect.Product] {
         
-        paymentProductsForSberQR()
+        paymentEligibleProducts()
             .mapToSberQRProducts(
                 response: response,
                 formatBalance: { [weak self] in
