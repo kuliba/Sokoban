@@ -7,14 +7,6 @@
 
 import ForaTools
 
-enum _PaymentOperator<Operator, Provider> {
-    
-    case `operator`(Operator)
-    case provider(Provider)
-}
-
-extension _PaymentOperator: Equatable where Operator: Equatable, Provider: Equatable {}
-
 enum LoadResult<Operator, Provider> {
     
     case mixed(Mixed)
@@ -23,7 +15,7 @@ enum LoadResult<Operator, Provider> {
     case `operator`(Operator)
     case provider(Provider)
     
-    typealias Mixed = MultiElementArray<_PaymentOperator<Operator, Provider>>
+    typealias Mixed = MultiElementArray<OperatorProvider<Operator, Provider>>
     typealias MultipleOperators = MultiElementArray<Operator>
 }
 
@@ -35,7 +27,7 @@ extension LoadResult {
         operators: [Operator],
         providers: [Provider]
     ) {
-        typealias Either = _PaymentOperator<Operator, Provider>
+        typealias Either = OperatorProvider<Operator, Provider>
         
         switch (MultiElementArray(operators), operators.first, MultiElementArray(providers), providers.first) {
             

@@ -530,7 +530,7 @@ enum QRViewModelAction {
     struct AccessCamera: Action {}
     struct AccessPhotoGallery: Action {}
     struct Flashlight: Action {}
-    struct Result: Action {
+    struct Result: Action & Equatable {
         
         let result: QRViewModel.ScanResult
     }

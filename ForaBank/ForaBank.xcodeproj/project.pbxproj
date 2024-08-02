@@ -1277,6 +1277,8 @@
 		2ACFD65B2C5CC862003F08AE /* QRModelWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65A2C5CC862003F08AE /* QRModelWrapperTests.swift */; };
 		2ACFD6602C5CCAB7003F08AE /* LoadResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65F2C5CCAB7003F08AE /* LoadResultTests.swift */; };
 		2ACFD6612C5CCB2C003F08AE /* LoadResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */; };
+		2ACFD6632C5CCBCC003F08AE /* QRScanResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */; };
+		2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
@@ -4458,6 +4460,8 @@
 		2ACFD65A2C5CC862003F08AE /* QRModelWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapperTests.swift; sourceTree = "<group>"; };
 		2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResult.swift; sourceTree = "<group>"; };
 		2ACFD65F2C5CCAB7003F08AE /* LoadResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResultTests.swift; sourceTree = "<group>"; };
+		2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultHandler.swift; sourceTree = "<group>"; };
+		2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorProvider.swift; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -7204,6 +7208,8 @@
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
 				0BBC562229472CB600B95E6C /* ImagePackerController.swift */,
 				2ACFD65D2C5CCA8D003F08AE /* LoadResult.swift */,
+				2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */,
+				2ACFD6622C5CCBCC003F08AE /* QRScanResultHandler.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -18410,6 +18416,7 @@
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,
 				0C2B55E5299C17B800F9074C /* ServerCommands+ProductTemplate.swift in Sources */,
 				2A90494D2C326E3500313CB8 /* LoggingDecorator.swift in Sources */,
+				2ACFD6632C5CCBCC003F08AE /* QRScanResultHandler.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
 				774A8B632865FDAF00B81140 /* PaymentsSelectServiceViewComponent.swift in Sources */,
 				2AECBC3C2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift in Sources */,
@@ -19719,6 +19726,7 @@
 				774A3E41292647DD0011D952 /* PaymentsAmountViewComponent.swift in Sources */,
 				C165DDF42A160F0E003CE3DA /* CountryCodeReplace.swift in Sources */,
 				C15CB8E72B7EF2DA00718B49 /* RequestFactory+getOperatorsListByParam.swift in Sources */,
+				2ACFD6652C5CCF5B003F08AE /* OperatorProvider.swift in Sources */,
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */,
 				0BE0BDF62905D2340064549E /* QRDocumentsButtonsViewComponent.swift in Sources */,
