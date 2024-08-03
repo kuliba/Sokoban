@@ -11,17 +11,18 @@ import Foundation
 final class QRScanResultMapperComposer {
     
     private let flag: Flag
-    private let model: Model
+    private let nanoServices: NanoServices
     
     init(
         flag: Flag,
-        model: Model
+        nanoServices: NanoServices
     ) {
         self.flag = flag
-        self.model = model
+        self.nanoServices = nanoServices
     }
     
     typealias Flag = UtilitiesPaymentsFlag
+    typealias NanoServices = QRScanResultMapperNanoServices
 }
 
 extension QRScanResultMapperComposer {
@@ -41,7 +42,7 @@ private extension QRScanResultMapperComposer {
     
     func getMapping() -> QRMapping? {
         
-        return model.getMapping()
+        return nanoServices.getMapping()
     }
     
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
@@ -70,7 +71,7 @@ private extension QRScanResultMapperComposer {
         _ qrMapping: QRMapping
     ) -> [Operator]? {
         
-        model.segmentedFromDictionary(qrCode, qrMapping)
+        nanoServices.loadOperators(qrCode, qrMapping)
     }
     
     private func segmentedFromCache(
@@ -80,8 +81,8 @@ private extension QRScanResultMapperComposer {
         
         switch flag.rawValue {
         case .active(.live):
-            return model.segmentedFromCache(qrCode, qrMapping)
-
+            return nanoServices.loadProviders(qrCode, qrMapping)
+            
         case .active(.stub):
             return stub()
             
@@ -96,48 +97,6 @@ private extension QRScanResultMapperComposer {
     }
 }
 
-private extension Model {
-    
-    func getMapping() -> QRMapping? {
-        
-        return qrMapping.value
-    }
-    
-    func segmentedFromDictionary(
-        _ qrCode: QRCode,
-        _ qrMapping: QRMapping
-    ) -> [SegmentedOperatorData]? {
-        
-        return operatorsFromQR(qrCode, qrMapping)?
-            .filter(\.isGroup)
-            .compactMap {
-                
-                return .init(data: $0, segment: serviceName(for: $0))
-            }
-    }
-    
-    func segmentedFromCache(
-        _ qrCode: QRCode,
-        _ qrMapping: QRMapping
-    ) -> [SegmentedProvider]? {
-        
-        guard let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping)
-        else { return nil }
-        
-        return segmentedFromCache(with: inn)
-    }
-    
-    // TODO: replace with loader with fallback to remote
-    private func segmentedFromCache(
-        with inn: String
-    ) -> [SegmentedProvider]? {
-        
-        localAgent.load(type: [CachingSberOperator].self)?
-            .filter { $0.inn == inn }
-            .map(SegmentedProvider.init)
-    }
-}
-
 private extension OperatorProviderLoadResult {
     
     init(
@@ -147,39 +106,6 @@ private extension OperatorProviderLoadResult {
         self.init(
             operators: operators ?? [],
             providers: providers ?? []
-        )
-    }
-}
-
-private extension SegmentedOperatorData {
-    
-    init?(
-        data: OperatorGroupData.OperatorData,
-        segment: String?
-    ) {
-        guard let segment else { return nil }
-        
-        self.init(data: data, segment: segment)
-    }
-}
-
-private extension SegmentedProvider {
-    
-    init(
-        with cached: CachingSberOperator
-    ) {
-        // TODO: add `segment` property to `CachingSberOperator`
-        let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
-        
-        self.init(
-            origin: .init(
-                id: cached.id,
-                icon: cached.md5Hash,
-                inn: cached.inn,
-                title: cached.title,
-                segment: segment.apearance.title
-            ),
-            segment: segment.apearance.title
         )
     }
 }
