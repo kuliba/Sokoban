@@ -30,18 +30,18 @@ extension QRScanResultMapperComposer {
         
         return .init(
             microServices: .init(
-                getMapping: model.getMapping,
-                getOperators: model.operatorsFromQR(_:_:_:)
+                getMapping: getMapping,
+                getOperators: operatorsFromQR(_:_:_:)
             )
         )
     }
 }
 
-private extension Model {
+private extension QRScanResultMapperComposer {
     
     func getMapping() -> QRMapping? {
         
-        return qrMapping.value
+        return model.getMapping()
     }
     
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
@@ -50,7 +50,7 @@ private extension Model {
     
     // TODO: add fallback to remote
     func operatorsFromQR(
-        _ qr: QRCode,
+        _ qrCode: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (LoadResult) -> Void
     ) {
@@ -58,11 +58,49 @@ private extension Model {
             
             guard let self else { return }
             
-            let operators = segmentedFromDictionary(qr, qrMapping)
-            let providers = segmentedFromCache(qr, qrMapping)
+            let operators = segmentedFromDictionary(qrCode, qrMapping)
+            let providers = segmentedFromCache(qrCode, qrMapping)
             
             completion(.init(operators: operators, providers: providers))
         }
+    }
+    
+    private func segmentedFromDictionary(
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
+    ) -> [Operator]? {
+        
+        model.segmentedFromDictionary(qrCode, qrMapping)
+    }
+    
+    private func segmentedFromCache(
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
+    ) -> [Provider]? {
+        
+        switch flag.rawValue {
+        case .active(.live):
+            return model.segmentedFromCache(qrCode, qrMapping)
+
+        case .active(.stub):
+            return stub()
+            
+        case .inactive:
+            return nil
+        }
+    }
+    
+    func stub() -> [Provider]? {
+        
+        return nil
+    }
+}
+
+private extension Model {
+    
+    func getMapping() -> QRMapping? {
+        
+        return qrMapping.value
     }
     
     func segmentedFromDictionary(
@@ -78,7 +116,7 @@ private extension Model {
             }
     }
     
-    private func segmentedFromCache(
+    func segmentedFromCache(
         _ qrCode: QRCode,
         _ qrMapping: QRMapping
     ) -> [SegmentedProvider]? {
