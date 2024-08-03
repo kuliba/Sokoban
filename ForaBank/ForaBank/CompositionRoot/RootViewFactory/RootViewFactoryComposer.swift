@@ -194,8 +194,8 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
-    
+    typealias Completed = AnywayCompleted
+
     private func map(
         _ completed: Completed
     ) -> PaymentCompleteView.State {

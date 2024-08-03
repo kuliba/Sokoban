@@ -25,12 +25,26 @@ typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandler
 typealias AnywayTransactionStatus = AnywayPaymentUI.AnywayStatus<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionReport = AnywayPaymentUI.Report<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
+
 enum DocumentStatus {
     
     case completed, inflight, rejected
 }
 
 typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
+
+struct AnywayCompleted: Equatable {
+    
+    let formattedAmount: String
+    let result: TransactionResult
+    
+    typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+    
+    struct Fraud: Equatable, Error {
+        
+        let hasExpired: Bool
+    }
+}
 
 // MARK: - Adapters
 
