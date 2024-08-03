@@ -34,7 +34,7 @@ enum QRModelResult: Equatable {
         case mixed(MixedOperators, QRCode)
         case multiple(MultipleOperators, QRCode)
         case none(QRCode)
-        case provider(Provider)
+        case provider(Provider, QRCode)
         case single(QRCode, QRMapping)
         case source(Payments.Operation.Source)
         
