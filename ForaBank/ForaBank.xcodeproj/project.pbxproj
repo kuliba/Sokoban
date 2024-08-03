@@ -7213,10 +7213,7 @@
 				0BBC55FD2943318600B95E6C /* QRAccessViewComponent.swift */,
 				0BA7F27429320A8300A13EA1 /* DocumentPicker.swift */,
 				0BBC562229472CB600B95E6C /* ImagePackerController.swift */,
-				2ACFD65D2C5CCA8D003F08AE /* OperatorProviderLoadResult.swift */,
-				2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */,
-				2ACFD6622C5CCBCC003F08AE /* QRScanResultMapper.swift */,
-				2ACFD6682C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift */,
+				2ACFD66C2C5DEC7F003F08AE /* QRScanResultMapper */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -10483,6 +10480,17 @@
 				2ACFD65F2C5CCAB7003F08AE /* OperatorProviderLoadResultTests.swift */,
 			);
 			path = QR;
+			sourceTree = "<group>";
+		};
+		2ACFD66C2C5DEC7F003F08AE /* QRScanResultMapper */ = {
+			isa = PBXGroup;
+			children = (
+				2ACFD65D2C5CCA8D003F08AE /* OperatorProviderLoadResult.swift */,
+				2ACFD6642C5CCF5B003F08AE /* OperatorProvider.swift */,
+				2ACFD6622C5CCBCC003F08AE /* QRScanResultMapper.swift */,
+				2ACFD6682C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift */,
+			);
+			path = QRScanResultMapper;
 			sourceTree = "<group>";
 		};
 		2AD0928F2BFA30A100777EE4 /* TransactionPreview */ = {
