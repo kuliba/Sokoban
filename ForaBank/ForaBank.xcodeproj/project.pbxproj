@@ -575,6 +575,11 @@
 		2A3624752C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624742C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift */; };
 		2A3624772C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624762C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift */; };
 		2A36247E2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */; };
+		2A3624822C5EB4D500174C50 /* AnywayFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624812C5EB4D500174C50 /* AnywayFlowState.swift */; };
+		2A3624842C5EB51E00174C50 /* AnywayFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624832C5EB51E00174C50 /* AnywayFlowEvent.swift */; };
+		2A3624862C5EB53000174C50 /* AnywayFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624852C5EB53000174C50 /* AnywayFlowEffect.swift */; };
+		2A3624892C5EB59600174C50 /* AnywayFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */; };
+		2A36248B2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */; };
 		2A3663C12C59519500114294 /* PaymentCompleteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3663C02C59519500114294 /* PaymentCompleteState.swift */; };
 		2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */; };
 		2A3834AF2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */; };
@@ -3784,6 +3789,11 @@
 		2A3624742C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowState.swift; sourceTree = "<group>"; };
 		2A3624762C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentProviderPickerViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowFactory.swift; sourceTree = "<group>"; };
+		2A3624812C5EB4D500174C50 /* AnywayFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowState.swift; sourceTree = "<group>"; };
+		2A3624832C5EB51E00174C50 /* AnywayFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowEvent.swift; sourceTree = "<group>"; };
+		2A3624852C5EB53000174C50 /* AnywayFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowEffect.swift; sourceTree = "<group>"; };
+		2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowModel.swift; sourceTree = "<group>"; };
+		2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowFlowFactory.swift; sourceTree = "<group>"; };
 		2A3663C02C59519500114294 /* PaymentCompleteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteState.swift; sourceTree = "<group>"; };
 		2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentTests.swift; sourceTree = "<group>"; };
 		2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentsView.swift; sourceTree = "<group>"; };
@@ -7398,6 +7408,7 @@
 				83FAD87F29CD91A000474B06 /* InternetTV */,
 				0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */,
 				2AECBC272BEBA949000B0C0E /* PaymentsTransfersFlow */,
+				2A36247F2C5EB4B300174C50 /* AnywayFlow */,
 				2AECBC382BEBAAE2000B0C0E /* ServiceFailure.swift */,
 				2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */,
 				2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */,
@@ -8347,6 +8358,34 @@
 				2A3624702C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A36247F2C5EB4B300174C50 /* AnywayFlow */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624802C5EB4C100174C50 /* Domain */,
+				2A3624872C5EB58100174C50 /* UI */,
+			);
+			path = AnywayFlow;
+			sourceTree = "<group>";
+		};
+		2A3624802C5EB4C100174C50 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624812C5EB4D500174C50 /* AnywayFlowState.swift */,
+				2A3624832C5EB51E00174C50 /* AnywayFlowEvent.swift */,
+				2A3624852C5EB53000174C50 /* AnywayFlowEffect.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A3624872C5EB58100174C50 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */,
+				2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */ = {
@@ -18724,6 +18763,7 @@
 				776E67B5292D0F6B00F587A7 /* ProductData+Filter.swift in Sources */,
 				2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */,
 				0C4356FA29ED864A0044C72B /* EnvironmentKey.swift in Sources */,
+				2A3624842C5EB51E00174C50 /* AnywayFlowEvent.swift in Sources */,
 				687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */,
 				83A9C6DC2C060010005EAF62 /* UpdateInfo.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
@@ -19291,6 +19331,7 @@
 				2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */,
 				2A3834AF2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
+				2A3624822C5EB4D500174C50 /* AnywayFlowState.swift in Sources */,
 				2AD15D152C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
 				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
@@ -19518,6 +19559,7 @@
 				832F83112BB8292600C97BBD /* CarouselComponentConfig+iFora.swift in Sources */,
 				2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */,
 				C1549866290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift in Sources */,
+				2A3624862C5EB53000174C50 /* AnywayFlowEffect.swift in Sources */,
 				2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */,
 				2AA3A93E2BFF8B7900AEBCC9 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				83CA1C952A6013A300672AA5 /* PinCodeChangeView.swift in Sources */,
@@ -20027,6 +20069,7 @@
 				C1097D8E2942FC16002459F6 /* Model+Requisites.swift in Sources */,
 				2A1F084E2A7904D200C5B11B /* Services+Endpoint.swift in Sources */,
 				774A8B642865FDAF00B81140 /* PaymentsPopUpSelectViewComponent.swift in Sources */,
+				2A36248B2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift in Sources */,
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
@@ -20058,6 +20101,7 @@
 				2A3BD5FD2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift in Sources */,
 				A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
+				2A3624892C5EB59600174C50 /* AnywayFlowModel.swift in Sources */,
 				ED4B54422703450800C87A1A /* CardsScrollView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				8376C1262C08CF0100B482FC /* MyProductsViewFactory.swift in Sources */,
