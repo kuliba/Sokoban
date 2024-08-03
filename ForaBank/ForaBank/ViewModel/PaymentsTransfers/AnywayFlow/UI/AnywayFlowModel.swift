@@ -37,7 +37,7 @@ final class AnywayFlowModel: ObservableObject {
     typealias State = AnywayFlowState
     typealias Event = AnywayFlowEvent
     typealias Effect = AnywayFlowEffect
-    typealias Factory = AnywayFlowFlowFactory
+    typealias Factory = AnywayFlowModelFactory
     
     typealias Content = State.Content
 }

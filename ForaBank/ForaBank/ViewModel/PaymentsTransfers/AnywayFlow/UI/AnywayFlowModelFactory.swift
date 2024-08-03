@@ -1,17 +1,17 @@
 //
-//  AnywayFlowFlowFactory.swift
+//  AnywayFlowModelFactory.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 03.08.2024.
 //
 
-struct AnywayFlowFlowFactory {
+struct AnywayFlowModelFactory {
     
     let getFormattedAmount: GetFormattedAmount
     let makeFraud: MakeFraud
 }
 
-extension AnywayFlowFlowFactory {
+extension AnywayFlowModelFactory {
     
     typealias GetFormattedAmount = (AnywayTransactionState.Transaction) -> String?
     typealias MakeFraud = (AnywayTransactionState.Transaction) -> FraudNoticePayload?
