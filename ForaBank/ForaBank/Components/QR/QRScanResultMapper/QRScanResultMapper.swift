@@ -104,23 +104,37 @@ private extension SegmentedOperatorData {
         qrMapping: QRMapping
     ) -> QRModelResult.Mapped {
         
-        let isServicePayment = Payments
+        guard let source = origin.serviceSource(matching: qrCode)
+        else { return .single(qrCode, qrMapping) }
+        
+        return .source(source)
+    }
+}
+
+private extension OperatorGroupData.OperatorData {
+    
+    func serviceSource(
+        matching qrCode: QRCode
+    ) -> Payments.Operation.Source? {
+        
+        guard isServicePayment else { return nil }
+        
+        let puref = code
+        let additionalList = getAdditionalList(matching: qrCode)
+        let amount = qrCode.rawData["sum"]?.toDouble() ?? 0
+        
+        return .servicePayment(
+            puref: puref,
+            additionalList: additionalList,
+            amount: amount/100
+        )
+    }
+    
+    private var isServicePayment: Bool {
+        
+        return Payments
             .paymentsServicesOperators
             .map(\.rawValue)
-            .contains(origin.parentCode)
-        
-        if isServicePayment {
-            let puref = origin.code
-            let additionalList = origin.getAdditionalList(matching: qrCode)
-            let amount: Double = qrCode.rawData["sum"]?.toDouble() ?? 0
-            
-            return .source(.servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ))
-        } else {
-            return .single(qrCode, qrMapping)
-        }
+            .contains(parentCode)
     }
 }
