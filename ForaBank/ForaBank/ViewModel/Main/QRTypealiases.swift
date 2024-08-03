@@ -16,6 +16,9 @@ typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping 
 typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
 typealias MakeQRScannerModel = () -> QRModel
 
+typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
+typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
+
 enum QRModelResult: Equatable {
     
     case c2bSubscribeURL(URL)

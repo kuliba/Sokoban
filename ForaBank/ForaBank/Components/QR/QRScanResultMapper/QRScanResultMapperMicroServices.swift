@@ -9,12 +9,10 @@ struct QRScanResultMapperMicroServices {
     
     let getMapping: GetMapping
     let getOperators: GetOperators
-    let mapSingle: MapSingle
     
     typealias GetMapping = () -> QRMapping?
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
     typealias GetOperators = (QRCode, QRMapping, @escaping (LoadResult) -> Void) -> Void
-    typealias MapSingle = (SegmentedOperatorData, QRCode, QRMapping) -> QRModelResult.Mapped
     
     typealias Operator = SegmentedOperatorData
     typealias Provider = SegmentedProvider

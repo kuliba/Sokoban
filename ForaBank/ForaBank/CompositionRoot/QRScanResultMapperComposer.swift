@@ -31,38 +31,9 @@ extension QRScanResultMapperComposer {
         return .init(
             microServices: .init(
                 getMapping: model.getMapping,
-                getOperators: model.operatorsFromQR(_:_:_:),
-                mapSingle: model.mapSingle(_:_:_:)
+                getOperators: model.operatorsFromQR(_:_:_:)
             )
         )
-    }
-}
-
-extension SegmentedOperatorData {
-    
-    func mapSingle(
-        matching qgCode: QRCode,
-        qrMapping: QRMapping
-    ) -> QRModelResult.Mapped {
-        
-        let isServicePayment = Payments
-            .paymentsServicesOperators
-            .map(\.rawValue)
-            .contains(origin.parentCode)
-        
-        if isServicePayment {
-            let puref = origin.code
-            let additionalList = origin.getAdditionalList(matching: qgCode)
-            let amount: Double = qgCode.rawData["sum"]?.toDouble() ?? 0
-            
-            return .source(.servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ))
-        } else {
-            return .single(qgCode, qrMapping)
-        }
     }
 }
 
@@ -71,15 +42,6 @@ private extension Model {
     func getMapping() -> QRMapping? {
         
         return qrMapping.value
-    }
-    
-    func mapSingle(
-        _ `operator`: SegmentedOperatorData,
-        _ qr: QRCode,
-        _ qrMapping: QRMapping
-    ) -> QRModelResult.Mapped {
-        
-        return `operator`.mapSingle(matching: qr, qrMapping: qrMapping)
     }
     
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
@@ -140,17 +102,16 @@ private extension Model {
 
 private extension OperatorProviderLoadResult {
     
-    init(operators: [Operator]?, providers: [Provider]?) {
-        
+    init(
+        operators: [Operator]?,
+        providers: [Provider]?
+    ) {
         self.init(
             operators: operators ?? [],
             providers: providers ?? []
         )
     }
 }
-
-typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
-typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
 
 private extension SegmentedOperatorData {
     

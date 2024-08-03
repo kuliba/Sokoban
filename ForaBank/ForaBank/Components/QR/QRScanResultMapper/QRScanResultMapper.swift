@@ -31,7 +31,7 @@ extension QRScanResultMapper {
         switch scanResult {
         case let .qrCode(qrCode):
             if let qrMapping = microServices.getMapping() {
-                return handleMapped(qrCode, qrMapping) { completion(.mapped($0)) }
+                return resolveMapped(qrCode, qrMapping) { completion(.mapped($0)) }
             } else {
                 qrModelResult = .failure(qrCode)
             }
@@ -58,7 +58,7 @@ extension QRScanResultMapper {
 
 private extension QRScanResultMapper {
     
-    func handleMapped(
+    func resolveMapped(
         _ qr: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
@@ -78,7 +78,7 @@ private extension QRScanResultMapper {
                 completion(.none(qr))
                 
             case let .operator(`operator`):
-                completion(microServices.mapSingle(`operator`, qr, qrMapping))
+                completion(`operator`.match(qr, qrMapping: qrMapping))
                 
             case let .provider(provider):
                 handleSingle(provider, qr, qrMapping, completion)
@@ -94,5 +94,33 @@ private extension QRScanResultMapper {
     ) {
         // найден 1 поставщик и type = housingAndCommunalService
         completion(.provider(provider))
+    }
+}
+
+private extension SegmentedOperatorData {
+    
+    func match(
+        _ qrCode: QRCode,
+        qrMapping: QRMapping
+    ) -> QRModelResult.Mapped {
+        
+        let isServicePayment = Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(origin.parentCode)
+        
+        if isServicePayment {
+            let puref = origin.code
+            let additionalList = origin.getAdditionalList(matching: qrCode)
+            let amount: Double = qrCode.rawData["sum"]?.toDouble() ?? 0
+            
+            return .source(.servicePayment(
+                puref: puref,
+                additionalList: additionalList,
+                amount: amount/100
+            ))
+        } else {
+            return .single(qrCode, qrMapping)
+        }
     }
 }
