@@ -110,14 +110,7 @@ private extension SegmentedPaymentProvider {
             icon: icon,
             inn: inn,
             title: title,
-            segment: segment,
-            origin: .provider(.init(
-                id: id, 
-                inn: inn ?? "",
-                md5Hash: icon,
-                title: title,
-                sortedOrder: .random(in: 1...100)
-            ))
+            segment: segment
         )
     }
 }
