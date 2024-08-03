@@ -8,15 +8,26 @@
 extension QRScanResultMapperComposer {
     
     convenience init(
-        flag: Flag,
+        flag: UtilitiesPaymentsFlag,
         model: Model
     ) {
         self.init(
-            flag: flag,
             nanoServices: .init(
                 getMapping: model.getMapping,
                 loadOperators: model.segmentedFromDictionary,
-                loadProviders: model.segmentedFromCache
+                loadProviders: {
+                    
+                    switch flag.rawValue {
+                    case .active(.live):
+                        return model.segmentedFromCache($0, $1)
+                        
+                    case .active(.stub):
+                        return nil // stub()
+                        
+                    case .inactive:
+                        return nil
+                    }
+                }
             )
         )
     }

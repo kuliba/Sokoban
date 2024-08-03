@@ -10,18 +10,13 @@ import Foundation
 
 final class QRScanResultMapperComposer {
     
-    private let flag: Flag
     private let nanoServices: NanoServices
     
-    init(
-        flag: Flag,
-        nanoServices: NanoServices
-    ) {
-        self.flag = flag
+    init(nanoServices: NanoServices) {
+        
         self.nanoServices = nanoServices
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
     typealias NanoServices = QRScanResultMapperNanoServices
 }
 
@@ -59,41 +54,11 @@ private extension QRScanResultMapperComposer {
             
             guard let self else { return }
             
-            let operators = segmentedFromDictionary(qrCode, qrMapping)
-            let providers = segmentedFromCache(qrCode, qrMapping)
+            let operators = nanoServices.loadOperators(qrCode, qrMapping)
+            let providers = nanoServices.loadProviders(qrCode, qrMapping)
             
             completion(.init(operators: operators, providers: providers))
         }
-    }
-    
-    private func segmentedFromDictionary(
-        _ qrCode: QRCode,
-        _ qrMapping: QRMapping
-    ) -> [Operator]? {
-        
-        nanoServices.loadOperators(qrCode, qrMapping)
-    }
-    
-    private func segmentedFromCache(
-        _ qrCode: QRCode,
-        _ qrMapping: QRMapping
-    ) -> [Provider]? {
-        
-        switch flag.rawValue {
-        case .active(.live):
-            return nanoServices.loadProviders(qrCode, qrMapping)
-            
-        case .active(.stub):
-            return stub()
-            
-        case .inactive:
-            return nil
-        }
-    }
-    
-    func stub() -> [Provider]? {
-        
-        return nil
     }
 }
 
