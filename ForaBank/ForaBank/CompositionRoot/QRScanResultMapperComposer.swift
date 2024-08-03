@@ -58,7 +58,7 @@ private extension Model {
         
         if isServicePayment {
             let puref = `operator`.origin.code
-            let additionalList = additionalList(for: `operator`.origin, qrCode: qr)
+            let additionalList = `operator`.origin.getAdditionalList(matching: qr)
             let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
             
             return .source(.servicePayment(
