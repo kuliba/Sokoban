@@ -42,7 +42,7 @@ extension QRModelWrapper where QRResult == QRViewModel.ScanResult {
     static func preview() -> QRModelWrapper {
         
         return .init(
-            handleScanResult: { _, completion in completion(.unknown) },
+            mapScanResult: { _, completion in completion(.unknown) },
             makeQRModel: QRViewModel.preview,
             scheduler: .main
         )

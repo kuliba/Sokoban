@@ -15,17 +15,17 @@ final class QRModelWrapper<QRResult>: ObservableObject {
     
     let qrModel: QRViewModel
     
-    private let handleScanResult: HandleScanResult
+    private let mapScanResult: MapScanResult
     
     private let stateSubject = PassthroughSubject<State?, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(
-        handleScanResult: @escaping HandleScanResult,
+        mapScanResult: @escaping MapScanResult,
         makeQRModel: MakeQRModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.handleScanResult = handleScanResult
+        self.mapScanResult = mapScanResult
         let subject = PassthroughSubject<Void, Never>()
         self.qrModel = makeQRModel { [subject] in subject.send(()) }
         
@@ -51,7 +51,7 @@ extension QRModelWrapper {
     
     typealias State = QRModelWrapperState<QRResult>
     typealias MakeQRModel = (@escaping () -> Void) -> QRViewModel
-    typealias HandleScanResult = (QRViewModel.ScanResult, @escaping (QRResult) -> Void) -> Void
+    typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRResult) -> Void) -> Void
 }
 
 extension QRModelWrapper {
@@ -96,7 +96,7 @@ private extension QRModelWrapper {
         
         switch effect {
         case let .scanResult(scanResult):
-            handleScanResult(scanResult) { [weak self] in
+            mapScanResult(scanResult) { [weak self] in
                 
                 self?.event(.qrResult($0))
             }
