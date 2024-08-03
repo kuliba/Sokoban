@@ -38,6 +38,34 @@ extension QRScanResultMapperComposer {
     }
 }
 
+extension SegmentedOperatorData {
+    
+    func mapSingle(
+        matching qgCode: QRCode,
+        qrMapping: QRMapping
+    ) -> QRModelResult.Mapped {
+        
+        let isServicePayment = Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(origin.parentCode)
+        
+        if isServicePayment {
+            let puref = origin.code
+            let additionalList = origin.getAdditionalList(matching: qgCode)
+            let amount: Double = qgCode.rawData["sum"]?.toDouble() ?? 0
+            
+            return .source(.servicePayment(
+                puref: puref,
+                additionalList: additionalList,
+                amount: amount/100
+            ))
+        } else {
+            return .single(qgCode, qrMapping)
+        }
+    }
+}
+
 private extension Model {
     
     func getMapping() -> QRMapping? {
@@ -51,24 +79,7 @@ private extension Model {
         _ qrMapping: QRMapping
     ) -> QRModelResult.Mapped {
         
-        let isServicePayment = Payments
-            .paymentsServicesOperators
-            .map(\.rawValue)
-            .contains(`operator`.origin.parentCode)
-        
-        if isServicePayment {
-            let puref = `operator`.origin.code
-            let additionalList = `operator`.origin.getAdditionalList(matching: qr)
-            let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
-            
-            return .source(.servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ))
-        } else {
-            return .single(qr, qrMapping)
-        }
+        return `operator`.mapSingle(matching: qr, qrMapping: qrMapping)
     }
     
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
