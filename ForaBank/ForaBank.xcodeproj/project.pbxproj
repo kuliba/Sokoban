@@ -1284,6 +1284,7 @@
 		2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66A2C5D1F69003F08AE /* Node.swift */; };
 		2ACFD66E2C5DEDA8003F08AE /* UtilityPaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */; };
 		2ACFD6702C5DEDF9003F08AE /* SegmentedOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */; };
+		2ACFD6742C5DFBC6003F08AE /* QRScanResultMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
@@ -4472,6 +4473,7 @@
 		2ACFD66A2C5D1F69003F08AE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentProvider.swift; sourceTree = "<group>"; };
 		2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedOperator.swift; sourceTree = "<group>"; };
+		2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperTests.swift; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -10499,6 +10501,22 @@
 			path = QRScanResultMapper;
 			sourceTree = "<group>";
 		};
+		2ACFD6712C5DFB8F003F08AE /* QR */ = {
+			isa = PBXGroup;
+			children = (
+				2ACFD6722C5DFBBA003F08AE /* QRScanResultMapper */,
+			);
+			path = QR;
+			sourceTree = "<group>";
+		};
+		2ACFD6722C5DFBBA003F08AE /* QRScanResultMapper */ = {
+			isa = PBXGroup;
+			children = (
+				2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */,
+			);
+			path = QRScanResultMapper;
+			sourceTree = "<group>";
+		};
 		2AD0928F2BFA30A100777EE4 /* TransactionPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -12661,15 +12679,16 @@
 		7772978A27C3B7480099EF91 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				83943ECA2A8F789400042CB2 /* ProductsSelector */,
-				7784262D2A28B8D100543FB8 /* ProductProfile */,
-				2AB5FEA329E681430055BE57 /* PaymentsTransfers */,
 				2AD64855299E7EF600D70B6B /* General */,
+				2AB5FEA329E681430055BE57 /* PaymentsTransfers */,
+				2AC2FB1B2C5104F8001972CB /* PaymentProviderServicePickerFlow */,
+				7784262D2A28B8D100543FB8 /* ProductProfile */,
+				83943ECA2A8F789400042CB2 /* ProductsSelector */,
+				2ACFD6712C5DFB8F003F08AE /* QR */,
 				7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */,
 				77C3829D27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift */,
 				C154986F29088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift */,
 				C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */,
-				2AC2FB1B2C5104F8001972CB /* PaymentProviderServicePickerFlow */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -20422,6 +20441,7 @@
 				83C990E52B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift in Sources */,
 				2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */,
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
+				2ACFD6742C5DFBC6003F08AE /* QRScanResultMapperTests.swift in Sources */,
 				2A8764FF2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift in Sources */,
 				2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */,
 				2A4300902C521FCE002FF8C7 /* ServicePaymentFlowReducerTests.swift in Sources */,
