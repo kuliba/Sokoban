@@ -20,6 +20,7 @@ extension AnywayFlowState {
         case alert(Alert)
         case completed(Completed)
         case fraud(FraudNoticePayload)
+        case inflight
         case main
         
         enum Alert: Equatable {

@@ -580,6 +580,7 @@
 		2A3624862C5EB53000174C50 /* AnywayFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624852C5EB53000174C50 /* AnywayFlowEffect.swift */; };
 		2A3624892C5EB59600174C50 /* AnywayFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */; };
 		2A36248B2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */; };
+		2A36248D2C5EBF8B00174C50 /* AnywayFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36248C2C5EBF8B00174C50 /* AnywayFlowView.swift */; };
 		2A3663C12C59519500114294 /* PaymentCompleteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3663C02C59519500114294 /* PaymentCompleteState.swift */; };
 		2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */; };
 		2A3834AF2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */; };
@@ -3794,6 +3795,7 @@
 		2A3624852C5EB53000174C50 /* AnywayFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowEffect.swift; sourceTree = "<group>"; };
 		2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowModel.swift; sourceTree = "<group>"; };
 		2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowFlowFactory.swift; sourceTree = "<group>"; };
+		2A36248C2C5EBF8B00174C50 /* AnywayFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayFlowView.swift; sourceTree = "<group>"; };
 		2A3663C02C59519500114294 /* PaymentCompleteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteState.swift; sourceTree = "<group>"; };
 		2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentTests.swift; sourceTree = "<group>"; };
 		2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentsView.swift; sourceTree = "<group>"; };
@@ -8384,6 +8386,7 @@
 			children = (
 				2A3624882C5EB59600174C50 /* AnywayFlowModel.swift */,
 				2A36248A2C5EB5F000174C50 /* AnywayFlowFlowFactory.swift */,
+				2A36248C2C5EBF8B00174C50 /* AnywayFlowView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -18863,6 +18866,7 @@
 				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
 				833D3E512C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift in Sources */,
 				77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */,
+				2A36248D2C5EBF8B00174C50 /* AnywayFlowView.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
 				ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */,
 				2AD7EBDD2B0CB233009FDCAB /* RootViewModelFactory+makeDetailButton.swift in Sources */,

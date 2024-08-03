@@ -69,6 +69,12 @@ private extension AnywayFlowModel {
         var effect: Effect?
         
         switch event {
+        case .dismissDestination:
+            state.destination = nil
+            
+        case .goToMain:
+            state.destination = .main
+            
         case let .notify(status):
             reduce(&state, &effect, with: status)
             
@@ -122,12 +128,13 @@ private extension AnywayFlowModel {
             state.destination = .alert(.paymentRestartConfirmation)
             
         case .fraudSuspected:
-            if let fraud = factory.makeFraud(state.content.state.transaction) {
+            let transaction = state.content.state.transaction
+            if let fraud = factory.makeFraud(transaction) {
                 state.destination = .fraud(fraud)
             }
             
         case .inflight:
-            break
+            state.destination = .inflight
             
         case let .serverError(errorMessage):
             state.destination = .alert(.serverError(errorMessage))
