@@ -43,6 +43,7 @@ extension QRScanResultMapper {
             qrModelResult = .c2bSubscribeURL(c2bSubscribeURL)
             
         case let .sberQR(sberQR):
+            // TODO: add async SberQR processing
             qrModelResult = .sberQR(sberQR)
             
         case let .url(url):
