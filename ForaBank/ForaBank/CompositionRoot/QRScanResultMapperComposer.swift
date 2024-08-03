@@ -1,5 +1,5 @@
 //
-//  QRScanResultHandlerComposer.swift
+//  QRScanResultMapperComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 02.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import Foundation
 
-final class QRScanResultHandlerComposer {
+final class QRScanResultMapperComposer {
     
     private let flag: Flag
     private let model: Model
@@ -24,9 +24,9 @@ final class QRScanResultHandlerComposer {
     typealias Flag = UtilitiesPaymentsFlag
 }
 
-extension QRScanResultHandlerComposer {
+extension QRScanResultMapperComposer {
     
-    func compose() -> QRScanResultHandler {
+    func compose() -> QRScanResultMapper {
         
         return .init(
             microServices: .init(

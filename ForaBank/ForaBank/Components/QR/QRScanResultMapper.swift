@@ -1,5 +1,5 @@
 //
-//  QRScanResultHandler.swift
+//  QRScanResultMapper.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import Foundation
 
-final class QRScanResultHandler {
+final class QRScanResultMapper {
     
     private let microServices: MicroServices
     
@@ -17,12 +17,12 @@ final class QRScanResultHandler {
         self.microServices = microServices
     }
     
-    typealias MicroServices = QRScanResultHandlerMicroServices
+    typealias MicroServices = QRScanResultMapperMicroServices
 }
 
-extension QRScanResultHandler {
+extension QRScanResultMapper {
     
-    func handleScanResult(
+    func mapScanResult(
         _ scanResult: QRViewModel.ScanResult,
         _ completion: @escaping (QRModelResult) -> Void
     ) {
@@ -56,7 +56,7 @@ extension QRScanResultHandler {
     }
 }
 
-private extension QRScanResultHandler {
+private extension QRScanResultMapper {
     
     func handleMapped(
         _ qr: QRCode,
