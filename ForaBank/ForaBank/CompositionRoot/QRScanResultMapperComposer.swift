@@ -46,7 +46,7 @@ private extension Model {
     }
     
     func mapSingle(
-        _ `operator`: OperatorGroupData.OperatorData,
+        _ `operator`: SegmentedOperatorData,
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) -> QRModelResult.Mapped {
@@ -54,11 +54,11 @@ private extension Model {
         let isServicePayment = Payments
             .paymentsServicesOperators
             .map(\.rawValue)
-            .contains(`operator`.parentCode)
+            .contains(`operator`.origin.parentCode)
         
         if isServicePayment {
-            let puref = `operator`.code
-            let additionalList = additionalList(for: `operator`, qrCode: qr)
+            let puref = `operator`.origin.code
+            let additionalList = additionalList(for: `operator`.origin, qrCode: qr)
             let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
             
             return .source(.servicePayment(
@@ -72,8 +72,8 @@ private extension Model {
     }
     
     typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
-    typealias Operator = OperatorGroupData.OperatorData
-    typealias Provider = PaymentProvider
+    typealias Operator = SegmentedOperatorData
+    typealias Provider = SegmentedProvider
     
     // TODO: add fallback to remote
     func operatorsFromQR(
@@ -85,11 +85,45 @@ private extension Model {
             
             guard let self else { return }
             
-            let operators = operatorsFromQR(qr, qrMapping)
-            let providers: [Provider] = [.init(id: "1", type: .service)]//{ fatalError() }()
+            let operators = segmentedFromDictionary(qr, qrMapping)
+            let providers = segmentedFromCache(qr, qrMapping)
             
             completion(.init(operators: operators, providers: providers))
         }
+    }
+    
+    func segmentedFromDictionary(
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
+    ) -> [SegmentedOperatorData]? {
+        
+        return operatorsFromQR(qrCode, qrMapping)?
+            .filter(\.isGroup)
+            .compactMap {
+                
+                return .init(data: $0, segment: serviceName(for: $0))
+            }
+    }
+    
+    private func segmentedFromCache(
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
+    ) -> [SegmentedProvider]? {
+        
+        guard let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping)
+        else { return nil }
+        
+        return segmentedFromCache(with: inn)
+    }
+    
+    // TODO: replace with loader with fallback to remote
+    private func segmentedFromCache(
+        with inn: String
+    ) -> [SegmentedProvider]? {
+        
+        localAgent.load(type: [CachingSberOperator].self)?
+            .filter { $0.inn == inn }
+            .map(SegmentedProvider.init)
     }
 }
 
@@ -100,6 +134,42 @@ private extension OperatorProviderLoadResult {
         self.init(
             operators: operators ?? [],
             providers: providers ?? []
+        )
+    }
+}
+
+typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
+typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
+
+private extension SegmentedOperatorData {
+    
+    init?(
+        data: OperatorGroupData.OperatorData,
+        segment: String?
+    ) {
+        guard let segment else { return nil }
+        
+        self.init(data: data, segment: segment)
+    }
+}
+
+private extension SegmentedProvider {
+    
+    init(
+        with cached: CachingSberOperator
+    ) {
+        // TODO: add `segment` property to `CachingSberOperator`
+        let segment = PTSectionPaymentsView.ViewModel.PaymentsType.service
+        
+        self.init(
+            origin: .init(
+                id: cached.id,
+                icon: cached.md5Hash,
+                inn: cached.inn,
+                title: cached.title,
+                segment: segment.apearance.title
+            ),
+            segment: segment.apearance.title
         )
     }
 }

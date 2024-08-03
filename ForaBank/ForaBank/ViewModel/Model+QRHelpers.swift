@@ -52,7 +52,7 @@ extension Model {
         }
     }
     
-    func segmentedFromDictionary(
+    private func segmentedFromDictionary(
         matching qrCode: QRCode,
         qrMapping: QRMapping
     ) -> [SegmentedPaymentProvider]? {
@@ -66,11 +66,11 @@ extension Model {
     }
     
     func loadCached(
-        matching code: QRCode,
+        matching qrCode: QRCode,
         qrMapping: QRMapping
     ) -> [SegmentedPaymentProvider]? {
         
-        guard let inn = code.stringValue(type: .general(.inn), mapping: qrMapping)
+        guard let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping)
         else { return nil }
         
         return loadCached(with: inn)

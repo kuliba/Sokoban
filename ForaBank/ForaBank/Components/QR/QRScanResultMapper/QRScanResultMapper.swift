@@ -87,17 +87,12 @@ private extension QRScanResultMapper {
     }
     
     private func handleSingle(
-        _ provider: Provider,
+        _ provider: SegmentedProvider,
         _ qr: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
     ) {
-        switch provider.type {
-            // найден 1 поставщик и type = housingAndCommunalService
-        case .service:
-            completion(.provider(provider))
-        }
+        // найден 1 поставщик и type = housingAndCommunalService
+        completion(.provider(provider))
     }
-
-    private typealias Provider = PaymentProvider
 }
