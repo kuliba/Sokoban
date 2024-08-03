@@ -71,6 +71,7 @@ private extension Model {
         }
     }
     
+    typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
     typealias Operator = OperatorGroupData.OperatorData
     typealias Provider = PaymentProvider
     
@@ -78,7 +79,7 @@ private extension Model {
     func operatorsFromQR(
         _ qr: QRCode,
         _ qrMapping: QRMapping,
-        _ completion: @escaping (OperatorProviderLoadResult<Operator, Provider>) -> Void
+        _ completion: @escaping (LoadResult) -> Void
     ) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             
