@@ -106,6 +106,7 @@ extension RootViewModelFactory {
             model: model,
             logger: logger,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: scheduler
         )
         

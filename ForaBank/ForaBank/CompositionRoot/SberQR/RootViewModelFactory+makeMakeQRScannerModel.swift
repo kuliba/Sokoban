@@ -13,6 +13,7 @@ extension RootViewModelFactory {
     static func makeMakeQRScannerModel(
         model: Model,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> MakeQRScannerModel {
         
