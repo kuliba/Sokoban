@@ -15,7 +15,7 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
     
     let factory: AnywayPaymentFactory<IconDomain.IconView>
 #warning("combine into one factory")
-    let makePaymentCompleteView: (AnywayFlowState.Destination.Completed) -> PaymentCompleteView
+    let makePaymentCompleteView: (AnywayFlowState.Status.Completed) -> PaymentCompleteView
     
     var body: some View {
         
@@ -36,7 +36,7 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
         )
         .fullScreenCover(
             cover: flowModel.state.fullScreenCover,
-            dismissFullScreenCover: { flowModel.event(.goToMain) },
+            dismissFullScreenCover: { flowModel.event(.goTo(.main)) },
             content: makePaymentCompleteView
         )
         .bottomSheet(
@@ -51,17 +51,17 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
 
 private extension AnywayFlowState {
     
-    var alert: Destination.Alert? {
+    var alert: Status.Alert? {
         
-        guard case let .alert(alert) = destination
+        guard case let .alert(alert) = status
         else { return nil }
         
         return alert
     }
     
-    var fullScreenCover: Destination.Completed? {
+    var fullScreenCover: Status.Completed? {
         
-        guard case let .completed(completed) = destination
+        guard case let .completed(completed) = status
         else { return nil }
         
         return completed
@@ -69,14 +69,14 @@ private extension AnywayFlowState {
     
     var sheet: FraudNoticePayload? {
         
-        guard case let .fraud(fraud) = destination
+        guard case let .fraud(fraud) = status
         else { return nil }
         
         return fraud
     }
 }
 
-extension AnywayFlowState.Destination.Alert: Identifiable {
+extension AnywayFlowState.Status.Alert: Identifiable {
     
     var id: ID {
         
@@ -100,7 +100,7 @@ extension AnywayFlowState.Destination.Alert: Identifiable {
     }
 }
 
-extension AnywayFlowState.Destination.Completed: Identifiable {
+extension AnywayFlowState.Status.Completed: Identifiable {
     
     var id: ID {
         
@@ -128,7 +128,7 @@ private extension AnywayFlowView {
     func paymentFlowAlert(
         transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
         flowEvent: @escaping (AnywayFlowEvent) -> Void
-    ) -> (AnywayFlowState.Destination.Alert) -> Alert {
+    ) -> (AnywayFlowState.Status.Alert) -> Alert {
         
         return { alert in
             

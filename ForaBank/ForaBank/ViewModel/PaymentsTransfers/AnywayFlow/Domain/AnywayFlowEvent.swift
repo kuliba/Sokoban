@@ -8,7 +8,7 @@
 enum AnywayFlowEvent: Equatable {
     
     case dismissDestination
-    case goToMain
+    case goTo(GoTo)
     case notify(AnywayTransactionStatus?)
     case showResult(TransactionResult)
 }
@@ -21,5 +21,11 @@ extension AnywayFlowEvent {
         
         let formattedAmount: String
         let hasExpired: Bool
+    }
+    
+    enum GoTo {
+        
+        case main
+        case payments
     }
 }

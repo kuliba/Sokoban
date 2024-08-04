@@ -71,7 +71,7 @@ private extension AnywayServicePickerFlowModel {
         switch event {
         case .dismiss:
             state.status = nil
-
+            
         case .goToMain:
             state.status = .outside(.main)
             
@@ -146,7 +146,7 @@ private extension AnywayServicePickerFlowModel {
             .receive(on: scheduler)
             .sink { [weak self] a in self?.event(.scanQR) }
     }
-
+    
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
@@ -173,9 +173,26 @@ private extension AnywayServicePickerFlowModel {
     ) -> AnyCancellable {
         
         anywayFlowModel.$state
-            .compactMap { $0.destination == .main ? () : nil }
+            .compactMap(\.outsideEvent)
             .receive(on: scheduler)
-            .sink { [weak self] _ in self?.event(.goToMain) }
+            .sink { [weak self] in self?.event($0) }
     }
 }
 
+private extension AnywayFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status else { return nil }
+        return outside
+    }
+    
+    var outsideEvent: AnywayServicePickerFlowEvent? {
+        
+        switch outside {
+        case .none:     return .none
+        case .main:     return .goToMain
+        case .payments: return .goToPayments
+        }
+    }
+}

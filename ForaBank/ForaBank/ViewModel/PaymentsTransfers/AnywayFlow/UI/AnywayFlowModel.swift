@@ -70,10 +70,13 @@ private extension AnywayFlowModel {
         
         switch event {
         case .dismissDestination:
-            state.destination = nil
+            state.status = nil
             
-        case .goToMain:
-            state.destination = .main
+        case .goTo(.main):
+            state.status = .outside(.main)
+            
+        case .goTo(.payments):
+            state.status = .outside(.payments)
             
         case let .notify(status):
             reduce(&state, &effect, with: status)
@@ -122,22 +125,22 @@ private extension AnywayFlowModel {
     ) {
         switch status {
         case .none:
-            state.destination = nil
+            state.status = nil
             
         case .awaitingPaymentRestartConfirmation:
-            state.destination = .alert(.paymentRestartConfirmation)
+            state.status = .alert(.paymentRestartConfirmation)
             
         case .fraudSuspected:
             let transaction = state.content.state.transaction
             if let fraud = factory.makeFraud(transaction) {
-                state.destination = .fraud(fraud)
+                state.status = .fraud(fraud)
             }
             
         case .inflight:
-            state.destination = .inflight
+            state.status = .inflight
             
         case let .serverError(errorMessage):
-            state.destination = .alert(.serverError(errorMessage))
+            state.status = .alert(.serverError(errorMessage))
             
         case let .result(transactionResult):
             reduce(&state, &effect, with: transactionResult)
@@ -156,7 +159,7 @@ private extension AnywayFlowModel {
         case let .failure(terminated):
             switch terminated {
             case let .fraud(fraud):
-                state.destination = nil
+                state.status = nil
                 
                 effect = .delay(
                     .showResult(.failure(.init(
@@ -168,15 +171,15 @@ private extension AnywayFlowModel {
                 
 #warning("the case should have associated string")
             case .transactionFailure:
-                state.destination = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+                state.status = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
                 
 #warning("the case should have associated string")
             case .updatePaymentFailure:
-                state.destination = .alert(.serverError("Error"))
+                state.status = .alert(.serverError("Error"))
             }
             
         case let .success(report):
-            state.destination = nil
+            state.status = nil
             
             effect = .delay(
                 .showResult(.success(report)),
@@ -192,14 +195,14 @@ private extension AnywayFlowModel {
     ) {
         switch result {
         case let .failure(fraud):
-            state.destination = .completed(.init(
+            state.status = .completed(.init(
                 formattedAmount: fraud.formattedAmount,
                 result: .failure(.init(hasExpired: fraud.hasExpired))
             ))
             
         case let .success(report):
             let transaction = state.content.state.transaction
-            state.destination = .completed(.init(
+            state.status = .completed(.init(
                 formattedAmount: factory.getFormattedAmount(transaction) ?? "",
                 result: .success(report)
             ))
