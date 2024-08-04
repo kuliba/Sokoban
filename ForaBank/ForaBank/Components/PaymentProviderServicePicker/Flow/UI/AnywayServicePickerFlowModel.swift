@@ -73,10 +73,10 @@ private extension AnywayServicePickerFlowModel {
             state.status = nil
 
         case .goToMain:
-            state.status = .main
+            state.status = .outside(.main)
             
         case .goToPayments:
-            state.status = .payments
+            state.status = .outside(.payments)
             
         case let .notify(result):
             reduce(&state, &effect, with: result)
@@ -85,7 +85,7 @@ private extension AnywayServicePickerFlowModel {
             payByInstructions(&state)
             
         case .scanQR:
-            state.status = .scanQR
+            state.status = .outside(.scanQR)
         }
         
         return nil
@@ -121,10 +121,10 @@ private extension AnywayServicePickerFlowModel {
         let paymentsViewModel = makePayByInstructionsModel()
         let cancellable = bind(paymentsViewModel)
         
-        state.status = .payByInstructions(.init(
+        state.status = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: cancellable
-        ))
+        )))
     }
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
@@ -161,10 +161,10 @@ private extension AnywayServicePickerFlowModel {
             
         case let .success(transaction):
             let anywayFlowModel = factory.makeAnywayFlowModel(transaction)
-            state.status = .payment(.init(
+            state.status = .destination(.payment(.init(
                 model: anywayFlowModel,
                 cancellable: bind(anywayFlowModel)
-            ))
+            )))
         }
     }
     

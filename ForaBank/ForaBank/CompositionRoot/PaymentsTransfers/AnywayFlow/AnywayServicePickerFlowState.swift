@@ -18,12 +18,9 @@ extension AnywayServicePickerFlowState {
     enum Status {
         
         case alert(Alert)
+        case destination(Destination)
         case inflight
-        case main
-        case payByInstructions(Node<PaymentsViewModel>)
-        case payment(Node<AnywayFlowModel>)
-        case payments
-        case scanQR
+        case outside(Outside)
         
         enum Alert {
             
@@ -33,10 +30,15 @@ extension AnywayServicePickerFlowState {
         
         enum Destination {
             
+            case payByInstructions(Node<PaymentsViewModel>)
+            case payment(Node<AnywayFlowModel>)
         }
         
-        enum GoTo {
+        enum Outside {
             
+            case main
+            case payments
+            case scanQR
         }
     }
 }

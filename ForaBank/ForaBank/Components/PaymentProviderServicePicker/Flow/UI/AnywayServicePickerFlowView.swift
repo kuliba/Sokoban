@@ -48,11 +48,14 @@ extension AnywayServicePickerFlowModel {
     var destination: Destination? {
         
         switch state.status {
-        case let .payByInstructions(node):
-            return .payByInstructions(node.model)
-            
-        case let .payment(node):
-            return .payment(node.model)
+        case let .destination(destination):
+            switch destination {
+            case let .payByInstructions(node):
+                return .payByInstructions(node.model)
+                
+            case let .payment(node):
+                return .payment(node.model)
+            }
             
         default:
             return nil
