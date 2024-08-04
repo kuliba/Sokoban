@@ -51,16 +51,16 @@ extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
         
         switch self {
             
-        case .operator:          return .operator
         case .payByInstructions: return .payByInstructions
+        case .payments:          return .payments
         case .provider:          return .provider
         }
     }
     
     enum ID: Hashable {
         
-        case `operator`
         case payByInstructions
+        case payments
         case provider
     }
 }

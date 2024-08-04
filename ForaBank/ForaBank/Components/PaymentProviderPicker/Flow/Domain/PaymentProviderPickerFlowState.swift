@@ -22,8 +22,8 @@ extension PaymentProviderPickerFlowState {
         
         enum Destination {
             
-            case `operator`(Operator)
             case payByInstructions(Node<PaymentsViewModel>)
+            case payments(Node<PaymentsViewModel>)
             case provider(Provider)
         }
         

@@ -8,9 +8,12 @@
 struct PaymentProviderPickerFlowFactory {
     
     let makePayByInstructionsViewModel: MakePayByInstructionsViewModel
+    let makePaymentsViewModel: MakePaymentsViewModel
 }
 
 extension PaymentProviderPickerFlowFactory {
     
    typealias MakePayByInstructionsViewModel = (QRCode, @escaping () -> Void) -> PaymentsViewModel
+   typealias MakePaymentsViewModel = (Operator, @escaping () -> Void) -> PaymentsViewModel
+    typealias Operator = SegmentedOperatorData
 }

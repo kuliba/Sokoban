@@ -118,7 +118,22 @@ private extension PaymentProviderPickerFlowModel {
         _ state: inout State,
         _ `operator`: State.Status.Operator
     ) {
-        state.status = .destination(.operator(`operator`))
+        let paymentsViewModel = makePaymentsViewModel(with: `operator`)
+        
+        state.status = .destination(.payments(.init(
+            model: paymentsViewModel,
+            cancellable: bind(paymentsViewModel)
+        )))
+    }
+    
+    private func makePaymentsViewModel(
+        with `operator`: State.Status.Operator
+    ) -> PaymentsViewModel {
+        
+        return factory.makePaymentsViewModel(`operator`) { [weak self] in
+            
+            self?.event(.dismiss)
+        }
     }
 }
 
@@ -142,20 +157,18 @@ private extension PaymentProviderPickerFlowModel {
         _ state: inout State
     ) {
         let paymentsViewModel = makePayByInstructionsModel()
-        let cancellable = bind(paymentsViewModel)
         
         state.status = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
-            cancellable: cancellable
+            cancellable: bind(paymentsViewModel)
         )))
     }
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
         
         let qrCode = state.content.state.qrCode
-        let makeModel = factory.makePayByInstructionsViewModel
         
-        return makeModel(qrCode) { [weak self] in
+        return factory.makePayByInstructionsViewModel(qrCode) { [weak self] in
             
             self?.event(.dismiss)
         }
