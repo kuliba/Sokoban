@@ -75,6 +75,9 @@ private extension AnywayServicePickerFlowModel {
         case .goToMain:
             state.destination = .main
             
+        case .goToPayments:
+            state.destination = .payments
+            
         case let .notify(result):
             reduce(&state, &effect, with: result)
             

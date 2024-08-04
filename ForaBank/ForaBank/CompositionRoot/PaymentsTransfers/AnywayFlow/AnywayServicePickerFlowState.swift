@@ -22,6 +22,7 @@ extension AnywayServicePickerFlowState {
         case main
         case payByInstructions(Node<PaymentsViewModel>)
         case payment(Node<AnywayFlowModel>)
+        case payments
         case scanQR
         
         enum Alert {

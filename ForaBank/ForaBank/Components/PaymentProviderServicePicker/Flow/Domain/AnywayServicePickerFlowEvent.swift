@@ -9,6 +9,7 @@ enum AnywayServicePickerFlowEvent: Equatable {
     
     case dismiss
     case goToMain
+    case goToPayments
     case notify(PaymentProviderServicePickerResult)
     case payByInstruction
     case scanQR
