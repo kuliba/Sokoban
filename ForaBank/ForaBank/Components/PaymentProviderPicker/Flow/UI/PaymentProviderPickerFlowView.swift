@@ -15,7 +15,7 @@ where OperatorLabel: View,
     @ObservedObject var flowModel: FlowModel
     
     let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
-    let destinationContent: (FlowState.Status) -> DestinationContent
+    let destinationContent: (FlowState.Destination) -> DestinationContent
     
     var body: some View {
         
@@ -36,27 +36,47 @@ extension PaymentProviderPickerFlowView {
     typealias Provider = SegmentedProvider
 }
 
-extension PaymentProviderPickerFlowState.Status: Identifiable {
+extension PaymentProviderPickerFlowState {
     
-    var id: ID {
+    var destination: Destination? {
         
-        switch self {
+        switch status {
+        case let .operator(`operator`):
+            return .operator(`operator`)
             
-        case .addCompany:        return .addCompany
-        case .operator:          return .operator
-        case .payByInstructions: return .payByInstructions
-        case .provider:          return .provider
-        case .scanQR:            return .scanQR
+        case let .payByInstructions(node):
+            return .payByInstructions(node.model)
+            
+        case let .provider(provider):
+            return .provider(provider)
+            
+        default:
+            return nil
         }
     }
     
-    enum ID: Hashable {
+    enum Destination: Identifiable {
         
-        case addCompany
-        case `operator`
-        case payByInstructions
-        case provider
-        case scanQR
+        case `operator`(Operator)
+        case payByInstructions(PaymentsViewModel)
+        case provider(Provider)
+        
+        var id: ID {
+            
+            switch self {
+                
+            case .operator:          return .operator
+            case .payByInstructions: return .payByInstructions
+            case .provider:          return .provider
+            }
+        }
+        
+        enum ID: Hashable {
+            
+            case `operator`
+            case payByInstructions
+            case provider
+        }
     }
 }
 

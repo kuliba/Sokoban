@@ -8,7 +8,7 @@
 struct PaymentProviderPickerFlowState<Operator, Provider> {
     
     let content: Content
-    var destination: Status?
+    var status: Status?
 }
 
 extension PaymentProviderPickerFlowState {
@@ -17,10 +17,15 @@ extension PaymentProviderPickerFlowState {
     
     enum Status {
         
-        case addCompany
         case `operator`(Operator)
+        case outside(Outside)
         case payByInstructions(Node<PaymentsViewModel>)
         case provider(Provider)
-        case scanQR
+        
+        enum Outside {
+            
+            case addCompany
+            case scanQR
+        }
     }
 }

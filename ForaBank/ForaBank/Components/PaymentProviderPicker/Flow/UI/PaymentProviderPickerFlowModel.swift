@@ -65,7 +65,7 @@ private extension PaymentProviderPickerFlowModel {
         
         switch event {
         case .dismiss:
-            state.destination = nil
+            state.status = nil
             
         case let .goTo(goTo):
             return reduce(&state, with: goTo)
@@ -87,10 +87,10 @@ private extension PaymentProviderPickerFlowModel {
         
         switch goTo {
         case .addCompany:
-            state.destination = .addCompany
+            state.status = .outside(.addCompany)
             
         case .scanQR:
-            state.destination = .scanQR
+            state.status = .outside(.scanQR)
         }
         
         return nil
@@ -103,10 +103,10 @@ private extension PaymentProviderPickerFlowModel {
         
         switch select {
         case let .operator(`operator`):
-            state.destination = .operator(`operator`)
+            state.status = .operator(`operator`)
             
         case let .provider(provider):
-            state.destination = .provider(provider)
+            state.status = .provider(provider)
         }
         
         return nil
@@ -118,7 +118,7 @@ private extension PaymentProviderPickerFlowModel {
         let paymentsViewModel = makePayByInstructionsModel()
         let cancellable = bind(paymentsViewModel)
         
-        state.destination = .payByInstructions(.init(
+        state.status = .payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: cancellable
         ))
