@@ -37,9 +37,9 @@ extension AnywayServicePickerFlowView {
 
 extension AnywayServicePickerFlowModel {
     
-    var alert: State.Destination.Alert? {
+    var alert: State.Status.Alert? {
         
-        guard case let .alert(alert) = state.destination
+        guard case let .alert(alert) = state.status
         else { return nil }
         
         return alert
@@ -47,7 +47,7 @@ extension AnywayServicePickerFlowModel {
     
     var destination: Destination? {
         
-        switch state.destination {
+        switch state.status {
         case let .payByInstructions(node):
             return .payByInstructions(node.model)
             
@@ -80,7 +80,7 @@ extension AnywayServicePickerFlowModel {
     }
 }
 
-extension AnywayServicePickerFlowState.Destination.Alert: Identifiable {
+extension AnywayServicePickerFlowState.Status.Alert: Identifiable {
     
     var id: ID {
         
@@ -99,7 +99,7 @@ extension AnywayServicePickerFlowState.Destination.Alert: Identifiable {
 private extension AnywayServicePickerFlowView {
     
     func alertContent(
-        alert: AnywayServicePickerFlowState.Destination.Alert
+        alert: AnywayServicePickerFlowState.Status.Alert
     ) -> Alert {
         
         return .init(
@@ -126,7 +126,7 @@ private extension AnywayServicePickerFlowView {
     }
 }
 
-private extension AnywayServicePickerFlowState.Destination.Alert {
+private extension AnywayServicePickerFlowState.Status.Alert {
     
     var title: String {
         

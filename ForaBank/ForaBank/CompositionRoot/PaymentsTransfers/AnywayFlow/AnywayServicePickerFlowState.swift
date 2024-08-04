@@ -8,14 +8,14 @@
 struct AnywayServicePickerFlowState {
     
     let content: Content
-    var destination: Destination?
+    var status: Status?
 }
 
 extension AnywayServicePickerFlowState {
     
     typealias Content = PaymentProviderServicePickerModel
     
-    enum Destination {
+    enum Status {
         
         case alert(Alert)
         case inflight
@@ -29,6 +29,14 @@ extension AnywayServicePickerFlowState {
             
             case connectivity
             case serverError(String)
+        }
+        
+        enum Destination {
+            
+        }
+        
+        enum GoTo {
+            
         }
     }
 }

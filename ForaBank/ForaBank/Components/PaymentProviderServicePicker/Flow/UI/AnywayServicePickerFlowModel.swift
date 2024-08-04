@@ -70,13 +70,13 @@ private extension AnywayServicePickerFlowModel {
         
         switch event {
         case .dismiss:
-            state.destination = nil
+            state.status = nil
 
         case .goToMain:
-            state.destination = .main
+            state.status = .main
             
         case .goToPayments:
-            state.destination = .payments
+            state.status = .payments
             
         case let .notify(result):
             reduce(&state, &effect, with: result)
@@ -85,7 +85,7 @@ private extension AnywayServicePickerFlowModel {
             payByInstructions(&state)
             
         case .scanQR:
-            state.destination = .scanQR
+            state.status = .scanQR
         }
         
         return nil
@@ -121,7 +121,7 @@ private extension AnywayServicePickerFlowModel {
         let paymentsViewModel = makePayByInstructionsModel()
         let cancellable = bind(paymentsViewModel)
         
-        state.destination = .payByInstructions(.init(
+        state.status = .payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: cancellable
         ))
@@ -154,14 +154,14 @@ private extension AnywayServicePickerFlowModel {
     ) {
         switch result {
         case .failure(.connectivityError):
-            state.destination = .alert(.connectivity)
+            state.status = .alert(.connectivity)
             
         case let .failure(.serverError(message)):
-            state.destination = .alert(.serverError(message))
+            state.status = .alert(.serverError(message))
             
         case let .success(transaction):
             let anywayFlowModel = factory.makeAnywayFlowModel(transaction)
-            state.destination = .payment(.init(
+            state.status = .payment(.init(
                 model: anywayFlowModel,
                 cancellable: bind(anywayFlowModel)
             ))
