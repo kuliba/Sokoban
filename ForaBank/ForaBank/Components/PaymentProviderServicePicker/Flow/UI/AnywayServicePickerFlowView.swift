@@ -8,31 +8,33 @@
 import SwiftUI
 import UIPrimitives
 
-struct AnywayServicePickerFlowView<AnywayPaymentFlowView: View>: View {
+struct AnywayServicePickerFlowView<AnywayPaymentFlowView, ServicePicker>: View
+where AnywayPaymentFlowView: View,
+      ServicePicker: View {
     
     @ObservedObject var flowModel: FlowModel
     
-    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayPaymentFlowView
+    let factory: Factory
     
     var body: some View {
         
-        //PaymentProviderServicePickerWrapperView(
-        Text("")
-        .alert(
-            item: flowModel.alert,
-            content: alertContent
-        )
-        .navigationDestination(
-            destination: flowModel.destination,
-            dismissDestination: { flowModel.event(.dismiss) },
-            content: destinationContent
-        )
+        factory.makeServicePicker(flowModel.state.content)
+            .alert(
+                item: flowModel.alert,
+                content: alertContent
+            )
+            .navigationDestination(
+                destination: flowModel.destination,
+                dismissDestination: { flowModel.event(.dismiss) },
+                content: destinationContent
+            )
     }
 }
 
 extension AnywayServicePickerFlowView {
     
     typealias FlowModel = AnywayServicePickerFlowModel
+    typealias Factory = AnywayServicePickerFlowViewFactory<AnywayPaymentFlowView, ServicePicker>
 }
 
 extension AnywayServicePickerFlowModel {
@@ -124,7 +126,7 @@ private extension AnywayServicePickerFlowView {
             PaymentsView(viewModel: paymentsViewModel)
             
         case let .payment(anywayFlowModel):
-            makeAnywayFlowView(anywayFlowModel)
+            factory.makeAnywayFlowView(anywayFlowModel)
         }
     }
 }
