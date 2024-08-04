@@ -70,10 +70,8 @@ extension AnywayServicePickerFlowModel {
         
         var id: ID {
             switch self {
-            case .payByInstructions:
-                return .payByInstructions
-            case .payment:
-                return .payment
+            case .payByInstructions: return .payByInstructions
+            case .payment:           return .payment
             }
         }
         
