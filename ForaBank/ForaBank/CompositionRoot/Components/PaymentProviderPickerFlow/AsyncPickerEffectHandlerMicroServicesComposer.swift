@@ -10,7 +10,7 @@ import Foundation
 
 final class AsyncPickerEffectHandlerMicroServicesComposer {
     
-    // TODO: get rid of this dependency
+    // TODO: get rid of this dependency - used for its `makeStartPaymentResult`
     private let composer: Composer
     private let nanoServices: NanoServices
     
@@ -75,5 +75,13 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 }
             }
         }
+    }
+}
+
+private extension SegmentedPaymentProvider {
+    
+    var `operator`: UtilityPaymentOperator {
+        
+        return .init(id: id, title: title, subtitle: inn, icon: icon)
     }
 }

@@ -11,31 +11,26 @@ import Foundation
 
 final class PaymentProviderServicePickerFlowModelComposer {
     
-    // TODO: suboptimal, need to rethink how to inject what needed
-    // (and that is `AsyncPickerEffectHandlerMicroServices`)
-    private let composer: Composer
+    private let makeMicroServices: MakeMicroServices
     private let factory: Factory
     private let model: Model
-    private let nanoServices: NanoServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        composer: Composer,
+        makeMicroServices: @escaping MakeMicroServices,
         factory: Factory,
         model: Model,
-        nanoServices: NanoServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.composer = composer
+        self.makeMicroServices = makeMicroServices
         self.factory = factory
         self.model = model
-        self.nanoServices = nanoServices
         self.scheduler = scheduler
     }
     
-    typealias Composer = UtilityPrepaymentFlowMicroServicesComposer
     typealias Factory = PaymentProviderServicePickerFlowModelFactory
-    typealias NanoServices = UtilityPaymentNanoServices
+    typealias MakeMicroServices = (PaymentProviderServicePickerPayload) -> MicroServices
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
 }
 
 extension PaymentProviderServicePickerFlowModelComposer {
@@ -76,30 +71,7 @@ extension PaymentProviderServicePickerFlowModelComposer {
         
         let reducer = PickerReducer()
         let effectHandler = PickerEffectHandler(
-            microServices: .init(
-                load: load,
-                select: { service, completion in
-                    
-                    // TODO: needs simplification and decoupling from `nanoServices.startAnywayPayment` which much more complex than is needed in this case
-                    self.nanoServices.startAnywayPayment(
-                        .service(service, for: payload.provider.operator)
-                    ) {
-                        // TODO: get rid of this dependency
-                        let result = self.composer.makeStartPaymentResult(from: $0, service, payload.provider.operator)
-                        
-                        switch result {
-                        case let .failure(.serviceFailure(.serverError(errorMessage))):
-                            completion(.failure(.serverError(errorMessage)))
-                            
-                        case let .success(.startPayment(transaction)):
-                            completion(.success(transaction))
-                            
-                        default:
-                            completion(.failure(.connectivityError))
-                        }
-                    }
-                }
-            )
+            microServices: makeMicroServices(payload)
         )
         
         return .init(
@@ -113,30 +85,6 @@ extension PaymentProviderServicePickerFlowModelComposer {
     typealias PickerReducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, UtilityService, Result>
     typealias PickerEffectHandler = AsyncPickerEffectHandler<PaymentProviderServicePickerPayload, UtilityService, Result>
     
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, Result>
-    
     typealias Provider = SegmentedPaymentProvider
     typealias Result = PaymentProviderServicePickerResult
-}
-
-private extension PaymentProviderServicePickerFlowModelComposer {
-    
-    func load(
-        payload: PaymentProviderServicePickerPayload,
-        completion: @escaping ([UtilityService]) -> Void
-    ) {
-        nanoServices.getServicesFor(payload.provider.operator) {
-            
-            completion((try? $0.get()) ?? [])
-            _ = self.nanoServices
-        }
-    }
-}
-
-extension SegmentedPaymentProvider {
-    
-    var `operator`: UtilityPaymentOperator {
-        
-        return .init(id: id, title: title, subtitle: inn, icon: icon)
-    }
 }
