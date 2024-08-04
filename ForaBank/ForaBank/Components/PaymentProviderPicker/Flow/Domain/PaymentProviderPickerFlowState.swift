@@ -8,14 +8,14 @@
 struct PaymentProviderPickerFlowState<Operator, Provider> {
     
     let content: Content
-    var destination: Destination?
+    var destination: Status?
 }
 
 extension PaymentProviderPickerFlowState {
     
     typealias Content = PaymentProviderPickerModel<SegmentedOperatorProvider>
     
-    enum Destination {
+    enum Status {
         
         case addCompany
         case `operator`(Operator)

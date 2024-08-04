@@ -15,7 +15,7 @@ where OperatorLabel: View,
     @ObservedObject var flowModel: FlowModel
     
     let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
-    let destinationContent: (FlowState.Destination) -> DestinationContent
+    let destinationContent: (FlowState.Status) -> DestinationContent
     
     var body: some View {
         
@@ -36,7 +36,7 @@ extension PaymentProviderPickerFlowView {
     typealias Provider = SegmentedProvider
 }
 
-extension PaymentProviderPickerFlowState.Destination: Identifiable {
+extension PaymentProviderPickerFlowState.Status: Identifiable {
     
     var id: ID {
         
