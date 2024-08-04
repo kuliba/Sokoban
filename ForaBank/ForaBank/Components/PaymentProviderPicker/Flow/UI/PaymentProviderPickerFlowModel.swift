@@ -69,7 +69,7 @@ private extension PaymentProviderPickerFlowModel {
             
         case .payByInstructions:
             payByInstructions(&state)
-
+            
         case let .select(select):
             return reduce(&state, with: select)
         }
@@ -100,16 +100,45 @@ private extension PaymentProviderPickerFlowModel {
         
         switch select {
         case let .operator(`operator`):
-            state.status = .destination(.operator(`operator`))
+            payWithOperator(&state, `operator`)
             
         case let .provider(provider):
-            state.status = .destination(.provider(provider))
+            payWithProvider(&state, provider)
         }
         
         return nil
     }
+}
+
+// MARK: - pay with operator
+
+private extension PaymentProviderPickerFlowModel {
     
-    private func payByInstructions(
+    func payWithOperator(
+        _ state: inout State,
+        _ `operator`: State.Status.Operator
+    ) {
+        state.status = .destination(.operator(`operator`))
+    }
+}
+
+// MARK: - pay with provider
+
+private extension PaymentProviderPickerFlowModel {
+    
+    func payWithProvider(
+        _ state: inout State,
+        _ provider: State.Status.Provider
+    ) {
+        state.status = .destination(.provider(provider))
+    }
+}
+
+// MARK: - payByInstructions
+
+private extension PaymentProviderPickerFlowModel {
+    
+    func payByInstructions(
         _ state: inout State
     ) {
         let paymentsViewModel = makePayByInstructionsModel()
