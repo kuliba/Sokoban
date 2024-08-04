@@ -5,11 +5,11 @@
 //  Created by Igor Malyarov on 04.08.2024.
 //
 
+import FooterComponent
 import SwiftUI
 import UIPrimitives
 
-struct AnywayServicePickerFlowView<ServicePicker>: View
-where ServicePicker: View {
+struct AnywayServicePickerFlowView: View {
     
     @ObservedObject var flowModel: FlowModel
     
@@ -17,7 +17,7 @@ where ServicePicker: View {
     
     var body: some View {
         
-        factory.makeServicePicker(flowModel.state.content)
+        servicePicker(model: flowModel.state.content)
             .alert(
                 item: flowModel.alert,
                 content: alertContent
@@ -33,7 +33,7 @@ where ServicePicker: View {
 extension AnywayServicePickerFlowView {
     
     typealias FlowModel = AnywayServicePickerFlowModel
-    typealias Factory = AnywayServicePickerFlowViewFactory<ServicePicker>
+    typealias Factory = AnywayServicePickerFlowViewFactory
 }
 
 extension AnywayServicePickerFlowModel {
@@ -100,6 +100,36 @@ extension AnywayServicePickerFlowState.Status.Alert: Identifiable {
 
 private extension AnywayServicePickerFlowView {
     
+    func servicePicker(
+        model: PaymentProviderServicePickerModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerWrapperView(
+            model: flowModel.state.content,
+            failureView: failureView,
+            iconView: factory.makeIconView,
+            config: .iFora
+        )
+    }
+    
+    func failureView() -> FooterView {
+        
+        FooterView(
+            state: .footer(.iFora),
+            event: { event in
+                
+                switch event {
+                case .addCompany:
+                    flowModel.event(.goTo(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.event(.payByInstruction)
+                }
+            },
+            config: .iFora
+        )
+    }
+
     func alertContent(
         alert: AnywayServicePickerFlowState.Status.Alert
     ) -> Alert {
