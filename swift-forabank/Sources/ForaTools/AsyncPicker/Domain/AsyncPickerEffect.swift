@@ -12,7 +12,7 @@ public enum AsyncPickerEffect<Payload, Item> {
     case load(Payload)
     
     /// Effect to select an item in the picker.
-    case select(Item)
+    case select(Item, Payload)
 }
 
 extension AsyncPickerEffect: Equatable where Payload: Equatable, Item: Equatable {}

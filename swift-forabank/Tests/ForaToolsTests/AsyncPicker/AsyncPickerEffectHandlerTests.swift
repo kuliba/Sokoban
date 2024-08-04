@@ -67,12 +67,13 @@ final class AsyncPickerEffectHandlerTests: AsyncPickerTests {
     
     func test_select_shouldCallLoadWithPayload() {
         
-        let item = makeItem()
+        let (item, payload) = (makeItem(), makePayload())
         let (sut, _, selectSpy) = makeSUT()
         
-        sut.handleEffect(.select(item)) { _ in }
+        sut.handleEffect(.select(item, payload)) { _ in }
         
-        XCTAssertNoDiff(selectSpy.payloads, [item])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.0), [item])
+        XCTAssertNoDiff(selectSpy.payloads.map(\.1), [payload])
     }
     
     func test_select_shouldDeliverEmptyLoadResult() {
@@ -80,7 +81,7 @@ final class AsyncPickerEffectHandlerTests: AsyncPickerTests {
         let response = makeResponse()
         let (sut, _, selectSpy) = makeSUT()
         
-        expect(sut, with: .select(makeItem()), toDeliver: .response(response)) {
+        expect(sut, with: .select(makeItem(), makePayload()), toDeliver: .response(response)) {
             
             selectSpy.complete(with: response)
         }
@@ -90,7 +91,7 @@ final class AsyncPickerEffectHandlerTests: AsyncPickerTests {
     
     private typealias SUT = AsyncPickerEffectHandler<Payload, Item, Response>
     private typealias LoadSpy = Spy<Payload, [Item]>
-    private typealias SelectSpy = Spy<Item, Response>
+    private typealias SelectSpy = Spy<(Item, Payload), Response>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -105,7 +106,7 @@ final class AsyncPickerEffectHandlerTests: AsyncPickerTests {
         let sut = SUT(
             microServices: .init(
                 load: loadSpy.process,
-                select: selectSpy.process
+                select: { selectSpy.process(($0, $1), completion: $2) }
             )
         )
         

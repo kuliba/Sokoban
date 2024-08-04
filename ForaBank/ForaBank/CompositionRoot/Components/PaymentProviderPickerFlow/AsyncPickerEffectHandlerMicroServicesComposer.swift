@@ -28,11 +28,9 @@ final class AsyncPickerEffectHandlerMicroServicesComposer {
 
 extension AsyncPickerEffectHandlerMicroServicesComposer {
     
-    func compose(
-        _ payload: PaymentProviderServicePickerPayload
-    ) -> MicroServices {
+    func compose() -> MicroServices {
         
-        return .init(load: load(_:_:), select: select(payload))
+        return .init(load: load(_:_:), select: select(_:_:_:))
     }
     
     typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
@@ -52,27 +50,26 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
     }
     
     func select(
-        _ payload: PaymentProviderServicePickerPayload
-    ) -> MicroServices.Select {
-        return { service, completion in
+        _ service: UtilityService,
+        _ payload: PaymentProviderServicePickerPayload,
+        _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
+    ) {
+        // TODO: needs simplification and decoupling from `nanoServices.startAnywayPayment` which is much more complex than is needed in this case
+        self.nanoServices.startAnywayPayment(
+            .service(service, for: payload.provider.operator)
+        ) {
+            // TODO: get rid of this dependency
+            let result = self.composer.makeStartPaymentResult(from: $0, service, payload.provider.operator)
             
-            // TODO: needs simplification and decoupling from `nanoServices.startAnywayPayment` which is much more complex than is needed in this case
-            self.nanoServices.startAnywayPayment(
-                .service(service, for: payload.provider.operator)
-            ) {
-                // TODO: get rid of this dependency
-                let result = self.composer.makeStartPaymentResult(from: $0, service, payload.provider.operator)
+            switch result {
+            case let .failure(.serviceFailure(.serverError(errorMessage))):
+                completion(.failure(.serverError(errorMessage)))
                 
-                switch result {
-                case let .failure(.serviceFailure(.serverError(errorMessage))):
-                    completion(.failure(.serverError(errorMessage)))
-                    
-                case let .success(.startPayment(transaction)):
-                    completion(.success(transaction))
-                    
-                default:
-                    completion(.failure(.connectivityError))
-                }
+            case let .success(.startPayment(transaction)):
+                completion(.success(transaction))
+                
+            default:
+                completion(.failure(.connectivityError))
             }
         }
     }
