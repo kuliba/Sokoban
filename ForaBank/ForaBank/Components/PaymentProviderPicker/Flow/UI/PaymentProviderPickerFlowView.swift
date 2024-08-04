@@ -53,7 +53,7 @@ extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
             
         case .payByInstructions: return .payByInstructions
         case .payments:          return .payments
-        case .provider:          return .provider
+        case .servicePicker:     return .servicePicker
         }
     }
     
@@ -61,7 +61,7 @@ extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
         
         case payByInstructions
         case payments
-        case provider
+        case servicePicker
     }
 }
 

@@ -24,12 +24,14 @@ extension PaymentProviderPickerFlowState {
             
             case payByInstructions(Node<PaymentsViewModel>)
             case payments(Node<PaymentsViewModel>)
-            case provider(Provider)
+            case servicePicker(Node<AnywayServicePickerFlowModel>)
         }
         
         enum Outside {
             
             case addCompany
+            case main
+            case payments
             case scanQR
         }
         

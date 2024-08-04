@@ -86,6 +86,12 @@ private extension PaymentProviderPickerFlowModel {
         case .addCompany:
             state.status = .outside(.addCompany)
             
+        case .main:
+            state.status = .outside(.main)
+            
+        case .payments:
+            state.status = .outside(.payments)
+            
         case .scanQR:
             state.status = .outside(.scanQR)
         }
@@ -145,7 +151,41 @@ private extension PaymentProviderPickerFlowModel {
         _ state: inout State,
         _ provider: State.Status.Provider
     ) {
-        state.status = .destination(.provider(provider))
+        let flowModel = factory.makeServicePickerFlowModel(provider)
+        
+        state.status = .destination(.servicePicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        )))
+    }
+    
+    private func bind(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outsideEvent)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.goTo($0)) }
+    }
+}
+
+private extension AnywayServicePickerFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status else { return nil }
+        return outside
+    }
+    
+    var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
+        
+        switch outside {
+        case .none:     return .none
+        case .main:     return .main
+        case .payments: return .payments
+        case .scanQR:   return .scanQR
+        }
     }
 }
 
