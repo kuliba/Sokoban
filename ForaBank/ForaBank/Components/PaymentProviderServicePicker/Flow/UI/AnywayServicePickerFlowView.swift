@@ -8,9 +8,8 @@
 import SwiftUI
 import UIPrimitives
 
-struct AnywayServicePickerFlowView<AnywayPaymentFlowView, ServicePicker>: View
-where AnywayPaymentFlowView: View,
-      ServicePicker: View {
+struct AnywayServicePickerFlowView<ServicePicker>: View
+where ServicePicker: View {
     
     @ObservedObject var flowModel: FlowModel
     
@@ -34,7 +33,7 @@ where AnywayPaymentFlowView: View,
 extension AnywayServicePickerFlowView {
     
     typealias FlowModel = AnywayServicePickerFlowModel
-    typealias Factory = AnywayServicePickerFlowViewFactory<AnywayPaymentFlowView, ServicePicker>
+    typealias Factory = AnywayServicePickerFlowViewFactory<ServicePicker>
 }
 
 extension AnywayServicePickerFlowModel {

@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-struct AnywayServicePickerFlowViewFactory<AnywayPaymentFlowView, ServicePicker>
-where AnywayPaymentFlowView: View,
-      ServicePicker: View {
+struct AnywayServicePickerFlowViewFactory<ServicePicker>
+where ServicePicker: View {
     
     let makeAnywayFlowView: MakeAnywayFlowView
     let makeServicePicker: MakeServicePicker
@@ -17,6 +16,6 @@ where AnywayPaymentFlowView: View,
 
 extension AnywayServicePickerFlowViewFactory {
     
-    typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayPaymentFlowView
+    typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
     typealias MakeServicePicker = (PaymentProviderServicePickerModel) -> ServicePicker // PaymentProviderServicePickerWrapperView
 }
