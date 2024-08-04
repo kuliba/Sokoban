@@ -1520,7 +1520,7 @@ private extension PaymentsTransfersViewModel {
 extension PaymentsTransfersViewModel {
     
     private func handleQRResult(
-        _ result: QRViewModel.ScanResult
+        _ result: QRModelResult
     ) {
         event(.dismiss(.modal))
 

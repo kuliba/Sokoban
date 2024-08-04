@@ -26,10 +26,16 @@ extension RootViewModelFactory {
             return resolver.resolve(string: string)
         }
         
+        let composer = QRScanResultMapperComposer(
+            flag: utilitiesPaymentsFlag,
+            model: model
+        )
+        let mapper = composer.compose()
+        
         return {
             
             return .init(
-                mapScanResult: { $1($0) },
+                mapScanResult: mapper.mapScanResult(_:_:),
                 makeQRModel: { .init(closeAction: $0, qrResolve: qrResolve) },
                 scheduler: scheduler
             )

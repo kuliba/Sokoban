@@ -938,7 +938,7 @@ private extension MainViewModel {
 extension MainViewModel {
     
     private func handleQRResult(
-        _ result: QRViewModel.ScanResult
+        _ result: QRModelResult
     ) {
         resetModal()
         

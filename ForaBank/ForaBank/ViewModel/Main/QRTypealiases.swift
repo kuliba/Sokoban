@@ -13,7 +13,7 @@ typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, Mappi
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
 typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel
 
-typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
+typealias QRModel = QRModelWrapper<QRModelResult>
 typealias MakeQRScannerModel = () -> QRModel
 
 typealias SegmentedOperatorProvider = OperatorProvider<SegmentedOperatorData, SegmentedProvider>
