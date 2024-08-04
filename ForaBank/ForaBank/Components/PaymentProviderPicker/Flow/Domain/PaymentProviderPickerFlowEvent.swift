@@ -7,10 +7,23 @@
 
 enum PaymentProviderPickerFlowEvent<Operator, Provider> {
     
-    case addCompany
     case dismiss
-    case `operator`(Operator)
+    case goTo(GoTo)
     case payByInstructions
-    case provider(Provider)
-    case scanQR
+    case select(Select)
+}
+
+extension PaymentProviderPickerFlowEvent {
+    
+    enum GoTo {
+        
+        case addCompany
+        case scanQR
+    }
+    
+    enum Select {
+        
+        case `operator`(Operator)
+        case provider(Provider)
+    }
 }

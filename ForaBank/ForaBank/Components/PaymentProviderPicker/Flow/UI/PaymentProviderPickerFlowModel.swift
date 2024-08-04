@@ -38,9 +38,9 @@ final class PaymentProviderPickerFlowModel: ObservableObject {
     typealias Event = PaymentProviderPickerFlowEvent<Operator, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect
     typealias Factory = PaymentProviderPickerFlowFactory
-
+    
     typealias Content = State.Content
-
+    
     typealias Operator = SegmentedOperatorData
     typealias Provider = SegmentedProvider
 }
@@ -64,26 +64,52 @@ private extension PaymentProviderPickerFlowModel {
         let effect: Effect? = nil
         
         switch event {
-        case .addCompany:
-            state.destination = .addCompany
-            
         case .dismiss:
             state.destination = nil
             
-        case let .operator(`operator`):
-            state.destination = .operator(`operator`)
+        case let .goTo(goTo):
+            return reduce(&state, with: goTo)
             
         case .payByInstructions:
             payByInstructions(&state)
-            
-        case let .provider(provider):
-            state.destination = .provider(provider)
+
+        case let .select(select):
+            return reduce(&state, with: select)
+        }
+        
+        return effect
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with goTo: Event.GoTo
+    ) -> Effect? {
+        
+        switch goTo {
+        case .addCompany:
+            state.destination = .addCompany
             
         case .scanQR:
             state.destination = .scanQR
         }
         
-        return effect
+        return nil
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with select: Event.Select
+    ) -> Effect? {
+        
+        switch select {
+        case let .operator(`operator`):
+            state.destination = .operator(`operator`)
+            
+        case let .provider(provider):
+            state.destination = .provider(provider)
+        }
+        
+        return nil
     }
     
     private func payByInstructions(
@@ -116,7 +142,7 @@ private extension PaymentProviderPickerFlowModel {
         return paymentsViewModel.action
             .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: scheduler)
-            .sink { [weak self] a in self?.event(.scanQR) }
+            .sink { [weak self] a in self?.event(.goTo(.scanQR)) }
     }
 }
 
@@ -131,13 +157,13 @@ private extension PaymentProviderPickerFlowModel {
                 
                 switch $0 {
                 case .addCompany:
-                    self?.event(.addCompany)
+                    self?.event(.goTo(.addCompany))
                     
                 case let .item(.operator(`operator`)):
-                    self?.event(.operator(`operator`))
+                    self?.event(.select(.operator(`operator`)))
                     
                 case let .item(.provider(provider)):
-                    self?.event(.provider(provider))
+                    self?.event(.select(.provider(provider)))
                     
                 case .payByInstructions:
                     self?.event(.payByInstructions)
