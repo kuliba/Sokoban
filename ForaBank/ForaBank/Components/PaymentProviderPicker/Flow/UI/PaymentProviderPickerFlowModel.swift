@@ -184,10 +184,11 @@ private extension AnywayServicePickerFlowState {
     var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
         
         switch outside {
-        case .none:     return .none
-        case .main:     return .main
-        case .payments: return .payments
-        case .scanQR:   return .scanQR
+        case .none:       return .none
+        case .addCompany: return .addCompany
+        case .main:       return .main
+        case .payments:   return .payments
+        case .scanQR:     return .scanQR
         }
     }
 }
