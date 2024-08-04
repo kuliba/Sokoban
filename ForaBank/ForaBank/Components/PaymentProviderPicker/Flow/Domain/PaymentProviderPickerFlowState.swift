@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-struct PaymentProviderPickerFlowState<Operator, Provider> {
+struct PaymentProviderPickerFlowState {
     
     let content: Content
     var status: Status?
@@ -17,15 +17,23 @@ extension PaymentProviderPickerFlowState {
     
     enum Status {
         
-        case `operator`(Operator)
+        case destination(Destination)
         case outside(Outside)
-        case payByInstructions(Node<PaymentsViewModel>)
-        case provider(Provider)
+        
+        enum Destination {
+            
+            case `operator`(Operator)
+            case payByInstructions(Node<PaymentsViewModel>)
+            case provider(Provider)
+        }
         
         enum Outside {
             
             case addCompany
             case scanQR
         }
+        
+        typealias Operator = SegmentedOperatorData
+        typealias Provider = SegmentedProvider
     }
 }

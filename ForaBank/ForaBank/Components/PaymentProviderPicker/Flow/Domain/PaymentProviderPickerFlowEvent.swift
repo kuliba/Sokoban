@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-enum PaymentProviderPickerFlowEvent<Operator, Provider> {
+enum PaymentProviderPickerFlowEvent {
     
     case dismiss
     case goTo(GoTo)
@@ -25,5 +25,8 @@ extension PaymentProviderPickerFlowEvent {
         
         case `operator`(Operator)
         case provider(Provider)
+        
+        typealias Operator = SegmentedOperatorData
+        typealias Provider = SegmentedProvider
     }
 }

@@ -15,7 +15,7 @@ where OperatorLabel: View,
     @ObservedObject var flowModel: FlowModel
     
     let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
-    let destinationContent: (FlowState.Destination) -> DestinationContent
+    let destinationContent: (FlowState.Status.Destination) -> DestinationContent
     
     var body: some View {
         
@@ -31,52 +31,37 @@ where OperatorLabel: View,
 extension PaymentProviderPickerFlowView {
     
     typealias FlowModel = PaymentProviderPickerFlowModel
-    typealias FlowState = PaymentProviderPickerFlowState<Operator, Provider>
+    typealias FlowState = PaymentProviderPickerFlowState
     typealias Operator = SegmentedOperatorData
     typealias Provider = SegmentedProvider
 }
 
 extension PaymentProviderPickerFlowState {
     
-    var destination: Destination? {
+    var destination: Status.Destination? {
         
-        switch status {
-        case let .operator(`operator`):
-            return .operator(`operator`)
+        guard case let .destination(destination) = status else { return nil }
+        return destination
+    }
+}
+
+extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
             
-        case let .payByInstructions(node):
-            return .payByInstructions(node.model)
-            
-        case let .provider(provider):
-            return .provider(provider)
-            
-        default:
-            return nil
+        case .operator:          return .operator
+        case .payByInstructions: return .payByInstructions
+        case .provider:          return .provider
         }
     }
     
-    enum Destination: Identifiable {
+    enum ID: Hashable {
         
-        case `operator`(Operator)
-        case payByInstructions(PaymentsViewModel)
-        case provider(Provider)
-        
-        var id: ID {
-            
-            switch self {
-                
-            case .operator:          return .operator
-            case .payByInstructions: return .payByInstructions
-            case .provider:          return .provider
-            }
-        }
-        
-        enum ID: Hashable {
-            
-            case `operator`
-            case payByInstructions
-            case provider
-        }
+        case `operator`
+        case payByInstructions
+        case provider
     }
 }
 

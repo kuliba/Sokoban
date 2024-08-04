@@ -34,15 +34,12 @@ final class PaymentProviderPickerFlowModel: ObservableObject {
             .assign(to: &$state)
     }
     
-    typealias State = PaymentProviderPickerFlowState<Operator, Provider>
-    typealias Event = PaymentProviderPickerFlowEvent<Operator, Provider>
+    typealias State = PaymentProviderPickerFlowState
+    typealias Event = PaymentProviderPickerFlowEvent
     typealias Effect = PaymentProviderPickerFlowEffect
     typealias Factory = PaymentProviderPickerFlowFactory
     
     typealias Content = State.Content
-    
-    typealias Operator = SegmentedOperatorData
-    typealias Provider = SegmentedProvider
 }
 
 extension PaymentProviderPickerFlowModel {
@@ -103,10 +100,10 @@ private extension PaymentProviderPickerFlowModel {
         
         switch select {
         case let .operator(`operator`):
-            state.status = .operator(`operator`)
+            state.status = .destination(.operator(`operator`))
             
         case let .provider(provider):
-            state.status = .provider(provider)
+            state.status = .destination(.provider(provider))
         }
         
         return nil
@@ -118,10 +115,10 @@ private extension PaymentProviderPickerFlowModel {
         let paymentsViewModel = makePayByInstructionsModel()
         let cancellable = bind(paymentsViewModel)
         
-        state.status = .payByInstructions(.init(
+        state.status = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
             cancellable: cancellable
-        ))
+        )))
     }
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
