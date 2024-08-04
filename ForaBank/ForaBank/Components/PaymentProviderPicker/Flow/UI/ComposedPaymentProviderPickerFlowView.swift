@@ -11,9 +11,15 @@ struct ComposedPaymentProviderPickerFlowView: View {
     
     let flowModel: FlowModel
     let iconView: (IconDomain.Icon?) -> IconDomain.IconView
+    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        PaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            operatorLabel: label(provider:),
+            destinationContent: destinationContent(_:)
+        )
     }
 }
 
@@ -34,6 +40,31 @@ private extension ComposedPaymentProviderPickerFlowView {
             config: .iFora,
             iconView: iconView(provider.icon)
         )
+    }
+    
+    typealias FlowState = PaymentProviderPickerFlowState
+    
+    @ViewBuilder
+    func destinationContent(
+        _ destination: FlowState.Status.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payByInstructions(node):
+            PaymentsView(viewModel: node.model)
+            
+        case let .payments(node):
+            PaymentsView(viewModel: node.model)
+            
+        case let .servicePicker(node):
+            AnywayServicePickerFlowView(
+                flowModel: node.model,
+                factory: .init(
+                    makeAnywayFlowView: makeAnywayFlowView,
+                    makeIconView: iconView
+                )
+            )
+        }
     }
 }
 
