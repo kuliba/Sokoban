@@ -133,7 +133,7 @@ private extension PaymentProviderServicePickerFlowModelComposer {
     }
 }
 
-private extension SegmentedPaymentProvider {
+extension SegmentedPaymentProvider {
     
     var `operator`: UtilityPaymentOperator {
         
