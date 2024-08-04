@@ -136,7 +136,9 @@ private extension PaymentProviderPickerFlowModel {
         with `operator`: State.Status.Operator
     ) -> PaymentsViewModel {
         
-        return factory.makePaymentsViewModel(`operator`) { [weak self] in
+        let qrCode = state.content.state.qrCode
+        
+        return factory.makePaymentsViewModel(`operator`, qrCode) { [weak self] in
             
             self?.event(.dismiss)
         }
