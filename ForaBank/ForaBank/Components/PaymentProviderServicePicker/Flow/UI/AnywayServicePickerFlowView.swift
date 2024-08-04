@@ -171,7 +171,7 @@ where PrimaryEvent == AnywayServicePickerFlowEvent,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: .goToPayments
+                event: .goTo(.payments)
             )
         )
     }

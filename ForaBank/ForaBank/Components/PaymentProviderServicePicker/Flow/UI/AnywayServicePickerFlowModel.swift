@@ -72,20 +72,14 @@ private extension AnywayServicePickerFlowModel {
         case .dismiss:
             state.status = nil
             
-        case .goToMain:
-            state.status = .outside(.main)
-            
-        case .goToPayments:
-            state.status = .outside(.payments)
+        case let .goTo(goTo):
+            reduce(&state, &effect, with: goTo)
             
         case let .notify(result):
             reduce(&state, &effect, with: result)
             
         case .payByInstruction:
             payByInstructions(&state)
-            
-        case .scanQR:
-            state.status = .outside(.scanQR)
         }
         
         return nil
@@ -144,15 +138,32 @@ private extension AnywayServicePickerFlowModel {
         return paymentsViewModel.action
             .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: scheduler)
-            .sink { [weak self] a in self?.event(.scanQR) }
+            .sink { [weak self] a in self?.event(.goTo(.scanQR)) }
     }
     
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with result: PaymentProviderServicePickerResult
+        with goTo: Event.GoTo
     ) {
-        switch result {
+        switch goTo {
+        case .main:
+            state.status = .outside(.main)
+            
+        case .payments:
+            state.status = .outside(.payments)
+            
+        case .scanQR:
+            state.status = .outside(.scanQR)
+        }
+    }
+    
+    func reduce(
+            _ state: inout State,
+            _ effect: inout Effect?,
+            with result: PaymentProviderServicePickerResult
+        ) {
+            switch result {
         case .failure(.connectivityError):
             state.status = .alert(.connectivity)
             
@@ -191,8 +202,8 @@ private extension AnywayFlowState {
         
         switch outside {
         case .none:     return .none
-        case .main:     return .goToMain
-        case .payments: return .goToPayments
+        case .main:     return .goTo(.main)
+        case .payments: return .goTo(.payments)
         }
     }
 }
