@@ -559,14 +559,30 @@
 		2A35DDB12C0240F100EFF0EB /* Model+formattedBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */; };
 		2A35DDB42C02426F00EFF0EB /* Model+productSelectProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */; };
 		2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */; };
+		2A3624522C5E69E500174C50 /* PaymentProviderPickerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624512C5E69E500174C50 /* PaymentProviderPickerEffect.swift */; };
+		2A3624542C5E69F900174C50 /* PaymentProviderPickerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624532C5E69F900174C50 /* PaymentProviderPickerEvent.swift */; };
+		2A3624562C5E6A0600174C50 /* PaymentProviderPickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624552C5E6A0600174C50 /* PaymentProviderPickerState.swift */; };
+		2A3624592C5E6A2300174C50 /* PaymentProviderPickerEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624582C5E6A2300174C50 /* PaymentProviderPickerEffectHandler.swift */; };
+		2A36245B2C5E6A3200174C50 /* PaymentProviderPickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245A2C5E6A3200174C50 /* PaymentProviderPickerReducer.swift */; };
+		2A36245E2C5E6A9D00174C50 /* PaymentProviderPickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245D2C5E6A9D00174C50 /* PaymentProviderPickerModel.swift */; };
+		2A3624602C5E6AAD00174C50 /* PaymentProviderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36245F2C5E6AAD00174C50 /* PaymentProviderPickerView.swift */; };
+		2A3624622C5E6ABE00174C50 /* PaymentProviderPickerViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624612C5E6ABE00174C50 /* PaymentProviderPickerViewConfig.swift */; };
+		2A3624642C5E6ACC00174C50 /* PaymentProviderPickerWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624632C5E6ACC00174C50 /* PaymentProviderPickerWrapperView.swift */; };
+		2A3624672C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624662C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift */; };
+		2A3624692C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624682C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift */; };
+		2A3624712C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624702C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift */; };
+		2A3624732C5E6B8000174C50 /* PaymentProviderPickerFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624722C5E6B8000174C50 /* PaymentProviderPickerFlowEvent.swift */; };
+		2A3624752C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624742C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift */; };
+		2A3624772C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624762C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift */; };
+		2A36247E2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */; };
 		2A3663C12C59519500114294 /* PaymentCompleteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3663C02C59519500114294 /* PaymentCompleteState.swift */; };
-		2A3834AD2C4EB8E700A5DF8C /* PaymentProviderSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AC2C4EB8E700A5DF8C /* PaymentProviderSegmentTests.swift */; };
+		2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */; };
 		2A3834AF2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */; };
 		2A3834B22C4EDEE800A5DF8C /* PaymentProviderSegmentsViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B12C4EDEE800A5DF8C /* PaymentProviderSegmentsViewConfig.swift */; };
 		2A3834B42C4EDF1400A5DF8C /* PaymentProviderSegmentsViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B32C4EDF1400A5DF8C /* PaymentProviderSegmentsViewConfig+iFora.swift */; };
-		2A3834B62C4EDF5000A5DF8C /* PaymentProviderSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B52C4EDF5000A5DF8C /* PaymentProviderSegment.swift */; };
+		2A3834B62C4EDF5000A5DF8C /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B52C4EDF5000A5DF8C /* Segment.swift */; };
 		2A3834B82C4EDF6B00A5DF8C /* SegmentedPaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B72C4EDF6B00A5DF8C /* SegmentedPaymentProvider.swift */; };
-		2A3834BA2C4EDF8600A5DF8C /* [PaymentProviderSegment]+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B92C4EDF8600A5DF8C /* [PaymentProviderSegment]+ext.swift */; };
+		2A3834BA2C4EDF8600A5DF8C /* [Segment]+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834B92C4EDF8600A5DF8C /* [Segment]+ext.swift */; };
 		2A390B482B05E99900ECA2C2 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */; };
 		2A390B492B05E99900ECA2C2 /* NavigationModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */; };
 		2A390B4A2B05E99900ECA2C2 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */; };
@@ -3752,14 +3768,30 @@
 		2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+formattedBalance.swift"; sourceTree = "<group>"; };
 		2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+productSelectProducts.swift"; sourceTree = "<group>"; };
 		2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+currencyOf.swift"; sourceTree = "<group>"; };
+		2A3624512C5E69E500174C50 /* PaymentProviderPickerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerEffect.swift; sourceTree = "<group>"; };
+		2A3624532C5E69F900174C50 /* PaymentProviderPickerEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerEvent.swift; sourceTree = "<group>"; };
+		2A3624552C5E6A0600174C50 /* PaymentProviderPickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerState.swift; sourceTree = "<group>"; };
+		2A3624582C5E6A2300174C50 /* PaymentProviderPickerEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerEffectHandler.swift; sourceTree = "<group>"; };
+		2A36245A2C5E6A3200174C50 /* PaymentProviderPickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerReducer.swift; sourceTree = "<group>"; };
+		2A36245D2C5E6A9D00174C50 /* PaymentProviderPickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerModel.swift; sourceTree = "<group>"; };
+		2A36245F2C5E6AAD00174C50 /* PaymentProviderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerView.swift; sourceTree = "<group>"; };
+		2A3624612C5E6ABE00174C50 /* PaymentProviderPickerViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerViewConfig.swift; sourceTree = "<group>"; };
+		2A3624632C5E6ACC00174C50 /* PaymentProviderPickerWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerWrapperView.swift; sourceTree = "<group>"; };
+		2A3624662C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowModel.swift; sourceTree = "<group>"; };
+		2A3624682C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
+		2A3624702C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowEffect.swift; sourceTree = "<group>"; };
+		2A3624722C5E6B8000174C50 /* PaymentProviderPickerFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowEvent.swift; sourceTree = "<group>"; };
+		2A3624742C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowState.swift; sourceTree = "<group>"; };
+		2A3624762C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentProviderPickerViewConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowFactory.swift; sourceTree = "<group>"; };
 		2A3663C02C59519500114294 /* PaymentCompleteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteState.swift; sourceTree = "<group>"; };
-		2A3834AC2C4EB8E700A5DF8C /* PaymentProviderSegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentTests.swift; sourceTree = "<group>"; };
+		2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentTests.swift; sourceTree = "<group>"; };
 		2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentsView.swift; sourceTree = "<group>"; };
 		2A3834B12C4EDEE800A5DF8C /* PaymentProviderSegmentsViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentsViewConfig.swift; sourceTree = "<group>"; };
 		2A3834B32C4EDF1400A5DF8C /* PaymentProviderSegmentsViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentProviderSegmentsViewConfig+iFora.swift"; sourceTree = "<group>"; };
-		2A3834B52C4EDF5000A5DF8C /* PaymentProviderSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegment.swift; sourceTree = "<group>"; };
+		2A3834B52C4EDF5000A5DF8C /* Segment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
 		2A3834B72C4EDF6B00A5DF8C /* SegmentedPaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProvider.swift; sourceTree = "<group>"; };
-		2A3834B92C4EDF8600A5DF8C /* [PaymentProviderSegment]+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "[PaymentProviderSegment]+ext.swift"; sourceTree = "<group>"; };
+		2A3834B92C4EDF8600A5DF8C /* [Segment]+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "[Segment]+ext.swift"; sourceTree = "<group>"; };
 		2A390B4F2B05EE8100ECA2C2 /* QRReaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderStub.swift; sourceTree = "<group>"; };
 		2A390B522B05F75600ECA2C2 /* QRParsingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRParsingResult.swift; sourceTree = "<group>"; };
 		2A390B552B05F7B500ECA2C2 /* SberQRPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPaymentView.swift; sourceTree = "<group>"; };
@@ -7836,6 +7868,7 @@
 				2A6679E02C58AD0F003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift */,
 				2A6679DE2C58ACF3003ACA31 /* TransactionCompleteViewConfig+iFora.swift */,
 				2A8B72A62C59282700590676 /* PaymentCompletionConfig+iFora.swift */,
+				2A3624762C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -8238,12 +8271,90 @@
 			path = "Model+Products";
 			sourceTree = "<group>";
 		};
+		2A3624482C5E695C00174C50 /* PaymentProviderPicker */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624492C5E697000174C50 /* Content */,
+				2A36244A2C5E697B00174C50 /* Flow */,
+			);
+			path = PaymentProviderPicker;
+			sourceTree = "<group>";
+		};
+		2A3624492C5E697000174C50 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624502C5E69DB00174C50 /* Domain */,
+				2A3624572C5E6A1C00174C50 /* Logic */,
+				2A36245C2C5E6A9100174C50 /* UI */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
+		2A36244A2C5E697B00174C50 /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				2A36246F2C5E6B6C00174C50 /* Domain */,
+				2A3624652C5E6B1A00174C50 /* UI */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
+		2A3624502C5E69DB00174C50 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624552C5E6A0600174C50 /* PaymentProviderPickerState.swift */,
+				2A3624532C5E69F900174C50 /* PaymentProviderPickerEvent.swift */,
+				2A3624512C5E69E500174C50 /* PaymentProviderPickerEffect.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A3624572C5E6A1C00174C50 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				2A36245A2C5E6A3200174C50 /* PaymentProviderPickerReducer.swift */,
+				2A3624582C5E6A2300174C50 /* PaymentProviderPickerEffectHandler.swift */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+		2A36245C2C5E6A9100174C50 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A36245D2C5E6A9D00174C50 /* PaymentProviderPickerModel.swift */,
+				2A3624632C5E6ACC00174C50 /* PaymentProviderPickerWrapperView.swift */,
+				2A36245F2C5E6AAD00174C50 /* PaymentProviderPickerView.swift */,
+				2A3624612C5E6ABE00174C50 /* PaymentProviderPickerViewConfig.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2A3624652C5E6B1A00174C50 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624662C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift */,
+				2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */,
+				2A3624682C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2A36246F2C5E6B6C00174C50 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A3624742C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift */,
+				2A3624722C5E6B8000174C50 /* PaymentProviderPickerFlowEvent.swift */,
+				2A3624702C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
 		2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */ = {
 			isa = PBXGroup;
 			children = (
 				2A3834B72C4EDF6B00A5DF8C /* SegmentedPaymentProvider.swift */,
-				2A3834B52C4EDF5000A5DF8C /* PaymentProviderSegment.swift */,
-				2A3834B92C4EDF8600A5DF8C /* [PaymentProviderSegment]+ext.swift */,
+				2A3834B52C4EDF5000A5DF8C /* Segment.swift */,
+				2A3834B92C4EDF8600A5DF8C /* [Segment]+ext.swift */,
 				2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */,
 				2A3834B12C4EDEE800A5DF8C /* PaymentProviderSegmentsViewConfig.swift */,
 				2A3834B32C4EDF1400A5DF8C /* PaymentProviderSegmentsViewConfig+iFora.swift */,
@@ -10107,7 +10218,7 @@
 			isa = PBXGroup;
 			children = (
 				2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */,
-				2A3834AC2C4EB8E700A5DF8C /* PaymentProviderSegmentTests.swift */,
+				2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -13321,6 +13432,7 @@
 				83FAD89029CDB3A700474B06 /* InternetTV */,
 				0BE0BDF42905CE2C0064549E /* QR */,
 				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
+				2A3624482C5E695C00174C50 /* PaymentProviderPicker */,
 				2A1DE2C92C512FD80091B99C /* PaymentProviderServicePicker */,
 				7709C77B2833E56800C1A8B6 /* General */,
 				0C534CAE296E24B000967FE8 /* ViewModel */,
@@ -18458,6 +18570,7 @@
 				0B11A7782919875500C9BDD0 /* Model+QR.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				77517FF427A9990C005CFB77 /* ServerCommands+Default.swift in Sources */,
+				2A3624562C5E6A0600174C50 /* PaymentProviderPickerState.swift in Sources */,
 				77A1466427C12B52006CC112 /* PaymentsParameterViewModel.swift in Sources */,
 				2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */,
 				68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */,
@@ -18724,6 +18837,7 @@
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				8362FB0529DEFA050094457E /* SearchCityView.swift in Sources */,
 				2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */,
+				2A36245E2C5E6A9D00174C50 /* PaymentProviderPickerModel.swift in Sources */,
 				77D0386C2988441D00FBE5AB /* C2BSubscriptionData.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
@@ -18745,6 +18859,7 @@
 				C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */,
 				50D3D4842865C006002D7FB4 /* CurrencySwapViewComponent.swift in Sources */,
 				839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */,
+				2A3624592C5E6A2300174C50 /* PaymentProviderPickerEffectHandler.swift in Sources */,
 				83DBC7B42C37DD6600DEF441 /* RequestFactory+createUserVisibilityProductsSettingsRequest.swift in Sources */,
 				C1F8314F29DD997700D2C40E /* Bool+Extension.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
@@ -18782,7 +18897,7 @@
 				2A80C6C62B6E216400293FE5 /* MicroServices.Facade+stub.swift in Sources */,
 				C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */,
 				2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */,
-				2A3834B62C4EDF5000A5DF8C /* PaymentProviderSegment.swift in Sources */,
+				2A3834B62C4EDF5000A5DF8C /* Segment.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
 				2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */,
@@ -19111,6 +19226,7 @@
 				83CE89F72BC40178008CA98C /* ProductProfileViewModel+AccountInfoPanel.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				7758400227B13CF300251969 /* ImageData.swift in Sources */,
+				2A3624642C5E6ACC00174C50 /* PaymentProviderPickerWrapperView.swift in Sources */,
 				2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */,
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
@@ -19225,6 +19341,7 @@
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
 				C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */,
 				835D0DF92BEAA63D00FFE90B /* SliderConfig+ext.swift in Sources */,
+				2A3624692C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift in Sources */,
 				6820928327AB0E6F003DCAFD /* CurrencyData.swift in Sources */,
 				7705408D27BD1B4C00094006 /* BiometricAgentProtocol.swift in Sources */,
 				77A76A9827FC4BA400A271B3 /* PlacesDetailView.swift in Sources */,
@@ -19350,6 +19467,7 @@
 				ED0AF887286B281E00F86B68 /* UserAccountPhotoSourceView.swift in Sources */,
 				A58F263627E12E0D00A73778 /* C2BDetailsViewController.swift in Sources */,
 				C14303FA2A85F0BB00FAD5AA /* Model+Success.swift in Sources */,
+				2A3624732C5E6B8000174C50 /* PaymentProviderPickerFlowEvent.swift in Sources */,
 				774A8B3C2865FCDD00B81140 /* UserAccountContactsView.swift in Sources */,
 				2A0D9B862B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
@@ -19403,6 +19521,7 @@
 				2A65FB3F2B4E6F8B00A84F9E /* FastPaymentsSettingsWrapperView.swift in Sources */,
 				2AA3A93E2BFF8B7900AEBCC9 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				83CA1C952A6013A300672AA5 /* PinCodeChangeView.swift in Sources */,
+				2A3624522C5E69E500174C50 /* PaymentProviderPickerEffect.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				774A8B742865FECB00B81140 /* CircleProgressViewComponent.swift in Sources */,
 				77F468B6284522EB008C9579 /* ChatView.swift in Sources */,
@@ -19426,6 +19545,7 @@
 				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
 				2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */,
 				2AA3A9552BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift in Sources */,
+				2A3624712C5E6B7300174C50 /* PaymentProviderPickerFlowEffect.swift in Sources */,
 				2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
@@ -19474,6 +19594,7 @@
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
 				2A1A8E542B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift in Sources */,
+				2A3624602C5E6AAD00174C50 /* PaymentProviderPickerView.swift in Sources */,
 				2A1F08432A7902BF00C5B11B /* TokenProvider.swift in Sources */,
 				774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */,
 				2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */,
@@ -19586,6 +19707,7 @@
 				77F1582128109F8400CA5E4E /* SessionAgentEmptyMock.swift in Sources */,
 				7767049A27FD82C100996A07 /* PlacesControlViewModel.swift in Sources */,
 				C161C490299505BF003830C9 /* PaymentsSelectDropDownListComponent.swift in Sources */,
+				2A3624672C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift in Sources */,
 				2A6371252BF25EF5007E494A /* IconDomain.swift in Sources */,
 				774A8B412865FD1800B81140 /* MessagesHistoryDetailView.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
@@ -19652,6 +19774,7 @@
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				2AE2215E2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift in Sources */,
 				0BA4093228063F45001326CE /* SettingsPhotoViewController.swift in Sources */,
+				2A3624622C5E6ABE00174C50 /* PaymentProviderPickerViewConfig.swift in Sources */,
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
@@ -19715,6 +19838,7 @@
 				ED684CEE27638E6700AA7A33 /* DocDepositCollectionViewCell.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
 				68BAECAF2744132E00E1BF65 /* GetDepositStatementDecodableModel.swift in Sources */,
+				2A3624752C5E6B9000174C50 /* PaymentProviderPickerFlowState.swift in Sources */,
 				0CA1CDE32840725600021671 /* ContactsAgent.swift in Sources */,
 				2AC396AA2A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift in Sources */,
 				0BA14E12270DCF750098E422 /* BackgroundTimer.swift in Sources */,
@@ -19775,6 +19899,7 @@
 				2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */,
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
 				68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */,
+				2A36245B2C5E6A3200174C50 /* PaymentProviderPickerReducer.swift in Sources */,
 				0C2B55E7299D45A200F9074C /* PaymentsProductTemplateViewComponent.swift in Sources */,
 				0B71D7A228FD834D00AA1970 /* QRCode.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
@@ -19808,6 +19933,7 @@
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
 				2AC2ADC02B2248140049EE9B /* RemoteService+ext.swift in Sources */,
 				774A8B662865FDAF00B81140 /* PaymentsInfoViewComponent.swift in Sources */,
+				2A3624772C5E6BCA00174C50 /* PaymentProviderPickerViewConfig+iFora.swift in Sources */,
 				5044B5F9293553A200F233EF /* TransfersAdvantagesViewComponent.swift in Sources */,
 				2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */,
 				6820927F27AB0E1B003DCAFD /* BankData.swift in Sources */,
@@ -19909,6 +20035,7 @@
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,
 				2A1DE2CB2C5135550091B99C /* PaymentProviderServicePickerFlowModelComposer.swift in Sources */,
+				2A36247E2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift in Sources */,
 				77517FCE27A97913005CFB77 /* ColorData.swift in Sources */,
 				0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */,
 				777460EF291E5E0900D3FF46 /* ContactsPlaceholderItemViewComponent.swift in Sources */,
@@ -19956,7 +20083,7 @@
 				2A9CB0862BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift in Sources */,
 				684533722798515100104A8B /* CsrfData.swift in Sources */,
 				774A8B862865FFC200B81140 /* CurrencyExchangeViewComponent.swift in Sources */,
-				2A3834BA2C4EDF8600A5DF8C /* [PaymentProviderSegment]+ext.swift in Sources */,
+				2A3834BA2C4EDF8600A5DF8C /* [Segment]+ext.swift in Sources */,
 				2A872E8F2B00DE50007A8E72 /* SessionCode.swift in Sources */,
 				EDFA7521277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift in Sources */,
 				2A8CC2432B29B4C100191B8E /* RootViewFactoryComposer.swift in Sources */,
@@ -19976,6 +20103,7 @@
 				68CB588C28ABCA7A003064B0 /* LoggerAgentProtocol.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */,
+				2A3624542C5E69F900174C50 /* PaymentProviderPickerEvent.swift in Sources */,
 				C113225628CFA84300F90072 /* ContactsViewModel.swift in Sources */,
 				C1F7999F29CD18BF0048346B /* Model+ReturnAbroad.swift in Sources */,
 				77A76A7C27FAFDCB00A271B3 /* AtmMetroStationData.swift in Sources */,
@@ -20178,7 +20306,7 @@
 				77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */,
 				7743781829F1797000C3D5B1 /* CreateInterestDepositTransferPayloadTests.swift in Sources */,
 				83660CF02AD940EC0001B786 /* CvvPInErrorMapperTests.swift in Sources */,
-				2A3834AD2C4EB8E700A5DF8C /* PaymentProviderSegmentTests.swift in Sources */,
+				2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */,
 				83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */,
 				2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */,
 				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,

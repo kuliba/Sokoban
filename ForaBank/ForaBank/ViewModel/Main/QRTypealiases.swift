@@ -16,6 +16,8 @@ typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping 
 typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
 typealias MakeQRScannerModel = () -> QRModel
 
+typealias SegmentedOperatorProvider = OperatorProvider<SegmentedOperatorData, SegmentedProvider>
+
 typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
 typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
 
