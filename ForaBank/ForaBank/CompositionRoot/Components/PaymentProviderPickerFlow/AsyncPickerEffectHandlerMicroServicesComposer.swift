@@ -185,9 +185,21 @@ private extension AnywayPaymentOutline {
             fromQR: payload.qrCode,
             matching: payload.qrMapping
         )
-
+        
+        let amount: Decimal?
+        do {
+            let double: Double = try payload.qrCode.value(
+                type: .general(.amount),
+                mapping: payload.qrMapping
+            )
+            
+            amount = .init(double)
+        } catch {
+            amount = nil
+        }
+        
         self.init(
-            amount: 0,
+            amount: amount ?? 0,
             product: nil,
             fields: fields,
             payload: .init(
@@ -220,16 +232,15 @@ extension String {
         matching qrMapping: QRMapping
     ) -> [String: String] {
         
-        let pairs = qrMapping.operators
+        let parameters = qrMapping.operators
             .filter { $0.operator == self }
             .flatMap(\.parameters)
-            .compactMap { element in
+        
+        let pairs = parameters
+            .flatMap { parameter in
                 
-                element.keys.first.map { key in
-                    
-                    (key, element.parameter.name)
-                }
-            }
+                parameter.keys.map { ($0, parameter.parameter.name) }}
+        
         
         let dict = Dictionary(pairs) { _, last in last }
         
