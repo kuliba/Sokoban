@@ -32,11 +32,12 @@ extension PaymentProviderPickerFlowModelComposer {
     
     func compose(
         with mix: MultiElementArray<SegmentedOperatorProvider>,
-        qrCode: QRCode
+        qrCode: QRCode,
+        qrMapping: QRMapping
     ) -> PaymentProviderPickerFlowModel {
         
         return .init(
-            initialState: .init(content: makeContent(mix, qrCode)),
+            initialState: .init(content: makeContent(mix, qrCode, qrMapping)),
             factory: makeFactory(),
             scheduler: scheduler
         )
@@ -47,7 +48,8 @@ private extension PaymentProviderPickerFlowModelComposer {
     
     func makeContent(
         _ mix: MultiElementArray<SegmentedOperatorProvider>,
-        _ qrCode: QRCode
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
     ) -> PaymentProviderPickerFlowState.Content {
         
         let reducer = PaymentProviderPickerReducer<SegmentedOperatorProvider>()
@@ -60,7 +62,8 @@ private extension PaymentProviderPickerFlowModelComposer {
                     sortingSegmentsBy: \.title,
                     sortingItemsBy: \.title
                 ),
-                qrCode: qrCode
+                qrCode: qrCode,
+                qrMapping: qrMapping
             ),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),

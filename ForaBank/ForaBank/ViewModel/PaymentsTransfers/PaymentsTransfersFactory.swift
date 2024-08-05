@@ -47,7 +47,7 @@ extension PaymentsTransfersFactory {
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
-    typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode) -> PaymentProviderPickerFlowModel
+    typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel
     
     typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel
     
@@ -95,7 +95,8 @@ extension PaymentProviderPickerFlowModel {
     
     static func preview(
         mix: MultiElementArray<SegmentedOperatorProvider>,
-        qrCode: QRCode
+        qrCode: QRCode,
+        qrMapping: QRMapping
     ) -> PaymentProviderPickerFlowModel {
         
         return .init(
@@ -103,7 +104,8 @@ extension PaymentProviderPickerFlowModel {
                 content: .init(
                     initialState: .init(
                         segments: [],
-                        qrCode: .init(original: "", rawData: [:])
+                        qrCode: qrCode,
+                        qrMapping: qrMapping
                     ),
                     reduce: { state, _ in (state, nil) },
                     handleEffect: { _,_ in }
@@ -112,7 +114,7 @@ extension PaymentProviderPickerFlowModel {
             factory: .init(
                 makePayByInstructionsViewModel: { _,_ in fatalError() },
                 makePaymentsViewModel: { _,_,_ in fatalError() },
-                makeServicePickerFlowModel: { _,_ in fatalError() }),
+                makeServicePickerFlowModel: { _ in fatalError() }),
             scheduler: .main
         )
     }

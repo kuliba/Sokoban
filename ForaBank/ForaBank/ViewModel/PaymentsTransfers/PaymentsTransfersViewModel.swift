@@ -1561,19 +1561,19 @@ extension PaymentsTransfersViewModel {
         _ mapped: QRModelResult.Mapped
     ) {
         switch mapped {
-        case let .mixed(mixed, qrCode):
-            makePaymentProviderPicker(mixed, qrCode)
+        case let .mixed(mixed, qrCode, qrMapping):
+            makePaymentProviderPicker(mixed, qrCode, qrMapping)
 
-        case let .multiple(multipleOperators, qrCode):
+        case let .multiple(multipleOperators, qrCode, qrMapping):
             searchOperators(multipleOperators, with: qrCode)
             
         case let .none(qrCode):
             handleFailure(qrCode)
             
-        case let .provider(provider, qrCode):
-            makeServicePicker(provider, qrCode)
+        case let .provider(payload):
+            makeServicePicker(payload)
 
-        case let .single(qrCode, qrMapping):
+        case let .single(`operator`, qrCode, qrMapping):
             let viewModel = InternetTVDetailsViewModel(
                 model: model,
                 qrCode: qrCode,
@@ -1795,9 +1795,10 @@ private extension PaymentsTransfersViewModel {
     
     func makePaymentProviderPicker(
         _ mixed: MultiElementArray<SegmentedOperatorProvider>,
-        _ qrCode: QRCode
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
     ) {
-        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode)
+        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode, qrMapping)
         route.destination = .paymentProviderPicker(.init(
             model: flowModel,
             cancellable: bind(flowModel)
@@ -1843,10 +1844,10 @@ private extension PaymentsTransfersViewModel {
 private extension PaymentsTransfersViewModel {
     
     func makeServicePicker(
-        _ provider: SegmentedProvider,
-        _ qrCode: QRCode
+        _ payload: PaymentProviderServicePickerPayload
     ) {
-        let flowModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider: provider, qrCode: qrCode))
+        let make = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel
+        let flowModel = make(payload)
         route.destination = .providerServicePicker(.init(
             model: flowModel,
             cancellable: bind(flowModel)

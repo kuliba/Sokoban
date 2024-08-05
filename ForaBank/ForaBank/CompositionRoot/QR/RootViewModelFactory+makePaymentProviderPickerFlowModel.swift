@@ -20,7 +20,7 @@ extension RootViewModelFactory {
         pageSize: Int = 50,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
-    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode) -> PaymentProviderPickerFlowModel {
+    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
             httpClient: httpClient,
@@ -36,7 +36,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         
-        return pickerFlowComposer.compose(with:qrCode:)
+        return pickerFlowComposer.compose
     }
 }
 

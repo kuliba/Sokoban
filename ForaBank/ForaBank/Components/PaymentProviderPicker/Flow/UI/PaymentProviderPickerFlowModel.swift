@@ -154,7 +154,12 @@ private extension PaymentProviderPickerFlowModel {
         _ provider: State.Status.Provider
     ) {
         let qrCode = state.content.state.qrCode
-        let flowModel = factory.makeServicePickerFlowModel(provider, qrCode)
+        let qrMapping = state.content.state.qrMapping
+        let flowModel = factory.makeServicePickerFlowModel(.init(
+            provider: provider, 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        ))
         
         state.status = .destination(.servicePicker(.init(
             model: flowModel,

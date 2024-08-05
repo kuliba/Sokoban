@@ -9,6 +9,7 @@ struct PaymentProviderPickerState<Item> {
     
     let segments: [Segment<Item>]
     let qrCode: QRCode
+    let qrMapping: QRMapping
     var selection: Selection?
     
     enum Selection {
