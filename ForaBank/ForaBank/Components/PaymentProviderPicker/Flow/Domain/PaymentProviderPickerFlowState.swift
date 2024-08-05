@@ -8,6 +8,7 @@
 struct PaymentProviderPickerFlowState {
     
     let content: Content
+    var isLoading = false
     var status: Status?
 }
 
@@ -30,7 +31,6 @@ extension PaymentProviderPickerFlowState {
         enum Outside {
             
             case addCompany
-            case inflight
             case main
             case payments
             case scanQR

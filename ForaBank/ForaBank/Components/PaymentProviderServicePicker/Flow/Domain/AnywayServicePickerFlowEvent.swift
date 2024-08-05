@@ -8,14 +8,14 @@
 enum AnywayServicePickerFlowEvent: Equatable {
     
     case dismiss
+    case isLoading(Bool)
     case goTo(GoTo)
-    case notify(PaymentProviderServicePickerResult)
+    case notify(PaymentProviderServicePickerResult?)
     case payByInstruction
     
     enum GoTo {
         
         case addCompany
-        case inflight
         case main
         case payments
         case scanQR

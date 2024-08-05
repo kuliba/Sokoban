@@ -82,6 +82,7 @@ private extension PaymentProviderServicePickerFlowModel {
         
         contentStatePublisher
             .map(\.isLoading)
+            .removeDuplicates()
             .sink { [weak self] in self?.state.isContentLoading = $0 }
             .store(in: &cancellables)
         

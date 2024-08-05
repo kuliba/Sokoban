@@ -8,6 +8,7 @@
 enum PaymentProviderPickerFlowEvent {
     
     case dismiss
+    case isLoading(Bool)
     case goTo(GoTo)
     case payByInstructions
     case select(Select)
@@ -18,7 +19,6 @@ extension PaymentProviderPickerFlowEvent {
     enum GoTo {
         
         case addCompany
-        case inflight
         case main
         case payments
         case scanQR

@@ -8,6 +8,7 @@
 struct AnywayServicePickerFlowState {
     
     let content: Content
+    var isLoading = false
     var status: Status?
 }
 
@@ -36,7 +37,6 @@ extension AnywayServicePickerFlowState {
         enum Outside {
             
             case addCompany
-            case inflight
             case main
             case payments
             case scanQR

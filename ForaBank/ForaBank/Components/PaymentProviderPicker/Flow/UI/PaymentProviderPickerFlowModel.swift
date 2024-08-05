@@ -58,6 +58,7 @@ private extension PaymentProviderPickerFlowModel {
         _ event: Event
     ) -> Effect? {
         
+        state.isLoading = false
         let effect: Effect? = nil
         
         switch event {
@@ -66,6 +67,9 @@ private extension PaymentProviderPickerFlowModel {
             
         case let .goTo(goTo):
             return reduce(&state, with: goTo)
+            
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -85,9 +89,6 @@ private extension PaymentProviderPickerFlowModel {
         switch goTo {
         case .addCompany:
             state.status = .outside(.addCompany)
-            
-        case .inflight:
-            state.status = .outside(.inflight)
             
         case .main:
             state.status = .outside(.main)
@@ -159,25 +160,34 @@ private extension PaymentProviderPickerFlowModel {
         let qrCode = state.content.state.qrCode
         let qrMapping = state.content.state.qrMapping
         let flowModel = factory.makeServicePickerFlowModel(.init(
-            provider: provider, 
+            provider: provider,
             qrCode: qrCode,
             qrMapping: qrMapping
         ))
         
         state.status = .destination(.servicePicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         )))
     }
     
     private func bind(
         _ flowModel: AnywayServicePickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let loading = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.isLoading($0)) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outsideEvent)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.goTo($0)) }
+        
+        return [loading, outside]
     }
 }
 
@@ -197,7 +207,6 @@ private extension AnywayServicePickerFlowState {
         switch outside {
         case .none:       return .none
         case .addCompany: return .addCompany
-        case .inflight:   return .inflight
         case .main:       return .main
         case .payments:   return .payments
         case .scanQR:     return .scanQR
