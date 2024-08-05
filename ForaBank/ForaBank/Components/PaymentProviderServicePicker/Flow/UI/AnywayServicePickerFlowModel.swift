@@ -147,6 +147,9 @@ private extension AnywayServicePickerFlowModel {
         with goTo: Event.GoTo
     ) {
         switch goTo {
+        case .addCompany:
+            state.status = .outside(.addCompany)
+            
         case .main:
             state.status = .outside(.main)
             

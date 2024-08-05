@@ -19,6 +19,6 @@ extension PaymentProviderPickerFlowFactory {
     typealias MakePaymentsViewModel = (Operator, QRCode, @escaping () -> Void) -> PaymentsViewModel
     typealias Operator = SegmentedOperatorData
     
-    typealias MakeServicePickerFlowModel = (Provider) -> AnywayServicePickerFlowModel
+    typealias MakeServicePickerFlowModel = (Provider, QRCode) -> AnywayServicePickerFlowModel
     typealias Provider = SegmentedProvider
 }

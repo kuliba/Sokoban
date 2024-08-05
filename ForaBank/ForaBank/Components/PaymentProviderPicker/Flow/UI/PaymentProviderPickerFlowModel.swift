@@ -153,7 +153,8 @@ private extension PaymentProviderPickerFlowModel {
         _ state: inout State,
         _ provider: State.Status.Provider
     ) {
-        let flowModel = factory.makeServicePickerFlowModel(provider)
+        let qrCode = state.content.state.qrCode
+        let flowModel = factory.makeServicePickerFlowModel(provider, qrCode)
         
         state.status = .destination(.servicePicker(.init(
             model: flowModel,
@@ -183,10 +184,11 @@ private extension AnywayServicePickerFlowState {
     var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
         
         switch outside {
-        case .none:     return .none
-        case .main:     return .main
-        case .payments: return .payments
-        case .scanQR:   return .scanQR
+        case .none:       return .none
+        case .addCompany: return .addCompany
+        case .main:       return .main
+        case .payments:   return .payments
+        case .scanQR:     return .scanQR
         }
     }
 }

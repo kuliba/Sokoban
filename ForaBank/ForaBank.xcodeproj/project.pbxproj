@@ -592,6 +592,10 @@
 		2A3624A72C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A62C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift */; };
 		2A3624A92C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */; };
 		2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */; };
+		2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */; };
+		2A3624B12C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */; };
+		2A3624B32C5FC0F800174C50 /* PaymentProviderPickerFlowModelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B22C5FC0F800174C50 /* PaymentProviderPickerFlowModelIntegrationTests.swift */; };
+		2A3624B52C5FD5A400174C50 /* ComposedPaymentProviderPickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624B42C5FD5A400174C50 /* ComposedPaymentProviderPickerFlowView.swift */; };
 		2A3663C12C59519500114294 /* PaymentCompleteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3663C02C59519500114294 /* PaymentCompleteState.swift */; };
 		2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */; };
 		2A3834AF2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */; };
@@ -3818,6 +3822,10 @@
 		2A3624A62C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncPickerEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
+		2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModelComposer.swift; sourceTree = "<group>"; };
+		2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentProviderPickerFlowModel.swift"; sourceTree = "<group>"; };
+		2A3624B22C5FC0F800174C50 /* PaymentProviderPickerFlowModelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowModelIntegrationTests.swift; sourceTree = "<group>"; };
+		2A3624B42C5FD5A400174C50 /* ComposedPaymentProviderPickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentProviderPickerFlowView.swift; sourceTree = "<group>"; };
 		2A3663C02C59519500114294 /* PaymentCompleteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteState.swift; sourceTree = "<group>"; };
 		2A3834AC2C4EB8E700A5DF8C /* SegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentTests.swift; sourceTree = "<group>"; };
 		2A3834AE2C4EDEAA00A5DF8C /* PaymentProviderSegmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderSegmentsView.swift; sourceTree = "<group>"; };
@@ -8371,6 +8379,7 @@
 				2A3624662C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift */,
 				2A36247D2C5E8A5200174C50 /* PaymentProviderPickerFlowFactory.swift */,
 				2A3624682C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift */,
+				2A3624B42C5FD5A400174C50 /* ComposedPaymentProviderPickerFlowView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -9650,6 +9659,7 @@
 				2ACFD6662C5CDDF2003F08AE /* QRScanResultMapperComposer.swift */,
 				2A7183BB2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift */,
 				2A7183B92C5E284C008B222B /* QRScanResultMapperNanoServices.swift */,
+				2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -10730,6 +10740,7 @@
 			isa = PBXGroup;
 			children = (
 				2ACFD65F2C5CCAB7003F08AE /* OperatorProviderLoadResultTests.swift */,
+				2A3624B22C5FC0F800174C50 /* PaymentProviderPickerFlowModelIntegrationTests.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -11263,6 +11274,7 @@
 			children = (
 				2A36248E2C5ECB9100174C50 /* AnywayFlow */,
 				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */,
+				2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */,
 				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
 				2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */,
@@ -19029,6 +19041,7 @@
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
 				2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */,
 				2AE2662F2C195A850054C274 /* TransactionDetailButton.swift in Sources */,
+				2A3624B12C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
@@ -19363,6 +19376,7 @@
 				0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */,
 				83CDFA7D2BD2556400191D8B /* ArrayOfProductData+Extensions.swift in Sources */,
 				2AB352E02B6BC626000EADC2 /* UserAccountNavigationStateManager.swift in Sources */,
+				2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */,
 				77D01EB429CDAC0B0026B099 /* PaymentC2BParameter.swift in Sources */,
 				77D038632988283B00FBE5AB /* ServerCommands+SBP.swift in Sources */,
 				777460E5291E574400D3FF46 /* ContactsBankItemViewComponent.swift in Sources */,
@@ -19454,6 +19468,7 @@
 				774A8B2A2865FC6F00B81140 /* MyProductsSectionItemViewModel.swift in Sources */,
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
+				2A3624B52C5FD5A400174C50 /* ComposedPaymentProviderPickerFlowView.swift in Sources */,
 				F81EF91527D212990096DC70 /* MainSectionOpenProductViewComponent.swift in Sources */,
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
 				2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */,
@@ -20519,6 +20534,7 @@
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
 				776E67B7292D16BD00F587A7 /* ProductFilterTests.swift in Sources */,
+				2A3624B32C5FC0F800174C50 /* PaymentProviderPickerFlowModelIntegrationTests.swift in Sources */,
 				77E24F1B28B7BE05005899BA /* SessionAgentTests.swift in Sources */,
 				77F9F25B2A45ABBA00699433 /* PaymentsParametersReducerTests.swift in Sources */,
 				2A51903B2A7E12CB0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequestTests.swift in Sources */,

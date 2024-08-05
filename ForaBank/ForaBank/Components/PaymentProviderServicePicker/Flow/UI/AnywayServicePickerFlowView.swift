@@ -5,12 +5,11 @@
 //  Created by Igor Malyarov on 04.08.2024.
 //
 
+import FooterComponent
 import SwiftUI
 import UIPrimitives
 
-struct AnywayServicePickerFlowView<AnywayPaymentFlowView, ServicePicker>: View
-where AnywayPaymentFlowView: View,
-      ServicePicker: View {
+struct AnywayServicePickerFlowView: View {
     
     @ObservedObject var flowModel: FlowModel
     
@@ -18,7 +17,7 @@ where AnywayPaymentFlowView: View,
     
     var body: some View {
         
-        factory.makeServicePicker(flowModel.state.content)
+        servicePicker(model: flowModel.state.content)
             .alert(
                 item: flowModel.alert,
                 content: alertContent
@@ -34,7 +33,7 @@ where AnywayPaymentFlowView: View,
 extension AnywayServicePickerFlowView {
     
     typealias FlowModel = AnywayServicePickerFlowModel
-    typealias Factory = AnywayServicePickerFlowViewFactory<AnywayPaymentFlowView, ServicePicker>
+    typealias Factory = AnywayServicePickerFlowViewFactory
 }
 
 extension AnywayServicePickerFlowModel {
@@ -71,10 +70,8 @@ extension AnywayServicePickerFlowModel {
         
         var id: ID {
             switch self {
-            case .payByInstructions:
-                return .payByInstructions
-            case .payment:
-                return .payment
+            case .payByInstructions: return .payByInstructions
+            case .payment:           return .payment
             }
         }
         
@@ -103,6 +100,36 @@ extension AnywayServicePickerFlowState.Status.Alert: Identifiable {
 
 private extension AnywayServicePickerFlowView {
     
+    func servicePicker(
+        model: PaymentProviderServicePickerModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerWrapperView(
+            model: flowModel.state.content,
+            failureView: failureView,
+            iconView: factory.makeIconView,
+            config: .iFora
+        )
+    }
+    
+    func failureView() -> FooterView {
+        
+        FooterView(
+            state: .footer(.iFora),
+            event: { event in
+                
+                switch event {
+                case .addCompany:
+                    flowModel.event(.goTo(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.event(.payByInstruction)
+                }
+            },
+            config: .iFora
+        )
+    }
+
     func alertContent(
         alert: AnywayServicePickerFlowState.Status.Alert
     ) -> Alert {

@@ -454,15 +454,7 @@ private extension MainView {
                     config: .iFora
                 )
             },
-            itemView: { service in
-                
-                Button {
-                    model.event(.select(service))
-                } label: {
-                    label(title: service.name, icon: nil)
-                }
-                .buttonStyle(.plain)
-            },
+            iconView: viewFactory.makeIconView,
             config: .iFora
         )
     }
