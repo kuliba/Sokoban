@@ -130,7 +130,7 @@ private extension AnywayServicePickerFlowView {
             config: .iFora
         )
     }
-
+    
     func alertContent(
         alert: AnywayServicePickerFlowState.Status.Alert
     ) -> Alert {
@@ -154,7 +154,16 @@ private extension AnywayServicePickerFlowView {
             PaymentsView(viewModel: paymentsViewModel)
             
         case let .payment(anywayFlowModel):
+            let provider = flowModel.state.content.state.payload.provider
+            
             factory.makeAnywayFlowView(anywayFlowModel)
+                .navigationBarWithAsyncIcon(
+                    title: provider.origin.title,
+                    subtitle: provider.origin.inn,
+                    dismiss: { flowModel.event(.dismiss) },
+                    icon: factory.makeIconView(provider.icon),
+                    style: .normal
+                )
         }
     }
 }
@@ -202,5 +211,13 @@ where PrimaryEvent == AnywayServicePickerFlowEvent,
                 event: .goTo(.payments)
             )
         )
+    }
+}
+
+extension SegmentedProvider {
+    
+    var icon: IconDomain.Icon? {
+        
+        origin.icon.map { .md5Hash(.init($0)) }
     }
 }

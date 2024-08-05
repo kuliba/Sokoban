@@ -385,21 +385,12 @@ private extension MainView {
         flowModel: AnywayServicePickerFlowModel
     ) -> some View {
 
-        let provider = flowModel.state.content.state.payload.provider
-        
         AnywayServicePickerFlowView(
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,
                 makeIconView: viewFactory.makeIconView
             )
-        )
-        .navigationBarWithAsyncIcon(
-            title: provider.origin.title,
-            subtitle: provider.origin.inn,
-            dismiss: viewModel.dismissProviderServicePicker,
-            icon: iconView(provider.origin.icon),
-            style: .large
         )
     }
     
@@ -503,12 +494,6 @@ private extension MainView {
                     { flowModel.event(.goTo(.main)) }
                 )
             }
-        )
-        .navigationBarWithAsyncIcon(
-            title: payload.title,
-            subtitle: payload.subtitle,
-            dismiss: { flowModel.event(.goTo(.main)) },
-            icon: iconView(payload.icon)
         )
     }
     

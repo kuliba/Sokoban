@@ -246,11 +246,14 @@ private extension PaymentProviderPickerFlowModel {
     func bind(_ content: Content) {
         
         state.content.$state
-            .compactMap(\.selection)
+            .map(\.selection)
             .receive(on: scheduler)
             .sink { [weak self] in
                 
                 switch $0 {
+                case .none:
+                    self?.event(.dismiss)
+                    
                 case .addCompany:
                     self?.event(.goTo(.addCompany))
                     

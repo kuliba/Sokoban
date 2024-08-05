@@ -150,6 +150,9 @@ private extension AnywayServicePickerFlowModel {
         case .addCompany:
             state.status = .outside(.addCompany)
             
+        case .inflight:
+            state.status = .outside(.inflight)
+            
         case .main:
             state.status = .outside(.main)
             
