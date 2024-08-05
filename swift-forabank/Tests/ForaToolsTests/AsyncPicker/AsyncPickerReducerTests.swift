@@ -194,6 +194,21 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
         assert(state, event: .select(item), delivers: .select(item, payload))
     }
     
+    // MARK: - reset
+    
+    func test_reset_shouldResetResponse() {
+        
+        assert(makeState(response: makeResponse()), event: .reset) {
+            
+            $0.response = nil
+        }
+    }
+    
+    func test_reset_shouldNotDeliverEffect() {
+        
+        assert(makeState(response: makeResponse()), event: .reset, delivers: nil)
+    }
+    
     // MARK: - response
     
     func test_response_shouldSetResponse() {
@@ -233,10 +248,11 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     private func makeState(
         payload: Payload? = nil,
         isLoading: Bool = false,
-        items: [Item]? = nil
+        items: [Item]? = nil,
+        response: Response? = nil
     ) -> SUT.State {
         
-        return .init(payload: payload ?? makePayload(), isLoading: isLoading, items: items)
+        return .init(payload: payload ?? makePayload(), isLoading: isLoading, items: items, response: response)
     }
     
     @discardableResult
