@@ -473,16 +473,18 @@ private extension MainView {
 
 private extension MainView {
     
+    @ViewBuilder
     func makeAnywayFlowView(
         flowModel: AnywayFlowModel
-    ) -> AnywayFlowView<PaymentCompleteView> {
+    ) -> some View {
         
         let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
             
             flowModel.state.content.event(.payment($0))
         }
-
-        return .init(
+        let payload = flowModel.state.content.state.transaction.context.outline.payload
+        
+        AnywayFlowView(
             flowModel: flowModel,
             factory: .init(
                 makeElementView: anywayPaymentFactory.makeElementView,
@@ -501,6 +503,12 @@ private extension MainView {
                     { flowModel.event(.goTo(.main)) }
                 )
             }
+        )
+        .navigationBarWithAsyncIcon(
+            title: payload.title,
+            subtitle: payload.subtitle,
+            dismiss: { flowModel.event(.goTo(.main)) },
+            icon: iconView(payload.icon)
         )
     }
     
