@@ -181,13 +181,22 @@ private extension AnywayPaymentOutline {
         service: UtilityService,
         payload: PaymentProviderServicePickerPayload
     ) {
-        fatalError()
-//        self.init(
-//            amount: payload.qrCode.,
-//            product: <#T##Product?#>,
-//            fields: <#T##Fields#>,
-//            payload: <#T##Payload#>
-//        )
+        let fields = service.puref.fields(
+            fromQR: payload.qrCode,
+            matching: payload.qrMapping
+        )
+
+        self.init(
+            amount: 0,
+            product: nil,
+            fields: fields,
+            payload: .init(
+                puref: service.puref,
+                title: payload.provider.origin.title,
+                subtitle: payload.provider.origin.inn,
+                icon: payload.provider.origin.icon
+            )
+        )
     }
 }
 
@@ -201,5 +210,34 @@ private extension SegmentedProvider {
             subtitle: origin.inn,
             icon: origin.icon
         )
+    }
+}
+
+extension String {
+    
+    func fields(
+        fromQR qrCode: QRCode,
+        matching qrMapping: QRMapping
+    ) -> [String: String] {
+        
+        let pairs = qrMapping.operators
+            .filter { $0.operator == self }
+            .flatMap(\.parameters)
+            .compactMap { element in
+                
+                element.keys.first.map { key in
+                    
+                    (key, element.parameter.name)
+                }
+            }
+        
+        let dict = Dictionary(pairs) { _, last in last }
+        
+        let fields = qrCode.rawData.compactMap { element in
+            
+            dict[element.key].map { ($0, element.value) }
+        }
+        
+        return .init(fields) { _, last in last }
     }
 }
