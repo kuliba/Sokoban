@@ -1568,7 +1568,7 @@ extension PaymentsTransfersViewModel {
             searchOperators(multipleOperators, with: qrCode)
             
         case let .none(qrCode):
-            handleFailure(qrCode)
+            payByInstructions(with: qrCode)
             
         case let .provider(payload):
             makeServicePicker(payload)
