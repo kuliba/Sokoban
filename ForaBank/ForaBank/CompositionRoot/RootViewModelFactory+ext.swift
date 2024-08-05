@@ -258,7 +258,22 @@ extension RootViewModelFactory {
             model: model,
             scheduler: scheduler
         )
-        let makePaymentProviderServicePickerFlowModel = servicePickerComposer.makeFlowModel
+        
+        let makePaymentProviderPickerFlowModel = makePaymentProviderPickerFlowModel(
+            httpClient: httpClient,
+            log: logger.log(level:category:message:file:line:),
+            model: model,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: scheduler
+        )
+        
+        let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
+            httpClient: httpClient,
+            log: logger.log(level:category:message:file:line:),
+            model: model,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: scheduler
+        )
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -279,6 +294,7 @@ extension RootViewModelFactory {
                 scheduler: scheduler
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
+            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder
         )
@@ -296,6 +312,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation,
+            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder
         )
@@ -450,6 +467,7 @@ extension ProductProfileViewModel {
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> MakeProductProfileViewModel {
@@ -471,6 +489,7 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag,
+                makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder
             )
@@ -479,6 +498,7 @@ extension ProductProfileViewModel {
                 makeAlertDataUpdateFailureViewModel: {
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
+                makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
                 makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
@@ -594,6 +614,7 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister,
+        makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> RootViewModel {
@@ -601,7 +622,8 @@ private extension RootViewModelFactory {
         let paymentsTransfersFactory = PaymentsTransfersFactory(
             makeAlertDataUpdateFailureViewModel: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
-            },
+            }, 
+            makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },

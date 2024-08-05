@@ -40,7 +40,7 @@ enum QRModelResult: Equatable {
         case single(QRCode, QRMapping)
         case source(Payments.Operation.Source)
         
-        typealias MixedOperators = MultiElementArray<OperatorProvider<Operator, Provider>>
+        typealias MixedOperators = MultiElementArray<SegmentedOperatorProvider>
         typealias MultipleOperators = MultiElementArray<Operator>
         
         typealias Operator = SegmentedOperatorData

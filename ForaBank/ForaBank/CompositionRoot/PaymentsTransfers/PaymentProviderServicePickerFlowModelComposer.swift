@@ -9,6 +9,7 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
+@available(*, deprecated, message: "use AnywayServicePickerFlowModelComposer instead")
 final class PaymentProviderServicePickerFlowModelComposer {
     
     private let factory: Factory

@@ -75,10 +75,15 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
     }
 }
 
-private extension SegmentedPaymentProvider {
+private extension SegmentedProvider {
     
     var `operator`: UtilityPaymentOperator {
         
-        return .init(id: id, title: title, subtitle: inn, icon: icon)
+        return .init(
+            id: origin.id, 
+            title: origin.title,
+            subtitle: origin.inn,
+            icon: origin.icon
+        )
     }
 }

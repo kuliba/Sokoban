@@ -815,13 +815,15 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: updateInfoStatusFlag,
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
             makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: ServicePaymentBinder.preview,

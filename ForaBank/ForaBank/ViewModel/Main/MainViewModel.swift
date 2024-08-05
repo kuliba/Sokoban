@@ -212,7 +212,7 @@ extension MainViewModel {
         ))
     }
     
-    func dismissProviderServicePicker() {
+    func dismissPaymentProviderPicker() {
         
         guard case .paymentProviderPicker = route.destination
         else { return }
@@ -221,48 +221,13 @@ extension MainViewModel {
         openScanner()
     }
     
-    func dismissPaymentProviderPickerDestination() {
+    func dismissProviderServicePicker() {
         
-        guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
+        guard case .providerServicePicker = route.destination
         else { return }
         
-        route.destination = .paymentProviderPicker(qrCode, providers, destination: nil)
-    }
-    
-    func select(
-        provider: SegmentedPaymentProvider
-    ) {
-        guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
-        else { return }
-        
-        let pickerModel = makeServicePicker(with: .init(
-            provider: provider,
-            qrCode: qrCode
-        ))
-        route.destination = .paymentProviderPicker(qrCode, providers, destination: pickerModel)
-    }
-    
-    private func makeServicePicker(
-        with payload: PaymentProviderServicePickerPayload
-    ) -> PaymentProviderServicePickerFlowModel {
-        
-        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(payload)
-        
-        pickerModel.$state
-            .map(\.isContentLoading)
-            .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isContentLoading in
-                
-                if isContentLoading {
-                    self?.rootActions?.spinner.show()
-                } else {
-                    self?.rootActions?.spinner.hide()
-                }
-            }
-            .store(in: &bindings)
-        
-        return pickerModel
+        route.destination = nil
+        openScanner()
     }
     
     func goToChat() {
@@ -943,19 +908,17 @@ extension MainViewModel {
         resetModal()
         
         switch result {
-        case let .qrCode(qr):
-            
-            if let qrMapping = model.qrMapping.value {
-                handleQRMapping(qr, qrMapping)
-            } else {
-                handleFailure(qr)
-            }
+        case let .c2bSubscribeURL(url):
+            handleC2bSubscribeURL(url)
             
         case let .c2bURL(url):
             handleC2bURL(url)
             
-        case let .c2bSubscribeURL(url):
-            handleC2bSubscribeURL(url)
+        case let .failure(qrCode):
+            handleFailure(qrCode)
+            
+        case let .mapped(mapped):
+            handleMapped(mapped)
             
         case let .sberQR(url):
             handleSberQRURL(url)
@@ -968,109 +931,54 @@ extension MainViewModel {
         }
     }
     
-    private func handleQRMapping(
-        _ qr: QRCode,
-        _ qrMapping: QRMapping
+    private func handleMapped(
+        _ mapped: QRModelResult.Mapped
     ) {
-        let providers = model.segmentedPaymentProviders(
-            matching: qr,
-            qrMapping: qrMapping
-        )
-        let multipleProviders = MultiElementArray(providers ?? [])
-        
-        switch (multipleProviders, providers?.first) {
-        case (_, .none):
-            handleUnknownQR()
+        switch mapped {
+        case let .mixed(mixed, qrCode):
+            makePaymentProviderPicker(mixed, qrCode)
             
-        case let (.none, .some(provider)):
-            let pickerModel = makeServicePicker(with: .init(
-                provider: provider,
-                qrCode: qr
-            ))
-            route.destination = .providerServicePicker(pickerModel)
+        case let .multiple(multipleOperators, qrCode):
+            searchOperators(multipleOperators, with: qrCode)
             
-        case let (.some(providers), _):
-            route.destination = .paymentProviderPicker(qr, providers, destination: nil)
+        case let .none(qrCode):
+            handleFailure(qrCode)
+            
+        case let .provider(provider, qrCode):
+            makeServicePicker(provider, qrCode)
+            
+        case let .single(qrCode, qrMapping):
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: qrCode,
+                mapping: qrMapping
+            )
+            
+            self.route.destination = .operatorView(viewModel)
+            
+        case let .source(source):
+            makePayment(with: source)
         }
     }
-    
-    private func payWith(
-        `operator`: OperatorGroupData.OperatorData,
-        qr: QRCode,
-        qrMapping: QRMapping
+
+    private func makePayment(
+        with source: Payments.Operation.Source
     ) {
-        let isServicesOperator = Payments
-            .paymentsServicesOperators
-            .map(\.rawValue)
-            .contains(`operator`.parentCode)
-        
-        if isServicesOperator {
-            servicePayment(operator: `operator`, qr: qr)
-        } else {
-            operatorView(operator: `operator`, qr: qr, qrMapping: qrMapping)
-        }
-    }
-    
-    private func servicePayment(
-        `operator`: OperatorGroupData.OperatorData,
-        qr: QRCode
-    ) {
-        let paymentsViewModel = makeServicePaymentViewModel(
-            operator: `operator`,
-            qr: qr
-        )
-        bind(paymentsViewModel)
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.route.destination = .payments(paymentsViewModel)
-        }
-    }
-    
-    private func makeServicePaymentViewModel(
-        `operator`: OperatorGroupData.OperatorData,
-        qr: QRCode
-    ) -> PaymentsViewModel {
-        
-        let puref = `operator`.code
-        let additionalList = self.model.additionalList(for: `operator`, qrCode: qr)
-        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
-        
-        return PaymentsViewModel(
-            source: .servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ),
-            model: self.model,
+        let paymentsViewModel = PaymentsViewModel(
+            source: source,
+            model: model,
             closeAction: { [weak self] in
                 
                 self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
         )
-    }
-    
-    private func operatorView(
-        `operator`: OperatorGroupData.OperatorData,
-        qr: QRCode,
-        qrMapping: QRMapping
-    ) {
-        delay(for: .milliseconds(700)) { [weak self] in
-            
-            guard let self else { return }
-            
-            let viewModel = InternetTVDetailsViewModel(
-                model: model,
-                qrCode: qr,
-                mapping: qrMapping
-            )
-            
-            self.route.destination = .operatorView(viewModel)
-        }
+        bind(paymentsViewModel)
+        
+        route.destination = .payments(paymentsViewModel)
     }
     
     private func searchOperators(
-        _ operators: MultiElementArray<OperatorGroupData.OperatorData>,
+        _ operators: MultiElementArray<SegmentedOperatorData>,
         with qr: QRCode
     ) {
         let navigationBarViewModel = NavigationBarView.ViewModel(
@@ -1094,7 +1002,7 @@ extension MainViewModel {
             searchBar: .nameOrTaxCode(),
             navigationBar: navigationBarViewModel,
             model: self.model,
-            operators: operators.elements,
+            operators: operators.elements.map(\.origin),
             addCompanyAction: { [weak self] in self?.addCompany() },
             requisitesAction: { [weak self] in self?.payByInstructions(with: qr) },
             qrCode: qr
@@ -1304,7 +1212,116 @@ extension MainViewModel {
     }
 }
 
-// MARK: Helpers
+// MARK: - PaymentProviderPicker
+
+private extension MainViewModel {
+    
+    func makePaymentProviderPicker(
+        _ mixed: MultiElementArray<SegmentedOperatorProvider>,
+        _ qrCode: QRCode
+    ) {
+        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode)
+        route.destination = .paymentProviderPicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        ))
+    }
+    
+    private func bind(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.handle($0) }
+    }
+    
+    func handle(
+        _ outside: PaymentProviderPickerFlowState.Status.Outside
+    ) {
+        resetDestination()
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
+        }
+    }
+}
+
+extension PaymentProviderPickerFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status
+        else { return nil }
+        
+        return outside
+    }
+}
+
+// MARK: - PaymentProviderServicePicker
+
+private extension MainViewModel {
+    
+    func makeServicePicker(
+        _ provider: SegmentedProvider,
+        _ qrCode: QRCode
+    ) {
+        let flowModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider: provider, qrCode: qrCode))
+        route.destination = .providerServicePicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        ))
+    }
+    
+    private func bind(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.handle($0) }
+    }
+    
+    private func handle(
+        _ outside: AnywayServicePickerFlowState.Status.Outside
+    ) {
+        resetDestination()
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
+        }
+    }
+}
+
+// MARK: - Helpers
 
 extension MainViewModel {
     
@@ -1441,8 +1458,8 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case paymentProviderPicker(QRCode, MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderServicePickerFlowModel?)
-        case providerServicePicker(PaymentProviderServicePickerFlowModel)
+        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         
         var id: Case {
             
@@ -1488,7 +1505,7 @@ extension MainViewModel {
             case .sberQRPayment:
                 return .sberQRPayment
             case .paymentProviderPicker:
-                return .providerPicker
+                return .paymentProviderPicker
             case .providerServicePicker:
                 return .providerServicePicker
             }
@@ -1516,7 +1533,7 @@ extension MainViewModel {
             case landing
             case orderSticker
             case sberQRPayment
-            case providerPicker
+            case paymentProviderPicker
             case providerServicePicker
         }
     }

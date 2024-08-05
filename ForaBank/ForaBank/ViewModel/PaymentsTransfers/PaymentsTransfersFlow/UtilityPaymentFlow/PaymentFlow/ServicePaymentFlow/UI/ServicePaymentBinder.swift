@@ -9,6 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 
+@available(*, deprecated, message: "use AnywayFlowModel instead")
 final class ServicePaymentBinder {
     
     let content: Content

@@ -320,6 +320,9 @@ extension PaymentsTransfersView {
                 icon: operatorIconView,
                 style: .large
             )
+            
+        default:
+            Text("TBD")
         }
     }
     
