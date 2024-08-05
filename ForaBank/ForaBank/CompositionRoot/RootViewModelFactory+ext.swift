@@ -233,23 +233,6 @@ extension RootViewModelFactory {
         )
         let utilityNanoServices = utilityNanoServicesComposer.compose()
         let asyncPickerComposer = AsyncPickerEffectHandlerMicroServicesComposer(
-            composer: .init(
-                flag: utilitiesPaymentsFlag.rawValue,
-                nanoServices: utilityNanoServices,
-                makeLegacyPaymentsServicesViewModel: { _ in
-                    
-                    // not used for servicePickerComposer
-                    return .init(
-                        searchBar: .searchBar(for: .abroad),
-                        navigationBar: .sample,
-                        model: model,
-                        latestPayments: .init(model: model, including: []),
-                        allOperators: [],
-                        addCompanyAction: {},
-                        requisitesAction: {}
-                    )
-                }
-            ),
             nanoServices: utilityNanoServices
         )
         let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
