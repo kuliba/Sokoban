@@ -14,7 +14,18 @@ extension QRScanResultMapperComposer {
         self.init(
             nanoServices: .init(
                 getMapping: model.getMapping,
-                loadOperators: model.segmentedFromDictionary,
+                loadOperators: {
+                    
+                    switch flag.rawValue {
+                    case .active:
+                        return model.segmentedFromDictionary($0, $1)?
+                            .filter(\.isNotSberProvider)
+                        
+                    case .inactive:
+                        return model.segmentedFromDictionary($0, $1)
+                    }
+                    
+                },
                 loadProviders: {
                     
                     switch flag.rawValue {
@@ -30,6 +41,14 @@ extension QRScanResultMapperComposer {
                 }
             )
         )
+    }
+}
+
+private extension SegmentedOperatorData {
+    
+    var isNotSberProvider: Bool {
+        
+        origin.parentCode != "iFora||1031001"
     }
 }
 
