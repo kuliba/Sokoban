@@ -65,6 +65,12 @@ private extension ComposedPaymentProviderPickerFlowView {
                     makeIconView: iconView
                 )
             )
+            .navigationBarWithAsyncIcon(
+                title: node.title,
+                subtitle: node.subtitle,
+                dismiss: { node.model.event(.dismiss) },
+                icon: iconView(node.icon)
+            )
         }
     }
 }
@@ -99,5 +105,23 @@ private extension OperatorGroupData.OperatorData {
     var svg: String? {
         
         logotypeList.first?.svgImage?.description
+    }
+}
+
+private extension Node where Model == AnywayServicePickerFlowModel {
+    
+    var title: String {
+        
+        model.state.content.state.payload.provider.origin.title
+    }
+    
+    var subtitle: String? {
+        
+        model.state.content.state.payload.provider.origin.inn
+    }
+    
+    var icon: IconDomain.Icon? {
+        
+        model.state.content.state.payload.provider.origin.icon.map { .md5Hash(.init($0)) }
     }
 }
