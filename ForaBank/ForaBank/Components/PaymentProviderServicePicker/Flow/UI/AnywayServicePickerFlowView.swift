@@ -116,7 +116,7 @@ private extension AnywayServicePickerFlowView {
     func failureView() -> FooterView {
         
         FooterView(
-            state: .footer(.iFora),
+            state: .failure(.iFora),
             event: { event in
                 
                 switch event {
