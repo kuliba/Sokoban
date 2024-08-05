@@ -36,6 +36,7 @@ extension AnywayServicePickerFlowState {
         
         enum Outside {
             
+            case addCompany
             case main
             case payments
             case scanQR

@@ -80,7 +80,7 @@ extension AsyncPickerReducer {
             else { break }
             
             state.isLoading = true
-            effect = .select(item)
+            effect = .select(item, state.payload)
         }
         
         return effect

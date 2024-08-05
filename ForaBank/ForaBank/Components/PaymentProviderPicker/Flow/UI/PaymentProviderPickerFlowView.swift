@@ -15,7 +15,7 @@ where OperatorLabel: View,
     @ObservedObject var flowModel: FlowModel
     
     let operatorLabel: (SegmentedOperatorProvider) -> OperatorLabel
-    let destinationContent: (FlowState.Destination) -> DestinationContent
+    let destinationContent: (FlowState.Status.Destination) -> DestinationContent
     
     var body: some View {
         
@@ -31,32 +31,37 @@ where OperatorLabel: View,
 extension PaymentProviderPickerFlowView {
     
     typealias FlowModel = PaymentProviderPickerFlowModel
-    typealias FlowState = PaymentProviderPickerFlowState<Operator, Provider>
+    typealias FlowState = PaymentProviderPickerFlowState
     typealias Operator = SegmentedOperatorData
     typealias Provider = SegmentedProvider
 }
 
-extension PaymentProviderPickerFlowState.Destination: Identifiable {
+extension PaymentProviderPickerFlowState {
+    
+    var destination: Status.Destination? {
+        
+        guard case let .destination(destination) = status else { return nil }
+        return destination
+    }
+}
+
+extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
     
     var id: ID {
         
         switch self {
             
-        case .addCompany:        return .addCompany
-        case .operator:          return .operator
         case .payByInstructions: return .payByInstructions
-        case .provider:          return .provider
-        case .scanQR:            return .scanQR
+        case .payments:          return .payments
+        case .servicePicker:     return .servicePicker
         }
     }
     
     enum ID: Hashable {
         
-        case addCompany
-        case `operator`
         case payByInstructions
-        case provider
-        case scanQR
+        case payments
+        case servicePicker
     }
 }
 

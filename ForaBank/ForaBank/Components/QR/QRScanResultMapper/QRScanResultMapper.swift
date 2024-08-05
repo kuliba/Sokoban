@@ -103,7 +103,7 @@ private extension SegmentedOperatorData {
     }
 }
 
-private extension OperatorGroupData.OperatorData {
+extension OperatorGroupData.OperatorData {
     
     func serviceSource(
         matching qrCode: QRCode

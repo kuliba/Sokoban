@@ -34,15 +34,12 @@ final class PaymentProviderPickerFlowModel: ObservableObject {
             .assign(to: &$state)
     }
     
-    typealias State = PaymentProviderPickerFlowState<Operator, Provider>
-    typealias Event = PaymentProviderPickerFlowEvent<Operator, Provider>
+    typealias State = PaymentProviderPickerFlowState
+    typealias Event = PaymentProviderPickerFlowEvent
     typealias Effect = PaymentProviderPickerFlowEffect
     typealias Factory = PaymentProviderPickerFlowFactory
-
+    
     typealias Content = State.Content
-
-    typealias Operator = SegmentedOperatorData
-    typealias Provider = SegmentedProvider
 }
 
 extension PaymentProviderPickerFlowModel {
@@ -64,46 +61,158 @@ private extension PaymentProviderPickerFlowModel {
         let effect: Effect? = nil
         
         switch event {
-        case .addCompany:
-            state.destination = .addCompany
-            
         case .dismiss:
-            state.destination = nil
+            state.status = nil
             
-        case let .operator(`operator`):
-            state.destination = .operator(`operator`)
+        case let .goTo(goTo):
+            return reduce(&state, with: goTo)
             
         case .payByInstructions:
             payByInstructions(&state)
             
-        case let .provider(provider):
-            state.destination = .provider(provider)
-            
-        case .scanQR:
-            state.destination = .scanQR
+        case let .select(select):
+            return reduce(&state, with: select)
         }
         
         return effect
     }
     
-    private func payByInstructions(
+    func reduce(
+        _ state: inout State,
+        with goTo: Event.GoTo
+    ) -> Effect? {
+        
+        switch goTo {
+        case .addCompany:
+            state.status = .outside(.addCompany)
+            
+        case .main:
+            state.status = .outside(.main)
+            
+        case .payments:
+            state.status = .outside(.payments)
+            
+        case .scanQR:
+            state.status = .outside(.scanQR)
+        }
+        
+        return nil
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with select: Event.Select
+    ) -> Effect? {
+        
+        switch select {
+        case let .operator(`operator`):
+            payWithOperator(&state, `operator`)
+            
+        case let .provider(provider):
+            payWithProvider(&state, provider)
+        }
+        
+        return nil
+    }
+}
+
+// MARK: - pay with operator
+
+private extension PaymentProviderPickerFlowModel {
+    
+    func payWithOperator(
+        _ state: inout State,
+        _ `operator`: State.Status.Operator
+    ) {
+        let paymentsViewModel = makePaymentsViewModel(with: `operator`)
+        
+        state.status = .destination(.payments(.init(
+            model: paymentsViewModel,
+            cancellable: bind(paymentsViewModel)
+        )))
+    }
+    
+    private func makePaymentsViewModel(
+        with `operator`: State.Status.Operator
+    ) -> PaymentsViewModel {
+        
+        let qrCode = state.content.state.qrCode
+        
+        return factory.makePaymentsViewModel(`operator`, qrCode) { [weak self] in
+            
+            self?.event(.dismiss)
+        }
+    }
+}
+
+// MARK: - pay with provider
+
+private extension PaymentProviderPickerFlowModel {
+    
+    func payWithProvider(
+        _ state: inout State,
+        _ provider: State.Status.Provider
+    ) {
+        let qrCode = state.content.state.qrCode
+        let flowModel = factory.makeServicePickerFlowModel(provider, qrCode)
+        
+        state.status = .destination(.servicePicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        )))
+    }
+    
+    private func bind(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outsideEvent)
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.goTo($0)) }
+    }
+}
+
+private extension AnywayServicePickerFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status else { return nil }
+        return outside
+    }
+    
+    var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
+        
+        switch outside {
+        case .none:       return .none
+        case .addCompany: return .addCompany
+        case .main:       return .main
+        case .payments:   return .payments
+        case .scanQR:     return .scanQR
+        }
+    }
+}
+
+// MARK: - payByInstructions
+
+private extension PaymentProviderPickerFlowModel {
+    
+    func payByInstructions(
         _ state: inout State
     ) {
         let paymentsViewModel = makePayByInstructionsModel()
-        let cancellable = bind(paymentsViewModel)
         
-        state.destination = .payByInstructions(.init(
+        state.status = .destination(.payByInstructions(.init(
             model: paymentsViewModel,
-            cancellable: cancellable
-        ))
+            cancellable: bind(paymentsViewModel)
+        )))
     }
     
     private func makePayByInstructionsModel() -> PaymentsViewModel {
         
         let qrCode = state.content.state.qrCode
-        let makeModel = factory.makePayByInstructionsViewModel
         
-        return makeModel(qrCode) { [weak self] in
+        return factory.makePayByInstructionsViewModel(qrCode) { [weak self] in
             
             self?.event(.dismiss)
         }
@@ -116,7 +225,7 @@ private extension PaymentProviderPickerFlowModel {
         return paymentsViewModel.action
             .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: scheduler)
-            .sink { [weak self] a in self?.event(.scanQR) }
+            .sink { [weak self] a in self?.event(.goTo(.scanQR)) }
     }
 }
 
@@ -131,13 +240,13 @@ private extension PaymentProviderPickerFlowModel {
                 
                 switch $0 {
                 case .addCompany:
-                    self?.event(.addCompany)
+                    self?.event(.goTo(.addCompany))
                     
                 case let .item(.operator(`operator`)):
-                    self?.event(.operator(`operator`))
+                    self?.event(.select(.operator(`operator`)))
                     
                 case let .item(.provider(provider)):
-                    self?.event(.provider(provider))
+                    self?.event(.select(.provider(provider)))
                     
                 case .payByInstructions:
                     self?.event(.payByInstructions)

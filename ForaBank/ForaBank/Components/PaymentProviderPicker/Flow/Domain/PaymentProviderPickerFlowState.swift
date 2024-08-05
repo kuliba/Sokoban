@@ -5,22 +5,37 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-struct PaymentProviderPickerFlowState<Operator, Provider> {
+struct PaymentProviderPickerFlowState {
     
     let content: Content
-    var destination: Destination?
+    var status: Status?
 }
 
 extension PaymentProviderPickerFlowState {
     
     typealias Content = PaymentProviderPickerModel<SegmentedOperatorProvider>
     
-    enum Destination {
+    enum Status {
         
-        case addCompany
-        case `operator`(Operator)
-        case payByInstructions(Node<PaymentsViewModel>)
-        case provider(Provider)
-        case scanQR
+        case destination(Destination)
+        case outside(Outside)
+        
+        enum Destination {
+            
+            case payByInstructions(Node<PaymentsViewModel>)
+            case payments(Node<PaymentsViewModel>)
+            case servicePicker(Node<AnywayServicePickerFlowModel>)
+        }
+        
+        enum Outside {
+            
+            case addCompany
+            case main
+            case payments
+            case scanQR
+        }
+        
+        typealias Operator = SegmentedOperatorData
+        typealias Provider = SegmentedProvider
     }
 }

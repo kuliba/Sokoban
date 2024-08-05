@@ -33,13 +33,12 @@ final class AnywayFlowComposer {
 extension AnywayFlowComposer {
     
     func compose(
-        transaction: AnywayTransactionState.Transaction,
-        destination: AnywayFlowState.Status? = nil
+        transaction: AnywayTransactionState.Transaction
     ) -> AnywayFlowModel {
         
         let initialState = makeInitialState(
             transaction: transaction,
-            destination: destination
+            destination: nil
         )
         
         return .init(

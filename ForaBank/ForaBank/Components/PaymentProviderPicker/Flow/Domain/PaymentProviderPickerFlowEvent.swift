@@ -5,12 +5,30 @@
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-enum PaymentProviderPickerFlowEvent<Operator, Provider> {
+enum PaymentProviderPickerFlowEvent {
     
-    case addCompany
     case dismiss
-    case `operator`(Operator)
+    case goTo(GoTo)
     case payByInstructions
-    case provider(Provider)
-    case scanQR
+    case select(Select)
+}
+
+extension PaymentProviderPickerFlowEvent {
+    
+    enum GoTo {
+        
+        case addCompany
+        case main
+        case payments
+        case scanQR
+    }
+    
+    enum Select {
+        
+        case `operator`(Operator)
+        case provider(Provider)
+        
+        typealias Operator = SegmentedOperatorData
+        typealias Provider = SegmentedProvider
+    }
 }
