@@ -68,6 +68,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
+    #warning("extract repeated")
     func getFormattedAmount(
         state: Factory.ReducerState
     ) -> String? {
