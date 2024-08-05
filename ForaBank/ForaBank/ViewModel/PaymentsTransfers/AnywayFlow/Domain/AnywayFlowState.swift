@@ -8,20 +8,20 @@
 struct AnywayFlowState {
     
     let content: Content
-    var destination: Destination?
+    var status: Status?
 }
 
 extension AnywayFlowState {
     
     typealias Content = AnywayTransactionViewModel
     
-    enum Destination: Equatable {
+    enum Status: Equatable {
         
         case alert(Alert)
         case completed(Completed)
         case fraud(FraudNoticePayload)
         case inflight
-        case main
+        case outside(Outside)
         
         enum Alert: Equatable {
             
@@ -31,5 +31,11 @@ extension AnywayFlowState {
         }
         
         typealias Completed = AnywayCompleted
+        
+        enum Outside {
+            
+            case main
+            case payments
+        }
     }
 }
