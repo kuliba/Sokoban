@@ -73,8 +73,17 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         
         return .init(
             latestServicePayment: latestPayment, 
-            product: product
+            product: product ?? makeOutlineProduct()
         )
+    }
+    
+    private func makeOutlineProduct(
+        currency: String = anyMessage(),
+        productID: Int = .random(in: 1...100),
+        productType: AnywayPaymentOutline.Product.ProductType = .card
+    ) -> AnywayPaymentOutline.Product {
+        
+        return .init(currency: currency, productID: productID, productType: productType)
     }
     
     private func makeLatestPayment() throws -> LatestPayment {

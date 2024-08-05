@@ -303,7 +303,7 @@ extension AnywayPaymentOutline {
     
     init(
         latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment,
-        product: AnywayPaymentOutline.Product?
+        product: AnywayPaymentOutline.Product
     ) {
         let pairs = latest.additionalItems.map {
             

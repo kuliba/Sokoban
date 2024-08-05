@@ -10,13 +10,13 @@ import Foundation
 public struct AnywayPaymentOutline: Equatable {
     
     public let amount: Decimal?
-    public let product: Product?
+    public let product: Product
     public let fields: Fields
     public let payload: Payload
     
     public init(
         amount: Decimal?,
-        product: Product?,
+        product: Product,
         fields: Fields,
         payload: Payload
     ) {
