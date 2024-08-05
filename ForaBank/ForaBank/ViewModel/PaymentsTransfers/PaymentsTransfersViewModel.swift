@@ -1819,13 +1819,17 @@ private extension PaymentsTransfersViewModel {
         _ outside: PaymentProviderPickerFlowState.Status.Outside
     ) {
         event(.dismiss(.destination))
-        
+        rootActions?.spinner.hide()
+
         delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
             case .addCompany:
                 self?.rootActions?.switchTab(.chat)
                 
+            case .inflight:
+                self?.rootActions?.spinner.show()
+
             case .main:
                 self?.rootActions?.switchTab(.main)
 
@@ -1868,6 +1872,7 @@ private extension PaymentsTransfersViewModel {
         _ outside: AnywayServicePickerFlowState.Status.Outside
     ) {
         event(.dismiss(.destination))
+        rootActions?.spinner.hide()
         
         delay(for: .milliseconds(300)) { [weak self] in
             
@@ -1875,6 +1880,9 @@ private extension PaymentsTransfersViewModel {
             case .addCompany:
                 self?.rootActions?.switchTab(.chat)
                 
+            case .inflight:
+                self?.rootActions?.spinner.show()
+
             case .main:
                 self?.rootActions?.switchTab(.main)
 

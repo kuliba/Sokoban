@@ -18,6 +18,7 @@ extension PaymentProviderPickerFlowEvent {
     enum GoTo {
         
         case addCompany
+        case inflight
         case main
         case payments
         case scanQR

@@ -1242,12 +1242,16 @@ private extension MainViewModel {
         _ outside: PaymentProviderPickerFlowState.Status.Outside
     ) {
         resetDestination()
+        rootActions?.spinner.hide()
         
         delay(for: .milliseconds(300)) { [weak self] in
-            
+                        
             switch outside {
             case .addCompany:
                 self?.rootActions?.switchTab(.chat)
+                
+            case .inflight:
+                self?.rootActions?.spinner.show()
                 
             case .main:
                 self?.rootActions?.switchTab(.main)
@@ -1302,6 +1306,7 @@ private extension MainViewModel {
         _ outside: AnywayServicePickerFlowState.Status.Outside
     ) {
         resetDestination()
+        rootActions?.spinner.hide()
         
         delay(for: .milliseconds(300)) { [weak self] in
             
@@ -1309,6 +1314,9 @@ private extension MainViewModel {
             case .addCompany:
                 self?.rootActions?.switchTab(.chat)
                 
+            case .inflight:
+                self?.rootActions?.spinner.show()
+
             case .main:
                 self?.rootActions?.switchTab(.main)
 

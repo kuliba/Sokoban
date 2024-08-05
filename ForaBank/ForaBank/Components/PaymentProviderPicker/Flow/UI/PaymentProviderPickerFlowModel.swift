@@ -86,6 +86,9 @@ private extension PaymentProviderPickerFlowModel {
         case .addCompany:
             state.status = .outside(.addCompany)
             
+        case .inflight:
+            state.status = .outside(.inflight)
+            
         case .main:
             state.status = .outside(.main)
             
@@ -194,6 +197,7 @@ private extension AnywayServicePickerFlowState {
         switch outside {
         case .none:       return .none
         case .addCompany: return .addCompany
+        case .inflight:   return .inflight
         case .main:       return .main
         case .payments:   return .payments
         case .scanQR:     return .scanQR

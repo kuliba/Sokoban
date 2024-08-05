@@ -19,7 +19,6 @@ extension AnywayServicePickerFlowState {
         
         case alert(Alert)
         case destination(Destination)
-        case inflight
         case outside(Outside)
         
         enum Alert {
@@ -37,6 +36,7 @@ extension AnywayServicePickerFlowState {
         enum Outside {
             
             case addCompany
+            case inflight
             case main
             case payments
             case scanQR

@@ -30,6 +30,7 @@ extension PaymentProviderPickerFlowState {
         enum Outside {
             
             case addCompany
+            case inflight
             case main
             case payments
             case scanQR
