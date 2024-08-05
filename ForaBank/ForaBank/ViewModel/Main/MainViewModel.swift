@@ -972,7 +972,10 @@ extension MainViewModel {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        let providers = model.segmentedPaymentProviders(matching: qr, mapping: qrMapping)
+        let providers = model.segmentedPaymentProviders(
+            matching: qr, 
+            qrMapping: qrMapping
+        )
         let multipleProviders = MultiElementArray(providers ?? [])
         
         switch (multipleProviders, providers?.first) {

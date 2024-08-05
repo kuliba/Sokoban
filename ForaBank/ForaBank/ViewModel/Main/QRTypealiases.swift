@@ -16,6 +16,9 @@ typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping 
 typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
 typealias MakeQRScannerModel = () -> QRModel
 
+typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
+typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
+
 enum QRModelResult: Equatable {
     
     case c2bSubscribeURL(URL)
@@ -31,32 +34,14 @@ enum QRModelResult: Equatable {
         case mixed(MixedOperators, QRCode)
         case multiple(MultipleOperators, QRCode)
         case none(QRCode)
-        case provider(PaymentProvider)
+        case provider(Provider)
         case single(QRCode, QRMapping)
         case source(Payments.Operation.Source)
         
         typealias MixedOperators = MultiElementArray<OperatorProvider<Operator, Provider>>
         typealias MultipleOperators = MultiElementArray<Operator>
         
-        typealias Operator = OperatorGroupData.OperatorData
-        typealias Provider = PaymentProvider
-    }
-}
-
-//
-//  PaymentProvider.swift
-//  ForaBank
-//
-//  Created by Igor Malyarov on 01.08.2024.
-//
-
-struct PaymentProvider: Equatable {
-    
-    let id: String
-    let type: PaymentProviderType
-    
-    enum PaymentProviderType: Equatable {
-        
-        case service
+        typealias Operator = SegmentedOperatorData
+        typealias Provider = SegmentedProvider
     }
 }

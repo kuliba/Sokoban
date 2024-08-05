@@ -108,7 +108,6 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
         inn: String? = anyMessage(),
         title: String = anyMessage(),
         segment: String = anyMessage(),
-        sortedOrder: Int = .random(in: 1...100),
         qrCode: QRCode = .init(original: "", rawData: [:])
     ) -> PaymentProviderServicePickerPayload {
         
@@ -118,14 +117,7 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
                 icon: icon,
                 inn: inn,
                 title: title,
-                segment: segment,
-                origin: .provider(.init(
-                    id: id,
-                    inn: inn ?? "",
-                    md5Hash: icon,
-                    title: title,
-                    sortedOrder: sortedOrder
-                ))
+                segment: segment
             ),
             qrCode: qrCode
         )

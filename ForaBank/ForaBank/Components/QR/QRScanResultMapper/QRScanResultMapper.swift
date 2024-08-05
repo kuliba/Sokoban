@@ -1,5 +1,5 @@
 //
-//  QRScanResultHandler.swift
+//  QRScanResultMapper.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import Foundation
 
-final class QRScanResultHandler {
+final class QRScanResultMapper {
     
     private let microServices: MicroServices
     
@@ -17,12 +17,12 @@ final class QRScanResultHandler {
         self.microServices = microServices
     }
     
-    typealias MicroServices = QRScanResultHandlerMicroServices
+    typealias MicroServices = QRScanResultMapperMicroServices
 }
 
-extension QRScanResultHandler {
+extension QRScanResultMapper {
     
-    func handleScanResult(
+    func mapScanResult(
         _ scanResult: QRViewModel.ScanResult,
         _ completion: @escaping (QRModelResult) -> Void
     ) {
@@ -31,7 +31,7 @@ extension QRScanResultHandler {
         switch scanResult {
         case let .qrCode(qrCode):
             if let qrMapping = microServices.getMapping() {
-                return handleMapped(qrCode, qrMapping) { completion(.mapped($0)) }
+                return resolveMapped(qrCode, qrMapping) { completion(.mapped($0)) }
             } else {
                 qrModelResult = .failure(qrCode)
             }
@@ -56,9 +56,9 @@ extension QRScanResultHandler {
     }
 }
 
-private extension QRScanResultHandler {
+private extension QRScanResultMapper {
     
-    func handleMapped(
+    func resolveMapped(
         _ qr: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
@@ -78,7 +78,7 @@ private extension QRScanResultHandler {
                 completion(.none(qr))
                 
             case let .operator(`operator`):
-                completion(microServices.mapSingle(`operator`, qr, qrMapping))
+                completion(`operator`.match(qr, qrMapping: qrMapping))
                 
             case let .provider(provider):
                 handleSingle(provider, qr, qrMapping, completion)
@@ -87,17 +87,54 @@ private extension QRScanResultHandler {
     }
     
     private func handleSingle(
-        _ provider: Provider,
+        _ provider: SegmentedProvider,
         _ qr: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
     ) {
-        switch provider.type {
-            // найден 1 поставщик и type = housingAndCommunalService
-        case .service:
-            completion(.provider(provider))
-        }
+        // найден 1 поставщик и type = housingAndCommunalService
+        completion(.provider(provider))
     }
+}
 
-    private typealias Provider = PaymentProvider
+private extension SegmentedOperatorData {
+    
+    func match(
+        _ qrCode: QRCode,
+        qrMapping: QRMapping
+    ) -> QRModelResult.Mapped {
+        
+        guard let source = origin.serviceSource(matching: qrCode)
+        else { return .single(qrCode, qrMapping) }
+        
+        return .source(source)
+    }
+}
+
+private extension OperatorGroupData.OperatorData {
+    
+    func serviceSource(
+        matching qrCode: QRCode
+    ) -> Payments.Operation.Source? {
+        
+        guard isServicePayment else { return nil }
+        
+        let puref = code
+        let additionalList = getAdditionalList(matching: qrCode)
+        let amount = qrCode.rawData["sum"]?.toDouble() ?? 0
+        
+        return .servicePayment(
+            puref: puref,
+            additionalList: additionalList,
+            amount: amount/100
+        )
+    }
+    
+    private var isServicePayment: Bool {
+        
+        return Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(parentCode)
+    }
 }
