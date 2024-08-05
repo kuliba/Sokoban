@@ -1,5 +1,5 @@
 //
-//  LoadResultTests.swift
+//  OperatorProviderLoadResultTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class LoadResultTests: XCTestCase {
+final class OperatorProviderLoadResultTests: XCTestCase {
     
     func test_shouldSetToNoneOnBothEmpty() {
         
@@ -103,7 +103,7 @@ final class LoadResultTests: XCTestCase {
     
     private typealias Operator = Int
     private typealias Provider = String
-    private typealias SUT = LoadResult<Operator, Provider>
+    private typealias SUT = OperatorProviderLoadResult<Operator, Provider>
     
     private func makeResult(
         _ operators: [Operator],

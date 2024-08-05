@@ -5,13 +5,15 @@
 //  Created by Igor Malyarov on 11.12.2023.
 //
 
+import CombineSchedulers
 import Foundation
 
 extension RootViewModelFactory {
     
     static func makeMakeQRScannerModel(
         model: Model,
-        qrResolverFeatureFlag: QRResolverFeatureFlag
+        qrResolverFeatureFlag: QRResolverFeatureFlag,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) -> MakeQRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
@@ -25,7 +27,11 @@ extension RootViewModelFactory {
         
         return {
             
-            .init(closeAction: $0, qrResolve: qrResolve)
+            return .init(
+                handleScanResult: { $1($0) },
+                makeQRModel: { .init(closeAction: $0, qrResolve: qrResolve) },
+                scheduler: scheduler
+            )
         }
     }
 }

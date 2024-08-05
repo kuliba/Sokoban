@@ -15,7 +15,7 @@ final class Model_QRHelpersTests: XCTestCase {
         let (qrCode, qrMapping) = makeQR(inn: anyMessage())
         let sut = makeSUT(operators: [makeCachingOperator(inn: anyMessage())])
         
-        let loaded = sut.loadCached(matching: qrCode, mapping: qrMapping)
+        let loaded = sut.loadCached(matching: qrCode, qrMapping: qrMapping)
         
         XCTAssertEqual(loaded, [])
     }
@@ -26,7 +26,7 @@ final class Model_QRHelpersTests: XCTestCase {
         let (qrCode, qrMapping) = makeQR(inn: inn)
         let sut = makeSUT(operators: [makeCachingOperator(inn: inn)])
         
-        let loaded = sut.loadCached(matching: qrCode, mapping: qrMapping)
+        let loaded = sut.loadCached(matching: qrCode, qrMapping: qrMapping)
         
         XCTAssertEqual(loaded?.count, 1)
         XCTAssertEqual(loaded?.first?.inn, inn)
@@ -41,7 +41,7 @@ final class Model_QRHelpersTests: XCTestCase {
             makeCachingOperator(inn: inn),
         ])
         
-        let loaded = sut.loadCached(matching: qrCode, mapping: qrMapping)
+        let loaded = sut.loadCached(matching: qrCode, qrMapping: qrMapping)
         
         XCTAssertEqual(loaded?.count, 2)
         XCTAssertEqual(loaded?.first?.inn, inn)
@@ -57,7 +57,7 @@ final class Model_QRHelpersTests: XCTestCase {
             makeCachingOperator(inn: inn),
         ])
         
-        let loaded = sut.segmentedPaymentProviders(matching: qrCode, mapping: qrMapping)
+        let loaded = sut.segmentedPaymentProviders(matching: qrCode, qrMapping: qrMapping)
         
         XCTAssertEqual(loaded?.count, 2)
         XCTAssertEqual(loaded?.first?.inn, inn)
@@ -74,7 +74,7 @@ final class Model_QRHelpersTests: XCTestCase {
             makeCachingOperator(inn: inn),
         ])
         
-        let loaded = sut.segmentedPaymentProviders(matching: qrCode, mapping: qrMapping)
+        let loaded = sut.segmentedPaymentProviders(matching: qrCode, qrMapping: qrMapping)
         
         XCTAssertEqual(loaded?.count, 2)
         XCTAssertEqual(loaded?.first?.inn, inn)

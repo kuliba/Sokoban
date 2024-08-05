@@ -1,5 +1,5 @@
 //
-//  LoadResult.swift
+//  OperatorProviderLoadResult.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -7,7 +7,7 @@
 
 import ForaTools
 
-enum LoadResult<Operator, Provider> {
+enum OperatorProviderLoadResult<Operator, Provider> {
     
     case mixed(Mixed)
     case multiple(MultipleOperators)
@@ -19,9 +19,9 @@ enum LoadResult<Operator, Provider> {
     typealias MultipleOperators = MultiElementArray<Operator>
 }
 
-extension LoadResult: Equatable where Operator: Equatable, Provider: Equatable {}
+extension OperatorProviderLoadResult: Equatable where Operator: Equatable, Provider: Equatable {}
 
-extension LoadResult {
+extension OperatorProviderLoadResult {
     
     init(
         operators: [Operator],

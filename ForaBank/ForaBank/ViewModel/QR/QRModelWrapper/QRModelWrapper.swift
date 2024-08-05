@@ -13,13 +13,12 @@ final class QRModelWrapper<QRResult>: ObservableObject {
     
     @Published private(set) var state: State?
     
-    // var since `QRViewModel` needs a closure to initialise
-    var qrModel: QRViewModel?
+    let qrModel: QRViewModel
     
     private let handleScanResult: HandleScanResult
     
     private let stateSubject = PassthroughSubject<State?, Never>()
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         handleScanResult: @escaping HandleScanResult,
@@ -27,16 +26,20 @@ final class QRModelWrapper<QRResult>: ObservableObject {
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.handleScanResult = handleScanResult
+        let subject = PassthroughSubject<Void, Never>()
+        self.qrModel = makeQRModel { [subject] in subject.send(()) }
         
-        let qrModel = makeQRModel { [weak self] in self?.event(.cancel) }
-        let cancellable = qrModel.action
+        qrModel.action
             .compactMap { $0 as? QRViewModelAction.Result }
             .map(\.result)
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.scanResult($0)) }
+            .store(in: &cancellables)
         
-        self.qrModel = qrModel
-        self.cancellable = cancellable
+        subject
+            .receive(on: scheduler)
+            .sink { [weak self] _ in self?.event(.cancel) }
+            .store(in: &cancellables)
         
         stateSubject
             .receive(on: scheduler)

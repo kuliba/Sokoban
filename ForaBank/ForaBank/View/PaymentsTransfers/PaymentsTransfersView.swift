@@ -433,10 +433,10 @@ extension PaymentsTransfersView {
     ) -> some View {
         
         switch fullScreenCover.type {
-        case let .qrScanner(viewModel):
+        case let .qrScanner(node):
             NavigationView {
                 
-                QRView(viewModel: viewModel)
+                QRView(viewModel: node.model.qrModel)
                     .navigationBarHidden(true)
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
