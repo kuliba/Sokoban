@@ -93,7 +93,7 @@ class ServicePaymentFlowTests: XCTestCase {
             payment: .init(amount: nil, elements: [], footer: .continue, isFinalStep: false),
             staged: .init(),
             outline: .init(
-                amount: 0,
+                amount: nil,
                 product: nil,
                 fields: .init(),
                 payload: .init(

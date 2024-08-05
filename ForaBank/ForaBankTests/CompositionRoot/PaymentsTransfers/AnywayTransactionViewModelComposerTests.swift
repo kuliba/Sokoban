@@ -157,7 +157,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     }
     
     private func makeAnywayPaymentOutline(
-        amount: Decimal = .init(Double.random(in: 1...1_000)),
+        amount: Decimal? = nil,
         product: AnywayPaymentOutline.Product? = nil,
         fields: AnywayPaymentOutline.Fields = [:],
         payload: AnywayPaymentOutline.Payload? = nil

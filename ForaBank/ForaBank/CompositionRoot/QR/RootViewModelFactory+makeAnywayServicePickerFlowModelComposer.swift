@@ -45,6 +45,7 @@ extension RootViewModelFactory {
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
+            model: model,
             nanoServices: pickerNanoServicesComposer.compose()
         )
         

@@ -137,7 +137,7 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
                 payment: .init(amount: nil, elements: [], footer: .continue, isFinalStep: false),
                 staged: [],
                 outline: .init(
-                    amount: 0,
+                    amount: nil,
                     product: nil,
                     fields: [:],
                     payload: .init(

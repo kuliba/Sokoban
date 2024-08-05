@@ -233,7 +233,32 @@ private extension UtilityPaymentNanoServicesComposer {
         and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
-        guard let product = model.paymentEligibleProducts().first,
+        let outlineProduct = model.outlineProduct()
+        
+        if let lastPayment {
+            
+            return .init(
+                latestServicePayment: lastPayment,
+                product: outlineProduct
+            )
+        }
+        
+        return .init(
+            amount: nil,
+            product: outlineProduct,
+            fields: .init(),
+            payload: payload
+        )
+    }
+}
+
+// MARK: - Helpers
+
+extension Model {
+    
+    func outlineProduct() -> AnywayPaymentOutline.Product {
+        
+        guard let product = paymentEligibleProducts().first,
               let outlineProductType = product.productType.outlineProductType
         else {
             // TODO: unimplemented graceful failure for missing products
@@ -246,20 +271,7 @@ private extension UtilityPaymentNanoServicesComposer {
             productType: outlineProductType
         )
         
-        if let lastPayment {
-            
-            return .init(
-                latestServicePayment: lastPayment,
-                product: outlineProduct
-            )
-        }
-        
-        return .init(
-            amount: 0, 
-            product: outlineProduct,
-            fields: .init(),
-            payload: payload
-        )
+        return outlineProduct
     }
 }
 
