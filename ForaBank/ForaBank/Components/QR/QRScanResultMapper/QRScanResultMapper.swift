@@ -43,6 +43,7 @@ extension QRScanResultMapper {
             qrModelResult = .c2bSubscribeURL(c2bSubscribeURL)
             
         case let .sberQR(sberQR):
+            // TODO: add async SberQR processing
             qrModelResult = .sberQR(sberQR)
             
         case let .url(url):
@@ -59,41 +60,32 @@ extension QRScanResultMapper {
 private extension QRScanResultMapper {
     
     func resolveMapped(
-        _ qr: QRCode,
+        _ qrCode: QRCode,
         _ qrMapping: QRMapping,
         _ completion: @escaping (QRModelResult.Mapped) -> Void
     ) {
-        microServices.getOperators(qr, qrMapping) { [weak self] loadResult in
+        microServices.getOperators(qrCode, qrMapping) { [weak self] loadResult in
             
             guard let self else { return }
             
             switch loadResult {
             case let .mixed(mixed):
-                completion(.mixed(mixed, qr))
+                completion(.mixed(mixed, qrCode))
                 
             case let .multiple(multipleOperators):
-                completion(.multiple(multipleOperators, qr))
+                completion(.multiple(multipleOperators, qrCode))
                 
             case .none:
-                completion(.none(qr))
+                completion(.none(qrCode))
                 
             case let .operator(`operator`):
-                completion(`operator`.match(qr, qrMapping: qrMapping))
+                completion(`operator`.match(qrCode, qrMapping: qrMapping))
                 
             case let .provider(provider):
-                handleSingle(provider, qr, qrMapping, completion)
+                // найден 1 поставщик и type = housingAndCommunalService
+                completion(.provider(provider, qrCode))
             }
         }
-    }
-    
-    private func handleSingle(
-        _ provider: SegmentedProvider,
-        _ qr: QRCode,
-        _ qrMapping: QRMapping,
-        _ completion: @escaping (QRModelResult.Mapped) -> Void
-    ) {
-        // найден 1 поставщик и type = housingAndCommunalService
-        completion(.provider(provider))
     }
 }
 
@@ -111,7 +103,7 @@ private extension SegmentedOperatorData {
     }
 }
 
-private extension OperatorGroupData.OperatorData {
+extension OperatorGroupData.OperatorData {
     
     func serviceSource(
         matching qrCode: QRCode

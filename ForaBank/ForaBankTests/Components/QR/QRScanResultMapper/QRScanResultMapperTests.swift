@@ -158,7 +158,7 @@ final class QRScanResultMapperTests: XCTestCase {
         let provider = makeSegmentedProvider()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.provider(provider))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.provider(provider, qr))) {
             
             spy.complete(with: .provider(provider))
         }

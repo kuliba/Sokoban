@@ -14,6 +14,7 @@ extension RootViewModelFactory {
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> QRViewModelFactory {
         
@@ -21,6 +22,7 @@ extension RootViewModelFactory {
             makeQRScannerModel: makeMakeQRScannerModel(
                 model: model,
                 qrResolverFeatureFlag: qrResolverFeatureFlag,
+                utilitiesPaymentsFlag: utilitiesPaymentsFlag,
                 scheduler: scheduler
             ),
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(

@@ -106,6 +106,7 @@ extension RootViewModelFactory {
             model: model,
             logger: logger,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: scheduler
         )
         
@@ -231,7 +232,7 @@ extension RootViewModelFactory {
             loadOperators: { $0([]) } // not used for servicePickerComposer
         )
         let utilityNanoServices = utilityNanoServicesComposer.compose()
-        let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
+        let asyncPickerComposer = AsyncPickerEffectHandlerMicroServicesComposer(
             composer: .init(
                 flag: utilitiesPaymentsFlag.rawValue,
                 nanoServices: utilityNanoServices,
@@ -249,9 +250,12 @@ extension RootViewModelFactory {
                     )
                 }
             ),
+            nanoServices: utilityNanoServices
+        )
+        let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
             factory: servicePickerFlowModelFactory,
+            microServices: asyncPickerComposer.compose(),
             model: model,
-            nanoServices: utilityNanoServices,
             scheduler: scheduler
         )
         let makePaymentProviderServicePickerFlowModel = servicePickerComposer.makeFlowModel

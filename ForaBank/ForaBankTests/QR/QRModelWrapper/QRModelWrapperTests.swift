@@ -70,7 +70,7 @@ final class QRModelWrapperTests: XCTestCase {
     
     private typealias QRResult = String
     private typealias SUT = QRModelWrapper<QRResult>
-    private typealias HandleSpy = Spy<QRViewModel.ScanResult, QRResult, Never>
+    private typealias MapScanResultSpy = Spy<QRViewModel.ScanResult, QRResult, Never>
     
     private func makeSUT(
         qrResult: QRResult = anyMessage(),
@@ -79,11 +79,11 @@ final class QRModelWrapperTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: HandleSpy
+        spy: MapScanResultSpy
     ) {
-        let spy = HandleSpy()
+        let spy = MapScanResultSpy()
         let sut = SUT(
-            handleScanResult: spy.process,
+            mapScanResult: spy.process,
             makeQRModel: {
                 
                 return .init(
@@ -95,6 +95,7 @@ final class QRModelWrapperTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
     }

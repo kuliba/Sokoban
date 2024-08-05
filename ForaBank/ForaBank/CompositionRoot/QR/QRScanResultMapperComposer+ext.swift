@@ -1,37 +1,33 @@
 //
-//  QRScanResultMapperComposer.swift
+//  QRScanResultMapperComposer+ext.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 02.08.2024.
+//  Created by Igor Malyarov on 03.08.2024.
 //
-
-import ForaTools
-import Foundation
-
-final class QRScanResultMapperComposer {
-    
-    private let flag: Flag
-    private let model: Model
-    
-    init(
-        flag: Flag,
-        model: Model
-    ) {
-        self.flag = flag
-        self.model = model
-    }
-    
-    typealias Flag = UtilitiesPaymentsFlag
-}
 
 extension QRScanResultMapperComposer {
     
-    func compose() -> QRScanResultMapper {
-        
-        return .init(
-            microServices: .init(
+    convenience init(
+        flag: UtilitiesPaymentsFlag,
+        model: Model
+    ) {
+        self.init(
+            nanoServices: .init(
                 getMapping: model.getMapping,
-                getOperators: model.operatorsFromQR(_:_:_:)
+                loadOperators: model.segmentedFromDictionary,
+                loadProviders: {
+                    
+                    switch flag.rawValue {
+                    case .active(.live):
+                        return model.segmentedFromCache($0, $1)
+                        
+                    case .active(.stub):
+                        return nil // stub()
+                        
+                    case .inactive:
+                        return nil
+                    }
+                }
             )
         )
     }
@@ -42,27 +38,6 @@ private extension Model {
     func getMapping() -> QRMapping? {
         
         return qrMapping.value
-    }
-    
-    typealias LoadResult = OperatorProviderLoadResult<Operator, Provider>
-    typealias Operator = SegmentedOperatorData
-    typealias Provider = SegmentedProvider
-    
-    // TODO: add fallback to remote
-    func operatorsFromQR(
-        _ qr: QRCode,
-        _ qrMapping: QRMapping,
-        _ completion: @escaping (LoadResult) -> Void
-    ) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            
-            guard let self else { return }
-            
-            let operators = segmentedFromDictionary(qr, qrMapping)
-            let providers = segmentedFromCache(qr, qrMapping)
-            
-            completion(.init(operators: operators, providers: providers))
-        }
     }
     
     func segmentedFromDictionary(
@@ -78,7 +53,7 @@ private extension Model {
             }
     }
     
-    private func segmentedFromCache(
+    func segmentedFromCache(
         _ qrCode: QRCode,
         _ qrMapping: QRMapping
     ) -> [SegmentedProvider]? {
@@ -97,19 +72,6 @@ private extension Model {
         localAgent.load(type: [CachingSberOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedProvider.init)
-    }
-}
-
-private extension OperatorProviderLoadResult {
-    
-    init(
-        operators: [Operator]?,
-        providers: [Provider]?
-    ) {
-        self.init(
-            operators: operators ?? [],
-            providers: providers ?? []
-        )
     }
 }
 

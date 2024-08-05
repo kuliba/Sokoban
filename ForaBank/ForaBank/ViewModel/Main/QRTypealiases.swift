@@ -16,6 +16,8 @@ typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping 
 typealias QRModel = QRModelWrapper<QRViewModel.ScanResult>//<QRModelResult>
 typealias MakeQRScannerModel = () -> QRModel
 
+typealias SegmentedOperatorProvider = OperatorProvider<SegmentedOperatorData, SegmentedProvider>
+
 typealias SegmentedOperatorData = SegmentedOperator<OperatorGroupData.OperatorData, String>
 typealias SegmentedProvider = SegmentedOperator<UtilityPaymentProvider, String>
 
@@ -34,7 +36,7 @@ enum QRModelResult: Equatable {
         case mixed(MixedOperators, QRCode)
         case multiple(MultipleOperators, QRCode)
         case none(QRCode)
-        case provider(Provider)
+        case provider(Provider, QRCode)
         case single(QRCode, QRMapping)
         case source(Payments.Operation.Source)
         

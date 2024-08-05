@@ -194,8 +194,8 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
-    
+    typealias Completed = AnywayCompleted
+
     private func map(
         _ completed: Completed
     ) -> PaymentCompleteView.State {
@@ -308,11 +308,29 @@ extension ImageCache {
         for icon: IconDomain.Icon?
     ) -> UIPrimitives.AsyncImage {
         
-        guard case let .md5Hash(md5Hash) = icon,
-              !md5Hash.rawValue.isEmpty
+        switch icon {
+        case let .svg(svg):
+            return makeSVGIconView(for: svg)
+        
+        case let .md5Hash(md5Hash) where !md5Hash.rawValue.isEmpty:
+            return makeIconView(for: md5Hash.rawValue)
+        
+        default:
+            return makeIconView(for: "placeholder")
+        }
+    }
+    
+    func makeSVGIconView(
+        for svg: String
+    ) -> UIPrimitives.AsyncImage {
+        
+        guard let image = Image(svg: svg)
         else { return makeIconView(for: "placeholder") }
-                    
-        return makeIconView(for: md5Hash.rawValue)
+        
+        return .init(
+            image: image,
+            publisher: Just(image).eraseToAnyPublisher()
+        )
     }
     
     func makeIconView(

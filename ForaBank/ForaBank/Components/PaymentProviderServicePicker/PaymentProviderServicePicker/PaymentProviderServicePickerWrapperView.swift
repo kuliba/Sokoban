@@ -5,19 +5,19 @@
 //  Created by Igor Malyarov on 24.07.2024.
 //
 
+import Combine
+import FooterComponent
 import SwiftUI
 import UIPrimitives
 
-struct PaymentProviderServicePickerWrapperView<FailureView, ServiceView>: View
-where FailureView: View,
-      ServiceView: View {
+struct PaymentProviderServicePickerWrapperView: View {
     
     @ObservedObject var model: Model
     
-    let failureView: () -> FailureView
-    let itemView: (Service) -> ServiceView
+    let failureView: () -> FooterView
+    let iconView: (IconDomain.Icon?) -> IconDomain.IconView
     let config: Config
-
+    
     var body: some View {
         
         Group {
@@ -55,6 +55,23 @@ private extension PaymentProviderServicePickerWrapperView {
             .background(config.background)
             .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
     }
+    
+    private func itemView(
+        _ service: UtilityService
+    ) -> some View {
+        
+        Button {
+            model.event(.select(service))
+        } label: {
+            LabelWithIcon(
+                title: service.name,
+                subtitle: nil,
+                config: .iFora,
+                iconView: iconView(nil)
+            )
+        }
+        .buttonStyle(.plain)
+    }
 }
 
 #Preview {
@@ -64,14 +81,20 @@ private extension PaymentProviderServicePickerWrapperView {
             reduce: { state, _ in (state, nil) },
             handleEffect: { _,_ in }
         ),
-        failureView: { Text("Failure view") },
-        itemView: { item in
+        failureView: {
             
-            Button {
-                print(item)
-            } label: {
-                Text(item.name)
-            }
+            FooterView(
+                state: .failure(.iFora),
+                event: { print($0) },
+                config: .iFora
+            )
+        },
+        iconView: { item in
+            
+            return .init(
+                image: .init(systemName: "photo"), publisher:
+                    Just(.init(systemName: "photo")).eraseToAnyPublisher()
+            )
         },
         config: .iFora
     )

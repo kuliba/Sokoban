@@ -23,16 +23,5 @@ extension ServicePaymentFlowEvent {
         let status: AnywayTransactionStatus?
     }
     
-    struct Completed: Equatable {
-        
-        let formattedAmount: String
-        let result: TransactionResult
-        
-        typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
-        
-        struct Fraud: Equatable, Error {
-            
-            let hasExpired: Bool
-        }
-    }
+    typealias Completed = AnywayCompleted
 }

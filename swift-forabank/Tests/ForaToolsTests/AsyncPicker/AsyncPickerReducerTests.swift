@@ -169,9 +169,10 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     
     func test_select_shouldDeliverEffectOnExistingSingleItem() {
         
-        let item = makeItem()
+        let (item, payload) = (makeItem(), makePayload())
+        let state = makeState(payload: payload, items: [item])
         
-        assert(makeState(items: [item]), event: .select(item), delivers: .select(item))
+        assert(state, event: .select(item), delivers: .select(item, payload))
     }
     
     func test_select_shouldChangeStateOnOneOfExistingItems() {
@@ -186,9 +187,11 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     
     func test_select_shouldDeliverEffectOnOneOfExistingItems() {
         
-        let item = makeItem()
+        let (item, payload) = (makeItem(), makePayload())
+        let state = makeState(payload: payload, items: [item, makeItem()])
+
         
-        assert(makeState(items: [item, makeItem()]), event: .select(item), delivers: .select(item))
+        assert(state, event: .select(item), delivers: .select(item, payload))
     }
     
     // MARK: - response

@@ -233,8 +233,7 @@ private extension UtilityPaymentNanoServicesComposer {
         and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
-#warning("fix filtering according to https://shorturl.at/hIE5B")
-        guard let product = model.paymentProducts().first,
+        guard let product = model.paymentEligibleProducts().first,
               let outlineProductType = product.productType.outlineProductType
         else {
             // TODO: unimplemented graceful failure for missing products

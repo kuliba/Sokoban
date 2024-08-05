@@ -1480,6 +1480,7 @@ private extension PaymentsTransfersViewModel {
     
     private func payByInstructions() {
         
+        event(.dismiss(.destination))
         event(.dismiss(.modal))
         
         let paymentsViewModel = makeByInstructionsPaymentsViewModel()
@@ -1488,6 +1489,14 @@ private extension PaymentsTransfersViewModel {
             delayMS: 800,
             action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
         )
+    }
+    
+    private func payByInstructions(with qrCode: QRCode) {
+        
+        event(.dismiss(.destination))
+        event(.dismiss(.modal))
+
+        action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qrCode))
     }
     
     private func makeAlert(_ message: String) {
@@ -1533,9 +1542,9 @@ extension PaymentsTransfersViewModel {
         case let .sberQR(url):
             handleSberQRURL(url)
             
-        case .url:
-            handleURL()
-            
+        case let .url(url):
+            handleURL(url)
+
         case .unknown:
             handleUnknownQR()
         }
@@ -1640,11 +1649,7 @@ extension PaymentsTransfersViewModel {
             navigationBar: navigationBarViewModel, model: self.model,
             operators: operators,
             addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
-            requisitesAction: { [weak self] in
-                
-                self?.event(.dismiss(.destination))
-                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-            },
+            requisitesAction: { [weak self] in self?.payByInstructions(with: qr) },
             qrCode: qr
         )
         
@@ -1673,11 +1678,7 @@ extension PaymentsTransfersViewModel {
             let failedView = QRFailedViewModel(
                 model: self.model,
                 addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
-                requisitsAction: { [weak self] in
-                    
-                    self?.event(.dismiss(.modal))
-                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                }
+                requisitsAction: { [weak self] in self?.payByInstructions(with: qr) }
             )
             
             route.destination = .failedView(failedView)
@@ -1793,8 +1794,9 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    private func handleURL() {
-        
+    private func handleURL(
+        _ url: URL
+    ) {
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(

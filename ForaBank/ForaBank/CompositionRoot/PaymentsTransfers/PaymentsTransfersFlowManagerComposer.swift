@@ -217,29 +217,8 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: MakePaymentPayload
     ) -> PaymentsServicesViewModel {
         
-        let operators = model.operators(for: payload.type) ?? []
-        
-        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-            titleButtonAction: { [weak model] in
-                
-                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-            },
-            navLeadingAction: payload.navLeadingAction,
-            navTrailingAction: payload.navTrailingAction
-        )
-        
-        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
-        
-        return .init(
-            searchBar: .withText("Наименование или ИНН"),
-            navigationBar: navigationBarViewModel,
-            model: model,
-            latestPayments: latestPayments,
-            allOperators: operators,
-            addCompanyAction: payload.addCompany,
-            requisitesAction: payload.requisites
-        )
+        let composer = PaymentsServicesViewModelComposer(model: model)
+        return composer.compose(payload: payload)
     }
     
     typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>

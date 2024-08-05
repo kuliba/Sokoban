@@ -37,7 +37,6 @@ where Provider: Identifiable & Segmentable,
 
 extension PaymentProviderSegmentsView {
     
-    typealias Segment = PaymentProviderSegment
     typealias Config = PaymentProviderSegmentsViewConfig
 }
 
@@ -56,7 +55,7 @@ private extension PaymentProviderSegmentsView {
             config.dividerColor
                 .frame(height: 0.5)
             
-            ForEach(segment.providers, content: providerView)
+            ForEach(segment.content, content: providerView)
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
