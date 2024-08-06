@@ -34,29 +34,33 @@ extension AsyncPickerEffectHandlerMicroServicesComposer {
         return .init(load: load(_:_:), select: select(_:_:_:))
     }
     
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
 }
 
 private extension AsyncPickerEffectHandlerMicroServicesComposer {
     
     func load(
         _ payload: PaymentProviderServicePickerPayload,
-        _ completion: @escaping ([UtilityService]) -> Void
+        _ completion: @escaping ([ServicePickerItem]) -> Void
     ) {
         nanoServices.getServicesFor(payload.provider.operator) {
             
-            completion((try? $0.get()) ?? [])
+            let services = (try? $0.get()) ?? []
+            completion(services.map {
+                
+                return .init(service: $0, isOneOf: services.count > 1)
+            })
             _ = self.nanoServices
         }
     }
     
     func select(
-        _ service: UtilityService,
+        _ item: ServicePickerItem,
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
     ) {
         self.nanoServices.startAnywayPayment(
-            .service(service, for: payload.provider.operator)
+            .service(item.service, for: payload.provider.operator)
         ) {
             switch StartPaymentResult(result: $0) {
             case let .failure(failure):
@@ -66,7 +70,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 
                 let context = AnywayPaymentContext(
                     response: response,
-                    service: service,
+                    service: item.service,
                     payload: payload,
                     product: self.model.outlineProduct()
                 )

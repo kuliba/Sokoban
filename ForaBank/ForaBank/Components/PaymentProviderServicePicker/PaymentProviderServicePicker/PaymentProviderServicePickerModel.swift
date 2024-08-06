@@ -11,6 +11,12 @@ import RxViewModel
 
 typealias AsyncPickerModel<Payload, Item, Response> = RxViewModel<AsyncPickerState<Payload, Item, Response>, AsyncPickerEvent<Item, Response>, AsyncPickerEffect<Payload, Item>>
 
-typealias PaymentProviderServicePickerModel = AsyncPickerModel<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
+typealias PaymentProviderServicePickerModel = AsyncPickerModel<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
+
+struct ServicePickerItem: Equatable {
+    
+    let service: UtilityService
+    let isOneOf: Bool
+}
 
 typealias PaymentProviderServicePickerResult = Result<AnywayTransactionState.Transaction, ServiceFailureAlert.ServiceFailure>

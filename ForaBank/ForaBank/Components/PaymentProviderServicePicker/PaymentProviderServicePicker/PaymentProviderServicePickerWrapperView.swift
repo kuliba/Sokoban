@@ -45,27 +45,32 @@ extension PaymentProviderServicePickerWrapperView {
     typealias Config = PaymentProviderServicePickerConfig
 }
 
+extension ServicePickerItem: Identifiable {
+    
+    var id: String { service.id }
+}
+
 private extension PaymentProviderServicePickerWrapperView {
     
     func serviceView(
-        service: UtilityService
+        item: ServicePickerItem
     ) -> some View {
         
-        itemView(service)
+        itemView(item)
             .padding()
             .background(config.background)
             .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
     }
     
     private func itemView(
-        _ service: UtilityService
+        _ item: ServicePickerItem
     ) -> some View {
         
         Button {
-            model.event(.select(service))
+            model.event(.select(item))
         } label: {
             LabelWithIcon(
-                title: service.name,
+                title: item.service.name,
                 subtitle: nil,
                 config: .iFora,
                 iconView: iconView(nil)

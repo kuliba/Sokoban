@@ -30,7 +30,7 @@ final class PaymentProviderServicePickerFlowModelComposer {
     }
     
     typealias Factory = PaymentProviderServicePickerFlowModelFactory
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
 }
 
 extension PaymentProviderServicePickerFlowModelComposer {
@@ -80,8 +80,8 @@ extension PaymentProviderServicePickerFlowModelComposer {
         )
     }
     
-    typealias PickerReducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, UtilityService, Result>
-    typealias PickerEffectHandler = AsyncPickerEffectHandler<PaymentProviderServicePickerPayload, UtilityService, Result>
+    typealias PickerReducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, ServicePickerItem, Result>
+    typealias PickerEffectHandler = AsyncPickerEffectHandler<PaymentProviderServicePickerPayload, ServicePickerItem, Result>
     
     typealias Provider = SegmentedPaymentProvider
     typealias Result = PaymentProviderServicePickerResult

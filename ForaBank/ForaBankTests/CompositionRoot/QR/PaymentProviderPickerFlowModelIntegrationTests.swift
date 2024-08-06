@@ -149,7 +149,11 @@ private extension PaymentProviderPickerFlowModel {
     ) throws {
         
         let servicePickerModel = try XCTUnwrap(servicePickerModel, "Expected to have service picker.", file: file, line: line)
-        servicePickerModel.state.content.event(.loaded(services))
+        let items = services.map {
+            
+            ServicePickerItem(service: $0, isOneOf: services.count > 1)
+        }
+        servicePickerModel.state.content.event(.loaded(items))
     }
     
     func receive(
