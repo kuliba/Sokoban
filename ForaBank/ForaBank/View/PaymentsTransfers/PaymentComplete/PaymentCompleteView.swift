@@ -124,15 +124,25 @@ struct PaymentCompleteView_Previews: PreviewProvider {
 
 extension PaymentCompleteState {
     
-    static let fraudCancelled: Self = .preview(.failure(.init(hasExpired: false)))
+    static let fraudCancelled: Self = failure(.init(hasExpired: false))
+    static let fraudExpired: Self = failure(.init(hasExpired: true))
+    static let completed: Self = success(.completed)
+    static let inflight: Self = success(.inflight)
+    static let rejected: Self = success(.rejected)
     
-    static let fraudExpired: Self = .preview(.failure(.init(hasExpired: true)))
+    private static func failure(
+        _ fraud: Fraud
+    ) -> Self {
+        
+        return preview(.failure(fraud))
+    }
     
-    static let completed: Self = .preview(.success(.completed))
-    
-    static let inflight: Self = .preview(.success(.inflight))
-    
-    static let rejected: Self = .preview(.success(.rejected))
+    private static func success(
+        _ report: Report
+    ) -> Self {
+        
+        return preview(.success(report))
+    }
     
     private static func preview(
         _ result: Result<Report, Fraud>
