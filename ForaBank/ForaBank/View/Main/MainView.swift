@@ -417,7 +417,6 @@ private extension MainView {
             
             flowModel.state.content.event(.payment($0))
         }
-        let payload = flowModel.state.content.state.transaction.context.outline.payload
         
         AnywayFlowView(
             flowModel: flowModel,
@@ -438,46 +437,6 @@ private extension MainView {
                     { flowModel.event(.goTo(.main)) }
                 )
             }
-        )
-    }
-    
-    func paymentFlow(
-        binder: ServicePaymentBinder
-    ) -> some View {
-        
-        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
-            
-            binder.content.event(.payment($0))
-        }
-        
-        let flowFactory = ServicePaymentFlowFactory(
-            bottomSheetContent: { payload in
-                
-                return .init(
-                    state: payload,
-                    event: { binder.content.event(.fraud($0)) }
-                )
-            },
-            fullScreenCoverContent: {
-                
-                viewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { binder.flow.event(.terminate) }
-                )
-            },
-            makeElementView: anywayPaymentFactory.makeElementView,
-            makeFooterView: anywayPaymentFactory.makeFooterView
-        )
-        
-        return ServicePaymentFlowStateWrapperView(
-            binder: binder,
-            factory: flowFactory
         )
     }
 }
