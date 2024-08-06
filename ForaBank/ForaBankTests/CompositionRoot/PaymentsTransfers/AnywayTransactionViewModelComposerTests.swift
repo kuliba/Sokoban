@@ -14,9 +14,10 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     
     func test_dismissRecoverableError_shouldNotResetTerminatedStatus() {
         
+        let message = anyMessage()
         let (sut, statusSpy) = makeSUT(
             transaction: makeTransaction(
-                status: .result(.failure(.updatePaymentFailure))
+                status: .result(.failure(.updatePaymentFailure(message)))
             )
         )
         
@@ -25,7 +26,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         sut.event(.dismissRecoverableError)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .result(.failure(.updatePaymentFailure)),
+            .result(.failure(.updatePaymentFailure(message))),
         ])
     }
     

@@ -174,12 +174,12 @@ private extension AnywayFlowModel {
                 )
                 
 #warning("the case should have associated string")
-            case .transactionFailure:
-                state.status = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            case let .transactionFailure(message):
+                state.status = .alert(.terminalError(message))
                 
 #warning("the case should have associated string")
-            case .updatePaymentFailure:
-                state.status = .alert(.serverError("Error"))
+            case let .updatePaymentFailure(message):
+                state.status = .alert(.serverError(message))
             }
             
         case let .success(report):

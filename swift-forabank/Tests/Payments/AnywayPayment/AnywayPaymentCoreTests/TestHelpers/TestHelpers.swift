@@ -93,7 +93,7 @@ func completeWithReport(
 }
 
 func completeWithFailure(
-    _ failure: _TransactionEvent.TransactionFailure = .terminal
+    _ failure: _TransactionEvent.TransactionFailure = .terminal(anyMessage())
 ) -> _TransactionEvent {
     
     return .completePayment(.failure(failure))
@@ -107,7 +107,7 @@ func makePaymentUpdate(
 }
 
 func makeCompletePaymentFailureEvent(
-    _ failure: _TransactionEvent.TransactionFailure = .terminal
+    _ failure: _TransactionEvent.TransactionFailure = .terminal(anyMessage())
 ) -> _TransactionEvent {
     
     return .completePayment(.failure(failure))
@@ -320,7 +320,7 @@ func makeResponse(
 
 func makeResultFailureTransaction(
     _ context: Context = makeContext(),
-    failure: _TransactionStatus.Terminated = .transactionFailure
+    failure: _TransactionStatus.Terminated = .transactionFailure(anyMessage())
 ) -> _Transaction {
     
     let state = makeTransaction(context, status: .result(.failure(failure)))
@@ -372,15 +372,18 @@ func makeUpdate(
     .init(value: value)
 }
 
-func makeUpdateFailureTransactionEvent(
-    _ message: String? = nil
+func makeUpdateConnectivityErrorTransactionEvent(
+    _ message: String = anyMessage()
 ) -> _TransactionEvent {
     
-    if let message {
-        return .updatePayment(.failure(.serverError(message)))
-    } else {
-        return .updatePayment(.failure(.connectivityError))
-    }
+    return .updatePayment(.failure(.connectivityError(message)))
+}
+
+func makeUpdateServerErrorTransactionEvent(
+    _ message: String = anyMessage()
+) -> _TransactionEvent {
+    
+    return .updatePayment(.failure(.serverError(message)))
 }
 
 func makeUpdateTransactionEvent(

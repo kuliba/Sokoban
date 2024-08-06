@@ -257,7 +257,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.transactionFailure)))
+            event: notify(.result(.failure(.transactionFailure(anyMessage()))))
         ) {
             $0 = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
         }
@@ -267,7 +267,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.transactionFailure))),
+            event: notify(.result(.failure(.transactionFailure(anyMessage())))),
             delivers: nil
         )
     }
@@ -276,7 +276,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.updatePaymentFailure)))
+            event: notify(.result(.failure(.updatePaymentFailure(anyMessage()))))
         ) {
             $0 = .alert(.serverError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
         }
@@ -286,7 +286,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.updatePaymentFailure))),
+            event: notify(.result(.failure(.updatePaymentFailure(anyMessage())))),
             delivers: nil
         )
     }
