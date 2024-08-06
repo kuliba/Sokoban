@@ -307,11 +307,9 @@ private extension PaymentsTransfersFlowReducer {
                     for: .microseconds(300)
                 )
                 
-#warning("the case should have associated string")
             case let .transactionFailure(message):
                 state.setPaymentAlert(to: .terminalError(message))
                 
-#warning("the case should have associated string")
             case let .updatePaymentFailure(message):
                 state.setPaymentAlert(to: .serverError(message))
             }
