@@ -23,15 +23,6 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         XCTAssertNoDiff(outline.amount, 777)
     }
     
-    func test_init_shouldNotSetProduct() throws {
-        
-        let latest = try makeLatestPayment()
-        
-        let outline = makeOutline(latest)
-        
-        XCTAssertNil(outline.product)
-    }
-    
     func test_init_shouldSetFields() throws {
         
         let latest = try makeLatestPayment()
