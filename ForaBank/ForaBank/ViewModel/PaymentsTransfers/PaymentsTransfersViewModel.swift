@@ -1868,20 +1868,29 @@ private extension PaymentsTransfersViewModel {
         let flowModel = make(payload)
         route.destination = .providerServicePicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         ))
     }
     
     private func bind(
         _ flowModel: AnywayServicePickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let loading = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outside)
-            .receive(on: DispatchQueue.main)
+            .removeDuplicates()
+            .receive(on: scheduler)
             .sink { [weak self] in self?.handle($0) }
+        
+        return [loading, outside]
     }
-    
+
     private func handle(
         _ outside: AnywayServicePickerFlowState.Status.Outside
     ) {
