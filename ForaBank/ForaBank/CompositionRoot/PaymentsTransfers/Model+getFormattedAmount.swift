@@ -15,17 +15,11 @@ extension Model {
     ) -> String? {
         
         let digest = context.makeDigest()
-        let amount = digest.amount
-        let currency = digest.core?.currency
         
-        var formattedAmount = amount.map { "\($0)" } ?? ""
+        guard let amount = digest.amount,
+              let currency = digest.core?.currency
+        else { return nil }
         
-#warning("look into model to extract currency symbol")
-        if let currency {
-            formattedAmount += " \(currency)"
-            _ = self
-        }
-        
-        return formattedAmount
+        return formatted(amount, with: currency)
     }
 }
