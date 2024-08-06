@@ -54,15 +54,26 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_terminate_shouldSetFullScreenCoverStateToTerminated() {
         
-        assert(.fullScreenCover(.init(formattedAmount: anyMessage(), result: .success(makeReport()))), event: .terminate) {
-            
+        assert(
+            .fullScreenCover(.init(
+                formattedAmount: anyMessage(),
+                merchantIcon: anyMessage(),
+                result: .success(makeReport()))), event: .terminate
+        ) {
             $0 = .terminated
         }
     }
     
     func test_dismissModal_shouldNotDeliverEffectOnFullScreenCoverState() {
         
-        assert(.fullScreenCover(.init(formattedAmount: anyMessage(), result: .success(makeReport()))), event: .terminate, delivers: nil)
+        assert(
+            .fullScreenCover(.init(
+                formattedAmount: anyMessage(),
+                merchantIcon: nil,
+                result: .success(makeReport()))
+            ),
+            event: .terminate,
+            delivers: nil)
     }
     
     // MARK: - notify
@@ -208,15 +219,20 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     func test_notify_shouldDeliverEffectOnFraudCancelledTerminated() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let sut = makeSUT(formattedAmount: formattedAmount)
         
         assert(
             sut: sut,
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.fraud(.cancelled)))),
+            event: notify(
+                context: makeAnywayPaymentContext(icon: merchantIcon),
+                .result(.failure(.fraud(.cancelled)))
+            ),
             delivers: .delay(
                 .showResult(.init(
                     formattedAmount: formattedAmount,
+                    merchantIcon: merchantIcon,
                     result: .failure(.init(hasExpired: false))
                 )),
                 for: .milliseconds(300)
@@ -237,15 +253,20 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     func test_notify_shouldDeliverEffectOnFraudExpiredTerminated() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let sut = makeSUT(formattedAmount: formattedAmount)
         
         assert(
             sut: sut,
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.fraud(.expired)))),
+            event: notify(
+                context: makeAnywayPaymentContext(icon: merchantIcon),
+                .result(.failure(.fraud(.expired)))
+            ),
             delivers: .delay(
                 .showResult(.init(
                     formattedAmount: formattedAmount,
+                    merchantIcon: merchantIcon,
                     result: .failure(.init(hasExpired: true))
                 )),
                 for: .milliseconds(300)
@@ -255,11 +276,13 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_notify_shouldSetAlertOnTransactionFailure() {
         
+        let message = anyMessage()
+        
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.transactionFailure(anyMessage()))))
+            event: notify(.result(.failure(.transactionFailure(message))))
         ) {
-            $0 = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            $0 = .alert(.terminalError(message))
         }
     }
     
@@ -274,11 +297,13 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_notify_shouldSetAlertOnUpdatePaymentFailure() {
         
+        let message = anyMessage()
+        
         assert(
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.failure(.updatePaymentFailure(anyMessage()))))
+            event: notify(.result(.failure(.updatePaymentFailure(message))))
         ) {
-            $0 = .alert(.serverError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            $0 = .alert(.serverError(message))
         }
     }
     
@@ -304,16 +329,21 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     func test_notify_shouldDeliverEffectOnSuccess() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let report = makeReport()
         let sut = makeSUT(formattedAmount: formattedAmount)
         
         assert(
             sut: sut,
             makeState(alert: .paymentRestartConfirmation),
-            event: notify(.result(.success(report))),
+            event: notify(
+                context: makeAnywayPaymentContext(icon: merchantIcon),
+                .result(.success(report))
+            ),
             delivers: .delay(
                 .showResult(.init(
                     formattedAmount: formattedAmount,
+                    merchantIcon: merchantIcon,
                     result: .success(report)
                 )),
                 for: .milliseconds(300)
@@ -326,14 +356,17 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     func test_showResult_shouldSetStateToFullScreenCoverFailureOnNonExpiredFraud() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let nonExpiredFraud = makeFraud(hasExpired: true)
         
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
+            merchantIcon: merchantIcon,
             result: .failure(nonExpiredFraud)
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
+                merchantIcon: merchantIcon,
                 result: .failure(.init(hasExpired: nonExpiredFraud.hasExpired))
             ))
         }
@@ -343,20 +376,23 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let nonExpiredFraud = makeFraud(hasExpired: true)
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .failure(nonExpiredFraud))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(nonExpiredFraud))), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverFailureOnExpiredFraud() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let expiredFraud = makeFraud(hasExpired: false)
         
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
+            merchantIcon: merchantIcon,
             result: .failure(expiredFraud)
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
+                merchantIcon: merchantIcon,
                 result: .failure(.init(hasExpired: expiredFraud.hasExpired))
             ))
         }
@@ -366,20 +402,23 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let expiredFraud = makeFraud(hasExpired: false)
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .failure(expiredFraud))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(expiredFraud))), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverSuccessOnSuccess() {
         
         let formattedAmount = anyMessage()
+        let merchantIcon = anyMessage()
         let report = makeReport()
         
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
+            merchantIcon: merchantIcon,
             result: .success(report)
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
+                merchantIcon: merchantIcon,
                 result: .success(report)
             ))
         }
@@ -389,7 +428,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let report = makeReport()
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .success(report))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .success(report))), delivers: nil)
     }
     
     // MARK: - Helpers
