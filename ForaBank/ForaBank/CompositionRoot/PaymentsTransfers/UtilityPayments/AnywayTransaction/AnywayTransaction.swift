@@ -36,6 +36,7 @@ typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
 struct AnywayCompleted: Equatable {
     
     let formattedAmount: String
+    let merchantIcon: String?
     let result: TransactionResult
     
     typealias TransactionResult = Result<AnywayTransactionReport, Fraud>

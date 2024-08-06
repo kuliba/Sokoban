@@ -98,18 +98,17 @@ private extension ServicePaymentFlowReducer {
                 effect = .delay(
                     .showResult(.init(
                         formattedAmount: formattedAmount,
+                        merchantIcon: context.outline.payload.icon,
                         result: .failure(.init(hasExpired: fraud == .expired))
                     )),
                     for: .milliseconds(300)
                 )
                 
-                // TODO: the case should have associated string
-            case .transactionFailure:
-                state = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            case let .transactionFailure(message):
+                state = .alert(.terminalError(message))
                 
-                // TODO: the case should have associated string
-            case .updatePaymentFailure:
-                state = .alert(.serverError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            case let .updatePaymentFailure(message):
+                state = .alert(.serverError(message))
             }
             
         case let .success(report):
@@ -117,6 +116,7 @@ private extension ServicePaymentFlowReducer {
             effect = .delay(
                 .showResult(.init(
                     formattedAmount: formattedAmount,
+                    merchantIcon: context.outline.payload.icon,
                     result: .success(report)
                 )),
                 for: .milliseconds(300)
@@ -133,12 +133,14 @@ private extension ServicePaymentFlowReducer {
         case let .failure(fraud):
             state = .fullScreenCover(.init(
                 formattedAmount: completed.formattedAmount,
+                merchantIcon: completed.merchantIcon,
                 result: .failure(.init(hasExpired: fraud.hasExpired))
             ))
             
         case let .success(report):
             state = .fullScreenCover(.init(
                 formattedAmount: completed.formattedAmount,
+                merchantIcon: completed.merchantIcon,
                 result: .success(report)
             ))
         }

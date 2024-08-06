@@ -225,13 +225,15 @@ private extension PaymentsTransfersFlowReducer {
             switch transactionResult {
             case let .failure(fraud):
                 state.setPaymentFullScreenCover(to: .completed(.init(
-                    formattedAmount: fraud.formattedAmount,
+                    formattedAmount: fraud.formattedAmount, 
+                    merchantIcon: state.merchantIcon,
                     result: .failure(.init(hasExpired: fraud.hasExpired))
                 )))
                 
             case let .success(report):
                 state.setPaymentFullScreenCover(to: .completed(.init(
                     formattedAmount: factory.getFormattedAmount(state) ?? "",
+                    merchantIcon: state.merchantIcon,
                     result: .success(report)
                 )))
             }
@@ -532,6 +534,15 @@ private extension PaymentsTransfersViewModel.Route {
     
     typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
     
+    var merchantIcon: String? {
+        
+        guard let paymentFlowState = paymentFlowState ?? paymentFlowStateInServicePicker ?? paymentFlowStateInDestination
+        else { return nil }
+        
+        let icon = paymentFlowState.content.state.transaction.context.outline.payload.icon
+        return icon
+    }
+    
     var utilityPrepayment: UtilityFlowState? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination
@@ -695,6 +706,16 @@ private extension PaymentsTransfersViewModel.Route {
         destination = .utilityPayment(utilityPrepayment)
     }
     
+    private var paymentFlowStateInServicePicker: UtilityServicePaymentFlowState? {
+        
+        guard case let .utilityPayment(utilityPrepayment) = destination,
+              case let .servicePicker(servicePicker) = utilityPrepayment.destination,
+              case let .payment(paymentFlowState) = servicePicker.destination
+        else { return nil }
+
+        return paymentFlowState
+    }
+    
     private mutating func setServicePickerPaymentFullScreenCover(
         to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
     ) {
@@ -731,6 +752,14 @@ private extension PaymentsTransfersViewModel.Route {
         
         paymentFlowState.alert = alert
         self.destination = .servicePayment(paymentFlowState)
+    }
+    
+    private var paymentFlowStateInDestination: UtilityServicePaymentFlowState? {
+        
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return nil }
+
+        return paymentFlowState
     }
     
     private mutating func setDestinationPaymentFullScreenCover(

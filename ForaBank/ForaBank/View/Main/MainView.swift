@@ -429,6 +429,7 @@ private extension MainView {
                 viewFactory.makePaymentCompleteView(
                     .init(
                         formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
                         result: $0.result.mapError {
                             
                             return .init(hasExpired: $0.hasExpired)
