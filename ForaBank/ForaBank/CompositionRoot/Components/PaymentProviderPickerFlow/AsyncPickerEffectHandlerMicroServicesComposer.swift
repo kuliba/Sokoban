@@ -70,7 +70,7 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 
                 let context = AnywayPaymentContext(
                     response: response,
-                    service: item.service,
+                    item: item,
                     payload: payload,
                     product: self.model.outlineProduct()
                 )
@@ -136,23 +136,29 @@ private extension AnywayPaymentContext {
     
     init(
         response: AnywayResponse,
-        service: UtilityService,
+        item: ServicePickerItem,
         payload: PaymentProviderServicePickerPayload,
         product: AnywayPaymentOutline.Product
     ) {
         let outline = AnywayPaymentOutline(
-            service: service,
+            service: item.service,
             payload: payload,
             product: product
         )
-        self.init(response: response, outline: outline)
+        let firstField = AnywayElement.Field(item: item, provider: payload.provider.origin)
+        
+        self.init(
+            initialElements: [firstField.map { .field($0) }].compactMap { $0 },
+            response: response,
+            outline: outline
+        )
     }
     
     init(
+        initialElements: [AnywayElement],
         response: AnywayResponse,
         outline: AnywayPaymentOutline
     ) {
-        let initialElements: [AnywayElement] = []
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,
             elements: initialElements,
@@ -166,6 +172,23 @@ private extension AnywayPaymentContext {
             staged: .init(),
             outline: outline,
             shouldRestart: false
+        )
+    }
+}
+
+private extension AnywayElement.Field {
+    
+    init?(
+        item: ServicePickerItem,
+        provider: UtilityPaymentProvider
+    ) {
+        guard item.isOneOf else { return nil }
+        
+        self.init(
+            id: "_selected_service", 
+            title: "Услуга",
+            value: item.service.name,
+            icon: provider.icon.map { .md5Hash($0) }
         )
     }
 }
