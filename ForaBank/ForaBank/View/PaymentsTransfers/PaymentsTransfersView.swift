@@ -1050,7 +1050,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: { .init(event: $0 ) }
+                makeHistoryButton: { .init(event: $0 ) },
+                makeRepeatButtonView: { .init(viewModel: .sample) }
             ),
             getUImage: { _ in nil }
         )
