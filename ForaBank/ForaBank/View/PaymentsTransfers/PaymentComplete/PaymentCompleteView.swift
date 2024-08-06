@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 11.06.2024.
 //
 
-import SwiftUI
+import Combine
 import PaymentCompletionUI
+import SwiftUI
+import UIPrimitives
 
 struct PaymentCompleteView: View {
     
@@ -14,6 +16,7 @@ struct PaymentCompleteView: View {
     let goToMain: () -> Void
     let `repeat`: () -> Void
     let factory: Factory
+    let makeIconView: (String?) -> UIPrimitives.AsyncImage
     let config: Config
     
     var body: some View {
@@ -22,13 +25,9 @@ struct PaymentCompleteView: View {
             state: transactionCompleteState,
             goToMain: goToMain,
             repeat: `repeat`,
-            factory: factory
-        ) {
-            PaymentCompletionStatusView(
-                state: paymentCompletionState,
-                config: config
-            )
-        }
+            factory: factory,
+            content: content
+        )
     }
 }
 
@@ -67,7 +66,7 @@ private extension PaymentCompleteView {
         
         return .init(
             formattedAmount: state.formattedAmount,
-            merchantIcon: nil,
+            merchantIcon: state.merchantIcon,
             status: paymentCompletionStatus
         )
     }
@@ -85,6 +84,15 @@ private extension PaymentCompleteView {
             case .rejected:  return .rejected
             }
         }
+    }
+    
+    private func content() -> some View {
+        
+        PaymentCompletionStatusView(
+            state: paymentCompletionState,
+            makeIconView: makeIconView,
+            config: config
+        )
     }
 }
 
@@ -117,6 +125,13 @@ struct PaymentCompleteView_Previews: PreviewProvider {
             goToMain: {},
             repeat: {},
             factory: .preview,
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0 ?? "pencil.and.outline"),
+                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                )
+            },
             config: .iFora
         )
     }
@@ -148,7 +163,7 @@ extension PaymentCompleteState {
         _ result: Result<Report, Fraud>
     ) -> Self {
         
-        return .init(formattedAmount: "1,000 ₽", result: result)
+        return .init(formattedAmount: "1,000 ₽", merchantIcon: nil, result: result)
     }
 }
 

@@ -5,12 +5,15 @@
 //  Created by Igor Malyarov on 30.07.2024.
 //
 
+import Combine
 import SwiftUI
+import UIPrimitives
 
 public extension PaymentCompletionStatusView {
     
     init(
         state: PaymentCompletion,
+        makeIconView: @escaping MakeIconView,
         config: PaymentCompletionConfig
     ) {
         let config = config.config(for: state.status)
@@ -21,6 +24,7 @@ public extension PaymentCompletionStatusView {
                 formattedAmount: state.formattedAmount,
                 merchantIcon: state.merchantIcon
             ),
+            makeIconView: makeIconView,
             config: .init(config.config)
         )
     }
@@ -110,6 +114,13 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
         
         PaymentCompletionStatusView(
             state: completion,
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0 ?? "pencil.and.outline"),
+                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                )
+            },
             config: .preview
         )
     }
@@ -119,27 +130,27 @@ private extension PaymentCompletion {
     
     static let completed: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .completed
     )
     static let inflight: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .inflight
     )
     static let rejected: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .rejected
     )
     static let fraudCancelled: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .fraud(.cancelled)
     )
     static let fraudExpired: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .fraud(.expired)
     )
 }
