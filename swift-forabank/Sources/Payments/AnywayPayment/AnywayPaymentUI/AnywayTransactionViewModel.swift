@@ -72,12 +72,7 @@ public extension AnywayTransactionViewModel {
         if transaction != state.transaction {
             
             let state = updating(state, with: transaction)
-#if DEBUG || MOCK
-//    print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, "\(#file):\(#line)")
-//    print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, "\(#file):\(#line)")
-#endif
-            stateSubject.send(state)
-            
+            stateSubject.send(state)            
             sendOTPWarning(state)
         }
         
@@ -157,12 +152,6 @@ private extension AnywayTransactionViewModel {
             .print("===== footer.projectionPublisher")
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
-        
-        // update footer active/inactive and style
-        $state
-            .map(\.projection)
-            .sink { [weak footer] in footer?.project($0) }
-            .store(in: &cancellables)
     }
     
     func update(
@@ -186,29 +175,5 @@ private extension CachedModelsTransaction {
         else { return nil }
         
         return warning
-    }
-    
-    var projection: FooterTransactionProjection {
-        
-        return .init(isEnabled: isEnabled, style: style)
-    }
-    
-    private var isEnabled: Bool {
-        
-        switch transaction.status {
-        case .inflight:
-            return false
-            
-        default:
-            return transaction.isValid
-        }
-    }
-    
-    private var style: AmountComponent.FooterState.Style {
-        
-        switch transaction.context.payment.footer {
-        case .amount:   return .amount
-        case .continue: return .button
-        }
     }
 }
