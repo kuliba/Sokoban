@@ -45,12 +45,18 @@ private extension Model {
         _ qrMapping: QRMapping
     ) -> [SegmentedOperatorData]? {
         
-        return operatorsFromQR(qrCode, qrMapping)?
-            .filter(\.isGroup)
-            .compactMap {
+        guard let operators = operatorsFromQR(qrCode, qrMapping)
+        else { return nil }
+        
+        let mapped: [SegmentedOperatorData] = operators
+            .compactMap { data -> SegmentedOperatorData? in
                 
-                return .init(data: $0, segment: serviceName(for: $0))
+                guard let segment = serviceName(for: data) else { return nil }
+                
+                return .init(origin: data, segment: segment)
             }
+        
+        return mapped
     }
     
     func segmentedFromCache(
@@ -61,7 +67,9 @@ private extension Model {
         guard let inn = qrCode.stringValue(type: .general(.inn), mapping: qrMapping)
         else { return nil }
         
-        return segmentedFromCache(with: inn)
+        let cached = segmentedFromCache(with: inn)
+        
+        return cached
     }
     
     // TODO: replace with loader with fallback to remote
@@ -72,18 +80,6 @@ private extension Model {
         localAgent.load(type: [CachingSberOperator].self)?
             .filter { $0.inn == inn }
             .map(SegmentedProvider.init)
-    }
-}
-
-private extension SegmentedOperatorData {
-    
-    init?(
-        data: OperatorGroupData.OperatorData,
-        segment: String?
-    ) {
-        guard let segment else { return nil }
-        
-        self.init(data: data, segment: segment)
     }
 }
 

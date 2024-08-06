@@ -27,7 +27,7 @@ final class AnywayServicePickerFlowModelComposer {
         self.model = model
         self.scheduler = scheduler
     }
-
+    
     typealias MakeAnywayFlowModel = (AnywayTransactionState.Transaction) -> AnywayFlowModel
     typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
 }
@@ -64,7 +64,7 @@ private extension AnywayServicePickerFlowModelComposer {
         return .init(
             initialState: .init(
                 payload: .init(
-                    provider: .init(provider),
+                    provider: provider,
                     qrCode: qrCode
                 )
             ),
@@ -82,22 +82,6 @@ private extension AnywayServicePickerFlowModelComposer {
                 
                 return .init(self.model, service: .requisites, closeAction: $0)
             }
-        )
-    }
-}
-
-// MARK: - Adapters
-
-private extension SegmentedPaymentProvider {
-    
-    init(_ provider: SegmentedProvider) {
-        
-        self.init(
-            id: provider.origin.id,
-            icon: provider.origin.icon,
-            inn: provider.origin.inn,
-            title: provider.origin.title,
-            segment: provider.segment
         )
     }
 }

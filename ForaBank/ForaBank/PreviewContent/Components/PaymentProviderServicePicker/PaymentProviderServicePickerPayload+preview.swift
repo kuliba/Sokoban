@@ -12,10 +12,13 @@ extension PaymentProviderServicePickerPayload {
     
     static let preview: Self = .init(
         provider: .init(
-            id: UUID().uuidString,
-            icon: nil,
-            inn: nil,
-            title: "Some Provider",
+            origin: .init(
+                id: UUID().uuidString,
+                icon: nil,
+                inn: nil,
+                title: "Some Provider",
+                segment: "Services"
+            ),
             segment: "Services"
         ),
         qrCode: .init(original: "", rawData: [:])

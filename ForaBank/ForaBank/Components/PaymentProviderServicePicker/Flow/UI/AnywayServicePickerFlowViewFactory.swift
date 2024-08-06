@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct AnywayServicePickerFlowViewFactory {
+struct AnywayServicePickerFlowViewFactory<AnywayFlowView>
+where AnywayFlowView: View {
     
     let makeAnywayFlowView: MakeAnywayFlowView
     let makeIconView: IconDomain.MakeIconView
@@ -15,5 +16,5 @@ struct AnywayServicePickerFlowViewFactory {
 
 extension AnywayServicePickerFlowViewFactory {
     
-    typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
+    typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView
 }

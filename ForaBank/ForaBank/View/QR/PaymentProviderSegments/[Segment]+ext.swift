@@ -58,6 +58,25 @@ extension SegmentedPaymentProvider: Segmentable {
     var segmentTitle: String { segment }
 }
 
+extension Array where Element == Segment<SegmentedOperatorProvider> {
+    
+    init<T: Comparable, Value: Comparable>(
+        with providers: [SegmentedOperatorProvider],
+        segmentKeyPath: KeyPath<Segment<SegmentedOperatorProvider>, T> = \.title,
+        itemKeyPath: KeyPath<SegmentedOperatorProvider, Value> = \.title
+    ) {
+        self.init(with: providers, sortingSegmentsBy: segmentKeyPath, sortingItemsBy: itemKeyPath)
+    }
+    
+    init<T: Comparable, Value: Comparable>(
+        with providers: [SegmentedOperatorProvider],
+        segmentKeyPath: KeyPath<Segment<SegmentedOperatorProvider>, T> = \.title,
+        itemKeyPath: KeyPath<SegmentedOperatorProvider, Value?>
+    ) {
+        self.init(with: providers, sortingSegmentsBy: segmentKeyPath, sortingItemsBy: itemKeyPath)
+    }
+}
+
 extension Array where Element == Segment<SegmentedPaymentProvider> {
     
     init<T: Comparable, Value: Comparable>(

@@ -9,7 +9,8 @@ import FooterComponent
 import SwiftUI
 import UIPrimitives
 
-struct AnywayServicePickerFlowView: View {
+struct AnywayServicePickerFlowView<AnywayFlowView>: View 
+where AnywayFlowView: View {
     
     @ObservedObject var flowModel: FlowModel
     
@@ -33,7 +34,7 @@ struct AnywayServicePickerFlowView: View {
 extension AnywayServicePickerFlowView {
     
     typealias FlowModel = AnywayServicePickerFlowModel
-    typealias Factory = AnywayServicePickerFlowViewFactory
+    typealias Factory = AnywayServicePickerFlowViewFactory<AnywayFlowView>
 }
 
 extension AnywayServicePickerFlowModel {

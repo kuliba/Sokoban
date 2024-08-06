@@ -9,6 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 
+@available(*, deprecated, message: "use AnywayServicePickerFlowModel instead")
 final class PaymentProviderServicePickerFlowModel: ObservableObject {
     
     @Published private(set) var state: State

@@ -113,10 +113,13 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
         
         return .init(
             provider: .init(
-                id: id, 
-                icon: icon,
-                inn: inn,
-                title: title,
+                origin: .init(
+                    id: id,
+                    icon: icon,
+                    inn: inn,
+                    title: title,
+                    segment: segment
+                ),
                 segment: segment
             ),
             qrCode: qrCode

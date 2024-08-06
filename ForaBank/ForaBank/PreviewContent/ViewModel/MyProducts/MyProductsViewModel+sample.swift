@@ -34,7 +34,8 @@ extension MyProductsViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         refreshingIndicator: .init(isActive: true),
@@ -66,8 +67,9 @@ extension MyProductsViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            updateInfoStatusFlag: .init(.active), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         refreshingIndicator: .init(isActive: true),
@@ -75,4 +77,27 @@ extension MyProductsViewModel {
         openOrderSticker: {},
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
+}
+
+extension AnywayServicePickerFlowModel {
+    
+    static func preview(
+        payload: PaymentProviderServicePickerPayload
+    ) -> AnywayServicePickerFlowModel {
+        
+        return .init(
+            initialState: .init(
+                content: .init(
+                    initialState: .init(payload: .preview),
+                    reduce: { state, _ in (state, nil) },
+                    handleEffect: { _,_ in }
+                )
+            ),
+            factory: .init(
+                makeAnywayFlowModel: { _ in fatalError() },
+                makePayByInstructionsViewModel: { _ in fatalError() }
+            ),
+            scheduler: .main
+        )
+    }
 }

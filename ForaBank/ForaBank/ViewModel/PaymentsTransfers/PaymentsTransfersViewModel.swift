@@ -452,7 +452,10 @@ extension PaymentsTransfersViewModel {
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
         case servicePayment(UtilityServicePaymentFlowState)
-        
+        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case providerServicePicker(Node<AnywayServicePickerFlowModel>)
+
+        typealias MixedOperators = MultiElementArray<OperatorProvider<SegmentedOperatorData, SegmentedProvider>>
         typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
     }
     
@@ -571,6 +574,10 @@ extension PaymentsTransfersViewModel.Link {
             return .utilityPayment
         case .servicePayment:
             return .servicePayment
+        case .paymentProviderPicker:
+            return .paymentProviderPicker
+        case .providerServicePicker:
+            return .providerServicePicker
         }
     }
     
@@ -601,6 +608,8 @@ extension PaymentsTransfersViewModel.Link {
         case sberQRPayment
         case utilityPayment
         case servicePayment
+        case paymentProviderPicker
+        case providerServicePicker
     }
 }
 
@@ -1520,96 +1529,69 @@ private extension PaymentsTransfersViewModel {
 extension PaymentsTransfersViewModel {
     
     private func handleQRResult(
-        _ result: QRViewModel.ScanResult
+        _ result: QRModelResult
     ) {
         event(.dismiss(.modal))
 
         switch result {
-        case let .qrCode(qr):
-            
-            if let qrMapping = model.qrMapping.value {
-                handleQRMapping(qr, qrMapping)
-            } else {
-                handleFailure(qr: qr)
-            }
+        case let .c2bSubscribeURL(url):
+            handleC2bSubscribeURL(url)
             
         case let .c2bURL(url):
             handleC2bURL(url)
+
+        case let .failure(qrCode):
+            handleFailure(qrCode)
             
-        case let .c2bSubscribeURL(url):
-            handleC2bSubscribeURL(url)
+        case let .mapped(mapped):
+            handleMapped(mapped)
             
         case let .sberQR(url):
             handleSberQRURL(url)
             
         case let .url(url):
             handleURL(url)
-
+            
         case .unknown:
             handleUnknownQR()
         }
     }
     
-    private func handleQRMapping(
-        _ qr: QRCode,
-        _ qrMapping: QRMapping
+    private func handleMapped(
+        _ mapped: QRModelResult.Mapped
     ) {
-        let operators = model.operatorsFromQR(qr, qrMapping)
-        let multipleOperators = MultiElementArray(operators ?? [])
-        
-        switch (multipleOperators, operators?.first) {
-        case let (_, .some(`operator`)):
-            payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
+        switch mapped {
+        case let .mixed(mixed, qrCode):
+            makePaymentProviderPicker(mixed, qrCode)
+
+        case let .multiple(multipleOperators, qrCode):
+            searchOperators(multipleOperators, with: qrCode)
             
-        case let (.some(multipleOperators), _):
-            scheduler.delay(for:.milliseconds(700)) { [weak self] in
-                
-                self?.handleQRMappingWithMultipleOperators(qr, multipleOperators.elements)
-            }
+        case let .none(qrCode):
+            handleFailure(qrCode)
             
-        default:
-            self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        case let .provider(provider, qrCode):
+            makeServicePicker(provider, qrCode)
+
+        case let .single(qrCode, qrMapping):
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: qrCode,
+                mapping: qrMapping
+            )
+            
+            self.route.destination = .operatorView(viewModel)
+            
+        case let .source(source):
+            makePayment(with: source)
         }
     }
     
-    private func payWith(
-        operator: OperatorGroupData.OperatorData,
-        qr: QRCode,
-        qrMapping: QRMapping
+    private func makePayment(
+        with source: Payments.Operation.Source
     ) {
-        let isServicePayment = Payments
-            .paymentsServicesOperators
-            .map(\.rawValue)
-            .contains(`operator`.parentCode)
-        
-        if isServicePayment {
-            handleQRMappingWithSingleOperator(qr, `operator`)
-        } else {
-            delay(for: .milliseconds(700)) { [self] in
-                
-                let viewModel = InternetTVDetailsViewModel(
-                    model: model,
-                    qrCode: qr,
-                    mapping: qrMapping
-                )
-                self.route.destination = .operatorView(viewModel)
-            }
-        }
-    }
-    
-    private func handleQRMappingWithSingleOperator(
-        _ qr: QRCode,
-        _ operatorValue: OperatorGroupData.OperatorData
-    ) {
-        let puref = operatorValue.code
-        let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
-        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
         let paymentsViewModel = PaymentsViewModel(
-            source: .servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ),
+            source: source,
             model: model,
             closeAction: { [weak self] in
                 
@@ -1618,15 +1600,12 @@ extension PaymentsTransfersViewModel {
         )
         bind(paymentsViewModel)
         
-        scheduler.schedule { [weak self] in
-            
-            self?.route.destination = .init(.payments(paymentsViewModel))
-        }
+        route.destination = .payments(paymentsViewModel)
     }
     
-    private func handleQRMappingWithMultipleOperators(
-        _ qr: QRCode,
-        _ operators: [OperatorGroupData.OperatorData]
+    private func searchOperators(
+        _ operators: MultiElementArray<SegmentedOperatorData>,
+        with qr: QRCode
     ) {
         let navigationBarViewModel = NavigationBarView.ViewModel(
             title: "Все регионы",
@@ -1647,7 +1626,7 @@ extension PaymentsTransfersViewModel {
         let operatorsViewModel = QRSearchOperatorViewModel(
             searchBar: .nameOrTaxCode(),
             navigationBar: navigationBarViewModel, model: self.model,
-            operators: operators,
+            operators: operators.elements.map(\.origin),
             addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
             requisitesAction: { [weak self] in self?.payByInstructions(with: qr) },
             qrCode: qr
@@ -1669,7 +1648,7 @@ extension PaymentsTransfersViewModel {
         }
     }
 
-    private func handleFailure(qr: QRCode) {
+    private func handleFailure(_ qrCode: QRCode) {
         
         delay(for: .milliseconds(700)) { [weak self] in
             
@@ -1678,7 +1657,7 @@ extension PaymentsTransfersViewModel {
             let failedView = QRFailedViewModel(
                 model: self.model,
                 addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
-                requisitsAction: { [weak self] in self?.payByInstructions(with: qr) }
+                requisitsAction: { [weak self] in self?.payByInstructions(with: qrCode) }
             )
             
             route.destination = .failedView(failedView)
@@ -1806,6 +1785,104 @@ extension PaymentsTransfersViewModel {
             )
             
             self.route.destination = .failedView(failedView)
+        }
+    }
+}
+
+// MARK: - PaymentProviderPicker
+
+private extension PaymentsTransfersViewModel {
+    
+    func makePaymentProviderPicker(
+        _ mixed: MultiElementArray<SegmentedOperatorProvider>,
+        _ qrCode: QRCode
+    ) {
+        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode)
+        route.destination = .paymentProviderPicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        ))
+    }
+    
+    private func bind(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.handle($0) }
+    }
+    
+    func handle(
+        _ outside: PaymentProviderPickerFlowState.Status.Outside
+    ) {
+        event(.dismiss(.destination))
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
+        }
+    }
+}
+
+// MARK: - PaymentProviderServicePicker
+
+private extension PaymentsTransfersViewModel {
+    
+    func makeServicePicker(
+        _ provider: SegmentedProvider,
+        _ qrCode: QRCode
+    ) {
+        let flowModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider: provider, qrCode: qrCode))
+        route.destination = .providerServicePicker(.init(
+            model: flowModel,
+            cancellable: bind(flowModel)
+        ))
+    }
+    
+    private func bind(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> AnyCancellable {
+        
+        flowModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.handle($0) }
+    }
+    
+    private func handle(
+        _ outside: AnywayServicePickerFlowState.Status.Outside
+    ) {
+        event(.dismiss(.destination))
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
         }
     }
 }

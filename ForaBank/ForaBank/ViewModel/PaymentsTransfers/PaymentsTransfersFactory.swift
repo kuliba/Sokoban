@@ -5,11 +5,13 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
+import ForaTools
 import SwiftUI
 
 struct PaymentsTransfersFactory {
     
     let makeAlertDataUpdateFailureViewModel: MakeAlertDataUpdateFailureViewModel
+    let makePaymentProviderPickerFlowModel: MakePaymentProviderPickerFlowModel
     let makePaymentProviderServicePickerFlowModel: MakePaymentProviderServicePickerFlowModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makeSections: MakePaymentsTransfersSections
@@ -19,7 +21,7 @@ struct PaymentsTransfersFactory {
 }
 
 extension PaymentsTransfersFactory {
-#warning("move to PaymentsTransfersFlowReducerFactory")
+
     struct MakeUtilitiesPayload {
         
         let type: PTSectionPaymentsView.ViewModel.PaymentsType
@@ -45,7 +47,9 @@ extension PaymentsTransfersFactory {
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
-    typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> PaymentProviderServicePickerFlowModel
+    typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode) -> PaymentProviderPickerFlowModel
+    
+    typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel
     
     typealias MakeServicePaymentBinder = (AnywayTransactionState.Transaction, ServicePaymentFlowState) -> ServicePaymentBinder
 }
@@ -68,14 +72,16 @@ extension PaymentsTransfersFactory {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.inactive),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            updateInfoStatusFlag: .init(.inactive), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         return .init(
             makeAlertDataUpdateFailureViewModel: { _ in nil },
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
             makeServicePaymentBinder: ServicePaymentBinder.preview,
@@ -83,6 +89,33 @@ extension PaymentsTransfersFactory {
             makeUtilitiesViewModel: { _,_ in }
         )
     }()
+}
+
+extension PaymentProviderPickerFlowModel {
+    
+    static func preview(
+        mix: MultiElementArray<SegmentedOperatorProvider>,
+        qrCode: QRCode
+    ) -> PaymentProviderPickerFlowModel {
+        
+        return .init(
+            initialState: .init(
+                content: .init(
+                    initialState: .init(
+                        segments: [],
+                        qrCode: .init(original: "", rawData: [:])
+                    ),
+                    reduce: { state, _ in (state, nil) },
+                    handleEffect: { _,_ in }
+                    )
+            ),
+            factory: .init(
+                makePayByInstructionsViewModel: { _,_ in fatalError() },
+                makePaymentsViewModel: { _,_,_ in fatalError() },
+                makeServicePickerFlowModel: { _,_ in fatalError() }),
+            scheduler: .main
+        )
+    }
 }
 
 extension PaymentProviderServicePickerFlowModel {

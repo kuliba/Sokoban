@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct ComposedPaymentProviderPickerFlowView: View {
+struct ComposedPaymentProviderPickerFlowView<AnywayFlowView>: View 
+where AnywayFlowView: View {
     
     let flowModel: FlowModel
     let iconView: (IconDomain.Icon?) -> IconDomain.IconView
-    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
+    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
     
     var body: some View {
         

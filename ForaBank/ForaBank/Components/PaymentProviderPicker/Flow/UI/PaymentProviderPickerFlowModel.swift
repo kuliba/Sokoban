@@ -173,13 +173,16 @@ private extension PaymentProviderPickerFlowModel {
     }
 }
 
-private extension AnywayServicePickerFlowState {
+extension AnywayServicePickerFlowState {
     
     var outside: Status.Outside? {
         
         guard case let .outside(outside) = status else { return nil }
         return outside
     }
+}
+
+private extension AnywayServicePickerFlowState {
     
     var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
         

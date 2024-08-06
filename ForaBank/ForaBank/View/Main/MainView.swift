@@ -247,11 +247,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .paymentProviderPicker(qrCode, providers, destination):
-            paymentProviderPicker(qrCode: qrCode, providers: providers, with: destination)
+        case let .paymentProviderPicker(node):
+            paymentProviderPicker(node.model)
             
-        case let .providerServicePicker(model):
-            servicePicker(model: model)
+        case let .providerServicePicker(node):
+            servicePicker(flowModel: node.model)
         }
     }
     
@@ -347,58 +347,20 @@ private extension MainView {
 private extension MainView {
     
     func paymentProviderPicker(
-        qrCode: QRCode,
-        providers: MultiElementArray<SegmentedPaymentProvider>,
-        with destination: PaymentProviderServicePickerFlowModel?
+        _ flowModel: PaymentProviderPickerFlowModel
     ) -> some View {
-        
-        PaymentProviderSegmentsView(
-            segments: .init(with: providers.elements),
-            providerView: paymentProviderView,
-            footer: { paymentProviderPickerFooter(qrCode: qrCode) },
-            config: .iFora
-        )
-        .navigationDestination(
-            destination: destination,
-            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
-            content: servicePicker(model:)
+
+        ComposedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: viewFactory.makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
-            dismiss: viewModel.dismissProviderServicePicker,
+            dismiss: viewModel.dismissPaymentProviderPicker,
             rightItem: .barcodeScanner(
-                action: viewModel.dismissProviderServicePicker
+                action: viewModel.dismissPaymentProviderPicker
             )
-        )
-    }
-    
-    func paymentProviderView(
-        provider: SegmentedPaymentProvider
-    ) -> some View {
-        
-        Button {
-            
-            viewModel.select(provider: provider)
-            
-        } label: {
-            
-            label(
-                title: provider.title,
-                subtitle: provider.inn,
-                icon: provider.icon
-            )
-        }
-        .buttonStyle(.plain)
-    }
-    
-    func paymentProviderPickerFooter(
-        qrCode: QRCode
-    ) -> some View {
-        
-        FooterView(
-            state: .footer(.iFora),
-            event: event(qrCode: qrCode),
-            config: .iFora
         )
     }
     
@@ -420,22 +382,23 @@ private extension MainView {
     
     @ViewBuilder
     func servicePicker(
-        model: PaymentProviderServicePickerFlowModel
+        flowModel: AnywayServicePickerFlowModel
     ) -> some View {
+
+        let provider = flowModel.state.content.state.payload.provider
         
-        let provider = model.state.content.state.payload.provider
-        
-        PaymentProviderServicePickerFlowView(
-            model: model,
-            contentView: servicePickerContentView,
-            alertContent: servicePickerAlertContent,
-            destinationContent: servicePickerDestinationContent
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: viewFactory.makeIconView
+            )
         )
         .navigationBarWithAsyncIcon(
-            title: provider.title,
-            subtitle: provider.inn,
+            title: provider.origin.title,
+            subtitle: provider.origin.inn,
             dismiss: viewModel.dismissProviderServicePicker,
-            icon: iconView(provider.icon),
+            icon: iconView(provider.origin.icon),
             style: .large
         )
     }
@@ -510,6 +473,45 @@ private extension MainView {
 
 private extension MainView {
     
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        let payload = flowModel.state.content.state.transaction.context.outline.payload
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                viewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
+        .navigationBarWithAsyncIcon(
+            title: payload.title,
+            subtitle: payload.subtitle,
+            dismiss: { flowModel.event(.goTo(.main)) },
+            icon: iconView(payload.icon)
+        )
+    }
+    
     func paymentFlow(
         binder: ServicePaymentBinder
     ) -> some View {
@@ -553,7 +555,7 @@ private extension MainView {
 
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
-    var id: String { state.content.state.payload.provider.id }
+    var id: String { state.content.state.payload.provider.origin.id }
 }
 
 private extension MainViewModel.Route {
@@ -716,8 +718,9 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            updateInfoStatusFlag: .init(.active), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
@@ -745,7 +748,8 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
@@ -773,7 +777,8 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
