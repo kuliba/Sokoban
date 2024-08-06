@@ -308,12 +308,12 @@ private extension PaymentsTransfersFlowReducer {
                 )
                 
 #warning("the case should have associated string")
-            case .transactionFailure:
-                state.setPaymentAlert(to: .terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            case let .transactionFailure(message):
+                state.setPaymentAlert(to: .terminalError(message))
                 
 #warning("the case should have associated string")
-            case .updatePaymentFailure:
-                state.setPaymentAlert(to: .serverError("Error"))
+            case let .updatePaymentFailure(message):
+                state.setPaymentAlert(to: .serverError(message))
             }
             
         case let .success(report):

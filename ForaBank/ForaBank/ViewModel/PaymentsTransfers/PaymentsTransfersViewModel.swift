@@ -1801,25 +1801,43 @@ private extension PaymentsTransfersViewModel {
         let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode, qrMapping)
         route.destination = .paymentProviderPicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         ))
     }
     
     private func bind(
         _ flowModel: PaymentProviderPickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let spinner = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outside)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.handle($0) }
+        
+        return [spinner, outside]
+    }
+    
+    private func showSpinner(_ isShowing: Bool) {
+        
+        if isShowing {
+            rootActions?.spinner.show()
+        } else {
+            rootActions?.spinner.hide()
+        }
     }
     
     func handle(
         _ outside: PaymentProviderPickerFlowState.Status.Outside
     ) {
         event(.dismiss(.destination))
-        
+        rootActions?.spinner.hide()
+
         delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {

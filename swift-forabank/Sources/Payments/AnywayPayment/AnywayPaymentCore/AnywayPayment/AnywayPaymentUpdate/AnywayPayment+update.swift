@@ -21,13 +21,10 @@ extension AnywayPayment {
         elements.appendNewFields(from: update.fields)
         elements.appendNewParameters(from: update.parameters, with: outline)
         
-        if let product = outline.product {
-            
-            elements.addIfMissing(
-                widget: .product(.init(product)),
-                condition: update.details.control.needSum || update.details.control.isMultiSum
-            )
-        }
+        elements.addIfMissing(
+            widget: .product(.init(outline.product)),
+            condition: update.details.control.needSum || update.details.control.isMultiSum
+        )
         
         elements.addIfMissing(
             widget: .info(.init(update)),

@@ -93,8 +93,8 @@ class ServicePaymentFlowTests: XCTestCase {
             payment: .init(amount: nil, elements: [], footer: .continue, isFinalStep: false),
             staged: .init(),
             outline: .init(
-                amount: 0,
-                product: nil,
+                amount: nil,
+                product: makeOutlineProduct(),
                 fields: .init(),
                 payload: .init(
                     puref: anyMessage(),
@@ -105,5 +105,14 @@ class ServicePaymentFlowTests: XCTestCase {
             ),
             shouldRestart: false
         )
+    }
+    
+    private func makeOutlineProduct(
+        currency: String = anyMessage(),
+        productID: Int = .random(in: 1...100),
+        productType: AnywayPaymentOutline.Product.ProductType = .card
+    ) -> AnywayPaymentOutline.Product {
+        
+        return .init(currency: currency, productID: productID, productType: productType)
     }
 }

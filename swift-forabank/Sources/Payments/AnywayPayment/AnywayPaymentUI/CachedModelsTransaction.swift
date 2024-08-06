@@ -8,6 +8,7 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import Foundation
+import PaymentComponents
 
 public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     
@@ -22,7 +23,7 @@ public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
 }
 
 public extension CachedModelsTransaction 
-where Footer: Receiver<Decimal>,
+where Footer: FooterInterface & Receiver<Decimal>,
       DocumentStatus: Equatable,
       Response: Equatable {
     
@@ -44,7 +45,7 @@ where Footer: Receiver<Decimal>,
         using map: @escaping Map
     ) -> Self {
         
-        transaction.context.payment.amount.map(footer.receive)
+        updateFooter(with: transaction)
         
         return .init(
             models: transaction.updatingModels(
@@ -56,6 +57,32 @@ where Footer: Receiver<Decimal>,
             transaction: transaction,
             isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
         )
+    }
+    
+    func updateFooter(
+        with transaction: Transaction
+    ) {
+        transaction.context.payment.amount.map(footer.receive)
+        
+        let isEnabled: Bool = {
+            switch transaction.status {
+            case .inflight: return false
+            default:        return transaction.isValid
+            }
+        }()
+        let style: AmountComponent.FooterState.Style = {
+            
+            switch transaction.context.payment.footer {
+            case .amount:   return .amount
+            case .continue: return .button
+            }
+        }()
+        let projection = FooterTransactionProjection(
+            isEnabled: isEnabled,
+            style: style
+        )
+        
+        footer.project(projection)
     }
     
     // should reset model if status was awaitingPaymentRestartConfirmation, i.e. isAwaitingConfirmation == true, and now is not awaitingPaymentRestartConfirmation

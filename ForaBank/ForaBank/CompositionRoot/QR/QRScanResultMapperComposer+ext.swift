@@ -33,7 +33,8 @@ extension QRScanResultMapperComposer {
                         return model.segmentedFromCache($0, $1)
                         
                     case .active(.stub):
-                        return nil // stub()
+                        // stub()
+                        return model.segmentedFromCache($0, $1)
                         
                     case .inactive:
                         return nil

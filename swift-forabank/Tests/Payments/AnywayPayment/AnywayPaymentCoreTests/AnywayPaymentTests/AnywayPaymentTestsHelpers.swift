@@ -161,7 +161,7 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    amount: Decimal = makeAmount(),
+    amount: Decimal? = nil,
     product: AnywayPaymentOutline.Product = makeOutlineProduct(productType: .account),
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {

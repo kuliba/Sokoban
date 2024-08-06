@@ -66,16 +66,22 @@ private extension AnywayServicePickerFlowModel {
         _ event: Event
     ) -> Effect? {
         
+        state.isLoading = false
         var effect: Effect?
         
         switch event {
         case .dismiss:
             state.status = nil
+            state.content.event(.reset)
             
         case let .goTo(goTo):
             reduce(&state, &effect, with: goTo)
             
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
+
         case let .notify(result):
+            state.isLoading = false
             reduce(&state, &effect, with: result)
             
         case .payByInstruction:
@@ -99,7 +105,14 @@ private extension AnywayServicePickerFlowModel {
     func bind(_ content: Content) {
         
         state.content.$state
-            .compactMap(\.response)
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.isLoading($0)) }
+            .store(in: &cancellables)
+        
+        state.content.$state
+            .map(\.response)
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.notify($0)) }
@@ -162,11 +175,14 @@ private extension AnywayServicePickerFlowModel {
     }
     
     func reduce(
-            _ state: inout State,
-            _ effect: inout Effect?,
-            with result: PaymentProviderServicePickerResult
-        ) {
-            switch result {
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with result: PaymentProviderServicePickerResult?
+    ) {
+        switch result {
+        case .none:
+            state.status = .none
+            
         case .failure(.connectivityError):
             state.status = .alert(.connectivity)
             

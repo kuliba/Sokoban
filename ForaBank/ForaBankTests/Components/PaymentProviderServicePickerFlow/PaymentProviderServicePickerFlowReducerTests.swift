@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.07.2024.
 //
 
+import AnywayPaymentDomain
 @testable import ForaBank
 import XCTest
 
@@ -137,8 +138,8 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
                 payment: .init(amount: nil, elements: [], footer: .continue, isFinalStep: false),
                 staged: [],
                 outline: .init(
-                    amount: 0,
-                    product: nil,
+                    amount: nil,
+                    product: makeOutlineProduct(),
                     fields: [:],
                     payload: .init(
                         puref: anyMessage(), 
@@ -151,6 +152,15 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
             ),
             isValid: true
         )
+    }
+    
+    private func makeOutlineProduct(
+        currency: String = anyMessage(),
+        productID: Int = .random(in: 1...100),
+        productType: AnywayPaymentOutline.Product.ProductType = .card
+    ) -> AnywayPaymentOutline.Product {
+        
+        return .init(currency: currency, productID: productID, productType: productType)
     }
     
     private func makePaymentsViewModel(

@@ -10,14 +10,22 @@ import Combine
 struct Node<Model> {
     
     let model: Model
-    private let cancellable: AnyCancellable
+    private let cancellables: Set<AnyCancellable>
+    
+    init(
+        model: Model,
+        cancellables: Set<AnyCancellable>
+    ) {
+        self.model = model
+        self.cancellables = cancellables
+    }
     
     init(
         model: Model,
         cancellable: AnyCancellable
     ) {
         self.model = model
-        self.cancellable = cancellable
+        self.cancellables = [cancellable]
     }
 }
 

@@ -18,6 +18,9 @@ extension PaymentProviderPickerReducer {
         var effect: Effect?
         
         switch event {
+        case .deselect:
+            state.selection = nil
+            
         case let .select(select):
             reduce(&state, &effect, with: select)
         }

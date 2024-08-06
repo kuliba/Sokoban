@@ -36,10 +36,12 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_continue_shouldDeliverConnectivityErrorOnProcessingConnectivityErrorFailure() {
         
+        let message = anyMessage()
+        
         expect(
-            toDeliver: updateEvent(.connectivityError),
+            toDeliver: updateEvent(.connectivityError(message)),
             for: makeContinueTransactionEffect(),
-            onProcessing: .failure(.connectivityError)
+            onProcessing: .failure(.connectivityError(message))
         )
     }
     
@@ -74,7 +76,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makeContinueTransactionEffect()) { received.append($0) }
         sut = nil
-        paymentProcessing.complete(with: .failure(.connectivityError))
+        paymentProcessing.complete(with: .failure(.connectivityError(anyMessage())))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
@@ -108,14 +110,15 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_getVerificationCode_shouldDeliverConnectivityErrorOnGetVerificationCodeConnectivityFailure() {
         
+        let message = anyMessage()
         let (sut, getCodeSpy, _,_,_,_) = makeSUT()
         
         expect(
             sut,
-            toDeliver: .verificationCode(.receive(.failure(.connectivityError))),
+            toDeliver: .verificationCode(.receive(.failure(.connectivityError(message)))),
             for: .getVerificationCode
         ) {
-            getCodeSpy.complete(with: .failure(.connectivityError))
+            getCodeSpy.complete(with: .failure(.connectivityError(message)))
         }
     }
     
@@ -161,13 +164,14 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_initiatePayment_shouldDeliverUpdateWithConnectivityErrorOnPaymentInitiatorConnectivityErrorFailure() {
         
+        let message = anyMessage()
         let (sut, _,_, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
-            toDeliver: .updatePayment(.failure(.connectivityError)),
+            toDeliver: .updatePayment(.failure(.connectivityError(message))),
             for: makeInitiateTransactionEffect(),
-            on: { paymentInitiator.complete(with: .failure(.connectivityError)) }
+            on: { paymentInitiator.complete(with: .failure(.connectivityError(message))) }
         )
     }
     
@@ -206,7 +210,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makeInitiateTransactionEffect()) { receivedEvents.append($0) }
         sut = nil
-        paymentInitiator.complete(with: .failure(.connectivityError))
+        paymentInitiator.complete(with: .failure(.connectivityError(anyMessage())))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(receivedEvents.isEmpty)
@@ -226,10 +230,12 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_makePayment_shouldDeliverTransactionFailureOnMakePaymentFailure() {
         
+        let message = anyMessage()
+        
         expect(
-            toDeliver: makeCompletePaymentFailureEvent(),
+            toDeliver: makeCompletePaymentFailureEvent(.terminal(message)),
             for: makeTransactionEffect(),
-            onMakePayment: .failure(.terminal)
+            onMakePayment: .failure(.terminal(message))
         )
     }
     
@@ -264,7 +270,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makeTransactionEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: .failure(.terminal))
+        paymentMaker.complete(with: .failure(.terminal(anyMessage())))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)

@@ -13,11 +13,14 @@ import RemoteServices
 
 final class AsyncPickerEffectHandlerMicroServicesComposer {
     
+    private let model: Model
     private let nanoServices: NanoServices
     
     init(
+        model: Model,
         nanoServices: NanoServices
     ) {
+        self.model = model
         self.nanoServices = nanoServices
     }
     
@@ -64,7 +67,8 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 let context = AnywayPaymentContext(
                     response: response,
                     service: service,
-                    payload: payload
+                    payload: payload,
+                    product: self.model.outlineProduct()
                 )
                 
                 // TODO: replace with injected dependency
@@ -129,11 +133,13 @@ private extension AnywayPaymentContext {
     init(
         response: AnywayResponse,
         service: UtilityService,
-        payload: PaymentProviderServicePickerPayload
+        payload: PaymentProviderServicePickerPayload,
+        product: AnywayPaymentOutline.Product
     ) {
         let outline = AnywayPaymentOutline(
             service: service,
-            payload: payload
+            payload: payload,
+            product: product
         )
         self.init(response: response, outline: outline)
     }
@@ -179,7 +185,8 @@ private extension AnywayPaymentOutline {
     
     init(
         service: UtilityService,
-        payload: PaymentProviderServicePickerPayload
+        payload: PaymentProviderServicePickerPayload,
+        product: AnywayPaymentOutline.Product
     ) {
         let fields = service.puref.fields(
             fromQR: payload.qrCode,
@@ -199,8 +206,8 @@ private extension AnywayPaymentOutline {
         }
         
         self.init(
-            amount: amount ?? 0,
-            product: nil,
+            amount: amount,
+            product: product,
             fields: fields,
             payload: .init(
                 puref: service.puref,

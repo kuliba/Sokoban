@@ -28,6 +28,7 @@ struct PaymentProviderServicePickerWrapperView: View {
                 
             case .some([]):
                 failureView()
+                    .frame(maxHeight: .infinity)
                 
             case let .some(items):
                 ServicePickerView(state: items, serviceView: serviceView)

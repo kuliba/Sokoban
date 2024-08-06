@@ -8,6 +8,7 @@
 struct AnywayFlowState {
     
     let content: Content
+    var isLoading = false
     var status: Status?
 }
 
@@ -20,7 +21,6 @@ extension AnywayFlowState {
         case alert(Alert)
         case completed(Completed)
         case fraud(FraudNoticePayload)
-        case inflight
         case outside(Outside)
         
         enum Alert: Equatable {
