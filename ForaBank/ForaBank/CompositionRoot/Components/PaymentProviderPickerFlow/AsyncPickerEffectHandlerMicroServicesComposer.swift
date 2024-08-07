@@ -210,19 +210,8 @@ private extension AnywayPaymentOutline {
             matching: payload.qrMapping
         )
         
-        let amount: Decimal?
-        do {
-            let double: Double = try payload.qrCode.value(
-                type: .general(.amount),
-                mapping: payload.qrMapping
-            )
-            amount = .init(double)
-        } catch {
-            amount = nil
-        }
-        
         self.init(
-            amount: amount,
+            amount: payload.amount,
             product: product,
             fields: fields,
             payload: .init(
@@ -232,6 +221,22 @@ private extension AnywayPaymentOutline {
                 icon: payload.provider.origin.icon
             )
         )
+    }
+}
+
+private extension PaymentProviderServicePickerPayload {
+    
+    var amount: Decimal? {
+        
+        do {
+            let double: Double = try qrCode.value(
+                type: .general(.amount),
+                mapping: qrMapping
+            )
+            return .init(double)
+        } catch {
+            return nil
+        }
     }
 }
 
