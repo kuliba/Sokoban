@@ -1,6 +1,6 @@
 //
 //  TextInputView.swift
-//  SberNumericTextFieldPreview
+//  
 //
 //  Created by Igor Malyarov on 07.08.2024.
 //
@@ -13,7 +13,7 @@ import TextFieldComponent
 struct TextInputView<IconView: View>: View {
     
     let state: State
-    let event: (TextFieldAction) -> Void
+    let event: (Event) -> Void
     let config: Config
     let iconView: () -> IconView
     
@@ -45,6 +45,7 @@ struct TextInputView<IconView: View>: View {
 extension TextInputView {
     
     typealias State = TextInputState
+    typealias Event = TextInputEvent
     typealias Config = TextInputConfig
 }
 
@@ -59,7 +60,7 @@ private extension TextInputView {
             ),
             keyboardType: state.keyboard.uiKeyboardType,
             toolbar: toolbar(),
-            send: event,
+            send: { event(.textField($0)) },
             textFieldConfig: config.textField
         )
     }
