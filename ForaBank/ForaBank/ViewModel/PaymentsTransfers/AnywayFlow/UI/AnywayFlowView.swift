@@ -14,8 +14,7 @@ struct AnywayFlowView<PaymentCompleteView: View>: View {
     @ObservedObject var flowModel: AnywayFlowModel
     
     let factory: AnywayPaymentFactory<IconDomain.IconView>
-#warning("combine into one factory")
-    let makePaymentCompleteView: (AnywayFlowState.Status.Completed) -> PaymentCompleteView
+    let makePaymentCompleteView: (AnywayCompleted) -> PaymentCompleteView
     
     var body: some View {
         
