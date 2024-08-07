@@ -87,11 +87,20 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
         else { return nil }
         
         let product = model.outlineProduct()
-        
+        let outline = AnywayPaymentOutline(
+            service: item.service,
+            payload: payload,
+            product: product
+        )
+        let firstField = AnywayElement.Field(
+            service: item.isOneOf ? item.service : nil,
+            icon: payload.provider.origin.icon
+        )
+
         let context = AnywayPaymentContext(
             update: update,
-            item: item,
-            payload: payload,
+            outline: outline,
+            firstField: firstField,
             product: product
         )
         
@@ -152,19 +161,10 @@ private extension AnywayPaymentContext {
     
     init(
         update: AnywayPaymentUpdate,
-        item: ServicePickerItem,
-        payload: PaymentProviderServicePickerPayload,
+        outline: AnywayPaymentOutline,
+        firstField: AnywayElement.Field?,
         product: AnywayPaymentOutline.Product
     ) {
-        let outline = AnywayPaymentOutline(
-            service: item.service,
-            payload: payload,
-            product: product
-        )
-        let firstField = AnywayElement.Field(
-            service: item.isOneOf ? item.service : nil,
-            icon: payload.provider.origin.icon
-        )
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,
             elements: [firstField.map { .field($0) }].compactMap { $0 },
