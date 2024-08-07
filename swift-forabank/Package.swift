@@ -2034,7 +2034,8 @@ private extension Target {
     static let inputComponent = target(
         name: .inputComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .textFieldComponent
         ],
         path: "Sources/UI/Components/\(String.inputComponent)"
     )
