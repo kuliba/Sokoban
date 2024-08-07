@@ -9,14 +9,14 @@ import Foundation
 
 public enum BlockHorizontalRectangularEvent: Equatable {
     
-    case change(Limit)
+    case edit(Limit)
     
     public struct Limit: Equatable {
         
-        let id: String
-        let value: String
+        public let id: String
+        public let value: Decimal
         
-        public init(id: String, value: String) {
+        public init(id: String, value: Decimal) {
             self.id = id
             self.value = value
         }

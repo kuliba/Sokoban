@@ -22,6 +22,9 @@ public struct LandingView: View {
     private let makeIconView: MakeIconView
     private let makeLimit: MakeLimit
     private var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
+    private let cardLimitsInfo: CardLimitsInfo?
+    private let limitIsChanged: (BlockHorizontalRectangularEvent.Limit) -> Void
+    private let newLimits: () -> [BlockHorizontalRectangularEvent.Limit]
 
     public init(
         viewModel: LandingViewModel,
@@ -29,7 +32,10 @@ public struct LandingView: View {
         action: @escaping (LandingEvent) -> Void,
         makeIconView: @escaping MakeIconView,
         makeLimit: @escaping MakeLimit = { _ in nil },
-        limitsViewModel: ListHorizontalRectangleLimitsViewModel?
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
+        cardLimitsInfo: CardLimitsInfo?,
+        limitIsChanged: @escaping (BlockHorizontalRectangularEvent.Limit) -> Void,
+        newLimits: @escaping () -> [BlockHorizontalRectangularEvent.Limit]
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
@@ -37,6 +43,9 @@ public struct LandingView: View {
         self.makeIconView = makeIconView
         self.makeLimit = makeLimit
         self.limitsViewModel = limitsViewModel
+        self.cardLimitsInfo = cardLimitsInfo
+        self.limitIsChanged = limitIsChanged
+        self.newLimits = newLimits
     }
     
     struct ViewOffsetKey: PreferenceKey {
@@ -133,6 +142,7 @@ public struct LandingView: View {
     ) -> some View {
         
         let landingView = LandingComponentView(
+            cardLimitsInfo: cardLimitsInfo, 
             component: component,
             images: images,
             config: viewModel.config,
@@ -144,7 +154,9 @@ public struct LandingView: View {
             canOpenDetail: {
                 return viewModel.landing.components(g: $0.groupID.rawValue, v: $0.viewID.rawValue) != []
             }, 
-            limitsViewModel: limitsViewModel
+            limitsViewModel: limitsViewModel,
+            limitIsChanged: limitIsChanged,
+            newLimits: newLimits
         )
         
         switch component {
@@ -193,6 +205,7 @@ extension LandingView {
     
     struct LandingComponentView: View {
         
+        let cardLimitsInfo: CardLimitsInfo?
         let component: UILanding.Component
         let images: [String: Image]
         let config: UILanding.Component.Config
@@ -203,7 +216,9 @@ extension LandingView {
         let makeLimit: MakeLimit
         let canOpenDetail: UILanding.CanOpenDetail
         let limitsViewModel: ListHorizontalRectangleLimitsViewModel?
-        
+        let limitIsChanged: (BlockHorizontalRectangularEvent.Limit) -> Void
+        let newLimits: () -> [BlockHorizontalRectangularEvent.Limit]
+
         var body: some View {
             
             switch component {
@@ -323,10 +338,14 @@ extension LandingView {
                 
             case let .blockHorizontalRectangular(block):
                 // TODO: add reduce, handleEffect
+                
                 BlockHorizontalRectangularWrappedView(
-                    model: .init(
-                        initialState: .init(block: block),
-                        reduce: {state,_ in (state, .none)},
+                    viewModel: .init(
+                        initialState: .init(
+                            block: block,
+                            initialLimitsInfo: cardLimitsInfo
+                        ),
+                        reduce: BlockHorizontalRectangularReducer(limitIsChanged: limitIsChanged).reduce(_:_:),
                         handleEffect: {_,_ in }),
                     factory: .init(makeIconView: makeIconView),
                     config: config.blockHorizontalRectangular)
@@ -366,7 +385,10 @@ struct LandingUIView_Previews: PreviewProvider {
                 publisher: Just(.percent).eraseToAnyPublisher()
             )}, 
             makeLimit: { _ in nil }, 
-            limitsViewModel: nil
+            limitsViewModel: nil, 
+            cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true),
+            limitIsChanged: { _ in }, 
+            newLimits: { [] }
         )
     }
 }

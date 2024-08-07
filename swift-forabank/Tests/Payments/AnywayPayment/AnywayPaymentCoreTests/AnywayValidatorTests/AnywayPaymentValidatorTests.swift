@@ -29,6 +29,15 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
     
+    func test_validate_shouldDeliverFooterValidationErrorOnNilAmountFooterAndEmptyParameters() {
+        
+        let payment = makeAnywayPayment(amount: nil, footer: .amount)
+        let sut = makeSUT(validateParameter: { _ in nil })
+        
+        XCTAssertNoDiff(sut.validate(payment), .footerValidationError)
+        XCTAssertTrue(parameters(of: payment).isEmpty)
+    }
+    
     func test_validate_shouldDeliverFooterValidationErrorOnInvalidAmountFooterAndEmptyParameters() {
         
         let payment = makeAnywayPayment(amount: -1, footer: .amount)

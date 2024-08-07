@@ -25,7 +25,7 @@ extension AnywayPayment {
             
             elements.addIfMissing(
                 widget: .product(.init(product)),
-                condition: update.details.control.needSum
+                condition: update.details.control.needSum || update.details.control.isMultiSum
             )
         }
         

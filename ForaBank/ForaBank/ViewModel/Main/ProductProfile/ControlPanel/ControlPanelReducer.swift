@@ -64,7 +64,7 @@ extension ControlPanelReducer {
             makeActions.updateProducts()
             
         case let .updateTitle(newTitle):
-            state.navigationBarViewModel.title = newTitle
+            state.navigationBarInfo.title = newTitle
             
         case let .loadSVCardLanding(card):
             effect = .loadSVCardLanding(card)
@@ -81,8 +81,10 @@ extension ControlPanelReducer {
             
         case let .loadedSVCardLimits(limits):
             if let limits {
+                state.svCardLimits = .init(limits, getCurrencySymbol)
                 state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.success(.init(limits, getCurrencySymbol))))
             } else {
+                state.svCardLimits = nil
                 state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.failure))
             }
             

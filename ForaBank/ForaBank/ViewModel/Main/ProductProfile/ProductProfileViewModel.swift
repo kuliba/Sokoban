@@ -2021,14 +2021,16 @@ extension ProductProfileViewModel {
             )
         )
         
-        let backButton: NavigationBarView.ViewModel.BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })
-
-        let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
+        let navigationBarInfo = ControlPanelState.NavigationBarInfo(
+            title: "Управление",
+            subtitle: navigationTitleForControlPanel,
+            action: { [weak self] in self?.link = nil }
+        )
         
         return .init(
             initialState: .init(
                 buttons: buttons,
-                navigationBarViewModel: navigationBarViewModel),
+                navigationBarInfo: navigationBarInfo),
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions,
