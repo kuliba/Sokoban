@@ -145,23 +145,13 @@ private extension AnywayPaymentContext {
             payload: payload,
             product: product
         )
-        let firstField = AnywayElement.Field(item: item, provider: payload.provider.origin)
-        
-        self.init(
-            initialElements: [firstField.map { .field($0) }].compactMap { $0 },
-            response: response,
-            outline: outline
+        let firstField = AnywayElement.Field(
+            item: item,
+            provider: payload.provider.origin
         )
-    }
-    
-    init(
-        initialElements: [AnywayElement],
-        response: AnywayResponse,
-        outline: AnywayPaymentOutline
-    ) {
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,
-            elements: initialElements,
+            elements: [firstField.map { .field($0) }].compactMap { $0 },
             footer: .continue,
             isFinalStep: false
         )
@@ -226,7 +216,6 @@ private extension AnywayPaymentOutline {
                 type: .general(.amount),
                 mapping: payload.qrMapping
             )
-            
             amount = .init(double)
         } catch {
             amount = nil
