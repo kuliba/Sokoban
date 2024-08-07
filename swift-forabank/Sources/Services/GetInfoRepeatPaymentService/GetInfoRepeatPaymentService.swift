@@ -36,7 +36,7 @@ public final class GetInfoRepeatPaymentService {
             
             switch result {
             case .failure:
-                completion(.failure(GetInfoRepeatPaymentDomain.Error.connectivity))
+                completion(.failure(GetInfoRepeatPaymentDomain.InfoPaymentError.connectivity))
                 
             case let .success((data, httpURLResponse)):
                 completion(mapResponse(data, httpURLResponse))
