@@ -10,14 +10,26 @@ import SwiftUI
 import TextFieldDomain
 import TextFieldComponent
 
-struct TextInputView<IconView: View>: View {
+public struct TextInputView<IconView: View>: View {
     
-    let state: State
-    let event: (Event) -> Void
-    let config: Config
-    let iconView: () -> IconView
+    private let state: State
+    private let event: (Event) -> Void
+    private let config: Config
+    private let iconView: () -> IconView
     
-    var body: some View {
+    public init(
+        state: State, 
+        event: @escaping (Event) -> Void,
+        config: Config,
+        iconView: @escaping () -> IconView
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.iconView = iconView
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: 4) {
             
@@ -42,7 +54,7 @@ struct TextInputView<IconView: View>: View {
     }
 }
 
-extension TextInputView {
+public extension TextInputView {
     
     typealias State = TextInputState
     typealias Event = TextInputEvent
@@ -99,13 +111,3 @@ private extension TextInputView {
         .transition(.asymmetric(insertion: .scale, removal: .opacity))
     }
 }
-
-#if DEBUG
-struct TextInputView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        TextInputViewDemo()
-    }
-}
-#endif

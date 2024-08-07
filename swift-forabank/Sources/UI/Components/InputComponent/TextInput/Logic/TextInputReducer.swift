@@ -1,30 +1,27 @@
 //
 //  TextInputReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 07.08.2024.
 //
 
 import TextFieldDomain
 
-final class TextInputReducer {
+public final class TextInputReducer {
     
     private let textFieldReduce: TextFieldReduce
     private let validate: Validate
     
-    init(
+    public init(
         textFieldReduce: @escaping TextFieldReduce,
         validate: @escaping Validate
     ) {
         self.textFieldReduce = textFieldReduce
         self.validate = validate
     }
-    
-    typealias TextFieldReduce = (TextFieldState, TextFieldAction) -> TextFieldState
-    typealias Validate = (TextFieldState) -> State.Message?
 }
 
-extension TextInputReducer {
+public extension TextInputReducer {
     
     func reduce(
         _ state: State,
@@ -46,7 +43,10 @@ extension TextInputReducer {
     }
 }
 
-extension TextInputReducer {
+public extension TextInputReducer {
+    
+    typealias TextFieldReduce = (TextFieldState, TextFieldAction) -> TextFieldState
+    typealias Validate = (TextFieldState) -> State.Message?
     
     typealias State = TextInputState
     typealias Event = TextInputEvent

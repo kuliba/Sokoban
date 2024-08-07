@@ -7,4 +7,4 @@
 
 import RxViewModel
 
-typealias TextInputModel = RxViewModel<TextInputState, TextInputEvent, TextInputEffect>
+public typealias TextInputModel = RxViewModel<TextInputState, TextInputEvent, TextInputEffect>

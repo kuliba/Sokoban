@@ -7,13 +7,13 @@
 
 import TextFieldDomain
 
-final class TextInputValidator {
+public final class TextInputValidator {
     
     private let hintText: String?
     private let warningText: String
     private let validate: (String) -> Bool
     
-    init(
+    public init(
         hintText: String?,
         warningText: String,
         validate: @escaping (String) -> Bool
@@ -24,7 +24,7 @@ final class TextInputValidator {
     }
 }
 
-extension TextInputValidator {
+public extension TextInputValidator {
     
     func validate(
         _ state: TextFieldState

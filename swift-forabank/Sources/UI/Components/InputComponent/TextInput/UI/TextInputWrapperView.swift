@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct TextInputWrapperView<IconView: View>: View {
+public struct TextInputWrapperView<IconView: View>: View {
     
     @ObservedObject private var model: Model
     
     private let config: Config
     private let iconView: () -> IconView
     
-    init(
+    public init(
         model: Model,
         config: Config,
         iconView: @escaping () -> IconView
@@ -24,7 +24,7 @@ struct TextInputWrapperView<IconView: View>: View {
         self.iconView = iconView
     }
     
-    var body: some View {
+    public var body: some View {
         
         TextInputView(
             state: model.state,
@@ -35,7 +35,7 @@ struct TextInputWrapperView<IconView: View>: View {
     }
 }
 
-extension TextInputWrapperView {
+public extension TextInputWrapperView {
     
     typealias Model = TextInputModel
     typealias Config = TextInputConfig

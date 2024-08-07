@@ -7,7 +7,7 @@
 
 import TextFieldDomain
 
-enum TextInputEvent: Equatable {
+public enum TextInputEvent: Equatable {
     
     case textField(TextFieldAction)
 }

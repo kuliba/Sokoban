@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 07.08.2024.
 //
 
-final class TextInputEffectHandler {}
+public final class TextInputEffectHandler {
+    
+    public init() {}
+}
 
-extension TextInputEffectHandler {
+public extension TextInputEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -19,7 +22,7 @@ extension TextInputEffectHandler {
     }
 }
 
-extension TextInputEffectHandler {
+public extension TextInputEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
