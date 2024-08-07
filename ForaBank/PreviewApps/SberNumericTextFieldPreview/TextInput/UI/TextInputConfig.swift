@@ -13,12 +13,19 @@ struct TextInputConfig: Equatable {
     
     let hint: TextConfig
     let imageWidth: CGFloat
-    let textFieldConfig: TextFieldConfig
+    let textField: TextFieldConfig
     let title: TextConfig
+    let toolbar: ToolbarConfig
     let warning: TextConfig
 }
 
 extension TextInputConfig {
     
     typealias TextFieldConfig = TextFieldView.TextFieldConfig
+}
+
+struct ToolbarConfig: Equatable {
+    
+    let closeImage: String
+    let doneTitle: String
 }

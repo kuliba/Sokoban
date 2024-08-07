@@ -6,13 +6,14 @@
 //
 
 import TextFieldDomain
-import TextFieldUI
+import TextFieldComponent
 import SharedConfigs
 import SwiftUI
 
 struct TextInputView<IconView: View>: View {
     
     let state: State
+    let event: (TextFieldAction) -> Void
     let config: Config
     let iconView: () -> IconView
     
@@ -51,7 +52,28 @@ private extension TextInputView {
     
     func textField() -> some View {
         
-        TextField("enter text", text: .constant("some text"))
+        TextFieldView(
+            state: .init(
+                get: { state.textField },
+                set: { _ in }
+            ),
+            keyboardType: state.keyboard.uiKeyboardType,
+            toolbar: toolbar(),
+            send: event,
+            textFieldConfig: config.textField
+        )
+    }
+    
+    func toolbar() -> ToolbarViewModel {
+        
+        ToolbarFactory.makeToolbarViewModel(
+            closeButtonLabel: .image(config.toolbar.closeImage),
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title(config.toolbar.doneTitle),
+            doneButtonAction: { UIApplication.shared.endEditing() }
+        )
     }
     
     @ViewBuilder
@@ -104,13 +126,20 @@ struct TextInputView_Previews: PreviewProvider {
     }
     
     private static func textInputView(
+        keyboard: KeyboardType = .decimal,
         title: String = "Text Field Title",
         _ textField: TextFieldState,
         _ message: TextInputState.Message? = nil
     ) -> some View {
         
         TextInputView(
-            state: .init(title: title, textField: textField, message: message),
+            state: .init(
+                keyboard: keyboard,
+                title: title,
+                textField: textField,
+                message: message
+            ),
+            event: { print($0) },
             config: .preview
         ) {
             Image(systemName: "photo")
@@ -139,11 +168,12 @@ extension TextInputConfig {
             textColor: .orange
         ),
         imageWidth: 24,
-        textFieldConfig: .preview,
+        textField: .preview,
         title: .init(
             textFont: .subheadline,
             textColor: .green
         ),
+        toolbar: .preview,
         warning: .init(
             textFont: .footnote,
             textColor: .red
@@ -160,4 +190,13 @@ extension TextFieldView.TextFieldConfig {
         backgroundColor: .clear,
         placeholderColor: .pink
     )
-}#endif
+}
+
+extension ToolbarConfig {
+    
+    static let preview: Self = .init(
+        closeImage: "closeImage",
+        doneTitle: "Done!"
+    )
+}
+#endif

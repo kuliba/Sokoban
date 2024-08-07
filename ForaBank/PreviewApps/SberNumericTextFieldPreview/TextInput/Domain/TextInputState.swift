@@ -6,9 +6,11 @@
 //
 
 import TextFieldDomain
+import TextFieldUI
 
 struct TextInputState: Equatable {
     
+    let keyboard: KeyboardType
     let title: String
     var textField: TextFieldState
     var message: Message?
