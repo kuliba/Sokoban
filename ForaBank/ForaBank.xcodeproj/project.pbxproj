@@ -388,6 +388,14 @@
 		2A0D9B842B0E2A1E00F1DFD1 /* ResponseMapper+ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */; };
 		2A0D9B862B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */; };
 		2A0D9B882B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */; };
+		2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E31772C63D52800143969 /* SberNumericTextFieldPreviewApp.swift */; };
+		2A0E317A2C63D52800143969 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E31792C63D52800143969 /* ContentView.swift */; };
+		2A0E317C2C63D52A00143969 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0E317B2C63D52A00143969 /* Assets.xcassets */; };
+		2A0E317F2C63D52A00143969 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */; };
+		2A0E31862C63D5CE00143969 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31852C63D5CE00143969 /* TextFieldComponent */; };
+		2A0E31882C63D5CE00143969 /* TextFieldModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31872C63D5CE00143969 /* TextFieldModel */; };
+		2A0E318A2C63D5D800143969 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31892C63D5D800143969 /* PaymentComponents */; };
+		2A0E318C2C63D61D00143969 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E318B2C63D61D00143969 /* RxViewModel */; };
 		2A0EF2EA2C1DAB96003F094D /* ChevronView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2E92C1DAB96003F094D /* ChevronView.swift */; };
 		2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */; };
 		2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */; };
@@ -3611,6 +3619,11 @@
 		2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeDocumentButton.swift"; sourceTree = "<group>"; };
 		2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeButtonLabel.swift"; sourceTree = "<group>"; };
 		2A0DBD792B05E89B008386DA /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
+		2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SberNumericTextFieldPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A0E31772C63D52800143969 /* SberNumericTextFieldPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberNumericTextFieldPreviewApp.swift; sourceTree = "<group>"; };
+		2A0E31792C63D52800143969 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A0E317B2C63D52A00143969 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A0EF2E82C1D9589003F094D /* SelectorComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SelectorComponent.xctestplan; sourceTree = "<group>"; };
 		2A0EF2E92C1DAB96003F094D /* ChevronView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronView.swift; sourceTree = "<group>"; };
 		2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChevronViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -6350,6 +6363,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2A0E31722C63D52800143969 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A0E31882C63D5CE00143969 /* TextFieldModel in Frameworks */,
+				2A0E318C2C63D61D00143969 /* RxViewModel in Frameworks */,
+				2A0E318A2C63D5D800143969 /* PaymentComponents in Frameworks */,
+				2A0E31862C63D5CE00143969 /* TextFieldComponent in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0F1E262C06E143006E1231 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -7706,6 +7730,25 @@
 				2A65FB422B4E85D400A84F9E /* MainQueueReducerDecorator.swift */,
 			);
 			path = FastPayments;
+			sourceTree = "<group>";
+		};
+		2A0E31762C63D52800143969 /* SberNumericTextFieldPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2A0E31772C63D52800143969 /* SberNumericTextFieldPreviewApp.swift */,
+				2A0E31792C63D52800143969 /* ContentView.swift */,
+				2A0E317B2C63D52A00143969 /* Assets.xcassets */,
+				2A0E317D2C63D52A00143969 /* Preview Content */,
+			);
+			path = SberNumericTextFieldPreview;
+			sourceTree = "<group>";
+		};
+		2A0E317D2C63D52A00143969 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */ = {
@@ -11077,6 +11120,7 @@
 				C1C6F1C72B83642400237C07 /* OperatorsListPreview */,
 				2A783A822B5A87CE0035CEAB /* OTPInputComponentPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
+				2A0E31762C63D52800143969 /* SberNumericTextFieldPreview */,
 				2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */,
 				C1F346D42AE25C6000EE1E87 /* StickerPreview */,
 				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
@@ -15737,6 +15781,7 @@
 				2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */,
 				2A0F1E292C06E143006E1231 /* AutoScrollingListPreview.app */,
 				2AFED9652C0F929A008F2F95 /* CachedModelsStatePreview.app */,
+				2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -16556,6 +16601,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A0E31842C63D52A00143969 /* Build configuration list for PBXNativeTarget "SberNumericTextFieldPreview" */;
+			buildPhases = (
+				2A0E31712C63D52800143969 /* Sources */,
+				2A0E31722C63D52800143969 /* Frameworks */,
+				2A0E31732C63D52800143969 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SberNumericTextFieldPreview;
+			packageProductDependencies = (
+				2A0E31852C63D5CE00143969 /* TextFieldComponent */,
+				2A0E31872C63D5CE00143969 /* TextFieldModel */,
+				2A0E31892C63D5D800143969 /* PaymentComponents */,
+				2A0E318B2C63D61D00143969 /* RxViewModel */,
+			);
+			productName = SberNumericTextFieldPreview;
+			productReference = 2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2A0F1E282C06E143006E1231 /* AutoScrollingListPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A0F1E342C06E145006E1231 /* Build configuration list for PBXNativeTarget "AutoScrollingListPreview" */;
@@ -17220,6 +17288,9 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					2A0E31742C63D52800143969 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					2A0F1E282C06E143006E1231 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -17368,11 +17439,21 @@
 				2AD0928D2BFA30A100777EE4 /* TransactionPreview */,
 				2A0F1E282C06E143006E1231 /* AutoScrollingListPreview */,
 				2AFED9642C0F929A008F2F95 /* CachedModelsStatePreview */,
+				2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2A0E31732C63D52800143969 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A0E317F2C63D52A00143969 /* Preview Assets.xcassets in Resources */,
+				2A0E317C2C63D52A00143969 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0F1E272C06E143006E1231 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -18005,6 +18086,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2A0E31712C63D52800143969 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A0E317A2C63D52800143969 /* ContentView.swift in Sources */,
+				2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0F1E252C06E143006E1231 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -20886,6 +20976,147 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2A0E31802C63D52A00143969 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberNumericTextFieldPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A0E31812C63D52A00143969 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberNumericTextFieldPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A0E31822C63D52A00143969 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberNumericTextFieldPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A0E31832C63D52A00143969 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberNumericTextFieldPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.SberNumericTextFieldPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2A0F1E352C06E145006E1231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -24627,6 +24858,17 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2A0E31842C63D52A00143969 /* Build configuration list for PBXNativeTarget "SberNumericTextFieldPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A0E31802C63D52A00143969 /* Debug */,
+				2A0E31812C63D52A00143969 /* Mock */,
+				2A0E31822C63D52A00143969 /* Release */,
+				2A0E31832C63D52A00143969 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2A0F1E342C06E145006E1231 /* Build configuration list for PBXNativeTarget "AutoScrollingListPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -25125,6 +25367,22 @@
 		2A0702782A19F89B009B704A /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2A0E31852C63D5CE00143969 /* TextFieldComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TextFieldComponent;
+		};
+		2A0E31872C63D5CE00143969 /* TextFieldModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TextFieldModel;
+		};
+		2A0E31892C63D5D800143969 /* PaymentComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentComponents;
+		};
+		2A0E318B2C63D61D00143969 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
 		};
 		2A12674729EFE53200461884 /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
