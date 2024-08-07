@@ -396,6 +396,10 @@
 		2A0E31882C63D5CE00143969 /* TextFieldModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31872C63D5CE00143969 /* TextFieldModel */; };
 		2A0E318A2C63D5D800143969 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31892C63D5D800143969 /* PaymentComponents */; };
 		2A0E318C2C63D61D00143969 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E318B2C63D61D00143969 /* RxViewModel */; };
+		2A0E318E2C63D6A000143969 /* TextInputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E318D2C63D6A000143969 /* TextInputState.swift */; };
+		2A0E31932C63D71B00143969 /* TextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E31922C63D71B00143969 /* TextInputView.swift */; };
+		2A0E31952C63E57000143969 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0E31942C63E57000143969 /* UIPrimitives */; };
+		2A0E31972C63E5FF00143969 /* TextInputConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0E31962C63E5FF00143969 /* TextInputConfig.swift */; };
 		2A0EF2EA2C1DAB96003F094D /* ChevronView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2E92C1DAB96003F094D /* ChevronView.swift */; };
 		2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */; };
 		2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */; };
@@ -3624,6 +3628,9 @@
 		2A0E31792C63D52800143969 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A0E317B2C63D52A00143969 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A0E318D2C63D6A000143969 /* TextInputState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputState.swift; sourceTree = "<group>"; };
+		2A0E31922C63D71B00143969 /* TextInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputView.swift; sourceTree = "<group>"; };
+		2A0E31962C63E5FF00143969 /* TextInputConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputConfig.swift; sourceTree = "<group>"; };
 		2A0EF2E82C1D9589003F094D /* SelectorComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SelectorComponent.xctestplan; sourceTree = "<group>"; };
 		2A0EF2E92C1DAB96003F094D /* ChevronView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronView.swift; sourceTree = "<group>"; };
 		2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChevronViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -6371,6 +6378,7 @@
 				2A0E318C2C63D61D00143969 /* RxViewModel in Frameworks */,
 				2A0E318A2C63D5D800143969 /* PaymentComponents in Frameworks */,
 				2A0E31862C63D5CE00143969 /* TextFieldComponent in Frameworks */,
+				2A0E31952C63E57000143969 /* UIPrimitives in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7737,6 +7745,7 @@
 			children = (
 				2A0E31772C63D52800143969 /* SberNumericTextFieldPreviewApp.swift */,
 				2A0E31792C63D52800143969 /* ContentView.swift */,
+				2A0E318F2C63D6FB00143969 /* TextInput */,
 				2A0E317B2C63D52A00143969 /* Assets.xcassets */,
 				2A0E317D2C63D52A00143969 /* Preview Content */,
 			);
@@ -7749,6 +7758,32 @@
 				2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2A0E318F2C63D6FB00143969 /* TextInput */ = {
+			isa = PBXGroup;
+			children = (
+				2A0E31902C63D70500143969 /* Domain */,
+				2A0E31912C63D70C00143969 /* UI */,
+			);
+			path = TextInput;
+			sourceTree = "<group>";
+		};
+		2A0E31902C63D70500143969 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A0E318D2C63D6A000143969 /* TextInputState.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A0E31912C63D70C00143969 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A0E31922C63D71B00143969 /* TextInputView.swift */,
+				2A0E31962C63E5FF00143969 /* TextInputConfig.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */ = {
@@ -16619,6 +16654,7 @@
 				2A0E31872C63D5CE00143969 /* TextFieldModel */,
 				2A0E31892C63D5D800143969 /* PaymentComponents */,
 				2A0E318B2C63D61D00143969 /* RxViewModel */,
+				2A0E31942C63E57000143969 /* UIPrimitives */,
 			);
 			productName = SberNumericTextFieldPreview;
 			productReference = 2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */;
@@ -18090,8 +18126,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A0E31972C63E5FF00143969 /* TextInputConfig.swift in Sources */,
 				2A0E317A2C63D52800143969 /* ContentView.swift in Sources */,
 				2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */,
+				2A0E31932C63D71B00143969 /* TextInputView.swift in Sources */,
+				2A0E318E2C63D6A000143969 /* TextInputState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -25383,6 +25422,10 @@
 		2A0E318B2C63D61D00143969 /* RxViewModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RxViewModel;
+		};
+		2A0E31942C63E57000143969 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2A12674729EFE53200461884 /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
