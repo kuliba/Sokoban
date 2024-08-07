@@ -364,7 +364,11 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo13Cents() throws {
         
-        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.129)])
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.129)]
+        )
         
         XCTAssertEqual(result.validator.maxAmount, 60000.13)
         XCTAssertEqual(result.currencySymbol, "₽")
@@ -372,7 +376,11 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo12Cents() throws {
         
-        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.119)])
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.119)]
+        )
         
         XCTAssertEqual(result.validator.maxAmount, 60000.12)
         XCTAssertEqual(result.currencySymbol, "₽")
@@ -380,7 +388,11 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo46Cents() throws {
         
-        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.459)])
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.459)]
+        )
         
         XCTAssertEqual(result.validator.maxAmount, 60000.46)
         XCTAssertEqual(result.currencySymbol, "₽")
@@ -388,7 +400,11 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo30Cents() throws {
         
-        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.2999)])
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.2999)]
+        )
         
         XCTAssertEqual(result.validator.maxAmount, 60000.3)
         XCTAssertEqual(result.currencySymbol, "₽")
