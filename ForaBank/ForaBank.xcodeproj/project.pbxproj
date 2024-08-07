@@ -1265,6 +1265,7 @@
 		2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */; };
 		2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */; };
 		2AB9E0B92B371E0C00D36D07 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2AB9E0B82B371E0C00D36D07 /* PaymentComponents */; };
+		2ABB62FD2C63F22E00541DE7 /* TextInputViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB62FC2C63F22E00541DE7 /* TextInputViewDemo.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
 		2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */; };
 		2ABBFD1F2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */; };
@@ -4510,6 +4511,7 @@
 		2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferAnywayTests.swift"; sourceTree = "<group>"; };
 		2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelTests.swift; sourceTree = "<group>"; };
 		2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelModeTests.swift; sourceTree = "<group>"; };
+		2ABB62FC2C63F22E00541DE7 /* TextInputViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputViewDemo.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
 		2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactory.swift; sourceTree = "<group>"; };
@@ -7745,6 +7747,7 @@
 			children = (
 				2A0E31772C63D52800143969 /* SberNumericTextFieldPreviewApp.swift */,
 				2A0E31792C63D52800143969 /* ContentView.swift */,
+				2ABB62FC2C63F22E00541DE7 /* TextInputViewDemo.swift */,
 				2A0E318F2C63D6FB00143969 /* TextInput */,
 				2A0E317B2C63D52A00143969 /* Assets.xcassets */,
 				2A0E317D2C63D52A00143969 /* Preview Content */,
@@ -18127,6 +18130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A0E31972C63E5FF00143969 /* TextInputConfig.swift in Sources */,
+				2ABB62FD2C63F22E00541DE7 /* TextInputViewDemo.swift in Sources */,
 				2A0E317A2C63D52800143969 /* ContentView.swift in Sources */,
 				2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */,
 				2A0E31932C63D71B00143969 /* TextInputView.swift in Sources */,
