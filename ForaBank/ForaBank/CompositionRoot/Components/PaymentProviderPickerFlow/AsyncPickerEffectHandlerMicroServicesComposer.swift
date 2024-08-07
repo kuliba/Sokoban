@@ -67,25 +67,41 @@ private extension AsyncPickerEffectHandlerMicroServicesComposer {
                 completion(.failure(failure))
                 
             case let .success(response):
-                
-                let context = AnywayPaymentContext(
-                    response: response,
-                    item: item,
-                    payload: payload,
-                    product: self.model.outlineProduct()
-                )
-                
-                // TODO: replace with injected dependency
-                let validator = AnywayPaymentContextValidator()
-                
-                let transaction = AnywayTransactionState.Transaction(
-                    context: context,
-                    isValid: validator.validate(context) == nil
-                )
+                guard let transaction = self.makeTransaction(from: response, item: item, payload: payload)
+                else {
+                    return completion(.failure(.connectivityError))
+                }
                 
                 completion(.success(transaction))
             }
         }
+    }
+    
+    func makeTransaction(
+        from response: AnywayResponse,
+        item: ServicePickerItem,
+        payload: PaymentProviderServicePickerPayload
+    ) -> AnywayTransactionState.Transaction? {
+        
+        guard let update = AnywayPaymentUpdate(response)
+        else { return nil }
+        
+        let product = model.outlineProduct()
+        
+        let context = AnywayPaymentContext(
+            update: update,
+            item: item,
+            payload: payload,
+            product: product
+        )
+        
+        // TODO: replace with injected dependency
+        let validator = AnywayPaymentContextValidator()
+        
+        return .init(
+            context: context,
+            isValid: validator.validate(context) == nil
+        )
     }
 }
 
@@ -135,7 +151,7 @@ private extension StartPaymentResult {
 private extension AnywayPaymentContext {
     
     init(
-        response: AnywayResponse,
+        update: AnywayPaymentUpdate,
         item: ServicePickerItem,
         payload: PaymentProviderServicePickerPayload,
         product: AnywayPaymentOutline.Product
@@ -158,7 +174,7 @@ private extension AnywayPaymentContext {
         
         self.init(
             initial: initialPayment,
-            payment: initialPayment.updating(with: response, outline: outline),
+            payment: initialPayment.update(with: update, and: outline),
             staged: .init(),
             outline: outline,
             shouldRestart: false
@@ -180,21 +196,6 @@ extension AnywayElement.Field {
             value: service.name,
             icon: icon.map { .md5Hash($0) }
         )
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment {
-    
-    func updating(
-        with response: AnywayResponse,
-        outline: AnywayPaymentOutline
-    ) -> Self {
-        
-        if let update = AnywayPaymentUpdate(response) {
-            return self.update(with: update, and: outline)
-        } else {
-            return self
-        }
     }
 }
 
