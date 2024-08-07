@@ -14,7 +14,7 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
-typealias MakeRepeatButtonView = () -> RepeatButtonView?
+typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 
 struct RootViewFactory {
     
@@ -68,7 +68,7 @@ struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
     let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
-    let makeRepeatButtonView: () -> RepeatButtonView?
+    let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
 }
 
 extension RootViewFactory {
@@ -85,12 +85,15 @@ extension RootViewFactory {
 
 struct RepeatButtonView: View {
 
-    let viewModel: ButtonSimpleView.ViewModel
+    let action: () -> Void
     
     var body: some View {
     
-        ButtonSimpleView(viewModel: viewModel)
-        
+        ButtonSimpleView(viewModel: .init(
+            title: "Повторить",
+            style: .red,
+            action: action
+        ))
     }
 }
 
