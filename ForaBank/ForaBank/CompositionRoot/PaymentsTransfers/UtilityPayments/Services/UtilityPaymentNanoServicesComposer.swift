@@ -445,7 +445,15 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     )
     
     static let step2: Self = .make(
-        needSum: true
+        needSum: true,
+        parametersForNextStep: [
+            .make(
+                dataType: .number,
+                id: "_2",
+                regExp: "^(([1-9]\\d{0,})|([0]))([.]\\d{1}|[.]\\d{2})",
+                title: "Numeric field"
+            )
+        ]
     )
     
     static let step3: Self = .make(
