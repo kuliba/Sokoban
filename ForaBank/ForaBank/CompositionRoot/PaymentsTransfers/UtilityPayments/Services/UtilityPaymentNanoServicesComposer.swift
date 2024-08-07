@@ -66,8 +66,7 @@ extension UtilityPaymentNanoServicesComposer {
             getAllLatestPayments: getAllLatestPayments,
             getOperatorsListByParam: getOperatorsListByParam,
             getServicesFor: getServicesFor,
-            startAnywayPayment: startAnywayPayment,
-            makeAnywayPaymentOutline: makeAnywayPaymentOutline
+            startAnywayPayment: startAnywayPayment
         )
     }
     
@@ -227,43 +226,29 @@ private extension UtilityPaymentNanoServicesComposer {
             completion(result)
         }
     }
-    
-    private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?,
-        and payload: AnywayPaymentOutline.Payload
-    ) -> AnywayPaymentOutline {
-        
-        let outlineProduct = model.outlineProduct()
-        
-        if let lastPayment {
-            
-            return .init(
-                latestServicePayment: lastPayment,
-                product: outlineProduct
-            )
-        }
-        
-        return .init(
-            amount: nil,
-            product: outlineProduct,
-            fields: .init(),
-            payload: payload
-        )
-    }
 }
 
 // MARK: - Helpers
 
 extension Model {
     
+    @available(*, deprecated, message: "use failable overload")
     func outlineProduct() -> AnywayPaymentOutline.Product {
         
-        guard let product = paymentEligibleProducts().first,
-              let outlineProductType = product.productType.outlineProductType
+        guard let outlineProduct = outlineProduct()
         else {
             // TODO: unimplemented graceful failure for missing products
             fatalError("unimplemented graceful failure")
         }
+        
+        return outlineProduct
+    }
+    
+    func outlineProduct() -> AnywayPaymentOutline.Product? {
+        
+        guard let product = paymentEligibleProducts().first,
+              let outlineProductType = product.productType.outlineProductType
+        else { return nil }
         
         let outlineProduct = AnywayPaymentOutline.Product(
             currency: product.currency,
@@ -298,32 +283,6 @@ private extension UtilityPaymentNanoServicesComposer {
 }
 
 // MARK: - Adapters
-
-extension AnywayPaymentOutline {
-    
-    init(
-        latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment,
-        product: AnywayPaymentOutline.Product
-    ) {
-        let pairs = latest.additionalItems.map {
-            
-            ($0.fieldName, $0.fieldValue)
-        }
-        let fields = Dictionary(uniqueKeysWithValues: pairs)
-        
-        self.init(
-            amount: latest.amount,
-            product: product,
-            fields: fields,
-            payload: .init(
-                puref: latest.puref,
-                title: latest.name,
-                subtitle: nil,
-                icon: latest.md5Hash
-            )
-        )
-    }
-}
 
 private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     

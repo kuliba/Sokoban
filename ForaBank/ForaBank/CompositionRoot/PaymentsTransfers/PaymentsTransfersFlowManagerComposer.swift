@@ -193,8 +193,12 @@ private extension PaymentsTransfersFlowManagerComposer {
             log: log,
             loadOperators: loadOperators
         )
-
+        let composer = AnywayTransactionComposer(
+            model: model,
+            validator: .init()
+        )
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
+            composer: composer,
             flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
             makeLegacyPaymentsServicesViewModel: makeLegacyViewModel

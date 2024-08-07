@@ -36,10 +36,10 @@ extension AnywayTransactionComposer {
         payload: PaymentProviderServicePickerPayload
     ) -> AnywayTransactionState.Transaction? {
         
-        guard let update = AnywayPaymentUpdate(response)
+        guard let update = AnywayPaymentUpdate(response),
+              let product = model.outlineProduct()
         else { return nil }
         
-        let product = model.outlineProduct()
         let outline = AnywayPaymentOutline(
             service: item.service,
             payload: payload,
@@ -49,7 +49,6 @@ extension AnywayTransactionComposer {
             service: item.isOneOf ? item.service : nil,
             icon: payload.provider.origin.icon
         )
-        
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
@@ -62,8 +61,123 @@ extension AnywayTransactionComposer {
             isValid: validator.validate(context) == nil
         )
     }
-}
+    
+    func makeTransaction(
+        from response: AnywayResponse,
+        with payload: MakeAnywayTransactionPayload
+    ) -> AnywayTransactionState.Transaction? {
+        
+        guard let update = AnywayPaymentUpdate(response),
+              let product = model.outlineProduct()
+        else { return nil }
 
+        switch payload {
+        case let .lastPayment(lastPayment):
+            return makeTransaction(
+                update: update,
+                product: product,
+                lastPayment: lastPayment
+            )
+                        
+        case let .oneOf(utilityService, `operator`):
+            return makeTransaction(
+                update: update,
+                product: product,
+                service: utilityService,
+                operator: `operator`
+            )
+            
+        case let .singleService(utilityService, `operator`):
+            return makeTransaction(
+                update: update,
+                product: product,
+                puref: utilityService.puref,
+                operator: `operator`
+            )
+        }
+    }
+}
+    
+private extension AnywayTransactionComposer {
+    
+    func makeTransaction(
+        update: AnywayPaymentUpdate,
+        product: AnywayPaymentOutline.Product,
+        lastPayment: UtilityPaymentLastPayment
+    ) -> AnywayTransactionState.Transaction? {
+        
+        let outline = AnywayPaymentOutline(
+            latestServicePayment: lastPayment,
+            product: product
+        )
+        let context = AnywayPaymentContext(
+            update: update,
+            outline: outline,
+            firstField: nil,
+            product: product
+        )
+        
+        return .init(
+            context: context,
+            isValid: validator.validate(context) == nil
+        )
+    }
+    
+    func makeTransaction(
+        update: AnywayPaymentUpdate,
+        product: AnywayPaymentOutline.Product,
+        service: UtilityService,
+        operator: UtilityPaymentOperator
+    ) -> AnywayTransactionState.Transaction? {
+        
+        let outline = AnywayPaymentOutline(
+            operator: `operator`,
+            puref: service.puref,
+            product: product
+        )
+        let firstField = AnywayElement.Field(
+            service: service,
+            icon: `operator`.icon
+        )
+        let context = AnywayPaymentContext(
+            update: update,
+            outline: outline,
+            firstField: firstField,
+            product: product
+        )
+        
+        return .init(
+            context: context,
+            isValid: validator.validate(context) == nil
+        )
+    }
+    
+    func makeTransaction(
+        update: AnywayPaymentUpdate,
+        product: AnywayPaymentOutline.Product,
+        puref: String,
+        operator: UtilityPaymentOperator
+    ) -> AnywayTransactionState.Transaction? {
+        
+        let outline = AnywayPaymentOutline(
+            operator: `operator`,
+            puref: puref,
+            product: product
+        )
+        let context = AnywayPaymentContext(
+            update: update,
+            outline: outline,
+            firstField: nil,
+            product: product
+        )
+        
+        return .init(
+            context: context,
+            isValid: validator.validate(context) == nil
+        )
+    }
+}
+    
 private extension AnywayPaymentOutline {
     
     init(
@@ -165,6 +279,50 @@ private extension AnywayPaymentContext {
             staged: .init(),
             outline: outline,
             shouldRestart: false
+        )
+    }
+}
+
+extension AnywayPaymentOutline {
+    
+    init(
+        latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment,
+        product: AnywayPaymentOutline.Product
+    ) {
+        let pairs = latest.additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        self.init(
+            amount: latest.amount,
+            product: product,
+            fields: fields,
+            payload: .init(
+                puref: latest.puref,
+                title: latest.name,
+                subtitle: nil,
+                icon: latest.md5Hash
+            )
+        )
+    }
+    
+    init(
+        operator: UtilityPaymentOperator,
+        puref: String,
+        product: AnywayPaymentOutline.Product
+    ) {
+        self.init(
+            amount: nil,
+            product: product,
+            fields: [:],
+            payload: .init(
+                puref: puref,
+                title: `operator`.title,
+                subtitle: `operator`.subtitle,
+                icon: `operator`.icon
+            )
         )
     }
 }

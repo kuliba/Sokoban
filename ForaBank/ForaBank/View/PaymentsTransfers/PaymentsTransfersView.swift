@@ -709,7 +709,7 @@ private extension PaymentsTransfersView {
         
         let selectService = {
             event(.prepayment(.select(
-                .service($0, for: state.content.`operator`)
+                .oneOf($0, for: state.content.`operator`)
             )))
         }
         
