@@ -10,7 +10,7 @@ import TextFieldModel
 import XCTest
 
 final class FilteringTransformerTests: XCTestCase {
-
+    
     func test_filtering_shouldReturnEmpty_onMissing() {
         
         let state = TextState("abcde", cursorPosition: 3)
@@ -69,7 +69,7 @@ final class FilteringTransformerTests: XCTestCase {
         XCTAssertEqual(result.text.count, 10)
     }
     
-        // MARK: - letters
+    // MARK: - letters
     
     func test_letters_shouldReturnEmpty_onNonLetters() {
         
@@ -105,5 +105,38 @@ final class FilteringTransformerTests: XCTestCase {
         XCTAssertEqual(result.text, "asPOIUdfghjkl")
         XCTAssertEqual(result.cursorPosition, 13)
         XCTAssertEqual(result.text.count, 13)
+    }
+    
+    // MARK: numeric
+    
+    func test_numeric_shouldNotChangeValid() {
+        
+        let state = TextState("123,.45", cursorPosition: 3)
+        let transformer = FilteringTransformer.numeric
+        
+        let result = transformer.transform(state)
+        
+        XCTAssertEqual(result.text, state.text)
+    }
+    
+    func test_numeric_shouldSetCursorToEndOnValid() {
+        
+        let state = TextState("123,.45", cursorPosition: 3)
+        let transformer = FilteringTransformer.numeric
+        
+        let result = transformer.transform(state)
+        
+        XCTAssertEqual(result.cursorPosition, 7)
+    }
+    
+    func test_numeric_shouldRemoveNonDigitsSetCursorToEnd() {
+        
+        let state = TextState("aD1vb23,$.4&5-", cursorPosition: 3)
+        let transformer = FilteringTransformer.numeric
+        
+        let result = transformer.transform(state)
+        
+        XCTAssertEqual(result.text, "123,.45")
+        XCTAssertEqual(result.cursorPosition, 7)
     }
 }
