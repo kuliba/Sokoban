@@ -66,14 +66,14 @@ private extension QRScanResultMapper {
     ) {
         microServices.getOperators(qrCode, qrMapping) { [weak self] loadResult in
             
-            guard let self else { return }
+            guard self != nil else { return }
             
             switch loadResult {
             case let .mixed(mixed):
-                completion(.mixed(mixed, qrCode))
+                completion(.mixed(mixed, qrCode, qrMapping))
                 
             case let .multiple(multipleOperators):
-                completion(.multiple(multipleOperators, qrCode))
+                completion(.multiple(multipleOperators, qrCode, qrMapping))
                 
             case .none:
                 completion(.none(qrCode))
@@ -83,7 +83,11 @@ private extension QRScanResultMapper {
                 
             case let .provider(provider):
                 // найден 1 поставщик и type = housingAndCommunalService
-                completion(.provider(provider, qrCode))
+                completion(.provider(.init(
+                    provider: provider, 
+                    qrCode: qrCode, 
+                    qrMapping: qrMapping
+                )))
             }
         }
     }
@@ -97,7 +101,7 @@ private extension SegmentedOperatorData {
     ) -> QRModelResult.Mapped {
         
         guard let source = origin.serviceSource(matching: qrCode)
-        else { return .single(qrCode, qrMapping) }
+        else { return .single(self, qrCode, qrMapping) }
         
         return .source(source)
     }

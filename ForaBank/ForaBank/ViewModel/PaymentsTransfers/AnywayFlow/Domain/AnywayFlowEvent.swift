@@ -8,6 +8,7 @@
 enum AnywayFlowEvent: Equatable {
     
     case dismissDestination
+    case isLoading(Bool)
     case goTo(GoTo)
     case notify(AnywayTransactionStatus?)
     case showResult(TransactionResult)

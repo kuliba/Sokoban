@@ -23,15 +23,6 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         XCTAssertNoDiff(outline.amount, 777)
     }
     
-    func test_init_shouldNotSetProduct() throws {
-        
-        let latest = try makeLatestPayment()
-        
-        let outline = makeOutline(latest)
-        
-        XCTAssertNil(outline.product)
-    }
-    
     func test_init_shouldSetFields() throws {
         
         let latest = try makeLatestPayment()
@@ -73,8 +64,17 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
         
         return .init(
             latestServicePayment: latestPayment, 
-            product: product
+            product: product ?? makeOutlineProduct()
         )
+    }
+    
+    private func makeOutlineProduct(
+        currency: String = anyMessage(),
+        productID: Int = .random(in: 1...100),
+        productType: AnywayPaymentOutline.Product.ProductType = .card
+    ) -> AnywayPaymentOutline.Product {
+        
+        return .init(currency: currency, productID: productID, productType: productType)
     }
     
     private func makeLatestPayment() throws -> LatestPayment {

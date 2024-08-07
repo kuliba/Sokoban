@@ -34,11 +34,11 @@ final class QRScanResultMapperTests: XCTestCase {
     
     func test_mapScanResult_shouldDeliverMappedMixedOnMixed() {
         
-        let qr = anyQR()
+        let (qr, qrMapping) = (anyQR(), anyQRMapping())
         let mixed = makeMixed()
-        let (sut, spy) = makeSUT(qrMapping: anyQRMapping())
+        let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.mixed(mixed, qr))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.mixed(mixed, qr, qrMapping))) {
             
             spy.complete(with: .mixed(mixed))
         }
@@ -46,11 +46,11 @@ final class QRScanResultMapperTests: XCTestCase {
     
     func test_mapScanResult_shouldDeliverMappedMultipleOnMultiple() {
         
-        let qr = anyQR()
+        let (qr, qrMapping) = (anyQR(), anyQRMapping())
         let multiple = makeMultiple()
-        let (sut, spy) = makeSUT(qrMapping: anyQRMapping())
-        
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.multiple(multiple, qr))) {
+        let (sut, spy) = makeSUT(qrMapping: qrMapping)
+
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.multiple(multiple, qr, qrMapping))) {
             
             spy.complete(with: .multiple(multiple))
         }
@@ -70,11 +70,12 @@ final class QRScanResultMapperTests: XCTestCase {
     func test_mapScanResult_shouldDeliverMappedSingleOnNonServiceOperator() {
         
         let (qr, qrMapping) = (anyQR(), anyQRMapping())
+        let `operator` = makeOperator()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.single(qr, qrMapping))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.single(`operator`, qr, qrMapping))) {
             
-            spy.complete(with: .operator(makeOperator()))
+            spy.complete(with: .operator(`operator`))
         }
     }
     
@@ -158,8 +159,9 @@ final class QRScanResultMapperTests: XCTestCase {
         let provider = makeSegmentedProvider()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.provider(provider, qr))) {
-            
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.provider(
+            .init(provider: provider, qrCode: qr, qrMapping: qrMapping)
+        ))) {
             spy.complete(with: .provider(provider))
         }
     }

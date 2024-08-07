@@ -66,6 +66,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
     private func makeSUT(
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
         qrCode: QRCode? = nil,
+        qrMapping: QRMapping = .init(parameters: [], operators: []),
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .init(.active(.stub)),
         file: StaticString = #file,
         line: UInt = #line
@@ -84,7 +85,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
             scheduler: .immediate
         )
         let mix = mix ?? .init(.provider(makeSegmentedProvider()), .provider(makeSegmentedProvider()))
-        let sut = make(mix, qrCode ?? anyQR())
+        let sut = make(mix, qrCode ?? anyQR(), qrMapping)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

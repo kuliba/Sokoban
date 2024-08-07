@@ -21,7 +21,8 @@ extension PaymentProviderServicePickerPayload {
             ),
             segment: "Services"
         ),
-        qrCode: .init(original: "", rawData: [:])
+        qrCode: .init(original: "", rawData: [:]),
+        qrMapping: .init(parameters: [], operators: [])
     )
 }
 #endif

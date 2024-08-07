@@ -33,11 +33,11 @@ enum QRModelResult: Equatable {
     
     enum Mapped: Equatable {
         
-        case mixed(MixedOperators, QRCode)
-        case multiple(MultipleOperators, QRCode)
+        case mixed(MixedOperators, QRCode, QRMapping)
+        case multiple(MultipleOperators, QRCode, QRMapping)
         case none(QRCode)
-        case provider(Provider, QRCode)
-        case single(QRCode, QRMapping)
+        case provider(PaymentProviderServicePickerPayload)
+        case single(Operator, QRCode, QRMapping)
         case source(Payments.Operation.Source)
         
         typealias MixedOperators = MultiElementArray<SegmentedOperatorProvider>

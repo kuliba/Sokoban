@@ -7,6 +7,7 @@
 
 enum PaymentProviderPickerEvent<Item> {
     
+    case deselect
     case select(Select)
 }
 

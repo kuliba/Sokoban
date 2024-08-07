@@ -35,13 +35,12 @@ final class AnywayServicePickerFlowModelComposer {
 extension AnywayServicePickerFlowModelComposer {
     
     func compose(
-        provider: SegmentedProvider,
-        qrCode: QRCode
+        payload: PaymentProviderServicePickerPayload
     ) -> AnywayServicePickerFlowModel {
         
         return .init(
             initialState: .init(
-                content: makeContent(provider, qrCode)
+                content: makeContent(payload)
             ),
             factory: makeFactory(),
             scheduler: scheduler
@@ -52,8 +51,7 @@ extension AnywayServicePickerFlowModelComposer {
 private extension AnywayServicePickerFlowModelComposer {
     
     func makeContent(
-        _ provider: SegmentedProvider,
-        _ qrCode: QRCode
+        _ payload: PaymentProviderServicePickerPayload
     ) -> PaymentProviderServicePickerModel {
         
         let reducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>()
@@ -62,12 +60,7 @@ private extension AnywayServicePickerFlowModelComposer {
         )
         
         return .init(
-            initialState: .init(
-                payload: .init(
-                    provider: provider,
-                    qrCode: qrCode
-                )
-            ),
+            initialState: .init(payload: payload),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler

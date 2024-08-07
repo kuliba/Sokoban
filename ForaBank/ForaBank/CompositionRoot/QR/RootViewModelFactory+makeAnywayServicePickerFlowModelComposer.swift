@@ -37,19 +37,6 @@ extension RootViewModelFactory {
             pageSize: pageSize
         )
         let loadOperators = loaderComposer.loadOperators(completion:)
-        let nanoComposer = UtilityPaymentNanoServicesComposer(
-            flag: utilitiesPaymentsFlag,
-            model: model,
-            httpClient: httpClient,
-            log: log,
-            loadOperators: loadOperators
-        )
-        let servicesModelComposer = PaymentsServicesViewModelComposer(model: model)
-        let utilityMicroServicesComposer = UtilityPrepaymentFlowMicroServicesComposer(
-            flag: utilitiesPaymentsFlag.rawValue,
-            nanoServices: nanoComposer.compose(),
-            makeLegacyPaymentsServicesViewModel: servicesModelComposer.compose(payload:)
-        )
         let pickerNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
@@ -58,7 +45,7 @@ extension RootViewModelFactory {
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
-            composer: utilityMicroServicesComposer,
+            model: model,
             nanoServices: pickerNanoServicesComposer.compose()
         )
         

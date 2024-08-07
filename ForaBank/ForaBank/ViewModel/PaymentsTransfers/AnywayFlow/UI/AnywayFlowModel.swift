@@ -66,6 +66,7 @@ private extension AnywayFlowModel {
         _ event: Event
     ) -> Effect? {
         
+        state.isLoading = false
         var effect: Effect?
         
         switch event {
@@ -78,6 +79,9 @@ private extension AnywayFlowModel {
         case .goTo(.payments):
             state.status = .outside(.payments)
             
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
+
         case let .notify(status):
             reduce(&state, &effect, with: status)
             
@@ -137,7 +141,7 @@ private extension AnywayFlowModel {
             }
             
         case .inflight:
-            state.status = .inflight
+            state.isLoading = true
             
         case let .serverError(errorMessage):
             state.status = .alert(.serverError(errorMessage))
@@ -169,13 +173,11 @@ private extension AnywayFlowModel {
                     for: .microseconds(300)
                 )
                 
-#warning("the case should have associated string")
-            case .transactionFailure:
-                state.status = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            case let .transactionFailure(message):
+                state.status = .alert(.terminalError(message))
                 
-#warning("the case should have associated string")
-            case .updatePaymentFailure:
-                state.status = .alert(.serverError("Error"))
+            case let .updatePaymentFailure(message):
+                state.status = .alert(.serverError(message))
             }
             
         case let .success(report):

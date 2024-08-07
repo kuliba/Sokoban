@@ -37,7 +37,7 @@ extension AnywayTransactionEffectHandlerNanoServices {
     enum MakeTransferFailure: Equatable, Error {
         
         case otpFailure(String)
-        case terminal
+        case terminal(String)
     }
     typealias MakeTransferResult = Result<MakeTransferResponse, MakeTransferFailure>
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void

@@ -58,6 +58,7 @@ private extension PaymentProviderPickerFlowModel {
         _ event: Event
     ) -> Effect? {
         
+        state.isLoading = false
         let effect: Effect? = nil
         
         switch event {
@@ -66,6 +67,9 @@ private extension PaymentProviderPickerFlowModel {
             
         case let .goTo(goTo):
             return reduce(&state, with: goTo)
+            
+        case let .isLoading(isLoading):
+            state.isLoading = isLoading
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -154,22 +158,36 @@ private extension PaymentProviderPickerFlowModel {
         _ provider: State.Status.Provider
     ) {
         let qrCode = state.content.state.qrCode
-        let flowModel = factory.makeServicePickerFlowModel(provider, qrCode)
+        let qrMapping = state.content.state.qrMapping
+        let flowModel = factory.makeServicePickerFlowModel(.init(
+            provider: provider,
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        ))
         
         state.status = .destination(.servicePicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         )))
     }
     
     private func bind(
         _ flowModel: AnywayServicePickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let loading = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.isLoading($0)) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outsideEvent)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.goTo($0)) }
+        
+        return [loading, outside]
     }
 }
 
@@ -237,11 +255,14 @@ private extension PaymentProviderPickerFlowModel {
     func bind(_ content: Content) {
         
         state.content.$state
-            .compactMap(\.selection)
+            .map(\.selection)
             .receive(on: scheduler)
             .sink { [weak self] in
                 
                 switch $0 {
+                case .none:
+                    self?.event(.dismiss)
+                    
                 case .addCompany:
                     self?.event(.goTo(.addCompany))
                     

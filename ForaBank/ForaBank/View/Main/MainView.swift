@@ -399,73 +399,8 @@ private extension MainView {
             subtitle: provider.origin.inn,
             dismiss: viewModel.dismissProviderServicePicker,
             icon: iconView(provider.origin.icon),
-            style: .large
+            style: .normal
         )
-    }
-    
-    private func servicePickerContentView(
-        model: PaymentProviderServicePickerModel
-    ) -> some View {
-        
-        PaymentProviderServicePickerWrapperView(
-            model: model,
-            failureView: {
-                
-                FooterView(
-                    state: .failure(.iFora),
-                    event: event(qrCode: model.state.payload.qrCode),
-                    config: .iFora
-                )
-            },
-            iconView: viewFactory.makeIconView,
-            config: .iFora
-        )
-    }
-    
-    private func servicePickerAlertContent(
-        alert: ServiceFailureAlert
-    ) -> Alert {
-        
-        return .init(with: .init(
-            title: "Ошибка",
-            message: {
-                
-                switch alert.serviceFailure {
-                case .connectivityError:
-                    return "Ошибка"
-                    
-                case let .serverError(errorMessage):
-                    return errorMessage
-                }
-            }(),
-            primary: .init(
-                type: .default,
-                title: "OK",
-                action: { print("dismiss alert") }
-            )
-        ))
-    }
-    
-    @ViewBuilder
-    private func servicePickerDestinationContent(
-        destination: PaymentProviderServicePickerFlowState.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .payment(binder):
-            let payload  = binder.content.state.transaction.context.outline.payload
-            
-            paymentFlow(binder: binder)
-                .navigationBarWithAsyncIcon(
-                    title: payload.title,
-                    subtitle: payload.subtitle,
-                    dismiss: { binder.flow.event(.terminate) },
-                    icon: iconView(payload.icon)
-                )
-            
-        case .paymentByInstruction:
-            Text("DestinationView: paymentByInstruction")
-        }
     }
 }
 
@@ -482,7 +417,6 @@ private extension MainView {
             
             flowModel.state.content.event(.payment($0))
         }
-        let payload = flowModel.state.content.state.transaction.context.outline.payload
         
         AnywayFlowView(
             flowModel: flowModel,
@@ -503,52 +437,6 @@ private extension MainView {
                     { flowModel.event(.goTo(.main)) }
                 )
             }
-        )
-        .navigationBarWithAsyncIcon(
-            title: payload.title,
-            subtitle: payload.subtitle,
-            dismiss: { flowModel.event(.goTo(.main)) },
-            icon: iconView(payload.icon)
-        )
-    }
-    
-    func paymentFlow(
-        binder: ServicePaymentBinder
-    ) -> some View {
-        
-        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
-            
-            binder.content.event(.payment($0))
-        }
-        
-        let flowFactory = ServicePaymentFlowFactory(
-            bottomSheetContent: { payload in
-                
-                return .init(
-                    state: payload,
-                    event: { binder.content.event(.fraud($0)) }
-                )
-            },
-            fullScreenCoverContent: {
-                
-                viewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { binder.flow.event(.terminate) }
-                )
-            },
-            makeElementView: anywayPaymentFactory.makeElementView,
-            makeFooterView: anywayPaymentFactory.makeFooterView
-        )
-        
-        return ServicePaymentFlowStateWrapperView(
-            binder: binder,
-            factory: flowFactory
         )
     }
 }

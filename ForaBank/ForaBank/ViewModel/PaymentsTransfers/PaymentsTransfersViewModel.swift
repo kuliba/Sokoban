@@ -1561,19 +1561,19 @@ extension PaymentsTransfersViewModel {
         _ mapped: QRModelResult.Mapped
     ) {
         switch mapped {
-        case let .mixed(mixed, qrCode):
-            makePaymentProviderPicker(mixed, qrCode)
+        case let .mixed(mixed, qrCode, qrMapping):
+            makePaymentProviderPicker(mixed, qrCode, qrMapping)
 
-        case let .multiple(multipleOperators, qrCode):
+        case let .multiple(multipleOperators, qrCode, qrMapping):
             searchOperators(multipleOperators, with: qrCode)
             
         case let .none(qrCode):
-            handleFailure(qrCode)
+            payByInstructions(with: qrCode)
             
-        case let .provider(provider, qrCode):
-            makeServicePicker(provider, qrCode)
+        case let .provider(payload):
+            makeServicePicker(payload)
 
-        case let .single(qrCode, qrMapping):
+        case let .single(`operator`, qrCode, qrMapping):
             let viewModel = InternetTVDetailsViewModel(
                 model: model,
                 qrCode: qrCode,
@@ -1795,30 +1795,49 @@ private extension PaymentsTransfersViewModel {
     
     func makePaymentProviderPicker(
         _ mixed: MultiElementArray<SegmentedOperatorProvider>,
-        _ qrCode: QRCode
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
     ) {
-        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode)
+        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode, qrMapping)
         route.destination = .paymentProviderPicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         ))
     }
     
     private func bind(
         _ flowModel: PaymentProviderPickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let spinner = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outside)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.handle($0) }
+        
+        return [spinner, outside]
+    }
+    
+    private func showSpinner(_ isShowing: Bool) {
+        
+        if isShowing {
+            rootActions?.spinner.show()
+        } else {
+            rootActions?.spinner.hide()
+        }
     }
     
     func handle(
         _ outside: PaymentProviderPickerFlowState.Status.Outside
     ) {
         event(.dismiss(.destination))
-        
+        rootActions?.spinner.hide()
+
         delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
@@ -1843,10 +1862,10 @@ private extension PaymentsTransfersViewModel {
 private extension PaymentsTransfersViewModel {
     
     func makeServicePicker(
-        _ provider: SegmentedProvider,
-        _ qrCode: QRCode
+        _ payload: PaymentProviderServicePickerPayload
     ) {
-        let flowModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider: provider, qrCode: qrCode))
+        let make = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel
+        let flowModel = make(payload)
         route.destination = .providerServicePicker(.init(
             model: flowModel,
             cancellable: bind(flowModel)

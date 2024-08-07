@@ -22,7 +22,7 @@ where OperatorLabel: View,
         content()
             .navigationDestination(
                 destination: flowModel.state.destination,
-                dismissDestination: { flowModel.event(.dismiss) },
+                dismissDestination: { flowModel.state.content.event(.deselect) },
                 content: destinationContent
             )
     }

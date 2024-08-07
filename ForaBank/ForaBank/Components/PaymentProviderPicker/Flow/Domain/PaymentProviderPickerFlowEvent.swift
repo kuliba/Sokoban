@@ -8,6 +8,7 @@
 enum PaymentProviderPickerFlowEvent {
     
     case dismiss
+    case isLoading(Bool)
     case goTo(GoTo)
     case payByInstructions
     case select(Select)

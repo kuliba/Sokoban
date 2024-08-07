@@ -30,7 +30,7 @@ extension RootViewModelFactory {
         
         return {
             
-            servicePickerComposer.compose(provider: $0.provider, qrCode: $0.qrCode)
+            servicePickerComposer.compose(payload: $0)
         }
     }
 }

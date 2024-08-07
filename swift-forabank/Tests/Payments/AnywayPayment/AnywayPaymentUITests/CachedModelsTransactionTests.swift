@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import AnywayPaymentUI
+import Combine
 import XCTest
 
 final class CachedModelsTransactionTests: XCTestCase {
@@ -162,14 +163,13 @@ final class CachedModelsTransactionTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Response>
-    private typealias AmountViewModel = String
 
     private func makeSUT(
         with transaction: SUT.Transaction = makeTransaction(),
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        return SUT(with: transaction, using: map, makeFooter: { _ in "Footer" })
+        return SUT(with: transaction, using: map, makeFooter: { _ in .init() })
     }
     
     private func updating(
@@ -190,10 +190,27 @@ final class CachedModelsTransactionTests: XCTestCase {
             self.value = value
         }
     }
-}
-
-#warning("replace with model")
-extension String: Receiver {
     
-    public func receive(_ value: Decimal) { }
+    private final class AmountViewModel: FooterInterface, Receiver {
+        
+        private(set) var projections = [AnywayPaymentUI.FooterTransactionProjection]()
+        private(set) var messages = [Decimal]()
+        
+        let subject = PassthroughSubject<AnywayPaymentUI.Projection, Never>()
+        
+        var projectionPublisher: AnyPublisher<AnywayPaymentUI.Projection, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func project(_ projection: AnywayPaymentUI.FooterTransactionProjection) {
+            
+            projections.append(projection)
+        }
+        
+        func receive(_ message: Decimal) {
+            
+            messages.append(message)
+        }
+    }
 }

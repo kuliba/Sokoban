@@ -242,7 +242,7 @@ private extension AnywayElement.Widget {
 }
 
 private func makeEmptyOutline(
-    amount: Decimal = .init(Double.random(in: 1...1_000)),
+    amount: Decimal? = nil,
     product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:],
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
