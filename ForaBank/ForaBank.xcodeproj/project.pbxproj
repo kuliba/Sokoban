@@ -1273,6 +1273,7 @@
 		2ABB63082C63FC7E00541DE7 /* TextInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63072C63FC7E00541DE7 /* TextInputModel.swift */; };
 		2ABB630A2C63FE7800541DE7 /* TextInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63092C63FE7800541DE7 /* TextInputWrapperView.swift */; };
 		2ABB630C2C63FF3800541DE7 /* TextInputStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB630B2C63FF3800541DE7 /* TextInputStateWrapperView.swift */; };
+		2ABB630E2C6403F600541DE7 /* TextInputValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB630D2C6403F600541DE7 /* TextInputValidator.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
 		2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */; };
 		2ABBFD1F2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */; };
@@ -4526,6 +4527,7 @@
 		2ABB63072C63FC7E00541DE7 /* TextInputModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputModel.swift; sourceTree = "<group>"; };
 		2ABB63092C63FE7800541DE7 /* TextInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputWrapperView.swift; sourceTree = "<group>"; };
 		2ABB630B2C63FF3800541DE7 /* TextInputStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputStateWrapperView.swift; sourceTree = "<group>"; };
+		2ABB630D2C6403F600541DE7 /* TextInputValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputValidator.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
 		2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactory.swift; sourceTree = "<group>"; };
@@ -10581,6 +10583,7 @@
 			children = (
 				2ABB63052C63FB6900541DE7 /* TextInputReducer.swift */,
 				2ABB63032C63FB4900541DE7 /* TextInputEffectHandler.swift */,
+				2ABB630D2C6403F600541DE7 /* TextInputValidator.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -18166,6 +18169,7 @@
 				2ABB63082C63FC7E00541DE7 /* TextInputModel.swift in Sources */,
 				2ABB63062C63FB6900541DE7 /* TextInputReducer.swift in Sources */,
 				2A0E317A2C63D52800143969 /* ContentView.swift in Sources */,
+				2ABB630E2C6403F600541DE7 /* TextInputValidator.swift in Sources */,
 				2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */,
 				2A0E31932C63D71B00143969 /* TextInputView.swift in Sources */,
 				2ABB63042C63FB4900541DE7 /* TextInputEffectHandler.swift in Sources */,

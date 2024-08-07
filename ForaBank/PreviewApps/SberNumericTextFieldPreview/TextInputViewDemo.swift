@@ -59,9 +59,14 @@ private extension TextInputViewDemo {
         let textFieldReducer = TransformingReducer.sberNumericReducer(
             placeholderText: placeholderText
         )
-        
+        let textInputValidator = TextInputValidator(
+            hintText: "Long hint describing how to fill up this field without errors.",
+            warningText: "This text describes text input validation error.",
+            validate: { $0.count > 4 }
+        )
         let reducer = TextInputReducer(
-            textFieldReduce: textFieldReducer.reduce(_:_:)
+            textFieldReduce: textFieldReducer.reduce(_:_:), 
+            validate: textInputValidator.validate
         )
         let effectHandler = TextInputEffectHandler()
         
