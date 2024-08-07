@@ -53,6 +53,7 @@ private extension AnywayElement.Widget.Info {
         
         self.init(
             currency: update.details.amounts.currencyPayer,
+            debitAmount: update.details.amounts.debitAmount,
             fields: [
                 update.details.amounts.amount.map { .amount($0) },
                 update.details.amounts.fee.map { .fee($0) },

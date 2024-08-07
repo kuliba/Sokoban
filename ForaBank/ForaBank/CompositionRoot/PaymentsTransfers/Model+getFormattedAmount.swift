@@ -14,12 +14,24 @@ extension Model {
         context: AnywayPaymentContext
     ) -> String? {
         
-        let digest = context.makeDigest()
-        
-        guard let amount = digest.amount,
-              let currency = digest.core?.currency
+        guard let debitAmount = context.debitAmount,
+              let currency = context.currency
         else { return nil }
         
-        return formatted(amount, with: currency)
+        return formatted(debitAmount, with: currency)
+    }
+}
+
+extension AnywayPaymentContext {
+    
+    var debitAmount: Decimal? { info?.debitAmount }
+    var currency: String? { info?.currency }
+    
+    private var info: AnywayElement.Widget.Info? {
+        
+        guard case let .widget(.info(info)) = payment.elements.first(matching: .widgetID(.info))
+        else { return nil }
+        
+        return info
     }
 }
