@@ -89,7 +89,7 @@ private extension AnywayFlowModel {
             reduce(&state, &effect, with: result)
         }
         
-        return nil
+        return effect
     }
     
     func handleEffect(

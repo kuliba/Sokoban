@@ -1302,18 +1302,27 @@ private extension MainViewModel {
         let flowModel = make(payload)
         route.destination = .providerServicePicker(.init(
             model: flowModel,
-            cancellable: bind(flowModel)
+            cancellables: bind(flowModel)
         ))
     }
     
     private func bind(
         _ flowModel: AnywayServicePickerFlowModel
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        flowModel.$state
+        let loading = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
             .compactMap(\.outside)
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.handle($0) }
+        
+        return [loading, outside]
     }
     
     private func handle(
