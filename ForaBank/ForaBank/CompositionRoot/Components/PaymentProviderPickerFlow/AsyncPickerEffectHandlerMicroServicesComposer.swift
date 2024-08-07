@@ -146,8 +146,8 @@ private extension AnywayPaymentContext {
             product: product
         )
         let firstField = AnywayElement.Field(
-            item: item,
-            provider: payload.provider.origin
+            service: item.isOneOf ? item.service : nil,
+            icon: payload.provider.origin.icon
         )
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,
@@ -166,19 +166,19 @@ private extension AnywayPaymentContext {
     }
 }
 
-private extension AnywayElement.Field {
+extension AnywayElement.Field {
     
     init?(
-        item: ServicePickerItem,
-        provider: UtilityPaymentProvider
+        service: UtilityService?,
+        icon: String?
     ) {
-        guard item.isOneOf else { return nil }
+        guard let service else { return nil }
         
         self.init(
-            id: "_selected_service", 
+            id: "_selected_service",
             title: "Услуга",
-            value: item.service.name,
-            icon: provider.icon.map { .md5Hash($0) }
+            value: service.name,
+            icon: icon.map { .md5Hash($0) }
         )
     }
 }
