@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 07.08.2024.
 //
 
+import InputComponent
 import SwiftUI
 import TextFieldComponent
 
@@ -42,12 +43,47 @@ private extension TextInputViewDemo {
         _ state: TextInputState
     ) -> some View {
         
-        TextInputView(
-            state: state,
-            event: { print($0) },
+        return TextInputStateWrapperView(
+            model: makeModel(state),
             config: .preview
         ) {
             Image(systemName: "photo")
+        }
+    }
+    
+    func makeModel(
+        placeholderText: String = "placeholder",
+        _ state: TextInputState
+    ) -> TextInputModel {
+        
+        let textFieldReducer = TransformingReducer.sberNumericReducer(
+            placeholderText: placeholderText
+        )
+        
+        let reducer = TextInputReducer(
+            textFieldReduce: textFieldReducer.reduce(_:_:)
+        )
+        let effectHandler = TextInputEffectHandler()
+        
+        return .init(
+            initialState: state,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
+        )
+    }
+}
+
+private extension Reducer {
+    
+    func reduce(
+        _ state: TextFieldState,
+        _ action: TextFieldAction
+    ) -> TextFieldState {
+        
+        do {
+            return try reduce(state, with: action)
+        } catch {
+            return state
         }
     }
 }
