@@ -1267,6 +1267,9 @@
 		2AB9E0B92B371E0C00D36D07 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2AB9E0B82B371E0C00D36D07 /* PaymentComponents */; };
 		2ABB62FD2C63F22E00541DE7 /* TextInputViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB62FC2C63F22E00541DE7 /* TextInputViewDemo.swift */; };
 		2ABB62FF2C63FAAF00541DE7 /* TextInputEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB62FE2C63FAAF00541DE7 /* TextInputEvent.swift */; };
+		2ABB63012C63FB1800541DE7 /* TextInputEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63002C63FB1800541DE7 /* TextInputEffect.swift */; };
+		2ABB63042C63FB4900541DE7 /* TextInputEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63032C63FB4900541DE7 /* TextInputEffectHandler.swift */; };
+		2ABB63062C63FB6900541DE7 /* TextInputReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63052C63FB6900541DE7 /* TextInputReducer.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
 		2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */; };
 		2ABBFD1F2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */; };
@@ -4514,6 +4517,9 @@
 		2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelModeTests.swift; sourceTree = "<group>"; };
 		2ABB62FC2C63F22E00541DE7 /* TextInputViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputViewDemo.swift; sourceTree = "<group>"; };
 		2ABB62FE2C63FAAF00541DE7 /* TextInputEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputEvent.swift; sourceTree = "<group>"; };
+		2ABB63002C63FB1800541DE7 /* TextInputEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputEffect.swift; sourceTree = "<group>"; };
+		2ABB63032C63FB4900541DE7 /* TextInputEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputEffectHandler.swift; sourceTree = "<group>"; };
+		2ABB63052C63FB6900541DE7 /* TextInputReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputReducer.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
 		2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactory.swift; sourceTree = "<group>"; };
@@ -7769,6 +7775,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0E31902C63D70500143969 /* Domain */,
+				2ABB63022C63FB3600541DE7 /* Logic */,
 				2A0E31912C63D70C00143969 /* UI */,
 			);
 			path = TextInput;
@@ -7779,6 +7786,7 @@
 			children = (
 				2A0E318D2C63D6A000143969 /* TextInputState.swift */,
 				2ABB62FE2C63FAAF00541DE7 /* TextInputEvent.swift */,
+				2ABB63002C63FB1800541DE7 /* TextInputEffect.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -10557,6 +10565,15 @@
 				2A1A8E512B26FCBE008B896D /* QRViewModelFactory.swift */,
 			);
 			path = SberQRInterfaces;
+			sourceTree = "<group>";
+		};
+		2ABB63022C63FB3600541DE7 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				2ABB63052C63FB6900541DE7 /* TextInputReducer.swift */,
+				2ABB63032C63FB4900541DE7 /* TextInputEffectHandler.swift */,
+			);
+			path = Logic;
 			sourceTree = "<group>";
 		};
 		2ABC988A2BDBA96000EA7CFB /* UtilityServicePayment */ = {
@@ -18134,9 +18151,12 @@
 			files = (
 				2A0E31972C63E5FF00143969 /* TextInputConfig.swift in Sources */,
 				2ABB62FD2C63F22E00541DE7 /* TextInputViewDemo.swift in Sources */,
+				2ABB63012C63FB1800541DE7 /* TextInputEffect.swift in Sources */,
+				2ABB63062C63FB6900541DE7 /* TextInputReducer.swift in Sources */,
 				2A0E317A2C63D52800143969 /* ContentView.swift in Sources */,
 				2A0E31782C63D52800143969 /* SberNumericTextFieldPreviewApp.swift in Sources */,
 				2A0E31932C63D71B00143969 /* TextInputView.swift in Sources */,
+				2ABB63042C63FB4900541DE7 /* TextInputEffectHandler.swift in Sources */,
 				2ABB62FF2C63FAAF00541DE7 /* TextInputEvent.swift in Sources */,
 				2A0E318E2C63D6A000143969 /* TextInputState.swift in Sources */,
 			);
