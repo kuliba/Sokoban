@@ -1240,6 +1240,7 @@
 		2AB6BFE62AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB6BFE52AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift */; };
 		2AB766BE29EA82A600501DD2 /* StringUpdateMaskedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */; };
 		2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AB766BF29EA89AB00501DD2 /* UIKitHelpers */; };
+		2AB7AF702C626616007FA0CC /* Model+getFormattedAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB7AF6F2C626616007FA0CC /* Model+getFormattedAmount.swift */; };
 		2AB823A72B8EF917000C5FAD /* EffectHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB823A62B8EF917000C5FAD /* EffectHandlerSpy.swift */; };
 		2AB87C4D2C13346F0013EFFE /* AnywayElementModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */; };
 		2AB87C4F2C1336570013EFFE /* AnywayElementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C4E2C1336570013EFFE /* AnywayElementModel.swift */; };
@@ -4475,6 +4476,7 @@
 		2AB6BFE22AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAuthLoginViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		2AB6BFE52AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingAuthLoginViewModelTests.swift; sourceTree = "<group>"; };
 		2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUpdateMaskedTests.swift; sourceTree = "<group>"; };
+		2AB7AF6F2C626616007FA0CC /* Model+getFormattedAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getFormattedAmount.swift"; sourceTree = "<group>"; };
 		2AB823A62B8EF917000C5FAD /* EffectHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectHandlerSpy.swift; sourceTree = "<group>"; };
 		2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayElementModelMapper.swift; sourceTree = "<group>"; };
 		2AB87C4E2C1336570013EFFE /* AnywayElementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayElementModel.swift; sourceTree = "<group>"; };
@@ -11291,6 +11293,7 @@
 				2A43009A2C524B1A002FF8C7 /* ServicePaymentBinderComposer.swift */,
 				2A840C0C2C37437B00BA6887 /* Templates */,
 				2A9BD5142B85F04100B88395 /* UtilityPayments */,
+				2AB7AF6F2C626616007FA0CC /* Model+getFormattedAmount.swift */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -19383,6 +19386,7 @@
 				0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */,
 				83CDFA7D2BD2556400191D8B /* ArrayOfProductData+Extensions.swift in Sources */,
 				2AB352E02B6BC626000EADC2 /* UserAccountNavigationStateManager.swift in Sources */,
+				2AB7AF702C626616007FA0CC /* Model+getFormattedAmount.swift in Sources */,
 				2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */,
 				77D01EB429CDAC0B0026B099 /* PaymentC2BParameter.swift in Sources */,
 				77D038632988283B00FBE5AB /* ServerCommands+SBP.swift in Sources */,

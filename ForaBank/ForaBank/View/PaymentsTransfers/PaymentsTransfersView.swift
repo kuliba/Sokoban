@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import ActivateSlider
+import Combine
 import InfoComponent
 import OperatorsListComponents
 import PaymentComponents
@@ -808,7 +809,10 @@ private extension PaymentsTransfersView {
     typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service>
 }
 
-extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
+extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {
+    
+    var isUserInteractionEnabled: CurrentValueSubject<Bool, Never> { .init(false) }
+}
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
