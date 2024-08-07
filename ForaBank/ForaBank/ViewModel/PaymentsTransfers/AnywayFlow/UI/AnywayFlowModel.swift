@@ -173,11 +173,9 @@ private extension AnywayFlowModel {
                     for: .microseconds(300)
                 )
                 
-#warning("the case should have associated string")
             case let .transactionFailure(message):
                 state.status = .alert(.terminalError(message))
                 
-#warning("the case should have associated string")
             case let .updatePaymentFailure(message):
                 state.status = .alert(.serverError(message))
             }
