@@ -205,10 +205,7 @@ private extension AnywayPaymentOutline {
         payload: PaymentProviderServicePickerPayload,
         product: AnywayPaymentOutline.Product
     ) {
-        let fields = service.puref.fields(
-            fromQR: payload.qrCode,
-            matching: payload.qrMapping
-        )
+        let fields = payload.fields(matching: service.puref)
         
         self.init(
             amount: payload.amount,
@@ -238,6 +235,30 @@ private extension PaymentProviderServicePickerPayload {
             return nil
         }
     }
+    
+    func fields(
+        matching `operator`: String
+    ) -> [String: String] {
+        
+        let parameters = qrMapping.operators
+            .filter { $0.operator == `operator` }
+            .flatMap(\.parameters)
+        
+        let pairs = parameters
+            .flatMap { parameter in
+                
+                parameter.keys.map { ($0, parameter.parameter.name) }
+            }
+        
+        let dict = Dictionary(pairs) { _, last in last }
+        
+        let fields = qrCode.rawData.compactMap { element in
+            
+            dict[element.key].map { ($0, element.value) }
+        }
+        
+        return .init(fields) { _, last in last }
+    }
 }
 
 private extension SegmentedProvider {
@@ -250,33 +271,5 @@ private extension SegmentedProvider {
             subtitle: origin.inn,
             icon: origin.icon
         )
-    }
-}
-
-extension String {
-    
-    func fields(
-        fromQR qrCode: QRCode,
-        matching qrMapping: QRMapping
-    ) -> [String: String] {
-        
-        let parameters = qrMapping.operators
-            .filter { $0.operator == self }
-            .flatMap(\.parameters)
-        
-        let pairs = parameters
-            .flatMap { parameter in
-                
-                parameter.keys.map { ($0, parameter.parameter.name) }}
-        
-        
-        let dict = Dictionary(pairs) { _, last in last }
-        
-        let fields = qrCode.rawData.compactMap { element in
-            
-            dict[element.key].map { ($0, element.value) }
-        }
-        
-        return .init(fields) { _, last in last }
     }
 }
