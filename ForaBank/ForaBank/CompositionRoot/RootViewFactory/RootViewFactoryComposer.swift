@@ -177,7 +177,11 @@ private extension RootViewFactoryComposer {
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
                 makeTemplateButton: makeTemplateButtonView(with: result)
-            ),
+            ), 
+            makeIconView: {
+                
+                self.makeIconView($0.map { .md5Hash(.init($0)) })
+            },
             config: .iFora
         )
     }
@@ -202,6 +206,7 @@ private extension RootViewFactoryComposer {
         
         return .init(
             formattedAmount: completed.formattedAmount,
+            merchantIcon: completed.merchantIcon,
             result: completed.result
                 .map {
                     

@@ -199,6 +199,7 @@ private extension AnywayFlowModel {
         case let .failure(fraud):
             state.status = .completed(.init(
                 formattedAmount: fraud.formattedAmount,
+                merchantIcon: state.merchantIcon,
                 result: .failure(.init(hasExpired: fraud.hasExpired))
             ))
             
@@ -206,8 +207,17 @@ private extension AnywayFlowModel {
             let transaction = state.content.state.transaction
             state.status = .completed(.init(
                 formattedAmount: factory.getFormattedAmount(transaction) ?? "",
+                merchantIcon: state.merchantIcon,
                 result: .success(report)
             ))
         }
+    }
+}
+
+private extension AnywayFlowState {
+    
+    var merchantIcon: String? {
+        
+        content.state.transaction.context.outline.payload.icon
     }
 }

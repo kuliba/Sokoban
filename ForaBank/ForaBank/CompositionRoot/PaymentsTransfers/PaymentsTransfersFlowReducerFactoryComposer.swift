@@ -68,7 +68,6 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    #warning("extract repeated")
     func getFormattedAmount(
         state: Factory.ReducerState
     ) -> String? {
@@ -76,20 +75,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         guard let state = state.paymentFlowState?.content.state
         else { return nil }
         
-        let context = state.transaction.context
-        let digest = context.makeDigest()
-        let amount = digest.amount
-        let currency = digest.core?.currency
-        
-        var formattedAmount = amount.map { "\($0)" } ?? ""
-        
-#warning("look into model to extract currency symbol")
-        if let currency {
-            formattedAmount += " \(currency)"
-            _ = model
-        }
-        
-        return formattedAmount
+        return model.getFormattedAmount(context: state.transaction.context)
     }
     
     func makeFraudNoticePayload(

@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import Combine
 import SwiftUI
 import UIPrimitives
 
@@ -115,7 +116,10 @@ extension AnywayFlowState.Status.Completed: Identifiable {
     }
 }
 
-extension FraudNoticePayload: BottomSheetCustomizable {}
+extension FraudNoticePayload: BottomSheetCustomizable {
+    
+    var isUserInteractionEnabled: CurrentValueSubject<Bool, Never> { .init(false) }
+}
 
 extension FraudNoticePayload: Identifiable {
     

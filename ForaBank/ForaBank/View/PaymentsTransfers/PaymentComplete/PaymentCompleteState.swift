@@ -8,6 +8,7 @@
 struct PaymentCompleteState {
     
     let formattedAmount: String
+    let merchantIcon: String?
     let result: Result<Report, Fraud>
     
     struct Report {

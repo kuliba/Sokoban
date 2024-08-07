@@ -100,19 +100,7 @@ private extension ServicePaymentBinderComposer {
         context: AnywayPaymentContext
     ) -> String {
         
-        let digest = context.makeDigest()
-        let amount = digest.amount
-        let currency = digest.core?.currency
-        
-        var formattedAmount = amount.map { "\($0)" } ?? ""
-        
-#warning("look into model to extract currency symbol")
-        if let currency {
-            formattedAmount += " \(currency)"
-            _ = model
-        }
-        
-        return formattedAmount
+        model.getFormattedAmount(context: context) ?? ""
     }
     
     func makeFraudNoticePayload(
