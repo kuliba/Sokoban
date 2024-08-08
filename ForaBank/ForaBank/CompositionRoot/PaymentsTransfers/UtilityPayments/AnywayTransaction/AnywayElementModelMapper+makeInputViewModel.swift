@@ -22,7 +22,8 @@ extension AnywayElementModelMapper {
         let placeholderText = "Введите значение"
         
         let initialState = TextInputState(
-            textField: .placeholder(placeholderText)
+            parameter: parameter,
+            placeholderText: placeholderText
         )
         let textFieldReducer = parameter.textFieldReducer(placeholderText: placeholderText)
         let validator = AnywayPaymentParameterValidator()
@@ -49,6 +50,22 @@ extension AnywayElementModelMapper {
                 }
             }
         )
+    }
+}
+
+private extension TextInputState {
+    
+    init(
+        parameter: AnywayElement.Parameter,
+        placeholderText: String
+    ) {
+        switch parameter.field.value {
+        case .none:
+            self.init(textField: .placeholder(placeholderText))
+            
+        case let .some(value):
+            self.init(textField: .noFocus(value))
+        }
     }
 }
 
