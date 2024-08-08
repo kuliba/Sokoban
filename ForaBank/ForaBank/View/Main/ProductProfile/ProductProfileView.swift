@@ -259,6 +259,9 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+        
+        case let .payment(paymentViewModel):
+            PaymentsView(viewModel: paymentViewModel)
             
         case let .paymentsTransfers(viewModel):
             PaymentsTransfersView(
@@ -279,7 +282,10 @@ struct ProductProfileView: View {
         case let .operationDetail(viewModel):
             OperationDetailView(
                 viewModel: viewModel,
-                makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView
+                makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView, 
+                payment: {
+                    //TODO: Payment reducer
+                }
             )
             
         case let .optionsPannel(viewModel):
@@ -503,7 +509,7 @@ struct ProfileView_Previews: PreviewProvider {
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: HistoryButtonView.init(event:),
-                makeRepeatButtonView: { .init(viewModel: .sample) }
+                makeRepeatButtonView: { _ in .init(action: { }) }
             ),
             getUImage: { _ in nil }
         )

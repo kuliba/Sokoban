@@ -13,7 +13,7 @@ public enum GetInfoRepeatPaymentDomain {}
 public extension GetInfoRepeatPaymentDomain {
     
     typealias Payload = GetInfoRepeatPayment
-    typealias Result = Swift.Result<Payload, Error>
+    typealias Result = Swift.Result<Payload, InfoPaymentError>
     typealias Completion = (Result) -> Void
     
     typealias Response = Swift.Result<(Data, HTTPURLResponse), Swift.Error>
@@ -21,7 +21,7 @@ public extension GetInfoRepeatPaymentDomain {
     typealias PerformRequest = (URLRequest, @escaping ResponseCompletion) -> Void
     typealias MapResponse = (Data, HTTPURLResponse) -> Result
     
-    enum Error: Swift.Error, Equatable {
+    enum InfoPaymentError: Error, Equatable {
         
         case connectivity
         case serverError(statusCode: Int, errorMessage: String)

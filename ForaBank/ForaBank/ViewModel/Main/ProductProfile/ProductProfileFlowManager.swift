@@ -58,6 +58,9 @@ final class ProductProfileFlowReducer {
             let history: ProductProfileViewModel.HistoryState?
             (history, effect) = historyReduce(state.history, historyEvent)
             state.history = history
+            
+        case let .payment(paymentViewModel):
+            state.payment = paymentViewModel
         }
         
         return (state, effect)
@@ -139,12 +142,14 @@ struct ProductProfileFlowState {
     var alert: Alert.ViewModel?
     var bottomSheet: ProductProfileViewModel.BottomSheet?
     var history: ProductProfileViewModel.HistoryState?
+    var payment: PaymentsViewModel
 }
 
 enum ProductProfileFlowEvent {
     case alert(AlertEvent)
     case bottomSheet(BottomSheetEvent)
     case history(HistoryEvent)
+    case payment(PaymentsViewModel)
 }
 
 enum HistoryEvent: Equatable {

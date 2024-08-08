@@ -11,7 +11,8 @@ import UIPrimitives
 struct OperationDetailView: View {
     
     @ObservedObject var viewModel: OperationDetailViewModel
-    let makeRepeatButtonView: () -> RepeatButtonView?
+    let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
+    let payment: () -> Void
     
     var body: some View {
         
@@ -63,7 +64,7 @@ struct OperationDetailView: View {
                 LoadingPlaceholder()
             }
             
-            makeRepeatButtonView()
+            makeRepeatButtonView(payment)
                 .frame(height: 56, alignment: .center)
                 .padding(20)
         }
@@ -271,7 +272,8 @@ struct OperationDetailView_Previews: PreviewProvider {
             
             OperationDetailView(
                 viewModel: .sampleComplete,
-                makeRepeatButtonView: { .init(viewModel: .sample) }
+                makeRepeatButtonView: { _ in .init(action: { }) },
+                payment: {}
             )
         }
     }

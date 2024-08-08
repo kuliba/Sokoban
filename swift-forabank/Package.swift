@@ -285,6 +285,7 @@ private extension Product {
         name: .productProfile,
         targets: [
             .productProfile,
+            .getInfoRepeatPaymentService
         ]
     )
     

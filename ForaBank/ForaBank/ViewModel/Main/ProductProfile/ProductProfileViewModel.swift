@@ -34,6 +34,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var buttons: ProductProfileButtonsView.ViewModel
     @Published var detail: ProductProfileDetailView.ViewModel?
     @Published var history: ProductProfileHistoryView.ViewModel?
+    @Published var payment: PaymentsViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
     
@@ -63,7 +64,7 @@ class ProductProfileViewModel: ObservableObject {
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
-    private let productProfileServices: ProductProfileServices
+    public let productProfileServices: ProductProfileServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
@@ -82,29 +83,31 @@ class ProductProfileViewModel: ObservableObject {
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
+    private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
 
-    init(navigationBar: NavigationBarView.ViewModel,
-         product: ProductProfileCardView.ViewModel,
-         buttons: ProductProfileButtonsView.ViewModel,
-         detail: ProductProfileDetailView.ViewModel?,
-         history: ProductProfileHistoryView.ViewModel?,
-         operationDetail: OperationDetailViewModel? = nil,
-         accentColor: Color = .purple,
-         historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
-         model: Model = .emptyMock,
-         fastPaymentsFactory: FastPaymentsFactory,
-         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
-         userAccountNavigationStateManager: UserAccountNavigationStateManager,
-         sberQRServices: SberQRServices,
-         productProfileServices: ProductProfileServices,
-         qrViewModelFactory: QRViewModelFactory,
-         paymentsTransfersFactory: PaymentsTransfersFactory,
-         operationDetailFactory: OperationDetailFactory,
-         productNavigationStateManager: ProductProfileFlowManager,
-         cvvPINServicesClient: CVVPINServicesClient,
-         productProfileViewModelFactory: ProductProfileViewModelFactory,
-         rootView: String,
-         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    init(
+        navigationBar: NavigationBarView.ViewModel,
+        product: ProductProfileCardView.ViewModel,
+        buttons: ProductProfileButtonsView.ViewModel,
+        detail: ProductProfileDetailView.ViewModel?,
+        history: ProductProfileHistoryView.ViewModel?,
+        operationDetail: OperationDetailViewModel? = nil,
+        accentColor: Color = .purple,
+        historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
+        model: Model = .emptyMock,
+        fastPaymentsFactory: FastPaymentsFactory,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
+        userAccountNavigationStateManager: UserAccountNavigationStateManager,
+        sberQRServices: SberQRServices,
+        productProfileServices: ProductProfileServices,
+        qrViewModelFactory: QRViewModelFactory,
+        paymentsTransfersFactory: PaymentsTransfersFactory,
+        operationDetailFactory: OperationDetailFactory,
+        productNavigationStateManager: ProductProfileFlowManager,
+        cvvPINServicesClient: CVVPINServicesClient,
+        productProfileViewModelFactory: ProductProfileViewModelFactory,
+        rootView: String,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -144,6 +147,11 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: scheduler)
             .assign(to: &$historyState)
 
+        self.paymentSubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$payment)
+        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -2375,6 +2383,7 @@ extension ProductProfileViewModel {
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
+        case payment(PaymentsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
         case controlPanel(ControlPanelViewModel)
     }
@@ -2875,7 +2884,8 @@ extension ProductProfileViewModel {
         let state = ProductProfileFlowState(
             alert: alert,
             bottomSheet: bottomSheet,
-            history: historyState
+            history: historyState,
+            payment: .sample
         )
         
         let (newState, effect) = productNavigationStateManager.reduce(state, event)
