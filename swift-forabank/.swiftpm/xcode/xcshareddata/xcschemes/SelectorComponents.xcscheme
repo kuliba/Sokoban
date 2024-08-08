@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SelectorComponent"
-               BuildableName = "SelectorComponent"
-               BlueprintName = "SelectorComponent"
+               BlueprintIdentifier = "SelectorComponents"
+               BuildableName = "SelectorComponents"
+               BlueprintName = "SelectorComponents"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/SelectorComponent.xctestplan"
+            reference = "container:../ForaBank/TestPlans/SelectorComponents.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -55,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "SelectorComponent"
-            BuildableName = "SelectorComponent"
-            BlueprintName = "SelectorComponent"
+            BlueprintIdentifier = "SelectorComponents"
+            BuildableName = "SelectorComponents"
+            BlueprintName = "SelectorComponents"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

@@ -67,7 +67,7 @@ let package = Package(
         .carouselComponent,
         .paymentComponents,
         .productProfileComponents,
-        .selectorComponent,
+        .selectorComponents,
         // Utilities
         .remoteServices,
         // tools
@@ -214,6 +214,8 @@ let package = Package(
         .checkBoxComponent,
         .footerComponent,
         .nameComponent,
+        .optionalSelectorComponent,
+        .optionalSelectorComponentTests,
         .selectComponent,
         .selectComponentTests,
         .selectorComponent,
@@ -544,9 +546,10 @@ private extension Product {
         ]
     )
     
-    static let selectorComponent = library(
-        name: .selectorComponent,
+    static let selectorComponents = library(
+        name: .selectorComponents,
         targets: [
+            .optionalSelectorComponent,
             .selectorComponent,
         ]
     )
@@ -1935,14 +1938,6 @@ private extension Target {
         path: "Sources/UI/Components/\(String.buttonComponent)"
     )
     
-    static let infoComponent = target(
-        name: .infoComponent,
-        dependencies: [
-            .sharedConfigs
-        ],
-        path: "Sources/UI/Components/\(String.infoComponent)"
-    )
-    
     static let checkBoxComponent = target(
         name: .checkBoxComponent,
         dependencies: [
@@ -1958,7 +1953,15 @@ private extension Target {
         ],
         path: "Sources/UI/Components/\(String.footerComponent)"
     )
-      
+    
+    static let infoComponent = target(
+        name: .infoComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.infoComponent)"
+    )
+    
     static let nameComponent = target(
         name: .nameComponent,
         dependencies: [
@@ -1968,6 +1971,27 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
        
+    static let optionalSelectorComponent = target(
+        name: .optionalSelectorComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.optionalSelectorComponent)"
+    )
+    
+    static let optionalSelectorComponentTests = testTarget(
+        name: .optionalSelectorComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .rxViewModel,
+            // internal modules
+            .optionalSelectorComponent,
+        ],
+        path: "Tests/UI/Components/\(String.optionalSelectorComponentTests)"
+    )
+    
     static let paymentCompletionUI = target(
         name: .paymentCompletionUI,
         dependencies: [
@@ -2059,11 +2083,12 @@ private extension Target {
             .amountComponent,
             .buttonComponent,
             .carouselComponent,
-            .infoComponent,
             .checkBoxComponent,
             .footerComponent,
+            .infoComponent,
             .nameComponent,
             .otpInputComponent,
+            .optionalSelectorComponent,
             .paymentCompletionUI,
             .inputComponent,
             .inputPhoneComponent,
@@ -2417,10 +2442,6 @@ private extension Target.Dependency {
         name: .buttonComponent
     )
     
-    static let infoComponent = byName(
-        name: .infoComponent
-    )
-    
     static let checkBoxComponent = byName(
         name: .checkBoxComponent
     )
@@ -2429,6 +2450,14 @@ private extension Target.Dependency {
         name: .footerComponent
     )
        
+    static let infoComponent = byName(
+        name: .infoComponent
+    )
+    
+    static let optionalSelectorComponent = byName(
+        name: .optionalSelectorComponent
+    )
+     
     static let nameComponent = byName(
         name: .nameComponent
     )
@@ -2711,8 +2740,13 @@ private extension String {
     
     static let nameComponent = "NameComponent"
     
+    static let optionalSelectorComponent = "OptionalSelectorComponent"
+    static let optionalSelectorComponentTests = "OptionalSelectorComponentTests"
+    
     static let selectComponent = "SelectComponent"
     static let selectComponentTests = "SelectComponentTests"
+    
+    static let selectorComponents = "SelectorComponents"
     
     static let selectorComponent = "SelectorComponent"
     static let selectorComponentTests = "SelectorComponentTests"

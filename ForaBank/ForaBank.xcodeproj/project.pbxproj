@@ -347,6 +347,7 @@
 		2A0788032C35DC850022AEF6 /* PaymentsTransfersFlowReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0788022C35DC850022AEF6 /* PaymentsTransfersFlowReducerTests.swift */; };
 		2A0788052C35DF100022AEF6 /* SyncReducerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0788042C35DF100022AEF6 /* SyncReducerSpy.swift */; };
 		2A0788072C35E93A0022AEF6 /* CallSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0788062C35E93A0022AEF6 /* CallSpy.swift */; };
+		2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A07B2092C6524B40021B594 /* SelectorComponents */; };
 		2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */; };
 		2A0801B62B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */; };
 		2A094DE22BFEFB0900481B99 /* Selector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A094DDE2BFEF68100481B99 /* Selector.swift */; };
@@ -6682,6 +6683,7 @@
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */,
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
+				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
@@ -17250,6 +17252,7 @@
 				2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */,
 				832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */,
 				2A6889B92C30290F001FF1F2 /* LatestPayments */,
+				2A07B2092C6524B40021B594 /* SelectorComponents */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -25390,6 +25393,10 @@
 		2A0702782A19F89B009B704A /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2A07B2092C6524B40021B594 /* SelectorComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SelectorComponents;
 		};
 		2A0E31852C63D5CE00143969 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
