@@ -93,7 +93,6 @@ private extension AnywayElementModelMapper {
             ))
             
         case .numberInput:
-#warning("how to add differentiation for numeric input")
             return .parameter(.init(
                 origin: parameter.uiComponent,
                 type: .numberInput(makeInputViewModel(with: parameter, event: event))
