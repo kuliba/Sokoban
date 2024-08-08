@@ -7,6 +7,8 @@
 
 struct OptionalSelectorState<Item> {
     
+    let items: [Item]
+    var filteredItems: [Item]
     var isShowingOptions: Bool
     var selected: Item?
     var searchQuery: String
@@ -25,7 +27,17 @@ extension OptionalSelectorEvent: Equatable where Item: Equatable {}
 
 enum OptionalSelectorEffect: Equatable {}
 
-final class OptionalSelectorReducer<Item> {}
+final class OptionalSelectorReducer<Item> {
+    
+    private let predicate: SearchPredicate
+    
+    init(predicate: @escaping SearchPredicate) {
+        
+        self.predicate = predicate
+    }
+ 
+    typealias SearchPredicate = (Item, String) -> Bool
+}
 
 extension OptionalSelectorReducer {
     
@@ -40,6 +52,13 @@ extension OptionalSelectorReducer {
         switch event {
         case let .search(query):
             state.searchQuery = query
+            if query.isEmpty {
+                state.filteredItems = state.items
+            } else {
+                state.filteredItems = state.items.filter {
+                    predicate($0, query)
+                }
+            }
             
         case let .select(item):
             state.selected = item
@@ -122,11 +141,15 @@ final class OptionalSelectorReducerTests: XCTestCase {
     
     // MARK: - search
     
-    func test_search_shouldChangeSearchQueryToEmptyOnEmpty() {
+    func test_search_shouldChangeSearchQueryAndFilteredItemsToAllOnEmptyQuery() {
         
-        assert(makeState(query: anyMessage()), event: .search("")) {
+        let items = makeItems(count: 5)
+        let state = makeState(items: items, filtered: [], query: anyMessage())
+        
+        assert(state, event: .search("")) {
             
             $0.searchQuery = ""
+            $0.filteredItems = items
         }
     }
     
@@ -135,13 +158,16 @@ final class OptionalSelectorReducerTests: XCTestCase {
         assert(makeState(query: anyMessage()), event: .search(""), delivers: nil)
     }
     
-    func test_search_shouldSetSearchQuery() {
+    func test_search_shouldChangeSearchQueryAndSetFilteredItemsToPredicateMatching() {
         
-        let query = anyMessage()
+        let items = makeItems("a", "aa", "ba", "bb", "c")
+        let state = makeState(items: items, filtered: [], query: anyMessage())
+        let sut = makeSUT(predicate: { $0.value.contains($1) })
         
-        assert(makeState(), event: .search(query)) {
+        assert(sut: sut, state, event: .search("a")) {
             
-            $0.searchQuery = query
+            $0.searchQuery = "a"
+            $0.filteredItems = self.makeItems("a", "aa", "ba")
         }
     }
     
@@ -183,11 +209,12 @@ final class OptionalSelectorReducerTests: XCTestCase {
     private typealias SUT = OptionalSelectorReducer<Item>
     
     private func makeSUT(
+        predicate: @escaping (Item, String) -> Bool = { _,_ in true },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(predicate: predicate)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -195,12 +222,20 @@ final class OptionalSelectorReducerTests: XCTestCase {
     }
     
     private func makeState(
+        items: [Item]? = nil,
+        filtered filteredItems: [Item] = [],
         isShowingOptions: Bool = false,
         selected: Item? = nil,
         query: String = ""
     ) -> SUT.State {
         
-        return .init(isShowingOptions: isShowingOptions, selected: selected, searchQuery: query)
+        return .init(
+            items: items ?? makeItems(count: 3), 
+            filteredItems: filteredItems,
+            isShowingOptions: isShowingOptions,
+            selected: selected,
+            searchQuery: query
+        )
     }
     
     private func makeItem(
@@ -208,6 +243,22 @@ final class OptionalSelectorReducerTests: XCTestCase {
     ) -> Item {
         
         return .init(value: value)
+    }
+    
+    private func makeItems(_ values: String...) -> [Item] {
+        
+        values.map { makeItem($0) }
+    }
+    
+    private func makeItems(
+        count: Int,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> [Item] {
+        
+        let items = (0..<count).map { _ in makeItem() }
+        XCTAssertEqual(items.count, count, file: file, line: line)
+        return items
     }
     
     private struct Item: Equatable {
