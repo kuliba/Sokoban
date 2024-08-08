@@ -11,12 +11,15 @@ public struct OptionalSelectorViewConfig: Equatable {
     
     let title: TitleConfig
     let search: TextConfig
+    let searchPlaceholder: String
     
     public init(
         title: TitleConfig,
-        search: TextConfig
+        search: TextConfig,
+        searchPlaceholder: String
     ) {
         self.title = title
         self.search = search
+        self.searchPlaceholder = searchPlaceholder
     }
 }

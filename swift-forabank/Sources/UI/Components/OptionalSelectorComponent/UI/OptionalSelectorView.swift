@@ -100,7 +100,7 @@ private extension OptionalSelectorView {
     func searchView() -> some View {
         
         TextField(
-            "Search",
+            config.searchPlaceholder,
             text: .init(
                 get: { state.searchQuery },
                 set: { event(.search($0)) }

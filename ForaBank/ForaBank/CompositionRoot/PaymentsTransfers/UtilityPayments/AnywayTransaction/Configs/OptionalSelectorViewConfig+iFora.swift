@@ -22,7 +22,8 @@ extension OptionalSelectorViewConfig {
             search: .init(
                 textFont: .textH4M16240(),
                 textColor: .textSecondary
-            )
+            ),
+            searchPlaceholder: "Начните ввод для поиска"
         )
     }
 }
