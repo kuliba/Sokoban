@@ -5,11 +5,23 @@
 //  Created by Igor Malyarov on 08.08.2024.
 //
 
-struct OptionalSelectorState: Equatable {}
-enum OptionalSelectorEvent: Equatable {}
+struct OptionalSelectorState<Item> {
+    
+    var selected: Item?
+}
+
+extension OptionalSelectorState: Equatable where Item: Equatable {}
+
+enum OptionalSelectorEvent<Item> {
+    
+    case select(Item?)
+}
+
+extension OptionalSelectorEvent: Equatable where Item: Equatable {}
+
 enum OptionalSelectorEffect: Equatable {}
 
-final class OptionalSelectorReducer {}
+final class OptionalSelectorReducer<Item> {}
 
 extension OptionalSelectorReducer {
     
@@ -22,7 +34,8 @@ extension OptionalSelectorReducer {
         var effect: Effect?
         
         switch event {
-            
+        case let .select(item):
+            state.selected = item
         }
         
         return (state, effect)
@@ -31,8 +44,8 @@ extension OptionalSelectorReducer {
 
 extension OptionalSelectorReducer {
     
-    typealias State = OptionalSelectorState
-    typealias Event = OptionalSelectorEvent
+    typealias State = OptionalSelectorState<Item>
+    typealias Event = OptionalSelectorEvent<Item>
     typealias Effect = OptionalSelectorEffect
 }
 
@@ -40,9 +53,64 @@ import XCTest
 
 final class OptionalSelectorReducerTests: XCTestCase {
     
+    func test_deselect_shouldSetSelectionToNil() {
+        
+        let nonSelected = makeState(selected: makeItem())
+        
+        assert(nonSelected, event: .select(nil)) {
+            
+            $0.selected = nil
+        }
+    }
+    
+    func test_deselect_shouldDeliverNoEffect() {
+        
+        let nonSelected = makeState(selected: makeItem())
+        
+        assert(nonSelected, event: .select(nil), delivers: nil)
+    }
+    
+    func test_select_shouldSetSelectionOnNonSelected() {
+        
+        let item = makeItem()
+        let nonSelected = makeState(selected: nil)
+        
+        assert(nonSelected, event: .select(item)) {
+            
+            $0.selected = item
+        }
+    }
+    
+    func test_select_shouldDeliverNoEffectOnNonSelected() {
+        
+        let item = makeItem()
+        let nonSelected = makeState(selected: nil)
+        
+        assert(nonSelected, event: .select(item), delivers: nil)
+    }
+    
+    func test_select_shouldChangeSelectionOnSelected() {
+        
+        let (item, newItem) = (makeItem(), makeItem())
+        let nonSelected = makeState(selected: item)
+        
+        assert(nonSelected, event: .select(newItem)) {
+            
+            $0.selected = newItem
+        }
+    }
+    
+    func test_select_shouldDeliverNoEffectOnSelected() {
+        
+        let (item, newItem) = (makeItem(), makeItem())
+        let nonSelected = makeState(selected: item)
+        
+        assert(nonSelected, event: .select(newItem), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = OptionalSelectorReducer
+    private typealias SUT = OptionalSelectorReducer<Item>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -57,9 +125,22 @@ final class OptionalSelectorReducerTests: XCTestCase {
     }
     
     private func makeState(
+        selected: Item? = nil
     ) -> SUT.State {
         
-        return .init()
+        return .init(selected: selected)
+    }
+    
+    private func makeItem(
+        _ value: String = anyMessage()
+    ) -> Item {
+        
+        return .init(value: value)
+    }
+    
+    private struct Item: Equatable {
+        
+        let value: String
     }
     
     @discardableResult
