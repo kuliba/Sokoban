@@ -99,17 +99,19 @@ private extension AnywayElementModelMapper {
             ))
             
         case let .select(option, options):
-            if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.init(
-                    origin: parameter.uiComponent,
-                    type: .select(makeSelectorViewModel(with: selector, and: parameter.uiComponent, event: event))
-                ))
-            } else {
-                return .parameter(.init(
-                    origin: parameter.uiComponent,
-                    type: .unknown
-                ))
-            }
+            let model = makeSelectorViewModel(
+                initialState: .init(
+                    items: options,
+                    filteredItems: options,
+                    selected: option
+                ),
+                and: parameter.uiComponent,
+                event: event
+            )
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .select(model)
+            ))
             
         case .textInput:
             return .parameter(.init(
@@ -124,64 +126,6 @@ private extension AnywayElementModelMapper {
             ))
         }
     }
-}
-
-#warning("extract?")
-private extension AnywayElementModelMapper {
-
-    func makeSelectorViewModel(
-        with selector: Selector<Option>,
-        and parameter: AnywayElement.UIComponent.Parameter,
-        event: @escaping (AnywayPaymentEvent) -> Void
-    ) -> ObservingSelectorViewModel {
-        
-        let reducer = SelectorReducer<Option>()
-        
-        return .init(
-            initialState: .init(
-                title: parameter.title,
-                icon: parameter.icon,
-                selector: selector
-            ),
-            reduce: { state, event in
-            
-                let (selector, effect) = reducer.reduce(state.selector, event)
-                return (.init(title: state.title, icon: state.icon, selector: selector), effect)
-            },
-            handleEffect: { _,_ in },
-            observe: { event(.setValue($0.selector.selected.key, for: parameter.id)) }
-        )
-    }
-    
-    func makeSelectorViewModel(
-        with selector: Selector<Option>,
-        and parameter: AnywayElement.UIComponent.Parameter,
-        event: @escaping (AnywayPaymentEvent) -> Void
-    ) -> ObservingSelectViewModel {
-        
-        let reducer = SelectReducer()
-        
-        let image: Image = {
-            
-#warning("FIXME")
-            // extract image from parameter.image with fallback to .ic24MoreHorizontal
-            return .ic24MoreHorizontal
-        }()
-        
-        let initialState = SelectUIState(
-            image: image,
-            state: .init(selector)
-        )
-        
-        return .init(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in },
-            observe: { event(.setValue($0.state.selected?.id ?? "", for: parameter.id)) }
-        )
-    }
-    
-    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
 }
 
 private extension AnywayElementModelMapper {

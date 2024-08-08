@@ -6,15 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import OptionalSelectorComponent
 import RxViewModel
 
-typealias ObservingSelectorViewModel = RxObservingViewModel<SelectingParameter, SelectorEvent<SelectingParameter.Option>, Never>
-
-struct SelectingParameter {
- 
-    let title: String
-    let icon: AnywayElement.UIComponent.Icon?
-    let selector: Selector<Option>
-    
-    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-}
+typealias ObservingSelectorViewModel = RxObservingViewModel<OptionalSelectorState<AnywayElement.UIComponent.Parameter.ParameterType.Option>, OptionalSelectorEvent<AnywayElement.UIComponent.Parameter.ParameterType.Option>, OptionalSelectorEffect>

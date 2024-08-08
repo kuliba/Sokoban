@@ -1465,6 +1465,8 @@
 		2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */; };
 		2AE2B9B02B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */; };
 		2AE2B9B42B8E05AC00B86D56 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */; };
+		2AE34ACC2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */; };
+		2AE34ACE2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
 		2AE5972F29F918C20083F138 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972E29F918C20083F138 /* ContentView.swift */; };
 		2AE5973129F918C30083F138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973029F918C30083F138 /* Assets.xcassets */; };
@@ -4700,6 +4702,8 @@
 		2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationStateManager.swift; sourceTree = "<group>"; };
 		2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
 		2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
+		2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeSelectorViewModel.swift"; sourceTree = "<group>"; };
+		2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptionalSelectorViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextViewPreviewApp.swift; sourceTree = "<group>"; };
 		2AE5972E29F918C20083F138 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -10175,6 +10179,7 @@
 				2AB87C4E2C1336570013EFFE /* AnywayElementModel.swift */,
 				2AB109B02C2C3EB900325D3A /* AnywayElementModel+Receiver.swift */,
 				2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */,
+				2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */,
 				2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */,
 				2AA3A9352BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift */,
 				2AA3A9562BFF8DBB00AEBCC9 /* Configs */,
@@ -10270,6 +10275,7 @@
 				2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */,
 				2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */,
 				2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */,
+				2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift */,
 				2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */,
 				2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */,
 				2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */,
@@ -19991,6 +19997,7 @@
 				77F1582128109F8400CA5E4E /* SessionAgentEmptyMock.swift in Sources */,
 				7767049A27FD82C100996A07 /* PlacesControlViewModel.swift in Sources */,
 				C161C490299505BF003830C9 /* PaymentsSelectDropDownListComponent.swift in Sources */,
+				2AE34ACC2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift in Sources */,
 				2A3624672C5E6B2000174C50 /* PaymentProviderPickerFlowModel.swift in Sources */,
 				2A6371252BF25EF5007E494A /* IconDomain.swift in Sources */,
 				774A8B412865FD1800B81140 /* MessagesHistoryDetailView.swift in Sources */,
@@ -20245,6 +20252,7 @@
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				0BE0BE052910760B0064549E /* QRViewModel.swift in Sources */,
+				2AE34ACE2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift in Sources */,
 				0B87167E294A8003005B8C0A /* QRSearchCityViewModel.swift in Sources */,
 				2AA3A9722BFF921100AEBCC9 /* AnywayPaymentFooterEvent.swift in Sources */,
 				686A1C9827ED5867002972F0 /* ServerCommands+Loan.swift in Sources */,

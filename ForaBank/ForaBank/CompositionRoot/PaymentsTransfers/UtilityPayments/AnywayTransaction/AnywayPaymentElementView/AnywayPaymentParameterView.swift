@@ -41,7 +41,7 @@ struct AnywayPaymentParameterView: View {
             .paddedRoundedBackground()
             
         case let .select(viewModel):
-            factory.makeSelectorView(viewModel)
+            factory.makeSelectorView(parameter, viewModel)
                 .paddedRoundedBackground()
             
         case let .textInput(viewModel):
