@@ -69,12 +69,12 @@ private extension UtilityPrepaymentWrapperView {
         Button(
             action: { completionEvent(.select(.lastPayment(latestPayment))) },
             label: {
-                #warning("md5Hash is unwrapped to empty - iconView should be able to deal with it at composition level")
+
                 LastPaymentLabel(
                     amount: "\(latestPayment.amount)",
                     title: latestPayment.name,
                     config: .iFora,
-                    iconView: makeIconView(latestPayment.md5Hash ?? "")
+                    iconView: makeIconView(latestPayment.md5Hash)
                 )
                 .contentShape(Rectangle())
             }
