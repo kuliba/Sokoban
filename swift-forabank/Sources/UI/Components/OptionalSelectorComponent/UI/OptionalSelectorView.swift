@@ -262,6 +262,7 @@ private extension OptionalSelectorViewConfig {
         search: .init(
             textFont: .body.italic(),
             textColor: .pink
-        )
+        ),
+        searchPlaceholder: "Search"
     )
 }
