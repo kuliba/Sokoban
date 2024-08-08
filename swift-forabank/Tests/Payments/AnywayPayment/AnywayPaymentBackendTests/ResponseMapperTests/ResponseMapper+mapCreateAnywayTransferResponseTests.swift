@@ -372,7 +372,6 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         ))
     }
 
-
     func test_map_shouldDeliverResponseOnWithOTP() throws {
         
         try assert(string: .withOTP, makeResponse(
@@ -394,6 +393,21 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             needSum: false,
             payeeName: "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
             scenario: .ok
+        ))
+    }
+
+    func test_map_shouldDeliverResponseWithFieldNameForTitleOnMissingFieldTitle() throws {
+        
+        try assert(string: .withMissingFieldTitle, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "1",
+                    fieldValue: "4273.87",
+                    fieldTitle: "1"
+                )
+            ],
+            amount: 4273.87,
+            needSum: true
         ))
     }
 
@@ -1855,6 +1869,24 @@ private extension String {
                 "fieldName": "SumSTrs",
                 "fieldValue": "4273.87",
                 "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": []
+    }
+}
+"""
+    
+    static let withMissingFieldTitle = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "1",
+                "fieldValue": "4273.87"
             }
         ],
         "parameterListForNextStep": []
