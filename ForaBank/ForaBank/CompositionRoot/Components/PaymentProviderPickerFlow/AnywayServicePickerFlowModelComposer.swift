@@ -29,7 +29,7 @@ final class AnywayServicePickerFlowModelComposer {
     }
     
     typealias MakeAnywayFlowModel = (AnywayTransactionState.Transaction) -> AnywayFlowModel
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
 }
 
 extension AnywayServicePickerFlowModelComposer {
@@ -54,7 +54,7 @@ private extension AnywayServicePickerFlowModelComposer {
         _ payload: PaymentProviderServicePickerPayload
     ) -> PaymentProviderServicePickerModel {
         
-        let reducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>()
+        let reducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>()
         let effectHandler = AsyncPickerEffectHandler(
             microServices: microServices
         )

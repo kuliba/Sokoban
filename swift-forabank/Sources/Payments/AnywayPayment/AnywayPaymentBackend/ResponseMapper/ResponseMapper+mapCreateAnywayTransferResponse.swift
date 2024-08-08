@@ -87,7 +87,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
         self.init(
             fieldName: additional.fieldName,
             fieldValue: additional.fieldValue,
-            fieldTitle: additional.fieldTitle,
+            fieldTitle: additional.fieldTitle ?? additional.fieldName,
             md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
             svgImage: additional.svgImage,
@@ -285,7 +285,7 @@ private extension ResponseMapper._Data {
         
         let fieldName: String
         let fieldValue: String
-        let fieldTitle: String
+        let fieldTitle: String?
         let md5hash: String?
         let recycle: Bool?
         let svgImage: String?

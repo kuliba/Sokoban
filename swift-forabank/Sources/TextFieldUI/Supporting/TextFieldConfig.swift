@@ -9,7 +9,7 @@ import SwiftUI
 
 extension TextFieldView {
     
-    public struct TextFieldConfig {
+    public struct TextFieldConfig: Equatable {
         
         // TODO: wrapper Font -> UIFont required
         let font: UIFont

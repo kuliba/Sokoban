@@ -13,13 +13,16 @@ import RemoteServices
 
 final class AsyncPickerEffectHandlerMicroServicesComposer {
     
+    private let composer: AnywayTransactionComposer
     private let model: Model
     private let nanoServices: NanoServices
     
     init(
+        composer: AnywayTransactionComposer,
         model: Model,
         nanoServices: NanoServices
     ) {
+        self.composer = composer
         self.model = model
         self.nanoServices = nanoServices
     }
@@ -34,50 +37,43 @@ extension AsyncPickerEffectHandlerMicroServicesComposer {
         return .init(load: load(_:_:), select: select(_:_:_:))
     }
     
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, ServicePickerItem, PaymentProviderServicePickerResult>
 }
 
 private extension AsyncPickerEffectHandlerMicroServicesComposer {
     
     func load(
         _ payload: PaymentProviderServicePickerPayload,
-        _ completion: @escaping ([UtilityService]) -> Void
+        _ completion: @escaping ([ServicePickerItem]) -> Void
     ) {
         nanoServices.getServicesFor(payload.provider.operator) {
             
-            completion((try? $0.get()) ?? [])
+            let services = (try? $0.get()) ?? []
+            completion(services.map {
+                
+                return .init(service: $0, isOneOf: services.count > 1)
+            })
             _ = self.nanoServices
         }
     }
     
     func select(
-        _ service: UtilityService,
+        _ item: ServicePickerItem,
         _ payload: PaymentProviderServicePickerPayload,
         _ completion: @escaping (PaymentProviderServicePickerResult) -> Void
     ) {
         self.nanoServices.startAnywayPayment(
-            .service(service, for: payload.provider.operator)
+            .service(item.service, for: payload.provider.operator)
         ) {
             switch StartPaymentResult(result: $0) {
             case let .failure(failure):
                 completion(.failure(failure))
                 
             case let .success(response):
-                
-                let context = AnywayPaymentContext(
-                    response: response,
-                    service: service,
-                    payload: payload,
-                    product: self.model.outlineProduct()
-                )
-                
-                // TODO: replace with injected dependency
-                let validator = AnywayPaymentContextValidator()
-                
-                let transaction = AnywayTransactionState.Transaction(
-                    context: context,
-                    isValid: validator.validate(context) == nil
-                )
+                guard let transaction = self.composer.makeTransaction(from: response, item: item, payload: payload)
+                else {
+                    return completion(.failure(.connectivityError))
+                }
                 
                 completion(.success(transaction))
             }
@@ -128,97 +124,6 @@ private extension StartPaymentResult {
     }
 }
 
-private extension AnywayPaymentContext {
-    
-    init(
-        response: AnywayResponse,
-        service: UtilityService,
-        payload: PaymentProviderServicePickerPayload,
-        product: AnywayPaymentOutline.Product
-    ) {
-        let outline = AnywayPaymentOutline(
-            service: service,
-            payload: payload,
-            product: product
-        )
-        self.init(response: response, outline: outline)
-    }
-    
-    init(
-        response: AnywayResponse,
-        outline: AnywayPaymentOutline
-    ) {
-        let initialElements: [AnywayElement] = []
-        let initialPayment = AnywayPaymentDomain.AnywayPayment(
-            amount: outline.amount,
-            elements: initialElements,
-            footer: .continue,
-            isFinalStep: false
-        )
-        
-        self.init(
-            initial: initialPayment,
-            payment: initialPayment.updating(with: response, outline: outline),
-            staged: .init(),
-            outline: outline,
-            shouldRestart: false
-        )
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment {
-    
-    func updating(
-        with response: AnywayResponse,
-        outline: AnywayPaymentOutline
-    ) -> Self {
-        
-        if let update = AnywayPaymentUpdate(response) {
-            return self.update(with: update, and: outline)
-        } else {
-            return self
-        }
-    }
-}
-
-private extension AnywayPaymentOutline {
-    
-    init(
-        service: UtilityService,
-        payload: PaymentProviderServicePickerPayload,
-        product: AnywayPaymentOutline.Product
-    ) {
-        let fields = service.puref.fields(
-            fromQR: payload.qrCode,
-            matching: payload.qrMapping
-        )
-        
-        let amount: Decimal?
-        do {
-            let double: Double = try payload.qrCode.value(
-                type: .general(.amount),
-                mapping: payload.qrMapping
-            )
-            
-            amount = .init(double)
-        } catch {
-            amount = nil
-        }
-        
-        self.init(
-            amount: amount,
-            product: product,
-            fields: fields,
-            payload: .init(
-                puref: service.puref,
-                title: payload.provider.origin.title,
-                subtitle: payload.provider.origin.inn,
-                icon: payload.provider.origin.icon
-            )
-        )
-    }
-}
-
 private extension SegmentedProvider {
     
     var `operator`: UtilityPaymentOperator {
@@ -229,33 +134,5 @@ private extension SegmentedProvider {
             subtitle: origin.inn,
             icon: origin.icon
         )
-    }
-}
-
-extension String {
-    
-    func fields(
-        fromQR qrCode: QRCode,
-        matching qrMapping: QRMapping
-    ) -> [String: String] {
-        
-        let parameters = qrMapping.operators
-            .filter { $0.operator == self }
-            .flatMap(\.parameters)
-        
-        let pairs = parameters
-            .flatMap { parameter in
-                
-                parameter.keys.map { ($0, parameter.parameter.name) }}
-        
-        
-        let dict = Dictionary(pairs) { _, last in last }
-        
-        let fields = qrCode.rawData.compactMap { element in
-            
-            dict[element.key].map { ($0, element.value) }
-        }
-        
-        return .init(fields) { _, last in last }
     }
 }

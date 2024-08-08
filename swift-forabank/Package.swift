@@ -220,6 +220,7 @@ let package = Package(
         .selectorComponentTests,
         .inputPhoneComponent,
         .inputComponent,
+        .inputComponentTests,
         .paymentCompletionUI,
         .paymentComponents,
         .productProfileComponents,
@@ -2034,9 +2035,19 @@ private extension Target {
     static let inputComponent = target(
         name: .inputComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .textFieldComponent
         ],
         path: "Sources/UI/Components/\(String.inputComponent)"
+    )
+    
+    static let inputComponentTests = testTarget(
+        name: .inputComponentTests,
+        dependencies: [
+            .inputComponent,
+            .customDump,
+        ],
+        path: "Tests/UI/Components/\(String.inputComponentTests)"
     )
     
     static let paymentComponents = target(
@@ -2707,6 +2718,7 @@ private extension String {
     static let selectorComponentTests = "SelectorComponentTests"
     
     static let inputComponent = "InputComponent"
+    static let inputComponentTests = "InputComponentTests"
     
     static let inputPhoneComponent = "InputPhoneComponent"
     

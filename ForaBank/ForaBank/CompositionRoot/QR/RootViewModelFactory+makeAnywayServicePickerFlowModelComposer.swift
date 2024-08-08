@@ -36,6 +36,10 @@ extension RootViewModelFactory {
             model: model,
             pageSize: pageSize
         )
+        let transactionComposer = AnywayTransactionComposer(
+            model: model,
+            validator: .init()
+        )
         let loadOperators = loaderComposer.loadOperators(completion:)
         let pickerNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             flag: utilitiesPaymentsFlag,
@@ -45,6 +49,7 @@ extension RootViewModelFactory {
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
+            composer: transactionComposer, 
             model: model,
             nanoServices: pickerNanoServicesComposer.compose()
         )

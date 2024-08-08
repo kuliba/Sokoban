@@ -19,11 +19,30 @@ public extension AnywayPaymentParameterValidator {
         _ parameter: Parameter
     ) -> AnywayPaymentParameterValidationError? {
         
+        return validate(
+            parameter.field.value,
+            with: parameter.validation
+        )
+    }
+        
+    func isValid(
+        _ value: String?,
+        with validation: Parameter.Validation
+    ) -> Bool {
+        
+        return validate(value, with: validation) == nil
+    }
+        
+    func validate(
+        _ value: String?,
+        with validation: Parameter.Validation
+    ) -> AnywayPaymentParameterValidationError? {
+        
         let validationErrors = [
-            validateRequired(parameter),
-            validateMaxLength(parameter),
-            validateMinLength(parameter),
-            validateRegExp(parameter),
+            validateRequired(value, with: validation),
+            validateMaxLength(value, with: validation),
+            validateMinLength(value, with: validation),
+            validateRegExp(value, with: validation),
         ].compactMap { $0 }
         
         return validationErrors.first
@@ -38,12 +57,11 @@ public extension AnywayPaymentParameterValidator {
 private extension AnywayPaymentParameterValidator {
     
     func validateRequired(
-        _ parameter: Parameter
+        _ value: String?,
+        with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
-        if parameter.validation.isRequired,
-           parameter.field.value == nil {
-            
+        if validation.isRequired, value == nil {
             return .emptyRequired
         } else {
             return nil
@@ -51,35 +69,38 @@ private extension AnywayPaymentParameterValidator {
     }
     
     func validateMinLength(
-        _ parameter: Parameter
+        _ value: String?,
+        with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
-        guard let minLength = parameter.validation.minLength else { return nil }
+        guard let minLength = validation.minLength else { return nil }
         
-        let value = parameter.field.value ?? ""
+        let value = value ?? ""
         
         return value.count >= minLength ? nil : .tooShort
     }
     
     func validateMaxLength(
-        _ parameter: Parameter
+        _ value: String?,
+        with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
-        guard let maxLength = parameter.validation.maxLength else { return nil }
+        guard let maxLength = validation.maxLength else { return nil }
         
-        let value = parameter.field.value ?? ""
+        let value = value ?? ""
         
         return value.count <= maxLength ? nil : .tooLong
     }
     
     func validateRegExp(
-        _ parameter: Parameter
+        _ value: String?,
+        with validation: Parameter.Validation
     ) -> AnywayPaymentParameterValidationError? {
         
-        guard !parameter.validation.regExp.isEmpty else { return nil }
+        guard !validation.regExp.isEmpty else { return nil }
         
-        let value = parameter.field.value ?? ""
-        let pattern = parameter.validation.regExp
+        let value = value ?? ""
+        let pattern = validation.regExp
         let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)
         
         return isMatching ? nil : .regExViolation

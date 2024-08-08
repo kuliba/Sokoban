@@ -224,6 +224,10 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: { makeServicePaymentBinder($0, .none) }
         )
         
+        let transactionComposer = AnywayTransactionComposer(
+            model: model,
+            validator: .init()
+        )
         let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
@@ -233,6 +237,7 @@ extension RootViewModelFactory {
         )
         let utilityNanoServices = utilityNanoServicesComposer.compose()
         let asyncPickerComposer = AsyncPickerEffectHandlerMicroServicesComposer(
+            composer: transactionComposer,
             model: model,
             nanoServices: utilityNanoServices
         )
