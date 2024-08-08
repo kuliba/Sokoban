@@ -7,14 +7,18 @@
 
 struct OptionalSelectorState<Item> {
     
+    var isShowingOptions: Bool
     var selected: Item?
+    var searchQuery: String
 }
 
 extension OptionalSelectorState: Equatable where Item: Equatable {}
 
 enum OptionalSelectorEvent<Item> {
     
+    case search(String)
     case select(Item?)
+    case toggleOptions
 }
 
 extension OptionalSelectorEvent: Equatable where Item: Equatable {}
@@ -34,8 +38,14 @@ extension OptionalSelectorReducer {
         var effect: Effect?
         
         switch event {
+        case let .search(query):
+            state.searchQuery = query
+            
         case let .select(item):
             state.selected = item
+            
+        case .toggleOptions:
+            state.isShowingOptions.toggle()
         }
         
         return (state, effect)
@@ -52,6 +62,8 @@ extension OptionalSelectorReducer {
 import XCTest
 
 final class OptionalSelectorReducerTests: XCTestCase {
+    
+    // MARK: - select
     
     func test_deselect_shouldSetSelectionToNil() {
         
@@ -108,6 +120,64 @@ final class OptionalSelectorReducerTests: XCTestCase {
         assert(nonSelected, event: .select(newItem), delivers: nil)
     }
     
+    // MARK: - search
+    
+    func test_search_shouldChangeSearchQueryToEmptyOnEmpty() {
+        
+        assert(makeState(query: anyMessage()), event: .search("")) {
+            
+            $0.searchQuery = ""
+        }
+    }
+    
+    func test_search_shouldNotDeliverEffectOnEmpty() {
+        
+        assert(makeState(query: anyMessage()), event: .search(""), delivers: nil)
+    }
+    
+    func test_search_shouldSetSearchQuery() {
+        
+        let query = anyMessage()
+        
+        assert(makeState(), event: .search(query)) {
+            
+            $0.searchQuery = query
+        }
+    }
+    
+    func test_search_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .search(anyMessage()), delivers: nil)
+    }
+    
+    // MARK: - toggleOptions
+    
+    func test_toggleOptions_shouldSetShowingOptionsFlagToTrueOnFalse() {
+        
+        assert(makeState(isShowingOptions: false), event: .toggleOptions) {
+            
+            $0.isShowingOptions = true
+        }
+    }
+    
+    func test_toggleOptions_shouldNotDeliverEffectOnFalse() {
+        
+        assert(makeState(isShowingOptions: false), event: .toggleOptions, delivers: nil)
+    }
+    
+    func test_toggleOptions_shouldSetShowingOptionsFlagToFalseOnTrue() {
+        
+        assert(makeState(isShowingOptions: true), event: .toggleOptions) {
+            
+            $0.isShowingOptions = false
+        }
+    }
+    
+    func test_toggleOptions_shouldNotDeliverEffectOnTrue() {
+        
+        assert(makeState(isShowingOptions: true), event: .toggleOptions, delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = OptionalSelectorReducer<Item>
@@ -125,10 +195,12 @@ final class OptionalSelectorReducerTests: XCTestCase {
     }
     
     private func makeState(
-        selected: Item? = nil
+        isShowingOptions: Bool = false,
+        selected: Item? = nil,
+        query: String = ""
     ) -> SUT.State {
         
-        return .init(selected: selected)
+        return .init(isShowingOptions: isShowingOptions, selected: selected, searchQuery: query)
     }
     
     private func makeItem(
