@@ -10,12 +10,12 @@ import TextFieldDomain
 public final class TextInputValidator {
     
     private let hintText: String?
-    private let warningText: String
+    private let warningText: String?
     private let validate: (String) -> Bool
     
     public init(
         hintText: String?,
-        warningText: String,
+        warningText: String?,
         validate: @escaping (String) -> Bool
     ) {
         self.hintText = hintText
@@ -38,7 +38,7 @@ public extension TextInputValidator {
             if validate(text) {
                 return hintText.map { .hint($0) }
             } else {
-                return .warning(warningText)
+                return warningText.map { .warning($0) }
             }
         }
     }

@@ -40,7 +40,7 @@ public struct TextInputView<IconView: View>: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    state.title.text(withConfig: config.title, alignment: .leading)
+                    config.title.text(withConfig: config.titleConfig, alignment: .leading)
                     
                     textField()
                 }
@@ -70,7 +70,7 @@ private extension TextInputView {
                 get: { state.textField },
                 set: { _ in }
             ),
-            keyboardType: state.keyboard.uiKeyboardType,
+            keyboardType: config.keyboard.uiKeyboardType,
             toolbar: toolbar(),
             send: { event(.textField($0)) },
             textFieldConfig: config.textField

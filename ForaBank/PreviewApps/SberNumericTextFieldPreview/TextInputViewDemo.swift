@@ -1,6 +1,6 @@
 //
 //  TextInputViewDemo.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 07.08.2024.
 //
@@ -38,15 +38,25 @@ struct TextInputViewDemo: View {
     }
 }
 
+struct TextInputDemoState: Equatable {
+    
+    let keyboard: KeyboardType
+    let textInput: TextInputState
+    let title: String
+}
+
 private extension TextInputViewDemo {
     
     func textInputView(
-        _ state: TextInputState
+        _ state: TextInputDemoState
     ) -> some View {
         
         return TextInputStateWrapperView(
-            model: makeModel(state),
-            config: .preview
+            model: makeModel(state.textInput),
+            config: .preview(
+                keyboard: state.keyboard,
+                title: state.title
+            )
         ) {
             Image(systemName: "photo")
         }
@@ -66,7 +76,7 @@ private extension TextInputViewDemo {
             validate: { $0.count > 4 }
         )
         let reducer = TextInputReducer(
-            textFieldReduce: textFieldReducer.reduce(_:_:), 
+            textFieldReduce: textFieldReducer.reduce(_:_:),
             validate: textInputValidator.validate
         )
         let effectHandler = TextInputEffectHandler()
@@ -99,36 +109,35 @@ private extension Reducer {
     TextInputViewDemo()
 }
 
-extension TextInputState {
+extension TextInputDemoState {
     
-    static let decimalPlaceholderNoMessage: Self = .preview(keyboard: .decimal, textField: .decimalPlaceholder, message: nil)
-    static let decimalPlaceholderHint: Self = .preview(keyboard: .decimal, textField: .decimalPlaceholder, message: .hintPreview)
-    static let decimalPlaceholderWarning: Self = .preview(keyboard: .decimal, textField: .decimalPlaceholder, message: .warningPreview)
+    static let decimalPlaceholderNoMessage: Self = .preview(.decimal, message: nil, textField: .decimalPlaceholder)
+    static let decimalPlaceholderHint: Self = .preview(.decimal, message: .hintPreview, textField: .decimalPlaceholder)
+    static let decimalPlaceholderWarning: Self = .preview(.decimal, message: .warningPreview, textField: .decimalPlaceholder)
     
-    static let defaultPlaceholderNoMessage: Self = .preview(keyboard: .default, textField: .defaultPlaceholder, message: nil)
-    static let defaultPlaceholderHint: Self = .preview(keyboard: .default, textField: .defaultPlaceholder, message: .hintPreview)
-    static let defaultPlaceholderWarning: Self = .preview(keyboard: .default, textField: .defaultPlaceholder, message: .warningPreview)
+    static let defaultPlaceholderNoMessage: Self = .preview(.default, message: nil, textField: .defaultPlaceholder)
+    static let defaultPlaceholderHint: Self = .preview(.default, message: .hintPreview, textField: .defaultPlaceholder)
+    static let defaultPlaceholderWarning: Self = .preview(.default, message: .warningPreview, textField: .defaultPlaceholder)
     
-    static let numberPlaceholderNoMessage: Self = .preview(keyboard: .number, textField: .numberPlaceholder, message: nil)
-    static let numberPlaceholderHint: Self = .preview(keyboard: .number, textField: .numberPlaceholder, message: .hintPreview)
-    static let numberPlaceholderWarning: Self = .preview(keyboard: .number, textField: .numberPlaceholder, message: .warningPreview)
+    static let numberPlaceholderNoMessage: Self = .preview(.number, message: nil, textField: .numberPlaceholder)
+    static let numberPlaceholderHint: Self = .preview(.number, message: .hintPreview, textField: .numberPlaceholder)
+    static let numberPlaceholderWarning: Self = .preview(.number, message: .warningPreview, textField: .numberPlaceholder)
     
-    static let defaultNpFocusNoMessage: Self = .preview(keyboard: .default, textField: .noFocusPreview, message: nil)
-    static let defaultNpFocusHint: Self = .preview(keyboard: .default, textField: .noFocusPreview, message: .hintPreview)
-    static let defaultNpFocusWarning: Self = .preview(keyboard: .default, textField: .noFocusPreview, message: .warningPreview)
+    static let defaultNpFocusNoMessage: Self = .preview(.default, message: nil, textField: .noFocusPreview)
+    static let defaultNpFocusHint: Self = .preview(.default, message: .hintPreview, textField: .noFocusPreview)
+    static let defaultNpFocusWarning: Self = .preview(.default, message: .warningPreview, textField: .noFocusPreview)
     
     private static func preview(
-        keyboard: KeyboardType,
-        title: String = "Text Field Title",
+        _ keyboard: KeyboardType,
+        message: TextInputState.Message?,
         textField: TextFieldState,
-        message: Message?
+        _ title: String = "Text Field Title"
     ) -> Self {
         
         return .init(
-            keyboard: keyboard, 
-            title: title,
-            textField: textField,
-            message: message
+            keyboard: keyboard,
+            textInput: .init(textField: textField, message: message),
+            title: title
         )
     }
 }
@@ -151,23 +160,32 @@ extension TextInputState.Message {
 
 extension TextInputConfig {
     
-    static let preview: Self = .init(
-        hint: .init(
-            textFont: .footnote,
-            textColor: .orange
-        ),
-        imageWidth: 24,
-        textField: .preview,
-        title: .init(
-            textFont: .subheadline,
-            textColor: .green
-        ),
-        toolbar: .preview,
-        warning: .init(
-            textFont: .footnote,
-            textColor: .red
+    static func preview(
+        keyboard: KeyboardType,
+        title: String
+    ) -> Self {
+        
+        return .init(
+            hint: .init(
+                textFont: .footnote,
+                textColor: .orange
+            ),
+            imageWidth: 24,
+            keyboard: keyboard,
+            placeholder: "Введите значение",
+            textField: .preview,
+            title: title,
+            titleConfig: .init(
+                textFont: .subheadline,
+                textColor: .green
+            ),
+            toolbar: .preview,
+            warning: .init(
+                textFont: .footnote,
+                textColor: .red
+            )
         )
-    )
+    }
 }
 
 extension TextFieldView.TextFieldConfig {

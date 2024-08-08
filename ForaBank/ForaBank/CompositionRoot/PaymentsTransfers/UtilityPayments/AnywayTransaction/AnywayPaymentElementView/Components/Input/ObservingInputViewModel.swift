@@ -9,4 +9,4 @@ import AnywayPaymentDomain
 import PaymentComponents
 import RxViewModel
 
-typealias ObservingInputViewModel = RxObservingViewModel<InputState<AnywayElement.UIComponent.Icon?>, InputEvent, Never>
+typealias ObservingInputViewModel = RxObservingViewModel<TextInputState, TextInputEvent, TextInputEffect>

@@ -10,19 +10,13 @@ import TextFieldUI
 
 public struct TextInputState: Equatable {
     
-    public let keyboard: KeyboardType
-    public let title: String
     public var textField: TextFieldState
     public var message: Message?
     
     public init(
-        keyboard: KeyboardType, 
-        title: String,
         textField: TextFieldState,
         message: Message? = nil
     ) {
-        self.keyboard = keyboard
-        self.title = title
         self.textField = textField
         self.message = message
     }

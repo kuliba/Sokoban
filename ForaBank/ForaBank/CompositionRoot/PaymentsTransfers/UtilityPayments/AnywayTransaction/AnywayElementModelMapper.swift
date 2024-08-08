@@ -81,50 +81,54 @@ private extension AnywayElementModelMapper {
         
         switch parameter.uiComponent.type {
         case .hidden:
-            return .parameter(.hidden(parameter.uiComponent))
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .hidden
+            ))
             
         case .nonEditable:
-            return .parameter(.nonEditable(parameter.uiComponent))
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .nonEditable
+            ))
             
         case .numberInput:
-#warning("how to add differentiation for numeric input")
-            return .parameter(.numberInput(makeInputViewModel(with: parameter, event: event)))
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .numberInput(makeInputViewModel(with: parameter, event: event))
+            ))
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter.uiComponent, event: event)))
+                return .parameter(.init(
+                    origin: parameter.uiComponent,
+                    type: .select(makeSelectorViewModel(with: selector, and: parameter.uiComponent, event: event))
+                ))
             } else {
-                return .parameter(.unknown(parameter.uiComponent))
+                return .parameter(.init(
+                    origin: parameter.uiComponent,
+                    type: .unknown
+                ))
             }
             
         case .textInput:
-            return .parameter(.textInput(makeInputViewModel(with: parameter, event: event)))
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .textInput(makeInputViewModel(with: parameter, event: event))
+            ))
             
         case .unknown:
-            return .parameter(.unknown(parameter.uiComponent))
+            return .parameter(.init(
+                origin: parameter.uiComponent,
+                type: .unknown
+            ))
         }
     }
 }
 
-private extension AnywayElementModelMapper {
-    
 #warning("extract?")
-    func makeInputViewModel(
-        with parameter: AnywayElement.Parameter,
-        event: @escaping (AnywayPaymentEvent) -> Void
-    ) -> ObservingInputViewModel {
-        
-        let inputState = InputState.init(parameter)
-        let reducer = InputReducer<AnywayElement.UIComponent.Icon?>()
-        
-        return .init(
-            initialState: inputState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in },
-            observe: { event(.setValue($0.dynamic.value, for: parameter.uiComponent.id)) }
-        )
-    }
-    
+private extension AnywayElementModelMapper {
+
     func makeSelectorViewModel(
         with selector: Selector<Option>,
         and parameter: AnywayElement.UIComponent.Parameter,
