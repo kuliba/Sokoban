@@ -1,41 +1,15 @@
 //
-//  ContentView.swift
-//  CalendarPreview
+//  CalendarWrapperView.swift
+//  ForaBank
 //
-//  Created by Дмитрий Савушкин on 22.05.2024.
+//  Created by Дмитрий Савушкин on 22.07.2024.
 //
 
+import Foundation
 import SwiftUI
 import CalendarUI
 
-struct ContentView: View {
-    
-    @State private var selectedDate: Date? = nil
-    @State private var selectedRange: MDateRange? = .init()
-    @State private var showingSheet = false
-
-    var body: some View {
-        
-        Button("CalendarView") {
-            showingSheet.toggle()
-        }
-        .sheet(isPresented: $showingSheet) {
-            
-            NavigationStack {
-                
-                CalendarViewWrapper(closeAction: { showingSheet = false })
-                    .navigationTitle("Выберите даты или период")
-                    .navigationBarTitleDisplayMode(.inline)
-            }
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-}
-
-struct CalendarViewWrapper: View {
+struct CalendarWrapperView: View {
     
     @State private var selectedRange: MDateRange? = .init()
     let closeAction: () -> Void
@@ -46,7 +20,7 @@ struct CalendarViewWrapper: View {
             
             ZStack {
                 
-                createCalendarView()
+                calendarView()
                     .padding(10)
                 
                 VStack {
@@ -55,12 +29,12 @@ struct CalendarViewWrapper: View {
                     
                     HStack {
                         
-                        createSimpleButtonView(
+                        simpleButtonView(
                             title: "Закрыть",
                             action: closeAction
                         )
                         
-                        createSimpleButtonView(
+                        simpleButtonView(
                             title: selectedRange?.rangeSelected == true ? "Показать" : "Выбрать",
                             action: closeAction
                         )
@@ -76,23 +50,33 @@ struct CalendarViewWrapper: View {
     }
 }
 
-private extension CalendarViewWrapper {
+private extension CalendarWrapperView {
     
-    func createSelectedRangeView() -> some View {
+    func selectedRangeView() -> some View {
         SelectedRangeView(selectedRange: $selectedRange)
     }
     
-    func createCalendarView() -> some View {
-        CalendarView(selectedDate: nil, selectedRange: $selectedRange, configBuilder: configureCalendar)
+    func calendarView() -> some View {
+        
+        CalendarView(
+            selectedDate: nil,
+            selectedRange: $selectedRange,
+            configBuilder: { config in
+                
+                config
+                     .dayView(RangeSelector.init)
+         //            .scrollTo(date: .now)
+            }
+        )
     }
     
-    func createBottomView() -> some View {
+    func bottomView() -> some View {
         Button("Continue", action: closeAction)
             .padding(.top, 12)
             .padding(.horizontal, margins)
     }
     
-    func createSimpleButtonView(
+    func simpleButtonView(
         title: String,
         action: @escaping () -> Void
     ) -> some View {
@@ -105,19 +89,8 @@ private extension CalendarViewWrapper {
                 .background(Color.gray)
                 .foregroundColor(.white)
                 .font(.system(size: 18))
-                .fontWeight(.semibold)
                 .clipShape(.rect(cornerRadius: 12))
         }
-    }
-}
-
-private extension CalendarViewWrapper {
-    
-    func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
-       
-        config
-            .dayView(DV.RangeSelector.init)
-            .scrollTo(date: .now)
     }
 }
 
@@ -128,9 +101,9 @@ fileprivate struct SelectedRangeView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            createDateText(startDateText)
-            createArrowIcon()
-            createDateText(endDateText)
+            dateText(startDateText)
+            arrowIcon()
+            dateText(endDateText)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, margins)
@@ -139,18 +112,18 @@ fileprivate struct SelectedRangeView: View {
 }
 
 private extension SelectedRangeView {
-    func createDateText(_ text: String) -> some View {
+    func dateText(_ text: String) -> some View {
         Text(text)
             .font(.system(size: 24))
-            .foregroundStyle(.black)
+            .foregroundColor(.black)
             .lineLimit(1)
-            .contentTransition(.numericText(countsDown: true))
+//            .contentTransition(.numericText(countsDown: true))
     }
-    func createArrowIcon() -> some View {
+    func arrowIcon() -> some View {
         Image("arrow-right")
             .resizable()
             .frame(width: 28)
-            .foregroundStyle(.black)
+            .foregroundColor(.black)
     }
 }
 
@@ -177,38 +150,30 @@ private extension SelectedRangeView {
 // MARK: - Modifiers
 fileprivate let margins: CGFloat = 24
 
-enum DV {}
-
-extension DV {
     
-    struct RangeSelector: DayView {
-        
-        let date: Date
-        let isCurrentMonth: Bool
-        let selectedDate: Binding<Date?>?
-        var selectedRange: Binding<MDateRange?>? {
-            didSet {
-                print("print")
-            }
+struct RangeSelector: DayView {
+    
+    let date: Date
+    let isCurrentMonth: Bool
+    let selectedDate: Binding<Date?>?
+    var selectedRange: Binding<MDateRange?>? {
+        didSet {
+            print("print")
         }
     }
-}
-
-extension DV.RangeSelector {
     
     func dayLabel() -> AnyView {
         
         Text(getStringFromDay(format: "d"))
             .font(.system(size: 15))
-            .foregroundStyle(isSelected() ? .white : .black)
+            .foregroundColor(isSelected() ? .white : .black)
             .opacity(isFuture() ? 0.2 : 1)
             .erased()
     }
-}
-
-// MARK: - On Selection Logic
-extension DV.RangeSelector {
-    func onSelection() { if !isFuture() {
-        selectedRange?.wrappedValue?.addToRange(date)
-    }}
+    
+    func onSelection() {
+        if !isFuture() {
+            selectedRange?.wrappedValue?.addToRange(date)
+        }
+    }
 }

@@ -160,6 +160,11 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
+    func historyCategories() -> [String] {
+                
+        Array(Set(self.model.statements.value[self.product.activeProductId]?.statements.map(\.groupName) ?? []))
+    }
+    
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -2305,6 +2310,21 @@ extension ProductProfileViewModel {
         var filters: [Filter]?
         var buttonAction: ButtonAction
         var showSheet: Bool
+        var categories: [String]
+        
+        public init(
+            date: Date? = nil,
+            filters: [Filter]? = nil,
+            buttonAction: ButtonAction,
+            showSheet: Bool,
+            categories: [String] = []
+        ) {
+            self.date = date
+            self.filters = filters
+            self.buttonAction = buttonAction
+            self.showSheet = showSheet
+            self.categories = categories
+        }
         
         enum Filter {
         

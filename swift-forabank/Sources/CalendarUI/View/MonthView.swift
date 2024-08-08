@@ -19,7 +19,7 @@ struct MonthView: View {
         
         LazyVStack(spacing: config.daysSpacing.vertical) {
             
-            ForEach(data.items, id: \.last, content: createSingleRow)
+            ForEach(data.items, id: \.last, content: singleRow)
         }
         .frame(maxWidth: .infinity)
         .animation(animation, value: selectedDate)
@@ -29,18 +29,18 @@ struct MonthView: View {
 
 private extension MonthView {
     
-    func createSingleRow(_ dates: [Date]) -> some View {
+    func singleRow(_ dates: [Date]) -> some View {
         
         HStack(spacing: config.daysSpacing.horizontal) {
             
-            ForEach(dates, id: \.self, content: createDayView)
+            ForEach(dates, id: \.self, content: dayView)
         }
     }
 }
 
 private extension MonthView {
     
-    func createDayView(_ date: Date) -> some View {
+    func dayView(_ date: Date) -> some View {
         
         config.dayView(
             date,
@@ -67,15 +67,15 @@ public protocol MonthLabel: View {
     var month: Date { get }
 
     // MARK: View Customisation
-    func createContent() -> AnyView
+    func content() -> AnyView
 }
 
 // MARK: - Default View Implementation
 public extension MonthLabel {
-    func createContent() -> AnyView { createDefaultContent().erased() }
+    func content() -> AnyView { defaultContent().erased() }
 }
 private extension MonthLabel {
-    func createDefaultContent() -> some View {
+    func defaultContent() -> some View {
         
         Text(getString(format: "MMMM y"))
             .font(.system(size: 16, weight: .semibold))
@@ -92,7 +92,7 @@ public extension MonthLabel {
 
 // MARK: - Others
 public extension MonthLabel {
-    var body: some View { createContent() }
+    var body: some View { content() }
 }
 
 public protocol WeekdayLabel: View {
@@ -100,15 +100,15 @@ public protocol WeekdayLabel: View {
     var weekday: WeekDay { get }
 
     // MARK: View Customisation
-    func createContent() -> AnyView
+    func content() -> AnyView
 }
 
 // MARK: - Default View Implementation
 public extension WeekdayLabel {
-    func createContent() -> AnyView { createDefaultContent().erased() }
+    func content() -> AnyView { defaultContent().erased() }
 }
 private extension WeekdayLabel {
-    func createDefaultContent() -> some View {
+    func defaultContent() -> some View {
         Text(getString(with: .veryShort))
             .foregroundColor(.onBackgroundSecondary)
             .font(.system(size: 14))
@@ -126,34 +126,34 @@ public extension WeekdayLabel {
 
 // MARK: - Others
 public extension WeekdayLabel {
-    var body: some View { createContent() }
+    var body: some View { content() }
 }
 
 public protocol WeekdaysView: View {
     // MARK: View Customisation
-    func createContent() -> AnyView
-    func createWeekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel
+    func content() -> AnyView
+    func weekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel
 }
 
 // MARK: - Default View Implementation
 public extension WeekdaysView {
-    func createContent() -> AnyView { createWeekdaysView().erased() }
-    func createWeekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel { createDefaultWeekDayLabel(weekday).erased() }
+    func content() -> AnyView { weekdaysView().erased() }
+    func weekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel { defaultWeekDayLabel(weekday).erased() }
 }
 private extension WeekdaysView {
-    func createDefaultWeekDayLabel(_ weekday: WeekDay) -> DefaultWeekdayLabel { DefaultWeekdayLabel(weekday: weekday) }
+    func defaultWeekDayLabel(_ weekday: WeekDay) -> DefaultWeekdayLabel { DefaultWeekdayLabel(weekday: weekday) }
 }
 
 // MARK: - Helpers
 public extension WeekdaysView {
     /// Creates weekdays view using the selected weekday labels. Cannot be overriden.
-    func createWeekdaysView() -> some View { HStack(spacing: 0) { ForEach(WeekDay.allCases, id: \.self, content: createWeekdayItem) } }
+    func weekdaysView() -> some View { HStack(spacing: 0) { ForEach(WeekDay.allCases, id: \.self, content: weekdayItem) } }
 }
 private extension WeekdaysView {
-    func createWeekdayItem(_ weekday: WeekDay) -> some View { createWeekdayLabel(weekday).frame(maxWidth: .infinity) }
+    func weekdayItem(_ weekday: WeekDay) -> some View { weekdayLabel(weekday).frame(maxWidth: .infinity) }
 }
 
 // MARK: - Others
 public extension WeekdaysView {
-    var body: some View { createContent() }
+    var body: some View { content() }
 }

@@ -12,6 +12,7 @@ import PinCodeUI
 import RxViewModel
 import SberQR
 import SwiftUI
+import CalendarUI
 
 struct ProductProfileView: View {
     
@@ -81,22 +82,11 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton {
-                                    viewModel.event(.history($0))
-                                }
-                                
-                                if let selectedDate = viewModel.historyState?.date?.description {
-                                    
-                                    Text(selectedDate)
-                                }
-                                
-                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
-                                    
-                                    Text(filters)
-                                }
-                                
                                 ProductProfileHistoryView(
-                                    viewModel: historyViewModel
+                                    viewModel: historyViewModel,
+                                    makeHistoryButton: {  productProfileViewFactory.makeHistoryButton {
+                                        viewModel.event(.history($0))
+                                    }}
                                 )
                             }
                         }
@@ -185,38 +175,39 @@ struct ProductProfileView: View {
                 
                 switch state.buttonAction {
                 case .calendar:
-                    
-                    calendarView()
-                    
+                    CalendarWrapperView(closeAction: {  })
+                        .navigationTitle("Выберите даты или период")
+                        .navigationBarTitleDisplayMode(.inline)
+                
                 case .filter:
-                    
-                    Text("Filter")
-                    
-                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
-                        Text("setup debit filter")
-                    }
-                    
-                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
-                        Text("clear filters")
-                    })
+                    FilterView(
+                        state: .init(
+                            title: "Фильтры",
+                            selectedServices: [],
+                            periods: ["Неделя", "Месяц", "Выбрать период"],
+                            transactions: ["Списание", "Пополнение"],
+                            services: self.viewModel.historyCategories() 
+                        ),
+                        event: { event in  },
+                        config: .iFora,
+                        makeButtonsContainer: {
+                            .init(
+                                dismissAction: { self.viewModel.event(.history(.dismiss)) },
+                                clearOptionsAction: { self.viewModel.event(.history(.clearOptions)) },
+                                config: .init(
+                                    clearButtonTitle: "Очистить",
+                                    applyButtonTitle: "Применить"
+                                )
+                            )
+                        },
+                        clearOptionsAction: { self.viewModel.event(.history(.clearOptions))
+                        },
+                        dismissAction: {
+                            self.viewModel.event(.history(.dismiss))
+                        }
+                    )
                 }
             }
-        }
-    }
-    
-    private func calendarView() -> some View {
-        
-        VStack {
-            
-            Text("Calendar")
-            
-            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
-                Text("setup date")
-            })
-            
-            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
-                Text("clear date")
-            })
         }
     }
     

@@ -55,7 +55,7 @@ public struct CalendarView: View {
         _ selectedRange: Binding<MDateRange?>?,
         _ configBuilder: (CalendarConfig) -> CalendarConfig)
     {
-        self._selectedData = .init(wrappedValue: .init(selectedDate, selectedRange))
+        self._selectedData = .init(wrappedValue: .init(.now, .init(nil, nil)))
         self.configData = configBuilder(.init())
         self.monthsData = .generate()
     }
@@ -81,30 +81,30 @@ public struct CalendarView: View {
                 Spacer()
             }
             
-            createWeekdaysView()
-            createScrollView()
+            weekdaysView()
+            scrollView()
         }
     }
 }
 
 private extension CalendarView {
     
-    func createButtonsView() -> some View {
+    func buttonsView() -> some View {
     
         Color.red.frame(width: 20, height: 20, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
     
-    func createWeekdaysView() -> some View {
+    func weekdaysView() -> some View {
         configData.weekdaysView().erased()
     }
     
-    func createScrollView() -> some View { ScrollViewReader { reader in
+    func scrollView() -> some View { ScrollViewReader { reader in
         
         ScrollView(showsIndicators: false) {
             
             LazyVStack(spacing: configData.monthsSpacing) {
                 
-                ForEach(monthsData, id: \.month, content: createMonthItem)
+                ForEach(monthsData, id: \.month, content: monthItem)
             }
             .padding(.top, configData.monthsPadding.top)
             .padding(.bottom, configData.monthsPadding.bottom)
@@ -117,25 +117,25 @@ private extension CalendarView {
 
 private extension CalendarView {
     
-    func createMonthItem(_ data: Month) -> some View {
+    func monthItem(_ data: Month) -> some View {
         
         VStack(spacing: configData.monthLabelDaysSpacing) {
             
-            createMonthLabel(data.month)
-            createMonthView(data)
+            monthLabel(data.month)
+            monthView(data)
         }
     }
 }
 private extension CalendarView {
     
-    func createMonthLabel(_ month: Date) -> some View {
+    func monthLabel(_ month: Date) -> some View {
         
         configData.monthLabel(month)
             .erased()
             .onAppear { onMonthChange(month) }
     }
     
-    func createMonthView(_ data: Month) -> some View {
+    func monthView(_ data: Month) -> some View {
         
         MonthView(
             selectedDate: $selectedData.date,
