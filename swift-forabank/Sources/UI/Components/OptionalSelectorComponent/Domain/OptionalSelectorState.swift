@@ -9,20 +9,20 @@ public struct OptionalSelectorState<Item> {
     
     public let items: [Item]
     public var filteredItems: [Item]
-    public var isShowingOptions: Bool
+    public var isShowingItems: Bool
     public var selected: Item?
     public var searchQuery: String
     
     public init(
         items: [Item],
         filteredItems: [Item],
-        isShowingOptions: Bool,
+        isShowingItems: Bool = false,
         selected: Item? = nil,
-        searchQuery: String
+        searchQuery: String = ""
     ) {
         self.items = items
         self.filteredItems = filteredItems
-        self.isShowingOptions = isShowingOptions
+        self.isShowingItems = isShowingItems
         self.selected = selected
         self.searchQuery = searchQuery
     }

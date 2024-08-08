@@ -38,9 +38,10 @@ public extension OptionalSelectorReducer {
             
         case let .select(item):
             state.selected = item
+            state.isShowingItems = false
             
         case .toggleOptions:
-            state.isShowingOptions.toggle()
+            state.isShowingItems.toggle()
         }
         
         return (state, effect)

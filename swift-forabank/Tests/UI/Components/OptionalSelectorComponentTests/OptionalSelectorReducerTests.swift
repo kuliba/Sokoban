@@ -29,13 +29,14 @@ final class OptionalSelectorReducerTests: XCTestCase {
         assert(nonSelected, event: .select(nil), delivers: nil)
     }
     
-    func test_select_shouldSetSelectionOnNonSelected() {
+    func test_select_shouldSetSelectionOnNonSelectedAndToggleShowing() {
         
         let item = makeItem()
-        let nonSelected = makeState(selected: nil)
+        let nonSelected = makeState(isShowingOptions: true, selected: nil)
         
         assert(nonSelected, event: .select(item)) {
             
+            $0.isShowingItems = false
             $0.selected = item
         }
     }
@@ -110,7 +111,7 @@ final class OptionalSelectorReducerTests: XCTestCase {
         
         assert(makeState(isShowingOptions: false), event: .toggleOptions) {
             
-            $0.isShowingOptions = true
+            $0.isShowingItems = true
         }
     }
     
@@ -123,7 +124,7 @@ final class OptionalSelectorReducerTests: XCTestCase {
         
         assert(makeState(isShowingOptions: true), event: .toggleOptions) {
             
-            $0.isShowingOptions = false
+            $0.isShowingItems = false
         }
     }
     
@@ -160,7 +161,7 @@ final class OptionalSelectorReducerTests: XCTestCase {
         return .init(
             items: items ?? makeItems(count: 3), 
             filteredItems: filteredItems,
-            isShowingOptions: isShowingOptions,
+            isShowingItems: isShowingOptions,
             selected: selected,
             searchQuery: query
         )
