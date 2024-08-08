@@ -532,7 +532,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel.Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentBinder>
     
     var merchantIcon: String? {
         

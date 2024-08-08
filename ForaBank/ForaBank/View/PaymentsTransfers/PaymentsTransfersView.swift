@@ -497,7 +497,7 @@ private extension PaymentsTransfersView {
             content: {
                 
                 UtilityPrepaymentWrapperView(
-                    viewModel: state.content,
+                    binder: state.content,
                     completionEvent: { event(.prepayment($0.flowEvent)) },
                     makeIconView: { viewFactory.makeIconView($0.map { .md5Hash(.init($0)) }) }
                 )
@@ -798,7 +798,7 @@ private extension PaymentsTransfersView {
     typealias Operator = UtilityPaymentOperator
     typealias Service = UtilityService
     
-    typealias Content = UtilityPrepaymentViewModel
+    typealias Content = UtilityPrepaymentBinder
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content>
     
