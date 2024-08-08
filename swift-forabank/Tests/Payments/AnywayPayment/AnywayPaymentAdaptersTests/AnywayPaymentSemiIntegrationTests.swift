@@ -62,6 +62,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 29", "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213"),
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
+            .init("w: core", "RUB, 1234567890, account"),
             .init("footer", "continue")
         ])
         
@@ -88,8 +89,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 29", "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213"),
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
-            .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
+            .init("f: SumSTrs", "Сумма"),
             .init("footer", "amount")
         ])
         
@@ -116,8 +117,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 29", "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213"),
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
-            .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
+            .init("f: SumSTrs", "Сумма"),
             .init("w: info", "info"),
             .init("w: otp", "otp"),
             .init("footer", "continue"),

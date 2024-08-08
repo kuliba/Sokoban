@@ -67,11 +67,10 @@ private extension AnywayPaymentValidator {
         _ payment: AnywayPayment
     ) -> AnywayPaymentValidationError? {
         
-        guard case .amount = payment.footer,
-              let amount = payment.amount
+        guard case .amount = payment.footer
         else { return nil }
         
-        return amount > 0 ? nil : .footerValidationError
+        return (payment.amount ?? -1) > 0 ? nil : .footerValidationError
     }
     
     func validate(

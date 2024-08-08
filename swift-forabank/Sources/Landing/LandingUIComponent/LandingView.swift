@@ -23,7 +23,9 @@ public struct LandingView: View {
     private let makeLimit: MakeLimit
     private var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
     private let cardLimitsInfo: CardLimitsInfo?
-    
+    private let limitIsChanged: (BlockHorizontalRectangularEvent.Limit) -> Void
+    private let newLimits: () -> [BlockHorizontalRectangularEvent.Limit]
+
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
@@ -31,7 +33,9 @@ public struct LandingView: View {
         makeIconView: @escaping MakeIconView,
         makeLimit: @escaping MakeLimit = { _ in nil },
         limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
-        cardLimitsInfo: CardLimitsInfo?
+        cardLimitsInfo: CardLimitsInfo?,
+        limitIsChanged: @escaping (BlockHorizontalRectangularEvent.Limit) -> Void,
+        newLimits: @escaping () -> [BlockHorizontalRectangularEvent.Limit]
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
@@ -40,6 +44,8 @@ public struct LandingView: View {
         self.makeLimit = makeLimit
         self.limitsViewModel = limitsViewModel
         self.cardLimitsInfo = cardLimitsInfo
+        self.limitIsChanged = limitIsChanged
+        self.newLimits = newLimits
     }
     
     struct ViewOffsetKey: PreferenceKey {
@@ -148,7 +154,9 @@ public struct LandingView: View {
             canOpenDetail: {
                 return viewModel.landing.components(g: $0.groupID.rawValue, v: $0.viewID.rawValue) != []
             }, 
-            limitsViewModel: limitsViewModel
+            limitsViewModel: limitsViewModel,
+            limitIsChanged: limitIsChanged,
+            newLimits: newLimits
         )
         
         switch component {
@@ -208,7 +216,9 @@ extension LandingView {
         let makeLimit: MakeLimit
         let canOpenDetail: UILanding.CanOpenDetail
         let limitsViewModel: ListHorizontalRectangleLimitsViewModel?
-        
+        let limitIsChanged: (BlockHorizontalRectangularEvent.Limit) -> Void
+        let newLimits: () -> [BlockHorizontalRectangularEvent.Limit]
+
         var body: some View {
             
             switch component {
@@ -328,10 +338,14 @@ extension LandingView {
                 
             case let .blockHorizontalRectangular(block):
                 // TODO: add reduce, handleEffect
+                
                 BlockHorizontalRectangularWrappedView(
                     viewModel: .init(
-                        initialState: .init(block: block, initialLimitsInfo: cardLimitsInfo),
-                        reduce: {state,_ in (state, .none)},
+                        initialState: .init(
+                            block: block,
+                            initialLimitsInfo: cardLimitsInfo
+                        ),
+                        reduce: BlockHorizontalRectangularReducer(limitIsChanged: limitIsChanged).reduce(_:_:),
                         handleEffect: {_,_ in }),
                     factory: .init(makeIconView: makeIconView),
                     config: config.blockHorizontalRectangular)
@@ -372,7 +386,9 @@ struct LandingUIView_Previews: PreviewProvider {
             )}, 
             makeLimit: { _ in nil }, 
             limitsViewModel: nil, 
-            cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true)
+            cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true),
+            limitIsChanged: { _ in }, 
+            newLimits: { [] }
         )
     }
 }

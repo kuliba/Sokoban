@@ -21,12 +21,16 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         )
     }
     
-    func test_update_shouldNotAddAmountWidgetOnNeedSumFalseAndIsMultiSumTrue() {
+    func test_update_shouldAddProductOnNeedSumFalseAndIsMultiSumTrue() {
         
-        assert(
-            makeAnywayPaymentWithoutAmount(),
-            on: makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
+        let payment = makeAnywayPaymentWithoutAmount()
+        XCTAssertFalse(hasProductWidget(payment))
+        let update = makeAnywayPaymentUpdate(
+            needSum: false,
+            isMultiSum: true
         )
+        
+        XCTAssertTrue(hasProductWidget(updatePayment(payment, with: update)))
     }
     
     func test_update_shouldSetFooterToAmountOnNeedSumTrueAndIsMultiSumFalse() {

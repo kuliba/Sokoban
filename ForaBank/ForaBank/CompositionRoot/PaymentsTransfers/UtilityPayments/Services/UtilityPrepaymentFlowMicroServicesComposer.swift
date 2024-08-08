@@ -63,15 +63,25 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ payload: LegacyPayload,
         _ completion: @escaping InitiateUtilityPaymentCompletion
     ) {
-        switch flag {
-        case .inactive:
+        switch payload.type {
+        case .internet:
             completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
             
-        case .active:
-            nanoServices.getOperatorsListByParam { [weak self] in
+        case .service:
+            switch flag {
+            case .inactive:
+                completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
                 
-                self?.getAllLatestPayments($0, completion)
+            case .active:
+                nanoServices.getOperatorsListByParam { [weak self] in
+                    
+                    self?.getAllLatestPayments($0, completion)
+                }
             }
+            
+        default:
+            // other payment types/categories are not supported
+            break
         }
     }
     

@@ -268,7 +268,10 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(viewModel):
-            OperationDetailView(viewModel: viewModel)
+            OperationDetailView(
+                viewModel: viewModel,
+                makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView
+            )
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -490,7 +493,8 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:)
+                makeHistoryButton: HistoryButtonView.init(event:),
+                makeRepeatButtonView: { .init(viewModel: .sample) }
             ),
             getUImage: { _ in nil }
         )

@@ -41,6 +41,7 @@ let package = Package(
         .foraCrypto,
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        .getInfoRepeatPaymentService,
         .serverAgent,
         .symmetricEncryption,
         .transferPublicKey,
@@ -153,6 +154,8 @@ let package = Package(
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        .getInfoRepeatPaymentService,
+        .getInfoRepeatPaymentServiceTests,
         .serverAgent,
         .serverAgentTests,
         .symmetricEncryption,
@@ -220,6 +223,7 @@ let package = Package(
         .selectorComponentTests,
         .inputPhoneComponent,
         .inputComponent,
+        .paymentCompletionUI,
         .paymentComponents,
         .productProfileComponents,
         .productSelectComponent,
@@ -521,9 +525,10 @@ private extension Product {
             .inputPhoneComponent,
             .nameComponent,
             .paymentComponents,
+            .paymentCompletionUI,
             .productSelectComponent,
             .selectComponent,
-//            .selectorComponent,
+            // .selectorComponent,
             .sharedConfigs,
         ]
     )
@@ -658,6 +663,13 @@ private extension Product {
         name: .getProcessingSessionCodeService,
         targets: [
             .getProcessingSessionCodeService,
+        ]
+    )
+    
+    static let getInfoRepeatPaymentService = library(
+        name: .getInfoRepeatPaymentService,
+        targets: [
+            .getInfoRepeatPaymentService,
         ]
     )
     
@@ -966,6 +978,7 @@ private extension Target {
             .foraTools,
             .textFieldComponent,
             .sharedConfigs,
+            .svCardLimitAPI
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -1395,6 +1408,7 @@ private extension Target {
         name: .getProcessingSessionCodeService,
         path: "Sources/Services/\(String.getProcessingSessionCodeService)"
     )
+    
     static let getProcessingSessionCodeServiceTests = testTarget(
         name: .getProcessingSessionCodeServiceTests,
         dependencies: [
@@ -1404,6 +1418,22 @@ private extension Target {
             .getProcessingSessionCodeService,
         ],
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
+    )
+    
+    static let getInfoRepeatPaymentService = target(
+        name: .getInfoRepeatPaymentService,
+        path: "Sources/Services/\(String.getInfoRepeatPaymentService)"
+    )
+    
+    static let getInfoRepeatPaymentServiceTests = testTarget(
+        name: .getInfoRepeatPaymentServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getInfoRepeatPaymentService,
+        ],
+        path: "Tests/Services/\(String.getInfoRepeatPaymentServiceTests)"
     )
     
     static let serverAgent = target(
@@ -1965,6 +1995,15 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
        
+    static let paymentCompletionUI = target(
+        name: .paymentCompletionUI,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/Components/\(String.paymentCompletionUI)"
+    )
+       
     static let selectComponent = target(
         name: .selectComponent,
         dependencies: [
@@ -2042,6 +2081,7 @@ private extension Target {
             .footerComponent,
             .nameComponent,
             .otpInputComponent,
+            .paymentCompletionUI,
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
@@ -2191,6 +2231,7 @@ private extension Target {
             .cvvPin,
             .genericRemoteService,
             .getProcessingSessionCodeService,
+            .getInfoRepeatPaymentService,
             .rxViewModel,
             .transferPublicKey,
             .textFieldDomain,
@@ -2339,6 +2380,10 @@ private extension Target.Dependency {
     
     static let otpInputComponent = byName(
         name: .otpInputComponent
+    )
+    
+    static let paymentCompletionUI = byName(
+        name: .paymentCompletionUI
     )
     
     static let pickerWithPreviewComponent = byName(
@@ -2535,6 +2580,10 @@ private extension Target.Dependency {
         name: .getProcessingSessionCodeService
     )
     
+    static let getInfoRepeatPaymentService = byName(
+        name: .getInfoRepeatPaymentService
+    )
+    
     static let transferPublicKey = byName(
         name: .transferPublicKey
     )
@@ -2638,6 +2687,8 @@ private extension String {
     static let otpInputComponent = "OTPInputComponent"
     static let otpInputComponentTests = "OTPInputComponentTests"
     
+    static let paymentCompletionUI = "PaymentCompletionUI"
+
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
@@ -2774,6 +2825,9 @@ private extension String {
     
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
+    
+    static let getInfoRepeatPaymentService = "GetInfoRepeatPaymentService"
+    static let getInfoRepeatPaymentServiceTests = "GetInfoRepeatPaymentServiceTests"
     
     static let serverAgent = "ServerAgent"
     static let serverAgentTests = "ServerAgentTests"

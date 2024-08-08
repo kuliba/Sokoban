@@ -15,18 +15,22 @@ struct ChangeSVCardLimitServices {
     typealias ChangeSVCardLimitResult = Result<Void, MappingError>
     typealias ChangeSVCardLimitCompletion = (ChangeSVCardLimitResult) -> Void
     typealias MappingError = MappingRemoteServiceError<RemoteServices.ResponseMapper.MappingError>
-
-    typealias ChangeSVCardLimitsCompletion = (String?) -> Void
-
+    
+    typealias ChangeSVCardLimitsCompletion = (String?, [GetSVCardLimitsResponse.LimitItem]?) -> Void
+    
     private let createChangeSVCardLimit: CreateChangeSVCardLimit
+    private let createGetSVCardLimits: GetSVCardLimitsServices.CreateGetSVCardLimits
     
     init(
-        createChangeSVCardLimit: @escaping CreateChangeSVCardLimit
+        createChangeSVCardLimit: @escaping CreateChangeSVCardLimit,
+        createGetSVCardLimits: @escaping GetSVCardLimitsServices.CreateGetSVCardLimits
     ) {
         self.createChangeSVCardLimit = createChangeSVCardLimit
+        self.createGetSVCardLimits = createGetSVCardLimits
     }
     
     func сhangeSVCardLimits(
+        card: ProductCardData,
         payloads: [ChangeSVCardLimitPayload],
         completion: @escaping ChangeSVCardLimitsCompletion
     ) {
@@ -47,13 +51,25 @@ struct ChangeSVCardLimitServices {
             }
         }
         
-        dispatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .global(qos: .background)) {
             
             if !errors.isEmpty {
                 
-                completion(errorMessages(errors))
+                completion(errorMessages(errors), nil)
             } else {
-                completion(nil)
+                
+                DispatchQueue.global(qos: .background).sync {
+                    
+                    createGetSVCardLimits((.init(cardId: card.cardId))) {
+                        switch $0 {
+                            
+                        case let .success(limits):
+                            completion(nil, limits.limitsList)
+                            
+                        case let .failure(err):
+                            completion(errorMessages([err]), nil)                        }
+                    }
+                }
             }
         }
     }
@@ -69,7 +85,7 @@ private extension ChangeSVCardLimitServices {
                 errorMessage($0)
             }
         }()
-
+        
         return messages.uniqued().joined(separator: "\n")
     }
     
@@ -104,20 +120,31 @@ extension ChangeSVCardLimitServices {
     
     static func preview() -> Self {
         
-        .init(createChangeSVCardLimit: { _, completion in
-            
-            completion(.success(()))
-        })
+        .init(
+            createChangeSVCardLimit: { _, completion in
+                
+                completion(.success(()))
+            },
+            createGetSVCardLimits: { _, completion in
+                
+                completion(.success(.init(limitsList: [.init(type: "Debit", limits: [.init(currency: 810, currentValue: 10, name: "Limit", value: 10)])], serial: "11")))
+            }
+        )
     }
     
     static func preview(
-        createChangeSVCardLimitStub: ChangeSVCardLimitResult
+        createChangeSVCardLimitStub: ChangeSVCardLimitResult,
+        createGetSVCardLimitsStub: GetSVCardLimitsServices.GetSVCardLimitsResult
     ) -> Self {
         
         .init(
             createChangeSVCardLimit: { _, completion in
                 
                 completion(createChangeSVCardLimitStub)
+            }, 
+            createGetSVCardLimits: { _, completion in
+                
+                completion(createGetSVCardLimitsStub)
             }
         )
     }

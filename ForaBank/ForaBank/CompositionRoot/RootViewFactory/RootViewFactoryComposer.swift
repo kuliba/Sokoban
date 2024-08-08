@@ -48,7 +48,8 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) }
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+            makeReturnButtonView: { self.makeReturnButtonView(self.historyFeatureFlag) }
         )
     }
 }
@@ -79,7 +80,8 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) }
+                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+                makeRepeatButtonView: { self.makeReturnButtonView(self.historyFeatureFlag) }
             ),
             getUImage: getUImage
         )
@@ -165,19 +167,32 @@ private extension RootViewFactoryComposer {
     }
     
     func makePaymentCompleteView(
-        result: TransactionResult,
+        result: Completed,
         goToMain: @escaping () -> Void
     ) -> PaymentCompleteView {
         
         return PaymentCompleteView(
             state: map(result),
             goToMain: goToMain,
+            repeat: {},
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
                 makeTemplateButton: makeTemplateButtonView(with: result)
-            )
+            ),
+            config: .iFora
         )
+    }
+    
+    func makeReturnButtonView(
+        _ historyFeatureFlag: HistoryFilterFlag
+    ) -> RepeatButtonView? {
+        
+        if historyFeatureFlag.rawValue {
+            return RepeatButtonView(viewModel: .sample)
+        } else {
+           return nil
+        }
     }
     
     func makeHistoryButtonView(
@@ -192,28 +207,28 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    typealias Completed = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.Completed
     
     private func map(
-        _ result: TransactionResult
+        _ completed: Completed
     ) -> PaymentCompleteView.State {
         
-        return result
-            .map {
-                
-                return .init(
-                    status: $0.status,
-                    detailID: $0.detailID,
-                    details: model.makeTransactionDetailButtonDetail(with: $0.info)
-                )
-            }
-            .mapError {
-                
-                return .init(
-                    formattedAmount: $0.formattedAmount,
-                    hasExpired: $0.hasExpired
-                )
-            }
+        return .init(
+            formattedAmount: completed.formattedAmount,
+            result: completed.result
+                .map {
+                    
+                    return .init(
+                        detailID: $0.detailID,
+                        details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                        status: $0.status
+                    )
+                }
+                .mapError {
+                    
+                    return .init(hasExpired: $0.hasExpired)
+                }
+        )
     }
     
     private func makeDocumentButton(
@@ -244,12 +259,12 @@ private extension RootViewFactoryComposer {
     }
     
     private func makeTemplateButtonView(
-        with result: TransactionResult
+        with completed: Completed
     ) -> () -> TemplateButtonStateWrapperView? {
     
         return {
             
-            guard let report = try? result.get(),
+            guard let report = try? completed.result.get(),
                   let operationDetail = report.info.operationDetail
             else { return nil }
             
