@@ -30,16 +30,19 @@ public extension TextInputValidator {
         _ state: TextFieldState
     ) -> TextInputState.Message? {
         
-        switch state.text {
-        case .none:
+        switch state {
+        case .editing:
             return hintText.map { .hint($0) }
             
-        case let .some(text):
+        case let .noFocus(text):
             if validate(text) {
                 return hintText.map { .hint($0) }
             } else {
                 return warningText.map { .warning($0) }
             }
+            
+        case .placeholder:
+            return hintText.map { .hint($0) }
         }
     }
 }
