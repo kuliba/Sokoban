@@ -1,5 +1,5 @@
 //
-//  TemplatesListFlowModelTests.swift
+//  TemplatesListFlowModelIntegrationTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 09.08.2024.
@@ -10,7 +10,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class TemplatesListFlowModelTests: XCTestCase {
+final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     
     func test_init_shouldSetStatusToNil() {
         
