@@ -197,14 +197,14 @@ public struct LandingWrapperView: View {
     public typealias UpdateSaveButtonAction = () -> Void
     
     @ObservedObject private var viewModel: LandingWrapperViewModel
-    private let updateSaveButton: UpdateSaveButtonAction?
+    private let updateSaveButtonAction: UpdateSaveButtonAction?
     
     public init(
         viewModel: LandingWrapperViewModel,
-        updateSaveButton: UpdateSaveButtonAction? = nil
+        updateSaveButtonAction: UpdateSaveButtonAction? = nil
     ) {
         self.viewModel = viewModel
-        self.updateSaveButton = updateSaveButton
+        self.updateSaveButtonAction = updateSaveButtonAction
     }
     
     @ViewBuilder
@@ -226,7 +226,7 @@ public struct LandingWrapperView: View {
                 viewModel.cardLimitsInfo,
                 {
                     viewModel.newLimitsValue.updateOrAddLimit($0)
-                    if let updateSaveButton { updateSaveButton() }
+                    if let updateSaveButtonAction { updateSaveButtonAction() }
                 },
                 { 
                     return viewModel.newLimitsValue
