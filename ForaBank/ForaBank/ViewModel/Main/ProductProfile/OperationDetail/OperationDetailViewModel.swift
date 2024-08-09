@@ -23,6 +23,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     @Published var sheet: Sheet?
     @Published var fullScreenSheet: FullScreenSheet?
 
+    var operationId: Int? = nil
+    
     var templateAction: () -> Void = {}
     
     let model: Model
@@ -127,6 +129,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         }
                 
                         self.update(with: statement, product: product, operationDetail: details)
+                        self.operationId = details.paymentOperationDetailId
                         
                         guard statement.paymentDetailType != .insideOther,
                               details.shouldHaveTemplateButton,
