@@ -1114,6 +1114,7 @@
 		2A9049542C3276BC00313CB8 /* LocalImageLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049502C3274D400313CB8 /* LocalImageLoaderComposer.swift */; };
 		2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049552C32962200313CB8 /* RemoteImageLoaderComposer.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
+		2A92EA612C665D4F001452E7 /* TemplatesListFlowModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA602C665D4F001452E7 /* TemplatesListFlowModelFactory.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
@@ -4369,6 +4370,7 @@
 		2A9049522C32753C00313CB8 /* LocalImageLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2A9049552C32962200313CB8 /* RemoteImageLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderComposer.swift; sourceTree = "<group>"; };
 		2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicServerSessionKeyMapper.swift; sourceTree = "<group>"; };
+		2A92EA602C665D4F001452E7 /* TemplatesListFlowModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowModelFactory.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
@@ -9692,6 +9694,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6CF7342C662BCB00F2B85A /* TemplatesListFlowModel.swift */,
+				2A92EA602C665D4F001452E7 /* TemplatesListFlowModelFactory.swift */,
 				2A6CF7382C662EF200F2B85A /* TemplatesListFlowView.swift */,
 			);
 			path = UI;
@@ -19978,6 +19981,7 @@
 				503F074128252CBA00E84A77 /* DepositCalculatorViewModel.swift in Sources */,
 				2A1F5E822C26EA0D002B3F65 /* ButtonStateConfig+ext.swift in Sources */,
 				50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */,
+				2A92EA612C665D4F001452E7 /* TemplatesListFlowModelFactory.swift in Sources */,
 				833D3E432C2F10A7006626F2 /* Services+makeBlockCardServices.swift in Sources */,
 				2AEF685A2AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift in Sources */,
 				2AEF6BF62BF78017000249A1 /* UtilityServicePickerFlowState.swift in Sources */,

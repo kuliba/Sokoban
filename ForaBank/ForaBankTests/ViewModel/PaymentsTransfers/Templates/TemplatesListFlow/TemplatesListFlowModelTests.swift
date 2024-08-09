@@ -25,7 +25,7 @@ final class TemplatesListFlowModelTests: XCTestCase {
         let productID = makeProductID()
         let (sut, content, statusSpy) = makeSUT()
         
-        content.subject.send(productID)
+        content.productIDSubject.send(productID)
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
@@ -34,11 +34,41 @@ final class TemplatesListFlowModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldSetDestinationOnContentEmittingTemplate() {
+        
+        let template = makeTemplate()
+        let (sut, content, statusSpy) = makeSUT()
+        
+        content.templateSubject.send(template)
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .destination(.payment)
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldResetDestinationOnPaymentDismiss() throws {
+        
+        let template = makeTemplate()
+        let (sut, content, statusSpy) = makeSUT()
+        content.templateSubject.send(template)
+
+        try sut.dismissPayment()
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .destination(.payment),
+            .none
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TemplatesListFlowModel<Content>
     private typealias ProductID = ProductData.ID
-    private typealias StatusSpy = ValueSpy<SUT.State.Status?>
+    private typealias StatusSpy = ValueSpy<SUT.State.EquatableStatus?>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -51,9 +81,15 @@ final class TemplatesListFlowModelTests: XCTestCase {
         let content = Content()
         let sut = SUT(
             initialState: .init(content: content),
+            factory: .init(
+                makePaymentModel: {
+                    
+                    return .init(source: .template($0.id), model: .emptyMock, closeAction: $1)
+                }
+            ),
             scheduler: .immediate
         )
-        let statusSpy = StatusSpy(sut.$state.map(\.status))
+        let statusSpy = StatusSpy(sut.$state.map(\.equatableStatus))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
@@ -62,19 +98,86 @@ final class TemplatesListFlowModelTests: XCTestCase {
         return (sut, content, statusSpy)
     }
     
-    private func makeProductID(
-    ) -> ProductID {
+    private func makeProductID() -> ProductID {
         
         return .random(in: 1...100)
     }
     
-    private final class Content: ProductIDEmitter {
+    private func makeTemplate(
+        id: Int = .random(in: 1...100),
+        type: PaymentTemplateData.Kind = .sfp
+    ) -> PaymentTemplateData {
         
-        let subject = PassthroughSubject<ProductID, Never>()
+        PaymentTemplateData.templateStub(paymentTemplateId: id, type: type)
+    }
+    
+    private final class Content: ProductIDEmitter & TemplateEmitter {
+        
+        let productIDSubject = PassthroughSubject<ProductID, Never>()
+        let templateSubject = PassthroughSubject<PaymentTemplateData, Never>()
         
         var productIDPublisher: AnyPublisher<ProductID, Never> {
             
-            subject.eraseToAnyPublisher()
+            productIDSubject.eraseToAnyPublisher()
         }
+        
+        var templatePublisher: AnyPublisher<PaymentTemplateData, Never> {
+            
+            templateSubject.eraseToAnyPublisher()
+        }
+    }
+}
+
+private extension TemplatesListFlowState {
+    
+    var equatableStatus: EquatableStatus? {
+        
+        switch status {
+        case .none:
+            return .none
+            
+        case .destination(.payment):
+            return .destination(.payment)
+            
+        case let .outside(outside):
+            return .outside(outside)
+        }
+    }
+    
+    enum EquatableStatus: Equatable {
+        
+        case destination(Destination)
+        case outside(Status.Outside)
+        
+        
+        enum Destination: Equatable {
+            
+            case payment
+        }
+    }
+}
+
+// MARK: - DSL
+
+private extension TemplatesListFlowModel {
+    
+    func dismissPayment(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let payment = try XCTUnwrap(state.payment, "Expected to have payment, but got nil instead.", file: file, line: line)
+        payment.closeAction()
+    }
+}
+
+private extension TemplatesListFlowState {
+    
+    var payment: PaymentsViewModel? {
+        
+        guard case let .payment(payment) = destination 
+        else { return nil }
+        
+        return payment
     }
 }

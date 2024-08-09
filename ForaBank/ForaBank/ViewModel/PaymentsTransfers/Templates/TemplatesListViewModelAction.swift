@@ -114,6 +114,12 @@ enum TemplatesListViewModelAction {
         let productId: ProductData.ID
     }
     
+    // Should be observed from outside, is handled in the TemplatesListViewModel
+    struct OpenDefaultTemplate: Action, Equatable {
+        
+        let template: PaymentTemplateData
+    }
+    
     struct AddTemplateTapped: Action {}
     
     // Action to present payment screen

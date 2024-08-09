@@ -8,15 +8,7 @@
 import Combine
 import Foundation
 
-protocol ProductIDEmitter {
-    
-    typealias ProductID = ProductData.ID
-
-    var productIDPublisher: AnyPublisher<ProductID, Never> { get }
-}
-
-struct TemplatesListFlowState<Content>
-where Content: ProductIDEmitter {
+struct TemplatesListFlowState<Content>{
     
     let content: Content
     var status: Status?
@@ -24,9 +16,15 @@ where Content: ProductIDEmitter {
 
 extension TemplatesListFlowState {
  
-    enum Status: Equatable {
+    enum Status {
         
+        case destination(Destination)
         case outside(Outside)
+        
+        enum Destination {
+            
+            case payment(PaymentsViewModel)
+        }
         
         enum Outside: Equatable {
             

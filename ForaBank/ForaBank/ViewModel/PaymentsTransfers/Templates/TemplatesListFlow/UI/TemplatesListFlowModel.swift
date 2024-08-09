@@ -9,19 +9,35 @@ import Combine
 import CombineSchedulers
 import Foundation
 
+protocol ProductIDEmitter {
+    
+    typealias ProductID = ProductData.ID
+    
+    var productIDPublisher: AnyPublisher<ProductID, Never> { get }
+}
+
+protocol TemplateEmitter {
+    
+    var templatePublisher: AnyPublisher<PaymentTemplateData, Never> { get }
+}
+
 final class TemplatesListFlowModel<Content>: ObservableObject
-where Content: ProductIDEmitter {
+where Content: ProductIDEmitter & TemplateEmitter {
     
     @Published private(set) var state: State
+    
+    private let factory: Factory
     
     private let stateSubject = PassthroughSubject<State, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(
         initialState: State,
+        factory: Factory,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.state = initialState
+        self.factory = factory
         
         stateSubject
             .receive(on: scheduler)
@@ -35,6 +51,7 @@ extension TemplatesListFlowModel {
     
     typealias State = TemplatesListFlowState<Content>
     typealias Event = TemplatesListFlowEvent
+    typealias Factory = TemplatesListFlowModelFactory
 }
 
 extension TemplatesListFlowModel {
@@ -44,8 +61,21 @@ extension TemplatesListFlowModel {
         var state = state
         
         switch event {
-        case let .select(productID):
-            state.status = .outside(.productID(productID))
+        case .dismiss(.destination):
+            state.status = nil
+            
+        case let .select(select):
+            switch select {
+            case let .productID(productID):
+                state.status = .outside(.productID(productID))
+                
+            case let .template(template):
+                let model = factory.makePaymentModel(template) { [weak self] in
+                    
+                    self?.event(.dismiss(.destination))
+                }
+                state.status = .destination(.payment(model))
+            }
         }
         
         stateSubject.send(state)
@@ -60,7 +90,12 @@ private extension TemplatesListFlowModel {
     ) {
         content.productIDPublisher
             .receive(on: scheduler)
-            .sink { [weak self] in self?.event(.select($0)) }
+            .sink { [weak self] in self?.event(.select(.productID($0))) }
+            .store(in: &cancellables)
+        
+        content.templatePublisher
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.event(.select(.template($0))) }
             .store(in: &cancellables)
     }
 }

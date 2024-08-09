@@ -195,6 +195,16 @@ extension RootViewModelFactory {
             
             return .init(
                 initialState: .init(content: content),
+                factory: .init(
+                    makePaymentModel: { template, close in
+                        
+                        return .init(
+                            source: .template(template.id), 
+                            model: model,
+                            closeAction: close
+                        )
+                    }
+                ),
                 scheduler: scheduler
             )
         }

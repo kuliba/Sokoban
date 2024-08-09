@@ -186,6 +186,12 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
         
         return .init(
             initialState: .init(content: .sampleComplete),
+            factory: .init(
+                makePaymentModel: { template, close in
+                    
+                    return .init(source: .template(template.id), model: .emptyMock, closeAction: close)
+                }
+            ),
             scheduler: .main
         )
     }

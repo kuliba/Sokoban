@@ -337,8 +337,9 @@ private extension TemplatesListViewModel {
                         sheet = .init(type: .meToMe(paymentsMeToMeViewModel))
                         
                     default:
-                        openDefaultPayment(template)
+                        self.action.send(TemplatesListViewModelAction.OpenDefaultTemplate(template: template))
                     }
+                    
             //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:
                     
@@ -690,19 +691,6 @@ private extension TemplatesListViewModel {
                 default: return
                 }
             }.store(in: &bindings)
-    }
-    
-    private func openDefaultPayment(
-        _ template: PaymentTemplateData
-    ) {
-        link = .payment(.init(
-            source: .template(template.id),
-            model: model,
-            closeAction: { [weak self] in
-                
-                self?.action.send(TemplatesListViewModelAction.CloseAction())
-            }
-        ))
     }
     
     func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
