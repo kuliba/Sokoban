@@ -7,7 +7,6 @@
 
 import Foundation
 
-#if DEBUG || MOCK
 extension PaymentProviderServicePickerPayload {
     
     static let preview: Self = .init(
@@ -25,4 +24,3 @@ extension PaymentProviderServicePickerPayload {
         qrMapping: .init(parameters: [], operators: [])
     )
 }
-#endif
