@@ -18,6 +18,13 @@
         "identifier" : "SelectorComponentTests",
         "name" : "SelectorComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OptionalSelectorComponentTests",
+        "name" : "OptionalSelectorComponentTests"
+      }
     }
   ],
   "version" : 1
