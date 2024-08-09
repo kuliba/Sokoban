@@ -740,21 +740,20 @@ private extension MainViewModel {
     func bind(_ templates: Templates) {
         
         templates.model.action
+            .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
+            .map(\.productId)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] id in
                 
-                switch action {
-                case let payload as TemplatesListViewModelAction.OpenProductProfile:
+                self.action.send(MainViewModelAction.Close.Link())
+                
+                self.delay(for: .milliseconds(800)) {
                     
-                    self.action.send(MainViewModelAction.Close.Link())
-                    
-                    DispatchQueue.main.delay(for: .milliseconds(800)) {
-                        self.action.send(MainViewModelAction.Show.ProductProfile
-                            .init(productId: payload.productId))
-                    }
-                    
-                default:
-                    break
+                    self.action.send(
+                        MainViewModelAction.Show.ProductProfile(
+                            productId: id
+                        )
+                    )
                 }
             }
             .store(in: &bindings)

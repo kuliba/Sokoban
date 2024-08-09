@@ -1223,24 +1223,19 @@ private extension PaymentsTransfersViewModel {
     private func bind(_ templates: Templates) {
         
         templates.model.action
+            .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
             .receive(on: scheduler)
-            .sink { [unowned self] action in
+            .map(\.productId)
+            .sink { [unowned self] id in
                 
-                switch action {
-                case let payload as TemplatesListViewModelAction.OpenProductProfile:
+                self.event(.dismiss(.destination))
+                self.delay(for: .milliseconds(800)) {
                     
-                    self.event(.dismiss(.destination))
-                    self.delay(for: .milliseconds(800)) {
-                        
-                        self.action.send(
-                            PaymentsTransfersViewModelAction.Show.ProductProfile(
-                                productId: payload.productId
-                            )
+                    self.action.send(
+                        PaymentsTransfersViewModelAction.Show.ProductProfile(
+                            productId: id
                         )
-                    }
-                    
-                default:
-                    break
+                    )
                 }
             }
             .store(in: &bindings)
