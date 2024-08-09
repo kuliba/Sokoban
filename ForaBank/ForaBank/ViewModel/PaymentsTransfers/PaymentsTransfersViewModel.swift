@@ -14,6 +14,7 @@ import OperatorsListComponents
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
+    typealias Templates = PaymentsTransfersFactory.Templates
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
@@ -455,7 +456,7 @@ extension PaymentsTransfersViewModel {
         case service(OperatorsViewModel)
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
-        case template(TemplatesListViewModel)
+        case templates(Templates)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
@@ -562,7 +563,7 @@ extension PaymentsTransfersViewModel.Link {
             return .internet
         case .transport:
             return .transport
-        case .template:
+        case .templates:
             return .template
         case .country:
             return .country
@@ -1017,13 +1018,13 @@ private extension PaymentsTransfersViewModel {
     
     private func handleTemplatesButtonTapped() {
         
-        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
+        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
             
             self?.event(.dismiss(.destination))
         }
         
-        bind(viewModel)
-        route.destination = .template(viewModel)
+        bind(templates)
+        route.destination = .templates(templates)
     }
     
     private func handleCurrencyWalletButtonTapped() {
@@ -1219,9 +1220,9 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+    private func bind(_ templates: Templates) {
         
-        templatesListViewModel.action
+        templates.action
             .receive(on: scheduler)
             .sink { [unowned self] action in
                 

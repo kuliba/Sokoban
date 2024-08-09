@@ -17,6 +17,7 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
+    typealias Templates = PaymentsTransfersFactory.Templates
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -503,11 +504,11 @@ private extension MainViewModel {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListViewModel = paymentsTransfersFactory.makeTemplatesListViewModel (
+                                let templates = paymentsTransfersFactory.makeTemplates (
                                     { [weak self] in self?.action.send(MainViewModelAction.Close.Link())
                                     })
-                                bind(templatesListViewModel)
-                                route.destination = .templates(templatesListViewModel)
+                                bind(templates)
+                                route.destination = .templates(templates)
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -736,9 +737,9 @@ private extension MainViewModel {
             .store(in: &bindings)
     }
     
-    func bind(_ templatesListViewModel: TemplatesListViewModel) {
+    func bind(_ templates: Templates) {
         
-        templatesListViewModel.action
+        templates.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
@@ -1471,7 +1472,7 @@ extension MainViewModel {
         case messages(MessagesHistoryViewModel)
         case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositListViewModel)
-        case templates(TemplatesListViewModel)
+        case templates(Templates)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)

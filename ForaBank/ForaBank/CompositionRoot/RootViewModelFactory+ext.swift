@@ -181,7 +181,7 @@ extension RootViewModelFactory {
         
         let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
         
-        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+        let makeTemplates: PaymentsTransfersFactory.MakeTemplates = {
             
             .init(
                 model,
@@ -268,7 +268,7 @@ extension RootViewModelFactory {
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            makeTemplates: makeTemplates,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -291,7 +291,7 @@ extension RootViewModelFactory {
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            makeTemplates: makeTemplates,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
@@ -445,7 +445,7 @@ extension ProductProfileViewModel {
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
+        makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -467,7 +467,7 @@ extension ProductProfileViewModel {
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
-                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makeTemplates: makeTemplates,
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
@@ -492,7 +492,7 @@ extension ProductProfileViewModel {
                 makeProductProfileViewModel: makeProductProfileViewModel,
                 makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
                 makeServicePaymentBinder: makeServicePaymentBinder,
-                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makeTemplates: makeTemplates,
                 makeUtilitiesViewModel: makeUtilitiesViewModel
             )
             
@@ -593,7 +593,7 @@ private extension RootViewModelFactory {
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
+        makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
@@ -617,7 +617,7 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            makeTemplates: makeTemplates,
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
@@ -695,11 +695,3 @@ private extension UserAccountModelEffectHandler {
         )
     }
 }
-
-//extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload {
-//    
-//    var state: UtilityPrepaymentState {
-//        
-//        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
-//    }
-//}

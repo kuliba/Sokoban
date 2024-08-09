@@ -232,7 +232,7 @@ extension PaymentsTransfersView {
                 .navigationBarTitle("", displayMode: .inline)
                 .edgesIgnoringSafeArea(.all)
             
-        case let .template(templateListViewModel):
+        case let .templates(templateListViewModel):
             TemplatesListView(viewModel: templateListViewModel)
             
         case let .currencyWallet(currencyWalletViewModel):
