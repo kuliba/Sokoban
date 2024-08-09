@@ -30,6 +30,10 @@ struct RootView: View {
                     chatViewTab()
                 }
                 .accentColor(.black)
+                .tabBar(isHidden: .init(
+                    get: { viewModel.isTabBarHidden },
+                    set: { if !$0 { viewModel.reset() }}
+                ))
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
             }

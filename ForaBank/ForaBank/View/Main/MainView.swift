@@ -97,10 +97,6 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
-        .tabBar(isHidden: .init(
-            get: { !viewModel.route.isEmpty },
-            set: { if !$0 { viewModel.reset() } }
-        ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:

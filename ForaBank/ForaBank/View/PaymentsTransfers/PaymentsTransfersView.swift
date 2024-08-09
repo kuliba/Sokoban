@@ -56,10 +56,6 @@ struct PaymentsTransfersView: View {
                 leading: leadingBarItems,
                 trailing: trailingBarItems
             )
-            .tabBar(isHidden: .init(
-                get: { viewModel.route.destination != nil },
-                set: { if !$0 { viewModel.reset() } }
-            ))
     }
 }
 
