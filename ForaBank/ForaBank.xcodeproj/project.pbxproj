@@ -1118,6 +1118,7 @@
 		2A92EA662C667558001452E7 /* TemplatesListFlowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */; };
 		2A92EA682C667853001452E7 /* TemplatesListFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */; };
 		2A92EA6A2C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */; };
+		2A92EA6C2C667D68001452E7 /* TemplatesListFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
@@ -4377,6 +4378,7 @@
 		2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowReducer.swift; sourceTree = "<group>"; };
 		2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandler.swift; sourceTree = "<group>"; };
 		2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
+		2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
@@ -10045,6 +10047,7 @@
 			isa = PBXGroup;
 			children = (
 				2A840C0D2C37438600BA6887 /* TemplatesFlowManagerComposer.swift */,
+				2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */,
 			);
 			path = Templates;
 			sourceTree = "<group>";
@@ -19157,6 +19160,7 @@
 				ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */,
 				2AD7EBDD2B0CB233009FDCAB /* RootViewModelFactory+makeDetailButton.swift in Sources */,
 				2A3011E42A6AB4FC00560B98 /* ServerAgentSessionCodeAPIClientAdapter.swift in Sources */,
+				2A92EA6C2C667D68001452E7 /* TemplatesListFlowModelComposer.swift in Sources */,
 				ED2D89FD286DAF5D0000B391 /* CameraAgentMock.swift in Sources */,
 				5008781C2853453A0033DDD5 /* SpinnerRefreshView.swift in Sources */,
 				2A2E32FB29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift in Sources */,

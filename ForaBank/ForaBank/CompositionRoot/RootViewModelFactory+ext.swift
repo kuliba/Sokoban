@@ -178,43 +178,13 @@ extension RootViewModelFactory {
             handleEffect: ProductNavigationStateEffectHandler().handleEffect,
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
-        
-        let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
-        
-        let makeTemplates: PaymentsTransfersFactory.MakeTemplates = {
-            
-            let content = TemplatesListViewModel(
-                model,
-                dismissAction: $0,
-                updateFastAll: {
-                    
-                    model.action.send(ModelAction.Products.Update.Fast.All())
-                },
-                flowManager: templatesFlowManager
-            )
-            
-            let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
-            let microServices = TemplatesListFlowEffectHandlerMicroServices(
-                makePaymentModel: { template, close in
-                    
-                    return .init(
-                        source: .template(template.id),
-                        model: model,
-                        closeAction: close
-                    )
-                }
-            )
-            let effectHandler = TemplatesListFlowEffectHandler(
-                microServices: microServices
-            )
-            
-            return .init(
-                initialState: .init(content: content),
-                reduce: reducer.reduce(_:_:),
-                handleEffect: effectHandler.handleEffect(_:_:),
-                scheduler: scheduler
-            )
-        }
+                
+        let templatesComposer = TemplatesListFlowModelComposer(
+            model: model,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: scheduler
+        )
+        let makeTemplates = templatesComposer.compose
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag,
