@@ -43,6 +43,7 @@ final class TemplatesListFlowModelTests: XCTestCase {
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
+            .outside(.inflight),
             .destination(.payment)
         ])
         XCTAssertNotNil(sut)
@@ -58,6 +59,7 @@ final class TemplatesListFlowModelTests: XCTestCase {
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
+            .outside(.inflight),
             .destination(.payment),
             .none
         ])

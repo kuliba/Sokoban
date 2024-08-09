@@ -51,6 +51,7 @@ extension TemplatesListFlowModel {
     
     typealias State = TemplatesListFlowState<Content>
     typealias Event = TemplatesListFlowEvent
+    typealias Effect = TemplatesListFlowEffect
     typealias Factory = TemplatesListFlowModelFactory
 }
 
@@ -59,26 +60,27 @@ extension TemplatesListFlowModel {
     func event(_ event: Event) {
         
         var state = state
-        
-        switch event {
-        case .dismiss(.destination):
-            state.status = nil
-            
-        case let .select(select):
-            switch select {
-            case let .productID(productID):
-                state.status = .outside(.productID(productID))
-                
-            case let .template(template):
-                let model = factory.makePaymentModel(template) { [weak self] in
-                    
-                    self?.event(.dismiss(.destination))
-                }
-                state.status = .destination(.payment(model))
-            }
-        }
-        
+        let effect = reduce(&state, event)
         stateSubject.send(state)
+        
+        if let effect {
+            
+            handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+    }
+    
+    func handleEffect(
+        _ effect: Effect,
+        _ dispatch: @escaping (Event) -> Void
+    ) {
+        switch effect {
+        case let .template(template):
+            let model = factory.makePaymentModel(template) { [weak self] in
+                
+                self?.event(.dismiss(.destination))
+            }
+            self.event(.payment(model))
+        }
     }
 }
 
@@ -97,5 +99,36 @@ private extension TemplatesListFlowModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.select(.template($0))) }
             .store(in: &cancellables)
+    }
+}
+
+private extension TemplatesListFlowModel {
+    
+    func reduce(
+        _ state: inout State,
+        _ event: Event
+    ) -> Effect? {
+        
+        var effect: Effect?
+        
+        switch event {
+        case .dismiss(.destination):
+            state.status = nil
+            
+        case let .payment(payment):
+            state.status = .destination(.payment(payment))
+            
+        case let .select(select):
+            switch select {
+            case let .productID(productID):
+                state.status = .outside(.productID(productID))
+                
+            case let .template(template):
+                state.status = .outside(.inflight)
+                effect = .template(template)
+            }
+        }
+        
+        return effect
     }
 }

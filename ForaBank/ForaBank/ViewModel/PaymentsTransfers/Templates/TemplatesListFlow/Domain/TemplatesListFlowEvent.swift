@@ -5,9 +5,10 @@
 //  Created by Igor Malyarov on 09.08.2024.
 //
 
-enum TemplatesListFlowEvent: Equatable {
+enum TemplatesListFlowEvent {
     
     case dismiss(Dismiss)
+    case payment(Payment)
     case select(Select)
 }
 
@@ -17,6 +18,8 @@ extension TemplatesListFlowEvent {
         
         case destination
     }
+    
+    typealias Payment = PaymentsViewModel
     
     enum Select: Equatable {
         

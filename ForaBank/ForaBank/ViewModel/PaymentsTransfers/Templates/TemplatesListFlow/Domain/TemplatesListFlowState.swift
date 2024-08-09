@@ -28,6 +28,7 @@ extension TemplatesListFlowState {
         
         enum Outside: Equatable {
             
+            case inflight
             case productID(ProductData.ID)
         }
     }
