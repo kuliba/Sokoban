@@ -1230,20 +1230,24 @@ private extension PaymentsTransfersViewModel {
         _ templates: Templates
     ) -> AnyCancellable {
         
-        templates.action
-            .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
+        templates.$state
+            .compactMap(\.status)
             .receive(on: scheduler)
-            .map(\.productId)
-            .sink { [unowned self] id in
+            .sink { [weak self] status in
                 
-                self.event(.dismiss(.destination))
-                self.delay(for: .milliseconds(800)) {
-                    
-                    self.action.send(
-                        PaymentsTransfersViewModelAction.Show.ProductProfile(
-                            productId: id
+                guard let self else { return }
+                
+                switch status {
+                case let .outside(.productID(productID)):
+                    self.event(.dismiss(.destination))
+                    self.delay(for: .milliseconds(800)) {
+                        
+                        self.action.send(
+                            PaymentsTransfersViewModelAction.Show.ProductProfile(
+                                productId: productID
+                            )
                         )
-                    )
+                    }
                 }
             }
     }

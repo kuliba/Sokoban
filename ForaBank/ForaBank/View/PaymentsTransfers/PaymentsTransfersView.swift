@@ -233,7 +233,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .templates(node):
-            TemplatesListView(viewModel: node.model)
+            TemplatesListFlowView(model: node.model)
             
         case let .currencyWallet(currencyWalletViewModel):
             CurrencyWalletView(viewModel: currencyWalletViewModel)

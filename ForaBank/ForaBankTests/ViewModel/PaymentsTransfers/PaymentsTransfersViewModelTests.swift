@@ -981,7 +981,7 @@ extension PaymentsTransfersViewModel {
         
         switch route.destination {
         case let .templates(node):
-            return node.model
+            return node.model.state.content
             
         default:
             return nil

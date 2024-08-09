@@ -478,8 +478,10 @@ private extension MainViewModel {
             case let openProductSection as MainSectionOpenProductView.ViewModel:
                 openProductSection.action
                     .receive(on: scheduler)
-                    .sink { [unowned self] action in
-                        
+                    .sink { [weak self] action in
+                            
+                        guard let self else { return }
+
                         switch action {
                         case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
                             
@@ -761,21 +763,25 @@ private extension MainViewModel {
         _ templates: Templates
     ) -> AnyCancellable {
         
-        templates.action
-            .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
-            .map(\.productId)
+        templates.$state
+            .compactMap(\.status)
             .receive(on: scheduler)
-            .sink { [unowned self] id in
+            .sink { [weak self] status in
                 
-                self.action.send(MainViewModelAction.Close.Link())
+                guard let self else { return }
                 
-                self.delay(for: .milliseconds(800)) {
+                switch status {
+                case let .outside(.productID(productID)):
+                    self.action.send(MainViewModelAction.Close.Link())
                     
-                    self.action.send(
-                        MainViewModelAction.Show.ProductProfile(
-                            productId: id
+                    self.delay(for: .milliseconds(800)) {
+                        
+                        self.action.send(
+                            MainViewModelAction.Show.ProductProfile(
+                                productId: productID
+                            )
                         )
-                    )
+                    }
                 }
             }
     }

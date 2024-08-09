@@ -183,7 +183,7 @@ extension RootViewModelFactory {
         
         let makeTemplates: PaymentsTransfersFactory.MakeTemplates = {
             
-            return .init(
+            let content = TemplatesListViewModel(
                 model,
                 dismissAction: $0,
                 updateFastAll: {
@@ -191,6 +191,11 @@ extension RootViewModelFactory {
                     model.action.send(ModelAction.Products.Update.Fast.All())
                 },
                 flowManager: templatesFlowManager
+            )
+            
+            return .init(
+                initialState: .init(content: content),
+                scheduler: scheduler
             )
         }
         

@@ -180,7 +180,7 @@ struct MainView<NavigationOperationView: View>: View {
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(node):
-            TemplatesListView(viewModel: node.model)
+            TemplatesListFlowView(model: node.model)
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)
