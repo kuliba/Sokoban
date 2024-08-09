@@ -9,6 +9,7 @@ import AnywayPaymentAdapters
 import AnywayPaymentBackend
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import CombineSchedulers
 import OperatorsListComponents
 import ForaTools
 import Foundation
@@ -26,17 +27,20 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         flag: Flag,
         model: Model,
         httpClient: HTTPClient,
-        log: @escaping Log
+        log: @escaping Log,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
+        self.scheduler = scheduler
     }
     
     typealias Flag = UtilitiesPaymentsFlag
@@ -286,7 +290,8 @@ private extension PaymentsTransfersFlowManagerComposer {
                 fraudDelay: settings.fraudDelay,
                 navTitle: settings.utilityNavTitle
             ),
-            microServices: microComposer.compose()
+            microServices: microComposer.compose(), 
+            scheduler: scheduler
         )
     }
     

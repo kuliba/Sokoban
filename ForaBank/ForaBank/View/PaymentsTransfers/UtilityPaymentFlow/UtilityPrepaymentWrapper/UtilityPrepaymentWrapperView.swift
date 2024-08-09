@@ -7,16 +7,29 @@
 
 import FooterComponent
 import SwiftUI
+import TextFieldComponent
 import UIPrimitives
 import UtilityServicePrepaymentDomain
 import UtilityServicePrepaymentUI
 
 struct UtilityPrepaymentWrapperView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
+    @ObservedObject private var searchModel: RegularFieldViewModel
     
-    let completionEvent: (CompletionEvent) -> Void
-    let makeIconView: MakeIconView
+    private let completionEvent: (CompletionEvent) -> Void
+    private let makeIconView: MakeIconView
+    
+    init(
+        binder: Binder,
+        completionEvent: @escaping (CompletionEvent) -> Void,
+        makeIconView: @escaping MakeIconView
+    ) {
+        self.viewModel = binder.model
+        self.searchModel = binder.searchModel
+        self.completionEvent = completionEvent
+        self.makeIconView = makeIconView
+    }
     
     var body: some View {
         
@@ -42,6 +55,8 @@ extension UtilityPrepaymentWrapperView {
     
     typealias CompletionEvent = UtilityPrepaymentCompletionEvent
     typealias ViewModel = UtilityPrepaymentViewModel
+    
+    typealias Binder = UtilityPrepaymentBinder
 }
 
 extension UtilityPaymentLastPayment: Identifiable {
@@ -69,12 +84,12 @@ private extension UtilityPrepaymentWrapperView {
         Button(
             action: { completionEvent(.select(.lastPayment(latestPayment))) },
             label: {
-                #warning("md5Hash is unwrapped to empty - iconView should be able to deal with it at composition level")
+
                 LastPaymentLabel(
                     amount: "\(latestPayment.amount)",
                     title: latestPayment.name,
                     config: .iFora,
-                    iconView: makeIconView(latestPayment.md5Hash ?? "")
+                    iconView: makeIconView(latestPayment.md5Hash)
                 )
                 .contentShape(Rectangle())
             }
@@ -102,19 +117,14 @@ private extension UtilityPrepaymentWrapperView {
     
     func makeSearchView() -> some View {
         
-        TextField(
-            "Наименование или ИНН",
-            text: .init(
-                get: { viewModel.state.searchText ?? "" },
-                set: { viewModel.event(.search($0)) }
-            )
-        )
-        .frame(height: 44)
-        .padding(.leading, 14)
-        .padding(.trailing, 15)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.bordersDivider, lineWidth: 1)
+        DefaultCancellableSearchBarView(
+            viewModel: searchModel,
+            textFieldConfig: .black16,
+            cancel: {
+            
+                UIApplication.shared.endEditing()
+                searchModel.setText(to: nil)
+            }
         )
     }
 }

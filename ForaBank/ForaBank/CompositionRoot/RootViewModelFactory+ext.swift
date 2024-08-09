@@ -197,7 +197,8 @@ extension RootViewModelFactory {
             flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
-            log: logger.log
+            log: logger.log,
+            scheduler: scheduler
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose

@@ -7,8 +7,11 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import CombineSchedulers
+import Foundation
 import PaymentComponents
 import RxViewModel
+import TextFieldModel
 import UtilityServicePrepaymentCore
 
 final class PaymentsTransfersFlowReducerFactoryComposer {
@@ -16,15 +19,18 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     private let model: Model
     private let settings: Settings
     private let microServices: MicroServices
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
         settings: Settings,
-        microServices: MicroServices
+        microServices: MicroServices,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
         self.settings = settings
         self.microServices = microServices
+        self.scheduler = scheduler
     }
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
@@ -62,7 +68,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Operator = UtilityPaymentOperator
     typealias Service = UtilityService
     
-    typealias Content = UtilityPrepaymentViewModel
+    typealias Content = UtilityPrepaymentBinder
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
 }
 
@@ -174,8 +180,23 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
+        let placeholderText = "Наименование или ИНН"
+        let searchReducer = TransformingReducer(
+            placeholderText: placeholderText,
+            transform: { $0}
+        )
+        let searchModel = RegularFieldViewModel(
+            initialState: .placeholder(placeholderText),
+            reducer: searchReducer,
+            keyboardType: .default
+        )
+        let binder = UtilityPrepaymentBinder(
+            model: viewModel,
+            searchModel: searchModel,
+            scheduler: scheduler
+        )
         
-        return .init(content: viewModel, navTitle: settings.navTitle)
+        return .init(content: binder, navTitle: settings.navTitle)
     }
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content>

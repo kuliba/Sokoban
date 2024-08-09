@@ -456,7 +456,7 @@ extension PaymentsTransfersViewModel {
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
 
         typealias MixedOperators = MultiElementArray<OperatorProvider<SegmentedOperatorData, SegmentedProvider>>
-        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentBinder>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

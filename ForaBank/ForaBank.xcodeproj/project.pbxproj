@@ -1084,6 +1084,7 @@
 		2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E902B00DE6C007A8E72 /* SessionKey.swift */; };
 		2A8764FF2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8764FE2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift */; };
 		2A87848B29DC18020067DE04 /* UIFont+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A87848A29DC18020067DE04 /* UIFont+Assets.swift */; };
+		2A884E7B2C65062200493D0A /* UtilityPrepaymentBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A884E7A2C65062200493D0A /* UtilityPrepaymentBinder.swift */; };
 		2A89FB9A2A836179008F6B87 /* Crypto+AESTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89FB992A836179008F6B87 /* Crypto+AESTests.swift */; };
 		2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */; };
 		2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A283D2A4088DE000D3807 /* ServerAgentSpy.swift */; };
@@ -4334,6 +4335,7 @@
 		2A8764FE2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetAllLatestPaymentsResponse.swift"; sourceTree = "<group>"; };
 		2A87848A29DC18020067DE04 /* UIFont+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Assets.swift"; sourceTree = "<group>"; };
 		2A87FCCA2B9310E4008257ED /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
+		2A884E7A2C65062200493D0A /* UtilityPrepaymentBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentBinder.swift; sourceTree = "<group>"; };
 		2A89FB992A836179008F6B87 /* Crypto+AESTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Crypto+AESTests.swift"; sourceTree = "<group>"; };
 		2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportMosParkingTests.swift"; sourceTree = "<group>"; };
 		2A8A283D2A4088DE000D3807 /* ServerAgentSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentSpy.swift; sourceTree = "<group>"; };
@@ -9237,6 +9239,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */,
+				2A884E7A2C65062200493D0A /* UtilityPrepaymentBinder.swift */,
 			);
 			path = UtilityPrepaymentWrapper;
 			sourceTree = "<group>";
@@ -19995,6 +19998,7 @@
 				774A8B622865FDAF00B81140 /* PaymentsProductViewComponent.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				833D3E412C2EF036006626F2 /* ControlPanelButtonDetails.swift in Sources */,
+				2A884E7B2C65062200493D0A /* UtilityPrepaymentBinder.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
 				6828807228A32F0200186F32 /* OptionsButtonsViewComponent.swift in Sources */,

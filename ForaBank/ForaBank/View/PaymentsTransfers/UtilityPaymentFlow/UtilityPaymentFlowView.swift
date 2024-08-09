@@ -59,7 +59,7 @@ extension UtilityPaymentFlowView {
     typealias Service = UtilityService
 
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias State = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel>
+    typealias State = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentBinder>
     typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
 }
 
