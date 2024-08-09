@@ -26,6 +26,24 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
             $0.limitsLoadingStatus = .limits(limits)
         }
     }
+    
+    func test_limitChanging_valueIsChanged_shouldSetSaveButtonEnableTrue() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 10)]), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = true
+        }
+    }
+
+    func test_limitChanging_valueNoChanged_shouldSetSaveButtonEnableFalse() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 100)]), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
+        }
+    }
 
     private typealias SUT = ListHorizontalRectangleLimitsReducer
     private typealias State = SUT.State

@@ -52,7 +52,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     config: config.navigationBarConfig
                 )
 
-                LandingWrapperView(viewModel: viewModel)
+                LandingWrapperView(
+                    viewModel: viewModel,
+                    updateSaveButton: { event(.limitChanging(viewModel.newLimitsValue))}
+                )
                     .frame(maxHeight: .infinity)
                     .alert(
                         item: .init(
