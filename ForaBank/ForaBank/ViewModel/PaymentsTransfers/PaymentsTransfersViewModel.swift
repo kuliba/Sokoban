@@ -15,6 +15,7 @@ import OperatorsListComponents
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
+    typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
@@ -456,7 +457,7 @@ extension PaymentsTransfersViewModel {
         case service(OperatorsViewModel)
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
-        case templates(Templates)
+        case templates(TemplatesNode)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
@@ -1022,9 +1023,13 @@ private extension PaymentsTransfersViewModel {
             
             self?.event(.dismiss(.destination))
         }
-        
-        bind(templates)
-        route.destination = .templates(templates)
+        let cancellable = bind(templates)
+        var route = route
+        route.destination = .templates(.init(
+            model: templates,
+            cancellable: cancellable
+        ))
+        routeSubject.send(route)
     }
     
     private func handleCurrencyWalletButtonTapped() {
@@ -1220,9 +1225,11 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func bind(_ templates: Templates) {
+    private func bind(
+        _ templates: Templates
+    ) -> AnyCancellable {
         
-        templates.model.action
+        templates.action
             .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
             .receive(on: scheduler)
             .map(\.productId)
@@ -1238,7 +1245,6 @@ private extension PaymentsTransfersViewModel {
                     )
                 }
             }
-            .store(in: &bindings)
     }
     
     private func bind(_ productProfile: ProductProfileViewModel) {

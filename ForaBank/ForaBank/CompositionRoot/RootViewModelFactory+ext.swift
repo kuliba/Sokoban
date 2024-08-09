@@ -183,16 +183,15 @@ extension RootViewModelFactory {
         
         let makeTemplates: PaymentsTransfersFactory.MakeTemplates = {
             
-            let model = TemplatesListViewModel(
+            return .init(
                 model,
                 dismissAction: $0,
                 updateFastAll: {
+                    
                     model.action.send(ModelAction.Products.Update.Fast.All())
                 },
                 flowManager: templatesFlowManager
             )
-            
-            return .init(model: model, cancellables: [])
         }
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(

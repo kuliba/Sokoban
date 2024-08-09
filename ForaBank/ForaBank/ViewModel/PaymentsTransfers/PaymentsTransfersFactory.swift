@@ -42,7 +42,8 @@ extension PaymentsTransfersFactory {
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     typealias DismissAction = () -> Void
-    typealias Templates = Node<TemplatesListViewModel>
+    typealias TemplatesNode = Node<Templates>
+    typealias Templates = TemplatesListViewModel
     typealias MakeTemplates = (@escaping DismissAction) -> Templates
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]

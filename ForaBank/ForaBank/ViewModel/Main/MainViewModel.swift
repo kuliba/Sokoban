@@ -18,9 +18,11 @@ import PaymentSticker
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
+    typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
+    let routeSubject = PassthroughSubject<Route, Never>()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(
         logo: MainViewModel.logo,
@@ -213,6 +215,21 @@ extension MainViewModel {
         ))
     }
     
+    func openTemplates() {
+        
+        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
+            
+            self?.action.send(MainViewModelAction.Close.Link())
+        }
+        let cancellable = bind(templates)
+        var route = route
+        route.destination = .templates(.init(
+            model: templates,
+            cancellable: cancellable
+        ))
+        routeSubject.send(route)
+    }
+    
     func dismissPaymentProviderPicker() {
         
         guard case .paymentProviderPicker = route.destination
@@ -252,6 +269,10 @@ extension MainViewModel {
 private extension MainViewModel {
     
     func bind() {
+        
+        routeSubject
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$route)
         
         model.images
             .receive(on: DispatchQueue.main)
@@ -503,12 +524,7 @@ private extension MainViewModel {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
                             switch payload.operationType {
                             case .templates:
-                                
-                                let templates = paymentsTransfersFactory.makeTemplates (
-                                    { [weak self] in self?.action.send(MainViewModelAction.Close.Link())
-                                    })
-                                bind(templates)
-                                route.destination = .templates(templates)
+                                self.openTemplates()
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -737,9 +753,11 @@ private extension MainViewModel {
             .store(in: &bindings)
     }
     
-    func bind(_ templates: Templates) {
+    func bind(
+        _ templates: Templates
+    ) -> AnyCancellable {
         
-        templates.model.action
+        templates.action
             .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
             .map(\.productId)
             .receive(on: DispatchQueue.main)
@@ -756,7 +774,6 @@ private extension MainViewModel {
                     )
                 }
             }
-            .store(in: &bindings)
     }
     
     func bind(_ viewModel: ContactsViewModel) {
@@ -1471,7 +1488,7 @@ extension MainViewModel {
         case messages(MessagesHistoryViewModel)
         case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositListViewModel)
-        case templates(Templates)
+        case templates(TemplatesNode)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)
         case country(CountryPaymentView.ViewModel)
