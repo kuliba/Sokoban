@@ -193,8 +193,11 @@ extension RootViewModelFactory {
                 flowManager: templatesFlowManager
             )
             
+            let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
+            
             return .init(
                 initialState: .init(content: content),
+                reduce: reducer.reduce(_:_:),
                 factory: .init(
                     makePaymentModel: { template, close in
                         

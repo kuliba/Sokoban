@@ -54,7 +54,7 @@ final class TemplatesListFlowModelTests: XCTestCase {
         let template = makeTemplate()
         let (sut, content, statusSpy) = makeSUT()
         content.templateSubject.send(template)
-
+        
         try sut.dismissPayment()
         
         XCTAssertNoDiff(statusSpy.values, [
@@ -81,8 +81,10 @@ final class TemplatesListFlowModelTests: XCTestCase {
         statusSpy: StatusSpy
     ) {
         let content = Content()
+        let reducer = TemplatesListFlowReducer<Content>()
         let sut = SUT(
             initialState: .init(content: content),
+            reduce: reducer.reduce(_:_:),
             factory: .init(
                 makePaymentModel: {
                     
@@ -177,7 +179,7 @@ private extension TemplatesListFlowState {
     
     var payment: PaymentsViewModel? {
         
-        guard case let .payment(payment) = destination 
+        guard case let .payment(payment) = destination
         else { return nil }
         
         return payment

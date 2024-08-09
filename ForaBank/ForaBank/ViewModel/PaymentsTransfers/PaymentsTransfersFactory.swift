@@ -21,7 +21,7 @@ struct PaymentsTransfersFactory {
 }
 
 extension PaymentsTransfersFactory {
-
+    
     struct MakeUtilitiesPayload {
         
         let type: PTSectionPaymentsView.ViewModel.PaymentsType
@@ -74,7 +74,7 @@ extension PaymentsTransfersFactory {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.inactive), 
+            updateInfoStatusFlag: .init(.inactive),
             makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
@@ -111,7 +111,7 @@ extension PaymentProviderPickerFlowModel {
                     ),
                     reduce: { state, _ in (state, nil) },
                     handleEffect: { _,_ in }
-                    )
+                )
             ),
             factory: .init(
                 makePayByInstructionsViewModel: { _,_ in fatalError() },
@@ -184,8 +184,11 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
     
     static var sampleComplete: Self {
         
+        let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
+        
         return .init(
             initialState: .init(content: .sampleComplete),
+            reduce: reducer.reduce(_:_:),
             factory: .init(
                 makePaymentModel: { template, close in
                     

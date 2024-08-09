@@ -26,6 +26,7 @@ where Content: ProductIDEmitter & TemplateEmitter {
     
     @Published private(set) var state: State
     
+    private let reduce: Reduce
     private let factory: Factory
     
     private let stateSubject = PassthroughSubject<State, Never>()
@@ -33,10 +34,12 @@ where Content: ProductIDEmitter & TemplateEmitter {
     
     init(
         initialState: State,
+        reduce: @escaping Reduce,
         factory: Factory,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.state = initialState
+        self.reduce = reduce
         self.factory = factory
         
         stateSubject
@@ -52,6 +55,8 @@ extension TemplatesListFlowModel {
     typealias State = TemplatesListFlowState<Content>
     typealias Event = TemplatesListFlowEvent
     typealias Effect = TemplatesListFlowEffect
+    
+    typealias Reduce = (State, Event) -> (State, Effect?)
     typealias Factory = TemplatesListFlowModelFactory
 }
 
@@ -59,8 +64,7 @@ extension TemplatesListFlowModel {
     
     func event(_ event: Event) {
         
-        var state = state
-        let effect = reduce(&state, event)
+        let (state, effect) = reduce(state, event)
         stateSubject.send(state)
         
         if let effect {
@@ -99,36 +103,5 @@ private extension TemplatesListFlowModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.select(.template($0))) }
             .store(in: &cancellables)
-    }
-}
-
-private extension TemplatesListFlowModel {
-    
-    func reduce(
-        _ state: inout State,
-        _ event: Event
-    ) -> Effect? {
-        
-        var effect: Effect?
-        
-        switch event {
-        case .dismiss(.destination):
-            state.status = nil
-            
-        case let .payment(payment):
-            state.status = .destination(.payment(payment))
-            
-        case let .select(select):
-            switch select {
-            case let .productID(productID):
-                state.status = .outside(.productID(productID))
-                
-            case let .template(template):
-                state.status = .outside(.inflight)
-                effect = .template(template)
-            }
-        }
-        
-        return effect
     }
 }
