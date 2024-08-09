@@ -250,7 +250,7 @@ extension ListHorizontalRectangleLimitsView {
                 if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
                     
                     switch limit.value {
-                    case 999999999...:
+                    case .maxLimit...:
                         Text("Без ограничений")
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
