@@ -232,8 +232,8 @@ extension PaymentsTransfersView {
                 .navigationBarTitle("", displayMode: .inline)
                 .edgesIgnoringSafeArea(.all)
             
-        case let .templates(templateListViewModel):
-            TemplatesListView(viewModel: templateListViewModel)
+        case let .templates(node):
+            TemplatesListView(viewModel: node.model)
             
         case let .currencyWallet(currencyWalletViewModel):
             CurrencyWalletView(viewModel: currencyWalletViewModel)

@@ -179,8 +179,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
-        case let .templates(templatesViewModel):
-            TemplatesListView(viewModel: templatesViewModel)
+        case let .templates(node):
+            TemplatesListView(viewModel: node.model)
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)

@@ -980,8 +980,8 @@ extension PaymentsTransfersViewModel {
     var templatesListViewModel: TemplatesListViewModel? {
         
         switch route.destination {
-        case let .templates(templatesListViewModel):
-            return templatesListViewModel
+        case let .templates(node):
+            return node.model
             
         default:
             return nil

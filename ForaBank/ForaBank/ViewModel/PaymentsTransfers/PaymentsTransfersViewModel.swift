@@ -1222,7 +1222,7 @@ private extension PaymentsTransfersViewModel {
     
     private func bind(_ templates: Templates) {
         
-        templates.action
+        templates.model.action
             .receive(on: scheduler)
             .sink { [unowned self] action in
                 

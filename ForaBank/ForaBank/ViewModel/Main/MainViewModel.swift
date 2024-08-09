@@ -739,7 +739,7 @@ private extension MainViewModel {
     
     func bind(_ templates: Templates) {
         
-        templates.action
+        templates.model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 

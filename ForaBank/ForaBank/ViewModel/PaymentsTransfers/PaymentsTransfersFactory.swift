@@ -42,7 +42,7 @@ extension PaymentsTransfersFactory {
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     typealias DismissAction = () -> Void
-    typealias Templates = TemplatesListViewModel
+    typealias Templates = Node<TemplatesListViewModel>
     typealias MakeTemplates = (@escaping DismissAction) -> Templates
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
@@ -177,4 +177,9 @@ extension ServicePaymentBinder {
             scheduler: .main
         )
     }
+}
+
+extension Node where Model == TemplatesListViewModel {
+    
+    static let sampleComplete: Self = .init(model: .sampleComplete, cancellables: [])
 }
