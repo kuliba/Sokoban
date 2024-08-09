@@ -181,6 +181,24 @@ extension PaymentsTransfersViewModel {
         ))
     }
     
+    func dismissPaymentProviderPicker() {
+        
+        guard case .paymentProviderPicker = route.destination
+        else { return }
+        
+        route.destination = nil
+        openScanner()
+    }
+    
+    func dismissProviderServicePicker() {
+        
+        guard case .providerServicePicker = route.destination
+        else { return }
+        
+        route.destination = nil
+        openScanner()
+    }
+    
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
         
         let (_, data) = try await model.getMosParkingListData()
@@ -1475,7 +1493,7 @@ private extension PaymentsTransfersViewModel {
                 switch $0 {
                 case .cancelled:
                     self?.rootActions?.spinner.hide()
-                    self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+                    self?.event(.dismiss(.fullScreenCover))
                     
                 case .inflight:
                     self?.rootActions?.spinner.show()
@@ -1532,28 +1550,33 @@ extension PaymentsTransfersViewModel {
         _ result: QRModelResult
     ) {
         event(.dismiss(.modal))
-
-        switch result {
-        case let .c2bSubscribeURL(url):
-            handleC2bSubscribeURL(url)
+        
+        delay(for: .milliseconds(300)) { [weak self] in
             
-        case let .c2bURL(url):
-            handleC2bURL(url)
-
-        case let .failure(qrCode):
-            handleFailure(qrCode)
+            guard let self else { return }
             
-        case let .mapped(mapped):
-            handleMapped(mapped)
-            
-        case let .sberQR(url):
-            handleSberQRURL(url)
-            
-        case let .url(url):
-            handleURL(url)
-            
-        case .unknown:
-            handleUnknownQR()
+            switch result {
+            case let .c2bSubscribeURL(url):
+                handleC2bSubscribeURL(url)
+                
+            case let .c2bURL(url):
+                handleC2bURL(url)
+                
+            case let .failure(qrCode):
+                handleFailure(qrCode)
+                
+            case let .mapped(mapped):
+                handleMapped(mapped)
+                
+            case let .sberQR(url):
+                handleSberQRURL(url)
+                
+            case let .url(url):
+                handleURL(url)
+                
+            case .unknown:
+                handleUnknownQR()
+            }
         }
     }
     
@@ -1866,10 +1889,13 @@ private extension PaymentsTransfersViewModel {
     ) {
         let make = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel
         let flowModel = make(payload)
+        var route = route
+        route.modal = nil
         route.destination = .providerServicePicker(.init(
             model: flowModel,
             cancellables: bind(flowModel)
         ))
+        routeSubject.send(route)
     }
     
     private func bind(

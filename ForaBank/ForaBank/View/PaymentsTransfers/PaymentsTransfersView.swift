@@ -47,7 +47,7 @@ struct PaymentsTransfersView: View {
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.destination },
-                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) } }
+                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) }}
                 ),
                 content: destinationView(link:)
             )
@@ -56,10 +56,6 @@ struct PaymentsTransfersView: View {
                 leading: leadingBarItems,
                 trailing: trailingBarItems
             )
-            .tabBar(isHidden: .init(
-                get: { viewModel.route.destination != nil },
-                set: { if !$0 { viewModel.reset() } }
-            ))
     }
 }
 
@@ -322,8 +318,11 @@ extension PaymentsTransfersView {
                 style: .large
             )
             
-        default:
-            Text("TBD")
+        case let .paymentProviderPicker(node):
+            paymentProviderPicker(node.model)
+            
+        case let .providerServicePicker(node):
+            servicePicker(flowModel: node.model)
         }
     }
     
@@ -478,6 +477,90 @@ extension PaymentsTransfersView {
             
             ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
         }
+    }
+}
+
+// MARK: - payment provider & service pickers
+
+private extension PaymentsTransfersView {
+    
+    func paymentProviderPicker(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> some View {
+        
+        ComposedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: viewFactory.makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
+        )
+        .navigationBarWithBack(
+            title: PaymentsTransfersSectionType.payments.name,
+            dismiss: viewModel.dismissPaymentProviderPicker,
+            rightItem: .barcodeScanner(
+                action: viewModel.dismissPaymentProviderPicker
+            )
+        )
+    }
+    
+    @ViewBuilder
+    func servicePicker(
+        flowModel: AnywayServicePickerFlowModel
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: viewFactory.makeIconView
+            )
+        )
+        .navigationBarWithAsyncIcon(
+            title: provider.origin.title,
+            subtitle: provider.origin.inn,
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: viewFactory.iconView(provider.origin.icon),
+            style: .normal
+        )
+    }
+}
+
+// MARK: - payment flow
+
+private extension PaymentsTransfersView {
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                viewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
     }
 }
 

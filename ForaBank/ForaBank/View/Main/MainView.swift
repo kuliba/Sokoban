@@ -97,10 +97,6 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
-        .tabBar(isHidden: .init(
-            get: { !viewModel.route.isEmpty },
-            set: { if !$0 { viewModel.reset() } }
-        ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -316,32 +312,6 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
-// MARK: - Helpers
-
-private extension MainView {
-    
-    func iconView(
-        _ icon: String?
-    ) -> IconDomain.IconView {
-     
-        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
-    }
-    
-    func label(
-        title: String,
-        subtitle: String? = nil,
-        icon: String?
-    ) -> some View {
-        
-        LabelWithIcon(
-            title: title,
-            subtitle: subtitle,
-            config: .iFora,
-            iconView: iconView(icon)
-        )
-    }
-}
-
 // MARK: - payment provider & service pickers
 
 private extension MainView {
@@ -349,7 +319,7 @@ private extension MainView {
     func paymentProviderPicker(
         _ flowModel: PaymentProviderPickerFlowModel
     ) -> some View {
-
+        
         ComposedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
@@ -364,27 +334,11 @@ private extension MainView {
         )
     }
     
-    private func event(
-        qrCode: QRCode
-    ) -> (FooterEvent) -> Void {
-        
-        return { event in
-    
-            switch event {
-            case .addCompany:
-                viewModel.goToChat()
-                
-            case .payByInstruction:
-                viewModel.payByInstructions(withQR: qrCode)
-            }
-        }
-    }
-    
     @ViewBuilder
     func servicePicker(
         flowModel: AnywayServicePickerFlowModel
     ) -> some View {
-
+        
         let provider = flowModel.state.content.state.payload.provider
         
         AnywayServicePickerFlowView(
@@ -398,7 +352,7 @@ private extension MainView {
             title: provider.origin.title,
             subtitle: provider.origin.inn,
             dismiss: viewModel.dismissProviderServicePicker,
-            icon: iconView(provider.origin.icon),
+            icon: viewFactory.iconView(provider.origin.icon),
             style: .normal
         )
     }

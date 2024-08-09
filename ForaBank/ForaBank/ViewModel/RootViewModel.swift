@@ -5,9 +5,9 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -15,6 +15,7 @@ class RootViewModel: ObservableObject, Resetable {
 
     let action: PassthroughSubject<Action, Never> = .init()
     
+    @Published private(set) var isTabBarHidden = false
     @Published var selected: TabType
     @Published var alert: Alert.ViewModel?
     @Published private(set) var link: Link?
@@ -65,6 +66,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         bind()
         bindAuth()
+        bindTabBar()
     }
 
     func reset() {
@@ -412,6 +414,22 @@ class RootViewModel: ObservableObject, Resetable {
                     
                 })
         )
+    }
+    
+    private func bindTabBar() {
+        
+        let mainViewModelHasDestination = mainViewModel.$route
+            .map { $0.destination != nil }
+        
+        let paymentsViewModelHasDestination = paymentsViewModel.$route
+            .map { $0.destination != nil }
+        
+        mainViewModelHasDestination
+            .combineLatest(paymentsViewModelHasDestination)
+            .map { $0 || $1 }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isTabBarHidden)
     }
 }
 
