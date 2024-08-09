@@ -986,7 +986,7 @@ private extension PaymentsTransfersViewModel {
                 
                 //LatestPayment Section TemplateButton
             case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                handleTemplatesButtonTapped()
+                openTemplates()
                 
             case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                 handleCurrencyWalletButtonTapped()
@@ -1017,7 +1017,7 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func handleTemplatesButtonTapped() {
+    private func openTemplates() {
         
         let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
             
