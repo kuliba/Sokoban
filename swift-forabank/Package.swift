@@ -2068,8 +2068,10 @@ private extension Target {
     static let inputComponentTests = testTarget(
         name: .inputComponentTests,
         dependencies: [
-            .inputComponent,
             .customDump,
+            .inputComponent,
+            .rxViewModel,
+            .textFieldModel
         ],
         path: "Tests/UI/Components/\(String.inputComponentTests)"
     )
