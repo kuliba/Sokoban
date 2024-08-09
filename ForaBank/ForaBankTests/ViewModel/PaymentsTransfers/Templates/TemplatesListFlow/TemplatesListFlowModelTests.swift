@@ -82,15 +82,20 @@ final class TemplatesListFlowModelTests: XCTestCase {
     ) {
         let content = Content()
         let reducer = TemplatesListFlowReducer<Content>()
+        let effectHandler = TemplatesListFlowEffectHandler(
+            makePaymentModel: { template, close in
+                
+                return .init(
+                    source: .template(template.id),
+                    model: .emptyMock,
+                    closeAction: close
+                )
+            }
+        )
         let sut = SUT(
             initialState: .init(content: content),
             reduce: reducer.reduce(_:_:),
-            factory: .init(
-                makePaymentModel: {
-                    
-                    return .init(source: .template($0.id), model: .emptyMock, closeAction: $1)
-                }
-            ),
+            handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .immediate
         )
         let statusSpy = StatusSpy(sut.$state.map(\.equatableStatus))

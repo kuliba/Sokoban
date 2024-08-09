@@ -185,16 +185,21 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
     static var sampleComplete: Self {
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
+        let effectHandler = TemplatesListFlowEffectHandler(
+            makePaymentModel: { template, close in
+                
+                return .init(
+                    source: .template(template.id),
+                    model: .emptyMock,
+                    closeAction: close
+                )
+            }
+        )
         
         return .init(
             initialState: .init(content: .sampleComplete),
             reduce: reducer.reduce(_:_:),
-            factory: .init(
-                makePaymentModel: { template, close in
-                    
-                    return .init(source: .template(template.id), model: .emptyMock, closeAction: close)
-                }
-            ),
+            handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .main
         )
     }

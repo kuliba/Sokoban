@@ -27,7 +27,7 @@ where Content: ProductIDEmitter & TemplateEmitter {
     @Published private(set) var state: State
     
     private let reduce: Reduce
-    private let factory: Factory
+    private let handleEffect: HandleEffect
     
     private let stateSubject = PassthroughSubject<State, Never>()
     private var cancellables = Set<AnyCancellable>()
@@ -35,12 +35,12 @@ where Content: ProductIDEmitter & TemplateEmitter {
     init(
         initialState: State,
         reduce: @escaping Reduce,
-        factory: Factory,
+        handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.state = initialState
         self.reduce = reduce
-        self.factory = factory
+        self.handleEffect = handleEffect
         
         stateSubject
             .receive(on: scheduler)
@@ -57,7 +57,8 @@ extension TemplatesListFlowModel {
     typealias Effect = TemplatesListFlowEffect
     
     typealias Reduce = (State, Event) -> (State, Effect?)
-    typealias Factory = TemplatesListFlowModelFactory
+    typealias Dispatch = (Event) -> Void
+    typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
 }
 
 extension TemplatesListFlowModel {
@@ -70,20 +71,6 @@ extension TemplatesListFlowModel {
         if let effect {
             
             handleEffect(effect) { [weak self] in self?.event($0) }
-        }
-    }
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping (Event) -> Void
-    ) {
-        switch effect {
-        case let .template(template):
-            let model = factory.makePaymentModel(template) { [weak self] in
-                
-                self?.event(.dismiss(.destination))
-            }
-            self.event(.payment(model))
         }
     }
 }

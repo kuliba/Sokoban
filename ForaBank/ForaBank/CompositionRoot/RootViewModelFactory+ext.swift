@@ -194,20 +194,21 @@ extension RootViewModelFactory {
             )
             
             let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
+            let effectHandler = TemplatesListFlowEffectHandler(
+                makePaymentModel: { template, close in
+                    
+                    return .init(
+                        source: .template(template.id),
+                        model: model,
+                        closeAction: close
+                    )
+                }
+            )
             
             return .init(
                 initialState: .init(content: content),
                 reduce: reducer.reduce(_:_:),
-                factory: .init(
-                    makePaymentModel: { template, close in
-                        
-                        return .init(
-                            source: .template(template.id), 
-                            model: model,
-                            closeAction: close
-                        )
-                    }
-                ),
+                handleEffect: effectHandler.handleEffect(_:_:),
                 scheduler: scheduler
             )
         }
