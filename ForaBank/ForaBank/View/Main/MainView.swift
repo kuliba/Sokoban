@@ -349,7 +349,7 @@ private extension MainView {
     func paymentProviderPicker(
         _ flowModel: PaymentProviderPickerFlowModel
     ) -> some View {
-
+        
         ComposedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
@@ -364,27 +364,11 @@ private extension MainView {
         )
     }
     
-    private func event(
-        qrCode: QRCode
-    ) -> (FooterEvent) -> Void {
-        
-        return { event in
-    
-            switch event {
-            case .addCompany:
-                viewModel.goToChat()
-                
-            case .payByInstruction:
-                viewModel.payByInstructions(withQR: qrCode)
-            }
-        }
-    }
-    
     @ViewBuilder
     func servicePicker(
         flowModel: AnywayServicePickerFlowModel
     ) -> some View {
-
+        
         let provider = flowModel.state.content.state.payload.provider
         
         AnywayServicePickerFlowView(
