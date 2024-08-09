@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CombineSchedulers
 import ForaTools
 import Foundation
 #warning("remove GenericRemoteService")
@@ -50,6 +51,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
     private var bindings = Set<AnyCancellable>()
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         _ model: Model,
@@ -60,7 +62,8 @@ class MainViewModel: ObservableObject, Resetable {
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        onRegister: @escaping () -> Void
+        onRegister: @escaping () -> Void,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
@@ -75,6 +78,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
+        self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -253,7 +257,7 @@ extension MainViewModel {
         resetDestination()
         resetModal()
         
-        DispatchQueue.main.delay(for: .milliseconds(400)) { [weak self] in
+        delay(for: .milliseconds(400)) { [weak self] in
             
             self?.rootActions?.switchTab(.chat)
         }
@@ -271,11 +275,11 @@ private extension MainViewModel {
     func bind() {
         
         routeSubject
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$route)
         
         model.images
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] _ in
                 guard let self else { return }
                 self.createSticker(self.model)
@@ -284,7 +288,7 @@ private extension MainViewModel {
         
         if updateInfoStatusFlag.isActive {
             model.updateInfo
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [weak self] updateInfo in
                     
                     self?.updateSections(updateInfo)
@@ -293,7 +297,7 @@ private extension MainViewModel {
         }
         
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -354,7 +358,7 @@ private extension MainViewModel {
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Requisites })
             .map(\.qrCode)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink(receiveValue: { [unowned self] qrCode in
                 
                 action.send(MainViewModelAction.Close.FullScreenSheet())
@@ -371,7 +375,7 @@ private extension MainViewModel {
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Payments })
             .map(\.paymentsViewModel)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink(receiveValue: { [unowned self] paymentsViewModel in
                 
                 route.destination = .payments(paymentsViewModel)
@@ -380,7 +384,7 @@ private extension MainViewModel {
         
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Contacts })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink(receiveValue: { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
@@ -392,7 +396,7 @@ private extension MainViewModel {
         
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Countries })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink(receiveValue: { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
@@ -407,7 +411,7 @@ private extension MainViewModel {
             .flatMap({
                 
                 Just($0.action)
-                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
+                    .delay(for: .milliseconds($0.delayMS), scheduler: self.scheduler)
             })
             .sink(receiveValue: { [weak self] in
                 
@@ -416,7 +420,7 @@ private extension MainViewModel {
             }).store(in: &bindings)
         
         model.productsOrdersUpdating
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in
                 guard let self else { return }
                 
@@ -424,7 +428,7 @@ private extension MainViewModel {
             }.store(in: &bindings)
         
         model.products
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] products in
                 guard let deposits = products[.deposit], !deposits.isEmpty else { return }
                 
@@ -457,7 +461,7 @@ private extension MainViewModel {
         
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] clientData in
                 
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
@@ -472,7 +476,7 @@ private extension MainViewModel {
             switch section {
             case let openProductSection as MainSectionOpenProductView.ViewModel:
                 openProductSection.action
-                    .receive(on: DispatchQueue.main)
+                    .receive(on: scheduler)
                     .sink { [unowned self] action in
                         
                         switch action {
@@ -517,7 +521,7 @@ private extension MainViewModel {
                 
             case let fastPayment as MainSectionFastOperationView.ViewModel:
                 fastPayment.action
-                    .receive(on: DispatchQueue.main)
+                    .receive(on: scheduler)
                     .sink { [unowned self] action in
                         
                         switch action {
@@ -542,7 +546,7 @@ private extension MainViewModel {
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
                 promo.action
-                    .receive(on: DispatchQueue.main)
+                    .receive(on: scheduler)
                     .sink { [unowned self] action in
                         
                         switch action {
@@ -601,7 +605,7 @@ private extension MainViewModel {
             }
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
                     switch action {
@@ -620,10 +624,9 @@ private extension MainViewModel {
                                 
                                 self.route = .empty
                                 
-                                DispatchQueue.main.delay(for: .milliseconds(700)) { [self] in
+                                self.delay(for: .milliseconds(700)) { [self] in
                                     
                                     handleLandingAction(.sticker)
-                                    
                                 }
                             },
                             makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
@@ -692,7 +695,7 @@ private extension MainViewModel {
                 
                 collapsableSection.$isCollapsed
                     .dropFirst()
-                    .receive(on: DispatchQueue.main)
+                    .receive(on: scheduler)
                     .sink { [unowned self] isCollapsed in
                         
                         var settings = model.settingsMainSections
@@ -708,8 +711,8 @@ private extension MainViewModel {
         
         qrModel.$state
             .compactMap { $0 }
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
+            .debounce(for: 0.1, scheduler: scheduler)
+            .receive(on: scheduler)
             .sink { [weak self] in
                 
                 switch $0 {
@@ -730,7 +733,7 @@ private extension MainViewModel {
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
         
         paymentsViewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -748,7 +751,7 @@ private extension MainViewModel {
         
         productProfile.action
             .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] _ in self.openDeposit() }
             .store(in: &bindings)
     }
@@ -760,7 +763,7 @@ private extension MainViewModel {
         templates.action
             .compactMap { $0 as? TemplatesListViewModelAction.OpenProductProfile }
             .map(\.productId)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] id in
                 
                 self.action.send(MainViewModelAction.Close.Link())
@@ -781,7 +784,7 @@ private extension MainViewModel {
         viewModel.action
             .compactMap({ $0 as? ContactsViewModelAction.PaymentRequested })
             .map(\.source)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] payloadSource in
                 
                 self.action.send(MainViewModelAction.Close.Sheet())
@@ -894,7 +897,7 @@ private extension MainViewModel {
         
         self.resetDestination()
         
-        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
+        self.delay(for: .milliseconds(300)) { [weak self] in
             
             self?.rootActions?.switchTab(.chat)
         }
@@ -1252,12 +1255,12 @@ private extension MainViewModel {
         let spinner = flowModel.$state
             .map(\.isLoading)
             .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.showSpinner($0) }
         
         let outside = flowModel.$state
             .compactMap(\.outside)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.handle($0) }
         
         return [spinner, outside]
@@ -1330,13 +1333,13 @@ private extension MainViewModel {
         let loading = flowModel.$state
             .map(\.isLoading)
             .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.showSpinner($0) }
         
         let outside = flowModel.$state
             .compactMap(\.outside)
             .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] in self?.handle($0) }
         
         return [loading, outside]
@@ -1375,7 +1378,7 @@ extension MainViewModel {
         _ action: @escaping () -> Void
     ) {
         // TODO: replace with scheduler
-        DispatchQueue.main.delay(for: timeout, execute: action)
+        scheduler.delay(for: timeout, action)
     }
 }
 
