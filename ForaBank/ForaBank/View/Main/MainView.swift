@@ -316,32 +316,6 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
-// MARK: - Helpers
-
-private extension MainView {
-    
-    func iconView(
-        _ icon: String?
-    ) -> IconDomain.IconView {
-     
-        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
-    }
-    
-    func label(
-        title: String,
-        subtitle: String? = nil,
-        icon: String?
-    ) -> some View {
-        
-        LabelWithIcon(
-            title: title,
-            subtitle: subtitle,
-            config: .iFora,
-            iconView: iconView(icon)
-        )
-    }
-}
-
 // MARK: - payment provider & service pickers
 
 private extension MainView {
@@ -382,7 +356,7 @@ private extension MainView {
             title: provider.origin.title,
             subtitle: provider.origin.inn,
             dismiss: viewModel.dismissProviderServicePicker,
-            icon: iconView(provider.origin.icon),
+            icon: viewFactory.iconView(provider.origin.icon),
             style: .normal
         )
     }
