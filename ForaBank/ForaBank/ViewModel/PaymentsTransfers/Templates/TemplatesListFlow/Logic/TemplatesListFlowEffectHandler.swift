@@ -7,15 +7,15 @@
 
 final class TemplatesListFlowEffectHandler {
     
-    private let makePaymentModel: MakePaymentModel
+    private let microServices: MicroServices
     
     init(
-        makePaymentModel: @escaping MakePaymentModel
+        microServices: MicroServices
     ) {
-        self.makePaymentModel = makePaymentModel
+        self.microServices = microServices
     }
     
-    typealias MakePaymentModel = (PaymentTemplateData, @escaping () -> Void) -> PaymentsViewModel
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
 }
 
 extension TemplatesListFlowEffectHandler {
@@ -26,7 +26,7 @@ extension TemplatesListFlowEffectHandler {
     ) {
         switch effect {
         case let .template(template):
-            let model = makePaymentModel(template) {
+            let model = microServices.makePaymentModel(template) {
                 
                 dispatch(.dismiss(.destination))
             }

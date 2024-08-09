@@ -194,7 +194,7 @@ extension RootViewModelFactory {
             )
             
             let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
-            let effectHandler = TemplatesListFlowEffectHandler(
+            let microServices = TemplatesListFlowEffectHandlerMicroServices(
                 makePaymentModel: { template, close in
                     
                     return .init(
@@ -203,6 +203,9 @@ extension RootViewModelFactory {
                         closeAction: close
                     )
                 }
+            )
+            let effectHandler = TemplatesListFlowEffectHandler(
+                microServices: microServices
             )
             
             return .init(

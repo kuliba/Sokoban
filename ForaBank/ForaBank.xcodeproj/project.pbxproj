@@ -1117,6 +1117,7 @@
 		2A92EA632C666F0D001452E7 /* TemplatesListFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA622C666F0D001452E7 /* TemplatesListFlowEffect.swift */; };
 		2A92EA662C667558001452E7 /* TemplatesListFlowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */; };
 		2A92EA682C667853001452E7 /* TemplatesListFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */; };
+		2A92EA6A2C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
@@ -4375,6 +4376,7 @@
 		2A92EA622C666F0D001452E7 /* TemplatesListFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffect.swift; sourceTree = "<group>"; };
 		2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowReducer.swift; sourceTree = "<group>"; };
 		2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandler.swift; sourceTree = "<group>"; };
+		2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
@@ -10105,6 +10107,7 @@
 			children = (
 				2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */,
 				2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */,
+				2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -19955,6 +19958,7 @@
 				C15CB8E42B7EF26B00718B49 /* Service+getOperatorsListByParam.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
+				2A92EA6A2C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift in Sources */,
 				2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */,
 				2ACFD6582C5CC762003F08AE /* QRModelWrapperState.swift in Sources */,
 				2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */,

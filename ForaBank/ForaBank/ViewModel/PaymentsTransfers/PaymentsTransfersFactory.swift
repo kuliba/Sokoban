@@ -185,7 +185,7 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
     static var sampleComplete: Self {
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
-        let effectHandler = TemplatesListFlowEffectHandler(
+        let microServices = TemplatesListFlowEffectHandlerMicroServices(
             makePaymentModel: { template, close in
                 
                 return .init(
@@ -194,6 +194,9 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
                     closeAction: close
                 )
             }
+        )
+        let effectHandler = TemplatesListFlowEffectHandler(
+            microServices: microServices
         )
         
         return .init(

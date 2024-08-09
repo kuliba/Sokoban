@@ -82,7 +82,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     ) {
         let content = Content()
         let reducer = TemplatesListFlowReducer<Content>()
-        let effectHandler = TemplatesListFlowEffectHandler(
+        let microServices = TemplatesListFlowEffectHandlerMicroServices(
             makePaymentModel: { template, close in
                 
                 return .init(
@@ -92,6 +92,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
                 )
             }
         )
+        let effectHandler = TemplatesListFlowEffectHandler(
+            microServices: microServices
+        )
+        
         let sut = SUT(
             initialState: .init(content: content),
             reduce: reducer.reduce(_:_:),
