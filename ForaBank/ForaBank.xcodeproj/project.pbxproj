@@ -1079,9 +1079,6 @@
 		2A840C012C373C1500BA6887 /* TemplatesFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */; };
 		2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */; };
 		2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C042C373E2D00BA6887 /* TemplatesFlowEffect.swift */; };
-		2A840C072C37417100BA6887 /* TemplatesFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C062C37417100BA6887 /* TemplatesFlowManager.swift */; };
-		2A840C0B2C37433900BA6887 /* TemplatesFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C0A2C37433900BA6887 /* TemplatesFlowManager+preview.swift */; };
-		2A840C0E2C37438600BA6887 /* TemplatesFlowManagerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A840C0D2C37438600BA6887 /* TemplatesFlowManagerComposer.swift */; };
 		2A84C4A52B25D90900F314BD /* sberQRProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A84C4A42B25D90900F314BD /* sberQRProducts.swift */; };
 		2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */; };
 		2A85DEAF29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */; };
@@ -4338,9 +4335,6 @@
 		2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowState.swift; sourceTree = "<group>"; };
 		2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowEvent.swift; sourceTree = "<group>"; };
 		2A840C042C373E2D00BA6887 /* TemplatesFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowEffect.swift; sourceTree = "<group>"; };
-		2A840C062C37417100BA6887 /* TemplatesFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowManager.swift; sourceTree = "<group>"; };
-		2A840C0A2C37433900BA6887 /* TemplatesFlowManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemplatesFlowManager+preview.swift"; sourceTree = "<group>"; };
-		2A840C0D2C37438600BA6887 /* TemplatesFlowManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesFlowManagerComposer.swift; sourceTree = "<group>"; };
 		2A84C4A42B25D90900F314BD /* sberQRProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sberQRProducts.swift; sourceTree = "<group>"; };
 		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
@@ -10019,7 +10013,6 @@
 		2A840BFF2C373C0300BA6887 /* TemplatesFlowDomain */ = {
 			isa = PBXGroup;
 			children = (
-				2A840C062C37417100BA6887 /* TemplatesFlowManager.swift */,
 				2A840C002C373C1500BA6887 /* TemplatesFlowState.swift */,
 				2A840C022C373C2A00BA6887 /* TemplatesFlowEvent.swift */,
 				2A840C042C373E2D00BA6887 /* TemplatesFlowEffect.swift */,
@@ -10027,26 +10020,9 @@
 			path = TemplatesFlowDomain;
 			sourceTree = "<group>";
 		};
-		2A840C082C37431E00BA6887 /* PaymentsTransfers */ = {
-			isa = PBXGroup;
-			children = (
-				2A840C092C37432B00BA6887 /* Templates */,
-			);
-			path = PaymentsTransfers;
-			sourceTree = "<group>";
-		};
-		2A840C092C37432B00BA6887 /* Templates */ = {
-			isa = PBXGroup;
-			children = (
-				2A840C0A2C37433900BA6887 /* TemplatesFlowManager+preview.swift */,
-			);
-			path = Templates;
-			sourceTree = "<group>";
-		};
 		2A840C0C2C37437B00BA6887 /* Templates */ = {
 			isa = PBXGroup;
 			children = (
-				2A840C0D2C37438600BA6887 /* TemplatesFlowManagerComposer.swift */,
 				2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */,
 			);
 			path = Templates;
@@ -10218,7 +10194,6 @@
 		2AA1BB782AEB7EDA0027347C /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				2A840C082C37431E00BA6887 /* PaymentsTransfers */,
 				2AA1BB792AEB7F090027347C /* MyProducts */,
 			);
 			path = ViewModel;
@@ -19020,7 +18995,6 @@
 				2A213D3A2C1C48C7008800FD /* ObservingSelectViewModel.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */,
-				2A840C0E2C37438600BA6887 /* TemplatesFlowManagerComposer.swift in Sources */,
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
 				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
@@ -19714,7 +19688,6 @@
 				C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
 				2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */,
-				2A840C0B2C37433900BA6887 /* TemplatesFlowManager+preview.swift in Sources */,
 				774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */,
 				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,
 				77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */,
@@ -20390,7 +20363,6 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
-				2A840C072C37417100BA6887 /* TemplatesFlowManager.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,

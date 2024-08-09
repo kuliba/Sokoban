@@ -32,16 +32,13 @@ extension TemplatesListFlowModelComposer {
         dismiss: @escaping () -> Void
     ) -> TemplatesListFlowModel<TemplatesListViewModel> {
         
-        let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
-
         let content = TemplatesListViewModel(
             model,
             dismissAction: dismiss,
             updateFastAll: { [weak model] in
                 
                 model?.action.send(ModelAction.Products.Update.Fast.All())
-            },
-            flowManager: templatesFlowManager
+            }
         )
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()

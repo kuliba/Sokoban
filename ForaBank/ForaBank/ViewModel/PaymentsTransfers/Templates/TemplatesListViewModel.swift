@@ -42,7 +42,6 @@ class TemplatesListViewModel: ObservableObject {
     var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
-    private let flowManager: TemplatesFlowManager
     private let routeSubject = PassthroughSubject<Route, Never>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -57,7 +56,6 @@ class TemplatesListViewModel: ObservableObject {
         dismissAction: @escaping () -> Void = {},
         updateFastAll: @escaping UpdateFastAll,
         model: Model,
-        flowManager: TemplatesFlowManager,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.route = route
@@ -70,7 +68,6 @@ class TemplatesListViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.updateFastAll = updateFastAll
         self.model = model
-        self.flowManager = flowManager
         self.scheduler = scheduler
         
         routeSubject
@@ -83,7 +80,6 @@ class TemplatesListViewModel: ObservableObject {
         _ model: Model,
         dismissAction: @escaping () -> Void,
         updateFastAll: @escaping UpdateFastAll,
-        flowManager: TemplatesFlowManager,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
@@ -110,7 +106,6 @@ class TemplatesListViewModel: ObservableObject {
             dismissAction: dismissAction,
             updateFastAll: updateFastAll,
             model: model,
-            flowManager: flowManager,
             scheduler: scheduler
         )
         
