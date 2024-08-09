@@ -26,11 +26,8 @@ extension TemplatesListFlowEffectHandler {
     ) {
         switch effect {
         case let .template(template):
-            let payment = microServices.makePayment(template) {
-                
-                dispatch(.dismiss(.destination))
-            }
-            dispatch(.payment(payment))
+            let payload = (template, { dispatch(.dismiss(.destination)) })
+            microServices.makePayment(payload) { dispatch(.payment($0)) }
         }
     }
 }

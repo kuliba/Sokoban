@@ -12,20 +12,32 @@ import XCTest
 
 final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     
+    // MARK: - init
+    
     func test_init_shouldSetStatusToNil() {
         
-        let (sut, _, statusSpy) = makeSUT()
+        let (sut, _, statusSpy, _) = makeSUT()
         
         XCTAssertNoDiff(statusSpy.values, [nil])
         XCTAssertNotNil(sut)
     }
     
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, _,_, makePaymentSpy) = makeSUT()
+        
+        XCTAssertEqual(makePaymentSpy.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - emit productID
+    
     func test_shouldChangeStatusOnContentEmittingProductID() {
         
         let productID = makeProductID()
-        let (sut, content, statusSpy) = makeSUT()
+        let (sut, content, statusSpy, _) = makeSUT()
         
-        content.productIDSubject.send(productID)
+        content.emitProductID(productID)
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
@@ -34,28 +46,27 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetLegacyPaymentDestinationOnContentEmittingTemplate() {
+    // MARK: - emit template
+    
+    func test_shouldCallMakePaymentWithTemplateOnContentEmittingTemplate() {
         
         let template = makeTemplate()
-        let (sut, content, statusSpy) = makeSUT()
+        let (sut, content, _, makePaymentSpy) = makeSUT()
         
-        content.templateSubject.send(template)
+        content.emitTemplate(template)
+        makePaymentSpy.complete(with: makeLegacy())
         
-        XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.legacy))
-        ])
+        XCTAssertNoDiff(makePaymentSpy.payloads.map(\.0), [template])
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldResetDestinationOnLegacyPaymentDismiss() throws {
+    func test_shouldCallMakePaymentWithDismissDestinationClosureOnContentEmittingTemplate() {
         
-        let template = makeTemplate()
-        let (sut, content, statusSpy) = makeSUT()
-        content.templateSubject.send(template)
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
-        try sut.dismissLegacyPayment()
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: makeLegacy())
+        makePaymentSpy.payloads.last?.1()
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
@@ -66,11 +77,41 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldSetLegacyPaymentCloseActionOnContentEmittingTemplate() throws {
+        
+        let (sut, content, _, makePaymentSpy) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: makeLegacy(close: { exp.fulfill() }))
+        
+        try sut.dismissLegacyPayment()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_shouldSetLegacyPaymentDestinationOnContentEmittingTemplate() {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: makeLegacy())
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.legacy))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TemplatesListFlowModel<Content>
     private typealias ProductID = ProductData.ID
     private typealias StatusSpy = ValueSpy<SUT.State.EquatableStatus?>
+    private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
+    private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, SUT.Event.Payment, Never>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -78,24 +119,17 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     ) -> (
         sut: SUT,
         content: Content,
-        statusSpy: StatusSpy
+        statusSpy: StatusSpy,
+        makePaymentSpy: MakePaymentSpy
     ) {
         let content = Content()
         let reducer = TemplatesListFlowReducer<Content>()
-        let microServices = TemplatesListFlowEffectHandlerMicroServices(
-            makePayment: { template, close in
-                
-                return .legacy(.init(
-                    source: .template(template.id),
-                    model: .emptyMock,
-                    closeAction: close
-                ))
-            }
-        )
+        let makePaymentSpy = MakePaymentSpy()
         let effectHandler = TemplatesListFlowEffectHandler(
-            microServices: microServices
+            microServices: .init(
+                makePayment: makePaymentSpy.process(_:completion:)
+            )
         )
-        
         let sut = SUT(
             initialState: .init(content: content),
             reduce: reducer.reduce(_:_:),
@@ -107,8 +141,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
         trackForMemoryLeaks(statusSpy, file: file, line: line)
+        trackForMemoryLeaks(makePaymentSpy, file: file, line: line)
         
-        return (sut, content, statusSpy)
+        return (sut, content, statusSpy, makePaymentSpy)
     }
     
     private func makeProductID() -> ProductID {
@@ -121,13 +156,25 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         type: PaymentTemplateData.Kind = .sfp
     ) -> PaymentTemplateData {
         
-        PaymentTemplateData.templateStub(paymentTemplateId: id, type: type)
+        return .templateStub(paymentTemplateId: id, type: type)
+    }
+    
+    private func makeLegacy(
+        _ template: PaymentTemplateData? = nil,
+        close: @escaping () -> Void = {}
+    ) -> SUT.Event.Payment {
+        
+        return .legacy(.init(
+            source: .template((template ?? makeTemplate()).id),
+            model: .emptyMock,
+            closeAction: close
+        ))
     }
     
     private final class Content: ProductIDEmitter & TemplateEmitter {
         
-        let productIDSubject = PassthroughSubject<ProductID, Never>()
-        let templateSubject = PassthroughSubject<PaymentTemplateData, Never>()
+        private let productIDSubject = PassthroughSubject<ProductID, Never>()
+        private let templateSubject = PassthroughSubject<PaymentTemplateData, Never>()
         
         var productIDPublisher: AnyPublisher<ProductID, Never> {
             
@@ -137,6 +184,16 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         var templatePublisher: AnyPublisher<PaymentTemplateData, Never> {
             
             templateSubject.eraseToAnyPublisher()
+        }
+        
+        func emitProductID(_ productID: ProductID) {
+            
+            productIDSubject.send(productID)
+        }
+        
+        func emitTemplate(_ template: PaymentTemplateData) {
+            
+            templateSubject.send(template)
         }
     }
 }

@@ -12,6 +12,8 @@ struct TemplatesListFlowEffectHandlerMicroServices {
 
 extension TemplatesListFlowEffectHandlerMicroServices {
     
-    typealias MakePayment = (PaymentTemplateData, @escaping () -> Void) -> Payment
+    typealias MakePaymentPayload = (PaymentTemplateData, () -> Void)
+    typealias MakePaymentCompletion = (Payment) -> Void
+    typealias MakePayment = (MakePaymentPayload, @escaping MakePaymentCompletion) -> Void
     typealias Payment = TemplatesListFlowEvent.Payment
 }
