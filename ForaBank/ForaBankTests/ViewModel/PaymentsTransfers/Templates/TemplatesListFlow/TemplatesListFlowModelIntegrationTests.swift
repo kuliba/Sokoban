@@ -34,7 +34,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetDestinationOnContentEmittingTemplate() {
+    func test_shouldSetLegacyPaymentDestinationOnContentEmittingTemplate() {
         
         let template = makeTemplate()
         let (sut, content, statusSpy) = makeSUT()
@@ -44,23 +44,23 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNoDiff(statusSpy.values, [
             .none,
             .outside(.inflight),
-            .destination(.payment)
+            .destination(.payment(.legacy))
         ])
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldResetDestinationOnPaymentDismiss() throws {
+    func test_shouldResetDestinationOnLegacyPaymentDismiss() throws {
         
         let template = makeTemplate()
         let (sut, content, statusSpy) = makeSUT()
         content.templateSubject.send(template)
         
-        try sut.dismissPayment()
+        try sut.dismissLegacyPayment()
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
             .outside(.inflight),
-            .destination(.payment),
+            .destination(.payment(.legacy)),
             .none
         ])
         XCTAssertNotNil(sut)
@@ -83,13 +83,13 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         let content = Content()
         let reducer = TemplatesListFlowReducer<Content>()
         let microServices = TemplatesListFlowEffectHandlerMicroServices(
-            makePaymentModel: { template, close in
+            makePayment: { template, close in
                 
-                return .init(
+                return .legacy(.init(
                     source: .template(template.id),
                     model: .emptyMock,
                     closeAction: close
-                )
+                ))
             }
         )
         let effectHandler = TemplatesListFlowEffectHandler(
@@ -149,8 +149,11 @@ private extension TemplatesListFlowState {
         case .none:
             return .none
             
-        case .destination(.payment):
-            return .destination(.payment)
+        case let .destination(.payment(payment)):
+            switch payment {
+            case .legacy:
+                return .destination(.payment(.legacy))
+            }
             
         case let .outside(outside):
             return .outside(outside)
@@ -162,10 +165,14 @@ private extension TemplatesListFlowState {
         case destination(Destination)
         case outside(Status.Outside)
         
-        
         enum Destination: Equatable {
             
-            case payment
+            case payment(Payment)
+            
+            enum Payment: Equatable {
+                
+                case legacy
+            }
         }
     }
 }
@@ -174,23 +181,23 @@ private extension TemplatesListFlowState {
 
 private extension TemplatesListFlowModel {
     
-    func dismissPayment(
+    func dismissLegacyPayment(
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        let payment = try XCTUnwrap(state.payment, "Expected to have payment, but got nil instead.", file: file, line: line)
+        let payment = try XCTUnwrap(state.legacy, "Expected to have payment, but got nil instead.", file: file, line: line)
         payment.closeAction()
     }
 }
 
 private extension TemplatesListFlowState {
     
-    var payment: PaymentsViewModel? {
+    var legacy: PaymentsViewModel? {
         
-        guard case let .payment(payment) = destination
+        guard case let .payment(.legacy(legacy)) = destination
         else { return nil }
         
-        return payment
+        return legacy
     }
 }

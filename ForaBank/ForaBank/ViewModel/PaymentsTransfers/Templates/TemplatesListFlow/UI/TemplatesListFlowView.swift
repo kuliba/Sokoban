@@ -83,8 +83,11 @@ private extension TemplatesListFlowView {
     ) -> some View {
         
         switch destination {
-        case let .payment(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+        case let .payment(payment):
+            switch payment {
+            case let .legacy(paymentsViewModel):
+                PaymentsView(viewModel: paymentsViewModel)
+            }
         }
     }
 }

@@ -23,7 +23,12 @@ extension TemplatesListFlowState {
         
         enum Destination {
             
-            case payment(PaymentsViewModel)
+            case payment(Payment)
+            
+            enum Payment {
+                
+                case legacy(PaymentsViewModel)
+            }
         }
         
         enum Outside: Equatable {

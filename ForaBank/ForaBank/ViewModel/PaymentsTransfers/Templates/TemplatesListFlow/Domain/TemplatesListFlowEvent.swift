@@ -19,7 +19,10 @@ extension TemplatesListFlowEvent {
         case destination
     }
     
-    typealias Payment = PaymentsViewModel
+    enum Payment {
+        
+        case legacy(PaymentsViewModel)
+    }
     
     enum Select: Equatable {
         

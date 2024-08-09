@@ -42,7 +42,10 @@ extension TemplatesListFlowReducer {
             state.status = nil
             
         case let .payment(payment):
-            state.status = .destination(.payment(payment))
+            switch payment {
+            case let .legacy(legacy):
+                state.status = .destination(.payment(.legacy(legacy)))
+            }
             
         case let .select(select):
             switch select {

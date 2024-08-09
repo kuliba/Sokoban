@@ -43,13 +43,13 @@ extension TemplatesListFlowModelComposer {
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
         let microServices = TemplatesListFlowEffectHandlerMicroServices(
-            makePaymentModel: { template, close in
+            makePayment: { template, close in
                 
-                return .init(
+                return .legacy(.init(
                     source: .template(template.id),
                     model: self.model,
                     closeAction: close
-                )
+                ))
             }
         )
         let effectHandler = TemplatesListFlowEffectHandler(
