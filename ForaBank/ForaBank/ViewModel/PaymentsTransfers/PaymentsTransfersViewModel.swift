@@ -174,13 +174,29 @@ extension PaymentsTransfersViewModel {
         
         let qrModel = qrViewModelFactory.makeQRScannerModel()
         let cancellable = bind(qrModel)
-        
-        self.route.modal = .fullScreenSheet(.init(
+        var route = route
+        route.modal = .fullScreenSheet(.init(
             type: .qrScanner(.init(
                 model: qrModel,
                 cancellable: cancellable
             ))
         ))
+        routeSubject.send(route)
+    }
+    
+    private func openTemplates() {
+        
+        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
+            
+            self?.event(.dismiss(.destination))
+        }
+        let cancellable = bind(templates)
+        var route = route
+        route.destination = .templates(.init(
+            model: templates,
+            cancellable: cancellable
+        ))
+        routeSubject.send(route)
     }
     
     func dismissPaymentProviderPicker() {
@@ -1015,21 +1031,6 @@ private extension PaymentsTransfersViewModel {
                 .sink { [weak self] in self?.handlePaymentButtonTapped($0) }
                 .store(in: &bindings)
         }
-    }
-    
-    private func openTemplates() {
-        
-        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
-            
-            self?.event(.dismiss(.destination))
-        }
-        let cancellable = bind(templates)
-        var route = route
-        route.destination = .templates(.init(
-            model: templates,
-            cancellable: cancellable
-        ))
-        routeSubject.send(route)
     }
     
     private func handleCurrencyWalletButtonTapped() {

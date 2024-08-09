@@ -210,13 +210,14 @@ extension MainViewModel {
         
         let qrModel = qrViewModelFactory.makeQRScannerModel()
         let cancellable = bind(qrModel)
-        
-        self.route.modal = .fullScreenSheet(.init(
+        var route = route
+        route.modal = .fullScreenSheet(.init(
             type: .qrScanner(.init(
                 model: qrModel,
                 cancellable: cancellable
             ))
         ))
+        routeSubject.send(route)
     }
     
     func openTemplates() {
