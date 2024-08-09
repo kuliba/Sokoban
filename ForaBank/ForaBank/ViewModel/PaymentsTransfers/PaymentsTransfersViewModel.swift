@@ -1231,14 +1231,14 @@ private extension PaymentsTransfersViewModel {
     ) -> AnyCancellable {
         
         templates.$state
-            .compactMap(\.status)
+            .compactMap(\.outside)
             .receive(on: scheduler)
-            .sink { [weak self] status in
+            .sink { [weak self] outside in
                 
                 guard let self else { return }
                 
-                switch status {
-                case let .outside(.productID(productID)):
+                switch outside {
+                case let .productID(productID):
                     self.event(.dismiss(.destination))
                     self.delay(for: .milliseconds(800)) {
                         

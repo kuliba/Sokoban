@@ -764,14 +764,14 @@ private extension MainViewModel {
     ) -> AnyCancellable {
         
         templates.$state
-            .compactMap(\.status)
+            .compactMap(\.outside)
             .receive(on: scheduler)
-            .sink { [weak self] status in
+            .sink { [weak self] outside in
                 
                 guard let self else { return }
                 
-                switch status {
-                case let .outside(.productID(productID)):
+                switch outside {
+                case let .productID(productID):
                     self.action.send(MainViewModelAction.Close.Link())
                     
                     self.delay(for: .milliseconds(800)) {
@@ -922,6 +922,19 @@ private extension MainViewModel {
         default:
             break
         }
+    }
+}
+
+// MARK: - Templates
+
+extension TemplatesListFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status
+        else { return nil }
+ 
+        return outside
     }
 }
 
