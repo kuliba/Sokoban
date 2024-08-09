@@ -21,9 +21,6 @@ struct BlockHorizontalRectangularView: View {
         VStack(spacing: config.spacing) {
             ForEach(state.block.list, content: itemView)
         }
-        .onTapGesture {
-            UIApplication.shared.endEditing()
-        }
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
@@ -69,6 +66,9 @@ extension BlockHorizontalRectangularView {
                 config.colors.background
                     .ignoresSafeArea()
                     .cornerRadius(config.cornerRadius)
+                    .onTapGesture {
+                        UIApplication.shared.endEditing()
+                    }
                 
                 VStack(alignment: .leading) {
                     
