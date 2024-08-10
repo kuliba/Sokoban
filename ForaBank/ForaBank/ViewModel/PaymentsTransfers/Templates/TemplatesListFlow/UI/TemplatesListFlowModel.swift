@@ -21,7 +21,7 @@ protocol TemplateEmitter {
     var templatePublisher: AnyPublisher<PaymentTemplateData, Never> { get }
 }
 
-final class TemplatesListFlowModel<Content>: ObservableObject
+final class TemplatesListFlowModel<Content, PaymentFlow>: ObservableObject
 where Content: ProductIDEmitter & TemplateEmitter {
     
     @Published private(set) var state: State
@@ -52,8 +52,8 @@ where Content: ProductIDEmitter & TemplateEmitter {
 
 extension TemplatesListFlowModel {
     
-    typealias State = TemplatesListFlowState<Content>
-    typealias Event = TemplatesListFlowEvent
+    typealias State = TemplatesListFlowState<Content, PaymentFlow>
+    typealias Event = TemplatesListFlowEvent<PaymentFlow>
     typealias Effect = TemplatesListFlowEffect
     
     typealias Reduce = (State, Event) -> (State, Effect?)

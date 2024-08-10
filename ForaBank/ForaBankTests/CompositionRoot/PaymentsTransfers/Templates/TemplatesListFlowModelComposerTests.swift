@@ -82,7 +82,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         let flowModel = sut.compose {}
         
         flowModel.select(makeTemplate())
-        spy.complete(with: .success(makeNode()))
+        spy.complete(with: .success(makeTransaction()))
         
         assertV1Destination(flowModel)
     }
@@ -91,8 +91,9 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     private typealias Flag = UtilitiesPaymentsFlag
     private typealias SUT = TemplatesListFlowModelComposer
-    private typealias FlowModel = TemplatesListFlowModel<TemplatesListViewModel>
-    private typealias InitiatePaymentSpy = Spy<PaymentTemplateData, Int, ServiceFailure>
+    private typealias FlowModel = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
+    private typealias Transaction = AnywayTransactionState.Transaction
+    private typealias InitiatePaymentSpy = Spy<PaymentTemplateData, Transaction, ServiceFailure>
     private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
 
     private func makeSUT(
@@ -103,10 +104,22 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         sut: SUT,
         spy: InitiatePaymentSpy
     ) {
-        let spy = InitiatePaymentSpy()
+        let httpClient = HTTPClientSpy()
         let model: Model = .emptyMock
+        let spy = InitiatePaymentSpy()
         let sut = SUT(
-            model: model, 
+            composer: .init(
+                composer: .init(
+                    flag: .init(flag),
+                    model: model,
+                    httpClient: httpClient,
+                    log: { _,_,_,_,_ in },
+                    scheduler: .immediate
+                ),
+                model: model,
+                scheduler: .immediate
+            ),
+            model: model,
             nanoServices: .init(initiatePayment: spy.process(_:completion:)),
             utilitiesPaymentsFlag: .init(flag),
             scheduler: .immediate
@@ -126,10 +139,43 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         return .templateStub(paymentTemplateId: id, type: type)
     }
     
-    private func makeNode(
-    ) -> FlowModel.State.Status.Destination.Payment.Node {
+    private func makeTransaction(
+    ) -> Transaction {
         
-        return .random(in: 1...100)
+        return .init(
+            context: .init(
+                initial: .init(
+                    amount: nil, 
+                    elements: [], 
+                    footer: .continue,
+                    isFinalStep: false
+                ),
+                payment: .init(
+                    amount: nil, 
+                    elements: [], 
+                    footer: .continue,
+                    isFinalStep: false
+                ),
+                staged: .init(),
+                outline: .init(
+                    amount: nil,
+                    product: .init(
+                        currency: "RUB",
+                        productID: 1,
+                        productType: .card
+                    ),
+                    fields: .init(),
+                    payload: .init(
+                        puref: anyMessage(),
+                        title: anyMessage(),
+                        subtitle: nil,
+                        icon: nil
+                    )
+                ),
+                shouldRestart: false
+            ),
+            isValid: true
+        )
     }
     
     private func assertLegacyDestination(

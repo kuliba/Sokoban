@@ -29,7 +29,7 @@ struct TemplatesListFlowView: View {
 
 extension TemplatesListFlowView {
     
-    typealias Model = TemplatesListFlowModel<TemplatesListViewModel>
+    typealias Model = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
 }
 
 extension TemplatesListFlowState {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 09.08.2024.
 //
 
-final class TemplatesListFlowReducer<Content> {}
+final class TemplatesListFlowReducer<Content, PaymentFlow> {}
 
 extension TemplatesListFlowReducer {
     
@@ -23,8 +23,8 @@ extension TemplatesListFlowReducer {
 
 extension TemplatesListFlowReducer {
     
-    typealias State = TemplatesListFlowState<Content>
-    typealias Event = TemplatesListFlowEvent
+    typealias State = TemplatesListFlowState<Content, PaymentFlow>
+    typealias Event = TemplatesListFlowEvent<PaymentFlow>
     typealias Effect = TemplatesListFlowEffect
 }
 
@@ -57,7 +57,7 @@ private extension TemplatesListFlowReducer {
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with flow: Event.FlowEvent
+        with flow: FlowEvent
     ) {
         switch flow {
         case .tab(.main):
@@ -65,6 +65,9 @@ private extension TemplatesListFlowReducer {
             
         case .tab(.payments):
             state.status = .outside(.tab(.payments))
+            
+        default:
+            fatalError("unimplemented")
         }
     }
     

@@ -11,17 +11,20 @@ import Foundation
 
 final class TemplatesListFlowModelComposer {
     
+    private let composer: AnywayFlowComposer
     private let model: Model
     private let nanoServices: NanoServices
     private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        composer: AnywayFlowComposer,
         model: Model,
         nanoServices: NanoServices,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.composer = composer
         self.model = model
         self.nanoServices = nanoServices
         self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
@@ -35,10 +38,10 @@ extension TemplatesListFlowModelComposer {
     
     func compose(
         dismiss: @escaping () -> Void
-    ) -> TemplatesListFlowModel<TemplatesListViewModel> {
+    ) -> TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel> {
         
         let content = makeTemplates(dismiss: dismiss)
-        let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
+        let reducer = TemplatesListFlowReducer<TemplatesListViewModel, AnywayFlowModel>()
         let effectHandler = makeEffectHandler()
         
         return .init(
@@ -47,6 +50,28 @@ extension TemplatesListFlowModelComposer {
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
         )
+    }
+}
+
+extension AnywayFlowModel: FlowEventPublishing {
+    
+    var flowEventPublisher: AnyPublisher<FlowEvent, Never> {
+        
+        $state
+            .compactMap(\.flowEvent)
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AnywayFlowState {
+    
+    var flowEvent: FlowEvent? {
+        
+        switch outside {
+        case .none:     return .none
+        case .main:     return .tab(.main)
+        case .payments: return .tab(.payments)
+        }
     }
 }
 
@@ -66,14 +91,14 @@ private extension TemplatesListFlowModelComposer {
         )
     }
     
-    func makeEffectHandler() -> TemplatesListFlowEffectHandler {
+    func makeEffectHandler() -> TemplatesListFlowEffectHandler<AnywayFlowModel> {
         
         let microServices = MicroServices(makePayment: makePayment)
         
         return .init(microServices: microServices)
     }
     
-    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<AnywayFlowModel>
     
     private func makePayment(
         payload: MicroServices.MakePaymentPayload,
@@ -99,14 +124,16 @@ private extension TemplatesListFlowModelComposer {
         _ template: PaymentTemplateData,
         _ completion: @escaping MicroServices.MakePaymentCompletion
     ) {
-        nanoServices.initiatePayment(template) {
+        nanoServices.initiatePayment(template) { [weak self] in
+            
+            guard let self else { return }
             
             switch $0 {
             case let .failure(serviceFailure):
                 completion(.failure(serviceFailure))
                 
-            case let .success(node):
-                completion(.success(.v1(node)))
+            case let .success(transaction):
+                completion(.success(.v1(composer.compose(transaction: transaction))))
             }
         }
     }
@@ -117,8 +144,7 @@ private extension TemplatesListFlowModelComposer {
     ) {
         DispatchQueue.main.delay(for: .seconds(2)) {
             
-            completion(.success(.v1(123)))
-            // completion(.failure(.serverError("Cannot proceed with payment due to server error #65432")))
+            completion(.failure(.serverError("Cannot proceed with payment due to server error #65432")))
         }
     }
     

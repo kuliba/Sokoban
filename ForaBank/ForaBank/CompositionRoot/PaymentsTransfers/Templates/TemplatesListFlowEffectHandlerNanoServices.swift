@@ -14,6 +14,7 @@ extension TemplatesListFlowEffectHandlerNanoServices {
     
     typealias InitiatePaymentPayload = PaymentTemplateData
     typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
-    typealias InitiatePaymentCompletion = (Result<Int, ServiceFailure>) -> Void
+    typealias Transaction = AnywayTransactionState.Transaction
+    typealias InitiatePaymentCompletion = (Result<Transaction, ServiceFailure>) -> Void
     typealias InitiatePayment = (InitiatePaymentPayload, @escaping InitiatePaymentCompletion) -> Void
 }

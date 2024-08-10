@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-struct TemplatesListFlowState<Content>{
+struct TemplatesListFlowState<Content, PaymentFlow>{
     
     let content: Content
     var status: Status?
@@ -31,9 +31,7 @@ extension TemplatesListFlowState {
             enum Payment {
                 
                 case legacy(PaymentsViewModel)
-                case v1(Node)
-                
-                typealias Node = Int
+                case v1(Node<PaymentFlow>)
             }
         }
         

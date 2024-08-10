@@ -497,6 +497,8 @@
 		2A248F412C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */; };
 		2A248F452C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */; };
 		2A248F472C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */; };
+		2A248F492C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */; };
+		2A248F4B2C67A03C00082814 /* FlowEventPublishing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3755,6 +3757,8 @@
 		2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift; sourceTree = "<group>"; };
 		2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceFailureAlert.ServiceFailure+ext.swift"; sourceTree = "<group>"; };
+		2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTemplatesComposer.swift"; sourceTree = "<group>"; };
+		2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowEventPublishing.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -10034,6 +10038,7 @@
 		2A840C0C2C37437B00BA6887 /* Templates */ = {
 			isa = PBXGroup;
 			children = (
+				2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */,
 				2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */,
 				2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */,
 				2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */,
@@ -10099,6 +10104,7 @@
 			children = (
 				2A92EA652C667558001452E7 /* TemplatesListFlowReducer.swift */,
 				2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */,
+				2A248F4A2C67A03C00082814 /* FlowEventPublishing.swift */,
 				2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */,
 			);
 			path = Logic;
@@ -18894,6 +18900,7 @@
 				0B931B1426DCD59900CA8017 /* LogotypeData.swift in Sources */,
 				A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */,
 				0B11A7782919875500C9BDD0 /* Model+QR.swift in Sources */,
+				2A248F492C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				77517FF427A9990C005CFB77 /* ServerCommands+Default.swift in Sources */,
 				2A3624562C5E6A0600174C50 /* PaymentProviderPickerState.swift in Sources */,
@@ -20530,6 +20537,7 @@
 				830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */,
 				77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */,
 				2AC2FB192C510475001972CB /* PaymentProviderServicePickerFlowEffectHandler.swift in Sources */,
+				2A248F4B2C67A03C00082814 /* FlowEventPublishing.swift in Sources */,
 				2AB109AD2C2C193200325D3A /* OTPWarningViewConfig.swift in Sources */,
 				C1CCFC3A29828EF30059212C /* Model+Abroad.swift in Sources */,
 				77517FD027A97AE8005CFB77 /* ProductData.swift in Sources */,

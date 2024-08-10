@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 09.08.2024.
 //
 
-enum TemplatesListFlowEvent {
+enum TemplatesListFlowEvent<PaymentFlow> {
     
     case dismiss(Dismiss)
     case flow(FlowEvent)
@@ -20,22 +20,12 @@ extension TemplatesListFlowEvent {
         case destination
     }
     
-    enum FlowEvent: Equatable {
-        
-        case tab(Tab)
-        
-        enum Tab: Equatable {
-            
-            case main, payments
-        }
-    }
-    
     typealias PaymentResult = Result<Payment, ServiceFailure>
     
     enum Payment {
         
         case legacy(PaymentsViewModel)
-        case v1(Int)
+        case v1(Node<PaymentFlow>)
     }
     
     typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
