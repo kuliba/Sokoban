@@ -87,3 +87,46 @@ extension ServiceFailureAlert.ServiceFailure {
         )
     }
 }
+
+extension ServiceFailureAlert.ServiceFailure {
+
+    func alert<Event>(
+        connectivityErrorTitle: String = "",
+        connectivityErrorMessage: String,
+        serverErrorTitle: String = "Ошибка",
+        event: Event,
+        action: @escaping (Event) -> Void
+    ) -> Alert {
+        
+        switch self {
+        case .connectivityError:
+            let model = alertModelOf(
+                event: event,
+                title: connectivityErrorTitle,
+                message: connectivityErrorMessage
+            )
+            return .init(with: model, event: action)
+            
+        case let .serverError(message):
+            let model = alertModelOf(
+                event: event,
+                title: serverErrorTitle,
+                message: message
+            )
+            return .init(with: model, event: action)
+        }
+    }
+    
+    private func alertModelOf<Event>(
+        event: Event,
+        title: String,
+        message: String? = nil
+    ) -> AlertModelOf<Event> {
+        
+        return .init(
+            title: title,
+            message: message,
+            primaryButton: .init(type: .default, title: "OK", event: event)
+        )
+    }
+}
