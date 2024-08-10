@@ -18,8 +18,11 @@ extension TemplatesListFlowState {
  
     enum Status {
         
+        case alert(ServiceFailure)
         case destination(Destination)
         case outside(Outside)
+        
+        typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
         
         enum Destination {
             

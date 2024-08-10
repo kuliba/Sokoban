@@ -190,11 +190,11 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
                 
                 let (template, close) = payload
                 
-                completion(.legacy(.init(
+                completion(.success(.legacy(.init(
                     source: .template(template.id),
                     model: .emptyMock,
                     closeAction: close
-                )))
+                ))))
             }
         )
         let effectHandler = TemplatesListFlowEffectHandler(

@@ -8,7 +8,7 @@
 enum TemplatesListFlowEvent {
     
     case dismiss(Dismiss)
-    case payment(Payment)
+    case payment(PaymentResult)
     case select(Select)
 }
 
@@ -19,11 +19,15 @@ extension TemplatesListFlowEvent {
         case destination
     }
     
+    typealias PaymentResult = Result<Payment, ServiceFailure>
+    
     enum Payment {
         
         case legacy(PaymentsViewModel)
     }
     
+    typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
+
     enum Select: Equatable {
         
         case productID(ProductID)

@@ -54,7 +54,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         let (sut, content, _, makePaymentSpy) = makeSUT()
         
         content.emitTemplate(template)
-        makePaymentSpy.complete(with: makeLegacy())
+        makePaymentSpy.complete(with: .success(makeLegacy()))
         
         XCTAssertNoDiff(makePaymentSpy.payloads.map(\.0), [template])
         XCTAssertNotNil(sut)
@@ -65,7 +65,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
         content.emitTemplate(makeTemplate())
-        makePaymentSpy.complete(with: makeLegacy())
+        makePaymentSpy.complete(with: .success(makeLegacy()))
         makePaymentSpy.payloads.last?.1()
         
         XCTAssertNoDiff(statusSpy.values, [
@@ -83,7 +83,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         content.emitTemplate(makeTemplate())
-        makePaymentSpy.complete(with: makeLegacy(close: { exp.fulfill() }))
+        makePaymentSpy.complete(with: .success(makeLegacy(close: { exp.fulfill() })))
         
         try sut.dismissLegacyPayment()
         
@@ -95,12 +95,43 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
         content.emitTemplate(makeTemplate())
-        makePaymentSpy.complete(with: makeLegacy())
+        makePaymentSpy.complete(with: .success(makeLegacy()))
         
         XCTAssertNoDiff(statusSpy.values, [
             .none,
             .outside(.inflight),
             .destination(.payment(.legacy))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetConnectivityAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .failure(.connectivityError))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .alert(.connectivityError)
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetServerErrorAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+        
+        let message = anyMessage()
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .failure(.serverError(message)))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .alert(.serverError(message))
         ])
         XCTAssertNotNil(sut)
     }
@@ -111,7 +142,8 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     private typealias ProductID = ProductData.ID
     private typealias StatusSpy = ValueSpy<SUT.State.EquatableStatus?>
     private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
-    private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, SUT.Event.Payment, Never>
+    private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, SUT.Event.Payment, ServiceFailure>
+    private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
     
     private func makeSUT(
         file: StaticString = #file,
@@ -206,6 +238,9 @@ private extension TemplatesListFlowState {
         case .none:
             return .none
             
+        case let .alert(serviceFailure):
+            return .alert(serviceFailure)
+            
         case let .destination(.payment(payment)):
             switch payment {
             case .legacy:
@@ -219,6 +254,7 @@ private extension TemplatesListFlowState {
     
     enum EquatableStatus: Equatable {
         
+        case alert(Status.ServiceFailure)
         case destination(Destination)
         case outside(Status.Outside)
         

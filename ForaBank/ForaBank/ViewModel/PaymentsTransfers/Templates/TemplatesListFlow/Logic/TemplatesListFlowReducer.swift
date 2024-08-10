@@ -28,7 +28,7 @@ extension TemplatesListFlowReducer {
     typealias Effect = TemplatesListFlowEffect
 }
 
-extension TemplatesListFlowReducer {
+private extension TemplatesListFlowReducer {
     
     func reduce(
         _ state: inout State,
@@ -41,23 +41,42 @@ extension TemplatesListFlowReducer {
         case .dismiss(.destination):
             state.status = nil
             
-        case let .payment(payment):
-            switch payment {
-            case let .legacy(legacy):
-                state.status = .destination(.payment(.legacy(legacy)))
-            }
+        case let .payment(result):
+            reduce(&state, &effect, with: result)
             
         case let .select(select):
-            switch select {
-            case let .productID(productID):
-                state.status = .outside(.productID(productID))
-                
-            case let .template(template):
-                state.status = .outside(.inflight)
-                effect = .template(template)
-            }
+            reduce(&state, &effect, with: select)
         }
         
         return effect
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with result: Event.PaymentResult
+    ) {
+        switch result {
+        case let .failure(serviceFailure):
+            state.status = .alert(serviceFailure)
+            
+        case let .success(.legacy(legacy)):
+            state.status = .destination(.payment(.legacy(legacy)))
+        }
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with select: Event.Select
+    ) {
+        switch select {
+        case let .productID(productID):
+            state.status = .outside(.productID(productID))
+            
+        case let .template(template):
+            state.status = .outside(.inflight)
+            effect = .template(template)
+        }
     }
 }
