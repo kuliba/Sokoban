@@ -495,6 +495,7 @@
 		2A235F812AFA6DD600E42E36 /* RootViewModelFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */; };
 		2A248F3F2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */; };
 		2A248F412C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */; };
+		2A248F452C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3751,6 +3752,7 @@
 		2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+ext.swift"; sourceTree = "<group>"; };
 		2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
 		2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposer.swift; sourceTree = "<group>"; };
+		2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -10104,6 +10106,7 @@
 			isa = PBXGroup;
 			children = (
 				2A92EA6E2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift */,
+				2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */,
 			);
 			path = Templates;
 			sourceTree = "<group>";
@@ -20833,6 +20836,7 @@
 				2A3086C229FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift in Sources */,
 				2A4111F12B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift in Sources */,
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
+				2A248F452C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift in Sources */,
 				2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */,
 				2A0439C72BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift in Sources */,
 				77B6B35D2852286500E3001B /* ProductStatementsStorageTests.swift in Sources */,
