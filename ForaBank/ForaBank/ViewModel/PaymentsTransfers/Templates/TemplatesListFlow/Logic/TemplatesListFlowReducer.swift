@@ -60,6 +60,9 @@ private extension TemplatesListFlowReducer {
         with flow: Event.FlowEvent
     ) {
         switch flow {
+        case .tab(.main):
+            state.status = .outside(.tab(.main))
+            
         case .tab(.payments):
             state.status = .outside(.tab(.payments))
         }

@@ -45,7 +45,7 @@ extension TemplatesListFlowState {
             
             enum Tab: Equatable {
                 
-                case payments
+                case main, payments
             }
         }
     }

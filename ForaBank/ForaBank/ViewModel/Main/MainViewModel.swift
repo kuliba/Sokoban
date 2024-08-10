@@ -792,6 +792,10 @@ private extension MainViewModel {
                 )
             }
             
+        case .tab(.main):
+            rootActions?.spinner.hide()
+            action.send(MainViewModelAction.Close.Link())
+            
         case .tab(.payments):
             rootActions?.spinner.hide()
             action.send(MainViewModelAction.Close.Link())
