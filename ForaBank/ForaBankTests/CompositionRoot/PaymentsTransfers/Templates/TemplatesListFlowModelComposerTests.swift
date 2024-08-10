@@ -42,7 +42,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         assertLegacyDestination(flowModel)
     }
     
-    func test_compose_shouldDeliverConnectivityFailureOnConnectivityErrorForActiveFlag() throws {
+    func test_compose_shouldDeliverConnectivityFailureOnConnectivityErrorForActiveLiveFlag() throws {
         
         let (sut, spy) = makeSUT(flag: .active(.live))
         let flowModel = sut.compose {}
@@ -53,7 +53,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         XCTAssertNoDiff(flowModel.state.alert, .connectivityError)
     }
     
-    func test_compose_shouldDeliverServerFailureOnServerErrorForActiveFlag() throws {
+    func test_compose_shouldDeliverServerFailureOnServerErrorForActiveLiveFlag() throws {
         
         let message = anyMessage()
         let (sut, spy) = makeSUT(flag: .active(.live))
@@ -65,7 +65,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         XCTAssertNoDiff(flowModel.state.alert, .serverError(message))
     }
     
-    func test_compose_shouldDeliverV1OnSuccessForActiveFlag() throws {
+    func test_compose_shouldDeliverV1OnSuccessForActiveLiveFlag() throws {
         
         let (sut, spy) = makeSUT(flag: .active(.live))
         let flowModel = sut.compose {}

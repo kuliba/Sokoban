@@ -82,8 +82,11 @@ private extension TemplatesListFlowModelComposer {
         let (template, close) = payload
         
         switch utilitiesPaymentsFlag.rawValue {
-        case .active(.live), .active(.stub):
+        case .active(.live):
             makeV1Payment(template, completion)
+            
+        case .active(.stub):
+            makeV1PaymentStub(template, completion)
             
         case .inactive:
             completion(.success(.legacy(
@@ -105,6 +108,16 @@ private extension TemplatesListFlowModelComposer {
             case let .success(node):
                 completion(.success(.v1(node)))
             }
+        }
+    }
+    
+    private func makeV1PaymentStub(
+        _ template: PaymentTemplateData,
+        _ completion: @escaping MicroServices.MakePaymentCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(2)) {
+            
+            completion(.failure(.serverError("Cannot proceed with payment due to server error #65432")))
         }
     }
     
