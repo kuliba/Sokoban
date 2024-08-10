@@ -90,7 +90,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
-    func test_shouldSetLegacyPaymentDestinationOnContentEmittingTemplate() {
+    func test_shouldDeliverLegacyPaymentDestinationOnContentEmittingTemplate() {
         
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
@@ -105,7 +105,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetConnectivityAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+    func test_shouldDeliverConnectivityAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
         
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
@@ -120,7 +120,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetServerErrorAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+    func test_shouldDeliverServerErrorAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
         
         let message = anyMessage()
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
@@ -132,6 +132,21 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
             .none,
             .outside(.inflight),
             .alert(.serverError(message))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetV1PaymentDestinationOnContentEmittingTemplate() {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makeNode())))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1))
         ])
         XCTAssertNotNil(sut)
     }
@@ -203,6 +218,12 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         ))
     }
     
+    private func makeNode(
+    ) -> SUT.State.Status.Destination.Payment.Node {
+        
+        return .random(in: 1...100)
+    }
+    
     private final class Content: ProductIDEmitter & TemplateEmitter {
         
         private let productIDSubject = PassthroughSubject<ProductID, Never>()
@@ -245,6 +266,9 @@ private extension TemplatesListFlowState {
             switch payment {
             case .legacy:
                 return .destination(.payment(.legacy))
+                
+            case .v1:
+                return .destination(.payment(.v1))
             }
             
         case let .outside(outside):
@@ -265,6 +289,7 @@ private extension TemplatesListFlowState {
             enum Payment: Equatable {
                 
                 case legacy
+                case v1
             }
         }
     }

@@ -31,6 +31,9 @@ extension TemplatesListFlowState {
             enum Payment {
                 
                 case legacy(PaymentsViewModel)
+                case v1(Node)
+                
+                typealias Node = Int
             }
         }
         

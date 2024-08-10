@@ -12,18 +12,23 @@ import Foundation
 final class TemplatesListFlowModelComposer {
     
     private let model: Model
+    private let nanoServices: NanoServices
     private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
+        nanoServices: NanoServices,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
+        self.nanoServices = nanoServices
         self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
         self.scheduler = scheduler
     }
+    
+    typealias NanoServices = TemplatesListFlowEffectHandlerNanoServices
 }
 
 extension TemplatesListFlowModelComposer {
@@ -76,10 +81,42 @@ private extension TemplatesListFlowModelComposer {
     ) {
         let (template, close) = payload
         
-        completion(.success(.legacy(.init(
+        switch utilitiesPaymentsFlag.rawValue {
+        case .active(.live), .active(.stub):
+            makeV1Payment(template, completion)
+            
+        case .inactive:
+            completion(.success(.legacy(
+                makeLegacyPayment(template: template, close: close)
+            )))
+        }
+    }
+    
+    private func makeV1Payment(
+        _ template: PaymentTemplateData,
+        _ completion: @escaping MicroServices.MakePaymentCompletion
+    ) {
+        nanoServices.initiatePayment(template) {
+            
+            switch $0 {
+            case let .failure(serviceFailure):
+                completion(.failure(serviceFailure))
+                
+            case let .success(node):
+                completion(.success(.v1(node)))
+            }
+        }
+    }
+    
+    private func makeLegacyPayment(
+        template: PaymentTemplateData,
+        close: @escaping () -> Void
+    ) -> PaymentsViewModel {
+        
+        return .init(
             source: .template(template.id),
             model: .emptyMock,
             closeAction: close
-        ))))
+        )
     }
 }

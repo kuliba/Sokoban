@@ -87,6 +87,9 @@ private extension TemplatesListFlowView {
             switch payment {
             case let .legacy(paymentsViewModel):
                 PaymentsView(viewModel: paymentsViewModel)
+                
+            case let .v1(node):
+                Text("\(node)")
             }
         }
     }

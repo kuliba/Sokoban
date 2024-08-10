@@ -179,8 +179,10 @@ extension RootViewModelFactory {
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
                 
+        let templatesNanoServicesComposer = TemplatesListFlowEffectHandlerNanoServicesComposer()
         let templatesComposer = TemplatesListFlowModelComposer(
-            model: model,
+            model: model, 
+            nanoServices: templatesNanoServicesComposer.compose(),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: scheduler
         )

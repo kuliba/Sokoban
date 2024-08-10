@@ -62,6 +62,9 @@ private extension TemplatesListFlowReducer {
             
         case let .success(.legacy(legacy)):
             state.status = .destination(.payment(.legacy(legacy)))
+            
+        case let .success(.v1(node)):
+            state.status = .destination(.payment(.v1(node)))
         }
     }
     

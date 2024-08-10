@@ -24,6 +24,7 @@ extension TemplatesListFlowEvent {
     enum Payment {
         
         case legacy(PaymentsViewModel)
+        case v1(Int)
     }
     
     typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
