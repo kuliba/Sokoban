@@ -209,13 +209,16 @@ private extension AnywayServicePickerFlowModel {
     }
 }
 
-private extension AnywayFlowState {
+extension AnywayFlowState {
     
     var outside: Status.Outside? {
         
         guard case let .outside(outside) = status else { return nil }
         return outside
     }
+}
+
+private extension AnywayFlowState {
     
     var outsideEvent: AnywayServicePickerFlowEvent? {
         
