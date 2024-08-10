@@ -38,6 +38,9 @@ where ContentView: View,
         return { alert in
             
             return alert.serviceFailure.alert(
+                connectivityErrorTitle: "Ошибка",
+                connectivityErrorMessage: "alert message",
+                serverErrorTitle: "Ошибка",
                 event: event,
                 map: {
                     switch $0 {
@@ -71,52 +74,5 @@ extension UtilityServicePickerFlowState.Destination: Identifiable {
     enum ID: Hashable {
         
         case payment
-    }
-}
-
-private extension ServiceFailureAlert.ServiceFailure {
-    
-    func alert<Event>(
-        event: @escaping (Event) -> Void,
-        map: @escaping (ServiceFailureEvent) -> Event
-    ) -> Alert {
-        
-        self.alert(event: { event(map($0)) })
-    }
-    
-    enum ServiceFailureEvent {
-        
-        case dismissAlert
-    }
-    
-    private func alert(
-        event: @escaping (ServiceFailureEvent) -> Void
-    ) -> Alert {
-        
-        switch self {
-        case .connectivityError:
-            let model = alertModelOf(title: "Ошибка", message: "alert message")
-            return .init(with: model, event: event)
-            
-        case let .serverError(message):
-            let model = alertModelOf(title: "Ошибка", message: message)
-            return .init(with: model, event: event)
-        }
-    }
-    
-    private func alertModelOf(
-        title: String,
-        message: String? = nil
-    ) -> AlertModelOf<ServiceFailureEvent> {
-        
-        .init(
-            title: title,
-            message: message,
-            primaryButton: .init(
-                type: .default,
-                title: "OK",
-                event: .dismissAlert
-            )
-        )
     }
 }

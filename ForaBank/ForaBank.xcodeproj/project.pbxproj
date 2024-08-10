@@ -496,6 +496,7 @@
 		2A248F3F2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */; };
 		2A248F412C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */; };
 		2A248F452C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */; };
+		2A248F472C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3753,6 +3754,7 @@
 		2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
 		2A248F402C6760B200082814 /* TemplatesListFlowEffectHandlerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A248F442C67666E00082814 /* TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerNanoServicesComposerTests.swift; sourceTree = "<group>"; };
+		2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceFailureAlert.ServiceFailure+ext.swift"; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -13499,6 +13501,7 @@
 				0C6508CD28299B4D0058916A /* PaymentsTransfers */,
 				0CCF9120281C19A800C6322F /* Chat */,
 				834731DE2A13746B002590A3 /* NoCompanyInListView.swift */,
+				2A248F462C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -18968,6 +18971,7 @@
 				2AF9ACD82AE646FB00AAB1DB /* LoggingStoreDecorator.swift in Sources */,
 				0BBDFBE027BBF71200A30D6D /* PaymentsServiceView.swift in Sources */,
 				2AC2ADBB2B2242A10049EE9B /* RequestFactory+createGetSberQRRequest.swift in Sources */,
+				2A248F472C676AD600082814 /* ServiceFailureAlert.ServiceFailure+ext.swift in Sources */,
 				6820928927AB0EEC003DCAFD /* PaymentSystemData.swift in Sources */,
 				C16DDBF02B2C9A67001BF988 /* Model+QRHelpers.swift in Sources */,
 				77F5CE0B2804A10500611B66 /* LocationAgent.swift in Sources */,
