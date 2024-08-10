@@ -41,6 +41,9 @@ private extension TemplatesListFlowReducer {
         case .dismiss(.destination):
             state.status = nil
             
+        case let .flow(flow):
+            reduce(&state, &effect, with: flow)
+
         case let .payment(result):
             reduce(&state, &effect, with: result)
             
@@ -49,6 +52,17 @@ private extension TemplatesListFlowReducer {
         }
         
         return effect
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with flow: Event.FlowEvent
+    ) {
+        switch flow {
+        case .tab(.payments):
+            state.status = .outside(.tab(.payments))
+        }
     }
     
     private func reduce(

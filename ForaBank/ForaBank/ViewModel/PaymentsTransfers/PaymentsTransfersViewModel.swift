@@ -1258,6 +1258,10 @@ private extension PaymentsTransfersViewModel {
                     )
                 )
             }
+            
+        case .tab(.payments):
+            rootActions?.spinner.hide()
+            action.send(PaymentsTransfersViewModelAction.Close.Link())
         }
     }
 

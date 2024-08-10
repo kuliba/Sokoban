@@ -15,6 +15,10 @@ struct TemplatesListFlowView: View {
     var body: some View {
         
         TemplatesListView(viewModel: model.state.content)
+            .alert(
+                item: model.state.alert,
+                content: alertContent
+            )
             .navigationDestination(
                 destination: model.state.destination,
                 dismissDestination: { model.event(.dismiss(.destination)) },
@@ -24,10 +28,19 @@ struct TemplatesListFlowView: View {
 }
 
 extension TemplatesListFlowView {
+    
     typealias Model = TemplatesListFlowModel<TemplatesListViewModel>
 }
 
 extension TemplatesListFlowState {
+    
+    var alert: Status.ServiceFailure? {
+        
+        guard case let .alert(alert) = status
+        else { return nil }
+        
+        return alert
+    }
     
     var destination: Status.Destination? {
         
@@ -76,6 +89,17 @@ extension TemplatesListViewModel: TemplateEmitter {
 }
 
 private extension TemplatesListFlowView {
+    
+    func alertContent(
+        failure: ServiceFailureAlert.ServiceFailure
+    ) -> Alert {
+        
+        return failure.alert(
+            connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+            event: .payments,
+            action: { model.event(.flow(.tab($0))) }
+        )
+    }
     
     @ViewBuilder
     func destinationContent(

@@ -151,6 +151,19 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldSetStateToOutsidePaymentsOnPaymentsTabFlowEvent() {
+        
+        let (sut, _, statusSpy,_) = makeSUT()
+
+        sut.event(.flow(.tab(.payments)))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.tab(.payments))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TemplatesListFlowModel<Content>

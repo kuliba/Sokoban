@@ -791,6 +791,15 @@ private extension MainViewModel {
                     )
                 )
             }
+            
+        case .tab(.payments):
+            rootActions?.spinner.hide()
+            action.send(MainViewModelAction.Close.Link())
+            
+            delay(for: .milliseconds(800)) { [weak self] in
+                
+                self?.rootActions?.switchTab(.payments)
+            }
         }
     }
     

@@ -8,6 +8,7 @@
 enum TemplatesListFlowEvent {
     
     case dismiss(Dismiss)
+    case flow(FlowEvent)
     case payment(PaymentResult)
     case select(Select)
 }
@@ -17,6 +18,16 @@ extension TemplatesListFlowEvent {
     enum Dismiss: Equatable {
         
         case destination
+    }
+    
+    enum FlowEvent: Equatable {
+        
+        case tab(Tab)
+        
+        enum Tab: Equatable {
+            
+            case payments
+        }
     }
     
     typealias PaymentResult = Result<Payment, ServiceFailure>

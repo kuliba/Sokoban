@@ -41,6 +41,12 @@ extension TemplatesListFlowState {
             
             case inflight
             case productID(ProductData.ID)
+            case tab(Tab)
+            
+            enum Tab: Equatable {
+                
+                case payments
+            }
         }
     }
 }
