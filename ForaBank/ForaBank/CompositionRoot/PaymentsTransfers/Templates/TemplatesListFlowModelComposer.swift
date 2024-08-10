@@ -117,7 +117,8 @@ private extension TemplatesListFlowModelComposer {
     ) {
         DispatchQueue.main.delay(for: .seconds(2)) {
             
-            completion(.failure(.serverError("Cannot proceed with payment due to server error #65432")))
+            completion(.success(.v1(123)))
+            // completion(.failure(.serverError("Cannot proceed with payment due to server error #65432")))
         }
     }
     

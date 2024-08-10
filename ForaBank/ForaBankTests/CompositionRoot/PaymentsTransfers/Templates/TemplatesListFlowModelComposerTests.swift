@@ -42,6 +42,17 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         assertLegacyDestination(flowModel)
     }
     
+    func test_compose_shouldCallCollaboratorWithTemplateForActiveLiveFlag() throws {
+        
+        let template = makeTemplate()
+        let (sut, spy) = makeSUT(flag: .active(.live))
+        let flowModel = sut.compose {}
+        
+        flowModel.select(template)
+        
+        XCTAssertNoDiff(spy.payloads, [template])
+    }
+    
     func test_compose_shouldDeliverConnectivityFailureOnConnectivityErrorForActiveLiveFlag() throws {
         
         let (sut, spy) = makeSUT(flag: .active(.live))
