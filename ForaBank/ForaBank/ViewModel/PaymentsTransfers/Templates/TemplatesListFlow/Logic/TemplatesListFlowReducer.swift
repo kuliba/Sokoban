@@ -63,14 +63,17 @@ private extension TemplatesListFlowReducer {
         case .dismiss:
             state.status = nil
             
+        case .inflight:
+            break
+            
+        case .tab(.chat):
+            break
+            
         case .tab(.main):
             state.status = .outside(.tab(.main))
             
         case .tab(.payments):
             state.status = .outside(.tab(.payments))
-            
-        default:
-            fatalError("unimplemented")
         }
     }
     

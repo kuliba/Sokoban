@@ -194,6 +194,74 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldNotChangeStateOnV1PaymentDestinationEmittingInflight() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .inflight)
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1)),
+            .destination(.payment(.v1)),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingChat() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .tab(.chat))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1)),
+            .destination(.payment(.v1)),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingMain() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .tab(.main))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1)),
+            .outside(.tab(.main)),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingPayments() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .tab(.payments))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1)),
+            .outside(.tab(.payments)),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TemplatesListFlowModel<Content, PaymentFlow>
