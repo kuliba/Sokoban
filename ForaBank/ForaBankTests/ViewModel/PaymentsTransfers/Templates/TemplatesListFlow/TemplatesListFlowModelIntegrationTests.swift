@@ -177,6 +177,23 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_shouldDismissDestinationOnV1PaymentDestinationEmittingDismiss() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .dismiss)
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .none,
+            .outside(.inflight),
+            .destination(.payment(.v1)),
+            .none
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TemplatesListFlowModel<Content, PaymentFlow>
@@ -290,6 +307,19 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
             subject.send(event)
         }
     }
+    
+    // MARK: - DSL
+    
+    private func paymentFlowEmit(
+        _ sut: SUT,
+        event: FlowEvent,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let paymentFlow = try XCTUnwrap(sut.state.paymentFlow, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
+        paymentFlow.emit(event)
+    }
 }
 
 private extension TemplatesListFlowState {
@@ -348,6 +378,16 @@ private extension TemplatesListFlowModel {
         let legacy = try XCTUnwrap(state.legacy, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
         legacy.closeAction()
     }
+    
+    func paymentFlowEmit(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let paymentFlow = try XCTUnwrap(state.paymentFlow, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
+        //        paymentFlow.
+        return unimplemented()
+    }
 }
 
 private extension TemplatesListFlowState {
@@ -358,5 +398,13 @@ private extension TemplatesListFlowState {
         else { return nil }
         
         return legacy
+    }
+    
+    var paymentFlow: PaymentFlow? {
+        
+        guard case let .payment(.v1(node)) = destination
+        else { return nil }
+        
+        return node.model
     }
 }
