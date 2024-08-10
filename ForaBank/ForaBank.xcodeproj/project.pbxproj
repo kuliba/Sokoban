@@ -1116,6 +1116,7 @@
 		2A92EA682C667853001452E7 /* TemplatesListFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */; };
 		2A92EA6A2C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */; };
 		2A92EA6C2C667D68001452E7 /* TemplatesListFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */; };
+		2A92EA6F2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A92EA6E2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
@@ -4373,6 +4374,7 @@
 		2A92EA672C667853001452E7 /* TemplatesListFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandler.swift; sourceTree = "<group>"; };
 		2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServices.swift; sourceTree = "<group>"; };
 		2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowModelComposer.swift; sourceTree = "<group>"; };
+		2A92EA6E2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowModelComposerTests.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
@@ -8378,6 +8380,7 @@
 			children = (
 				2A35DDA82C021AA400EFF0EB /* PaymentsTransfersFlowManagerComposerTests.swift */,
 				2AA619542C16BF9600043997 /* AnywayTransactionViewModelComposerTests.swift */,
+				2A92EA6D2C67357A001452E7 /* Templates */,
 				2AB4FA5D2B9067BF0061CBD7 /* UtilityPayments */,
 			);
 			path = PaymentsTransfers;
@@ -10089,6 +10092,14 @@
 				2A92EA692C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift */,
 			);
 			path = Logic;
+			sourceTree = "<group>";
+		};
+		2A92EA6D2C67357A001452E7 /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				2A92EA6E2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift */,
+			);
+			path = Templates;
 			sourceTree = "<group>";
 		};
 		2A9338522A17C83F00397C88 /* PhoneKit */ = {
@@ -20879,6 +20890,7 @@
 				687F9B1127FED202007A38A5 /* ServerCommandsLoanTests.swift in Sources */,
 				2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */,
 				83B614832B0390E7002EE299 /* ContactsAgent+ContactsListTests.swift in Sources */,
+				2A92EA6F2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift in Sources */,
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,

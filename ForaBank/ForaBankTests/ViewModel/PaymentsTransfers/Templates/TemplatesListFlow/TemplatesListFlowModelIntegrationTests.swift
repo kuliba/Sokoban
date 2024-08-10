@@ -279,8 +279,8 @@ private extension TemplatesListFlowModel {
         line: UInt = #line
     ) throws {
         
-        let payment = try XCTUnwrap(state.legacy, "Expected to have payment, but got nil instead.", file: file, line: line)
-        payment.closeAction()
+        let legacy = try XCTUnwrap(state.legacy, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
+        legacy.closeAction()
     }
 }
 

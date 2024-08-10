@@ -32,31 +32,9 @@ extension TemplatesListFlowModelComposer {
         dismiss: @escaping () -> Void
     ) -> TemplatesListFlowModel<TemplatesListViewModel> {
         
-        let content = TemplatesListViewModel(
-            model,
-            dismissAction: dismiss,
-            updateFastAll: { [weak model] in
-                
-                model?.action.send(ModelAction.Products.Update.Fast.All())
-            }
-        )
-        
+        let content = makeTemplates(dismiss: dismiss)
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
-        let microServices = TemplatesListFlowEffectHandlerMicroServices(
-            makePayment: { payload, completion in
-                
-                let (template, close) = payload
-                
-                completion(.success(.legacy(.init(
-                    source: .template(template.id),
-                    model: .emptyMock,
-                    closeAction: close
-                ))))
-            }
-        )
-        let effectHandler = TemplatesListFlowEffectHandler(
-            microServices: microServices
-        )
+        let effectHandler = makeEffectHandler()
         
         return .init(
             initialState: .init(content: content),
@@ -64,5 +42,44 @@ extension TemplatesListFlowModelComposer {
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
         )
+    }
+}
+
+private extension TemplatesListFlowModelComposer {
+    
+    func makeTemplates(
+        dismiss: @escaping () -> Void
+    ) -> TemplatesListViewModel {
+        
+        return .init(
+            model,
+            dismissAction: dismiss,
+            updateFastAll: { [weak model] in
+                
+                model?.action.send(ModelAction.Products.Update.Fast.All())
+            }
+        )
+    }
+    
+    func makeEffectHandler() -> TemplatesListFlowEffectHandler {
+        
+        let microServices = MicroServices(makePayment: makePayment)
+        
+        return .init(microServices: microServices)
+    }
+    
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
+    
+    private func makePayment(
+        payload: MicroServices.MakePaymentPayload,
+        completion: @escaping MicroServices.MakePaymentCompletion
+    ) {
+        let (template, close) = payload
+        
+        completion(.success(.legacy(.init(
+            source: .template(template.id),
+            model: .emptyMock,
+            closeAction: close
+        ))))
     }
 }
