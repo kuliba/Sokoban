@@ -315,7 +315,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output.outline.fields, .init())
     }
-        
+    
     func test_parse_oneOf_shouldSetOutlinePayloadPuref() throws {
         
         let puref = anyMessage()
@@ -383,7 +383,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: nil))
     }
-
+    
     func test_parse_oneOf_shouldSetFirstField() throws {
         
         let name = anyMessage()
@@ -394,14 +394,14 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: .md5Hash(icon)))
     }
-
+    
     func test_parse_oneOf_shouldDeliverOutput() throws {
         
         let product = makeOutlineProduct()
         let (puref, title, name, subtitle, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
         let source = oneOf(name: name, puref: puref, title: title, subtitle: subtitle, icon: icon)
         let sut = makeSUT(outlineProduct: product)
-
+        
         let output = try sut.parse(source: source)
         
         XCTAssertNoDiff(output, .init(
@@ -426,7 +426,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     }
     
     // MARK: - picked
-
+    
     func test_parse_picked_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
         
         let sut = makeSUT(outlineProduct: nil)
@@ -470,7 +470,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
     }
     
     func test_parse_picked_shouldSetOutlineFieldsFromQRCodeAndMapping() throws {
-
+        
         let puref = anyMessage()
         let (qrCode, _) = makeSampleQRCode()
         let source = picked(
@@ -486,7 +486,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
             "GENERAL_LAST_NAME": "Smith"
         ])
     }
-        
+    
     func test_parse_picked_shouldSetOutlinePayloadPuref() throws {
         
         let puref = anyMessage()
@@ -553,7 +553,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNil(output.firstField)
     }
-
+    
     func test_parse_picked_shouldSetFirstFieldWithNilIconOnIsOneOfTrue() throws {
         
         let name = anyMessage()
@@ -563,9 +563,9 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: nil))
     }
-
+    
     func test_parse_picked_shouldSetFirstFieldOnIsOneOfTrue() throws {
-
+        
         let (name, icon) = (anyMessage(), anyMessage())
         let source = picked(name: name, isOneOf: true, icon: icon)
         
@@ -573,7 +573,132 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: .md5Hash(icon)))
     }
-
+    
+    // MARK: - single
+    
+    func test_parse_single_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
+        
+        let sut = makeSUT(outlineProduct: nil)
+        
+        try XCTAssertThrowsError(sut.parse(source: single())) {
+            
+            XCTAssertNoDiff($0 as? SUT.ParsingError, .missingProduct)
+        }
+    }
+    
+    func test_parse_single_shouldSetOutlineAmountToNil() throws {
+        
+        let source = single()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.amount)
+    }
+    
+    func test_parse_single_shouldSetOutlineProduct() throws {
+        
+        let product = makeOutlineProduct()
+        let sut = makeSUT(outlineProduct: product)
+        let source = single()
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.product, product)
+    }
+    
+    func test_parse_single_shouldSetEmptyOutlineFields() throws {
+        
+        let source = single()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, .init())
+    }
+    
+    func test_parse_single_shouldSetOutlinePayloadPuref() throws {
+        
+        let puref = anyMessage()
+        let source = single(puref: puref)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.puref, puref)
+    }
+    
+    func test_parse_single_shouldSetOutlinePayloadTitle() throws {
+        
+        let title = anyMessage()
+        let source = single(title: title)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.title, title)
+    }
+    
+    func test_parse_single_shouldSetNilOutlinePayloadSubtitle() throws {
+        
+        let source = single()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_single_shouldSetNilOutlinePayloadIconOnNil() throws {
+        
+        let source = single(icon: nil)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_single_shouldSetOutlinePayloadIcon() throws {
+        
+        let icon = anyMessage()
+        let source = single(icon: icon)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.icon, icon)
+    }
+    
+    func test_parse_single_shouldSetFirstFieldToNil() throws {
+        
+        let source = single()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.firstField)
+    }
+    
+    func test_parse_single_shouldDeliverOutput() throws {
+        
+        let product = makeOutlineProduct()
+        let (name, puref, title, subtitle, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let source = single(
+            name: name, puref: puref, title: title, subtitle: subtitle, icon: icon
+        )
+        let sut = makeSUT(outlineProduct: product)
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output, .init(
+            outline: .init(
+                amount: nil,
+                product: product,
+                fields: .init(),
+                payload: .init(
+                    puref: puref,
+                    title: title,
+                    subtitle: subtitle,
+                    icon: icon
+                )
+            ),
+            firstField: nil
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentSourceParser
@@ -736,6 +861,21 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                 operator: puref,
                 parameters: [qrParameter1, qrParameter2]
             )]
+        )
+    }
+    
+    private func single(
+        name: String = anyMessage(),
+        puref: String = anyMessage(),
+        id: String = anyMessage(),
+        title: String = anyMessage(),
+        subtitle: String? = nil,
+        icon: String? = nil
+    ) -> AnywayPaymentSourceParser.Source {
+        
+        return .single(
+            .init(name: name, puref: puref),
+            .init(id: id, title: title, subtitle: subtitle, icon: icon)
         )
     }
 }
