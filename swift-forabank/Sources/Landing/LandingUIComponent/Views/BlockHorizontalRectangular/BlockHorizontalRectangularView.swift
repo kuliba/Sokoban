@@ -70,15 +70,15 @@ extension BlockHorizontalRectangularView {
                         UIApplication.shared.endEditing()
                     }
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: config.spacing) {
                     
                     Text(item.title)
-                        .font(.headline)
-                        .foregroundColor(config.colors.title)
+                        .font(config.titleConfig.textFont)
+                        .foregroundColor(config.titleConfig.textColor)
                     Text(item.description)
-                        .font(.caption)
-                        .foregroundColor(config.colors.subtitle)
-                    
+                        .font(config.subtitleConfig.textFont)
+                        .foregroundColor(config.subtitleConfig.textColor)
+
                     ForEach(item.limits, id: \.id, content: limit)
                 }
                 .padding()
@@ -91,8 +91,8 @@ extension BlockHorizontalRectangularView {
                 return AnyView(VStack(alignment: .leading) {
                     
                     Text(limit.title)
-                        .font(.headline)
-                        .foregroundColor(config.colors.title)
+                        .font(config.limitTitleConfig.textFont)
+                        .foregroundColor(config.limitTitleConfig.textColor)
 
                     VStack(alignment: .leading, spacing: 4) {
 
@@ -137,7 +137,7 @@ extension BlockHorizontalRectangularView {
                         return (state, .none)
                     },
                     handleEffect: {_,_ in }),
-                config: .preview,
+                config: config.limitConfig,
                 infoView: {
                     Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
                         .fixedSize(horizontal: false, vertical: true)
