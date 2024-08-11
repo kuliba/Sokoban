@@ -504,6 +504,7 @@
 		2A248F522C68862B00082814 /* InitiateAnywayPaymentMicroServiceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F512C68862B00082814 /* InitiateAnywayPaymentMicroServiceIntegrationTests.swift */; };
 		2A248F552C68911400082814 /* AnywayPaymentSourceParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */; };
 		2A248F572C68CA2F00082814 /* AnywayPaymentSourceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F562C68CA2F00082814 /* AnywayPaymentSourceParser.swift */; };
+		2A248F5A2C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F592C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3769,6 +3770,7 @@
 		2A248F512C68862B00082814 /* InitiateAnywayPaymentMicroServiceIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentMicroServiceIntegrationTests.swift; sourceTree = "<group>"; };
 		2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentSourceParserTests.swift; sourceTree = "<group>"; };
 		2A248F562C68CA2F00082814 /* AnywayPaymentSourceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentSourceParser.swift; sourceTree = "<group>"; };
+		2A248F592C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialAnywayTransactionComposerTests.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -7637,6 +7639,7 @@
 				2A0439C52BB405FD0063B7AB /* NanoServices */,
 				C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */,
 				2A248F532C6890FA00082814 /* AnywayPaymentSourceParser */,
+				2A248F582C68CC3400082814 /* InitialAnywayTransactionComposer */,
 				2A248F4E2C6885EC00082814 /* InitiateAnywayPaymentMicroService */,
 			);
 			path = AnywayPayment;
@@ -8131,6 +8134,14 @@
 				2A248F542C68911400082814 /* AnywayPaymentSourceParserTests.swift */,
 			);
 			path = AnywayPaymentSourceParser;
+			sourceTree = "<group>";
+		};
+		2A248F582C68CC3400082814 /* InitialAnywayTransactionComposer */ = {
+			isa = PBXGroup;
+			children = (
+				2A248F592C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift */,
+			);
+			path = InitialAnywayTransactionComposer;
 			sourceTree = "<group>";
 		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
@@ -21016,6 +21027,7 @@
 				2AC21DBC2B0795B80067F127 /* SearchFactoryRegularFieldViewModelTests.swift in Sources */,
 				2A624C062C346247002ABA24 /* String+customLexicographicallyPrecedesTests.swift in Sources */,
 				2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */,
+				2A248F5A2C68CC6700082814 /* InitialAnywayTransactionComposerTests.swift in Sources */,
 				2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */,
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				2AF5DF362BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift in Sources */,

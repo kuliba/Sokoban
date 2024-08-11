@@ -270,7 +270,7 @@ extension AnywayElement.Field {
     }
 }
 
-private extension AnywayPaymentContext {
+extension AnywayPaymentContext {
     
     init(
         update: AnywayPaymentUpdate,
