@@ -59,12 +59,14 @@ private extension TemplatesListFlowReducer {
         _ effect: inout Effect?,
         with flow: FlowEvent
     ) {
-        switch flow {
+        state.isLoading = flow.isLoading
+        
+        switch flow.status {
+        case .none:
+            break
+            
         case .dismiss:
             state.status = nil
-            
-        case .inflight:
-            break
             
         case .tab(.chat):
             break

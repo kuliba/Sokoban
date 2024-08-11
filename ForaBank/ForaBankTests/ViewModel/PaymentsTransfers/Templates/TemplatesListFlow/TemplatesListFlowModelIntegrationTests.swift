@@ -155,7 +155,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         let (sut, _, statusSpy,_) = makeSUT()
         
-        sut.event(.flow(.tab(.main)))
+        sut.event(.flow(.init(status: .tab(.main))))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
@@ -168,11 +168,28 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         let (sut, _, statusSpy,_) = makeSUT()
         
-        sut.event(.flow(.tab(.payments)))
+        sut.event(.flow(.init(status: .tab(.payments))))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
             .init(isLoading: false, .outside(.tab(.payments))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldChangeIsLoadingOnV1PaymentDestinationEmitting() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(isLoading: true))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: true, .destination(.payment(.v1))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -183,30 +200,13 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         content.emitTemplate(makeTemplate())
         makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
-        try paymentFlowEmit(sut, event: .dismiss)
+        try paymentFlowEmit(sut, event: .init(status: .dismiss))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
             .init(isLoading: true, .none),
             .init(isLoading: false, .destination(.payment(.v1))),
             .init(isLoading: false, .none),
-        ])
-        XCTAssertNotNil(sut)
-    }
-    
-    func test_shouldNotChangeStateOnV1PaymentDestinationEmittingInflight() throws {
-        
-        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
-        
-        content.emitTemplate(makeTemplate())
-        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
-        try paymentFlowEmit(sut, event: .inflight)
-        
-        XCTAssertNoDiff(statusSpy.values, [
-            .init(isLoading: false, .none),
-            .init(isLoading: true, .none),
-            .init(isLoading: false, .destination(.payment(.v1))),
-            .init(isLoading: false, .destination(.payment(.v1))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -217,7 +217,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         content.emitTemplate(makeTemplate())
         makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
-        try paymentFlowEmit(sut, event: .tab(.chat))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.chat)))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
@@ -234,7 +234,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         content.emitTemplate(makeTemplate())
         makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
-        try paymentFlowEmit(sut, event: .tab(.main))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.main)))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
@@ -251,7 +251,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         content.emitTemplate(makeTemplate())
         makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
-        try paymentFlowEmit(sut, event: .tab(.payments))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.payments)))
         
         XCTAssertNoDiff(statusSpy.values, [
             .init(isLoading: false, .none),
