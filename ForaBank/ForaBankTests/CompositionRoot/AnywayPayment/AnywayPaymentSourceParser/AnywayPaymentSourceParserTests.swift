@@ -27,6 +27,8 @@ extension AnywayPaymentSourceParser {
         
         case latest(Latest)
         case oneOf(Service, Operator)
+        case picked(ServicePickerItem, PaymentProviderServicePickerPayload)
+        case single(Service, Operator)
         
         typealias Latest = RemoteServices.ResponseMapper.LatestServicePayment
         typealias Operator = UtilityPaymentOperator
@@ -65,6 +67,29 @@ extension AnywayPaymentSourceParser {
                     service: service,
                     icon: `operator`.icon
                 )
+            )
+            
+        case let .picked(item, payload):
+            return .init(
+                outline: .init(
+                    service: item.service,
+                    payload: payload,
+                    product: product
+                ),
+                firstField: .init(
+                    service: item.isOneOf ? item.service : nil,
+                    icon: payload.provider.origin.icon
+                )
+            )
+            
+        case let .single(service, `operator`):
+            return .init(
+                outline: .init(
+                    operator: `operator`,
+                    puref: service.puref,
+                    product: product
+                ),
+                firstField: nil
             )
         }
     }
@@ -400,6 +425,155 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         ))
     }
     
+    // MARK: - picked
+
+    func test_parse_picked_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
+        
+        let sut = makeSUT(outlineProduct: nil)
+        
+        try XCTAssertThrowsError(sut.parse(source: picked())) {
+            
+            XCTAssertNoDiff($0 as? SUT.ParsingError, .missingProduct)
+        }
+    }
+    
+    func test_parse_picked_shouldSetOutlineAmountToNilOnNoAmountInQR() throws {
+        
+        let source = picked()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.amount)
+    }
+    
+    func test_parse_picked_shouldSetOutlineAmountOnQRWithMapping() throws {
+        
+        let puref = anyMessage()
+        let (qrCode, amount) = makeQRWithAmount()
+        let qrMapping = makeAmountQRMapping(puref: puref)
+        let source = picked(puref: puref, qrCode: qrCode, qrMapping: qrMapping)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        try XCTAssertEqual(XCTUnwrap(output.outline.amount), amount, accuracy: 0.01)
+    }
+    
+    func test_parse_picked_shouldSetOutlineProduct() throws {
+        
+        let product = makeOutlineProduct()
+        let sut = makeSUT(outlineProduct: product)
+        let source = picked()
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.product, product)
+    }
+    
+    func test_parse_picked_shouldSetOutlineFieldsFromQRCodeAndMapping() throws {
+
+        let puref = anyMessage()
+        let (qrCode, _) = makeSampleQRCode()
+        let source = picked(
+            puref: puref,
+            qrCode: qrCode,
+            qrMapping: makeSampleQRMapping(puref: puref)
+        )
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, [
+            "GENERAL_FIRST_NAME": "John",
+            "GENERAL_LAST_NAME": "Smith"
+        ])
+    }
+        
+    func test_parse_picked_shouldSetOutlinePayloadPuref() throws {
+        
+        let puref = anyMessage()
+        let source = picked(puref: puref)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.puref, puref)
+    }
+    
+    func test_parse_picked_shouldSetOutlinePayloadTitle() throws {
+        
+        let title = anyMessage()
+        let source = picked(title: title)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.title, title)
+    }
+    
+    func test_parse_picked_shouldSetNilOutlinePayloadSubtitle() throws {
+        
+        let source = picked()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_picked_shouldSetOutlinePayloadSubtitle() throws {
+        
+        let subtitle = anyMessage()
+        let source = picked(inn: subtitle)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.subtitle, subtitle)
+    }
+    
+    func test_parse_picked_shouldSetNilOutlinePayloadIconOnNil() throws {
+        
+        let source = picked(icon: nil)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_picked_shouldSetOutlinePayloadIcon() throws {
+        
+        let icon = anyMessage()
+        let source = picked(icon: icon)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.icon, icon)
+    }
+    
+    func test_parse_picked_shouldNotSetFirstFieldOnIsOfFalse() throws {
+        
+        let source = picked(isOneOf: false)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.firstField)
+    }
+
+    func test_parse_picked_shouldSetFirstFieldWithNilIconOnIsOneOfTrue() throws {
+        
+        let name = anyMessage()
+        let source = picked(name: name, isOneOf: true, icon: nil)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: nil))
+    }
+
+    func test_parse_picked_shouldSetFirstFieldOnIsOneOfTrue() throws {
+
+        let (name, icon) = (anyMessage(), anyMessage())
+        let source = picked(name: name, isOneOf: true, icon: icon)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: .md5Hash(icon)))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentSourceParser
@@ -483,6 +657,85 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         return .oneOf(
             .init(name: name, puref: puref),
             .init(id: id, title: title, subtitle: subtitle, icon: icon)
+        )
+    }
+    
+    private func picked(
+        name: String = anyMessage(),
+        puref: String = anyMessage(),
+        isOneOf: Bool = .random(),
+        id: String = anyMessage(),
+        icon: String? = nil,
+        inn: String? = nil,
+        title: String = anyMessage(),
+        segment: String = anyMessage(),
+        qrCode: QRCode = .init(original: "", rawData: [:]),
+        qrMapping: QRMapping = .init(parameters: [], operators: [])
+    ) -> AnywayPaymentSourceParser.Source {
+        
+        return .picked(
+            .init(service: .init(name: name, puref: puref), isOneOf: isOneOf),
+            .init(
+                provider: .init(
+                    origin: .init(
+                        id: id,
+                        icon: icon,
+                        inn: inn,
+                        title: title,
+                        segment: segment
+                    ),
+                    segment: segment
+                ),
+                qrCode: qrCode,
+                qrMapping: qrMapping
+            )
+        )
+    }
+    
+    private func makeQRWithAmount(
+        _ int: Int = .random(in: 1...100_000)
+    ) -> (QRCode, Decimal) {
+        
+        let qrCode = QRCode(original: "", rawData: ["sum": "\(int)"])
+        return (qrCode, Decimal(int)/100)
+    }
+    
+    private func makeAmountQRMapping(
+        puref: String
+    ) -> QRMapping {
+        
+        let qrParameter = QRParameter(parameter: .general(.amount), keys: ["sum"], type: .double)
+        
+        return .init(
+            parameters: [qrParameter],
+            operators: [.init(operator: puref, parameters: [qrParameter])]
+        )
+    }
+    
+    private func makeSampleQRCode(
+        _ int: Int = .random(in: 1...100_000)
+    ) -> (QRCode, Decimal) {
+        
+        let qrCode = QRCode(original: "", rawData: [
+            "first": "John",
+            "last": "Smith"
+        ])
+        return (qrCode, Decimal(int)/100)
+    }
+    
+    private func makeSampleQRMapping(
+        puref: String
+    ) -> QRMapping {
+        
+        let qrParameter1 = QRParameter(parameter: .general(.firstName), keys: ["first"], type: .string)
+        let qrParameter2 = QRParameter(parameter: .general(.lastName), keys: ["last"], type: .string)
+        
+        return .init(
+            parameters: [qrParameter1, qrParameter2],
+            operators: [.init(
+                operator: puref,
+                parameters: [qrParameter1, qrParameter2]
+            )]
         )
     }
 }
