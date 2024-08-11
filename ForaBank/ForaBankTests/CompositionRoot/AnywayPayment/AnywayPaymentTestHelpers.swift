@@ -1,22 +1,15 @@
 //
-//  InitiateAnywayPaymentMicroServiceIntegrationTests.swift
+//  AnywayPaymentTestHelpers.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 11.08.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
+import Foundation
 import RemoteServices
 @testable import ForaBank
-import XCTest
-
-final class InitiateAnywayPaymentMicroServiceIntegrationTests: XCTestCase {
-
-    private typealias Response = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
-    private typealias Transaction = AnywayTransactionState.Transaction
-
-
-}
 
 func makeCreateAnywayTransferResponse(
     finalStep: Bool = false,

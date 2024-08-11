@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 11.08.2024.
 //
 
+#warning("REMOVE AFTER MOVING TO PROD")
 @testable import ForaBank
 
 final class InitiateAnywayPaymentMicroService<Source, Payload, Response, Transaction> {
