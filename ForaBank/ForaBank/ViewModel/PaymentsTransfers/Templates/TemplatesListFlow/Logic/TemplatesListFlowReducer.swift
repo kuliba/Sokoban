@@ -82,6 +82,8 @@ private extension TemplatesListFlowReducer {
         _ effect: inout Effect?,
         with result: Event.PaymentResult
     ) {
+        state.isLoading = false
+        
         switch result {
         case let .failure(serviceFailure):
             state.status = .alert(serviceFailure)
@@ -104,7 +106,7 @@ private extension TemplatesListFlowReducer {
             state.status = .outside(.productID(productID))
             
         case let .template(template):
-            state.status = .outside(.inflight)
+            state.isLoading = true
             effect = .template(template)
         }
     }

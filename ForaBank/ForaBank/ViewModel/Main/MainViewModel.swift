@@ -764,21 +764,20 @@ private extension MainViewModel {
     ) -> AnyCancellable {
         
         templates.$state
-            .map(\.outside)
+            .map(\.external)
             .receive(on: scheduler)
-            .sink { [weak self] in self?.handleTemplatesFlowOutsideState($0) }
+            .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
     
-    private func handleTemplatesFlowOutsideState(
-        _ outside: Templates.State.Status.Outside?
+    private func handleTemplatesFlowState(
+        _ external: Templates.State.ExternalTemplatesListFlowState
     ) {
-        switch outside {
+        rootActions?.showSpinner(external.isLoading)
+
+        switch external.outside {
         case .none:
             rootActions?.spinner.hide()
 
-        case .inflight:
-            rootActions?.spinner.show()
-            
         case let .productID(productID):
             rootActions?.spinner.hide()
             action.send(MainViewModelAction.Close.Link())
@@ -943,19 +942,6 @@ private extension MainViewModel {
         default:
             break
         }
-    }
-}
-
-// MARK: - Templates
-
-extension TemplatesListFlowState {
-    
-    var outside: Status.Outside? {
-        
-        guard case let .outside(outside) = status
-        else { return nil }
- 
-        return outside
     }
 }
 

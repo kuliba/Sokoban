@@ -18,7 +18,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         let (sut, _, statusSpy, _) = makeSUT()
         
-        XCTAssertNoDiff(statusSpy.values, [nil])
+        XCTAssertNoDiff(statusSpy.values, [.init(isLoading: false, nil)])
         XCTAssertNotNil(sut)
     }
     
@@ -40,8 +40,8 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         content.emitProductID(productID)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.productID(productID))
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.productID(productID)))
         ])
         XCTAssertNotNil(sut)
     }
@@ -69,10 +69,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.payloads.last?.1()
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.legacy)),
-            .none
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.legacy))),
+            .init(isLoading: false, .none),
         ])
         XCTAssertNotNil(sut)
     }
@@ -98,9 +98,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .success(makeLegacy()))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.legacy))
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.legacy)))
         ])
         XCTAssertNotNil(sut)
     }
@@ -113,9 +113,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .alert(.connectivityError)
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .alert(.connectivityError))
         ])
         XCTAssertNotNil(sut)
     }
@@ -129,9 +129,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .alert(.serverError(message))
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .alert(.serverError(message)))
         ])
         XCTAssertNotNil(sut)
     }
@@ -144,9 +144,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1))
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1)))
         ])
         XCTAssertNotNil(sut)
     }
@@ -158,8 +158,8 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         sut.event(.flow(.tab(.main)))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.tab(.main))
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.tab(.main))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -171,8 +171,8 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         sut.event(.flow(.tab(.payments)))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.tab(.payments))
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.tab(.payments))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -186,10 +186,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         try paymentFlowEmit(sut, event: .dismiss)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1)),
-            .none
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .none),
         ])
         XCTAssertNotNil(sut)
     }
@@ -203,10 +203,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         try paymentFlowEmit(sut, event: .inflight)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1)),
-            .destination(.payment(.v1)),
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .destination(.payment(.v1))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -220,10 +220,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         try paymentFlowEmit(sut, event: .tab(.chat))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1)),
-            .destination(.payment(.v1)),
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .destination(.payment(.v1))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -237,10 +237,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         try paymentFlowEmit(sut, event: .tab(.main))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1)),
-            .outside(.tab(.main)),
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .outside(.tab(.main))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -254,10 +254,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         try paymentFlowEmit(sut, event: .tab(.payments))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.v1)),
-            .outside(.tab(.payments)),
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .outside(.tab(.payments))),
         ])
         XCTAssertNotNil(sut)
     }
@@ -266,7 +266,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     
     private typealias SUT = TemplatesListFlowModel<Content, PaymentFlow>
     private typealias ProductID = ProductData.ID
-    private typealias StatusSpy = ValueSpy<SUT.State.EquatableStatus?>
+    private typealias StatusSpy = ValueSpy<SUT.State.EquatableState>
     private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentFlow>
     private typealias Transaction = AnywayTransactionState.Transaction
     private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, MicroServices.Payment, ServiceFailure>
@@ -295,7 +295,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .immediate
         )
-        let statusSpy = StatusSpy(sut.$state.map(\.equatableStatus))
+        let statusSpy = StatusSpy(sut.$state.map(\.equatableState))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
@@ -392,26 +392,40 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
 
 private extension TemplatesListFlowState {
     
-    var equatableStatus: EquatableStatus? {
+    var equatableState: EquatableState {
         
         switch status {
         case .none:
-            return .none
+            return .init(isLoading: isLoading, .none)
             
         case let .alert(serviceFailure):
-            return .alert(serviceFailure)
+            return .init(isLoading: isLoading, .alert(serviceFailure))
             
         case let .destination(.payment(payment)):
             switch payment {
             case .legacy:
-                return .destination(.payment(.legacy))
+                return .init(isLoading: isLoading, .destination(.payment(.legacy)))
                 
             case .v1:
-                return .destination(.payment(.v1))
+                return .init(isLoading: isLoading, .destination(.payment(.v1)))
             }
             
         case let .outside(outside):
-            return .outside(outside)
+            return .init(isLoading: isLoading, .outside(outside))
+        }
+    }
+    
+    struct EquatableState: Equatable {
+        
+        let isLoading: Bool
+        let status: EquatableStatus?
+        
+        init(
+            isLoading: Bool,
+            _ status: EquatableStatus?
+        ) {
+            self.isLoading = isLoading
+            self.status = status
         }
     }
     
@@ -445,16 +459,6 @@ private extension TemplatesListFlowModel {
         
         let legacy = try XCTUnwrap(state.legacy, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
         legacy.closeAction()
-    }
-    
-    func paymentFlowEmit(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws {
-        
-        let paymentFlow = try XCTUnwrap(state.paymentFlow, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
-        //        paymentFlow.
-        return unimplemented()
     }
 }
 
