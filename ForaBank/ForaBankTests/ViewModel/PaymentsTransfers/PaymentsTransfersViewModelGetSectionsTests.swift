@@ -81,7 +81,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -104,7 +104,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { sections },
             makeServicePaymentBinder: ServicePaymentBinder.preview,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _,_ in }
         )
     }

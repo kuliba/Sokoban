@@ -804,7 +804,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             with: model,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
@@ -827,7 +827,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: ServicePaymentBinder.preview,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _, completion in
                 
                 completion(.utilities)
@@ -980,8 +980,8 @@ extension PaymentsTransfersViewModel {
     var templatesListViewModel: TemplatesListViewModel? {
         
         switch route.destination {
-        case let .template(templatesListViewModel):
-            return templatesListViewModel
+        case let .templates(node):
+            return node.model.state.content
             
         default:
             return nil

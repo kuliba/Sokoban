@@ -179,8 +179,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
-        case let .templates(templatesViewModel):
-            TemplatesListView(viewModel: templatesViewModel)
+        case let .templates(node):
+            TemplatesListFlowView(model: node.model)
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)
@@ -551,7 +551,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -580,7 +580,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -609,7 +609,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),

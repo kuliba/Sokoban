@@ -14,6 +14,8 @@ import OperatorsListComponents
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
+    typealias Templates = PaymentsTransfersFactory.Templates
+    typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
@@ -172,13 +174,29 @@ extension PaymentsTransfersViewModel {
         
         let qrModel = qrViewModelFactory.makeQRScannerModel()
         let cancellable = bind(qrModel)
-        
-        self.route.modal = .fullScreenSheet(.init(
+        var route = route
+        route.modal = .fullScreenSheet(.init(
             type: .qrScanner(.init(
                 model: qrModel,
                 cancellable: cancellable
             ))
         ))
+        routeSubject.send(route)
+    }
+    
+    private func openTemplates() {
+        
+        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
+            
+            self?.event(.dismiss(.destination))
+        }
+        let cancellable = bind(templates)
+        var route = route
+        route.destination = .templates(.init(
+            model: templates,
+            cancellable: cancellable
+        ))
+        routeSubject.send(route)
     }
     
     func dismissPaymentProviderPicker() {
@@ -455,7 +473,7 @@ extension PaymentsTransfersViewModel {
         case service(OperatorsViewModel)
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
-        case template(TemplatesListViewModel)
+        case templates(TemplatesNode)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
@@ -562,7 +580,7 @@ extension PaymentsTransfersViewModel.Link {
             return .internet
         case .transport:
             return .transport
-        case .template:
+        case .templates:
             return .template
         case .country:
             return .country
@@ -984,7 +1002,7 @@ private extension PaymentsTransfersViewModel {
                 
                 //LatestPayment Section TemplateButton
             case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                handleTemplatesButtonTapped()
+                openTemplates()
                 
             case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                 handleCurrencyWalletButtonTapped()
@@ -1013,17 +1031,6 @@ private extension PaymentsTransfersViewModel {
                 .sink { [weak self] in self?.handlePaymentButtonTapped($0) }
                 .store(in: &bindings)
         }
-    }
-    
-    private func handleTemplatesButtonTapped() {
-        
-        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
-            
-            self?.event(.dismiss(.destination))
-        }
-        
-        bind(viewModel)
-        route.destination = .template(viewModel)
     }
     
     private func handleCurrencyWalletButtonTapped() {
@@ -1219,30 +1226,30 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+    private func bind(
+        _ templates: Templates
+    ) -> AnyCancellable {
         
-        templatesListViewModel.action
+        templates.$state
+            .compactMap(\.status)
             .receive(on: scheduler)
-            .sink { [unowned self] action in
+            .sink { [weak self] status in
                 
-                switch action {
-                case let payload as TemplatesListViewModelAction.OpenProductProfile:
-                    
+                guard let self else { return }
+                
+                switch status {
+                case let .outside(.productID(productID)):
                     self.event(.dismiss(.destination))
                     self.delay(for: .milliseconds(800)) {
                         
                         self.action.send(
                             PaymentsTransfersViewModelAction.Show.ProductProfile(
-                                productId: payload.productId
+                                productId: productID
                             )
                         )
                     }
-                    
-                default:
-                    break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func bind(_ productProfile: ProductProfileViewModel) {
