@@ -607,7 +607,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getOutlineProduct: { outlineProduct })
+        let sut = SUT(getOutlineProduct: { _ in outlineProduct })
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

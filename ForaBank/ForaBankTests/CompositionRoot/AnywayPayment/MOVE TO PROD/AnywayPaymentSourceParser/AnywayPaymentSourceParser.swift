@@ -20,7 +20,7 @@ final class AnywayPaymentSourceParser {
         self.getOutlineProduct = getOutlineProduct
     }
     
-    typealias GetOutlineProduct = () -> AnywayPaymentOutline.Product?
+    typealias GetOutlineProduct = (Source) -> AnywayPaymentOutline.Product?
 }
 
 extension AnywayPaymentSourceParser {
@@ -108,6 +108,6 @@ private extension AnywayPaymentSourceParser {
         for source: Source
     ) -> AnywayPaymentOutline.Product? {
         
-        getOutlineProduct()
+        getOutlineProduct(source)
     }
 }
