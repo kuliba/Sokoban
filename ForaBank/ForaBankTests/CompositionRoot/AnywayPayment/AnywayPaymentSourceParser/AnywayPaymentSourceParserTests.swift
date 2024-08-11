@@ -216,6 +216,40 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNil(output.firstField)
     }
     
+    func test_parse_latest_shouldDeliverOutput() throws {
+        
+        let amount = anyAmount()
+        let product = makeOutlineProduct()
+        let (name, value) = (anyMessage(), anyMessage())
+        let additional = makeAdditional(fieldName: name, fieldValue: value)
+        let (puref, title, icon) = (anyMessage(), anyMessage(), anyMessage())
+        let source = latest(
+            additionalItems: [additional],
+            amount: amount,
+            icon: icon,
+            puref: puref,
+            title: title
+        )
+        let sut = makeSUT(outlineProduct: product)
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output, .init(
+            outline: .init(
+                amount: amount,
+                product: product,
+                fields: [name: value],
+                payload: .init(
+                    puref: puref,
+                    title: title,
+                    subtitle: nil,
+                    icon: icon
+                )
+            ),
+            firstField: nil
+        ))
+    }
+    
     // MARK: - oneOf
     
     func test_parse_oneOf_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
@@ -336,6 +370,36 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: .md5Hash(icon)))
     }
 
+    func test_parse_oneOf_shouldDeliverOutput() throws {
+        
+        let product = makeOutlineProduct()
+        let (puref, title, name, subtitle, icon) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let source = oneOf(name: name, puref: puref, title: title, subtitle: subtitle, icon: icon)
+        let sut = makeSUT(outlineProduct: product)
+
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output, .init(
+            outline: .init(
+                amount: nil,
+                product: product,
+                fields: .init(),
+                payload: .init(
+                    puref: puref,
+                    title: title,
+                    subtitle: subtitle,
+                    icon: icon
+                )
+            ),
+            firstField: .init(
+                id: "_selected_service",
+                title: "Услуга",
+                value: name,
+                icon: .md5Hash(icon)
+            )
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentSourceParser
