@@ -31,7 +31,7 @@ extension InitiateAnywayPaymentMicroService {
     typealias ProcessPayloadCompletion = (Result<Response, ServiceFailure>) -> Void
     typealias ProcessPayload = (Payload, @escaping ProcessPayloadCompletion) -> Void
     
-    typealias InitiateTransaction = (Response) -> Transaction?
+    typealias InitiateTransaction = (Payload, Response) -> Transaction?
     
     typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
 }
@@ -59,7 +59,7 @@ extension InitiateAnywayPaymentMicroService {
                 completion(.failure(serviceFailure))
                 
             case let .success(response):
-                guard let transaction = initiateTransaction(response) else {
+                guard let transaction = initiateTransaction(payload, response) else {
                     
                     return completion(.failure(.connectivityError))
                 }

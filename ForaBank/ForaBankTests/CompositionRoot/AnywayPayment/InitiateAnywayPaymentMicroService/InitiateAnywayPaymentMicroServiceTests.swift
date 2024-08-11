@@ -96,7 +96,7 @@ final class InitiateAnywayPaymentMicroServiceTests: XCTestCase {
         let sut = SUT(
             parseSource: { _ in paymentSourceParsingResult },
             processPayload: remote.process(_:completion:),
-            initiateTransaction: { _ in initiateTransactionResult }
+            initiateTransaction: { _,_ in initiateTransactionResult }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
