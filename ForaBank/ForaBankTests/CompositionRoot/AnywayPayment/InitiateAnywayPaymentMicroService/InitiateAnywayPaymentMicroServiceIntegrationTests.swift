@@ -63,7 +63,7 @@ private func makeAnywayPaymentOutline(
     return .init(amount: amount, product: product, fields: fields, payload: payload)
 }
 
-private func makeOutlineProduct(
+func makeOutlineProduct(
     currency: String = anyMessage(),
     productID: Int = .random(in: 1...100),
     productType: AnywayPaymentOutline.Product.ProductType = .card
