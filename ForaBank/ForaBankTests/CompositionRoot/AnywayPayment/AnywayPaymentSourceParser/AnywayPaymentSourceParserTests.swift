@@ -26,8 +26,11 @@ extension AnywayPaymentSourceParser {
     enum Source: Equatable {
         
         case latest(Latest)
+        case oneOf(Service, Operator)
         
         typealias Latest = RemoteServices.ResponseMapper.LatestServicePayment
+        typealias Operator = UtilityPaymentOperator
+        typealias Service = UtilityService
     }
     
     struct Output: Equatable {
@@ -49,6 +52,19 @@ extension AnywayPaymentSourceParser {
                     product: product
                 ),
                 firstField: nil
+            )
+            
+        case let .oneOf(service, `operator`):
+            return .init(
+                outline: .init(
+                    operator: `operator`,
+                    puref: service.puref,
+                    product: product
+                ),
+                firstField: .init(
+                    service: service,
+                    icon: `operator`.icon
+                )
             )
         }
     }
@@ -191,6 +207,135 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         XCTAssertNoDiff(output.outline.payload.icon, icon)
     }
     
+    func test_parse_latest_shouldSetFirstFieldToNil() throws {
+        
+        let source = latest()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.firstField)
+    }
+    
+    // MARK: - oneOf
+    
+    func test_parse_oneOf_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
+        
+        let sut = makeSUT(outlineProduct: nil)
+        
+        try XCTAssertThrowsError(sut.parse(source: oneOf())) {
+            
+            XCTAssertNoDiff($0 as? SUT.ParsingError, .missingProduct)
+        }
+    }
+    
+    func test_parse_oneOf_shouldSetOutlineAmountToNil() throws {
+        
+        let source = oneOf()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.amount)
+    }
+    
+    func test_parse_oneOf_shouldSetOutlineProduct() throws {
+        
+        let product = makeOutlineProduct()
+        let sut = makeSUT(outlineProduct: product)
+        let source = oneOf()
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.product, product)
+    }
+    
+    func test_parse_oneOf_shouldSetEmptyOutlineFields() throws {
+        
+        let source = oneOf()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, .init())
+    }
+        
+    func test_parse_oneOf_shouldSetOutlinePayloadPuref() throws {
+        
+        let puref = anyMessage()
+        let source = oneOf(puref: puref)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.puref, puref)
+    }
+    
+    func test_parse_oneOf_shouldSetOutlinePayloadTitle() throws {
+        
+        let title = anyMessage()
+        let source = oneOf(title: title)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.title, title)
+    }
+    
+    func test_parse_oneOf_shouldSetNilOutlinePayloadSubtitle() throws {
+        
+        let source = oneOf()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_oneOf_shouldSetOutlinePayloadSubtitle() throws {
+        
+        let subtitle = anyMessage()
+        let source = oneOf(subtitle: subtitle)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.subtitle, subtitle)
+    }
+    
+    func test_parse_oneOf_shouldSetNilOutlinePayloadIconOnNil() throws {
+        
+        let source = oneOf(icon: nil)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.outline.payload.subtitle)
+    }
+    
+    func test_parse_oneOf_shouldSetOutlinePayloadIcon() throws {
+        
+        let icon = anyMessage()
+        let source = oneOf(icon: icon)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.icon, icon)
+    }
+    
+    func test_parse_oneOf_shouldSetFirstFieldWithNilIcon() throws {
+        
+        let name = anyMessage()
+        let source = oneOf(name: name, icon: nil)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: nil))
+    }
+
+    func test_parse_oneOf_shouldSetFirstField() throws {
+        
+        let name = anyMessage()
+        let icon = anyMessage()
+        let source = oneOf(name: name, icon: icon)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.firstField, .init(id: "_selected_service", title: "Услуга", value: name, icon: .md5Hash(icon)))
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentSourceParser
@@ -259,6 +404,21 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
             fieldValue: fieldValue,
             fieldTitle: fieldTitle,
             svgImage: svgImage
+        )
+    }
+    
+    private func oneOf(
+        name: String = anyMessage(),
+        puref: String = anyMessage(),
+        id: String = anyMessage(),
+        title: String = anyMessage(),
+        subtitle: String? = nil,
+        icon: String? = nil
+    ) -> AnywayPaymentSourceParser.Source {
+        
+        return .oneOf(
+            .init(name: name, puref: puref),
+            .init(id: id, title: title, subtitle: subtitle, icon: icon)
         )
     }
 }
