@@ -50,49 +50,16 @@ extension AnywayPaymentSourceParser {
         
         switch source {
         case let .latest(latest):
-            return .init(
-                outline: .init(
-                    latestServicePayment: latest,
-                    product: product
-                ),
-                firstField: nil
-            )
+            return self.latest(latest, product)
             
         case let .oneOf(service, `operator`):
-            return .init(
-                outline: .init(
-                    operator: `operator`,
-                    puref: service.puref,
-                    product: product
-                ),
-                firstField: .init(
-                    service: service,
-                    icon: `operator`.icon
-                )
-            )
+            return oneOf(service, `operator`, product)
             
         case let .picked(item, payload):
-            return .init(
-                outline: .init(
-                    service: item.service,
-                    payload: payload,
-                    product: product
-                ),
-                firstField: .init(
-                    service: item.isOneOf ? item.service : nil,
-                    icon: payload.provider.origin.icon
-                )
-            )
+            return picked(item, payload, product)
             
         case let .single(service, `operator`):
-            return .init(
-                outline: .init(
-                    operator: `operator`,
-                    puref: service.puref,
-                    product: product
-                ),
-                firstField: nil
-            )
+            return single(service, `operator`, product)
         }
     }
     
@@ -107,7 +74,75 @@ private extension AnywayPaymentSourceParser {
     func getOutlineProduct(
         for source: Source
     ) -> AnywayPaymentOutline.Product? {
-        
+        // TODO: implement extraction of particular product with fallback to first eligible
         getOutlineProduct(source)
+    }
+    
+    func latest(
+        _ latest: Source.Latest,
+        _ product: AnywayPaymentOutline.Product
+    ) -> Output {
+        
+        return .init(
+            outline: .init(
+                latestServicePayment: latest,
+                product: product
+            ),
+            firstField: nil
+        )
+    }
+    
+    func oneOf(
+        _ service: Source.Service,
+        _ `operator`: Source.Operator,
+        _ product: AnywayPaymentOutline.Product
+    ) -> Output {
+        
+        return .init(
+            outline: .init(
+                operator: `operator`,
+                puref: service.puref,
+                product: product
+            ),
+            firstField: .init(
+                service: service,
+                icon: `operator`.icon
+            )
+        )
+    }
+    
+    func picked(
+        _ item: ServicePickerItem,
+        _ payload: PaymentProviderServicePickerPayload,
+        _ product: AnywayPaymentOutline.Product
+    ) -> Output {
+        
+        return .init(
+            outline: .init(
+                service: item.service,
+                payload: payload,
+                product: product
+            ),
+            firstField: .init(
+                service: item.isOneOf ? item.service : nil,
+                icon: payload.provider.origin.icon
+            )
+        )
+    }
+    
+    func single(
+    _ service: Source.Service,
+    _ `operator`: Source.Operator,
+    _ product: AnywayPaymentOutline.Product
+    ) -> Output {
+        
+        return .init(
+            outline: .init(
+                operator: `operator`,
+                puref: service.puref,
+                product: product
+            ),
+            firstField: nil
+        )
     }
 }
