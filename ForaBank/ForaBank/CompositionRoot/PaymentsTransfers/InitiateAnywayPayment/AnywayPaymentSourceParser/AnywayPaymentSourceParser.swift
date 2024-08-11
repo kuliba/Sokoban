@@ -8,8 +8,6 @@
 import AnywayPaymentDomain
 import Foundation
 import RemoteServices
-#warning("REMOVE AFTER MOVING TO PROD")
-@testable import ForaBank
 
 final class AnywayPaymentSourceParser {
     
