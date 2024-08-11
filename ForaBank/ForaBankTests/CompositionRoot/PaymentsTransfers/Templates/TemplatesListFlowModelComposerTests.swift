@@ -87,6 +87,16 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         assertV1Destination(flowModel)
     }
     
+    func test_compose_shouldDeliverLegacyOnSuccessForActiveLiveFlagForDifferentTemplateType() throws {
+        
+        let (sut, _) = makeSUT(flag: .active(.live))
+        let flowModel = sut.compose {}
+        
+        flowModel.select(makeTemplate(type: .sfp))
+        
+        assertLegacyDestination(flowModel)
+    }
+    
     // MARK: - Helpers
     
     private typealias Flag = UtilitiesPaymentsFlag
@@ -133,7 +143,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     
     private func makeTemplate(
         id: Int = .random(in: 1...100),
-        type: PaymentTemplateData.Kind = .sfp
+        type: PaymentTemplateData.Kind = .housingAndCommunalService
     ) -> PaymentTemplateData {
         
         return .templateStub(paymentTemplateId: id, type: type)
