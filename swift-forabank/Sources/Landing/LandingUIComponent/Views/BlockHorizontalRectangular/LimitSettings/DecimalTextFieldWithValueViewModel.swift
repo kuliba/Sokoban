@@ -9,6 +9,7 @@ import Foundation
 import TextFieldDomain
 import TextFieldUI
 import TextFieldModel
+import SwiftUI
 
 typealias DecimalTextFieldWithValueViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
 
@@ -25,7 +26,7 @@ extension DecimalTextFieldWithValueViewModel {
         let reducer = ChangingReducer.decimal(
             formatter: formatter
         )
-        let initialState = reducer.setToValue(maxValue)
+        let initialState = maxValue >= .maxLimit ? .noFocus("Без ограничений") : reducer.setToValue(maxValue)
         
         return .init(
             initialState: initialState,
@@ -33,6 +34,20 @@ extension DecimalTextFieldWithValueViewModel {
             keyboardType: .decimal,
             scheduler: scheduler
         )
+    }
+    
+    func textFieldColor(
+        first: Color,
+        second: Color
+    ) -> Color {
+        
+        guard let text = state.text else { return first }
+        
+        let decimalCharacters = CharacterSet.decimalDigits
+
+        let decimalRange = text.rangeOfCharacter(from: decimalCharacters)
+        
+        return (decimalRange != nil) ? first : second
     }
 }
 
@@ -59,4 +74,9 @@ private extension ChangingReducer {
             return .placeholder("")
         }
     }
+}
+
+extension Decimal {
+    
+    static let maxLimit: Self = 999999999
 }

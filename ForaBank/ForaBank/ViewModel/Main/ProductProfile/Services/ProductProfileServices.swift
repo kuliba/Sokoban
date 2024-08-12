@@ -8,6 +8,7 @@
 import Foundation
 import LandingUIComponent
 import LandingMapping
+import GetInfoRepeatPaymentService
 
 struct ProductProfileServices {
     
@@ -17,7 +18,8 @@ struct ProductProfileServices {
     let createCreateGetSVCardLimits: GetSVCardLimitsServices
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
-
+    let repeatPayment: InfoRepeatPaymentServices
+    
     let makeSVCardLandingViewModel: (Landing, ListHorizontalRectangleLimitsViewModel?, UILanding.Component.Config, @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel?
     
@@ -37,6 +39,7 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
+        repeatPayment: .preview(),
         makeSVCardLandingViewModel: { _,_,_,_  in nil },
         makeInformer: { _ in }
     )

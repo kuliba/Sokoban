@@ -193,12 +193,18 @@ public extension LandingWrapperViewModel {
 }
 
 public struct LandingWrapperView: View {
-        
-    @ObservedObject private var viewModel: LandingWrapperViewModel
+     
+    public typealias UpdateSaveButtonAction = () -> Void
     
-    public init(viewModel: LandingWrapperViewModel) {
-        
+    @ObservedObject private var viewModel: LandingWrapperViewModel
+    private let updateSaveButtonAction: UpdateSaveButtonAction?
+    
+    public init(
+        viewModel: LandingWrapperViewModel,
+        updateSaveButtonAction: UpdateSaveButtonAction? = nil
+    ) {
         self.viewModel = viewModel
+        self.updateSaveButtonAction = updateSaveButtonAction
     }
     
     @ViewBuilder
@@ -220,6 +226,7 @@ public struct LandingWrapperView: View {
                 viewModel.cardLimitsInfo,
                 {
                     viewModel.newLimitsValue.updateOrAddLimit($0)
+                    if let updateSaveButtonAction { updateSaveButtonAction() }
                 },
                 { 
                     return viewModel.newLimitsValue

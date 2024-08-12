@@ -17,17 +17,20 @@ final class ControlPanelEffectHandler {
     private let productProfileServices: ProductProfileServices
     private let landingEvent: (LandingEvent) -> Void
     private let card: ProductCardData
-    
+    private let hideKeyboard: () -> Void
+
     init(
         card: ProductCardData,
         productProfileServices: ProductProfileServices,
         landingEvent: @escaping (LandingEvent) -> Void,
-        handleModelEffect: @escaping HandleModelEffect
+        handleModelEffect: @escaping HandleModelEffect,
+        hideKeyboard: @escaping () -> Void
     ) {
         self.card = card
         self.productProfileServices = productProfileServices
         self.landingEvent = landingEvent
         self.handleModelEffect = handleModelEffect
+        self.hideKeyboard = hideKeyboard
     }
 }
 
@@ -169,6 +172,8 @@ private extension ControlPanelEffectHandler {
             }
             
         case let .saveLimits(limits):
+            
+            hideKeyboard()
             
             productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
                 
