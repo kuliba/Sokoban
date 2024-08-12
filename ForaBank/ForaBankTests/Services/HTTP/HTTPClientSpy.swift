@@ -13,6 +13,7 @@ final class HTTPClientSpy: HTTPClient {
     typealias Message = (request: Request, completion: Completion)
     
     private var messages = [Message]()
+    var callCount: Int { messages.count }
     
     var requests: [Request] { messages.map(\.request) }
     

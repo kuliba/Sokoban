@@ -233,8 +233,15 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .templates(node):
-            TemplatesListFlowView(model: node.model)
-            
+            TemplatesListFlowView(
+                model: node.model,
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: {
+                    
+                    viewFactory.makeIconView($0.map { .svg($0) })
+                }
+            )
+
         case let .currencyWallet(currencyWalletViewModel):
             CurrencyWalletView(viewModel: currencyWalletViewModel)
             
@@ -1143,7 +1150,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: { .init(event: $0 ) }
+                makeHistoryButton: { .init(event: $0 ) },
+                makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
         )

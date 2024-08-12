@@ -8,13 +8,20 @@
 import Combine
 import SwiftUI
 
-struct TemplatesListFlowView: View {
+struct TemplatesListFlowView<AnywayFlowView: View>: View {
     
     @ObservedObject var model: Model
+    
+    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
+    let makeIconView: (String?) -> IconDomain.IconView
     
     var body: some View {
         
         TemplatesListView(viewModel: model.state.content)
+            .alert(
+                item: model.state.alert,
+                content: alertContent
+            )
             .navigationDestination(
                 destination: model.state.destination,
                 dismissDestination: { model.event(.dismiss(.destination)) },
@@ -24,10 +31,19 @@ struct TemplatesListFlowView: View {
 }
 
 extension TemplatesListFlowView {
-    typealias Model = TemplatesListFlowModel<TemplatesListViewModel>
+    
+    typealias Model = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
 }
 
 extension TemplatesListFlowState {
+    
+    var alert: Status.ServiceFailure? {
+        
+        guard case let .alert(alert) = status
+        else { return nil }
+        
+        return alert
+    }
     
     var destination: Status.Destination? {
         
@@ -39,7 +55,7 @@ extension TemplatesListFlowState {
 }
 
 extension TemplatesListFlowState.Status.Destination: Identifiable {
- 
+    
     var id: ID {
         
         switch self {
@@ -77,6 +93,17 @@ extension TemplatesListViewModel: TemplateEmitter {
 
 private extension TemplatesListFlowView {
     
+    func alertContent(
+        failure: ServiceFailureAlert.ServiceFailure
+    ) -> Alert {
+        
+        return failure.alert(
+            connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+            event: .payments,
+            action: { model.event(.flow(.init(status: .tab($0)))) }
+        )
+    }
+    
     @ViewBuilder
     func destinationContent(
         destination: Model.State.Status.Destination
@@ -87,6 +114,18 @@ private extension TemplatesListFlowView {
             switch payment {
             case let .legacy(paymentsViewModel):
                 PaymentsView(viewModel: paymentsViewModel)
+                
+            case let .v1(node):
+                let payload = node.model.state.content.state.transaction.context.outline.payload
+                
+                makeAnywayFlowView(node.model)
+                    .navigationBarWithAsyncIcon(
+                        title: payload.title,
+                        subtitle: payload.subtitle,
+                        dismiss: { model.event(.dismiss(.destination)) },
+                        icon: makeIconView(payload.icon),
+                        style: .normal
+                    )
             }
         }
     }

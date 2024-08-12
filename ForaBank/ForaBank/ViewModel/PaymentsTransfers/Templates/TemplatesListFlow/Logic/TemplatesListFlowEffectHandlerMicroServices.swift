@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 09.08.2024.
 //
 
-struct TemplatesListFlowEffectHandlerMicroServices {
+struct TemplatesListFlowEffectHandlerMicroServices<PaymentFlow> {
     
     let makePayment: MakePayment
 }
@@ -13,7 +13,14 @@ struct TemplatesListFlowEffectHandlerMicroServices {
 extension TemplatesListFlowEffectHandlerMicroServices {
     
     typealias MakePaymentPayload = (PaymentTemplateData, () -> Void)
-    typealias MakePaymentResult = TemplatesListFlowEvent.PaymentResult
+    typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
+    typealias MakePaymentResult = Result<Payment, ServiceFailure>
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (MakePaymentPayload, @escaping MakePaymentCompletion) -> Void
+    
+    enum Payment {
+        
+        case legacy(PaymentsViewModel)
+        case v1(PaymentFlow)
+    }
 }

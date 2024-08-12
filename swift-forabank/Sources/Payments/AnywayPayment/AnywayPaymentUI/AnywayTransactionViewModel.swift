@@ -70,9 +70,10 @@ public extension AnywayTransactionViewModel {
         let (transaction, effect) = reduce(state.transaction, event)
         
         if transaction != state.transaction {
-            
             let state = updating(state, with: transaction)
             stateSubject.send(state)            
+
+            updateValues(with: transaction)
             sendOTPWarning(state)
         }
         
@@ -107,6 +108,19 @@ public extension AnywayTransactionViewModel {
 
 private extension AnywayTransactionViewModel {
     
+    func updateValues(
+        with transaction: State.Transaction
+    ) {
+        transaction.context.payment.elements.forEach { element in
+            
+            guard let model = state.models[element.id],
+                  let value = element.value
+            else { return }
+            
+            model.receive(.updateValueTo(value))
+        }
+    }
+
     func sendOTPWarning(
         _ state: State
     ) {
@@ -136,6 +150,23 @@ private extension AnywayTransactionViewModel {
                 }
             }
         )
+    }
+}
+
+private extension AnywayElement {
+    
+    var value: String? {
+        
+        switch self {
+        case let .field(field):
+            return field.value
+            
+        case let .parameter(parameter):
+            return parameter.field.value
+            
+        case .widget:
+            return nil
+        }
     }
 }
 

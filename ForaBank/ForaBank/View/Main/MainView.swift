@@ -180,7 +180,14 @@ struct MainView<NavigationOperationView: View>: View {
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(node):
-            TemplatesListFlowView(model: node.model)
+            TemplatesListFlowView(
+                model: node.model,
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: {
+                    
+                    viewFactory.makeIconView($0.map { .svg($0) })
+                }
+            )
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)
@@ -514,7 +521,8 @@ struct MainView_Previews: PreviewProvider {
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:)
+                makeHistoryButton: HistoryButtonView.init(event:),
+                makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
         )

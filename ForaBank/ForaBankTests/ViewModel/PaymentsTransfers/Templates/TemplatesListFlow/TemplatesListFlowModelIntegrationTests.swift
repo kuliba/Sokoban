@@ -18,7 +18,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         
         let (sut, _, statusSpy, _) = makeSUT()
         
-        XCTAssertNoDiff(statusSpy.values, [nil])
+        XCTAssertNoDiff(statusSpy.values, [.init(isLoading: false, nil)])
         XCTAssertNotNil(sut)
     }
     
@@ -40,8 +40,8 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         content.emitProductID(productID)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.productID(productID))
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.productID(productID)))
         ])
         XCTAssertNotNil(sut)
     }
@@ -69,10 +69,10 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.payloads.last?.1()
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.legacy)),
-            .none
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.legacy))),
+            .init(isLoading: false, .none),
         ])
         XCTAssertNotNil(sut)
     }
@@ -90,7 +90,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
-    func test_shouldSetLegacyPaymentDestinationOnContentEmittingTemplate() {
+    func test_shouldDeliverLegacyPaymentDestinationOnContentEmittingTemplate() {
         
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
@@ -98,14 +98,14 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .success(makeLegacy()))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .destination(.payment(.legacy))
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.legacy)))
         ])
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetConnectivityAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+    func test_shouldDeliverConnectivityAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
         
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
         
@@ -113,14 +113,14 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .failure(.connectivityError))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .alert(.connectivityError)
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .alert(.connectivityError))
         ])
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetServerErrorAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
+    func test_shouldDeliverServerErrorAlertOnMakePaymentServerErrorOnContentEmittingTemplate() {
         
         let message = anyMessage()
         let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
@@ -129,20 +129,147 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy.complete(with: .failure(.serverError(message)))
         
         XCTAssertNoDiff(statusSpy.values, [
-            .none,
-            .outside(.inflight),
-            .alert(.serverError(message))
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .alert(.serverError(message)))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetV1PaymentDestinationOnContentEmittingTemplate() {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1)))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStateToOutsideMainOnMainTabFlowEvent() {
+        
+        let (sut, _, statusSpy,_) = makeSUT()
+        
+        sut.event(.flow(.init(status: .tab(.main))))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.tab(.main))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStateToOutsidePaymentsOnPaymentsTabFlowEvent() {
+        
+        let (sut, _, statusSpy,_) = makeSUT()
+        
+        sut.event(.flow(.init(status: .tab(.payments))))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: false, .outside(.tab(.payments))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldChangeIsLoadingOnV1PaymentDestinationEmitting() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(isLoading: true))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: true, .destination(.payment(.v1))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldDismissDestinationOnV1PaymentDestinationEmittingDismiss() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(status: .dismiss))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .none),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingChat() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.chat)))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .destination(.payment(.v1))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingMain() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.main)))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .outside(.tab(.main))),
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_shouldSetStatusToTabOnV1PaymentDestinationEmittingPayments() throws {
+        
+        let (sut, content, statusSpy, makePaymentSpy) = makeSUT()
+        
+        content.emitTemplate(makeTemplate())
+        makePaymentSpy.complete(with: .success(.v1(makePaymentFlow())))
+        try paymentFlowEmit(sut, event: .init(status: .tab(.payments)))
+        
+        XCTAssertNoDiff(statusSpy.values, [
+            .init(isLoading: false, .none),
+            .init(isLoading: true, .none),
+            .init(isLoading: false, .destination(.payment(.v1))),
+            .init(isLoading: false, .outside(.tab(.payments))),
         ])
         XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = TemplatesListFlowModel<Content>
+    private typealias SUT = TemplatesListFlowModel<Content, PaymentFlow>
     private typealias ProductID = ProductData.ID
-    private typealias StatusSpy = ValueSpy<SUT.State.EquatableStatus?>
-    private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices
-    private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, SUT.Event.Payment, ServiceFailure>
+    private typealias StatusSpy = ValueSpy<SUT.State.EquatableState>
+    private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentFlow>
+    private typealias Transaction = AnywayTransactionState.Transaction
+    private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, MicroServices.Payment, ServiceFailure>
     private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
     
     private func makeSUT(
@@ -155,9 +282,9 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
         makePaymentSpy: MakePaymentSpy
     ) {
         let content = Content()
-        let reducer = TemplatesListFlowReducer<Content>()
+        let reducer = TemplatesListFlowReducer<Content, PaymentFlow>()
         let makePaymentSpy = MakePaymentSpy()
-        let effectHandler = TemplatesListFlowEffectHandler(
+        let effectHandler = TemplatesListFlowEffectHandler<PaymentFlow>(
             microServices: .init(
                 makePayment: makePaymentSpy.process(_:completion:)
             )
@@ -168,7 +295,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .immediate
         )
-        let statusSpy = StatusSpy(sut.$state.map(\.equatableStatus))
+        let statusSpy = StatusSpy(sut.$state.map(\.equatableState))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(content, file: file, line: line)
@@ -194,13 +321,18 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     private func makeLegacy(
         _ template: PaymentTemplateData? = nil,
         close: @escaping () -> Void = {}
-    ) -> SUT.Event.Payment {
+    ) -> MicroServices.Payment {
         
         return .legacy(.init(
             source: .template((template ?? makeTemplate()).id),
             model: .emptyMock,
             closeAction: close
         ))
+    }
+    
+    private func makePaymentFlow() -> PaymentFlow {
+        
+        return .init()
     }
     
     private final class Content: ProductIDEmitter & TemplateEmitter {
@@ -228,27 +360,72 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
             templateSubject.send(template)
         }
     }
+    
+    private final class PaymentFlow: FlowEventPublishing {
+        
+        private let subject = PassthroughSubject<FlowEvent, Never>()
+        
+        var flowEventPublisher: AnyPublisher<FlowEvent, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ event: FlowEvent) {
+            
+            subject.send(event)
+        }
+    }
+    
+    // MARK: - DSL
+    
+    private func paymentFlowEmit(
+        _ sut: SUT,
+        event: FlowEvent,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let paymentFlow = try XCTUnwrap(sut.state.paymentFlow, "Expected to have legacy payment, but got nil instead.", file: file, line: line)
+        paymentFlow.emit(event)
+    }
 }
 
 private extension TemplatesListFlowState {
     
-    var equatableStatus: EquatableStatus? {
+    var equatableState: EquatableState {
         
         switch status {
         case .none:
-            return .none
+            return .init(isLoading: isLoading, .none)
             
         case let .alert(serviceFailure):
-            return .alert(serviceFailure)
+            return .init(isLoading: isLoading, .alert(serviceFailure))
             
         case let .destination(.payment(payment)):
             switch payment {
             case .legacy:
-                return .destination(.payment(.legacy))
+                return .init(isLoading: isLoading, .destination(.payment(.legacy)))
+                
+            case .v1:
+                return .init(isLoading: isLoading, .destination(.payment(.v1)))
             }
             
         case let .outside(outside):
-            return .outside(outside)
+            return .init(isLoading: isLoading, .outside(outside))
+        }
+    }
+    
+    struct EquatableState: Equatable {
+        
+        let isLoading: Bool
+        let status: EquatableStatus?
+        
+        init(
+            isLoading: Bool,
+            _ status: EquatableStatus?
+        ) {
+            self.isLoading = isLoading
+            self.status = status
         }
     }
     
@@ -265,6 +442,7 @@ private extension TemplatesListFlowState {
             enum Payment: Equatable {
                 
                 case legacy
+                case v1
             }
         }
     }
@@ -292,5 +470,13 @@ private extension TemplatesListFlowState {
         else { return nil }
         
         return legacy
+    }
+    
+    var paymentFlow: PaymentFlow? {
+        
+        guard case let .payment(.v1(node)) = destination
+        else { return nil }
+        
+        return node.model
     }
 }

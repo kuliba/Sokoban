@@ -43,7 +43,7 @@ extension PaymentsTransfersFactory {
     
     typealias DismissAction = () -> Void
     typealias TemplatesNode = Node<Templates>
-    typealias Templates = TemplatesListFlowModel<TemplatesListViewModel>
+    typealias Templates = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
     typealias MakeTemplates = (@escaping DismissAction) -> Templates
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
@@ -180,12 +180,12 @@ extension ServicePaymentBinder {
     }
 }
 
-extension TemplatesListFlowModel<TemplatesListViewModel> {
+extension TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel> {
     
     static var sampleComplete: Self {
         
-        let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
-        let microServices = TemplatesListFlowEffectHandlerMicroServices(
+        let reducer = TemplatesListFlowReducer<TemplatesListViewModel, AnywayFlowModel>()
+        let microServices = TemplatesListFlowEffectHandlerMicroServices<AnywayFlowModel>(
             makePayment: { payload, completion in
                 
                 let (template, close) = payload
@@ -197,7 +197,7 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
                 ))))
             }
         )
-        let effectHandler = TemplatesListFlowEffectHandler(
+        let effectHandler = TemplatesListFlowEffectHandler<AnywayFlowModel>(
             microServices: microServices
         )
         

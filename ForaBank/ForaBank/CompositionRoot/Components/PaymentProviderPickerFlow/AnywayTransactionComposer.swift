@@ -52,8 +52,7 @@ extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: firstField,
-            product: product
+            firstField: firstField
         )
         
         return .init(
@@ -113,8 +112,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: nil,
-            product: product
+            firstField: nil
         )
         
         return .init(
@@ -142,8 +140,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: firstField,
-            product: product
+            firstField: firstField
         )
         
         return .init(
@@ -167,8 +164,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: nil,
-            product: product
+            firstField: nil
         )
         
         return .init(
@@ -178,7 +174,7 @@ private extension AnywayTransactionComposer {
     }
 }
     
-private extension AnywayPaymentOutline {
+extension AnywayPaymentOutline {
     
     init(
         service: UtilityService,
@@ -201,12 +197,12 @@ private extension AnywayPaymentOutline {
     }
 }
 
-private extension PaymentProviderServicePickerPayload {
+extension QRCode {
     
-    var amount: Decimal? {
+    func amount(for qrMapping: QRMapping) -> Decimal? {
         
         do {
-            let double: Double = try qrCode.value(
+            let double: Double = try value(
                 type: .general(.amount),
                 mapping: qrMapping
             )
@@ -217,7 +213,8 @@ private extension PaymentProviderServicePickerPayload {
     }
     
     func fields(
-        matching `operator`: String
+        matching `operator`: String,
+        for qrMapping: QRMapping
     ) -> [String: String] {
         
         let parameters = qrMapping.operators
@@ -232,12 +229,27 @@ private extension PaymentProviderServicePickerPayload {
         
         let dict = Dictionary(pairs) { _, last in last }
         
-        let fields = qrCode.rawData.compactMap { element in
+        let fields = rawData.compactMap { element in
             
             dict[element.key].map { ($0, element.value) }
         }
         
         return .init(fields) { _, last in last }
+    }
+}
+
+private extension PaymentProviderServicePickerPayload {
+    
+    var amount: Decimal? {
+        
+        return qrCode.amount(for: qrMapping)
+    }
+    
+    func fields(
+        matching `operator`: String
+    ) -> [String: String] {
+        
+        return qrCode.fields(matching: `operator`, for: qrMapping)
     }
 }
 
@@ -258,13 +270,12 @@ extension AnywayElement.Field {
     }
 }
 
-private extension AnywayPaymentContext {
+extension AnywayPaymentContext {
     
     init(
         update: AnywayPaymentUpdate,
         outline: AnywayPaymentOutline,
-        firstField: AnywayElement.Field?,
-        product: AnywayPaymentOutline.Product
+        firstField: AnywayElement.Field?
     ) {
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,

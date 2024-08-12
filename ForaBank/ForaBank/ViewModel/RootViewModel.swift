@@ -534,6 +534,18 @@ extension RootViewModel {
     }
 }
 
+extension RootViewModel.RootActions {
+    
+    func showSpinner(_ isShowing: Bool) {
+        
+        if isShowing {
+            spinner.show()
+        } else {
+            spinner.hide()
+        }
+    }
+}
+
 //MARK: - Action
 
 enum RootViewModelAction {

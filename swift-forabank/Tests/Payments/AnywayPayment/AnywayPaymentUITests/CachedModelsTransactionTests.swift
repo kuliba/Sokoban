@@ -131,7 +131,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         XCTAssertTrue(initialFieldModel === fieldModel)
     }
     
-    func test_update_shouldRecreateModelsOnStatusFlipFromAwaitingPaymentRestartConfirmation() throws {
+    func test_update_shouldNotRecreateModelsOnStatusFlipFromAwaitingPaymentRestartConfirmation() throws {
         
         let id = anyMessage()
         let field = makeFieldAnywayElement(id: id)
@@ -155,7 +155,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         let updatedSUT = updating(sut, with: updated)
         let fieldModel = try XCTUnwrap(updatedSUT.models[.fieldID(id)])
         
-        XCTAssertFalse(initialFieldModel === fieldModel)
+        XCTAssertTrue(initialFieldModel === fieldModel)
     }
     
     // TODO: add tests for footer
