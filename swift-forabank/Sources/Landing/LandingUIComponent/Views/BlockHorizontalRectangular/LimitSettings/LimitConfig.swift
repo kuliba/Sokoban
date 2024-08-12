@@ -8,20 +8,18 @@
 import SwiftUI
 import SharedConfigs
 
-struct LimitConfig {
+public struct LimitConfig {
     
     let limit: TextConfig
-    let backgroundColor: Color
     let title: TextConfig
     let widthAndHeight: CGFloat
-    init(
+    
+    public init(
         limit: TextConfig,
-        backgroundColor: Color,
         title: TextConfig,
         widthAndHeight: CGFloat
     ) {
         self.limit = limit
-        self.backgroundColor = backgroundColor
         self.title = title
         self.widthAndHeight = widthAndHeight
     }
