@@ -186,13 +186,15 @@ extension TemplatesListFlowModel<TemplatesListViewModel> {
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel>()
         let microServices = TemplatesListFlowEffectHandlerMicroServices(
-            makePaymentModel: { template, close in
+            makePayment: { payload, completion in
                 
-                return .init(
+                let (template, close) = payload
+                
+                completion(.success(.legacy(.init(
                     source: .template(template.id),
                     model: .emptyMock,
                     closeAction: close
-                )
+                ))))
             }
         )
         let effectHandler = TemplatesListFlowEffectHandler(

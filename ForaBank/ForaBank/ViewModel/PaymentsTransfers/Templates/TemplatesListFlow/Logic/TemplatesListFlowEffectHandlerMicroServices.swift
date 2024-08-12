@@ -7,10 +7,13 @@
 
 struct TemplatesListFlowEffectHandlerMicroServices {
     
-    let makePaymentModel: MakePaymentModel
+    let makePayment: MakePayment
 }
 
 extension TemplatesListFlowEffectHandlerMicroServices {
     
-    typealias MakePaymentModel = (PaymentTemplateData, @escaping () -> Void) -> PaymentsViewModel
+    typealias MakePaymentPayload = (PaymentTemplateData, () -> Void)
+    typealias MakePaymentResult = TemplatesListFlowEvent.PaymentResult
+    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
+    typealias MakePayment = (MakePaymentPayload, @escaping MakePaymentCompletion) -> Void
 }
