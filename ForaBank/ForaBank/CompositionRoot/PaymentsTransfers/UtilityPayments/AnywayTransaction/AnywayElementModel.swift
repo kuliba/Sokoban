@@ -30,9 +30,9 @@ extension AnywayElementModel {
          
             case hidden
             case nonEditable
-            case numberInput(ObservingInputViewModel)
+            case numberInput(Node<RxInputViewModel>)
             case select(ObservingSelectorViewModel)
-            case textInput(ObservingInputViewModel)
+            case textInput(Node<RxInputViewModel>)
             case unknown
         }
     }

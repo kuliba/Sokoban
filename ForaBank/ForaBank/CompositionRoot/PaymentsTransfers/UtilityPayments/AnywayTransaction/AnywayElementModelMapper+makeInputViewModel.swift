@@ -17,7 +17,7 @@ extension AnywayElementModelMapper {
     func makeInputViewModel(
         with parameter: AnywayElement.Parameter,
         event: @escaping (AnywayPaymentEvent) -> Void
-    ) -> ObservingInputViewModel {
+    ) -> Node<RxInputViewModel> {
         
         let placeholderText = "Введите значение"
         
@@ -25,7 +25,9 @@ extension AnywayElementModelMapper {
             parameter: parameter,
             placeholderText: placeholderText
         )
-        let textFieldReducer = parameter.textFieldReducer(placeholderText: placeholderText)
+        let textFieldReducer = parameter.textFieldReducer(
+            placeholderText: placeholderText
+        )
         let validator = AnywayPaymentParameterValidator()
         let textInputValidator = TextInputValidator(
             hintText: parameter.uiAttributes.subTitle,
@@ -37,19 +39,18 @@ extension AnywayElementModelMapper {
             validate: textInputValidator.validate
         )
         let effectHandler = TextInputEffectHandler()
-
-        return .init(
+        
+        let model = RxInputViewModel(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            observe: {
-            
-                if let value = $0.textField.text {
-                    
-                    event(.setValue(value, for: parameter.uiComponent.id))
-                }
-            }
+            handleEffect: effectHandler.handleEffect(_:_:)
         )
+        let cancellable = model.$state
+            .compactMap(\.textField.text)
+            .removeDuplicates()
+            .sink { event(.setValue($0, for: parameter.uiComponent.id)) }
+        
+        return .init(model: model, cancellable: cancellable)
     }
 }
 
@@ -78,9 +79,7 @@ private extension AnywayElement.Parameter {
         guard case .number = uiAttributes.dataType
         else { return .init(placeholderText: placeholderText) }
         
-        return .sberNumericReducer(
-            placeholderText: placeholderText
-        )
+        return .sberNumericReducer(placeholderText: placeholderText)
     }
 }
 
@@ -91,10 +90,6 @@ private extension TextFieldModel.Reducer {
         _ action: TextFieldAction
     ) -> TextFieldState {
         
-        do {
-            return try reduce(state, with: action)
-        } catch {
-            return state
-        }
+        (try? reduce(state, with: action)) ?? state
     }
 }

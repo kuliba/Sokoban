@@ -38,6 +38,6 @@ struct TextInputWrapperView<IconView: View>: View {
 
 extension TextInputWrapperView {
     
-    typealias Model = ObservingInputViewModel
+    typealias Model = RxInputViewModel
     typealias Config = TextInputConfig
 }

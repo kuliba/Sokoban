@@ -25,9 +25,9 @@ struct AnywayPaymentParameterView: View {
 #warning("replace with real components")
             Text("TBD: nonEditable parameter view")
             
-        case let .numberInput(viewModel):
+        case let .numberInput(node):
             TextInputWrapperView(
-                model: viewModel,
+                model: node.model,
                 config: .iFora(
                     keyboard: .decimal, 
                     title: parameter.origin.title
@@ -44,9 +44,9 @@ struct AnywayPaymentParameterView: View {
             factory.makeSelectorView(viewModel)
                 .paddedRoundedBackground()
             
-        case let .textInput(viewModel):
+        case let .textInput(node):
             TextInputWrapperView(
-                model: viewModel,
+                model: node.model,
                 config: .iFora(
                     keyboard: .default,
                     title: parameter.origin.title
