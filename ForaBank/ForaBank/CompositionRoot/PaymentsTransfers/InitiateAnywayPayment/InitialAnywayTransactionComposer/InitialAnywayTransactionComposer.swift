@@ -7,8 +7,6 @@
 
 import AnywayPaymentDomain
 import RemoteServices
-#warning("REMOVE AFTER MOVING TO PROD")
-@testable import ForaBank
 
 final class InitialAnywayTransactionComposer {
     

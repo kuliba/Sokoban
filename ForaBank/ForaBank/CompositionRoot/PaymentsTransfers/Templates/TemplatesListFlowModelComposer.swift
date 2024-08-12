@@ -111,14 +111,22 @@ private extension TemplatesListFlowModelComposer {
     ) {
         let (template, close) = payload
         
-        switch utilitiesPaymentsFlag.rawValue {
-        case .active(.live):
-            makeV1Payment(template, completion)
+        switch template.type {
+        case .housingAndCommunalService:
+            switch utilitiesPaymentsFlag.rawValue {
+            case .active(.live):
+                makeV1Payment(template, completion)
+                
+            case .active(.stub):
+                makeV1PaymentStub(template, completion)
+                
+            case .inactive:
+                completion(.success(.legacy(
+                    makeLegacyPayment(template: template, close: close)
+                )))
+            }
             
-        case .active(.stub):
-            makeV1PaymentStub(template, completion)
-            
-        case .inactive:
+        default:
             completion(.success(.legacy(
                 makeLegacyPayment(template: template, close: close)
             )))
