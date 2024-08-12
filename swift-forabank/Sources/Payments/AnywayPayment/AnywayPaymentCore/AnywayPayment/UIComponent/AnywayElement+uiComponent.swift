@@ -110,7 +110,7 @@ extension AnywayElement.UIComponent.Parameter {
         case hidden
         case nonEditable
         case numberInput
-        case select(Option, [Option])
+        case select(Option?, [Option])
         case textInput
         case unknown
     }
@@ -177,7 +177,7 @@ private extension AnywayElement.Parameter.UIAttributes {
             return .textInput
             
         case let (.select, .input, .pairs(pair, pairs)):
-            return .select(pair.option, pairs.map(\.option))
+            return .select(pair?.option, pairs.map(\.option))
             
         default:
             return .unknown
