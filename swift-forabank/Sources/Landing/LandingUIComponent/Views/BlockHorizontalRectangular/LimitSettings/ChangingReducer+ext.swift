@@ -8,7 +8,7 @@
 import Foundation
 import TextFieldModel
 
-extension ChangingReducer {
+public extension ChangingReducer {
 
     static func decimal(
         formatter: DecimalFormatter,
