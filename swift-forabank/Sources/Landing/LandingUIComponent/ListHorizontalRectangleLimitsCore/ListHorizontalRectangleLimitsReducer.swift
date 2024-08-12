@@ -82,9 +82,9 @@ public extension ListHorizontalRectangleLimitsReducer {
             state.limitsLoadingStatus = .limits(.init(limits, getCurrencySymbol: getCurrencySymbol))
             state.saveButtonEnable = false
 
-        case let .limitChanging(newLimits):
+        case let .limitChanging(newLimits, newValueMoreThenMaxValue):
 
-            state.saveButtonEnable = limitsIsChanged(state.limitsInfo, newLimits)
+            state.saveButtonEnable = !newValueMoreThenMaxValue ? limitsIsChanged(state.limitsInfo, newLimits) : false
         }
         
         return (state, effect)

@@ -178,9 +178,9 @@ private extension ControlPanelEffectHandler {
             }
             
         case let .saveLimits(limits):
-            
-            hideKeyboard()
-            
+            DispatchQueue.main.delay(for: .milliseconds(10)) { [weak self] in
+                self?.hideKeyboard()
+            }
             productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
                 
                 switch ($0, $1) {

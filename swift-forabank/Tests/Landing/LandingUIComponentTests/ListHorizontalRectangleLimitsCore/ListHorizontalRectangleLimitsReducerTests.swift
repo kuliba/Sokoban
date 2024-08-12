@@ -28,12 +28,21 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
         }
     }
     
-    func test_limitChanging_valueIsChanged_shouldSetSaveButtonEnableTrue() {
+    func test_limitChanging_valueIsChanged_newValueLessThenMaxValue_shouldSetSaveButtonEnableTrue() {
         
         let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
         
-        assert(.limitChanging([.init(id: "1", value: 10)]), on: initialState(.default, .limits(limits))) {
+        assert(.limitChanging([.init(id: "1", value: 10)], false), on: initialState(.default, .limits(limits))) {
             $0.saveButtonEnable = true
+        }
+    }
+    
+    func test_limitChanging_valueIsChanged_newValueMoreThenMaxValue_shouldSetSaveButtonEnableFalse() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 10)], true), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
         }
     }
 
@@ -41,7 +50,7 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
         
         let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
         
-        assert(.limitChanging([.init(id: "1", value: 100)]), on: initialState(.default, .limits(limits))) {
+        assert(.limitChanging([.init(id: "1", value: 100)], false), on: initialState(.default, .limits(limits))) {
             $0.saveButtonEnable = false
         }
     }
