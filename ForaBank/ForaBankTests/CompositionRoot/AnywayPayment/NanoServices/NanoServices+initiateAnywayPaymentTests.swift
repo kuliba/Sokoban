@@ -52,7 +52,7 @@ final class NanoServices_initiateAnywayPaymentTests: XCTestCase {
         let sut = NanoServices.initiateAnywayPayment(
             flag: flag,
             httpClient: httpClient,
-            log: { _,_,_ in },
+            log: { _,_,_,_,_ in },
             scheduler: .immediate
         )
         
