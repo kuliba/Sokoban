@@ -1226,32 +1226,41 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func bind(
+    func bind(
         _ templates: Templates
     ) -> AnyCancellable {
         
         templates.$state
-            .compactMap(\.status)
+            .map(\.outside)
             .receive(on: scheduler)
-            .sink { [weak self] status in
-                
-                guard let self else { return }
-                
-                switch status {
-                case let .outside(.productID(productID)):
-                    self.event(.dismiss(.destination))
-                    self.delay(for: .milliseconds(800)) {
-                        
-                        self.action.send(
-                            PaymentsTransfersViewModelAction.Show.ProductProfile(
-                                productId: productID
-                            )
-                        )
-                    }
-                }
-            }
+            .sink { [weak self] in self?.handleTemplatesFlowOutsideState($0) }
     }
     
+    private func handleTemplatesFlowOutsideState(
+        _ outside: Templates.State.Status.Outside?
+    ) {
+        switch outside {
+        case .none:
+            rootActions?.spinner.hide()
+
+        case .inflight:
+            rootActions?.spinner.show()
+            
+        case let .productID(productID):
+            rootActions?.spinner.hide()
+            action.send(PaymentsTransfersViewModelAction.Close.Link())
+            
+            delay(for: .milliseconds(800)) { [weak self] in
+                
+                self?.action.send(
+                    MainViewModelAction.Show.ProductProfile(
+                        productId: productID
+                    )
+                )
+            }
+        }
+    }
+
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action

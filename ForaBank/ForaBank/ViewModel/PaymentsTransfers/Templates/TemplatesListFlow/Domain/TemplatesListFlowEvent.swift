@@ -7,10 +7,26 @@
 
 enum TemplatesListFlowEvent {
     
-    case select(ProductID)
+    case dismiss(Dismiss)
+    case payment(Payment)
+    case select(Select)
 }
 
 extension TemplatesListFlowEvent {
     
-    typealias ProductID = ProductData.ID
+    enum Dismiss: Equatable {
+        
+        case destination
+    }
+    
+    typealias Payment = PaymentsViewModel
+    
+    enum Select: Equatable {
+        
+        case productID(ProductID)
+        case template(Template)
+        
+        typealias ProductID = ProductData.ID
+        typealias Template = PaymentTemplateData
+    }
 }

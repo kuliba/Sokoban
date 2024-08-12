@@ -764,26 +764,34 @@ private extension MainViewModel {
     ) -> AnyCancellable {
         
         templates.$state
-            .compactMap(\.status)
+            .map(\.outside)
             .receive(on: scheduler)
-            .sink { [weak self] status in
+            .sink { [weak self] in self?.handleTemplatesFlowOutsideState($0) }
+    }
+    
+    private func handleTemplatesFlowOutsideState(
+        _ outside: Templates.State.Status.Outside?
+    ) {
+        switch outside {
+        case .none:
+            rootActions?.spinner.hide()
+
+        case .inflight:
+            rootActions?.spinner.show()
+            
+        case let .productID(productID):
+            rootActions?.spinner.hide()
+            action.send(MainViewModelAction.Close.Link())
+            
+            delay(for: .milliseconds(800)) { [weak self] in
                 
-                guard let self else { return }
-                
-                switch status {
-                case let .outside(.productID(productID)):
-                    self.action.send(MainViewModelAction.Close.Link())
-                    
-                    self.delay(for: .milliseconds(800)) {
-                        
-                        self.action.send(
-                            MainViewModelAction.Show.ProductProfile(
-                                productId: productID
-                            )
-                        )
-                    }
-                }
+                self?.action.send(
+                    MainViewModelAction.Show.ProductProfile(
+                        productId: productID
+                    )
+                )
             }
+        }
     }
     
     func bind(_ viewModel: ContactsViewModel) {
@@ -922,6 +930,19 @@ private extension MainViewModel {
         default:
             break
         }
+    }
+}
+
+// MARK: - Templates
+
+extension TemplatesListFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = status
+        else { return nil }
+ 
+        return outside
     }
 }
 
