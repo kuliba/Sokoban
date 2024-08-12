@@ -151,8 +151,14 @@ extension RootViewModelFactory {
         
         let landingService = Services.makeSVCardLandingServices(
             httpClient: httpClient,
-            log: infoNetworkLog)
+            log: infoNetworkLog
+        )
         
+        let infoPaymentService = Services.makeInfoRepeatPaymentServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -160,6 +166,7 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
+            repeatPayment: infoPaymentService,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {                
                 model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))

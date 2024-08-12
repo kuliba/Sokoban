@@ -27,7 +27,7 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
         self.list = list
         self.limitsLoadingStatus = limitsLoadingStatus
         self.destination = destination
-        self.saveButtonEnable = true
+        self.saveButtonEnable = false
     }
 }
 

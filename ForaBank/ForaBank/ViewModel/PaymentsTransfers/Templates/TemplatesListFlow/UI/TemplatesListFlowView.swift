@@ -8,9 +8,12 @@
 import Combine
 import SwiftUI
 
-struct TemplatesListFlowView: View {
+struct TemplatesListFlowView<AnywayFlowView: View>: View {
     
     @ObservedObject var model: Model
+    
+    let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
+    let makeIconView: (String?) -> IconDomain.IconView
     
     var body: some View {
         
@@ -52,7 +55,7 @@ extension TemplatesListFlowState {
 }
 
 extension TemplatesListFlowState.Status.Destination: Identifiable {
- 
+    
     var id: ID {
         
         switch self {
@@ -113,7 +116,16 @@ private extension TemplatesListFlowView {
                 PaymentsView(viewModel: paymentsViewModel)
                 
             case let .v1(node):
-                Text("\(node)")
+                let payload = node.model.state.content.state.transaction.context.outline.payload
+                
+                makeAnywayFlowView(node.model)
+                    .navigationBarWithAsyncIcon(
+                        title: payload.title,
+                        subtitle: payload.subtitle,
+                        dismiss: { model.event(.dismiss(.destination)) },
+                        icon: makeIconView(payload.icon),
+                        style: .normal
+                    )
             }
         }
     }

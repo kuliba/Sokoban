@@ -13,6 +13,7 @@ import SwiftUI
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
 typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 typealias MakeIconView = IconDomain.MakeIconView
 typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
@@ -29,6 +30,7 @@ struct RootViewFactory {
     let makeIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
+    let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUpdateInfoView: MakeUpdateInfoView
     let makeUserAccountView: MakeUserAccountView
@@ -66,6 +68,7 @@ struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
     let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+    let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
 }
 
 extension RootViewFactory {
@@ -74,8 +77,23 @@ extension RootViewFactory {
         
         return .init(
             makeActivateSliderView: makeActivateSliderView,
-            makeHistoryButton: makeHistoryButtonView
+            makeHistoryButton: makeHistoryButtonView,
+            makeRepeatButtonView: makeReturnButtonView
         )
+    }
+}
+
+struct RepeatButtonView: View {
+
+    let action: () -> Void
+    
+    var body: some View {
+    
+        ButtonSimpleView(viewModel: .init(
+            title: "Повторить",
+            style: .red,
+            action: action
+        ))
     }
 }
 

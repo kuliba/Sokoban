@@ -30,14 +30,59 @@ extension RootViewModelFactory {
             model: model,
             scheduler: scheduler
         )
-        let templatesNanoServicesComposer = TemplatesListFlowEffectHandlerNanoServicesComposer()
+        let initiatePayment = NanoServices.initiateAnywayPayment(
+            flag: utilitiesPaymentsFlag.optionOrStub,
+            httpClient: httpClient,
+            log: log,
+            scheduler: scheduler
+        )
+        let composer = InitiateAnywayPaymentMicroServiceComposer(
+            getOutlineProduct: { _ in model.outlineProduct() },
+            processPayload: { payload, completion in
+                
+                initiatePayment(payload.outline.payload.puref) {
+                    
+                    switch $0 {
+                    case let .failure(serviceFailure):
+                        switch serviceFailure {
+                        case .connectivityError:
+                            completion(.failure(.connectivityError))
+                            
+                        case let .serverError(message):
+                            completion(.failure(.serverError(message)))
+                        }
+                        
+                    case let .success(response):
+                        completion(.success(response))
+                    }
+                }
+            }
+        )
+        let initiatePaymentMicroService = composer.compose()
+        let initiatePaymentFromTemplate = { template, completion in
+            
+            initiatePaymentMicroService.initiatePayment(.template(template), completion)
+        }
         
         return .init(
             composer: anywayFlowComposer,
             model: model,
-            nanoServices: templatesNanoServicesComposer.compose(),
+            nanoServices: .init(
+                initiatePayment: initiatePaymentFromTemplate
+            ),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: scheduler
         )
+    }
+}
+
+extension PaymentTemplateData {
+    
+    var puref: String? {
+        
+        let asTransferAnywayData = parameterList
+            .compactMap { $0 as? TransferAnywayData }
+        
+        return asTransferAnywayData.compactMap(\.puref).first
     }
 }

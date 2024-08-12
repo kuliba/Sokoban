@@ -75,6 +75,7 @@ extension Services {
             case fastPaymentContractFindList
             case formSessionKey
             case getAllLatestPayments
+            case getInfoForRepeatPayment
             case getBankDefault
             case getC2BSub
             case getCardStatementForPeriod
@@ -409,5 +410,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getAllLatestPayments
+    )
+    
+    static let getInfoForRepeatPayment: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getInfoForRepeatPayment
     )
 }
