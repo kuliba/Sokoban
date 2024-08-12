@@ -9,6 +9,7 @@ import Foundation
 import TextFieldDomain
 import TextFieldUI
 import TextFieldModel
+import SwiftUI
 
 typealias DecimalTextFieldWithValueViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
 
@@ -33,6 +34,20 @@ extension DecimalTextFieldWithValueViewModel {
             keyboardType: .decimal,
             scheduler: scheduler
         )
+    }
+    
+    func textFieldColor(
+        first: Color,
+        second: Color
+    ) -> Color {
+        
+        guard let text = state.text else { return first }
+        
+        let decimalCharacters = CharacterSet.decimalDigits
+
+        let decimalRange = text.rangeOfCharacter(from: decimalCharacters)
+        
+        return (decimalRange != nil) ? first : second
     }
 }
 

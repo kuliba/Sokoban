@@ -81,7 +81,7 @@ where InfoView: View {
             viewModel: textFieldModel,
             textFieldConfig: .init(
                 font: .systemFont(ofSize: 16),
-                textColor: config.limit.textColor,
+                textColor: textFieldModel.textFieldColor(first: config.limit.textColor, second: config.title.textColor) ,
                 tintColor: .init(red: 28/255, green: 28/255, blue: 28/255),
                 backgroundColor: .clear,
                 placeholderColor: .clear
