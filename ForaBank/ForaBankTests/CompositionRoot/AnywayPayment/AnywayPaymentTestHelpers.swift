@@ -1,27 +1,22 @@
 //
-//  InitiateAnywayPaymentMicroServiceIntegrationTests.swift
+//  AnywayPaymentTestHelpers.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 11.08.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
+import Foundation
 import RemoteServices
 @testable import ForaBank
-import XCTest
 
-final class InitiateAnywayPaymentMicroServiceIntegrationTests: XCTestCase {
-
-    private typealias Response = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
-    private typealias Transaction = AnywayTransactionState.Transaction
-
-
-}
-
-private func makeResponse(
+func makeCreateAnywayTransferResponse(
+    finalStep: Bool = false,
+    needMake: Bool = false
 ) -> RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
-    return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [], options: [])
+    return .init(additional: [], finalStep: finalStep, needMake: needMake, needOTP: false, needSum: false, parametersForNextStep: [], options: [])
 }
 
 private func makeTransaction(
@@ -53,7 +48,7 @@ private func makeAnywayPayment(
     return .init(amount: amount, elements: elements, footer: footer, isFinalStep: isFinalStep)
 }
 
-private func makeAnywayPaymentOutline(
+func makeAnywayPaymentOutline(
     amount: Decimal? = nil,
     product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: AnywayPaymentOutline.Fields = .init(),

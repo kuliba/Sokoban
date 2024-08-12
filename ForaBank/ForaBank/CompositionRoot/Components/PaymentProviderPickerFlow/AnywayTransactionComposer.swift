@@ -52,8 +52,7 @@ extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: firstField,
-            product: product
+            firstField: firstField
         )
         
         return .init(
@@ -113,8 +112,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: nil,
-            product: product
+            firstField: nil
         )
         
         return .init(
@@ -142,8 +140,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: firstField,
-            product: product
+            firstField: firstField
         )
         
         return .init(
@@ -167,8 +164,7 @@ private extension AnywayTransactionComposer {
         let context = AnywayPaymentContext(
             update: update,
             outline: outline,
-            firstField: nil,
-            product: product
+            firstField: nil
         )
         
         return .init(
@@ -274,13 +270,12 @@ extension AnywayElement.Field {
     }
 }
 
-private extension AnywayPaymentContext {
+extension AnywayPaymentContext {
     
     init(
         update: AnywayPaymentUpdate,
         outline: AnywayPaymentOutline,
-        firstField: AnywayElement.Field?,
-        product: AnywayPaymentOutline.Product
+        firstField: AnywayElement.Field?
     ) {
         let initialPayment = AnywayPaymentDomain.AnywayPayment(
             amount: outline.amount,

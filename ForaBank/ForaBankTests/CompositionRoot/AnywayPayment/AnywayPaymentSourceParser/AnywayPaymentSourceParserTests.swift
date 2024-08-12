@@ -595,6 +595,138 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         ))
     }
     
+    // MARK: - latest
+    
+    func test_parse_template_shouldDeliverOutlineProductErrorOnMissingOutlineProduct() throws {
+        
+        let sut = makeSUT(outlineProduct: nil)
+        
+        try XCTAssertThrowsError(sut.parse(source: template())) {
+            
+            XCTAssertNoDiff($0 as? SUT.ParsingError, .missingProduct)
+        }
+    }
+    
+    func test_parse_template_shouldSetOutlineAmount() throws {
+        
+        let amount = anyAmount()
+        let source = template(amount: amount)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.amount, amount)
+    }
+    
+    func test_parse_template_shouldSetOutlineAccountProduct() throws {
+        
+        let currency = anyMessage()
+        let accountID = Int.random(in: 1...100)
+        let sut = makeSUT()
+        let source = template(currency: currency, accountId: accountID)
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.product, .init(
+            currency: currency,
+            productID: accountID,
+            productType: .account
+        ))
+    }
+    
+    func test_parse_template_shouldSetOutlineCardProduct() throws {
+        
+        let currency = anyMessage()
+        let cardID = Int.random(in: 1...100)
+        let sut = makeSUT()
+        let source = template(currency: currency, cardId: cardID)
+        
+        let output = try sut.parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.product, .init(
+            currency: currency,
+            productID: cardID,
+            productType: .card
+        ))
+    }
+    
+    func test_parse_template_shouldSetEmptyOutlineFieldsOnEmptyFields() throws {
+        
+        let source = template(additional: [])
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, .init())
+    }
+    
+    func test_parse_template_shouldSetOutlineOneFieldOnOne() throws {
+        
+        let (name, value) = (anyMessage(), anyMessage())
+        let additional = makeAdditional(fieldName: name, fieldValue: value)
+        let source = template(additional: [
+            .init(fieldid: .random(in: 1...100), fieldname: name, fieldvalue: value)
+        ])
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, [name: value])
+    }
+    
+    func test_parse_template_shouldSetOutlineFields() throws {
+        
+        let (name1, value1) = (anyMessage(), anyMessage())
+        let (name2, value2) = (anyMessage(), anyMessage())
+        let source = template(additional: [
+            .init(fieldid: .random(in: 1...100), fieldname: name1, fieldvalue: value1),
+            .init(fieldid: .random(in: 1...100), fieldname: name2, fieldvalue: value2)
+        ])
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.fields, [
+            name1: value1,
+            name2: value2,
+        ])
+    }
+    
+    func test_parse_template_shouldSetOutlinePayloadPuref() throws {
+        
+        let puref = anyMessage()
+        let source = template(puref: puref)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.puref, puref)
+    }
+    
+    func test_parse_template_shouldSetOutlinePayloadTitle() throws {
+        
+        let title = anyMessage()
+        let source = template(name: title)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.title, title)
+    }
+    
+    func test_parse_template_shouldSetOutlinePayloadSubtitle() throws {
+        
+        let groupName = anyMessage()
+        let source = template(groupName: groupName)
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNoDiff(output.outline.payload.subtitle, groupName)
+    }
+    
+    func test_parse_template_shouldSetFirstFieldToNil() throws {
+        
+        let source = template()
+        
+        let output = try makeSUT().parse(source: source)
+        
+        XCTAssertNil(output.firstField)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentSourceParser
@@ -607,7 +739,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getOutlineProduct: { outlineProduct })
+        let sut = SUT(getOutlineProduct: { _ in outlineProduct })
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -772,6 +904,72 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         return .single(
             .init(name: name, puref: puref),
             .init(id: id, title: title, subtitle: subtitle, icon: icon)
+        )
+    }
+    
+    private func template(
+        additional: [TransferAnywayData.Additional] = [],
+        amount: Decimal = anyAmount(),
+        currency: String = anyMessage(),
+        accountId: Int? = nil,
+        cardId: Int? = .random(in: 1...100),
+        groupName: String = anyMessage(),
+        name: String = anyMessage(),
+        puref: String? = anyMessage(),
+        type: PaymentTemplateData.Kind = .housingAndCommunalService
+    ) -> AnywayPaymentSourceParser.Source {
+        
+        return .template(makeTemplate(
+            additional: additional,
+            amount: amount,
+            currency: currency,
+            accountId: accountId,
+            cardId: cardId,
+            groupName: groupName,
+            name: name,
+            puref: puref,
+            type: type
+        ))
+    }
+    
+    private func makeTemplate(
+        additional: [TransferAnywayData.Additional] = [],
+        amount: Decimal = anyAmount(),
+        currency: String = anyMessage(),
+        accountId: Int? = nil,
+        cardId: Int? = .random(in: 1...100),
+        groupName: String = anyMessage(),
+        name: String = anyMessage(),
+        puref: String? = anyMessage(),
+        type: PaymentTemplateData.Kind = .housingAndCommunalService
+    ) -> PaymentTemplateData {
+        
+        return .init(
+            groupName: groupName,
+            name: name,
+            parameterList: [
+                TransferAnywayData(
+                    amount: amount,
+                    check: true,
+                    comment: nil,
+                    currencyAmount: currency,
+                    payer: .init(
+                        inn: nil,
+                        accountId: accountId,
+                        accountNumber: nil,
+                        cardId: cardId,
+                        cardNumber: nil,
+                        phoneNumber: nil
+                    ),
+                    additional: additional,
+                    puref: puref
+                )
+            ],
+            paymentTemplateId: .random(in: 1...100),
+            productTemplate: nil,
+            sort: 0,
+            svgImage: .test,
+            type: type
         )
     }
 }

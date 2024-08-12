@@ -114,7 +114,7 @@ enum TemplatesListViewModelAction {
         let productId: ProductData.ID
     }
     
-    // Should be observed from outside, is handled in the TemplatesListViewModel
+    // Should be observed from outside, is not handled in the TemplatesListViewModel
     struct OpenDefaultTemplate: Action, Equatable {
         
         let template: PaymentTemplateData
