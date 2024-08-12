@@ -228,10 +228,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     ),
                     uiAttributes: makeParameterUIAttributes(
                         dataType: .pairs(
-                            .init(
-                                key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС",
-                                value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"
-                            ), [
+                            nil, [
                                 .init(
                                     key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС",
                                     value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"

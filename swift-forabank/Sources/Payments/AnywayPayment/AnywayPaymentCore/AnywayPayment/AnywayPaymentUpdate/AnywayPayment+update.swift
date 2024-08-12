@@ -310,7 +310,7 @@ private extension AnywayPaymentUpdate.Parameter {
         guard case let .pairs(pair, _) = uiAttributes.dataType
         else { return nil }
         
-        return pair.key
+        return pair?.key
     }
 }
 
@@ -400,7 +400,7 @@ private extension AnywayElement.Parameter.UIAttributes.DataType {
             self = .number
             
         case let .pairs(pair, pairs):
-            self = .pairs(pair.pair, pairs.map(\.pair))
+            self = .pairs(pair?.pair, pairs.map(\.pair))
             
         case .string:
             self = .string
