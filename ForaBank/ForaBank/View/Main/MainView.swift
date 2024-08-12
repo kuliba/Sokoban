@@ -180,7 +180,14 @@ struct MainView<NavigationOperationView: View>: View {
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(node):
-            TemplatesListFlowView(model: node.model)
+            TemplatesListFlowView(
+                model: node.model,
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: {
+                    
+                    viewFactory.makeIconView($0.map { .svg($0) })
+                }
+            )
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)
