@@ -24,8 +24,10 @@ extension DecimalTextFieldWithValueViewModel {
     ) -> DecimalTextFieldWithValueViewModel {
         
         let reducer = ChangingReducer.decimal(
-            formatter: formatter
+            formatter: formatter,
+            maxValue: 999999999.99
         )
+        
         let initialState = maxValue >= .maxLimit ? .noFocus("Без ограничений") : reducer.setToValue(maxValue)
         
         return .init(
