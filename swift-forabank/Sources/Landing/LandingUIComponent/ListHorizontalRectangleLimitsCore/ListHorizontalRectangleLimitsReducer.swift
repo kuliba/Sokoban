@@ -77,9 +77,43 @@ public extension ListHorizontalRectangleLimitsReducer {
         case let .informerWithLimits(message, limits):
             makeInformer(message)
             // TODO: update limits
+            
+        case let .limitChanging(newLimits):
+
+            state.saveButtonEnable = limitsIsChanged(state.limitsInfo, newLimits)
         }
         
         return (state, effect)
+    }
+    
+    private func limitsIsChanged(
+        _ oldLimits: SVCardLimits?,
+        _ newLimits: [BlockHorizontalRectangularEvent.Limit]
+    ) -> Bool {
+        
+        guard !newLimits.isEmpty else { return false }
+        
+        var limitIsChanged = false
+        
+        for newLimit in newLimits {
+            if oldLimits?.limitValue(by: newLimit.id) != newLimit.value {
+                limitIsChanged = true
+                break
+            }
+        }
+        return limitIsChanged
+    }
+}
+
+private extension SVCardLimits {
+    
+    typealias LimitType = String
+    
+    func limitValue(by type: LimitType) -> Decimal {
+        
+        let limitValue = self.limitsList.first(where: { $0.limits.first(where: { $0.name == type }) != nil })
+        
+        return limitValue?.limits.first(where: { $0.name == type })?.value ?? 0
     }
 }
 

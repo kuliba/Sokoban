@@ -779,6 +779,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let changeSVCardLimitServices = ChangeSVCardLimitServices.preview()
 
         let svCardLandingServices = SVCardLandingServices.preview()
+        
+        let repeatPayment = InfoRepeatPaymentServices.preview()
 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
@@ -786,7 +788,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             createUserVisibilityProductsSettingsService: userVisibilityServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
-            createSVCardLanding: svCardLandingServices,
+            createSVCardLanding: svCardLandingServices, 
+            repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: {_,_,_,_  in nil},
             makeInformer: { _ in }
         )
