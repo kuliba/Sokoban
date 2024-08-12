@@ -22,7 +22,7 @@ public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
-public extension CachedModelsTransaction 
+public extension CachedModelsTransaction
 where Footer: FooterInterface & Receiver<Decimal>,
       DocumentStatus: Equatable,
       Response: Equatable {
@@ -48,11 +48,7 @@ where Footer: FooterInterface & Receiver<Decimal>,
         updateFooter(with: transaction)
         
         return .init(
-            models: transaction.updatingModels(
-                models,
-                using: map,
-                shouldRecreateModels: shouldRecreateModels(transaction)
-            ),
+            models: transaction.updatingModels(models, using: map),
             footer: footer,
             transaction: transaction,
             isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
@@ -85,20 +81,6 @@ where Footer: FooterInterface & Receiver<Decimal>,
         footer.project(projection)
     }
     
-    // should reset model if status was awaitingPaymentRestartConfirmation, i.e. isAwaitingConfirmation == true, and now is not awaitingPaymentRestartConfirmation
-    private func shouldRecreateModels(
-        _ transaction: Transaction
-    ) -> Bool {
-        
-        switch transaction.status {
-        case .awaitingPaymentRestartConfirmation:
-            return false
-            
-        default:
-            return isAwaitingConfirmation
-        }
-    }
-    
     typealias Map = (AnywayElement) -> Model
     typealias MakeFooter = (Transaction) -> Footer
 }
@@ -117,11 +99,8 @@ extension Transaction where Context == AnywayPaymentContext {
     
     func updatingModels<Model>(
         _ models: Models<Model>,
-        using map: @escaping (AnywayElement) -> Model,
-        shouldRecreateModels: Bool
+        using map: @escaping (AnywayElement) -> Model
     ) -> Models<Model> {
-        
-        guard !shouldRecreateModels else { return makeModels(using: map) }
         
         let existingIDs = Set(models.keys)
         let newModels = context.payment.elements
