@@ -18,14 +18,14 @@ extension AnywayElementModel: Receiver {
             
         case let (.parameter(parameter), .updateValueTo(value)):
             switch parameter.type {
-            case let .numberInput(numberInput):
-                numberInput.event(.textField(.setTextTo(value)))
+            case let .numberInput(node):
+                node.model.event(.textField(.setTextTo(value)))
                 
             case let .select(select):
                 self.select(value, in: select)
                 
-            case let .textInput(textInput):
-                textInput.event(.textField(.setTextTo(value)))
+            case let .textInput(node):
+                node.model.event(.textField(.setTextTo(value)))
                 
             default:
                 break
