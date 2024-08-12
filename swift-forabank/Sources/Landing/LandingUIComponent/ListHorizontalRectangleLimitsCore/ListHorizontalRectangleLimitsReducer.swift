@@ -7,18 +7,21 @@
 
 import Foundation
 import UIPrimitives
+import SVCardLimitAPI
 
 public final class ListHorizontalRectangleLimitsReducer {
     
     let makeInformer: (String) -> Void
     private let alertLifespan: DispatchTimeInterval
+    private let getCurrencySymbol: GetCurrencySymbol
 
     public init(
         makeInformer: @escaping (String) -> Void,
+        getCurrencySymbol: @escaping GetCurrencySymbol,
         alertLifespan: DispatchTimeInterval = .milliseconds(400)
-
     ) {
         self.makeInformer = makeInformer
+        self.getCurrencySymbol = getCurrencySymbol
         self.alertLifespan = alertLifespan
     }
 }
@@ -76,8 +79,9 @@ public extension ListHorizontalRectangleLimitsReducer {
             
         case let .informerWithLimits(message, limits):
             makeInformer(message)
-            // TODO: update limits
-            
+            state.limitsLoadingStatus = .limits(.init(limits, getCurrencySymbol: getCurrencySymbol))
+            state.saveButtonEnable = false
+
         case let .limitChanging(newLimits):
 
             state.saveButtonEnable = limitsIsChanged(state.limitsInfo, newLimits)
@@ -122,4 +126,24 @@ public extension ListHorizontalRectangleLimitsReducer {
     typealias State = ListHorizontalRectangleLimitsState
     typealias Event = ListHorizontalRectangleLimitsEvent
     typealias Effect = ListHorizontalRectangleLimitsEffect
+    typealias GetCurrencySymbol = (Int) -> String?
+}
+
+extension SVCardLimits {
+    
+    init(
+        _ limits: [GetSVCardLimitsResponse.LimitItem],
+        getCurrencySymbol: (Int) -> String?
+    ) {
+       self.init(limitsList: limits.map {
+           SVCardLimits.LimitItem.init(type: $0.type, limits: $0.limits.map { limit in
+               .init(
+                currency: getCurrencySymbol(limit.currency) ?? "",
+                currentValue: limit.currentValue,
+                name: limit.name,
+                value: limit.value
+               )
+           })
+       })
+    }
 }

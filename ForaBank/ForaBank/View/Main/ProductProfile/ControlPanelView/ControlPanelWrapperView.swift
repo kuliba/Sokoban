@@ -14,7 +14,7 @@ typealias ControlPanelViewModel = RxViewModel<ControlPanelState, ControlPanelEve
 
 struct ControlPanelWrapperView: View {
     
-    @ObservedObject private var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
     
     private let config: Config
     private let getUImage: (Md5hash) -> UIImage?
@@ -24,7 +24,7 @@ struct ControlPanelWrapperView: View {
         config: Config,
         getUImage: @escaping (Md5hash) -> UIImage?
     ) {
-        self.viewModel = viewModel
+        self._viewModel = .init(wrappedValue: viewModel)
         self.config = config
         self.getUImage = getUImage
     }
