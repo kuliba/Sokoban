@@ -129,10 +129,10 @@ extension UILanding {
             }
         })
         
-        if case let .blockHorizontalRectangular(value) = component {
-            return value
+        guard case let .blockHorizontalRectangular(value) = component else {
+            return nil
         }
         
-        return nil
+        return value
     }
 }
