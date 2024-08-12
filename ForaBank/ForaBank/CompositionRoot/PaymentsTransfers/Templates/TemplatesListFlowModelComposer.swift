@@ -67,6 +67,11 @@ extension AnywayFlowState {
     
     var flowEvent: FlowEvent? {
         
+        return .init(isLoading: isLoading, status: flowEventStatus)
+    }
+    
+    private var flowEventStatus: FlowEvent.Status? {
+        
         switch outside {
         case .none:     return .none
         case .main:     return .tab(.main)

@@ -12,14 +12,27 @@ protocol FlowEventPublishing {
     var flowEventPublisher: AnyPublisher<FlowEvent, Never> { get }
 }
 
-enum FlowEvent: Equatable {
+struct FlowEvent: Equatable {
     
-    case dismiss
-    case inflight
-    case tab(Tab)
+    let isLoading: Bool
+    let status: Status?
     
-    enum Tab: Equatable {
+    init(
+        isLoading: Bool = false,
+        status: Status? = nil
+    ) {
+        self.isLoading = isLoading
+        self.status = status
+    }
+    
+    enum Status: Equatable {
+ 
+        case dismiss
+        case tab(Tab)
         
-        case chat, main, payments
+        enum Tab: Equatable {
+            
+            case chat, main, payments
+        }
     }
 }

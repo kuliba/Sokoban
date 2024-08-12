@@ -97,7 +97,7 @@ private extension TemplatesListFlowView {
         return failure.alert(
             connectivityErrorMessage: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
             event: .payments,
-            action: { model.event(.flow(.tab($0))) }
+            action: { model.event(.flow(.init(status: .tab($0)))) }
         )
     }
     
