@@ -2049,7 +2049,8 @@ extension ProductProfileViewModel {
                 card: card,
                 productProfileServices: productProfileServices,
                 landingEvent: landingEvent, 
-                handleModelEffect: productNavigationStateManager.handleModelEffect
+                handleModelEffect: productNavigationStateManager.handleModelEffect,
+                hideKeyboard: { UIApplication.shared.endEditing() }
                     ).handleEffect(_:_:))
     }
     

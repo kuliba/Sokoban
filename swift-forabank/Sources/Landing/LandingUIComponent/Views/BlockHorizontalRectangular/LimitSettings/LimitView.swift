@@ -48,21 +48,25 @@ where InfoView: View {
     }
         
     var body: some View {
-                
+        
         VStack(alignment: .leading, spacing: 4) {
             
-            state.limit.title.text(withConfig: config.title)
-                .frame(height: 24)
             HStack {
+                
                 makeIconView(state.limit.md5Hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(widthAndHeight: config.widthAndHeight)
                 
-                textField()
+                VStack(alignment: .leading, spacing: 0){
+                    state.limit.title.text(withConfig: config.title)
+                        .frame(height: 18)
+                    textField()
+                        .frame(height: 24)
+                }
             }
             .frame(height: 46)
             infoView()
-                .hidden(state.hiddenInfo)
+                .hidden(state.hiddenInfo, 32)
         }
     }
 
@@ -77,7 +81,7 @@ where InfoView: View {
             viewModel: textFieldModel,
             textFieldConfig: .init(
                 font: .systemFont(ofSize: 16),
-                textColor: config.limit.textColor,
+                textColor: textFieldModel.textFieldColor(first: config.limit.textColor, second: config.title.textColor) ,
                 tintColor: .init(red: 28/255, green: 28/255, blue: 28/255),
                 backgroundColor: .clear,
                 placeholderColor: .clear
@@ -140,14 +144,17 @@ struct LimitView_Previews: PreviewProvider {
     }
 }
 
-extension View {
+private extension View {
     
     @ViewBuilder
-    func hidden(_ isHidden: Bool) -> some View {
+    func hidden(
+        _ isHidden: Bool,
+        _ height: CGFloat
+    ) -> some View {
         
         switch isHidden {
         case true: self.hidden()
-        case false: self
+        case false: self.frame(height: height)
         }
     }
 }
