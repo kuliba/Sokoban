@@ -57,7 +57,7 @@ extension NanoServices {
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
 }
 
-private extension ServiceFailure {
+extension ServiceFailure {
     
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     

@@ -92,6 +92,7 @@ extension Services {
             case getProcessingSessionCode
             case getScenarioQRData
             case getSberQRData
+            case getServiceCategoryList
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
@@ -326,6 +327,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getServiceCategoryList: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getServiceCategoryList
     )
     
     static let getSVCardLimits: Self = .init(
