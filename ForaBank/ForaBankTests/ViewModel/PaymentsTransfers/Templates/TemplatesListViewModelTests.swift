@@ -288,7 +288,7 @@ private extension TemplatesListViewModelTests {
         model.products.value = [.card: [.stub(productId: 1)]]
         model.currencyList.value = [.rub]
         
-        let sut = TemplatesListViewModel(model, dismissAction: {}, updateFastAll: {}, flowManager: .preview)
+        let sut = TemplatesListViewModel(model, dismissAction: {}, updateFastAll: {})
         
         sut.items = [.stub()]
         //TODO: restore memory leak tracking after Model fix

@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct PaymentProviderSegmentsView<ProviderView, Footer>: View
-where ProviderView: View,
+struct PaymentProviderSegmentsView<Provider, ProviderView, Footer>: View
+where Provider: Identifiable & Segmentable,
+      ProviderView: View,
       Footer: View {
     
-    let segments: [Segment]
+    let segments: [Segment<Provider>]
     let providerView: (Provider) -> ProviderView
     let footer: () -> Footer
     let config: Config
@@ -36,15 +37,13 @@ where ProviderView: View,
 
 extension PaymentProviderSegmentsView {
     
-    typealias Segment = PaymentProviderSegment
-    typealias Provider = PaymentProviderSegment.Provider
     typealias Config = PaymentProviderSegmentsViewConfig
 }
 
 private extension PaymentProviderSegmentsView {
     
     func segmentView(
-        segment: Segment
+        segment: Segment<Provider>
     ) -> some View {
         
         VStack(spacing: 13) {
@@ -56,7 +55,7 @@ private extension PaymentProviderSegmentsView {
             config.dividerColor
                 .frame(height: 0.5)
             
-            ForEach(segment.providers, content: providerView)
+            ForEach(segment.content, content: providerView)
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -66,15 +65,14 @@ private extension PaymentProviderSegmentsView {
     }
 }
 
-
 #Preview {
     PaymentProviderSegmentsView(
         segments: .init(with: [SegmentedPaymentProvider].preview),
         providerView: { provider in
             
             VStack(alignment: .leading) {
-             
-                Text(provider.icon + " " + provider.title)
+                
+                Text((provider.icon ?? "?") + " " + provider.title)
                 provider.inn.map(Text.init)
                     .foregroundColor(.secondary)
                     .font(.footnote)
@@ -89,10 +87,29 @@ private extension PaymentProviderSegmentsView {
 private extension Array where Element == SegmentedPaymentProvider {
     
     static let preview: Self = [
-        .init(id: "1", icon: "i", title: "Service A", inn: nil, segment: "Services"),
-        .init(id: "2", icon: "i", title: "Service B", inn: "123567890", segment: "Services"),
-        .init(id: "3", icon: "i", title: "FastNet", inn: nil, segment: "Internet"),
-        .init(id: "4", icon: "i", title: "TV-D", inn: "234", segment: "TV"),
-        .init(id: "5", icon: "i", title: "TV-F", inn: "3456", segment: "TV"),
+        .init("1", icon: "i", inn: nil, title: "Service A", segment: "Services"),
+        .init("2", icon: "i", inn: "123567890", title: "Service B", segment: "Services"),
+        .init("3", icon: "i", inn: nil, title: "FastNet", segment: "Internet"),
+        .init("4", icon: "i", inn: "234", title: "TV-D", segment: "TV"),
+        .init("5", icon: "i", inn: "3456", title: "TV-F", segment: "TV"),
     ]
+}
+
+private extension SegmentedPaymentProvider {
+    
+    init(
+        _ id: String,
+        icon: String?,
+        inn: String?,
+        title: String,
+        segment: String
+    ) {
+        self.init(
+            id: id, 
+            icon: icon,
+            inn: inn,
+            title: title,
+            segment: segment
+        )
+    }
 }

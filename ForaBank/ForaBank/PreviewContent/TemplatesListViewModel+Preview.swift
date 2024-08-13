@@ -201,8 +201,7 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
               updateFastAll: {},
-              model: .emptyMock,
-              flowManager: .preview
+              model: .emptyMock
         )
     }()
     
@@ -215,8 +214,7 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems2,
               deletePannel: nil,
               updateFastAll: {},
-              model: .emptyMock,
-              flowManager: .preview
+              model: .emptyMock
         )
     }()
     
@@ -229,8 +227,7 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems3,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
               updateFastAll: {},
-              model: .emptyMock,
-              flowManager: .preview
+              model: .emptyMock
         )
     }()
 }

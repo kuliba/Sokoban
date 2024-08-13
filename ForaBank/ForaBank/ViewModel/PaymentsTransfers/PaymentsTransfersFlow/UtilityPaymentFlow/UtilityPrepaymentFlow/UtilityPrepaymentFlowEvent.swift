@@ -43,7 +43,8 @@ extension UtilityPrepaymentFlowEvent {
         
         case lastPayment(LastPayment)
         case `operator`(Operator)
-        case service(Service, for: Operator)
+        case oneOf(Service, for: Operator)
+        case singleService(Service, for: Operator)
     }
     
     typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>

@@ -161,7 +161,7 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    amount: Decimal = makeAmount(),
+    amount: Decimal? = nil,
     product: AnywayPaymentOutline.Product = makeOutlineProduct(productType: .account),
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
@@ -858,7 +858,7 @@ private extension AnywayElement.Parameter.UIAttributes.DataType {
             self = .number
             
         case let .pairs(pair, pairs):
-            self = .pairs(pair.pair, pairs.map(\.pair))
+            self = .pairs(pair?.pair, pairs.map(\.pair))
             
         case .string:
             self = .string

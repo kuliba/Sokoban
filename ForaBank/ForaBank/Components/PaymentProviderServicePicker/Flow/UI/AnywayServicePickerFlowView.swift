@@ -1,0 +1,223 @@
+//
+//  AnywayServicePickerFlowView.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 04.08.2024.
+//
+
+import FooterComponent
+import SwiftUI
+import UIPrimitives
+
+struct AnywayServicePickerFlowView<AnywayFlowView>: View 
+where AnywayFlowView: View {
+    
+    @ObservedObject var flowModel: FlowModel
+    
+    let factory: Factory
+    
+    var body: some View {
+        
+        servicePicker(model: flowModel.state.content)
+            .alert(
+                item: flowModel.alert,
+                content: alertContent
+            )
+            .navigationDestination(
+                destination: flowModel.destination,
+                dismissDestination: { flowModel.event(.dismiss) },
+                content: destinationContent
+            )
+    }
+}
+
+extension AnywayServicePickerFlowView {
+    
+    typealias FlowModel = AnywayServicePickerFlowModel
+    typealias Factory = AnywayServicePickerFlowViewFactory<AnywayFlowView>
+}
+
+extension AnywayServicePickerFlowModel {
+    
+    var alert: State.Status.Alert? {
+        
+        guard case let .alert(alert) = state.status
+        else { return nil }
+        
+        return alert
+    }
+    
+    var destination: Destination? {
+        
+        switch state.status {
+        case let .destination(destination):
+            switch destination {
+            case let .payByInstructions(node):
+                return .payByInstructions(node.model)
+                
+            case let .payment(node):
+                return .payment(node.model)
+            }
+            
+        default:
+            return nil
+        }
+    }
+    
+    enum Destination: Identifiable {
+        
+        case payByInstructions(PaymentsViewModel)
+        case payment(AnywayFlowModel)
+        
+        var id: ID {
+            switch self {
+            case .payByInstructions: return .payByInstructions
+            case .payment:           return .payment
+            }
+        }
+        
+        enum ID: Hashable {
+            
+            case payByInstructions, payment
+        }
+    }
+}
+
+extension AnywayServicePickerFlowState.Status.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .connectivity: return .connectivity
+        case .serverError:  return .serverError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case connectivity, serverError
+    }
+}
+
+private extension AnywayServicePickerFlowView {
+    
+    func servicePicker(
+        model: PaymentProviderServicePickerModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerWrapperView(
+            model: flowModel.state.content,
+            failureView: failureView,
+            iconView: factory.makeIconView,
+            config: .iFora
+        )
+    }
+    
+    func failureView() -> FooterView {
+        
+        FooterView(
+            state: .failure(.iFora),
+            event: { event in
+                
+                switch event {
+                case .addCompany:
+                    flowModel.event(.goTo(.addCompany))
+                    
+                case .payByInstruction:
+                    flowModel.event(.payByInstruction)
+                }
+            },
+            config: .iFora
+        )
+    }
+    
+    func alertContent(
+        alert: AnywayServicePickerFlowState.Status.Alert
+    ) -> Alert {
+        
+        return .init(
+            with: .error(
+                title: alert.title,
+                message: alert.message
+            ),
+            event: flowModel.event(_:)
+        )
+    }
+    
+    @ViewBuilder
+    func destinationContent(
+        destination: AnywayServicePickerFlowModel.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payByInstructions(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
+            
+        case let .payment(anywayFlowModel):
+            let provider = flowModel.state.content.state.payload.provider
+            
+            factory.makeAnywayFlowView(anywayFlowModel)
+                .navigationBarWithAsyncIcon(
+                    title: provider.origin.title,
+                    subtitle: provider.origin.inn,
+                    dismiss: { flowModel.event(.dismiss) },
+                    icon: factory.makeIconView(provider.icon),
+                    style: .normal
+                )
+        }
+    }
+}
+
+private extension AnywayServicePickerFlowState.Status.Alert {
+    
+    var title: String {
+        
+        switch self {
+        case .connectivity:
+            return ""
+            
+        case .serverError:
+            return "Ошибка"
+        }
+    }
+    
+    var message: String {
+        
+        switch self {
+        case .connectivity:
+            return "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."
+            
+        case let .serverError(message):
+            return message
+        }
+    }
+}
+
+private extension AlertModel
+where PrimaryEvent == AnywayServicePickerFlowEvent,
+      SecondaryEvent == AnywayServicePickerFlowEvent {
+    
+    static func error(
+        title: String,
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .goTo(.payments)
+            )
+        )
+    }
+}
+
+extension SegmentedProvider {
+    
+    var icon: IconDomain.Icon? {
+        
+        origin.icon.map { .md5Hash(.init($0)) }
+    }
+}

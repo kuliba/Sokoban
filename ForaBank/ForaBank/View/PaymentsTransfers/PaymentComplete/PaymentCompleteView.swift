@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 11.06.2024.
 //
 
-import SwiftUI
+import Combine
 import PaymentCompletionUI
+import SwiftUI
+import UIPrimitives
 
 struct PaymentCompleteView: View {
     
@@ -14,6 +16,7 @@ struct PaymentCompleteView: View {
     let goToMain: () -> Void
     let `repeat`: () -> Void
     let factory: Factory
+    let makeIconView: (String?) -> UIPrimitives.AsyncImage
     let config: Config
     
     var body: some View {
@@ -22,13 +25,9 @@ struct PaymentCompleteView: View {
             state: transactionCompleteState,
             goToMain: goToMain,
             repeat: `repeat`,
-            factory: factory
-        ) {
-            PaymentCompletionStatusView(
-                state: paymentCompletionState,
-                config: config
-            )
-        }
+            factory: factory,
+            content: content
+        )
     }
 }
 
@@ -67,7 +66,7 @@ private extension PaymentCompleteView {
         
         return .init(
             formattedAmount: state.formattedAmount,
-            merchantIcon: nil,
+            merchantIcon: state.merchantIcon,
             status: paymentCompletionStatus
         )
     }
@@ -85,6 +84,15 @@ private extension PaymentCompleteView {
             case .rejected:  return .rejected
             }
         }
+    }
+    
+    private func content() -> some View {
+        
+        PaymentCompletionStatusView(
+            state: paymentCompletionState,
+            makeIconView: makeIconView,
+            config: config
+        )
     }
 }
 
@@ -117,6 +125,13 @@ struct PaymentCompleteView_Previews: PreviewProvider {
             goToMain: {},
             repeat: {},
             factory: .preview,
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0 ?? "pencil.and.outline"),
+                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                )
+            },
             config: .iFora
         )
     }
@@ -124,21 +139,31 @@ struct PaymentCompleteView_Previews: PreviewProvider {
 
 extension PaymentCompleteState {
     
-    static let fraudCancelled: Self = .preview(.failure(.init(hasExpired: false)))
+    static let fraudCancelled: Self = failure(.init(hasExpired: false))
+    static let fraudExpired: Self = failure(.init(hasExpired: true))
+    static let completed: Self = success(.completed)
+    static let inflight: Self = success(.inflight)
+    static let rejected: Self = success(.rejected)
     
-    static let fraudExpired: Self = .preview(.failure(.init(hasExpired: true)))
+    private static func failure(
+        _ fraud: Fraud
+    ) -> Self {
+        
+        return preview(.failure(fraud))
+    }
     
-    static let completed: Self = .preview(.success(.completed))
-    
-    static let inflight: Self = .preview(.success(.inflight))
-    
-    static let rejected: Self = .preview(.success(.rejected))
+    private static func success(
+        _ report: Report
+    ) -> Self {
+        
+        return preview(.success(report))
+    }
     
     private static func preview(
         _ result: Result<Report, Fraud>
     ) -> Self {
         
-        return .init(formattedAmount: "1,000 ₽", result: result)
+        return .init(formattedAmount: "1,000 ₽", merchantIcon: nil, result: result)
     }
 }
 

@@ -7,7 +7,7 @@
 
 import ForaTools
 
-struct UtilityServicePickerFlowState<Operator, Service, PaymentViewModel> {
+struct UtilityServicePickerFlowState<Operator, Service> {
     
     var alert: Alert?
     let content: Content
@@ -32,7 +32,7 @@ extension UtilityServicePickerFlowState {
 
 extension UtilityServicePickerFlowState.Destination {
     
-    typealias Payment = UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias Payment = UtilityServicePaymentFlowState
 }
 
 extension UtilityServicePickerFlowState.Content: Equatable where Operator: Equatable, Service: Equatable {}

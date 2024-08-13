@@ -113,15 +113,6 @@ protocol AuthLoginViewModelFactory {
     ) -> LandingWrapperViewModel
 }
 
-protocol MainViewModelFactory {
-    
-    func makeStickerLandingViewModel(
-        _ type: AbroadType,
-        config: UILanding.Component.Config,
-        landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
-    ) -> LandingWrapperViewModel
-}
-
 // MARK: Binding
 
 private extension AuthLoginViewModel {

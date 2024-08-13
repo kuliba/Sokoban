@@ -2,52 +2,61 @@
 //  AnywayTransactionViewModelComposer.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 10.06.2024.
+//  Created by Igor Malyarov on 25.07.2024.
 //
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import CombineSchedulers
 import ForaTools
 import Foundation
 import PaymentComponents
 
 final class AnywayTransactionViewModelComposer {
     
-    private let getCurrencySymbol: GetCurrencySymbol
-    private let elementMapper: AnywayElementModelMapper
-    private let microServices: MicroServices
-    private let spinnerActions: SpinnerActions
+    private let flag: Flag
+    private let model: Model
+    private let httpClient: HTTPClient
+    private let log: Log
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     private let buttonTitle = "Продолжить"
     
     init(
-        getCurrencySymbol: @escaping GetCurrencySymbol,
-        elementMapper: AnywayElementModelMapper,
-        microServices: MicroServices,
-        spinnerActions: SpinnerActions
+        flag: Flag,
+        model: Model,
+        httpClient: HTTPClient,
+        log: @escaping Log,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.getCurrencySymbol = getCurrencySymbol
-        self.elementMapper = elementMapper
-        self.microServices = microServices
-        self.spinnerActions = spinnerActions
+        self.flag = flag
+        self.model = model
+        self.httpClient = httpClient
+        self.log = log
+        self.scheduler = scheduler
     }
     
-    typealias GetCurrencySymbol = (String) -> String
-    typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
-    typealias SpinnerActions = RootViewModel.RootActions.Spinner?
+    typealias Flag = UtilitiesPaymentsFlag
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
 extension AnywayTransactionViewModelComposer {
     
-    func makeAnywayTransactionViewModel(
-        transaction: AnywayTransactionState.Transaction,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    func compose(
+        transaction: AnywayTransactionState.Transaction
     ) -> AnywayTransactionViewModel {
         
-        let effectHandler = EffectHandler(microServices: microServices)
+        typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
+        typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
+        
+        let elementMapperComposer = AnywayElementModelMapperComposer(model: model)
+        let elementMapper = elementMapperComposer.compose(flag: flag)
         
         let composer = ReducerComposer()
         let reducer = composer.compose()
+        
+        let microServices = composeMicroServices()
+        let effectHandler = EffectHandler(microServices: microServices)
         
         let footer = makeFooterViewModel(
             transaction: transaction,
@@ -56,18 +65,18 @@ extension AnywayTransactionViewModelComposer {
         
         return .init(
             transaction: transaction,
-            mapToModel: { event in { self.elementMapper.map($0, event) }},
+            mapToModel: { event in { elementMapper.map($0, event) }},
             footer: footer,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
         )
     }
+}
+
+private extension AnywayTransactionViewModelComposer {
     
-    typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
-    typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
-    
-    private func makeFooterViewModel(
+    func makeFooterViewModel(
         transaction: AnywayTransactionState.Transaction,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> FooterViewModel {
@@ -92,5 +101,33 @@ extension AnywayTransactionViewModelComposer {
             currencySymbol: currencySymbol,
             scheduler: scheduler
         )
+    }
+    
+    private func composeMicroServices(
+    ) -> AnywayTransactionEffectHandlerMicroServices {
+        
+        typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
+        typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
+        
+        let nanoServicesComposer = NanoServicesComposer(
+            flag: flag.optionOrStub,
+            httpClient: httpClient,
+            log: log
+        )
+        
+        let nanoServices = nanoServicesComposer.compose()
+        
+        let microServicesComposer = MicroServicesComposer(
+            nanoServices: nanoServices
+        )
+        
+        return microServicesComposer.compose()
+    }
+    
+    private func getCurrencySymbol(
+        for currency: String
+    ) -> String {
+        
+        model.dictionaryCurrencySymbol(for: currency) ?? ""
     }
 }

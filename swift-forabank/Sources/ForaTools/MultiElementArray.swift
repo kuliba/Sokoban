@@ -39,6 +39,13 @@ public struct MultiElementArray<Element> {
         
         self._elements = elements
     }
+    
+    public init(
+        _ head: Element,
+        _ tail: Element...
+    ) {
+        self._elements = [head] + tail
+    }
 }
 
 extension MultiElementArray {
@@ -47,3 +54,18 @@ extension MultiElementArray {
 }
 
 extension MultiElementArray: Equatable where Element: Equatable {}
+
+extension MultiElementArray {
+    
+    public func map<T>(
+        _ transform: (Element) throws -> T
+    ) rethrows -> MultiElementArray<T> {
+        
+        return try .init(elements.map(transform))!
+    }
+    
+    public static func + (_ lhs: Self, _ rhs: Self) -> Self {
+        
+        return .init(lhs.elements + rhs.elements)!
+    }
+}
