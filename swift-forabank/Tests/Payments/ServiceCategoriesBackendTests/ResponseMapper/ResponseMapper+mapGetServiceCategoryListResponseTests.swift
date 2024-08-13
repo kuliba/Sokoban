@@ -16,7 +16,7 @@ extension ResponseMapper {
         
         struct Category: Equatable {
             
-            let latestPaymentsCategory: String?
+            let latestPaymentsCategory: LatestPaymentsCategory?
             let md5Hash: String
             let name: String
             let ord: Int
@@ -39,6 +39,21 @@ extension ResponseMapper {
                 case socialAndGames
                 case transport
                 case taxAndStateService
+            }
+            
+            enum LatestPaymentsCategory: Equatable {
+                
+                case charity
+                case education
+                case digitalWallets
+                case mobile
+                case networkMarketing
+                case repaymentLoansAndAccounts
+                case security
+                case service
+                case socialAndGames
+                case taxAndStateService
+                case transport
             }
             
             enum PaymentFlow: Equatable {
@@ -90,7 +105,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category {
     init(_ category: ResponseMapper._Data._Category) {
 
         self.init(
-            latestPaymentsCategory: category.latestPaymentsCategory,
+            latestPaymentsCategory: category.latestPaymentsCategory.map { .init($0) },
             md5Hash: category.md5hash,
             name: category.name,
             ord: category.ord,
@@ -123,6 +138,26 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category.Categor
     }
 }
 
+private extension ResponseMapper.GetServiceCategoryListResponse.Category.LatestPaymentsCategory {
+    
+    init(_ category: ResponseMapper._Data._Category.LatestPaymentsCategory) {
+        
+        switch category {
+        case .isCharityPayments:                   self = .charity
+        case .isEducationPayments:                 self = .education
+        case .isDigitalWalletsPayments:            self = .digitalWallets
+        case .isMobilePayments:                    self = .mobile
+        case .isNetworkMarketingPayments:          self = .networkMarketing
+        case .isRepaymentLoansAndAccountsPayments: self = .repaymentLoansAndAccounts
+        case .isServicePayments:                   self = .service
+        case .isSecurityPayments:                  self = .security
+        case .isSocialAndGamesPayments:            self = .socialAndGames
+        case .isTaxAndStateServicePayments:        self = .taxAndStateService
+        case .isTransportPayments:                 self = .transport
+        }
+    }
+}
+
 private extension ResponseMapper.GetServiceCategoryListResponse.Category.PaymentFlow {
     
     init(_ paymentFlow: ResponseMapper._Data._Category.PaymentFlow) {
@@ -151,7 +186,7 @@ private extension ResponseMapper {
             let ord: Int
             let md5hash: String
             let paymentFlow: PaymentFlow
-            let latestPaymentsCategory: String?
+            let latestPaymentsCategory: LatestPaymentsCategory?
             let search: Bool
             
             enum CategoryType: String, Decodable {
@@ -169,6 +204,21 @@ private extension ResponseMapper {
                 case socialAndGames
                 case transport
                 case taxAndStateService
+            }
+            
+            enum LatestPaymentsCategory: String, Decodable {
+                
+                case isCharityPayments
+                case isEducationPayments
+                case isDigitalWalletsPayments
+                case isMobilePayments
+                case isNetworkMarketingPayments
+                case isRepaymentLoansAndAccountsPayments
+                case isServicePayments
+                case isSecurityPayments
+                case isSocialAndGamesPayments
+                case isTaxAndStateServicePayments
+                case isTransportPayments
             }
             
             enum PaymentFlow: String, Decodable {
@@ -313,7 +363,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
     static let one: Self = .init(
         categoryGroupList: [
             .init(
-                latestPaymentsCategory: "isMobilePayments",
+                latestPaymentsCategory: .mobile,
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
@@ -336,7 +386,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .qr
             ),
             .init(
-                latestPaymentsCategory: "isMobilePayments",
+                latestPaymentsCategory: .mobile,
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
@@ -345,7 +395,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .mobile
             ),
             .init(
-                latestPaymentsCategory: "isServicePayments",
+                latestPaymentsCategory: .service,
                 md5Hash: "ffc64acafb053c5e6ebc4e9300f7cccc",
                 name: "Услуги ЖКХ",
                 ord: 30,
@@ -354,7 +404,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .housingAndCommunalService
             ),
             .init(
-                latestPaymentsCategory: "Услуги ЖКХ",
+                latestPaymentsCategory: .service,
                 md5Hash: "c15643f89507e5fd4f5caef8fbd3e4df",
                 name: "Интернет, ТВ",
                 ord: 40,
@@ -363,7 +413,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .internet
             ),
             .init(
-                latestPaymentsCategory: "isTransportPayments",
+                latestPaymentsCategory: .transport,
                 md5Hash: "23d9ad3ce923f736b8ee4c5a11cb1915",
                 name: "Транспорт",
                 ord: 50,
@@ -372,7 +422,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .transport
             ),
             .init(
-                latestPaymentsCategory: "isTaxAndStateServicePayments",
+                latestPaymentsCategory: .taxAndStateService,
                 md5Hash: "a49599eb358791b62b8d4c6341a163e5",
                 name: "Налоги и госуслуги",
                 ord: 60,
@@ -381,7 +431,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .taxAndStateService
             ),
             .init(
-                latestPaymentsCategory: "isSecurityPayments",
+                latestPaymentsCategory: .security,
                 md5Hash: "12e2479526b75f3ac2cf2b4bf420626d",
                 name: "Охранные системы",
                 ord: 70,
@@ -390,7 +440,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .security
             ),
             .init(
-                latestPaymentsCategory: "isDigitalWalletsPayments",
+                latestPaymentsCategory: .digitalWallets,
                 md5Hash: "39e857d35b8e683526ec4912845f1c55",
                 name: "Электронный кошелек",
                 ord: 80,
@@ -399,7 +449,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .digitalWallets
             ),
             .init(
-                latestPaymentsCategory: "isRepaymentLoansAndAccountsPayments",
+                latestPaymentsCategory: .repaymentLoansAndAccounts,
                 md5Hash: "9f37d214d2462f2c5dc952c553613cc6",
                 name: "Погашение кредита ",
                 ord: 90,
@@ -408,7 +458,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .repaymentLoansAndAccounts
             ),
             .init(
-                latestPaymentsCategory: "isSocialAndGamesPayments",
+                latestPaymentsCategory: .socialAndGames,
                 md5Hash: "d7d1c6adc224e96343c012ca1fcf1472",
                 name: "Развлечения (игры и соц.сети)",
                 ord: 100,
@@ -417,7 +467,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .socialAndGames
             ),
             .init(
-                latestPaymentsCategory: "isNetworkMarketingPayments",
+                latestPaymentsCategory: .networkMarketing,
                 md5Hash: "9a2b90b30cf0e65dccb44f43d3c1e145",
                 name: "Сетевой маркетинг",
                 ord: 110,
@@ -426,7 +476,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .networkMarketing
             ),
             .init(
-                latestPaymentsCategory: "isEducationPayments",
+                latestPaymentsCategory: .education,
                 md5Hash: "a83b5b005fc16c356b2456d5a514c842",
                 name: "Образование",
                 ord: 120,
@@ -435,7 +485,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 type: .education
             ),
             .init(
-                latestPaymentsCategory: "isCharityPayments",
+                latestPaymentsCategory: .charity,
                 md5Hash: "f7463aa7646d1e2cfe33f71ab4a72d75",
                 name: "Благотворительность",
                 ord: 130,
@@ -571,7 +621,7 @@ private extension String {
         "ord": 40,
         "md5hash": "c15643f89507e5fd4f5caef8fbd3e4df",
         "paymentFlow": "STANDARD_FLOW",
-        "latestPaymentsCategory": "Услуги ЖКХ",
+        "latestPaymentsCategory": "isServicePayments",
         "search": true
       },
       {
