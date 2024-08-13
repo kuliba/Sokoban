@@ -55,7 +55,8 @@ public struct CalendarView: View {
         _ selectedRange: Binding<MDateRange?>?,
         _ configBuilder: (CalendarConfig) -> CalendarConfig)
     {
-        self._selectedData = .init(wrappedValue: .init(.now, .init(nil, nil)))
+        self._selectedData = .init(wrappedValue: .init(.now, .init(.now.start(of: .weekday), .now.end(of: .weekday))))
+        
         self.configData = configBuilder(.init())
         self.monthsData = .generate()
     }
@@ -67,7 +68,7 @@ public struct CalendarView: View {
             HStack(spacing: 8) {
             
                 OptionButtonView(title: "Неделя", isSelected: false) {
-                    self._selectedData.wrappedValue.range = .init(.now.start(of: .month), .now.end(of: .weekday))
+                    self._selectedData.wrappedValue.range = .init(.now.start(of: .weekday), .now.end(of: .weekday))
                 }
                 
                 OptionButtonView(title: "Месяц", isSelected: false) {
