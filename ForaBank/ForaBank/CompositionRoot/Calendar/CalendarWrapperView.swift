@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import CalendarUI
+import SharedConfigs
 
 struct CalendarWrapperView: View {
     
@@ -30,12 +31,26 @@ struct CalendarWrapperView: View {
                     HStack {
                         
                         simpleButtonView(
-                            title: "Закрыть",
+                            config: .init(
+                                title: "Закрыть",
+                                titleConfig: .init(
+                                    textFont: .textH3Sb18240(),
+                                    textColor: .textSecondary
+                                ),
+                                background: .buttonSecondary
+                            ),
                             action: closeAction
                         )
                         
                         simpleButtonView(
-                            title: selectedRange?.rangeSelected == true ? "Показать" : "Выбрать",
+                            config: .init(
+                                title: "Показать",
+                                titleConfig: .init(
+                                    textFont: .textH3Sb18240(),
+                                    textColor: .textSecondary
+                                ),
+                                background: .buttonPrimary
+                            ),
                             action: closeAction
                         )
                         .allowsHitTesting(selectedRange?.rangeSelected == true ? false : true)
@@ -65,7 +80,7 @@ private extension CalendarWrapperView {
                 
                 config
                      .dayView(RangeSelector.init)
-         //            .scrollTo(date: .now)
+                     .scrollTo(date: Date())
             }
         )
     }
@@ -77,20 +92,29 @@ private extension CalendarWrapperView {
     }
     
     func simpleButtonView(
-        title: String,
+        config: SimpleButtonConfig,
         action: @escaping () -> Void
     ) -> some View {
         
         Button(action: action) {
             
-            Text(title)
+            config.title.text(withConfig: config.titleConfig)
                 .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
                 .padding(.horizontal, 16)
-                .background(Color.gray)
-                .foregroundColor(.white)
+                .background(config.background)
                 .font(.system(size: 18))
                 .clipShape(.rect(cornerRadius: 12))
         }
+    }
+}
+
+extension CalendarWrapperView {
+    
+    struct SimpleButtonConfig {
+    
+        let title: String
+        let titleConfig: TextConfig
+        let background: Color
     }
 }
 
