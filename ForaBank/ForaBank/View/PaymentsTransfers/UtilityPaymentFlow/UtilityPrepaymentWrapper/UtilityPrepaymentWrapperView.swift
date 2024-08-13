@@ -86,7 +86,7 @@ private extension UtilityPrepaymentWrapperView {
             label: {
 
                 LastPaymentLabel(
-                    amount: "\(latestPayment.amount)",
+                    amount: "\(latestPayment.amount) ₽",
                     title: latestPayment.name,
                     config: .iFora,
                     iconView: makeIconView(latestPayment.md5Hash)
