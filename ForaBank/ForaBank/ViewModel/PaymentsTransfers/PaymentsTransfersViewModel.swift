@@ -1618,8 +1618,8 @@ extension PaymentsTransfersViewModel {
         case let .multiple(multipleOperators, qrCode, qrMapping):
             searchOperators(multipleOperators, with: qrCode)
             
-        case let .none(qrCode):
-            payByInstructions(with: qrCode)
+        case .none:
+            handleUnknownQR()
             
         case let .provider(payload):
             makeServicePicker(payload)
