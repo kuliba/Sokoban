@@ -307,7 +307,7 @@ extension AnywayPaymentOutline {
         let fields = Dictionary(uniqueKeysWithValues: pairs)
         
         self.init(
-            amount: latest.amount,
+            amount: nil,
             product: product,
             fields: fields,
             payload: .init(
