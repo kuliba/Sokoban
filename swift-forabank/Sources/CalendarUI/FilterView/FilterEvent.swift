@@ -11,4 +11,5 @@ public enum FilterEvent {
     
     case selectedPeriod(String)
     case selectedTransaction(String)
+    case selectedCategory(String)
 }

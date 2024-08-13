@@ -16,7 +16,7 @@ public struct FilterView: View {
     public typealias Config = FilterConfig
     
     var state: State
-    let event: (Event) -> Void
+    let filterEvent: (Event) -> Void
     let config: Config
     
     let makeButtonsContainer: () -> ButtonsContainer
@@ -32,7 +32,7 @@ public struct FilterView: View {
         dismissAction: @escaping () -> Void
     ) {
         self.state = state
-        self.event = event
+        self.filterEvent = event
         self.config = config
         self.makeButtonsContainer = makeButtonsContainer
         self.clearOptionsAction = clearOptionsAction
@@ -52,7 +52,11 @@ public struct FilterView: View {
             
             PeriodContainer(
                 periods: state.periods,
-                event: { event in  }
+                selectedPeriod: state.selectedPeriod,
+                event: { event in
+                    
+                    filterEvent(event)
+                }
             )
             
             if !state.services.isEmpty {
@@ -62,7 +66,10 @@ public struct FilterView: View {
                 
                 TransactionContainer(
                     transactions: state.transactions,
-                    event: { event in },
+                    selectedTransaction: state.selectedTransaction,
+                    event: { event in
+                        filterEvent(event)
+                    },
                     config: config
                 )
                 
@@ -70,9 +77,12 @@ public struct FilterView: View {
                     .padding(.bottom, 5)
                 
                 FlexibleContainerButtons(
-                    data: state.services,
+                    data: state.services.sorted(),
                     selectedItems: state.selectedServices,
-                    serviceButtonTapped: {},
+                    serviceButtonTapped: { service in
+                        
+                        filterEvent(.selectedCategory(service))
+                    },
                     config: .init(
                         title: "",
                         titleConfig: .init(
@@ -104,7 +114,10 @@ extension FilterView {
                 
                 ForEach(periods, id: \.self) { period in
                     
-                    Button(action: { event(.selectedPeriod(period)) }) {
+                    Button(action: {
+                        
+                        event(.selectedPeriod(period))
+                    }) {
                         
                         Text(period)
                             .padding()
@@ -216,8 +229,8 @@ struct BottomButton: View {
             
             Text(title)
                 .frame(maxWidth: .infinity, minHeight: 56)
-                .foregroundColor(.white)
-                .background(Color.red)
+                .foregroundColor(config.foreground)
+                .background(config.background)
                 .cornerRadius(12)
                 .font(.system(size: 18))
         }
@@ -234,7 +247,7 @@ struct FlexibleContainerButtons: View {
     
     let data: [String]
     var selectedItems: Set<String>
-    let serviceButtonTapped: () -> Void
+    let serviceButtonTapped: (String) -> Void
     let config: ServiceButton.Config
     
     var body: some View {
@@ -255,7 +268,7 @@ struct FlexibleContainerButtons: View {
                             title: service,
                             titleConfig: .init(
                                 textFont: .system(size: 16),
-                                textColor: .black
+                                textColor: .white
                             ))
                     )
                     .padding([.horizontal, .vertical], 4)
@@ -325,14 +338,14 @@ extension View {
 struct ServiceButton: View {
     
     let state: State
-    let action: () -> Void
+    let action: (String) -> Void
     let config: Config
     
     var body: some View {
         
-        Button(action: action) {
+        Button(action: { action(self.config.title) }) {
             
-            config.title.text(withConfig: config.titleConfig)
+            Text(config.title)
                 .padding()
                 .background(state.isSelected ? Color.black : .gray.opacity(0.2))
                 .foregroundColor(state.isSelected ? .white : .black)
