@@ -168,7 +168,7 @@ private extension TemplatesListFlowModelComposer {
         
         return .init(
             source: .template(template.id),
-            model: .emptyMock,
+            model: model,
             closeAction: close
         )
     }
