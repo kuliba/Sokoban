@@ -228,7 +228,10 @@ extension ModelAction {
             
             enum Total {
                 
-                struct All: Action {}
+                struct All: Action {
+                    
+                    let isCalledOnAuth: Bool
+                }
             }
 
             struct ForProductType: Action {
@@ -445,7 +448,7 @@ extension Model {
         productsFastUpdating.value.remove(product.id)
     }
 
-    func handleProductsUpdateTotalAll() {
+    func handleProductsUpdateTotalAll(isCalledOnAuth: Bool) {
         
         guard self.productsUpdating.value.isEmpty == true else {
             return
@@ -469,7 +472,12 @@ extension Model {
                     let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
                     queue.delay(
                         for: .seconds((1 + index) * interval),
-                        execute: { self.updateProduct(command, productType: productType) })
+                        execute: {
+                            self.updateProduct(command, 
+                                               productType: productType,
+                                               isCalledOnAuth: isCalledOnAuth)
+                        })
+                  
                 }
             }
         }
@@ -492,13 +500,16 @@ extension Model {
             self.productsUpdating.value.append(payload.productType)
 
             let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
-
-            updateProduct(command, productType: payload.productType)
+            updateProduct(command, productType: payload.productType, isCalledOnAuth: false)
         }
     }
     
-    func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
-            
+    func updateProduct(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        productType: ProductType,
+        isCalledOnAuth: Bool
+    ) {
+        
         getProducts(productType) { response in
             
             if let response {
@@ -539,16 +550,19 @@ extension Model {
                     self.handleServerCommandCachingError(error: error, command: command)
                 }
                 
-                // update additional products data
-                switch productType {
-                case .deposit:
-                    self.action.send(ModelAction.Deposits.Info.All())
+                // update additional products data, without launching when the app starts on the main screen
+                if !isCalledOnAuth {
                     
-                case .loan:
-                    self.action.send(ModelAction.Loans.Update.All())
-                    
-                default:
-                    break
+                    switch productType {
+                    case .deposit:
+                        self.action.send(ModelAction.Deposits.Info.All())
+                        
+                    case .loan:
+                        self.action.send(ModelAction.Loans.Update.All())
+                        
+                    default:
+                        break
+                    }
                 }
             }
             else {

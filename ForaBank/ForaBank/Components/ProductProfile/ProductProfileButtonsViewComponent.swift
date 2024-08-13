@@ -34,7 +34,10 @@ extension ProductProfileButtonsView {
             self.buttons = updatedButtons(for: product, depositInfo: depositInfo)
         }
         
-        private func updatedButtons(for product: ProductData, depositInfo: DepositInfoDataItem?) -> [ButtonIconTextRectView.ViewModel] {
+        private func updatedButtons(
+            for product: ProductData,
+            depositInfo: DepositInfoDataItem?
+        ) -> [ButtonIconTextRectView.ViewModel] {
             
             var result = [ButtonIconTextRectView.ViewModel]()
             for type in ButtonType.allCases {

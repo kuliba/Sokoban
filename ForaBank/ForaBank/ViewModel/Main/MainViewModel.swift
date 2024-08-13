@@ -271,7 +271,8 @@ private extension MainViewModel {
                     route.destination = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
-                    model.action.send(ModelAction.Products.Update.Total.All())
+                    
+                    model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
                     
                 case _ as MainViewModelAction.Close.Link:

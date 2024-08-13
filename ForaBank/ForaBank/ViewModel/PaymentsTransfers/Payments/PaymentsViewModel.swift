@@ -150,7 +150,7 @@ class PaymentsViewModel: ObservableObject {
                         self.successViewModel = successViewModel
                         bind(successViewModel: successViewModel)
                         // update products balances
-                        model.action.send(ModelAction.Products.Update.Total.All())
+                        model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
                         // update latest operations list
                         model.action.send(ModelAction.LatestPayments.List.Requested())
                         

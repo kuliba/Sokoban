@@ -164,7 +164,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        self.model.action.send(ModelAction.Products.Update.Total.All())
+        self.model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
     }
     

@@ -141,7 +141,7 @@ class PaymentsSuccessViewModelAdapter {
     
     func updateProducts() {
         
-        model.action.send(ModelAction.Products.Update.Total.All())
+        model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
     }
     
     //MARK: - Other Helpers

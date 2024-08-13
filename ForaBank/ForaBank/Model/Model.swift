@@ -381,7 +381,7 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "auth: AUTHORIZED")
                     loadCachedAuthorizedData()
                     loadSettings()
-                    action.send(ModelAction.Products.Update.Total.All())
+                    action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: true))
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.ClientPhoto.Load())
                     action.send(ModelAction.Rates.Update.All())
@@ -607,9 +607,9 @@ class Model {
                 case let payload as ModelAction.Products.Update.Fast.Single.Request:
                     handleProductsUpdateFastSingleRequest(payload)
                     
-                case _ as ModelAction.Products.Update.Total.All:
-                    handleProductsUpdateTotalAll()
-                
+                case let payload as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll(isCalledOnAuth: payload.isCalledOnAuth)
+                    
                 case let payload as ModelAction.Products.UpdateVisibility:
                     handleProductsUpdateVisibility(payload)
                     

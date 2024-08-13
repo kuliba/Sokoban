@@ -125,7 +125,7 @@ class MyProductsViewModel: ObservableObject {
                 case _ as MyProductsViewModelAction.PullToRefresh:
                     guard editModeState != .active else { return }
                     
-                    model.action.send(ModelAction.Products.Update.Total.All())
+                    model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
                     self.action.send(MyProductsViewModelAction.StartIndicator())
                     
                 case _ as MyProductsViewModelAction.StartIndicator:
