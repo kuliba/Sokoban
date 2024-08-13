@@ -18,19 +18,22 @@ final class ControlPanelEffectHandler {
     private let landingEvent: (LandingEvent) -> Void
     private let card: ProductCardData
     private let hideKeyboard: () -> Void
+    private let getCurrencySymbol: GetCurrencySymbol
 
     init(
         card: ProductCardData,
         productProfileServices: ProductProfileServices,
         landingEvent: @escaping (LandingEvent) -> Void,
         handleModelEffect: @escaping HandleModelEffect,
-        hideKeyboard: @escaping () -> Void
+        hideKeyboard: @escaping () -> Void,
+        getCurrencySymbol: @escaping GetCurrencySymbol
     ) {
         self.card = card
         self.productProfileServices = productProfileServices
         self.landingEvent = landingEvent
         self.handleModelEffect = handleModelEffect
         self.hideKeyboard = hideKeyboard
+        self.getCurrencySymbol = getCurrencySymbol
     }
 }
 
@@ -102,7 +105,10 @@ extension ControlPanelEffectHandler {
                             
                             return .init(
                                 initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight(.loadingSVCardLimits)),
-                                reduce: ListHorizontalRectangleLimitsReducer.init(makeInformer: self.productProfileServices.makeInformer).reduce(_:_:),
+                                reduce: ListHorizontalRectangleLimitsReducer.init(
+                                    makeInformer: self.productProfileServices.makeInformer,
+                                    getCurrencySymbol: self.getCurrencySymbol)
+                                .reduce(_:_:),
                                 handleEffect: self.handleEffect(_:_:))
                         }
                         return nil
@@ -139,7 +145,7 @@ extension ControlPanelEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias HandleModelEffect = (Effect.ModelEffect, @escaping Dispatch) -> Void
-
+    typealias GetCurrencySymbol = (Int) -> String?
 }
 
 private extension ControlPanelEffectHandler {
@@ -172,9 +178,9 @@ private extension ControlPanelEffectHandler {
             }
             
         case let .saveLimits(limits):
-            
-            hideKeyboard()
-            
+            DispatchQueue.main.delay(for: .milliseconds(10)) { [weak self] in
+                self?.hideKeyboard()
+            }
             productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
                 
                 switch ($0, $1) {
