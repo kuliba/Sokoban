@@ -266,7 +266,7 @@ extension ListHorizontalRectangleLimitsView {
                     
                     switch limit.value {
                     case .maxLimit...:
-                        Text("Без ограничений")
+                        Text(String.noLimits)
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
