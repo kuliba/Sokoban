@@ -9,6 +9,7 @@ import ForaTools
 
 enum OperatorProviderLoadResult<Operator, Provider> {
     
+    case missingINN
     case mixed(Mixed)
     case multiple(MultipleOperators)
     case none
@@ -22,6 +23,19 @@ enum OperatorProviderLoadResult<Operator, Provider> {
 extension OperatorProviderLoadResult: Equatable where Operator: Equatable, Provider: Equatable {}
 
 extension OperatorProviderLoadResult {
+    
+    init(
+        operators: [Operator]?,
+        providers: [Provider]?
+    ) {
+        switch (operators, providers) {
+        case (.none, .none):
+            self = .missingINN
+            
+        default:
+            self.init(operators: operators ?? [], providers: providers ?? [])
+        }
+    }
     
     init(
         operators: [Operator],

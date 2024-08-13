@@ -982,14 +982,17 @@ extension MainViewModel {
         _ mapped: QRModelResult.Mapped
     ) {
         switch mapped {
+        case .missingINN:
+            handleUnknownQR()
+            
         case let .mixed(mixed, qrCode, qrMapping):
             makePaymentProviderPicker(mixed, qrCode, qrMapping)
             
         case let .multiple(multipleOperators, qrCode, qrMapping):
             searchOperators(multipleOperators, with: qrCode)
             
-        case .none:
-            handleUnknownQR()
+        case let .none(qrCode):
+            payByInstructions(with: qrCode)
             
         case let .provider(payload):
             makeServicePicker(payload)
