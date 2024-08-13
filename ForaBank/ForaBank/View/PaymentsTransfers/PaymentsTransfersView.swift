@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import ActivateSlider
+import Combine
 import InfoComponent
 import OperatorsListComponents
 import PaymentComponents
@@ -46,7 +47,7 @@ struct PaymentsTransfersView: View {
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.destination },
-                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) } }
+                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) }}
                 ),
                 content: destinationView(link:)
             )
@@ -55,10 +56,6 @@ struct PaymentsTransfersView: View {
                 leading: leadingBarItems,
                 trailing: trailingBarItems
             )
-            .tabBar(isHidden: .init(
-                get: { viewModel.route.destination != nil },
-                set: { if !$0 { viewModel.reset() } }
-            ))
     }
 }
 
@@ -235,9 +232,16 @@ extension PaymentsTransfersView {
                 .navigationBarTitle("", displayMode: .inline)
                 .edgesIgnoringSafeArea(.all)
             
-        case let .template(templateListViewModel):
-            TemplatesListView(viewModel: templateListViewModel)
-            
+        case let .templates(node):
+            TemplatesListFlowView(
+                model: node.model,
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: {
+                    
+                    viewFactory.makeIconView($0.map { .svg($0) })
+                }
+            )
+
         case let .currencyWallet(currencyWalletViewModel):
             CurrencyWalletView(viewModel: currencyWalletViewModel)
             
@@ -305,7 +309,7 @@ extension PaymentsTransfersView {
                 )
             
         case let .servicePayment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -320,6 +324,12 @@ extension PaymentsTransfersView {
                 icon: operatorIconView,
                 style: .large
             )
+            
+        case let .paymentProviderPicker(node):
+            paymentProviderPicker(node.model)
+            
+        case let .providerServicePicker(node):
+            servicePicker(flowModel: node.model)
         }
     }
     
@@ -433,10 +443,10 @@ extension PaymentsTransfersView {
     ) -> some View {
         
         switch fullScreenCover.type {
-        case let .qrScanner(viewModel):
+        case let .qrScanner(node):
             NavigationView {
                 
-                QRView(viewModel: viewModel)
+                QRView(viewModel: node.model.qrModel)
                     .navigationBarHidden(true)
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
@@ -477,6 +487,90 @@ extension PaymentsTransfersView {
     }
 }
 
+// MARK: - payment provider & service pickers
+
+private extension PaymentsTransfersView {
+    
+    func paymentProviderPicker(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> some View {
+        
+        ComposedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: viewFactory.makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
+        )
+        .navigationBarWithBack(
+            title: PaymentsTransfersSectionType.payments.name,
+            dismiss: viewModel.dismissPaymentProviderPicker,
+            rightItem: .barcodeScanner(
+                action: viewModel.dismissPaymentProviderPicker
+            )
+        )
+    }
+    
+    @ViewBuilder
+    func servicePicker(
+        flowModel: AnywayServicePickerFlowModel
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: viewFactory.makeIconView
+            )
+        )
+        .navigationBarWithAsyncIcon(
+            title: provider.origin.title,
+            subtitle: provider.origin.inn,
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: viewFactory.iconView(provider.origin.icon),
+            style: .normal
+        )
+    }
+}
+
+// MARK: - payment flow
+
+private extension PaymentsTransfersView {
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                viewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
+    }
+}
+
 // MARK: - Utility Payment Flow
 
 private extension PaymentsTransfersView {
@@ -493,7 +587,7 @@ private extension PaymentsTransfersView {
             content: {
                 
                 UtilityPrepaymentWrapperView(
-                    viewModel: state.content,
+                    binder: state.content,
                     completionEvent: { event(.prepayment($0.flowEvent)) },
                     makeIconView: { viewFactory.makeIconView($0.map { .md5Hash(.init($0)) }) }
                 )
@@ -534,7 +628,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -605,18 +699,18 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowView(
-        state: UtilityServiceFlowState,
+        state: UtilityServicePaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let transactionEvent = { state.viewModel.event($0) }
+        let transactionEvent = { state.content.event($0) }
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
             transactionEvent(.payment($0))
         }
         
-        AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
+        AnywayTransactionStateWrapperView(viewModel: state.content) { state, event in
             
             AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
@@ -641,14 +735,14 @@ private extension PaymentsTransfersView {
         )
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
-        .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
+        .navigationTitle("Payment: \(state.content.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
         transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
         flowEvent: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (UtilityServiceFlowState.Alert) -> Alert {
+    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
         
         return { alert in
             
@@ -676,7 +770,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowFullScreenCoverView(
-        fullScreenCover: UtilityServiceFlowState.FullScreenCover
+        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -687,9 +781,14 @@ private extension PaymentsTransfersView {
     
     func paymentFlowModalView(
         event: @escaping (FraudEvent) -> Void
-    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServicePaymentFlowState.Modal) -> FraudNoticeView {
         
-        return { PaymentFlowModalView(state: $0, event: event) }
+        return { 
+            
+            switch $0 {
+            case let .fraud(fraud):
+                FraudNoticeView(state: fraud, event: event) }
+            }
     }
     
     @ViewBuilder
@@ -700,7 +799,7 @@ private extension PaymentsTransfersView {
         
         let selectService = {
             event(.prepayment(.select(
-                .service($0, for: state.content.`operator`)
+                .oneOf($0, for: state.content.`operator`)
             )))
         }
         
@@ -789,20 +888,21 @@ private extension PaymentsTransfersView {
     typealias Operator = UtilityPaymentOperator
     typealias Service = UtilityService
     
-    typealias Content = UtilityPrepaymentViewModel
+    typealias Content = UtilityPrepaymentBinder
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, AnywayTransactionViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, AnywayTransactionViewModel>
-    
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service>
 }
 
-extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
+extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {
+    
+    var isUserInteractionEnabled: CurrentValueSubject<Bool, Never> { .init(false) }
+}
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
@@ -860,7 +960,7 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
 
 // MARK: - Alerts
 
-private extension AlertModel
+extension AlertModel
 where PrimaryEvent == AnywayTransactionEvent,
       SecondaryEvent == AnywayTransactionEvent {
     
@@ -1051,7 +1151,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: { .init(event: $0 ) },
-                makeRepeatButtonView: { .init(viewModel: .sample) }
+                makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
         )

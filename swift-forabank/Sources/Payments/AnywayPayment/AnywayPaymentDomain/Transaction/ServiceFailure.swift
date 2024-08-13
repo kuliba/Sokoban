@@ -7,6 +7,19 @@
 
 public enum ServiceFailure: Error, Equatable {
     
-    case connectivityError
+    case connectivityError(String)
     case serverError(String)
+}
+
+extension ServiceFailure {
+    
+    public var message: String {
+        
+        switch self {
+        case let .connectivityError(message):
+            return message
+        case let .serverError(message):
+            return message
+        }
+    }
 }

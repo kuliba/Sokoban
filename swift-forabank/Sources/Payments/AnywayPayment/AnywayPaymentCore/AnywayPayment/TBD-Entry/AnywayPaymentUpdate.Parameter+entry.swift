@@ -20,8 +20,11 @@ public extension AnywayPaymentUpdate.Parameter {
             case .number, .string:
                 return field.content.map { .nonEditable(.string($0)) }
                 
-            case let .pairs(pair, _):
-                return .nonEditable(.pair(key: pair.key, value: pair.value))
+            case let .pairs(pair, pairs):
+                return (pair ?? pairs.first).map {
+                    
+                    .nonEditable(.pair(key: $0.key, value: $0.value))
+                }
             }
             
         case .input:
@@ -68,8 +71,8 @@ public extension AnywayPaymentUpdate.Parameter {
             case .number, .string:
                 return field.content.map { .hidden($0) }
                 
-            case let .pairs(pair, _):
-                return .hidden(pair.key)
+            case let .pairs(pair, pairs):
+                return (pair ?? pairs.first).map { .hidden($0.key) }
             }
         }
     }
@@ -77,10 +80,10 @@ public extension AnywayPaymentUpdate.Parameter {
     enum Entry: Equatable {
         
         case hidden(String)
-        case maskList(Pair, [Pair])
+        case maskList(Pair?, [Pair])
         case nonEditable(Field)
         case numberInput(id: ID, value: Value?)
-        case select(Pair, [Pair])
+        case select(Pair?, [Pair])
         case textInput(id: ID, value: Value?)
     }
 }
@@ -90,7 +93,7 @@ public extension AnywayPaymentUpdate.Parameter.Entry {
     enum Field: Equatable {
         
         case string(String)
-        case pair(key: String, value: String)
+        case pair(key: String?, value: String)
     }
     
     typealias ID = String

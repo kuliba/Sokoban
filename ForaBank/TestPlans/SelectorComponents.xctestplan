@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "0EC6DEA1-E2DB-44F1-AA01-C9529F2A02A7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OptionalSelectorComponentTests",
+        "name" : "OptionalSelectorComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

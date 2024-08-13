@@ -31,7 +31,7 @@ extension Model {
 
 // MARK: - Cache
 
-struct CachingSberOperator: Codable {
+struct CachingSberOperator: Codable, Equatable {
     
     let id: String
     let inn: String

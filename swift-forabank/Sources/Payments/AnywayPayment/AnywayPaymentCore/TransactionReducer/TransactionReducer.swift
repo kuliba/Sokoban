@@ -146,8 +146,8 @@ private extension TransactionReducer {
             state.context = paymentInspector.handleOTPFailure(state.context, message)
             state.status = nil
             
-        case .failure(.terminal):
-            state.status = .result(.failure(.transactionFailure))
+        case let .failure(.terminal(message)):
+            state.status = .result(.failure(.transactionFailure(message)))
             
         case let .success(report):
             state.status = .result(.success(report))
@@ -228,8 +228,8 @@ private extension TransactionReducer {
         switch updateResult {
         case let .failure(serviceFailure):
             switch serviceFailure {
-            case .connectivityError:
-                state.status = .result(.failure(.updatePaymentFailure))
+            case let .connectivityError(message):
+                state.status = .result(.failure(.updatePaymentFailure(message)))
                 
             case let .serverError(message):
                 state.status = .serverError(message)
@@ -255,7 +255,7 @@ private extension TransactionReducer {
         case let .receive(result):
             switch result {
             case let .failure(serviceFailure):
-                state.status = .result(.failure(.transactionFailure))
+                state.status = .result(.failure(.transactionFailure(serviceFailure.message)))
 
             case .success:
                 break

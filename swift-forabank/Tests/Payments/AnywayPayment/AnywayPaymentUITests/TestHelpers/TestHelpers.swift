@@ -247,7 +247,7 @@ func makeAnywayElementParameterUIAttributes(
 }
 
 func makeAnywayPaymentOutline(
-    amount: Decimal = anyAmount(),
+    amount: Decimal? = nil,
     product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: AnywayPaymentOutline.Fields = [:],
     payload: AnywayPaymentOutline.Payload = makeOutlinePayload()

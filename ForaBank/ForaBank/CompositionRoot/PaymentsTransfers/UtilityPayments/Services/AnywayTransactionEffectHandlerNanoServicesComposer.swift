@@ -95,18 +95,20 @@ extension AnywayPaymentDomain.ServiceFailure {
         
         switch error {
         case .createRequest, .performRequest:
-            self = .connectivityError
+            self = .connectivity
             
         case let .mapResponse(error):
             switch error {
             case .invalid:
-                self = .connectivityError
+                self = .connectivity
                 
             case let .server(_, errorMessage: errorMessage):
                 self = .serverError(errorMessage)
             }
         }
     }
+    
+    static let connectivity: Self = .connectivityError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
     
     typealias MappingError = MappingRemoteServiceError<RemoteServices.ResponseMapper.MappingError>
 }
@@ -331,12 +333,12 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure
  
         switch error {
         case .createRequest, .performRequest:
-            self = .terminal
+            self = .terminalFailure
             
         case let .mapResponse(mappingError):
             switch mappingError {
             case .invalid:
-                self = .terminal
+                self = .terminalFailure
                 
             case let .server(statusCode, errorMessage):
                 switch (statusCode, errorMessage) {
@@ -344,11 +346,13 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure
                     self = .otpFailure(errorMessage)
                     
                 default:
-                    self = .terminal
+                    self = .terminalFailure
                 }
             }
         }
     }
+    
+    static let terminalFailure: Self = .terminal("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
     
     typealias ServiceError = RemoteServiceError<any Error, any Error, RemoteServices.ResponseMapper.MappingError>
 }
@@ -364,7 +368,7 @@ private extension NanoServices.CreateAnywayTransferResult {
         case let .success(response):
             switch AnywayPaymentUpdate(response) {
             case .none:
-                return .failure(.connectivityError)
+                return .failure(.connectivity)
                 
             case let .some(update):
                 return .success(update)
@@ -439,7 +443,7 @@ private extension AnywayPaymentDomain.ServiceFailure {
         
         switch error {
         case .connectivityError:
-            self = .connectivityError
+            self = .connectivity
             
         case let .serverError(message):
             self = .serverError(message)
@@ -453,19 +457,19 @@ private extension AnywayPaymentDigest {
     
     var initiatePaymentResultStub: ProcessResult {
         
-        .failure(.connectivityError)
+        .failure(.connectivity)
     }
     
     var processResultStub: ProcessResult {
         
         if isStep4 { return .success(.init(.step4)!) }
         if isStep4Fraud { return .success(.init(.step4Fraud)!) }
-        if isStep3Alert { return .failure(.connectivityError) }
+        if isStep3Alert { return .failure(.connectivity) }
         if isStep3 { return .success(.init(.step3)!) }
         if isStep2Alert { return .failure(.serverError("Неверный лицевой счет.")) }
         if isStep2 { return .success(.init(.step2)!) }
         
-        return .failure(.connectivityError)
+        return .failure(.connectivity)
     }
     
     typealias ProcessResult = AnywayTransactionEffectHandlerNanoServices.ProcessResult
@@ -681,7 +685,7 @@ private extension VerificationCode {
         case "222222": return .success(.g1Inflight)
         case "333333": return .success(.g1Rejected)
         case "444444": return .failure(.otpFailure("Код введен неверно"))
-        default:       return .failure(.terminal)
+        default:       return .failure(.terminalFailure)
         }
     }
     

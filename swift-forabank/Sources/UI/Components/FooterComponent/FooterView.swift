@@ -95,8 +95,10 @@ private extension FooterView {
         _ description: String
     ) -> some View {
         
-        description.text(withConfig: config.description)
-            .multilineTextAlignment(.center)
+        description.text(
+            withConfig: config.description, 
+            alignment: .center
+        )
     }
     
     func addCompanyButton() -> some View {

@@ -52,7 +52,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     config: config.navigationBarConfig
                 )
 
-                LandingWrapperView(viewModel: viewModel)
+                LandingWrapperView(
+                    viewModel: viewModel,
+                    updateSaveButtonAction: { updateSaveButtonAction(viewModel: viewModel) }
+                )
                     .frame(maxHeight: .infinity)
                     .alert(
                         item: .init(
@@ -114,6 +117,21 @@ struct ListHorizontalRectangleLimitsView: View {
                     event(.buttonTapped(.init(limitType: item.limitType, action: item.action.type)))
                 }
         )
+    }
+    
+    private func updateSaveButtonAction(viewModel: LandingWrapperViewModel) {
+        
+        let newValueMoreThenMaxValue: Bool  = {
+            
+            if case let .success(landing) = viewModel.state {
+                
+                return landing?.blockHorizontalRectangular? .newValueMoreThenMaxValue(viewModel.newLimitsValue) ?? false
+            }
+            
+            return false
+        }()
+        
+        event(.limitChanging(viewModel.newLimitsValue, newValueMoreThenMaxValue))
     }
 }
 
@@ -247,7 +265,7 @@ extension ListHorizontalRectangleLimitsView {
                 if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
                     
                     switch limit.value {
-                    case 999999999...:
+                    case .maxLimit...:
                         Text("Без ограничений")
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)

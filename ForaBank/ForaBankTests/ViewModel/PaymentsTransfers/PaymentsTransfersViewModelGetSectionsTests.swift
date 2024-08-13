@@ -81,7 +81,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -91,14 +91,21 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_  in .preview},
-            updateInfoStatusFlag: .init(.inactive)
+            updateInfoStatusFlag: .init(.inactive), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         )
+        
         return .init(
-            makeUtilitiesViewModel: { _,_ in },
+            makeAlertDataUpdateFailureViewModel: { _ in nil },
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { sections }, 
-            makeAlertDataUpdateFailureViewModel: { _ in nil }
+            makeSections: { sections },
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
+            makeTemplates: { _ in .sampleComplete },
+            makeUtilitiesViewModel: { _,_ in }
         )
     }
     

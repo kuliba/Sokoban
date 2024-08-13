@@ -17,7 +17,7 @@ extension AnywayPaymentOutline {
         )
         
         return .init(
-            amount: payment.amount ?? 0,
+            amount: payment.amount,
             product: payment.product ?? product,
             fields: fields,
             payload: payload

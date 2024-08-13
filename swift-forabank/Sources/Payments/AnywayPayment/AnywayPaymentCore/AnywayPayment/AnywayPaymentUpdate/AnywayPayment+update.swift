@@ -21,13 +21,10 @@ extension AnywayPayment {
         elements.appendNewFields(from: update.fields)
         elements.appendNewParameters(from: update.parameters, with: outline)
         
-        if let product = outline.product {
-            
-            elements.addIfMissing(
-                widget: .product(.init(product)),
-                condition: update.details.control.needSum || update.details.control.isMultiSum
-            )
-        }
+        elements.addIfMissing(
+            widget: .product(.init(outline.product)),
+            condition: update.details.control.needSum || update.details.control.isMultiSum
+        )
         
         elements.addIfMissing(
             widget: .info(.init(update)),
@@ -56,6 +53,7 @@ private extension AnywayElement.Widget.Info {
         
         self.init(
             currency: update.details.amounts.currencyPayer,
+            debitAmount: update.details.amounts.debitAmount,
             fields: [
                 update.details.amounts.amount.map { .amount($0) },
                 update.details.amounts.fee.map { .fee($0) },
@@ -312,7 +310,7 @@ private extension AnywayPaymentUpdate.Parameter {
         guard case let .pairs(pair, _) = uiAttributes.dataType
         else { return nil }
         
-        return pair.key
+        return pair?.key
     }
 }
 
@@ -402,7 +400,7 @@ private extension AnywayElement.Parameter.UIAttributes.DataType {
             self = .number
             
         case let .pairs(pair, pairs):
-            self = .pairs(pair.pair, pairs.map(\.pair))
+            self = .pairs(pair?.pair, pairs.map(\.pair))
             
         case .string:
             self = .string

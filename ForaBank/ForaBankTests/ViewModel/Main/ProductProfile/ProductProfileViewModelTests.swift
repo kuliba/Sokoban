@@ -892,6 +892,8 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .controlPanel(viewModel):
             return viewModel
+        case let .payment(viewModel):
+            return viewModel
         }
     }
 }

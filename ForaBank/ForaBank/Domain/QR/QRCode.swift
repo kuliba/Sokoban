@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QRCode {
+struct QRCode: Equatable {
     
     let original: String
     let rawData: [String: String]

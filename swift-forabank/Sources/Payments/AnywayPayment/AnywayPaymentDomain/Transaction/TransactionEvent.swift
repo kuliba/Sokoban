@@ -23,7 +23,7 @@ public extension TransactionEvent {
     enum TransactionFailure: Equatable, Error {
         
         case otpFailure(String)
-        case terminal
+        case terminal(String)
     }
     
     typealias TransactionResult = Result<TransactionReport, TransactionFailure>

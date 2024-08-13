@@ -221,7 +221,7 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
 
         case _backendReserved
         case number
-        case pairs(Pair, [Pair])
+        case pairs(Pair?, [Pair])
         case string
         
         public struct Pair: Equatable {

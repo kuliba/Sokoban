@@ -267,7 +267,8 @@ struct QRView_Previews: PreviewProvider {
         
         QRView(viewModel: .init(
             closeAction: {},
-            qrResolve: QRViewModel.ScanResult.init))
+            qrResolve: { _ in .unknown }
+        ))
     }
 }
 

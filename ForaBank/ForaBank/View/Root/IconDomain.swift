@@ -11,6 +11,7 @@ enum IconDomain {
     
     enum Icon {
         
+        case svg(String)
         case md5Hash(MD5Hash)
     }
     

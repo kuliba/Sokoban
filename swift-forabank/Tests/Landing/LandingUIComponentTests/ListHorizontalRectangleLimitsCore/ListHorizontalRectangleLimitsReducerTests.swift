@@ -7,6 +7,7 @@
 
 @testable import LandingUIComponent
 import RxViewModel
+import SVCardLimitAPI
 import XCTest
 
 final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
@@ -26,6 +27,46 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
             $0.limitsLoadingStatus = .limits(limits)
         }
     }
+    
+    func test_limitChanging_valueIsChanged_newValueLessThenMaxValue_shouldSetSaveButtonEnableTrue() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 10)], false), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = true
+        }
+    }
+    
+    func test_limitChanging_valueIsChanged_newValueMoreThenMaxValue_shouldSetSaveButtonEnableFalse() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 10)], true), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
+        }
+    }
+
+    func test_limitChanging_valueNoChanged_shouldSetSaveButtonEnableFalse() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.limitChanging([.init(id: "1", value: 100)], false), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
+        }
+    }
+    
+    func test_informerWithLimits_shouldSetSaveButtonEnableFalseUpdateLimits() {
+        
+        let newLimits: [GetSVCardLimitsResponse.LimitItem] = [
+            .init(type: "Debit", limits: [.init(currency: 810, currentValue: 90, name: "1", value: 1001)])
+        ]
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+
+        assert(.informerWithLimits("Test", newLimits), on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
+            $0.limitsLoadingStatus = .limits(.init(newLimits, getCurrencySymbol: { _ in "₽" }))
+        }
+    }
 
     private typealias SUT = ListHorizontalRectangleLimitsReducer
     private typealias State = SUT.State
@@ -40,11 +81,12 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
     }
     private func makeSUT(
         makeInformer: @escaping (String) -> Void = { _ in },
+        getCurrencySymbol: @escaping SUT.GetCurrencySymbol = { _ in "₽" },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(makeInformer: makeInformer)
+        let sut = SUT(makeInformer: makeInformer, getCurrencySymbol: getCurrencySymbol)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

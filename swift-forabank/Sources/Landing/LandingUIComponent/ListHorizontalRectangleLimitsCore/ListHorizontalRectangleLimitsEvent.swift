@@ -15,13 +15,14 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
     }
         
     case buttonTapped(Info)
-    case dismissDestination
-    case loadedLimits(LandingWrapperViewModel?, String, String)
-    case updateLimits(SVCardLimitsResult)
-    case saveLimits([BlockHorizontalRectangularEvent.Limit])
     case delayAlert(String)
-    case showAlert(String)
+    case dismissDestination
     case informerWithLimits(String, [GetSVCardLimitsResponse.LimitItem])
+    case limitChanging([BlockHorizontalRectangularEvent.Limit], Bool)
+    case loadedLimits(LandingWrapperViewModel?, String, String)
+    case saveLimits([BlockHorizontalRectangularEvent.Limit])
+    case showAlert(String)
+    case updateLimits(SVCardLimitsResult)
     
     public var id: Case {
         
@@ -43,12 +44,14 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
             return .showAlert
         case .informerWithLimits:
             return .informerWithLimits
+        case .limitChanging:
+            return .limitChanging
         }
     }
     
     public enum Case {
         
-        case buttonTapped, dismissDestination, loadedLimits, updateLimits, saveLimits, delayAlert, showAlert, informerWithLimits
+        case buttonTapped, dismissDestination, loadedLimits, updateLimits, saveLimits, delayAlert, showAlert, informerWithLimits, limitChanging
     }
 
     public struct Info: Equatable {

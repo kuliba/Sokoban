@@ -11,7 +11,7 @@ struct PaymentCompletionStatus {
     
     let status: Status
     let formattedAmount: String
-    let merchantIcon: Image?
+    let merchantIcon: String?
     
     struct Status: Equatable {
         

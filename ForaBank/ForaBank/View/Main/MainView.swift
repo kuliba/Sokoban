@@ -5,12 +5,15 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
+import ActivateSlider
+import Combine
+import FooterComponent
+import ForaTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker
 import SberQR
 import ScrollViewProxy
-import ActivateSlider
 import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
@@ -94,10 +97,6 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
-        .tabBar(isHidden: .init(
-            get: { !viewModel.route.isEmpty },
-            set: { if !$0 { viewModel.reset() } }
-        ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
@@ -163,7 +162,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -180,8 +179,15 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
-        case let .templates(templatesViewModel):
-            TemplatesListView(viewModel: templatesViewModel)
+        case let .templates(node):
+            TemplatesListFlowView(
+                model: node.model,
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: {
+                    
+                    viewFactory.makeIconView($0.map { .svg($0) })
+                }
+            )
             
         case let .currencyWallet(viewModel):
             CurrencyWalletView(viewModel: viewModel)
@@ -189,7 +195,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -243,6 +249,12 @@ struct MainView<NavigationOperationView: View>: View {
             navigationOperationView()
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
+            
+        case let .paymentProviderPicker(node):
+            paymentProviderPicker(node.model)
+            
+        case let .providerServicePicker(node):
+            servicePicker(flowModel: node.model)
         }
     }
     
@@ -255,7 +267,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
+                viewFactory: paymentsTransfersViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -291,10 +303,10 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch fullScreenSheet.type {
-        case let .qrScanner(viewModel):
+        case let .qrScanner(node):
             NavigationView {
                 
-                QRView(viewModel: viewModel)
+                QRView(viewModel: node.model.qrModel)
                     .navigationBarHidden(true)
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
@@ -305,6 +317,95 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
         }
     }
+}
+
+// MARK: - payment provider & service pickers
+
+private extension MainView {
+    
+    func paymentProviderPicker(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> some View {
+        
+        ComposedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: viewFactory.makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
+        )
+        .navigationBarWithBack(
+            title: PaymentsTransfersSectionType.payments.name,
+            dismiss: viewModel.dismissPaymentProviderPicker,
+            rightItem: .barcodeScanner(
+                action: viewModel.dismissPaymentProviderPicker
+            )
+        )
+    }
+    
+    @ViewBuilder
+    func servicePicker(
+        flowModel: AnywayServicePickerFlowModel
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: viewFactory.makeIconView
+            )
+        )
+        .navigationBarWithAsyncIcon(
+            title: provider.origin.title,
+            subtitle: provider.origin.inn,
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: viewFactory.iconView(provider.origin.icon),
+            style: .normal
+        )
+    }
+}
+
+// MARK: - payment flow
+
+private extension MainView {
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                viewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
+    }
+}
+
+extension PaymentProviderServicePickerFlowModel: Identifiable {
+    
+    var id: String { state.content.state.payload.provider.origin.id }
 }
 
 private extension MainViewModel.Route {
@@ -421,7 +522,7 @@ struct MainView_Previews: PreviewProvider {
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: HistoryButtonView.init(event:),
-                makeRepeatButtonView: { .init(viewModel: .sample) }
+                makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
         )
@@ -433,6 +534,9 @@ extension MainViewFactory {
     static var preview: Self {
         
         return .init(
+            makeAnywayPaymentFactory: { _ in fatalError() },
+            makeIconView: IconDomain.preview,
+            makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
                 .init(
@@ -441,8 +545,8 @@ extension MainViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeUpdateInfoView: UpdateInfoView.init(text:)
+            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }
@@ -455,7 +559,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -465,7 +569,10 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -481,7 +588,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -491,7 +598,10 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -507,7 +617,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -517,7 +627,10 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
