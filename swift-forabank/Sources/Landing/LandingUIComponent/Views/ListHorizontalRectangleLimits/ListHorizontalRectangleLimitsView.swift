@@ -66,7 +66,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     )
                 
                 if state.editEnableFor(limitType) {
-                    Button(action: { event(.saveLimits(viewModel.newLimitsValue)) }) {
+                    Button(action: {
+                        UIApplication.shared.endEditing()
+                        event(.saveLimits(viewModel.newLimitsValue))
+                    }) {
                         ZStack {
                             if state.saveButtonEnable {
                                 Color(red: 255/255, green: 54/255, blue: 54/255)
@@ -266,7 +269,7 @@ extension ListHorizontalRectangleLimitsView {
                     
                     switch limit.value {
                     case .maxLimit...:
-                        Text("Без ограничений")
+                        Text(String.noLimits)
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
