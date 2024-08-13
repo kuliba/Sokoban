@@ -323,7 +323,8 @@ extension UILanding.TextsWithIconHorizontal.Config {
         text: .init(
             color: .textSecondary,
             font: .textBodyMR14200()
-        )
+        ), 
+        images: ["472c6bf19f04641f277d838797288bfa" : .ic24SmsColor]
     )
 }
 

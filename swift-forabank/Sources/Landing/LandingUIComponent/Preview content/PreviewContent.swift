@@ -445,7 +445,8 @@ extension UILanding.TextsWithIconHorizontal.Config {
                     padding: .init(vertical: 0, leading: 12)),
         height: 40,
         spacing: 12,
-        text: .init(color: .green, font: .body))
+        text: .init(color: .green, font: .body), 
+        images: [:])
 }
 
 extension UILanding.ImageBlock.Config {
