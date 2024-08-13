@@ -818,6 +818,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetInfoRepeatPaymentService"
+               BuildableName = "GetInfoRepeatPaymentService"
+               BlueprintName = "GetInfoRepeatPaymentService"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ServiceCategories"
+               BuildableName = "ServiceCategories"
+               BlueprintName = "ServiceCategories"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -859,6 +887,16 @@
                BlueprintIdentifier = "InputComponentTests"
                BuildableName = "InputComponentTests"
                BlueprintName = "InputComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetInfoRepeatPaymentServiceTests"
+               BuildableName = "GetInfoRepeatPaymentServiceTests"
+               BlueprintName = "GetInfoRepeatPaymentServiceTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

@@ -30,6 +30,7 @@ let package = Package(
         .anywayPayment,
         .latestPayments,
         .serviceCategories,
+        .serviceCategoriesBackend,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -132,6 +133,8 @@ let package = Package(
         .latestPaymentsTests,
         .serviceCategories,
         .serviceCategoriesTests,
+        .serviceCategoriesBackend,
+        .serviceCategoriesBackendTests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -610,6 +613,13 @@ private extension Product {
         name: .serviceCategories,
         targets: [
             .serviceCategories,
+        ]
+    )
+
+    static let serviceCategoriesBackend = library(
+        name: .serviceCategoriesBackend,
+        targets: [
+            .serviceCategoriesBackend,
         ]
     )
 
@@ -1181,8 +1191,6 @@ private extension Target {
     static let serviceCategories = target(
         name: .serviceCategories,
         dependencies: [
-            // internal modules
-            .remoteServices,
         ],
         path: "Sources/Payments/\(String.serviceCategories)"
     )
@@ -1193,9 +1201,28 @@ private extension Target {
             .customDump,
             // internal modules
             .serviceCategories,
-            .remoteServices,
         ],
         path: "Tests/Payments/\(String.serviceCategoriesTests)"
+    )
+    
+    static let serviceCategoriesBackend = target(
+        name: .serviceCategoriesBackend,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/\(String.serviceCategoriesBackend)"
+    )
+    static let serviceCategoriesBackendTests = testTarget(
+        name: .serviceCategoriesBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .serviceCategoriesBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
     )
     
     static let utilityPayment = target(
@@ -2605,6 +2632,10 @@ private extension Target.Dependency {
         name: .serviceCategories
     )
 
+    static let serviceCategoriesBackend = byName(
+        name: .serviceCategoriesBackend
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2871,6 +2902,9 @@ private extension String {
 
     static let serviceCategories = "ServiceCategories"
     static let serviceCategoriesTests = "ServiceCategoriesTests"
+
+    static let serviceCategoriesBackend = "ServiceCategoriesBackend"
+    static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"

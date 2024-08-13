@@ -464,6 +464,13 @@
         "identifier" : "ServiceCategoriesTests",
         "name" : "ServiceCategoriesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServiceCategoriesBackendTests",
+        "name" : "ServiceCategoriesBackendTests"
+      }
     }
   ],
   "version" : 1
