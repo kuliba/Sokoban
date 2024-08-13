@@ -4392,6 +4392,7 @@
 		2A8B173A2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesEndpointServiceNameBaseURLTests.swift; sourceTree = "<group>"; };
 		2A8B173E2A7C3BB1002EBC2E /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		2A8B72A62C59282700590676 /* PaymentCompletionConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentCompletionConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ServiceCategories.xctestplan; path = TestPlans/ServiceCategories.xctestplan; sourceTree = "<group>"; };
 		2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
 		2A8CC2422B29B4C100191B8E /* RootViewFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactoryComposer.swift; sourceTree = "<group>"; };
 		2A8CC2442B29D44D00191B8E /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -15933,6 +15934,7 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
+				2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A87FCCA2B9310E4008257ED /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,

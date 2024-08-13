@@ -434,16 +434,23 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "InputComponentTests",
         "name" : "InputComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "OptionalSelectorComponentTests",
         "name" : "OptionalSelectorComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServiceCategoriesTests",
+        "name" : "ServiceCategoriesTests"
       }
     }
   ],
