@@ -67,6 +67,16 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
             $0.limitsLoadingStatus = .limits(.init(newLimits, getCurrencySymbol: { _ in "₽" }))
         }
     }
+    
+    func test_dismissDestination_shouldSetSaveButtonEnableFalseDestinationNil() {
+        
+        let limits: SVCardLimits = .init(limitsList: [.init(type: "Debit", limits: .default)])
+        
+        assert(.dismissDestination, on: initialState(.default, .limits(limits))) {
+            $0.saveButtonEnable = false
+            $0.destination = nil
+        }
+    }
 
     private typealias SUT = ListHorizontalRectangleLimitsReducer
     private typealias State = SUT.State
