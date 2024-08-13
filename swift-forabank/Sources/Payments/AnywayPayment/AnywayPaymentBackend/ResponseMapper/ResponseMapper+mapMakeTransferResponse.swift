@@ -57,9 +57,24 @@ private extension ResponseMapper._Data {
     
     enum _DocumentStatus: String, Decodable {
         
+        // complete
         case complete = "COMPLETE"
+        case success = "SUCCESS"
+        case accepted = "Accepted"
+        // in progress
         case inProgress = "IN_PROGRESS"
-        case rejected = "REJECTED"
+        case pending = "PENDING"
+        case timeout = "TIMEOUT"
+        case executed = "Executed"
+        case postponed = "Postponed"
+        case recall = "Recall"
+        // rejected
+        case failure = "FAILURE"
+        case cancelled = "CANCELLED"
+        case rejectedCap = "REJECTED"
+        case notFound = "NOT_FOUND"
+        case undefined = "UNDEFINED"
+        case rejected = "Rejected"
     }
 }
 
@@ -81,11 +96,13 @@ private extension ResponseMapper.MakeTransferResponse.DocumentStatus {
     init(_ documentStatus: ResponseMapper._Data._DocumentStatus) {
         
         switch documentStatus {
-        case .complete:
+        case .complete, .success, .accepted:
             self = .complete
-        case .inProgress:
+            
+        case .inProgress, .pending, .timeout, .executed, .postponed, .recall:
             self = .inProgress
-        case .rejected:
+            
+        case .rejected, .failure, .cancelled, .rejectedCap, .notFound, .undefined:
             self = .rejected
         }
     }

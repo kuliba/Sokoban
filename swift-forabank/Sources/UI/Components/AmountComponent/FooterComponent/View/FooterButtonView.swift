@@ -40,7 +40,12 @@ private extension FooterButtonView {
     
     func button(config: ButtonStateConfig) -> some View {
         
-        SwiftUI.Button(action: event) {
+        SwiftUI.Button {
+            
+            UIApplication.shared.endEditing()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: event)
+        } label: {
             
             ZStack {
                 

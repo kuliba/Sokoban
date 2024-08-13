@@ -2077,7 +2077,8 @@ extension ProductProfileViewModel {
                 productProfileServices: productProfileServices,
                 landingEvent: landingEvent, 
                 handleModelEffect: productNavigationStateManager.handleModelEffect,
-                hideKeyboard: { UIApplication.shared.endEditing() }
+                hideKeyboard: { UIApplication.shared.endEditing() }, 
+                getCurrencySymbol: { self.model.dictionaryCurrency(for: $0)?.currencySymbol } 
                     ).handleEffect(_:_:))
     }
     

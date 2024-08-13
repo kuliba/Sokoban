@@ -30,8 +30,6 @@ struct UtilityPaymentNanoServices {
     /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
     /// POST /rest/transfer/createAnywayTransfer?isNewPayment=true
     let startAnywayPayment: StartAnywayPayment
-    
-    let makeAnywayPaymentOutline: MakeAnywayPaymentOutline
 }
 
 extension UtilityPaymentNanoServices {
@@ -94,8 +92,6 @@ extension UtilityPaymentNanoServices {
     /// /rest/transfer/createAnywayTransfer?isNewPayment=true
     typealias StartAnywayPayment = (StartAnywayPaymentPayload, @escaping StartAnywayPaymentCompletion) -> Void
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
-    
-    typealias MakeAnywayPaymentOutline = (LastPayment?, AnywayPaymentOutline.Payload) -> AnywayPaymentOutline
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator

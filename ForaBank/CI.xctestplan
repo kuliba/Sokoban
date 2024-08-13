@@ -439,7 +439,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UIPrimitivesTests",
         "name" : "UIPrimitivesTests"
       }
@@ -447,8 +447,15 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "UIPrimitivesTests",
-        "name" : "UIPrimitivesTests"
+        "identifier" : "InputComponentTests",
+        "name" : "InputComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OptionalSelectorComponentTests",
+        "name" : "OptionalSelectorComponentTests"
       }
     }
   ],

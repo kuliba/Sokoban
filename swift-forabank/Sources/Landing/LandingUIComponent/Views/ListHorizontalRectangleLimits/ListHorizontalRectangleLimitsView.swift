@@ -54,7 +54,7 @@ struct ListHorizontalRectangleLimitsView: View {
 
                 LandingWrapperView(
                     viewModel: viewModel,
-                    updateSaveButtonAction: { event(.limitChanging(viewModel.newLimitsValue))}
+                    updateSaveButtonAction: { updateSaveButtonAction(viewModel: viewModel) }
                 )
                     .frame(maxHeight: .infinity)
                     .alert(
@@ -117,6 +117,21 @@ struct ListHorizontalRectangleLimitsView: View {
                     event(.buttonTapped(.init(limitType: item.limitType, action: item.action.type)))
                 }
         )
+    }
+    
+    private func updateSaveButtonAction(viewModel: LandingWrapperViewModel) {
+        
+        let newValueMoreThenMaxValue: Bool  = {
+            
+            if case let .success(landing) = viewModel.state {
+                
+                return landing?.blockHorizontalRectangular? .newValueMoreThenMaxValue(viewModel.newLimitsValue) ?? false
+            }
+            
+            return false
+        }()
+        
+        event(.limitChanging(viewModel.newLimitsValue, newValueMoreThenMaxValue))
     }
 }
 

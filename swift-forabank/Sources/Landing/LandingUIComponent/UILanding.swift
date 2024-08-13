@@ -113,3 +113,26 @@ extension UILanding {
       return false
   }
 }
+
+extension UILanding {
+    
+    var blockHorizontalRectangular: UILanding.BlockHorizontalRectangular? {
+        
+        let component = main.first(where: {
+            
+            switch $0 {
+            case .blockHorizontalRectangular:
+                return true
+                
+            default:
+                return false
+            }
+        })
+        
+        guard case let .blockHorizontalRectangular(value) = component else {
+            return nil
+        }
+        
+        return value
+    }
+}

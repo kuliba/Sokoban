@@ -19,16 +19,22 @@ enum AnywayElementModel {
 
 extension AnywayElementModel {
     
-    enum Parameter {
+    struct Parameter {
         
-        case hidden(AnywayElement.UIComponent.Parameter)
-        case nonEditable(AnywayElement.UIComponent.Parameter)
-        case numberInput(ObservingInputViewModel)
-        case select(ObservingSelectorViewModel)
-        case textInput(ObservingInputViewModel)
-        case unknown(AnywayElement.UIComponent.Parameter)
+        let origin: Origin
+        let type: ParameterType
         
-        typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
+        typealias Origin = AnywayElement.UIComponent.Parameter
+
+        enum ParameterType {
+         
+            case hidden
+            case nonEditable
+            case numberInput(Node<RxInputViewModel>)
+            case select(ObservingSelectorViewModel)
+            case textInput(Node<RxInputViewModel>)
+            case unknown
+        }
     }
     
     enum Widget {

@@ -47,12 +47,16 @@ struct DefaultCancellableSearchBarView: View {
             .foregroundColor(buttonsColor)
     }
     
+    @ViewBuilder
     private func cancelButton() -> some View {
         
-        Button(action: cancel) {
-            Text("Отмена")
-                .foregroundColor(buttonsColor)
-                .font(.system(size: 14))
+        if case .editing = viewModel.state {
+            
+            Button(action: cancel) {
+                Text("Отмена")
+                    .foregroundColor(buttonsColor)
+                    .font(.system(size: 14))
+            }
         }
     }
 }

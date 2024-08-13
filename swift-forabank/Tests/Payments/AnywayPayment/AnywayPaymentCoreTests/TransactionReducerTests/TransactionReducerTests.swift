@@ -37,7 +37,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_completePayment_shouldNotChangeResultFailureStateOnReportFailure() {
         
         assertState(
-            completeWithFailure(.terminal),
+            completeWithFailure(.terminal(anyMessage())),
             on: makeResultFailureTransaction()
         )
     }
@@ -45,7 +45,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnResultFailureStateOnReportFailure() {
         
         assert(
-            completeWithFailure(.terminal),
+            completeWithFailure(.terminal(anyMessage())),
             on: makeResultFailureTransaction(),
             effect: nil
         )
@@ -54,7 +54,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_completePayment_shouldNotChangeResultSuccessStateOnReportFailure() {
         
         assertState(
-            completeWithFailure(.terminal),
+            completeWithFailure(.terminal(anyMessage())),
             on: makeResultSuccessTransaction()
         )
     }
@@ -62,7 +62,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_completePayment_shouldNotDeliverEffectOnResultSuccessStateOnReportFailure() {
         
         assert(
-            completeWithFailure(.terminal),
+            completeWithFailure(.terminal(anyMessage())),
             on: makeResultSuccessTransaction(),
             effect: nil
         )
@@ -73,16 +73,18 @@ final class TransactionReducerTests: XCTestCase {
         let context = makeContext()
         
         assertState(
-            completeWithFailure(.terminal),
+            completeWithFailure(.terminal(anyMessage())),
             on: makeFraudSuspectedTransaction(context)
         )
     }
     
     func test_completePayment_shouldChangeStatusToTerminatedTransactionFailureOnReportFailure() {
         
-        assertState(completeWithFailure(.terminal), on: makeTransaction()) {
+        let message = anyMessage()
+        
+        assertState(completeWithFailure(.terminal(message)), on: makeTransaction()) {
             
-            $0.status = .result(.failure(.transactionFailure))
+            $0.status = .result(.failure(.transactionFailure(message)))
         }
     }
     
@@ -1069,34 +1071,55 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(), on: makeResultFailureTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(),
+            on: makeResultFailureTransaction()
+        )
     }
     
     func test_update_shouldNotDeliverEffectOnResultFailureStateOnUpdateConnectivityErrorFailure() {
         
-        assert(makeUpdateFailureTransactionEvent(), on: makeResultFailureTransaction(), effect: nil)
+        assert(
+            makeUpdateConnectivityErrorTransactionEvent(),
+            on: makeResultFailureTransaction(),
+            effect: nil
+        )
     }
     
     func test_update_shouldNotChangeResultSuccessStateOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(), on: makeResultSuccessTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(),
+            on: makeResultSuccessTransaction()
+        )
     }
     
     func test_update_shouldNotDeliverEffectOnResultSuccessStateOnUpdateConnectivityErrorFailure() {
         
-        assert(makeUpdateFailureTransactionEvent(), on: makeResultSuccessTransaction(), effect: nil)
+        assert(
+            makeUpdateConnectivityErrorTransactionEvent(),
+            on: makeResultSuccessTransaction(),
+            effect: nil
+        )
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatusOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(), on: makeFraudSuspectedTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(),
+            on: makeFraudSuspectedTransaction()
+        )
     }
     
     func test_update_shouldChangeStatusToTerminatedUpdateFailureOnUpdateConnectivityErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(), on: makeTransaction()) {
-            
-            $0.status = .result(.failure(.updatePaymentFailure))
+        let message = anyMessage()
+        
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(message),
+            on: makeTransaction()
+        ) {
+            $0.status = .result(.failure(.updatePaymentFailure(message)))
         }
     }
     
@@ -1105,7 +1128,7 @@ final class TransactionReducerTests: XCTestCase {
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call)
         
-        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent())
+        _ = sut.reduce(makeTransaction(), makeUpdateConnectivityErrorTransactionEvent())
         
         XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
@@ -1115,41 +1138,58 @@ final class TransactionReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent())
+        _ = sut.reduce(makeTransaction(), makeUpdateConnectivityErrorTransactionEvent())
         
         XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultFailureTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
+            on: makeResultFailureTransaction()
+        )
     }
     
     func test_update_shouldNotDeliverEffectOnResultFailureStateOnUpdateServerErrorFailure() {
         
-        assert(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultFailureTransaction(), effect: nil)
+        assert(
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
+            on: makeResultFailureTransaction(),
+            effect: nil
+        )
     }
     
     func test_update_shouldNotChangeResultSuccessStateOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultSuccessTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
+            on: makeResultSuccessTransaction()
+        )
     }
     
     func test_update_shouldNotDeliverEffectOnResultSuccessStateOnUpdateServerErrorFailure() {
         
-        assert(makeUpdateFailureTransactionEvent(anyMessage()), on: makeResultSuccessTransaction(), effect: nil)
+        assert(
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()), 
+            on: makeResultSuccessTransaction(), 
+            effect: nil
+        )
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatusOnUpdateServerErrorFailure() {
         
-        assertState(makeUpdateFailureTransactionEvent(anyMessage()), on: makeFraudSuspectedTransaction())
+        assertState(
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
+            on: makeFraudSuspectedTransaction()
+        )
     }
     
     func test_update_shouldChangeStatusToServerErrorOnUpdateServerErrorFailure() {
         
         let message = anyMessage()
         
-        assertState(makeUpdateFailureTransactionEvent(message), on: makeTransaction()) {
+        assertState(makeUpdateServerErrorTransactionEvent(message), on: makeTransaction()) {
             
             $0.status = .serverError(message)
         }
@@ -1160,7 +1200,7 @@ final class TransactionReducerTests: XCTestCase {
         let validatePaymentSpy = ValidatePaymentSpy(response: false)
         let sut = makeSUT(validatePayment: validatePaymentSpy.call(payload:))
         
-        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent(anyMessage()))
+        _ = sut.reduce(makeTransaction(), makeUpdateConnectivityErrorTransactionEvent(anyMessage()))
         
         XCTAssert(validatePaymentSpy.payloads.isEmpty)
     }
@@ -1170,7 +1210,7 @@ final class TransactionReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        _ = sut.reduce(makeTransaction(), makeUpdateFailureTransactionEvent(anyMessage()))
+        _ = sut.reduce(makeTransaction(), makeUpdateConnectivityErrorTransactionEvent(anyMessage()))
         
         XCTAssert(checkFraudSpy.payloads.isEmpty)
     }
@@ -1292,7 +1332,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnConnectivityErrorFailure() {
         
         assert(
-            makeUpdateFailureTransactionEvent(),
+            makeUpdateConnectivityErrorTransactionEvent(),
             on: makeFraudSuspectedTransaction(),
             effect: nil
         )
@@ -1301,7 +1341,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnConnectivityErrorFailure() {
         
         assert(
-            makeUpdateFailureTransactionEvent(),
+            makeUpdateConnectivityErrorTransactionEvent(),
             on: makeTransaction(),
             effect: nil
         )
@@ -1310,7 +1350,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnServerErrorFailure() {
         
         assert(
-            makeUpdateFailureTransactionEvent(anyMessage()),
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
             on: makeFraudSuspectedTransaction(),
             effect: nil
         )
@@ -1319,7 +1359,7 @@ final class TransactionReducerTests: XCTestCase {
     func test_update_shouldNotDeliverEffectOnServerErrorFailure() {
         
         assert(
-            makeUpdateFailureTransactionEvent(anyMessage()),
+            makeUpdateConnectivityErrorTransactionEvent(anyMessage()),
             on: makeTransaction(),
             effect: nil
         )
@@ -1363,18 +1403,20 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_verificationCode_receive_shouldChangeStatusOnConnectivityError() {
         
+        let message = anyMessage()
+        
         assertState(
-            .verificationCode(.receive(.failure(.connectivityError))),
+            .verificationCode(.receive(.failure(.connectivityError(message)))),
             on: makeTransaction()
         ) {
-            $0.status = .result(.failure(.transactionFailure))
+            $0.status = .result(.failure(.transactionFailure(message)))
         }
     }
     
     func test_verificationCode_receive_shouldNotDeliverEffectOnConnectivityError() {
         
         assert(
-            .verificationCode(.receive(.failure(.connectivityError))),
+            .verificationCode(.receive(.failure(.connectivityError(anyMessage())))),
             on: makeTransaction(),
             effect: nil
         )
@@ -1388,7 +1430,7 @@ final class TransactionReducerTests: XCTestCase {
             .verificationCode(.receive(.failure(.serverError(message)))),
             on: makeTransaction()
         ) {
-            $0.status = .result(.failure(.transactionFailure))
+            $0.status = .result(.failure(.transactionFailure(message)))
         }
     }
     
