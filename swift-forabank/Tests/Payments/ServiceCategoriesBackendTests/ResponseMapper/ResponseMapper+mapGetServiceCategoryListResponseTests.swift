@@ -22,7 +22,24 @@ extension ResponseMapper {
             let ord: Int
             let paymentFlow: PaymentFlow
             let search: Bool
-            let type: String
+            let type: CategoryType
+            
+            enum CategoryType: Equatable {
+                
+                case charity
+                case digitalWallets
+                case education
+                case housingAndCommunalService
+                case internet
+                case mobile
+                case networkMarketing
+                case qr
+                case repaymentLoansAndAccounts
+                case security
+                case socialAndGames
+                case transport
+                case taxAndStateService
+            }
             
             enum PaymentFlow: Equatable {
                 
@@ -79,8 +96,30 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category {
             ord: category.ord,
             paymentFlow: .init(category.paymentFlow),
             search: category.search,
-            type: category.type
+            type: .init(category.type)
         )
+    }
+}
+
+private extension ResponseMapper.GetServiceCategoryListResponse.Category.CategoryType {
+    
+    init(_ paymentFlow: ResponseMapper._Data._Category.CategoryType) {
+        
+        switch paymentFlow {
+        case .charity:                   self = .charity
+        case .digitalWallets:            self = .digitalWallets
+        case .education:                 self = .education
+        case .housingAndCommunalService: self = .housingAndCommunalService
+        case .internet:                  self = .internet
+        case .mobile:                    self = .mobile
+        case .networkMarketing:          self = .networkMarketing
+        case .qr:                        self = .qr
+        case .repaymentLoansAndAccounts: self = .repaymentLoansAndAccounts
+        case .security:                  self = .security
+        case .socialAndGames:            self = .socialAndGames
+        case .transport:                 self = .transport
+        case .taxAndStateService:        self = .taxAndStateService
+        }
     }
 }
 
@@ -107,13 +146,30 @@ private extension ResponseMapper {
         
         struct _Category: Decodable {
             
-            let type: String
+            let type: CategoryType
             let name: String
             let ord: Int
             let md5hash: String
             let paymentFlow: PaymentFlow
             let latestPaymentsCategory: String?
             let search: Bool
+            
+            enum CategoryType: String, Decodable {
+                
+                case charity
+                case digitalWallets
+                case education
+                case housingAndCommunalService
+                case internet
+                case mobile
+                case networkMarketing
+                case qr
+                case repaymentLoansAndAccounts
+                case security
+                case socialAndGames
+                case transport
+                case taxAndStateService
+            }
             
             enum PaymentFlow: String, Decodable {
                 
@@ -263,7 +319,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 20,
                 paymentFlow: .mobile,
                 search: false,
-                type: "mobile"
+                type: .mobile
             )
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
@@ -277,7 +333,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 10,
                 paymentFlow: .qr,
                 search: false,
-                type: "qr"
+                type: .qr
             ),
             .init(
                 latestPaymentsCategory: "isMobilePayments",
@@ -286,7 +342,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 20,
                 paymentFlow: .mobile,
                 search: false,
-                type: "mobile"
+                type: .mobile
             ),
             .init(
                 latestPaymentsCategory: "isServicePayments",
@@ -295,7 +351,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 30,
                 paymentFlow: .standard,
                 search: true,
-                type: "housingAndCommunalService"
+                type: .housingAndCommunalService
             ),
             .init(
                 latestPaymentsCategory: "Услуги ЖКХ",
@@ -304,7 +360,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 40,
                 paymentFlow: .standard,
                 search: true,
-                type: "internet"
+                type: .internet
             ),
             .init(
                 latestPaymentsCategory: "isTransportPayments",
@@ -313,7 +369,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 50,
                 paymentFlow: .transport,
                 search: false,
-                type: "transport"
+                type: .transport
             ),
             .init(
                 latestPaymentsCategory: "isTaxAndStateServicePayments",
@@ -322,7 +378,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 60,
                 paymentFlow: .taxAndStateServices,
                 search: false,
-                type: "taxAndStateService"
+                type: .taxAndStateService
             ),
             .init(
                 latestPaymentsCategory: "isSecurityPayments",
@@ -331,7 +387,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 70,
                 paymentFlow: .standard,
                 search: true,
-                type: "security"
+                type: .security
             ),
             .init(
                 latestPaymentsCategory: "isDigitalWalletsPayments",
@@ -340,7 +396,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 80,
                 paymentFlow: .standard,
                 search: false,
-                type: "digitalWallets"
+                type: .digitalWallets
             ),
             .init(
                 latestPaymentsCategory: "isRepaymentLoansAndAccountsPayments",
@@ -349,7 +405,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 90,
                 paymentFlow: .standard,
                 search: true,
-                type: "repaymentLoansAndAccounts"
+                type: .repaymentLoansAndAccounts
             ),
             .init(
                 latestPaymentsCategory: "isSocialAndGamesPayments",
@@ -358,7 +414,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 100,
                 paymentFlow: .standard,
                 search: true,
-                type: "socialAndGames"
+                type: .socialAndGames
             ),
             .init(
                 latestPaymentsCategory: "isNetworkMarketingPayments",
@@ -367,7 +423,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 110,
                 paymentFlow: .standard,
                 search: true,
-                type: "networkMarketing"
+                type: .networkMarketing
             ),
             .init(
                 latestPaymentsCategory: "isEducationPayments",
@@ -376,7 +432,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 120,
                 paymentFlow: .standard,
                 search: true,
-                type: "education"
+                type: .education
             ),
             .init(
                 latestPaymentsCategory: "isCharityPayments",
@@ -385,7 +441,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 ord: 130,
                 paymentFlow: .standard,
                 search: true,
-                type: "charity"
+                type: .charity
             ),
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
