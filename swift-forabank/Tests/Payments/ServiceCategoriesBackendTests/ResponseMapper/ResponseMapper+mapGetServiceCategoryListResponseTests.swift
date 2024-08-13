@@ -20,9 +20,18 @@ extension ResponseMapper {
             let md5Hash: String
             let name: String
             let ord: Int
-            let paymentFlow: String
+            let paymentFlow: PaymentFlow
             let search: Bool
             let type: String
+            
+            enum PaymentFlow: Equatable {
+                
+                case mobile
+                case qr
+                case standard
+                case taxAndStateServices
+                case transport
+            }
         }
     }
 }
@@ -68,10 +77,24 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category {
             md5Hash: category.md5hash,
             name: category.name,
             ord: category.ord,
-            paymentFlow: category.paymentFlow,
+            paymentFlow: .init(category.paymentFlow),
             search: category.search,
             type: category.type
         )
+    }
+}
+
+private extension ResponseMapper.GetServiceCategoryListResponse.Category.PaymentFlow {
+    
+    init(_ paymentFlow: ResponseMapper._Data._Category.PaymentFlow) {
+        
+        switch paymentFlow {
+        case .mobile:              self = .mobile
+        case .qr:                  self = .qr
+        case .standard:            self = .standard
+        case .taxAndStateServices: self = .taxAndStateServices
+        case .transport:           self = .transport
+        }
     }
 }
 
@@ -88,9 +111,18 @@ private extension ResponseMapper {
             let name: String
             let ord: Int
             let md5hash: String
-            let paymentFlow: String
+            let paymentFlow: PaymentFlow
             let latestPaymentsCategory: String?
             let search: Bool
+            
+            enum PaymentFlow: String, Decodable {
+                
+                case mobile              = "MOBILE"
+                case qr                  = "QR"
+                case standard            = "STANDARD_FLOW"
+                case taxAndStateServices = "TAX_AND_STATE_SERVICE"
+                case transport           = "TRANSPORT"
+            }
         }
     }
 }
@@ -229,7 +261,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
-                paymentFlow: "MOBILE",
+                paymentFlow: .mobile,
                 search: false,
                 type: "mobile"
             )
@@ -243,7 +275,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "2d777a4bb3f53d495026b4884bbedde4",
                 name: "Оплата по QR",
                 ord: 10,
-                paymentFlow: "QR",
+                paymentFlow: .qr,
                 search: false,
                 type: "qr"
             ),
@@ -252,7 +284,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
-                paymentFlow: "MOBILE",
+                paymentFlow: .mobile,
                 search: false,
                 type: "mobile"
             ),
@@ -261,7 +293,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "ffc64acafb053c5e6ebc4e9300f7cccc",
                 name: "Услуги ЖКХ",
                 ord: 30,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "housingAndCommunalService"
             ),
@@ -270,7 +302,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "c15643f89507e5fd4f5caef8fbd3e4df",
                 name: "Интернет, ТВ",
                 ord: 40,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "internet"
             ),
@@ -279,7 +311,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "23d9ad3ce923f736b8ee4c5a11cb1915",
                 name: "Транспорт",
                 ord: 50,
-                paymentFlow: "TRANSPORT",
+                paymentFlow: .transport,
                 search: false,
                 type: "transport"
             ),
@@ -288,7 +320,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "a49599eb358791b62b8d4c6341a163e5",
                 name: "Налоги и госуслуги",
                 ord: 60,
-                paymentFlow: "TAX_AND_STATE_SERVICE",
+                paymentFlow: .taxAndStateServices,
                 search: false,
                 type: "taxAndStateService"
             ),
@@ -297,7 +329,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "12e2479526b75f3ac2cf2b4bf420626d",
                 name: "Охранные системы",
                 ord: 70,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "security"
             ),
@@ -306,7 +338,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "39e857d35b8e683526ec4912845f1c55",
                 name: "Электронный кошелек",
                 ord: 80,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: false,
                 type: "digitalWallets"
             ),
@@ -315,7 +347,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "9f37d214d2462f2c5dc952c553613cc6",
                 name: "Погашение кредита ",
                 ord: 90,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "repaymentLoansAndAccounts"
             ),
@@ -324,7 +356,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "d7d1c6adc224e96343c012ca1fcf1472",
                 name: "Развлечения (игры и соц.сети)",
                 ord: 100,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "socialAndGames"
             ),
@@ -333,7 +365,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "9a2b90b30cf0e65dccb44f43d3c1e145",
                 name: "Сетевой маркетинг",
                 ord: 110,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "networkMarketing"
             ),
@@ -342,7 +374,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "a83b5b005fc16c356b2456d5a514c842",
                 name: "Образование",
                 ord: 120,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "education"
             ),
@@ -351,7 +383,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 md5Hash: "f7463aa7646d1e2cfe33f71ab4a72d75",
                 name: "Благотворительность",
                 ord: 130,
-                paymentFlow: "STANDARD_FLOW",
+                paymentFlow: .standard,
                 search: true,
                 type: "charity"
             ),
