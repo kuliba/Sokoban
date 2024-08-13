@@ -231,7 +231,7 @@ private extension Array where Element == AnywayElement {
             uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
         )
         
-        self = map {
+        let updated = map {
             
             guard let id = $0.stringID,
                   let matching = updateFields[id]
@@ -239,6 +239,8 @@ private extension Array where Element == AnywayElement {
             
             return $0.updating(with: matching, and: outline)
         }
+        
+        self = updated
     }
     
     mutating func appendNewFields(
