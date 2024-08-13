@@ -21,9 +21,6 @@ extension AnywayElementModel: Receiver {
             case let .numberInput(node):
                 node.model.event(.textField(.setTextTo(value)))
                 
-            case let .select(select):
-                self.select(value, in: select)
-                
             case let .textInput(node):
                 node.model.event(.textField(.setTextTo(value)))
                 
@@ -34,16 +31,5 @@ extension AnywayElementModel: Receiver {
         default:
             break
         }
-    }
-    
-    private func select(
-        _ key: String,
-        in select: ObservingSelectorViewModel
-    ) {
-        let options = select.state.selector.options
-        guard let toSelect = options.first(where: { $0.key == key })
-        else { return }
-        
-        select.event(.selectOption(.init(key: key, value: toSelect.value)))
     }
 }
