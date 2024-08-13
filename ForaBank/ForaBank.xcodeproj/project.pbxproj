@@ -3659,7 +3659,6 @@
 		2A0E31792C63D52800143969 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A0E317B2C63D52A00143969 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A0E317E2C63D52A00143969 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2A0EF2E82C1D9589003F094D /* SelectorComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SelectorComponent.xctestplan; sourceTree = "<group>"; };
 		2A0EF2E92C1DAB96003F094D /* ChevronView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronView.swift; sourceTree = "<group>"; };
 		2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChevronViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronViewConfig.swift; sourceTree = "<group>"; };
@@ -4392,6 +4391,8 @@
 		2A8B173A2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesEndpointServiceNameBaseURLTests.swift; sourceTree = "<group>"; };
 		2A8B173E2A7C3BB1002EBC2E /* Crypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
 		2A8B72A62C59282700590676 /* PaymentCompletionConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentCompletionConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategories.xctestplan; sourceTree = "<group>"; };
+		2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategoriesBackend.xctestplan; sourceTree = "<group>"; };
 		2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
 		2A8CC2422B29B4C100191B8E /* RootViewFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactoryComposer.swift; sourceTree = "<group>"; };
 		2A8CC2442B29D44D00191B8E /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -9263,9 +9264,10 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */,
+				2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */,
 				2ADF62FE2C311153008D9FF8 /* UIPrimitives.xctestplan */,
 				2A6889B82C2F481B001FF1F2 /* LatestPayments.xctestplan */,
-				2A0EF2E82C1D9589003F094D /* SelectorComponent.xctestplan */,
 				2AD092C42BFA78C200777EE4 /* TransactionPreview.xctestplan */,
 				2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */,
 				2AA2EF962BB19C2500D5DBED /* RemoteServices.xctestplan */,

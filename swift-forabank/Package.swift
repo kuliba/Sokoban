@@ -29,6 +29,8 @@ let package = Package(
         // Payments
         .anywayPayment,
         .latestPayments,
+        .serviceCategories,
+        .serviceCategoriesBackend,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -129,6 +131,10 @@ let package = Package(
         .anywayPaymentUITests,
         .latestPayments,
         .latestPaymentsTests,
+        .serviceCategories,
+        .serviceCategoriesTests,
+        .serviceCategoriesBackend,
+        .serviceCategoriesBackendTests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -600,6 +606,20 @@ private extension Product {
         name: .latestPayments,
         targets: [
             .latestPayments,
+        ]
+    )
+
+    static let serviceCategories = library(
+        name: .serviceCategories,
+        targets: [
+            .serviceCategories,
+        ]
+    )
+
+    static let serviceCategoriesBackend = library(
+        name: .serviceCategoriesBackend,
+        targets: [
+            .serviceCategoriesBackend,
         ]
     )
 
@@ -1166,6 +1186,43 @@ private extension Target {
             .remoteServices,
         ],
         path: "Tests/Payments/\(String.latestPaymentsTests)"
+    )
+    
+    static let serviceCategories = target(
+        name: .serviceCategories,
+        dependencies: [
+        ],
+        path: "Sources/Payments/\(String.serviceCategories)"
+    )
+    static let serviceCategoriesTests = testTarget(
+        name: .serviceCategoriesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .serviceCategories,
+        ],
+        path: "Tests/Payments/\(String.serviceCategoriesTests)"
+    )
+    
+    static let serviceCategoriesBackend = target(
+        name: .serviceCategoriesBackend,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/\(String.serviceCategoriesBackend)"
+    )
+    static let serviceCategoriesBackendTests = testTarget(
+        name: .serviceCategoriesBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .serviceCategoriesBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
     )
     
     static let utilityPayment = target(
@@ -2571,6 +2628,14 @@ private extension Target.Dependency {
         name: .latestPayments
     )
 
+    static let serviceCategories = byName(
+        name: .serviceCategories
+    )
+
+    static let serviceCategoriesBackend = byName(
+        name: .serviceCategoriesBackend
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2834,6 +2899,12 @@ private extension String {
 
     static let latestPayments = "LatestPayments"
     static let latestPaymentsTests = "LatestPaymentsTests"
+
+    static let serviceCategories = "ServiceCategories"
+    static let serviceCategoriesTests = "ServiceCategoriesTests"
+
+    static let serviceCategoriesBackend = "ServiceCategoriesBackend"
+    static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"

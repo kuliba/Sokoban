@@ -457,6 +457,20 @@
         "identifier" : "OptionalSelectorComponentTests",
         "name" : "OptionalSelectorComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServiceCategoriesTests",
+        "name" : "ServiceCategoriesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServiceCategoriesBackendTests",
+        "name" : "ServiceCategoriesBackendTests"
+      }
     }
   ],
   "version" : 1
