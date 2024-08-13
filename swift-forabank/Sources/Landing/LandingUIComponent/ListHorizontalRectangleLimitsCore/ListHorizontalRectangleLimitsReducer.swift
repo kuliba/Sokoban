@@ -67,10 +67,12 @@ public extension ListHorizontalRectangleLimitsReducer {
         
         case let .saveLimits(limits):
             effect = .saveLimits(limits)
+            state.saveButtonEnable = false
             
         case .dismissDestination:
             state.destination = nil
-            
+            state.saveButtonEnable = false
+
         case let .showAlert(message):
             state.alert = .updateLimitsError(message)
             

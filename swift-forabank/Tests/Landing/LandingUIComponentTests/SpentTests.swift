@@ -61,6 +61,13 @@ final class SpentTests: XCTestCase {
         
         XCTAssertEqual(sut, .spent(.maxAngle))
     }
+    
+    func test_limitCurrentValueMoreThenValue_shouldReturnSpentEverything() {
+        
+        let sut = makeSUT(limit: makeLimit(currentValue: 19999.9, value: 100))
+        
+        XCTAssertEqual(sut, .spentEverything)
+    }
 
     // MARK: - helper
 

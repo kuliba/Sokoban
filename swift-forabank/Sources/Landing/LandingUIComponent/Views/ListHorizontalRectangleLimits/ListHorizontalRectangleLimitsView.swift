@@ -159,7 +159,7 @@ extension Spent {
         let balance = limit.value - limit.currentValue
         
         switch balance {
-        case 0:
+        case _ where balance <= 0:
             return .spentEverything
             
         case limit.value:
