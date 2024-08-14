@@ -180,32 +180,40 @@ struct ProductProfileView: View {
                         .navigationBarTitleDisplayMode(.inline)
                 
                 case .filter:
-                    FilterView(
-                        state: .init(
-                            title: "Фильтры",
-                            selectedServices: [],
-                            periods: ["Неделя", "Месяц", "Выбрать период"],
-                            transactions: ["Списание", "Пополнение"],
-                            services: self.viewModel.historyCategories() 
-                        ),
-                        event: { event in  },
-                        config: .iFora,
-                        makeButtonsContainer: {
-                            .init(
-                                dismissAction: { self.viewModel.event(.history(.dismiss)) },
-                                clearOptionsAction: { self.viewModel.event(.history(.clearOptions)) },
-                                config: .init(
-                                    clearButtonTitle: "Очистить",
-                                    applyButtonTitle: "Применить"
+                    if let filterState = self.viewModel.filterState {
+                     
+                        FilterView(
+                            state: filterState,
+                            event: { event in
+                                
+                                self.viewModel.filterState?.services = self.viewModel.historyCategories()
+                                
+                                self.viewModel.event(.filter(event))
+                                
+                            },
+                            config: .iFora,
+                            makeButtonsContainer: {
+                                .init(
+                                    dismissAction: {
+                                        self.viewModel.event(.history(.dismiss))
+                                        self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter())
+                                    },
+                                    clearOptionsAction: { self.viewModel.event(.filter(.clearOptions)) },
+                                    config: .init(
+                                        clearButtonTitle: "Очистить",
+                                        applyButtonTitle: "Применить"
+                                    )
                                 )
-                            )
-                        },
-                        clearOptionsAction: { self.viewModel.event(.history(.clearOptions))
-                        },
-                        dismissAction: {
-                            self.viewModel.event(.history(.dismiss))
-                        }
-                    )
+                            },
+                            clearOptionsAction: {
+                                self.viewModel.event(.history(.clearOptions))
+                            },
+                            dismissAction: {
+                                self.viewModel.action.send( ProductProfileHistoryViewModelAction.Filter())
+                                self.viewModel.event(.history(.dismiss))
+                            }
+                        )
+                    }
                 }
             }
         }
