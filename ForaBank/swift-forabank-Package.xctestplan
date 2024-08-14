@@ -455,9 +455,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "ServiceCategoriesBackendTests",
         "name" : "ServiceCategoriesBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
       }
     }
   ],

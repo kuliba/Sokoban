@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "2B2B075D-229C-40A4-B4A2-1B858466226E",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    }
+  ],
+  "version" : 1
+}

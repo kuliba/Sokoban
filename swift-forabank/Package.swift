@@ -31,6 +31,7 @@ let package = Package(
         .latestPayments,
         .serviceCategories,
         .serviceCategoriesBackend,
+        .payHub,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -136,6 +137,8 @@ let package = Package(
         .serviceCategoriesTests,
         .serviceCategoriesBackend,
         .serviceCategoriesBackendTests,
+        .payHub,
+        .payHubTests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -623,6 +626,13 @@ private extension Product {
         name: .serviceCategoriesBackend,
         targets: [
             .serviceCategoriesBackend,
+        ]
+    )
+
+    static let payHub = library(
+        name: .payHub,
+        targets: [
+            .payHub,
         ]
     )
 
@@ -1233,6 +1243,24 @@ private extension Target {
             .remoteServices,
         ],
         path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
+    )
+    
+    static let payHub = target(
+        name: .payHub,
+        dependencies: [
+            // internal modules
+        ],
+        path: "Sources/Payments/\(String.payHub)"
+    )
+    static let payHubTests = testTarget(
+        name: .payHubTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+        ],
+        path: "Tests/Payments/\(String.payHubTests)"
     )
     
     static let utilityPayment = target(
@@ -2666,6 +2694,10 @@ private extension Target.Dependency {
         name: .serviceCategoriesBackend
     )
 
+    static let payHub = byName(
+        name: .payHub
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2939,6 +2971,9 @@ private extension String {
 
     static let serviceCategoriesBackend = "ServiceCategoriesBackend"
     static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
+
+    static let payHub = "PayHub"
+    static let payHubTests = "PayHubTests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
