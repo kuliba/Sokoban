@@ -24,8 +24,15 @@ extension Model {
 
 extension AnywayPaymentContext {
     
-    var debitAmount: Decimal? { info?.debitAmount }
-    var currency: String? { info?.currency }
+    var debitAmount: Decimal? {
+        
+        info?.debitAmount ?? payment.amount
+    }
+    
+    var currency: String? {
+        
+        info?.currency ?? product?.currency
+    }
     
     private var info: AnywayElement.Widget.Info? {
         
@@ -33,5 +40,13 @@ extension AnywayPaymentContext {
         else { return nil }
         
         return info
+    }
+    
+    private var product: AnywayElement.Widget.Product? {
+        
+        guard case let .widget(.product(product)) = payment.elements.first(matching: .widgetID(.product))
+        else { return nil }
+        
+        return product
     }
 }
