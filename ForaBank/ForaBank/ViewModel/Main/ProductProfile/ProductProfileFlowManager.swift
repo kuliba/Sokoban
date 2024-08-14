@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CalendarUI
 
 final class ProductProfileFlowReducer {
 
@@ -58,6 +59,34 @@ final class ProductProfileFlowReducer {
             let history: ProductProfileViewModel.HistoryState?
             (history, effect) = historyReduce(state.history, historyEvent)
             state.history = history
+            
+        case let .filter(filterEvent):
+            
+            switch filterEvent {
+            case let .openSheet(services):
+                state.filter = .init(
+                    title: "Фильтры",
+                    selectedServices: [],
+                    periods: FilterState.Period.allCases,
+                    transactionType: FilterState.TransactionType.allCases,
+                    services: services
+                )
+                
+            case let .selectedCategory(category):
+                state.filter?.selectedServices.insert(category)
+
+            case let .selectedPeriod(period):
+                state.filter?.selectedPeriod = period
+
+            case let .selectedTransaction(transaction):
+                state.filter?.selectedTransaction = transaction
+                
+            case .clearOptions:
+                state.filter?.selectedTransaction = nil
+                state.filter?.selectedPeriod = .month
+                state.filter?.selectedServices.removeAll()
+                
+            }
             
         case let .payment(paymentViewModel):
             state.payment = paymentViewModel
@@ -142,6 +171,7 @@ struct ProductProfileFlowState {
     var alert: Alert.ViewModel?
     var bottomSheet: ProductProfileViewModel.BottomSheet?
     var history: ProductProfileViewModel.HistoryState?
+    var filter: FilterState?
     var payment: PaymentsViewModel
 }
 
@@ -149,6 +179,7 @@ enum ProductProfileFlowEvent {
     case alert(AlertEvent)
     case bottomSheet(BottomSheetEvent)
     case history(HistoryEvent)
+    case filter(FilterEvent)
     case payment(PaymentsViewModel)
 }
 
