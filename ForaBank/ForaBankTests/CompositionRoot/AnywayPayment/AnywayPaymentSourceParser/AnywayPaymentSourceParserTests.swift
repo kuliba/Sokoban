@@ -23,14 +23,14 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         }
     }
     
-    func test_parse_latest_shouldSetOutlineAmount() throws {
+    func test_parse_latest_shouldNotSetOutlineAmount() throws {
         
         let amount = anyAmount()
         let source = latest(amount: amount)
         
         let output = try makeSUT().parse(source: source)
         
-        XCTAssertNoDiff(output.outline.amount, amount)
+        XCTAssertNil(output.outline.amount)
     }
     
     func test_parse_latest_shouldSetOutlineProduct() throws {
@@ -157,7 +157,7 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
         
         XCTAssertNoDiff(output, .init(
             outline: .init(
-                amount: amount,
+                amount: nil,
                 product: product,
                 fields: [name: value],
                 payload: .init(
