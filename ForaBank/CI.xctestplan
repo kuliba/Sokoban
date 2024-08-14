@@ -471,6 +471,13 @@
         "identifier" : "ServiceCategoriesBackendTests",
         "name" : "ServiceCategoriesBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
     }
   ],
   "version" : 1
