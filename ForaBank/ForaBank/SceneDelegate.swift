@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         historyFilterFlag: featureFlags.historyFilterFlag,
-        changeSVCardLimitsFlag: featureFlags.changeSVCardLimitsFlag,
+        changeSVCardLimitsFlag: .init(.active),
         paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
         updateInfoStatusFlag: .init(.active)
     )
