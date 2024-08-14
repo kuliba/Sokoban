@@ -21,7 +21,7 @@ class RootViewModel: ObservableObject, Resetable {
     @Published private(set) var link: Link?
     
     let mainViewModel: MainViewModel
-    let paymentsViewModel: PaymentsTransfersViewModel
+    let paymentsModel: PaymentsModel
     let chatViewModel: ChatViewModel
     let informerViewModel: InformerView.ViewModel
     
@@ -42,7 +42,7 @@ class RootViewModel: ObservableObject, Resetable {
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
         mainViewModel: MainViewModel,
-        paymentsViewModel: PaymentsTransfersViewModel,
+        paymentsModel: PaymentsModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
@@ -54,7 +54,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
         self.mainViewModel = mainViewModel
-        self.paymentsViewModel = paymentsViewModel
+        self.paymentsModel = paymentsModel
         self.chatViewModel = chatViewModel
         self.informerViewModel = informerViewModel
         self.model = model
@@ -62,7 +62,9 @@ class RootViewModel: ObservableObject, Resetable {
         self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions
-        paymentsViewModel.rootActions = rootActions
+        if case let .legacy(paymentsViewModel) = paymentsModel {
+            paymentsViewModel.rootActions = rootActions
+        }
         
         bind()
         bindAuth()
@@ -72,7 +74,7 @@ class RootViewModel: ObservableObject, Resetable {
     func reset() {
         
         mainViewModel.reset()
-        paymentsViewModel.reset()
+        paymentsModel.reset()
         chatViewModel.reset()
     }
     
@@ -421,8 +423,7 @@ class RootViewModel: ObservableObject, Resetable {
         let mainViewModelHasDestination = mainViewModel.$route
             .map { $0.destination != nil }
         
-        let paymentsViewModelHasDestination = paymentsViewModel.$route
-            .map { $0.destination != nil }
+        let paymentsViewModelHasDestination = paymentsModel.hasDestination
         
         mainViewModelHasDestination
             .combineLatest(paymentsViewModelHasDestination)
@@ -531,6 +532,41 @@ extension RootViewModel {
         case me2me(RequestMeToMeModel)
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
+    }
+    
+    enum PaymentsModel {
+        
+        case legacy(PaymentsTransfersViewModel)
+        case v1(PaymentsTransfersModel)
+    }
+}
+
+extension RootViewModel.PaymentsModel: Resetable {
+    
+    func reset() {
+        
+        switch self {
+        case let .legacy(paymentsTransfersViewModel):
+            paymentsTransfersViewModel.reset()
+            
+        case let .v1(paymentsTransfersModel):
+#warning("unimplemented")
+            break
+        }
+    }
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        switch self {
+        case let .legacy(paymentsTransfersViewModel):
+            return paymentsTransfersViewModel.$route
+                .map { $0.destination != nil }
+                .eraseToAnyPublisher()
+            
+        case let .v1(paymentsTransfersModel):
+#warning("unimplemented")
+            return Just(false).eraseToAnyPublisher()
+        }
     }
 }
 

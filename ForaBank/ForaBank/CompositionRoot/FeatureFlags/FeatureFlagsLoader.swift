@@ -25,8 +25,9 @@ extension FeatureFlagsLoader {
     func load() -> FeatureFlags {
         
         return .init(
-            historyFilterFlag: loadHistoryFilterFlag(),
             changeSVCardLimitsFlag: loadChangeSVCardLimitsFlag(),
+            historyFilterFlag: loadHistoryFilterFlag(),
+            paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag()
         )
     }
@@ -34,19 +35,19 @@ extension FeatureFlagsLoader {
 
 enum FeatureFlagKey: String {
     
-    case historyFilterFlag = "history_filter"
     case changeSVCardLimitsFlag = "changeSVCardLimits"
+    case historyFilterFlag = "history_filter"
+    case paymentsTransfersFlag = "payments_transfers"
     case utilitiesPaymentsFlag = "sber_providers"
 }
 
 private extension FeatureFlagsLoader {
     
-    func loadUtilitiesPaymentsFlag() -> UtilitiesPaymentsFlag {
+    func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
         
-        switch retrieve(.utilitiesPaymentsFlag) {
-        case "sber_providers_live": return .init(.active(.live))
-        case "sber_providers_stub": return .init(.active(.stub))
-        default:                    return .init(.inactive)
+        switch retrieve(.changeSVCardLimitsFlag) {
+        case "1":  return .init(.active)
+        default:   return .init(.inactive)
         }
     }
     
@@ -58,11 +59,19 @@ private extension FeatureFlagsLoader {
         }
     }
     
-    func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
-        
-        switch retrieve(.changeSVCardLimitsFlag) {
+    func loadPaymentsTransfersFlag() -> PaymentsTransfersFlag {
+        switch retrieve(.paymentsTransfersFlag) {
         case "1":  return .init(.active)
         default:   return .init(.inactive)
+        }
+    }
+    
+    func loadUtilitiesPaymentsFlag() -> UtilitiesPaymentsFlag {
+        
+        switch retrieve(.utilitiesPaymentsFlag) {
+        case "sber_providers_live": return .init(.active(.live))
+        case "sber_providers_stub": return .init(.active(.stub))
+        default:                    return .init(.inactive)
         }
     }
 }

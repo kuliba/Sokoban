@@ -25,9 +25,9 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab()
-                    paymentsViewTab(viewModel.paymentsViewModel)
-                    chatViewTab()
+                    mainViewTab(viewModel.mainViewModel)
+                    paymentsViewTab(viewModel.paymentsModel)
+                    chatViewTab(viewModel.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -47,12 +47,14 @@ struct RootView: View {
         )
     }
     
-    private func mainViewTab() -> some View {
+    private func mainViewTab(
+        _ mainViewModel: MainViewModel
+    ) -> some View {
         
         NavigationView {
             
             MainView(
-                viewModel: viewModel.mainViewModel,
+                viewModel: mainViewModel,
                 navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
                     httpClient: viewModel.model.authenticatedHTTPClient(),
                     model: viewModel.model,
@@ -70,21 +72,29 @@ struct RootView: View {
     }
     
     private func paymentsViewTab(
-        _ paymentsViewModel: PaymentsTransfersViewModel
+        _ paymentsModel: RootViewModel.PaymentsModel
     ) -> some View {
         
         NavigationView {
             
-            rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
+            switch paymentsModel {
+            case let .legacy(paymentsViewModel):
+                rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
+                
+            case let .v1(paymentsTransfersModel):
+                Text("TBD: v1 for \(paymentsTransfersModel)")
+            }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarTransferButton")
     }
     
-    private func chatViewTab() -> some View {
+    private func chatViewTab(
+        _ chatViewModel: ChatViewModel
+    ) -> some View {
         
-        ChatView(viewModel: viewModel.chatViewModel)
+        ChatView(viewModel: chatViewModel)
             .taggedTabItem(.chat, selected: viewModel.selected)
             .accessibilityIdentifier("tabBarChatButton")
     }
@@ -187,7 +197,7 @@ struct RootView_Previews: PreviewProvider {
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 mainViewModel: .sample,
-                paymentsViewModel: .sample,
+                paymentsModel: .legacy(.sample),
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,

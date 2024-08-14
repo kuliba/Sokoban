@@ -26,6 +26,7 @@ extension RootViewModelFactory {
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
+        paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
@@ -292,6 +293,7 @@ extension RootViewModelFactory {
         )
         
         return make(
+            paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
@@ -594,6 +596,7 @@ private extension RootViewModelFactory {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     static func make(
+        paymentsTransfersFlag: PaymentsTransfersFlag,
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
@@ -644,6 +647,17 @@ private extension RootViewModelFactory {
             paymentsTransfersFactory: paymentsTransfersFactory
         )
         
+        let paymentsModel: RootViewModel.PaymentsModel = {
+           
+            switch paymentsTransfersFlag.rawValue {
+            case .active:
+                return .v1(.init())
+                
+            case .inactive:
+                return .legacy(paymentsViewModel)
+            }
+        }()
+        
         let chatViewModel = ChatViewModel()
         
         let informerViewModel = InformerView.ViewModel(model)
@@ -666,7 +680,7 @@ private extension RootViewModelFactory {
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             mainViewModel: mainViewModel,
-            paymentsViewModel: paymentsViewModel,
+            paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
