@@ -33,6 +33,7 @@ enum QRModelResult: Equatable {
     
     enum Mapped: Equatable {
         
+        case missingINN
         case mixed(MixedOperators, QRCode, QRMapping)
         case multiple(MultipleOperators, QRCode, QRMapping)
         case none(QRCode)
