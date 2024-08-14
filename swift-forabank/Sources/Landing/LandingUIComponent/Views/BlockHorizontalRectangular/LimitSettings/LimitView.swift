@@ -75,6 +75,7 @@ where InfoView: View {
         
         let textFieldPublisher = textFieldModel.$state
             .map(getDecimal)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .removeDuplicates(by: decimalEqual)
         
         TextFieldView(
