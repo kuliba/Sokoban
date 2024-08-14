@@ -178,21 +178,25 @@ private extension ControlPanelEffectHandler {
             }
             
         case let .saveLimits(limits):
-            DispatchQueue.main.delay(for: .milliseconds(400)) { [weak self] in
-                self?.hideKeyboard()
-            }
-            productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
+                hideKeyboard()
+            
+            DispatchQueue.global(qos: .userInitiated).delay(for: .milliseconds(100)) { [weak self] in
                 
-                switch ($0, $1) {
+                guard let self else { return }
+                
+                productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
                     
-                case let (.some(text), nil):
-                    dispatch(.delayAlert(text))
-                    
-                case let (.none, .some(limits)):
-                    
-                    dispatch(.informerWithLimits("Лимиты установлены", limits))
-                default:
-                    break
+                    switch ($0, $1) {
+                        
+                    case let (.some(text), nil):
+                        dispatch(.delayAlert(text))
+                        
+                    case let (.none, .some(limits)):
+                        
+                        dispatch(.informerWithLimits("Лимиты установлены", limits))
+                    default:
+                        break
+                    }
                 }
             }
             
