@@ -25,9 +25,9 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab()
+                    mainViewTab(viewModel.mainViewModel)
                     paymentsViewTab(viewModel.paymentsViewModel)
-                    chatViewTab()
+                    chatViewTab(viewModel.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -47,12 +47,14 @@ struct RootView: View {
         )
     }
     
-    private func mainViewTab() -> some View {
+    private func mainViewTab(
+        _ mainViewModel: MainViewModel
+    ) -> some View {
         
         NavigationView {
             
             MainView(
-                viewModel: viewModel.mainViewModel,
+                viewModel: mainViewModel,
                 navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
                     httpClient: viewModel.model.authenticatedHTTPClient(),
                     model: viewModel.model,
@@ -82,9 +84,11 @@ struct RootView: View {
         .accessibilityIdentifier("tabBarTransferButton")
     }
     
-    private func chatViewTab() -> some View {
+    private func chatViewTab(
+        _ chatViewModel: ChatViewModel
+    ) -> some View {
         
-        ChatView(viewModel: viewModel.chatViewModel)
+        ChatView(viewModel: chatViewModel)
             .taggedTabItem(.chat, selected: viewModel.selected)
             .accessibilityIdentifier("tabBarChatButton")
     }
