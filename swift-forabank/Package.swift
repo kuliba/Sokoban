@@ -1605,7 +1605,13 @@ private extension Target {
             .urlRequestFactory,
             .getProductListByTypeV6Service
         ],
-        path: "Tests/Services/\(String.getProductListByTypeV6ServiceTests)"
+        path: "Tests/Services/\(String.getProductListByTypeV6ServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
     )
 
     // MARK: - UI
