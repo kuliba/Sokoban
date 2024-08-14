@@ -65,7 +65,7 @@ public struct FilterView: View {
                     .padding(.bottom, 5)
                 
                 TransactionContainer(
-                    transactions: state.transactions,
+                    transactions: state.transactionType,
                     selectedTransaction: state.selectedTransaction,
                     event: { event in
                         filterEvent(event)
@@ -104,8 +104,8 @@ extension FilterView {
     
     struct PeriodContainer: View {
         
-        let periods: [String]
-        var selectedPeriod = "Месяц"
+        let periods: [FilterState.Period]
+        var selectedPeriod: FilterState.Period = .month
         let event: (Event) -> Void
         
         var body: some View {
@@ -119,7 +119,7 @@ extension FilterView {
                         event(.selectedPeriod(period))
                     }) {
                         
-                        Text(period)
+                        Text(period.id)
                             .padding()
                             .background(selectedPeriod == period ? Color.black : .gray.opacity(0.2))
                             .foregroundColor(selectedPeriod == period ? Color.white : Color.black)
@@ -134,8 +134,8 @@ extension FilterView {
     
     struct TransactionContainer: View {
         
-        let transactions: [String]
-        var selectedTransaction = ""
+        let transactions: [FilterState.TransactionType]
+        var selectedTransaction: FilterState.TransactionType?
         let event: (Event) -> Void
         let config: Config
         
@@ -147,7 +147,7 @@ extension FilterView {
                     
                     Button(action: { event(.selectedTransaction(transaction)) }) {
                         
-                        Text(transaction)
+                        Text(transaction.id)
                             .padding()
                             .background(selectedTransaction == transaction ? config.optionConfig.selectBackgroundColor : config.optionConfig.notSelectedBackgroundColor)
                             .foregroundColor(selectedTransaction == transaction ? config.optionConfig.selectForegroundColor : config.optionConfig.notSelectForegroundColor)
@@ -389,8 +389,8 @@ struct FilterView_Previews: PreviewProvider {
                 state: .init(
                     title: "Фильтры",
                     selectedServices: [],
-                    periods: ["Неделя", "Месяц", "Выбрать период"],
-                    transactions: ["Списание", "Пополнение"],
+                    periods: FilterState.Period.allCases,
+                    transactionType: FilterState.TransactionType.allCases,
                     services: ["Неделя", "Месяц", "Выбрать период"]
                 ),
                 event: { _ in },
