@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         historyFilterFlag: featureFlags.historyFilterFlag,
         changeSVCardLimitsFlag: featureFlags.changeSVCardLimitsFlag,
+        paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
         updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(

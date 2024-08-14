@@ -26,7 +26,7 @@ struct RootView: View {
                 TabView(selection: $viewModel.selected) {
                     
                     mainViewTab(viewModel.mainViewModel)
-                    paymentsViewTab(viewModel.paymentsViewModel)
+                    paymentsViewTab(viewModel.paymentsModel)
                     chatViewTab(viewModel.chatViewModel)
                 }
                 .accentColor(.black)
@@ -72,12 +72,18 @@ struct RootView: View {
     }
     
     private func paymentsViewTab(
-        _ paymentsViewModel: PaymentsTransfersViewModel
+        _ paymentsModel: RootViewModel.PaymentsModel
     ) -> some View {
         
         NavigationView {
             
-            rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
+            switch paymentsModel {
+            case let .legacy(paymentsViewModel):
+                rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
+                
+            case let .v1(paymentsTransfersModel):
+                Text("TBD: v1 for \(paymentsTransfersModel)")
+            }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
@@ -191,7 +197,7 @@ struct RootView_Previews: PreviewProvider {
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 mainViewModel: .sample,
-                paymentsViewModel: .sample,
+                paymentsModel: .legacy(.sample),
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
