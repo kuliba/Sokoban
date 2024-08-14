@@ -11,8 +11,7 @@ import GenericRemoteService
 
 extension NanoServices {
     
-#warning("placeholder `Void` in `GetServiceCategoryListResult` until mapping is ready")
-    typealias GetServiceCategoryListResult = Result<Void, ServiceFailure>
+    typealias GetServiceCategoryListResult = Result<RemoteServices.ResponseMapper.GetServiceCategoryListResponse, ServiceFailure>
     typealias GetServiceCategoryListCompletion = (GetServiceCategoryListResult) -> Void
     typealias GetServiceCategoryList = (@escaping GetServiceCategoryListCompletion) -> Void
     
@@ -26,10 +25,7 @@ extension NanoServices {
         adaptedLoggingFetch(
             createRequest: RequestFactory.createGetServiceCategoryListRequest,
             httpClient: httpClient,
-            mapResponse: { data, _ in
-                
-                    .success(print(String(data: data, encoding: .utf8)))
-            },
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse,
             mapError: ServiceFailure.init,
             log: log,
             file: file,
