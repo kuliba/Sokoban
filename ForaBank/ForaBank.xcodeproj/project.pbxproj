@@ -5876,6 +5876,7 @@
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
+		839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV6Service.xctestplan; sourceTree = "<group>"; };
 		839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createCardGuardianPanel.swift"; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
@@ -9363,6 +9364,7 @@
 				2AC4BE9B2B62C53C00650962 /* FastPaymentsSettingsPreview.xctestplan */,
 				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
 				D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */,
+				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
