@@ -10,6 +10,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Новый экран Платежи</string>
+			<key>Key</key>
+			<string>payments_transfers</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Фильтр Истории Операций</string>
 			<key>Key</key>
 			<string>history_filter</string>
