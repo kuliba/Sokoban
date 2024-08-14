@@ -49,6 +49,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         .getProductListByTypeService,
+        .getProductListByTypeV6Service,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -172,6 +173,8 @@ let package = Package(
         .urlRequestFactoryTests,
         .getProductListByTypeService,
         .getProductListByTypeServiceTests,
+        .getProductListByTypeV6Service,
+        .getProductListByTypeV6ServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -744,6 +747,13 @@ private extension Product {
         name: .getProductListByTypeService,
         targets: [
             .getProductListByTypeService
+        ]
+    )
+    
+    static let getProductListByTypeV6Service = library(
+        name: .getProductListByTypeV6Service,
+        targets: [
+            .getProductListByTypeV6Service
         ]
     )
     
@@ -1576,6 +1586,26 @@ private extension Target {
             .copy("Responses/GetProductListByType_Deposit_Response.json"),
             .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
+    )
+    
+    static let getProductListByTypeV6Service = target(
+        name: .getProductListByTypeV6Service,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeV6Service)"
+    )
+    
+    static let getProductListByTypeV6ServiceTests = testTarget(
+        name: .getProductListByTypeV6ServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeV6Service
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeV6ServiceTests)"
     )
 
     // MARK: - UI
@@ -2706,6 +2736,10 @@ private extension Target.Dependency {
         name: .getProductListByTypeService
     )
     
+    static let getProductListByTypeV6Service = byName(
+        name: .getProductListByTypeV6Service
+    )
+    
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -2961,6 +2995,9 @@ private extension String {
 
     static let getProductListByTypeService = "GetProductListByTypeService"
     static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
+    
+    static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
+    static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
 
     // MARK: - Tools
     

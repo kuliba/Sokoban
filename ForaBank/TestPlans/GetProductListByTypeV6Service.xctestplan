@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4B137F75-8AC9-4FE5-B96B-876783DB0EE8",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV6ServiceTests",
+        "name" : "GetProductListByTypeV6ServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}
