@@ -82,7 +82,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(paymentsTransfersModel):
-                Text("TBD: v1 for \(paymentsTransfersModel)")
+                Text("TBD: v1 for \("paymentsTransfersModel")")
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
