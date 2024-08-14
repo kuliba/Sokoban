@@ -19,6 +19,7 @@ import RxViewModel
 import LandingUIComponent
 import UIPrimitives
 import ManageSubscriptionsUI
+import CalendarUI
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -39,6 +40,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var accentColor: Color
     
     @Published var historyState: HistoryState?
+    @Published var filterState: FilterState?
     
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
@@ -83,6 +85,7 @@ class ProductProfileViewModel: ObservableObject {
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
+    private let filterSubject = PassthroughSubject<FilterState?, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
 
     init(
@@ -147,11 +150,16 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: scheduler)
             .assign(to: &$historyState)
 
+        self.filterSubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$filterState)
+        
         self.paymentSubject
             //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$payment)
-        
+
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -417,7 +425,7 @@ extension ProductProfileViewModel {
 private extension ProductProfileViewModel {
     
     func bind() {
-        
+                
         action
             .compactMap { $0 as? DelayWrappedAction }
             .flatMap {
@@ -1148,9 +1156,12 @@ private extension ProductProfileViewModel {
                             
                         } else {
                             
-                            let alertView = Alert.ViewModel(title: "Невозможно пополнить",
-                                                            message: "Вклад не предусматривает возможности пополнения.\nПодробнее в информации по вкладу в деталях",
-                                                            primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}))
+                            let alertView = Alert.ViewModel(
+                                title: "Невозможно пополнить",
+                                message: "Вклад не предусматривает возможности пополнения.\nПодробнее в информации по вкладу в деталях",
+                                primary: .init(type: .default, title: "ОК", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())})
+                            )
+                            
                             self.alert = .init(alertView)
                         }
                         
@@ -1866,7 +1877,15 @@ private extension ProductProfileViewModel {
             return nil
         }
         
-        return ProductProfileHistoryView.ViewModel(model, productId: productId)
+        return ProductProfileHistoryView.ViewModel(
+            model,
+            productId: productId, 
+            filter: {
+                return self.filterState
+            },
+            services: {
+                self.event(.filter(.openSheet(self.historyCategories())))
+            })
     }
     
     static func accentColor(with product: ProductData) -> Color {
@@ -2905,6 +2924,7 @@ extension ProductProfileViewModel {
             alert: alert,
             bottomSheet: bottomSheet,
             history: historyState,
+            filter: filterState,
             payment: .sample
         )
         
@@ -2913,6 +2933,7 @@ extension ProductProfileViewModel {
         alertSubject.send(newState.alert)
         bottomSheetSubject.send(newState.bottomSheet)
         historySubject.send(newState.history)
+        filterSubject.send(newState.filter)
         
         if let effect {
             
