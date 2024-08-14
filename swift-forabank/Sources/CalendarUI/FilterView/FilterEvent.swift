@@ -8,8 +8,10 @@
 import Foundation
 
 public enum FilterEvent {
-    
-    case selectedPeriod(String)
-    case selectedTransaction(String)
+
+    case openSheet([String])
+    case selectedPeriod(FilterState.Period)
+    case selectedTransaction(FilterState.TransactionType)
     case selectedCategory(String)
+    case clearOptions
 }
