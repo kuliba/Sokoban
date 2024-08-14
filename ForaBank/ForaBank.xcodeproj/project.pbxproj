@@ -862,6 +862,7 @@
 		2A625CF72B948E8A0017237F /* PaymentsTransfersNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */; };
 		2A625CF92B949C3C0017237F /* SimpleServiceFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */; };
 		2A625CFB2B94B71B0017237F /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CFA2B94B71B0017237F /* UtilityService.swift */; };
+		2A629D5C2C6C63210087F895 /* PaymentsTransfersFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */; };
 		2A62E9632BD94F870044EB39 /* FactoryBasedPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9622BD94F870044EB39 /* FactoryBasedPreviewApp.swift */; };
 		2A62E9652BD94F870044EB39 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9642BD94F870044EB39 /* ContentView.swift */; };
 		2A62E9672BD94F880044EB39 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A62E9662BD94F880044EB39 /* Assets.xcassets */; };
@@ -4151,6 +4152,7 @@
 		2A625CF62B948E8A0017237F /* PaymentsTransfersNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationState.swift; sourceTree = "<group>"; };
 		2A625CF82B949C3C0017237F /* SimpleServiceFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleServiceFailure.swift; sourceTree = "<group>"; };
 		2A625CFA2B94B71B0017237F /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
+		2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlag.swift; sourceTree = "<group>"; };
 		2A62E9602BD94F870044EB39 /* FactoryBasedPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FactoryBasedPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A62E9622BD94F870044EB39 /* FactoryBasedPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryBasedPreviewApp.swift; sourceTree = "<group>"; };
 		2A62E9642BD94F870044EB39 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -9468,6 +9470,20 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
+		2A629D5D2C6C660D0087F895 /* Flags */ = {
+			isa = PBXGroup;
+			children = (
+				2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */,
+				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
+				83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */,
+				2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */,
+				2A9BD5102B85105C00B88395 /* UtilitiesPaymentsFlag.swift */,
+				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
+				2A629D5B2C6C63210087F895 /* PaymentsTransfersFlag.swift */,
+			);
+			path = Flags;
+			sourceTree = "<group>";
+		};
 		2A62E9612BD94F870044EB39 /* FactoryBasedPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -10862,12 +10878,7 @@
 				2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */,
 				2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */,
 				2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */,
-				2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */,
-				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
-				83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */,
-				2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */,
-				2A9BD5102B85105C00B88395 /* UtilitiesPaymentsFlag.swift */,
-				C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */,
+				2A629D5D2C6C660D0087F895 /* Flags */,
 			);
 			path = FeatureFlags;
 			sourceTree = "<group>";
@@ -20351,6 +20362,7 @@
 				77DA2060284539BC00D7E005 /* ProductData+Legacy.swift in Sources */,
 				2A09C2AF2B3C59510076DC93 /* FastPaymentsFactory.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
+				2A629D5C2C6C63210087F895 /* PaymentsTransfersFlag.swift in Sources */,
 				774A8B782865FEE400B81140 /* SpinnerViewComponent.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				503B164E2889853F009F4CE3 /* CurrencyListViewModelMock.swift in Sources */,
