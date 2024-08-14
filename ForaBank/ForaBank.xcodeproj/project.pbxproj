@@ -338,6 +338,10 @@
 		2A0439CD2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439CC2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift */; };
 		2A0439CF2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439CE2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift */; };
 		2A05586E2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */; };
+		2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */; };
+		2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05ECC62C6C8C740070C5CF /* ContentView.swift */; };
+		2A05ECC92C6C8C770070C5CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A05ECC82C6C8C770070C5CF /* Assets.xcassets */; };
+		2A05ECCC2C6C8C770070C5CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A05ECCB2C6C8C770070C5CF /* Preview Assets.xcassets */; };
 		2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5190302A7E0BE80014B0B7 /* URLRequestFactory */; };
 		2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A06DC2F2AFACBDD0049709E /* ServerAgent */; };
 		2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DC312AFB72500049709E /* Services+makeActivationService.swift */; };
@@ -3613,6 +3617,11 @@
 		2A0439CC2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeCreateAnywayTransferV2Tests.swift"; sourceTree = "<group>"; };
 		2A0439CE2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeCreateAnywayTransferNewV2Tests.swift"; sourceTree = "<group>"; };
 		2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationViewModelParameterInputTests.swift; sourceTree = "<group>"; };
+		2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayHubPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPreviewApp.swift; sourceTree = "<group>"; };
+		2A05ECC62C6C8C740070C5CF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A05ECC82C6C8C770070C5CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A05ECCB2C6C8C770070C5CF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A06DC312AFB72500049709E /* Services+makeActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationService.swift"; sourceTree = "<group>"; };
 		2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+getJSON.swift"; sourceTree = "<group>"; };
 		2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_1_1.json; sourceTree = "<group>"; };
@@ -6445,6 +6454,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2A05ECBF2C6C8C740070C5CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0E31722C63D52800143969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -7693,6 +7709,25 @@
 				2A0439C82BB420040063B7AB /* NanoServicesTestHelpers.swift */,
 			);
 			path = NanoServices;
+			sourceTree = "<group>";
+		};
+		2A05ECC32C6C8C740070C5CF /* PayHubPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
+				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
+				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
+				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
+			);
+			path = PayHubPreview;
+			sourceTree = "<group>";
+		};
+		2A05ECCA2C6C8C770070C5CF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A05ECCB2C6C8C770070C5CF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		2A0776F62A02514200118373 /* Helpers */ = {
@@ -11350,6 +11385,7 @@
 				2AD87D8A2BD77859004D06C0 /* NavStackPreview */,
 				C1C6F1C72B83642400237C07 /* OperatorsListPreview */,
 				2A783A822B5A87CE0035CEAB /* OTPInputComponentPreview */,
+				2A05ECC32C6C8C740070C5CF /* PayHubPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
 				2A0E31762C63D52800143969 /* SberNumericTextFieldPreview */,
 				2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */,
@@ -16050,6 +16086,7 @@
 				2A0F1E292C06E143006E1231 /* AutoScrollingListPreview.app */,
 				2AFED9652C0F929A008F2F95 /* CachedModelsStatePreview.app */,
 				2A0E31752C63D52800143969 /* SberNumericTextFieldPreview.app */,
+				2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -16870,6 +16907,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2A05ECC12C6C8C740070C5CF /* PayHubPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A05ECD12C6C8C770070C5CF /* Build configuration list for PBXNativeTarget "PayHubPreview" */;
+			buildPhases = (
+				2A05ECBE2C6C8C740070C5CF /* Sources */,
+				2A05ECBF2C6C8C740070C5CF /* Frameworks */,
+				2A05ECC02C6C8C740070C5CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PayHubPreview;
+			productName = PayHubPreview;
+			productReference = 2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A0E31842C63D52A00143969 /* Build configuration list for PBXNativeTarget "SberNumericTextFieldPreview" */;
@@ -17560,6 +17614,9 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					2A05ECC12C6C8C740070C5CF = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					2A0E31742C63D52800143969 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -17712,11 +17769,21 @@
 				2A0F1E282C06E143006E1231 /* AutoScrollingListPreview */,
 				2AFED9642C0F929A008F2F95 /* CachedModelsStatePreview */,
 				2A0E31742C63D52800143969 /* SberNumericTextFieldPreview */,
+				2A05ECC12C6C8C740070C5CF /* PayHubPreview */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2A05ECC02C6C8C740070C5CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A05ECCC2C6C8C770070C5CF /* Preview Assets.xcassets in Resources */,
+				2A05ECC92C6C8C770070C5CF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0E31732C63D52800143969 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -18358,6 +18425,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2A05ECBE2C6C8C740070C5CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
+				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A0E31712C63D52800143969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -21287,6 +21363,147 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2A05ECCD2C6C8C770070C5CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/PayHubPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PayHubPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A05ECCE2C6C8C770070C5CF /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/PayHubPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PayHubPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A05ECCF2C6C8C770070C5CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/PayHubPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PayHubPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A05ECD02C6C8C770070C5CF /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/PayHubPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PayHubPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2A0E31802C63D52A00143969 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -25169,6 +25386,17 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2A05ECD12C6C8C770070C5CF /* Build configuration list for PBXNativeTarget "PayHubPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A05ECCD2C6C8C770070C5CF /* Debug */,
+				2A05ECCE2C6C8C770070C5CF /* Mock */,
+				2A05ECCF2C6C8C770070C5CF /* Release */,
+				2A05ECD02C6C8C770070C5CF /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2A0E31842C63D52A00143969 /* Build configuration list for PBXNativeTarget "SberNumericTextFieldPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
