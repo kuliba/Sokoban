@@ -7,6 +7,7 @@
 
 public enum PayHubEvent<Latest> {
     
+    #warning("just [Latest]")
     case loaded([PayHubItem<Latest>])
 }
 
