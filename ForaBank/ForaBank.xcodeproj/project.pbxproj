@@ -2629,6 +2629,7 @@
 		8399147B2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */; };
 		8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */ = {isa = PBXBuildFile; productRef = 8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */; };
 		8399147F2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */; };
+		839914832C6E2EF000E9D275 /* Model+ProductsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839914822C6E2EF000E9D275 /* Model+ProductsTests.swift */; };
 		839E53072BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */; };
 		83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219AF2A4D8FD500A34482 /* ProductConfig.swift */; };
 		83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219B12A4D940900A34482 /* ProductConfigTests.swift */; };
@@ -5885,6 +5886,7 @@
 		839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductListByTypeV6Flag.swift; sourceTree = "<group>"; };
 		8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByTypeV6.swift"; sourceTree = "<group>"; };
 		8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeV6Request.swift"; sourceTree = "<group>"; };
+		839914822C6E2EF000E9D275 /* Model+ProductsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ProductsTests.swift"; sourceTree = "<group>"; };
 		839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createCardGuardianPanel.swift"; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
@@ -13241,6 +13243,7 @@
 				C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */,
 				C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */,
 				2A1E52752C4FB69100619E2B /* Model+QRHelpersTests.swift */,
+				839914822C6E2EF000E9D275 /* Model+ProductsTests.swift */,
 				C130E3752A8FC184002F99BC /* C2BOperation.swift */,
 			);
 			path = Model;
@@ -21002,6 +21005,7 @@
 				6820923027A97A1D003DCAFD /* ServerCommandsFastPaymentTests.swift in Sources */,
 				83E2F6182A41A9EE000B64CF /* DocumentItemModelTests.swift in Sources */,
 				C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */,
+				839914832C6E2EF000E9D275 /* Model+ProductsTests.swift in Sources */,
 				682092A827AC0692003DCAFD /* ServerCommandsPersonTests.swift in Sources */,
 				2A6B8E602AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift in Sources */,
 				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
