@@ -5,25 +5,40 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-enum PayHubEvent {}
-enum PayHubEffect {
+enum PayHubItem<Latest> {
+    
+    case exchange
+    case latest(Latest)
+    case templates
+}
+
+extension PayHubItem: Equatable where Latest: Equatable {}
+
+enum PayHubEvent<Latest> {
+    
+    case loaded([PayHubItem<Latest>])
+}
+
+extension PayHubEvent: Equatable where Latest: Equatable {}
+
+enum PayHubEffect: Equatable {
     
     case load
 }
 
-struct PayHubEffectHandlerMicroServices {
+struct PayHubEffectHandlerMicroServices<Latest> {
     
     let load: Load
 }
 
 extension PayHubEffectHandlerMicroServices {
     
-    typealias LoadResult = ()
+    typealias LoadResult = Result<[Latest], Error>
     typealias LoadCompletion = (LoadResult) -> Void
-    typealias Load = (@escaping () -> Void) -> Void
+    typealias Load = (@escaping LoadCompletion) -> Void
 }
 
-final class PayHubEffectHandler {
+final class PayHubEffectHandler<Latest> {
     
     let microServices: MicroServices
     
@@ -32,7 +47,7 @@ final class PayHubEffectHandler {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PayHubEffectHandlerMicroServices
+    typealias MicroServices = PayHubEffectHandlerMicroServices<Latest>
 }
 
 extension PayHubEffectHandler {
@@ -43,7 +58,12 @@ extension PayHubEffectHandler {
     ) {
         switch effect {
         case .load:
-            microServices.load { }
+            microServices.load {
+                
+                let latests = (try? $0.get()) ?? []
+                let loaded = [.templates, .exchange] + latests.map(PayHubItem<Latest>.latest)
+                dispatch(.loaded(loaded))
+            }
         }
     }
 }
@@ -52,7 +72,7 @@ extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent
+    typealias Event = PayHubEvent<Latest>
     typealias Effect = PayHubEffect
 }
 
@@ -82,10 +102,52 @@ final class PayHubEffectHandlerTests: XCTestCase {
         XCTAssertEqual(loadPay.callCount, 1)
     }
     
+    func test_load_shouldDeliverTemplatesAndExchangeOnLoadFailure() {
+        
+        let (sut, loadPay) = makeSUT()
+        
+        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+            
+            loadPay.complete(with: .failure(anyError()))
+        }
+    }
+    
+    func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() {
+        
+        let (sut, loadPay) = makeSUT()
+        
+        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+            
+            loadPay.complete(with: .success([]))
+        }
+    }
+    
+    func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() {
+        
+        let latest = makeLatest()
+        let (sut, loadPay) = makeSUT()
+        
+        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest)])) {
+            
+            loadPay.complete(with: .success([latest]))
+        }
+    }
+    
+    func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() {
+        
+        let (latest1, latest2) = (makeLatest(), makeLatest())
+        let (sut, loadPay) = makeSUT()
+        
+        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest1), .latest(latest2)])) {
+            
+            loadPay.complete(with: .success([latest1, latest2]))
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PayHubEffectHandler
-    private typealias LoadSpy = Spy<Void, Void>
+    private typealias SUT = PayHubEffectHandler<Latest>
+    private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -97,12 +159,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let loadPay = LoadSpy()
         let sut = SUT(
             microServices: .init(
-                load: { completion in
-                    loadPay.process {
-                        
-                        completion()
-                    }
-                }
+                load: loadPay.process
             )
         )
         
@@ -112,4 +169,40 @@ final class PayHubEffectHandlerTests: XCTestCase {
         return (sut, loadPay)
     }
     
+    private struct Latest: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeLatest(
+        _ value: String = anyMessage()
+    ) -> Latest {
+        
+        return .init(value: value)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with effect: SUT.Effect,
+        toDeliver expectedEvents: SUT.Event...,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = expectedEvents.count
+        var events = [SUT.Event]()
+        
+        sut.handleEffect(effect) {
+            
+            events.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
+        
+        wait(for: [exp], timeout: 1)
+    }
 }
