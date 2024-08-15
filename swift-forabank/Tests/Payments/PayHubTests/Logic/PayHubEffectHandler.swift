@@ -5,11 +5,11 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-final class PayHubEffectHandler<ExchangeFlow, Latest, Status, TemplatesFlow>
-where ExchangeFlow: FlowEventEmitter,
-      ExchangeFlow.Status == Status,
-      TemplatesFlow: FlowEventEmitter,
-      TemplatesFlow.Status == Status {
+final class PayHubEffectHandler<Exchange, Latest, Status, Templates>
+where Exchange: FlowEventEmitter,
+      Exchange.Status == Status,
+      Templates: FlowEventEmitter,
+      Templates.Status == Status {
     
     let microServices: MicroServices
     
@@ -18,7 +18,7 @@ where ExchangeFlow: FlowEventEmitter,
         self.microServices = microServices
     }
     
-    typealias MicroServices = PayHubEffectHandlerMicroServices<ExchangeFlow, Latest, TemplatesFlow>
+    typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, Templates>
 }
 
 extension PayHubEffectHandler {
@@ -42,14 +42,14 @@ extension PayHubEffectHandler {
         }
     }
     
-    typealias Item = PayHubItem<ExchangeFlow, Latest, TemplatesFlow>
+    typealias Item = PayHubItem<Exchange, Latest, Templates>
 }
 
 extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<ExchangeFlow, Latest, Status, TemplatesFlow>
+    typealias Event = PayHubEvent<Exchange, Latest, Status, Templates>
     typealias Effect = PayHubEffect
 }
 
@@ -57,7 +57,7 @@ private extension PayHubEffectHandler {
     
     func makeTemplatesNode(
         _ dispatch: @escaping Dispatch
-    ) -> Node<TemplatesFlow> {
+    ) -> Node<Templates> {
         
         let templates = microServices.makeTemplates()
         let cancellable = templates.eventPublisher
@@ -68,7 +68,7 @@ private extension PayHubEffectHandler {
     
     func makeExchangeNode(
         _ dispatch: @escaping Dispatch
-    ) -> Node<ExchangeFlow> {
+    ) -> Node<Exchange> {
         
         let exchange = microServices.makeExchange()
         let cancellable = exchange.eventPublisher

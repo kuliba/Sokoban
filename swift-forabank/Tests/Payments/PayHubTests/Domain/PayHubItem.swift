@@ -5,11 +5,11 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-enum PayHubItem<ExchangeFlow, Latest, TemplatesFlow> {
+enum PayHubItem<Exchange, Latest, Templates> {
     
-    case exchange(Node<ExchangeFlow>)
+    case exchange(Node<Exchange>)
     case latest(Latest)
-    case templates(Node<TemplatesFlow>)
+    case templates(Node<Templates>)
 }
 
-extension PayHubItem: Equatable where ExchangeFlow: Equatable, Latest: Equatable, TemplatesFlow: Equatable {}
+extension PayHubItem: Equatable where Exchange: Equatable, Latest: Equatable, Templates: Equatable {}

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-struct PayHubEffectHandlerMicroServices<ExchangeFlow, Latest, TemplatesFlow> {
+struct PayHubEffectHandlerMicroServices<Exchange, Latest, Templates> {
     
     let load: Load
     let makeExchange: MakeExchange
@@ -18,6 +18,6 @@ extension PayHubEffectHandlerMicroServices {
     typealias LoadCompletion = (LoadResult) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
     
-    typealias MakeExchange = () -> ExchangeFlow
-    typealias MakeTemplates = () -> TemplatesFlow
+    typealias MakeExchange = () -> Exchange
+    typealias MakeTemplates = () -> Templates
 }

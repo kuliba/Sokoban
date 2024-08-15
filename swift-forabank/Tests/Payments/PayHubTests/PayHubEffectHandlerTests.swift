@@ -336,7 +336,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
     }
 }
 
-extension PayHubItem where ExchangeFlow: AnyObject, Latest: Equatable, TemplatesFlow: AnyObject {
+extension PayHubItem where Exchange: AnyObject, Latest: Equatable, Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -360,7 +360,7 @@ extension PayHubItem where ExchangeFlow: AnyObject, Latest: Equatable, Templates
     }
 }
 
-extension PayHubEvent where ExchangeFlow: AnyObject, Latest: Equatable, Status: Equatable, TemplatesFlow: AnyObject {
+extension PayHubEvent where Exchange: AnyObject, Latest: Equatable, Status: Equatable, Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -376,6 +376,6 @@ extension PayHubEvent where ExchangeFlow: AnyObject, Latest: Equatable, Status: 
     enum EquatableProjection: Equatable {
         
         case flowEvent(FlowEvent<Status>)
-        case loaded([PayHubItem<ExchangeFlow, Latest, TemplatesFlow>.EquatableProjection])
+        case loaded([PayHubItem<Exchange, Latest, Templates>.EquatableProjection])
     }
 }
