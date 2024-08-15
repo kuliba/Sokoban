@@ -5,21 +5,63 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
+import Combine
+
+struct Node<Model> {
+    
+    let model: Model
+    private let cancellables: Set<AnyCancellable>
+    
+    init(
+        model: Model,
+        cancellable: AnyCancellable
+    ) {
+        self.model = model
+        self.cancellables = [cancellable]
+    }
+    
+    init(
+        model: Model,
+        cancellables: Set<AnyCancellable>
+    ) {
+        self.model = model
+        self.cancellables = cancellables
+    }
+}
+
+extension Node: Equatable where Model: Equatable {}
+
+protocol FlowEventEmitter<Status> {
+    
+    associatedtype Status
+    
+    var eventPublisher: AnyPublisher<FlowEvent<Status>, Never> { get }
+}
+
+struct FlowEvent<Status> {
+    
+    let isLoading: Bool
+    let status: Status?
+}
+
+extension FlowEvent: Equatable where Status: Equatable {}
+
 enum PayHubItem<Latest, TemplatesFlow> {
     
     case exchange
     case latest(Latest)
-    case templates(TemplatesFlow)
+    case templates(Node<TemplatesFlow>)
 }
 
 extension PayHubItem: Equatable where Latest: Equatable, TemplatesFlow: Equatable {}
 
-enum PayHubEvent<Latest, TemplatesFlow> {
+enum PayHubEvent<Latest, Status, TemplatesFlow> {
     
+    case flowEvent(FlowEvent<Status>)
     case loaded([PayHubItem<Latest, TemplatesFlow>])
 }
 
-extension PayHubEvent: Equatable where Latest: Equatable, TemplatesFlow: Equatable {}
+extension PayHubEvent: Equatable where Latest: Equatable, Status: Equatable, TemplatesFlow: Equatable {}
 
 enum PayHubEffect: Equatable {
     
@@ -41,7 +83,9 @@ extension PayHubEffectHandlerMicroServices {
     typealias MakeTemplates = () -> TemplatesFlow
 }
 
-final class PayHubEffectHandler<Latest, TemplatesFlow> {
+final class PayHubEffectHandler<Latest, Status, TemplatesFlow>
+where TemplatesFlow: FlowEventEmitter,
+      TemplatesFlow.Status == Status {
     
     let microServices: MicroServices
     
@@ -62,10 +106,14 @@ extension PayHubEffectHandler {
         switch effect {
         case .load:
             let templates = microServices.makeTemplates()
+            let cancellable = templates.eventPublisher
+                .sink { _ in }
+            let templatesNode = Node(model: templates, cancellable: cancellable)
+            
             microServices.load {
                 
                 let latests = (try? $0.get()) ?? []
-                let loaded = [.templates(templates), .exchange] + latests.map(Item.latest)
+                let loaded = [.templates(templatesNode), .exchange] + latests.map(Item.latest)
                 dispatch(.loaded(loaded))
             }
         }
@@ -78,10 +126,9 @@ extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<Latest, TemplatesFlow>
+    typealias Event = PayHubEvent<Latest, Status, TemplatesFlow>
     typealias Effect = PayHubEffect
 }
-
 
 import XCTest
 
@@ -113,12 +160,14 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let templates = makeTemplatesFlow()
         let (sut, loadPay) = makeSUT(templates: templates)
         
-        let delivered = try deliver(sut, with: .load) {
+        let loaded = try load(sut, with: .load) {
             
             loadPay.complete(with: .failure(anyError()))
         }
         
-        XCTAssertNoDiff(delivered, .loaded([.templates(templates), .exchange]))
+        XCTAssertNoDiff(loaded.map(\.equatableProjection), [
+            .templates(ObjectIdentifier(templates)), .exchange
+        ])
     }
     
     func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() throws {
@@ -126,12 +175,14 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let templates = makeTemplatesFlow()
         let (sut, loadPay) = makeSUT(templates: templates)
         
-        let delivered = try deliver(sut, with: .load) {
+        let loaded = try load(sut, with: .load) {
             
             loadPay.complete(with: .success([]))
         }
         
-        XCTAssertNoDiff(delivered, .loaded([.templates(templates), .exchange]))
+        XCTAssertNoDiff(loaded.map(\.equatableProjection), [
+            .templates(ObjectIdentifier(templates)), .exchange
+        ])
     }
     
     func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() throws {
@@ -140,12 +191,14 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let templates = makeTemplatesFlow()
         let (sut, loadPay) = makeSUT(templates: templates)
         
-        let delivered = try deliver(sut, with: .load) {
+        let loaded = try load(sut, with: .load) {
             
             loadPay.complete(with: .success([latest]))
         }
         
-        XCTAssertNoDiff(delivered, .loaded([.templates(templates), .exchange, .latest(latest)]))
+        XCTAssertNoDiff(loaded.map(\.equatableProjection), [
+            .templates(ObjectIdentifier(templates)), .exchange, .latest(latest)
+        ])
     }
     
     func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() throws {
@@ -154,17 +207,19 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let templates = makeTemplatesFlow()
         let (sut, loadPay) = makeSUT(templates: templates)
         
-        let delivered = try deliver(sut, with: .load) {
+        let loaded = try load(sut, with: .load) {
             
             loadPay.complete(with: .success([latest1, latest2]))
         }
         
-        XCTAssertNoDiff(delivered, .loaded([.templates(templates), .exchange, .latest(latest1), .latest(latest2)]))
+        XCTAssertNoDiff(loaded.map(\.equatableProjection), [
+            .templates(ObjectIdentifier(templates)), .exchange, .latest(latest1), .latest(latest2)
+        ])
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PayHubEffectHandler<Latest, TemplatesFlow>
+    private typealias SUT = PayHubEffectHandler<Latest, Status, TemplatesFlow>
     private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
     private func makeSUT(
@@ -201,24 +256,47 @@ final class PayHubEffectHandlerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private struct TemplatesFlow: Equatable {
+    private struct Status: Equatable {
         
         let value: String
     }
     
-    private func makeTemplatesFlow(
-    ) -> TemplatesFlow {
+    private func Status(
+        _ value: String = anyMessage()
+    ) -> Status {
         
-        return .init(value: anyMessage())
+        return .init(value: value)
     }
     
-    private func deliver(
+    private final class TemplatesFlow: FlowEventEmitter {
+        
+        typealias Event = FlowEvent<Status>
+        
+        private let subject = PassthroughSubject<Event, Never>()
+        
+        var eventPublisher: AnyPublisher<Event, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ event: Event) {
+            
+            subject.send(event)
+        }
+    }
+    
+    private func makeTemplatesFlow() -> TemplatesFlow {
+        
+        return .init()
+    }
+    
+    private func load(
         _ sut: SUT,
         with effect: SUT.Effect,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> SUT.Event {
+    ) throws -> [SUT.Item] {
         
         let exp = expectation(description: "wait for completion")
         var event: SUT.Event?
@@ -233,6 +311,38 @@ final class PayHubEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
         
-        return try XCTUnwrap(event, file: file, line: line)
+        switch event {
+        case let .loaded(loaded):
+            return loaded
+            
+        default:
+            let message = "Expected loaded event, but got \(String(describing: event)) instead."
+            XCTFail(message, file: file, line: line)
+            throw NSError(domain: message, code: -1)
+        }
+    }
+}
+
+extension PayHubItem where Latest: Equatable, TemplatesFlow: AnyObject {
+    
+    var equatableProjection: EquatableProjection {
+        
+        switch self {
+        case .exchange:
+            return .exchange
+            
+        case let .latest(latest):
+            return .latest(latest)
+            
+        case let .templates(node):
+            return .templates(ObjectIdentifier(node.model))
+        }
+    }
+    
+    enum EquatableProjection: Equatable {
+        
+        case exchange
+        case latest(Latest)
+        case templates(ObjectIdentifier)
     }
 }
