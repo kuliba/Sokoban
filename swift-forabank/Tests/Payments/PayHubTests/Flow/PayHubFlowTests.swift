@@ -96,7 +96,10 @@ class PayHubFlowTests: XCTestCase {
     }
 }
 
-extension PayHubFlowItem where Exchange: AnyObject, Latest: AnyObject, Templates: AnyObject {
+extension PayHubFlowItem 
+where Exchange: AnyObject, 
+      Latest: AnyObject,
+      Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -117,6 +120,22 @@ extension PayHubFlowItem where Exchange: AnyObject, Latest: AnyObject, Templates
         case exchange(ObjectIdentifier)
         case latest(ObjectIdentifier)
         case templates(ObjectIdentifier)
+    }
+}
+
+extension PayHubFlowState
+where Exchange: AnyObject,
+      Latest: AnyObject,
+      Templates: AnyObject {
+    
+    var equatableProjection: EquatableProjection {
+        
+        return .init(selected: selected?.equatableProjection)
+    }
+    
+    struct EquatableProjection: Equatable {
+        
+        let selected: PayHubFlowItem<Exchange, Latest, Templates>.EquatableProjection?
     }
 }
 

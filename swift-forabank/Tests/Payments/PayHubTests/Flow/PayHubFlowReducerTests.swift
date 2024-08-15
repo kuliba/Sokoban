@@ -5,7 +5,14 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-typealias PayHubFlowState<Exchange, Latest, Templates> = Optional<PayHubFlowItem<Exchange, Latest, Templates>>
+struct PayHubFlowState<Exchange, Latest, Status, Templates> {
+    
+    var isLoading = false
+    var selected: PayHubFlowItem<Exchange, Latest, Templates>?
+    var status: Status?
+}
+
+extension PayHubFlowState: Equatable where Exchange: Equatable, Latest: Equatable, Status: Equatable, Templates: Equatable {}
 
 final class PayHubFlowReducer<Exchange, Latest, LatestFlow, Status, Templates> {}
 
@@ -24,14 +31,14 @@ extension PayHubFlowReducer {
             if let select {
                 effect = .select(select)
             } else {
-                state = .none
+                state.selected = .none
             }
             
         case let .flowEvent(flowEvent):
             break
             
         case let .selected(selected):
-            state = selected
+            state.selected = selected
         }
         
         return (state, effect)
@@ -40,7 +47,7 @@ extension PayHubFlowReducer {
 
 extension PayHubFlowReducer {
     
-    typealias State = PayHubFlowState<Exchange, LatestFlow, Templates>
+    typealias State = PayHubFlowState<Exchange, LatestFlow, Status, Templates>
     typealias Event = PayHubFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
     typealias Effect = PayHubFlowEffect<Latest>
 }
@@ -50,41 +57,121 @@ import XCTest
 
 final class PayHubFlowReducerTests: PayHubFlowTests {
     
+    // MARK: - flowEvent
+    
+    func test_flowEvent_shouldSetIsLoadingToFalseAndStatusToNil() {
+        
+        let state = makeState(isLoading: true, status: makeStatus())
+        let event = makeFlowEvent(false, nil)
+        
+        assert(state, event: event) {
+            
+            $0.isLoading = false
+            $0.status = nil
+        }
+    }
+    
+    func test_flowEvent_shouldNotDeliverEffectOnNilStateIsLoadingFalseNilStatus() {
+        
+        let state = makeState(isLoading: true, status: makeStatus())
+        let event = makeFlowEvent(false, nil)
+
+        assert(state, event: event, delivers: nil)
+    }
+    
+    func test_flowEvent_shouldSetIsLoadingToTrueAndStatusToNil() {
+        
+        let state = makeState(isLoading: false, status: makeStatus())
+        let event = makeFlowEvent(true, nil)
+        
+        assert(state, event: event) {
+            
+            $0.isLoading = true
+            $0.status = nil
+        }
+    }
+    
+    func test_flowEvent_shouldNotDeliverEffectOnNilStateIsLoadingTrueNilStatus() {
+        
+        let state = makeState(isLoading: false, status: makeStatus())
+        let event = makeFlowEvent(true, nil)
+
+        assert(state, event: event, delivers: nil)
+    }
+    
+    
+    //    func test_flowEvent_shouldNotDeliverEffectOnNilStateIsLoadingTrueNilStatus() {
+    //
+    //        let flowEvent = makeFlowEvent(true, nil)
+    //
+    //        assert(nil, event: flowEvent, delivers: nil)
+    //    }
+    //
+    //    func test_flowEvent_() {
+    //
+    //        let flowEvent = makeFlowEvent(false, makeStatus())
+    //    }
+    //
+    //    func test_flowEvent_shouldNotDeliverEffectOnNilStateIsLoadingFalseNonNilStatus() {
+    //
+    //        let flowEvent = makeFlowEvent(false, makeStatus())
+    //
+    //        assert(nil, event: flowEvent, delivers: nil)
+    //    }
+    //
+    //    func test_flowEvent_2() {
+    //
+    //        let flowEvent = makeFlowEvent(true, makeStatus())
+    //    }
+    //
+    //    func test_flowEvent_shouldNotDeliverEffectOnNilStateIsLoadingTrueNonNilStatus() {
+    //
+    //        let flowEvent = makeFlowEvent(true, makeStatus())
+    //
+    //        assert(nil, event: flowEvent, delivers: nil)
+    //    }
+    
     // MARK: - select
     
     func test_select_shouldResetStateOnSelectNil() {
         
-        assert(.exchange(makeExchangeFlowNode()), event: .select(nil)) {
+        let state = makeState(selected: .exchange(makeExchangeFlowNode()))
+        
+        assert(state, event: .select(nil)) {
             
-            $0 = .none
+            $0.selected = .none
         }
     }
     
     func test_select_shouldNotDeliverEffectOnSelectNil() {
         
-        assert(.exchange(makeExchangeFlowNode()), event: .select(nil), delivers: nil)
+        let state = makeState(selected: .exchange(makeExchangeFlowNode()))
+
+        assert(state, event: .select(nil), delivers: nil)
     }
     
     func test_select_shouldNotChangeStateOnSelectExchange() {
         
-        assert(.none, event: .select(.exchange))
+        let state = makeState(selected: nil)
+
+        assert(state, event: .select(.exchange))
     }
     
     func test_select_shouldDeliverEffectOnSelectExchange() {
         
-        assert(.none, event: .select(.exchange), delivers: .select(.exchange))
+        assert(makeState(selected: nil), event: .select(.exchange), delivers: .select(.exchange))
     }
     
     func test_select_shouldDeliverEffectOnSelectLatest() {
         
         let latest = makeLatest()
         
-        assert(.none, event: .select(.latest(latest)), delivers: .select(.latest(latest)))
+        assert(makeState(selected: nil), event: .select(.latest(latest)), delivers: .select(.latest(latest)))
     }
     
     func test_select_shouldDeliverEffectOnSelectTemplates() {
         
-        assert(.none, event: .select(.templates), delivers: .select(.templates))
+        assert(makeState(selected: nil), event: .select(.templates), delivers: .select(.templates))
     }
     
     // MARK: - selected
@@ -93,9 +180,9 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
         
         let exchange = makeExchangeFlowNode()
         
-        assert(.none, event: .selected(.exchange(exchange))) {
+        assert(makeState(selected: nil), event: .selected(.exchange(exchange))) {
             
-            $0 = .exchange(exchange)
+            $0.selected = .exchange(exchange)
         }
     }
     
@@ -103,9 +190,9 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
         
         let latest = makeLatestFlowNode()
         
-        assert(.none, event: .selected(.latest(latest))) {
+        assert(makeState(selected: nil), event: .selected(.latest(latest))) {
             
-            $0 = .latest(latest)
+            $0.selected = .latest(latest)
         }
     }
     
@@ -113,9 +200,9 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
         
         let templates = makeTemplatesFlowNode()
         
-        assert(.none, event: .selected(.templates(templates))) {
+        assert(makeState(selected: nil), event: .selected(.templates(templates))) {
             
-            $0 = .templates(templates)
+            $0.selected = .templates(templates)
         }
     }
     
@@ -133,6 +220,19 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState(
+        isLoading: Bool = false,
+        selected: PayHubFlowItem<Exchange, LatestFlow, Templates>? = nil,
+        status: Status? = nil
+    ) -> SUT.State {
+        
+        return .init(
+            isLoading: isLoading,
+            selected: selected,
+            status: status
+        )
     }
     
     private func makeFlowEvent(
@@ -161,8 +261,8 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
         let (receivedState, _) = sut.reduce(state, event)
         
         XCTAssertNoDiff(
-            receivedState?.equatableProjection,
-            expectedState?.equatableProjection,
+            receivedState.equatableProjection,
+            expectedState.equatableProjection,
             "\nExpected \(String(describing: expectedState)), but got \(String(describing: receivedState)) instead.",
             file: file, line: line
         )
