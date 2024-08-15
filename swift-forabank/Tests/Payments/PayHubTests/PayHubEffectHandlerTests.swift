@@ -346,18 +346,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) throws -> [SUT.Item] {
         
-        let exp = expectation(description: "wait for completion")
-        var event: SUT.Event?
-        
-        sut.handleEffect(effect) {
-            
-            event = $0
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 1)
+        let event = observed(sut, with: effect, eventsCount: 1, on: action).first
         
         switch event {
         case let .loaded(loaded):
@@ -375,9 +364,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         _ sut: SUT,
         with effect: SUT.Effect,
         eventsCount: Int,
-        on action: @escaping () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
+        on action: @escaping () -> Void
     ) -> [SUT.Event] {
         
         let exp = expectation(description: "wait for completion")
