@@ -33,8 +33,11 @@ final class PayHubEffectHandlerTests: XCTestCase {
     
     func test_load_shouldDeliverTemplatesAndExchangeOnLoadFailure() throws {
         
-        let templates = makeTemplatesFlow()
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let loaded = try load(sut, with: .load) {
             
@@ -42,14 +45,18 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(loaded.map(\.equatableProjection), [
-            .templates(ObjectIdentifier(templates)), .exchange
+            .templates(ObjectIdentifier(templates)),
+            .exchange(ObjectIdentifier(exchange))
         ])
     }
     
     func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() throws {
         
-        let templates = makeTemplatesFlow()
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let loaded = try load(sut, with: .load) {
             
@@ -57,15 +64,19 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(loaded.map(\.equatableProjection), [
-            .templates(ObjectIdentifier(templates)), .exchange
+            .templates(ObjectIdentifier(templates)),
+            .exchange(ObjectIdentifier(exchange))
         ])
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() throws {
+    func test_load_shouldDeliverTemplatesAndExchangeWithOneLatestOnLoadSuccessWithOne() throws {
         
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
         let latest = makeLatest()
-        let templates = makeTemplatesFlow()
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let loaded = try load(sut, with: .load) {
             
@@ -73,15 +84,20 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(loaded.map(\.equatableProjection), [
-            .templates(ObjectIdentifier(templates)), .exchange, .latest(latest)
+            .templates(ObjectIdentifier(templates)),
+            .exchange(ObjectIdentifier(exchange)),
+            .latest(latest)
         ])
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() throws {
+    func test_load_shouldDeliverTemplatesAndExchangeWithTwoLatestOnLoadSuccessWithTwo() throws {
         
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
         let (latest1, latest2) = (makeLatest(), makeLatest())
-        let templates = makeTemplatesFlow()
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let loaded = try load(sut, with: .load) {
             
@@ -89,16 +105,22 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(loaded.map(\.equatableProjection), [
-            .templates(ObjectIdentifier(templates)), .exchange, .latest(latest1), .latest(latest2)
+            .templates(ObjectIdentifier(templates)),
+            .exchange(ObjectIdentifier(exchange)),
+            .latest(latest1),
+            .latest(latest2)
         ])
     }
     
     func test_load_shouldDeliverObservableTemplates() {
         
-        let templates = makeTemplatesFlow()
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
         let status = makeStatus()
         let flowEvent = FlowEvent(isLoading: false, status: status)
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let observed = observed(sut, with: .load, eventsCount: 2) {
             
@@ -107,15 +129,21 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(observed.map(\.equatableProjection), [
-            .loaded([.templates(ObjectIdentifier(templates)), .exchange]),
+            .loaded([
+                .templates(ObjectIdentifier(templates)),
+                .exchange(ObjectIdentifier(exchange))
+            ]),
             .flowEvent(flowEvent)
         ])
     }
     
     func test_load_shouldDeliverObservableTemplates2() {
         
-        let templates = makeTemplatesFlow()
-        let (sut, loadPay) = makeSUT(templates: templates)
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
         
         let observed = observed(sut, with: .load, eventsCount: 2) {
             
@@ -124,18 +152,70 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
         
         XCTAssertNoDiff(observed.map(\.equatableProjection), [
-            .loaded([.templates(ObjectIdentifier(templates)), .exchange]),
+            .loaded([
+                .templates(ObjectIdentifier(templates)),
+                .exchange(ObjectIdentifier(exchange))
+            ]),
+            .flowEvent(.init(isLoading: true, status: nil))
+        ])
+    }
+    
+    func test_load_shouldDeliverObservableExchange() {
+        
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
+        let status = makeStatus()
+        let flowEvent = FlowEvent(isLoading: false, status: status)
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
+        
+        let observed = observed(sut, with: .load, eventsCount: 2) {
+            
+            loadPay.complete(with: .failure(anyError()))
+            exchange.emit(flowEvent)
+        }
+        
+        XCTAssertNoDiff(observed.map(\.equatableProjection), [
+            .loaded([
+                .templates(ObjectIdentifier(templates)),
+                .exchange(ObjectIdentifier(exchange))
+            ]),
+            .flowEvent(flowEvent)
+        ])
+    }
+    
+    func test_load_shouldDeliverObservableExchange2() {
+        
+        let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
+        let (sut, loadPay) = makeSUT(
+            exchange: exchange,
+            templates: templates
+        )
+        
+        let observed = observed(sut, with: .load, eventsCount: 2) {
+            
+            loadPay.complete(with: .success([]))
+            exchange.emit(.init(isLoading: true, status: nil))
+        }
+        
+        XCTAssertNoDiff(observed.map(\.equatableProjection), [
+            .loaded([
+                .templates(ObjectIdentifier(templates)),
+                .exchange(ObjectIdentifier(exchange))
+            ]),
             .flowEvent(.init(isLoading: true, status: nil))
         ])
     }
 
     // MARK: - Helpers
     
-    private typealias SUT = PayHubEffectHandler<Latest, Status, TemplatesFlow>
+    private typealias SUT = PayHubEffectHandler<Flow, Latest, Status, Flow>
     private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
     private func makeSUT(
-        templates: TemplatesFlow? = nil,
+        exchange: Flow? = nil,
+        templates: Flow? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -146,6 +226,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let sut = SUT(
             microServices: .init(
                 load: loadPay.process,
+                makeExchange: { exchange ?? self.makeTemplatesFlow() },
                 makeTemplates: { templates ?? self.makeTemplatesFlow() }
             )
         )
@@ -180,7 +261,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private final class TemplatesFlow: FlowEventEmitter {
+    private final class Flow: FlowEventEmitter {
         
         typealias Event = FlowEvent<Status>
         
@@ -197,7 +278,12 @@ final class PayHubEffectHandlerTests: XCTestCase {
         }
     }
     
-    private func makeTemplatesFlow() -> TemplatesFlow {
+    private func makeTemplatesFlow() -> Flow {
+        
+        return .init()
+    }
+    
+    private func makeExchangeFlow() -> Flow {
         
         return .init()
     }
@@ -250,13 +336,13 @@ final class PayHubEffectHandlerTests: XCTestCase {
     }
 }
 
-extension PayHubItem where Latest: Equatable, TemplatesFlow: AnyObject {
+extension PayHubItem where ExchangeFlow: AnyObject, Latest: Equatable, TemplatesFlow: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
         switch self {
-        case .exchange:
-            return .exchange
+        case let .exchange(node):
+            return .exchange(ObjectIdentifier(node.model))
             
         case let .latest(latest):
             return .latest(latest)
@@ -268,13 +354,13 @@ extension PayHubItem where Latest: Equatable, TemplatesFlow: AnyObject {
     
     enum EquatableProjection: Equatable {
         
-        case exchange
+        case exchange(ObjectIdentifier)
         case latest(Latest)
         case templates(ObjectIdentifier)
     }
 }
 
-extension PayHubEvent where Latest: Equatable, Status: Equatable, TemplatesFlow: AnyObject {
+extension PayHubEvent where ExchangeFlow: AnyObject, Latest: Equatable, Status: Equatable, TemplatesFlow: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -290,6 +376,6 @@ extension PayHubEvent where Latest: Equatable, Status: Equatable, TemplatesFlow:
     enum EquatableProjection: Equatable {
         
         case flowEvent(FlowEvent<Status>)
-        case loaded([PayHubItem<Latest, TemplatesFlow>.EquatableProjection])
+        case loaded([PayHubItem<ExchangeFlow, Latest, TemplatesFlow>.EquatableProjection])
     }
 }

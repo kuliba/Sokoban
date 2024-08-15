@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-final class PayHubEffectHandler<Latest, Status, TemplatesFlow>
-where TemplatesFlow: FlowEventEmitter,
+final class PayHubEffectHandler<ExchangeFlow, Latest, Status, TemplatesFlow>
+where ExchangeFlow: FlowEventEmitter,
+      ExchangeFlow.Status == Status,
+      TemplatesFlow: FlowEventEmitter,
       TemplatesFlow.Status == Status {
     
     let microServices: MicroServices
@@ -16,7 +18,7 @@ where TemplatesFlow: FlowEventEmitter,
         self.microServices = microServices
     }
     
-    typealias MicroServices = PayHubEffectHandlerMicroServices<Latest, TemplatesFlow>
+    typealias MicroServices = PayHubEffectHandlerMicroServices<ExchangeFlow, Latest, TemplatesFlow>
 }
 
 extension PayHubEffectHandler {
@@ -28,24 +30,26 @@ extension PayHubEffectHandler {
         switch effect {
         case .load:
             let templatesNode = makeTemplatesNode(dispatch)
+            let exchangeNode = makeExchangeNode(dispatch)
             
             microServices.load {
                 
                 let latests = (try? $0.get()) ?? []
-                let loaded = [.templates(templatesNode), .exchange] + latests.map(Item.latest)
+                let loaded = [.templates(templatesNode), .exchange(exchangeNode)
+                ] + latests.map(Item.latest)
                 dispatch(.loaded(loaded))
             }
         }
     }
     
-    typealias Item = PayHubItem<Latest, TemplatesFlow>
+    typealias Item = PayHubItem<ExchangeFlow, Latest, TemplatesFlow>
 }
 
 extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<Latest, Status, TemplatesFlow>
+    typealias Event = PayHubEvent<ExchangeFlow, Latest, Status, TemplatesFlow>
     typealias Effect = PayHubEffect
 }
 
@@ -60,5 +64,16 @@ private extension PayHubEffectHandler {
             .sink { dispatch(.flowEvent($0)) }
         
         return .init(model: templates, cancellable: cancellable)
+    }
+    
+    func makeExchangeNode(
+        _ dispatch: @escaping Dispatch
+    ) -> Node<ExchangeFlow> {
+        
+        let exchange = microServices.makeExchange()
+        let cancellable = exchange.eventPublisher
+            .sink { dispatch(.flowEvent($0)) }
+        
+        return .init(model: exchange, cancellable: cancellable)
     }
 }
