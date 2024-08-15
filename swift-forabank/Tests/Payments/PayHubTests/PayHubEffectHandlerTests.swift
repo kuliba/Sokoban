@@ -210,7 +210,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private typealias SUT = PayHubEffectHandler<Flow, Latest, Status, Flow>
+    private typealias SUT = PayHubEffectHandler<Flow, Latest, Flow>
     private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
     private func makeSUT(

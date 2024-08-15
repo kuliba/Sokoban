@@ -5,11 +5,10 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-final class PayHubEffectHandler<Exchange, Latest, Status, Templates>
+final class PayHubEffectHandler<Exchange, Latest, Templates>
 where Exchange: FlowEventEmitter,
-      Exchange.Status == Status,
       Templates: FlowEventEmitter,
-      Templates.Status == Status {
+      Exchange.Status == Templates.Status {
     
     let microServices: MicroServices
     
@@ -49,7 +48,7 @@ extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<Exchange, Latest, Status, Templates>
+    typealias Event = PayHubEvent<Exchange, Latest, Exchange.Status, Templates>
     typealias Effect = PayHubEffect
 }
 
