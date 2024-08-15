@@ -7,6 +7,7 @@
 
 public enum PayHubEvent<Latest> {
     
+    case load
     case loaded([Latest])
 }
 

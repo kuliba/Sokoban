@@ -20,6 +20,10 @@ extension PayHubReducer {
         var effect: Effect?
         
         switch event {
+        case .load:
+            state = .none
+            effect = .load
+            
         case let .loaded(loaded):
             state = [.templates, .exchange] + loaded.map { .latest($0) }
         }
@@ -41,6 +45,21 @@ import XCTest
 
 final class PayHubReducerTests: PayHubTests {
     
+    // MARK: - load
+    
+    func test_load_shouldSetStateToNil() {
+        
+        assert([.exchange], event: .load) {
+            
+            $0 = .none
+        }
+    }
+        
+    func test_load_shouldDeliverLoadEffect() {
+        
+        assert([.exchange], event: .load, delivers: .load)
+    }
+        
     // MARK: - loaded
         
     func test_loaded_shouldSetTemplatesWithExchangeOnEmpty() {
