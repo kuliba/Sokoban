@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-final class PayHubEffectHandler<Exchange, Latest, LatestFlow, Templates>
+public final class PayHubEffectHandler<Exchange, Latest, LatestFlow, Templates>
 where Exchange: FlowEventEmitter,
       LatestFlow: FlowEventEmitter,
       Templates: FlowEventEmitter,
@@ -14,15 +14,15 @@ where Exchange: FlowEventEmitter,
     
     let microServices: MicroServices
     
-    init(microServices: MicroServices) {
+    public init(microServices: MicroServices) {
         
         self.microServices = microServices
     }
     
-    typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
+    public typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
 }
 
-extension PayHubEffectHandler {
+public extension PayHubEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -50,7 +50,7 @@ extension PayHubEffectHandler {
     typealias Item = PayHubItem<Exchange, LatestFlow, Templates>
 }
 
-extension PayHubEffectHandler {
+public extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     

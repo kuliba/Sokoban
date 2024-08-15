@@ -6,6 +6,7 @@
 //
 
 import Combine
+import PayHub
 import XCTest
 
 final class PayHubEffectHandlerTests: XCTestCase {

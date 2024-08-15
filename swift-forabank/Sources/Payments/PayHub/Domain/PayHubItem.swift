@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-enum PayHubItem<Exchange, Latest, Templates> {
+public enum PayHubItem<Exchange, Latest, Templates> {
     
     case exchange(Node<Exchange>)
     case latest(Node<Latest>)

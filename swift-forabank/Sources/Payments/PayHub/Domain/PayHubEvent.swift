@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-enum PayHubEvent<Exchange, Latest, Status, Templates> {
+public enum PayHubEvent<Exchange, Latest, Status, Templates> {
     
     case flowEvent(FlowEvent<Status>)
     case loaded([PayHubItem<Exchange, Latest, Templates>])
