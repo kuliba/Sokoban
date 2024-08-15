@@ -6,10 +6,21 @@
 //
 
 enum PayHubEvent {}
-enum PayHubEffect {}
+enum PayHubEffect {
+    
+    case load
+}
 
 struct PayHubEffectHandlerMicroServices {
     
+    let load: Load
+}
+
+extension PayHubEffectHandlerMicroServices {
+    
+    typealias LoadResult = ()
+    typealias LoadCompletion = (LoadResult) -> Void
+    typealias Load = (@escaping () -> Void) -> Void
 }
 
 final class PayHubEffectHandler {
@@ -31,7 +42,8 @@ extension PayHubEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-            
+        case .load:
+            microServices.load { }
         }
     }
 }
@@ -48,23 +60,56 @@ extension PayHubEffectHandler {
 import XCTest
 
 final class PayHubEffectHandlerTests: XCTestCase {
+    
+    // MARK: - init
+    
+    func test_init_shouldNotCallCollaborator() {
         
+        let (sut, loadPay) = makeSUT()
+        
+        XCTAssertEqual(loadPay.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - load
+    
+    func test_load_shouldCallLoad() {
+        
+        let (sut, loadPay) = makeSUT()
+        
+        sut.handleEffect(.load) { _ in }
+        
+        XCTAssertEqual(loadPay.callCount, 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PayHubEffectHandler
+    private typealias LoadSpy = Spy<Void, Void>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
+    ) -> (
+        sut: SUT,
+        loadSpy: LoadSpy
+    ) {
+        let loadPay = LoadSpy()
         let sut = SUT(
-            microServices: .init()
+            microServices: .init(
+                load: { completion in
+                    loadPay.process {
+                        
+                        completion()
+                    }
+                }
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loadPay, file: file, line: line)
         
-        return sut
+        return (sut, loadPay)
     }
     
 }
