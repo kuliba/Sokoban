@@ -105,10 +105,7 @@ extension PayHubEffectHandler {
     ) {
         switch effect {
         case .load:
-            let templates = microServices.makeTemplates()
-            let cancellable = templates.eventPublisher
-                .sink { _ in }
-            let templatesNode = Node(model: templates, cancellable: cancellable)
+            let templatesNode = makeTemplatesNode(dispatch)
             
             microServices.load {
                 
@@ -128,6 +125,20 @@ extension PayHubEffectHandler {
     
     typealias Event = PayHubEvent<Latest, Status, TemplatesFlow>
     typealias Effect = PayHubEffect
+}
+
+private extension PayHubEffectHandler {
+    
+    func makeTemplatesNode(
+        _ dispatch: @escaping Dispatch
+    ) -> Node<TemplatesFlow> {
+        
+        let templates = microServices.makeTemplates()
+        let cancellable = templates.eventPublisher
+            .sink { dispatch(.flowEvent($0)) }
+        
+        return .init(model: templates, cancellable: cancellable)
+    }
 }
 
 import XCTest
