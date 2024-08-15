@@ -5,11 +5,10 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-import Combine
 import PayHub
 import XCTest
 
-final class PayHubEffectHandlerTests: XCTestCase {
+final class PayHubEffectHandlerTests: PayHubTests {
     
     // MARK: - init
     
@@ -227,7 +226,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
             .flowEvent(.init(isLoading: true, status: nil))
         ])
     }
-
+    
     func test_load_shouldDeliverObservableLatestFlow() {
         
         let (exchange, templates) = (makeTemplatesFlow(), makeExchangeFlow())
@@ -238,7 +237,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
             latest: [latest: latestFlow],
             templates: templates
         )
-
+        
         let observed = observed(sut, with: .load, eventsCount: 2) {
             
             loadSpy.complete(with: .success([latest]))
@@ -268,7 +267,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
             ],
             templates: templates
         )
-
+        
         let observed = observed(sut, with: .load, eventsCount: 2) {
             
             loadSpy.complete(with: .success([latest1, latest2]))
@@ -285,12 +284,9 @@ final class PayHubEffectHandlerTests: XCTestCase {
             .flowEvent(.init(isLoading: true, status: nil))
         ])
     }
-
+    
     // MARK: - Helpers
     
-    private typealias Exchange = Flow
-    private typealias LatestFlow = Flow
-    private typealias Templates = Flow
     private typealias SUT = PayHubEffectHandler<Exchange, Latest, LatestFlow, Templates>
     private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
@@ -321,62 +317,6 @@ final class PayHubEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(loadSpy, file: file, line: line)
         
         return (sut, loadSpy)
-    }
-    
-    private struct Latest: Hashable {
-        
-        let value: String
-    }
-    
-    private func makeLatest(
-        _ value: String = anyMessage()
-    ) -> Latest {
-        
-        return .init(value: value)
-    }
-    
-    private struct Status: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeStatus(
-        _ value: String = anyMessage()
-    ) -> Status {
-        
-        return .init(value: value)
-    }
-    
-    private final class Flow: FlowEventEmitter {
-        
-        typealias Event = FlowEvent<Status>
-        
-        private let subject = PassthroughSubject<Event, Never>()
-        
-        var eventPublisher: AnyPublisher<Event, Never> {
-            
-            subject.eraseToAnyPublisher()
-        }
-        
-        func emit(_ event: Event) {
-            
-            subject.send(event)
-        }
-    }
-    
-    private func makeTemplatesFlow() -> Flow {
-        
-        return .init()
-    }
-    
-    private func makeExchangeFlow() -> Flow {
-        
-        return .init()
-    }
-    
-    private func makeLatestFlow() -> Flow {
-        
-        return .init()
     }
     
     @discardableResult
@@ -424,49 +364,5 @@ final class PayHubEffectHandlerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
         
         return events
-    }
-}
-
-extension PayHubItem where Exchange: AnyObject, Latest: AnyObject, Templates: AnyObject {
-    
-    var equatableProjection: EquatableProjection {
-        
-        switch self {
-        case let .exchange(node):
-            return .exchange(ObjectIdentifier(node.model))
-            
-        case let .latest(node):
-            return .latest(ObjectIdentifier(node.model))
-            
-        case let .templates(node):
-            return .templates(ObjectIdentifier(node.model))
-        }
-    }
-    
-    enum EquatableProjection: Equatable {
-        
-        case exchange(ObjectIdentifier)
-        case latest(ObjectIdentifier)
-        case templates(ObjectIdentifier)
-    }
-}
-
-extension PayHubEvent where Exchange: AnyObject, Latest: AnyObject, Status: Equatable, Templates: AnyObject {
-    
-    var equatableProjection: EquatableProjection {
-        
-        switch self {
-        case let .flowEvent(flowEvent):
-            return .flowEvent(flowEvent)
-            
-        case let .loaded(loaded):
-            return .loaded(loaded.map(\.equatableProjection))
-        }
-    }
-    
-    enum EquatableProjection: Equatable {
-        
-        case flowEvent(FlowEvent<Status>)
-        case loaded([PayHubItem<Exchange, Latest, Templates>.EquatableProjection])
     }
 }
