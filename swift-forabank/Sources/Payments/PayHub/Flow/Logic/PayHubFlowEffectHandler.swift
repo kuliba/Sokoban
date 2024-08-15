@@ -1,11 +1,11 @@
 //
-//  PayHubEffectHandler.swift
+//  PayHubFlowEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public final class PayHubEffectHandler<Exchange, Latest, LatestFlow, Templates>
+public final class PayHubFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
 where Exchange: FlowEventEmitter,
       LatestFlow: FlowEventEmitter,
       Templates: FlowEventEmitter,
@@ -19,48 +19,61 @@ where Exchange: FlowEventEmitter,
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
+    public typealias MicroServices = PayHubFlowEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
 }
 
-public extension PayHubEffectHandler {
+public extension PayHubFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .load:
-            let templatesNode = makeTemplatesNode(dispatch)
-            let exchangeNode = makeExchangeNode(dispatch)
-            
-            microServices.load { [weak self] in
-                
-                guard let self else { return }
-                
-                let latests = ((try? $0.get()) ?? [])
-                let latestFlows = latests.map { self.makeLatestNode($0, dispatch) }
-                
-                let loaded = [Item.templates(templatesNode), .exchange(exchangeNode)
-                ] + latestFlows.map(Item.latest)
-                dispatch(.loaded(loaded))
-            }
+        case let .select(item):
+            select(item, dispatch)
         }
     }
     
-    typealias Item = PayHubItem<Exchange, LatestFlow, Templates>
+    typealias Item = PayHubFlowItem<Exchange, LatestFlow, Templates>
 }
 
-public extension PayHubEffectHandler {
+public extension PayHubFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<Exchange, LatestFlow, Exchange.Status, Templates>
-    typealias Effect = PayHubEffect
+    typealias Event = PayHubFlowEvent<Exchange, LatestFlow, Exchange.Status, Templates>
+    typealias Effect = PayHubFlowEffect<Latest>
 }
 
-private extension PayHubEffectHandler {
+private extension PayHubFlowEffectHandler {
     
-    func makeTemplatesNode(
+    func select(
+        _ item: PayHubItem<Latest>?,
+        _ dispatch: @escaping Dispatch
+    ) {
+        var selected: Item?
+        
+        switch item {
+        case .none:
+            break
+
+        case .exchange:
+            let exchangeNode = makeExchangeNode(dispatch)
+            selected = .exchange(exchangeNode)
+            
+        case let .latest(latest):
+            let latestNode = makeLatestNode(latest, dispatch)
+            selected = .latest(latestNode)
+            
+        case .templates:
+            let templatesNode = makeTemplatesNode(dispatch)
+            selected = .templates(templatesNode)
+        }
+
+        dispatch(.selected(selected))
+    }
+    
+    private func makeTemplatesNode(
         _ dispatch: @escaping Dispatch
     ) -> Node<Templates> {
         
@@ -71,7 +84,7 @@ private extension PayHubEffectHandler {
         return .init(model: templates, cancellable: cancellable)
     }
     
-    func makeLatestNode(
+    private func makeLatestNode(
         _ latest: Latest,
         _ dispatch: @escaping Dispatch
     ) -> Node<LatestFlow> {
@@ -83,7 +96,7 @@ private extension PayHubEffectHandler {
         return .init(model: latestFlow, cancellable: cancellable)
     }
     
-    func makeExchangeNode(
+    private func makeExchangeNode(
         _ dispatch: @escaping Dispatch
     ) -> Node<Exchange> {
         
