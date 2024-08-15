@@ -48,7 +48,13 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+            makeHistoryButtonView: { isFiltered, event in
+                self.makeHistoryButtonView(
+                    self.historyFeatureFlag,
+                    isFiltered: isFiltered,
+                    event: event
+                )
+            },
             makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
         )
     }
@@ -80,7 +86,13 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+                makeHistoryButton: {
+                    self.makeHistoryButtonView(
+                        self.historyFeatureFlag,
+                        isFiltered: $0,
+                        event: $1
+                    )
+                },
                 makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
             ),
             getUImage: getUImage
@@ -199,11 +211,15 @@ private extension RootViewFactoryComposer {
     
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag,
+        isFiltered: @escaping () -> Bool,
         event: @escaping (HistoryEvent) -> Void
     ) -> HistoryButtonView? {
         
         if historyFeatureFlag.rawValue {
-            return HistoryButtonView(event: event)
+            return HistoryButtonView(
+                event: event,
+                isFiltered: isFiltered
+            )
         } else {
            return nil
         }

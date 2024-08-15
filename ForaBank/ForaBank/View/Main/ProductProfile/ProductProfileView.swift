@@ -84,7 +84,9 @@ struct ProductProfileView: View {
                                 
                                 ProductProfileHistoryView(
                                     viewModel: historyViewModel,
-                                    makeHistoryButton: {  productProfileViewFactory.makeHistoryButton {
+                                    makeHistoryButton: {  productProfileViewFactory.makeHistoryButton(({
+                                        viewModel.filterState?.selectedServices.count != 0 || viewModel.filterState?.selectedTransaction != nil
+                                    })) {
                                         viewModel.event(.history($0))
                                     }}
                                 )
@@ -507,7 +509,7 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:),
+                makeHistoryButton: { .init(event: $1, isFiltered: $0 ) },
                 makeRepeatButtonView: { _ in .init(action: { }) }
             ),
             getUImage: { _ in nil }
