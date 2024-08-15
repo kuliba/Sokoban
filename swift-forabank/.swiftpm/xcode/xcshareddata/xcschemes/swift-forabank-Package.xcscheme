@@ -868,6 +868,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeV6Service"
+               BuildableName = "GetProductListByTypeV6Service"
+               BlueprintName = "GetProductListByTypeV6Service"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "PayHub"
                BuildableName = "PayHub"
                BlueprintName = "PayHub"
@@ -925,6 +939,16 @@
                BlueprintIdentifier = "GetInfoRepeatPaymentServiceTests"
                BuildableName = "GetInfoRepeatPaymentServiceTests"
                BlueprintName = "GetInfoRepeatPaymentServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeV6ServiceTests"
+               BuildableName = "GetProductListByTypeV6ServiceTests"
+               BlueprintName = "GetProductListByTypeV6ServiceTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
