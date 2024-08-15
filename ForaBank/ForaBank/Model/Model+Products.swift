@@ -11,6 +11,7 @@ import CloudKit
 import ForaTools
 import Foundation
 import ServerAgent
+import GetProductListByTypeV6Service
 
 //MARK: - Actions
 
@@ -574,63 +575,99 @@ extension Model {
         _ productType: ProductType
     ) {
         getProductsV6(productType) { response in
+            self.handleGetProductListByTypeResponse(productType, command, response)
+        }
+    }
+    
+    func handleGetProductListByTypeResponse(
+        _ productType: ProductType,
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ response: ProductsResponse?
+    ) {
+        switch response {
+        case .none:
+            updateStatus(productType)
+            updateInfo(false, productType)
             
-            if let response {
-                
-                let result = Services.mapProductsResponse(response)
-                
-                // updating status
-                self.productsUpdating.value.removeAll(where: { $0 == productType })
-                
-                // update products
-                let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
-                self.products.value = updatedProducts
-                
-                self.updateInfo.value.setValue(true, for: productType)
-                
-                //md5hash -> image
-                let md5Products = result.productList.reduce(Set<String>(), {
-                    $0.union([$1.smallDesignMd5hash,
-                              $1.smallBackgroundDesignHash,
-                              $1.xlDesignMd5Hash,
-                              $1.largeDesignMd5Hash,
-                              $1.mediumDesignMd5Hash,
-                              $1.paymentSystemMd5Hash
-                             ]) })
-                
-                let md5ToUpload = Array(md5Products.subtracting(self.images.value.keys))
-                if !md5ToUpload.isEmpty {
-                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
-                }
-                
-                // cache products
-                do {
-                    
-                    try self.productsCacheStore(productsData: updatedProducts)
-                    
-                } catch {
-                    
-                    self.handleServerCommandCachingError(error: error, command: command)
-                }
-                
-                // update additional products data
-                switch productType {
-                case .deposit:
-                    self.action.send(ModelAction.Deposits.Info.All())
-                    
-                case .loan:
-                    self.action.send(ModelAction.Loans.Update.All())
-                    
-                default:
-                    break
-                }
-            }
-            else {
-                // updating status
-                self.productsUpdating.value.removeAll(where: { $0 == productType })
-                
-                self.updateInfo.value.setValue(false, for: productType)
-            }
+        case let .some(value):
+            let result = Services.mapProductsResponse(value) // перенести в getProductsV6
+            
+            updateStatus(productType)
+            let updatedProducts = self.updateProducts(
+                productsData: products.value,
+                with: result.productList,
+                for: productType)
+            
+            loadImages(result.productList)
+            productsCacheStore(command, updatedProducts)
+            additionalUpdateIfNeed(productType: productType)
+        }
+    }
+
+    func updateStatus(_ productType: ProductType) {
+        self.productsUpdating.value.removeAll(where: { $0 == productType })
+    }
+    
+    func updateProducts(
+        productsData: ProductsData,
+        with productsList: [ProductData],
+        for productType: ProductType
+    ) -> ProductsData {
+        
+        let updatedProducts = Self.reduce(products: productsData, with: productsList, for: productType)
+        products.value = updatedProducts
+        updateInfo(true, productType)
+        return updatedProducts
+    }
+    
+    func updateInfo (
+        _ status: Bool,
+        _ productType: ProductType
+    ) {
+        updateInfo.value.setValue(status, for: productType)
+    }
+    
+    func loadImages(_ products: [ProductData]) {
+        
+        //md5hash -> image
+        let md5Products = products.reduce(Set<String>(), {
+            $0.union([$1.smallDesignMd5hash,
+                      $1.smallBackgroundDesignHash,
+                      $1.xlDesignMd5Hash,
+                      $1.largeDesignMd5Hash,
+                      $1.mediumDesignMd5Hash,
+                      $1.paymentSystemMd5Hash
+                     ]) })
+        
+        let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
+        if !md5ToUpload.isEmpty {
+            action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+        }
+    }
+    
+    func productsCacheStore(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ updatedProducts: ProductsData
+    ) {
+        do {
+            try productsCacheStore(productsData: updatedProducts)
+        } catch {
+            handleServerCommandCachingError(error: error, command: command)
+        }
+    }
+    
+    func additionalUpdateIfNeed(
+        productType: ProductType
+    ) {
+        switch productType {
+        case .deposit:
+            action.send(ModelAction.Deposits.Info.All())
+            
+        case .loan:
+            action.send(ModelAction.Loans.Update.All())
+            
+        default:
+            break
         }
     }
 
