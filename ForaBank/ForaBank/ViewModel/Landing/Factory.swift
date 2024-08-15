@@ -237,6 +237,14 @@ private extension Model {
                         return LocalAgentDomain.MainCard(landing: codableLanding)
                     case .regular:
                         return LocalAgentDomain.RegularCard(landing: codableLanding)
+                    case .additionalCorporate:
+                        return LocalAgentDomain.AdditionalCorporateCard(landing: codableLanding)
+                    case .corporate:
+                        return LocalAgentDomain.CorporateCard(landing: codableLanding)
+                    case .individualBusinessman:
+                        return LocalAgentDomain.IndividualBusinessmanCard(landing: codableLanding)
+                    case .individualBusinessmanMain:
+                        return LocalAgentDomain.IndividualBusinessmanMainCard(landing: codableLanding)
                     }
                     
                 case let .limit(cardType):
@@ -251,6 +259,14 @@ private extension Model {
                         return LocalAgentDomain.LimitMainCard(landing: codableLanding)
                     case .regular:
                         return LocalAgentDomain.LimitRegularCard(landing: codableLanding)
+                    case .additionalCorporate:
+                        return LocalAgentDomain.LimitAdditionalCorporateCard(landing: codableLanding)
+                    case .corporate:
+                        return LocalAgentDomain.LimitCorporateCard(landing: codableLanding)
+                    case .individualBusinessman:
+                        return LocalAgentDomain.LimitIndividualBusinessmanCard(landing: codableLanding)
+                    case .individualBusinessmanMain:
+                        return LocalAgentDomain.LimitIndividualBusinessmanMainCard(landing: codableLanding)
                     }
                 }
             }()

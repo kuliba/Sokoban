@@ -344,6 +344,11 @@ extension ProductCardData {
         case additionalSelfAccOwn = "ADDITIONAL_SELF_ACC_OWN"
         case additionalOther = "ADDITIONAL_OTHER"
         
+#warning("For compability with rest/v6/getProductListByType")
+        case additionalCorporate = "ADDITIONAL_CORPORATE"
+        case corporate = "CORPORATE"
+        case individualBusinessman = "INDIVIDUAL_BUSINESSMAN"
+        case individualBusinessmanMain = "INDIVIDUAL_BUSINESSMAN_MAIN"
         
         var isMainOrRegularOrAdditionalSelfAccOwn: Bool {
             
@@ -364,6 +369,14 @@ extension ProductCardData {
                 return .control(.additionalSelfAccOwn)
             case .additionalOther:
                 return .control(.additionalOther)
+            case .additionalCorporate:
+                return .control(.additionalCorporate)
+            case .corporate:
+                return .control(.corporate)
+            case .individualBusinessman:
+                return .control(.individualBusinessman)
+            case .individualBusinessmanMain:
+                return .control(.individualBusinessmanMain)
             }
         }
         
@@ -379,6 +392,14 @@ extension ProductCardData {
                 return .limit(.additionalSelfAccOwn)
             case .additionalOther:
                 return .limit(.additionalOther)
+            case .additionalCorporate:
+                return .limit(.additionalCorporate)
+            case .corporate:
+                return .limit(.corporate)
+            case .individualBusinessman:
+                return .limit(.individualBusinessman)
+            case .individualBusinessmanMain:
+                return .limit(.individualBusinessmanMain)
             }
         }
     }
