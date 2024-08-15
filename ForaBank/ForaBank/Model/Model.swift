@@ -131,16 +131,11 @@ class Model {
     typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
     typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
     
-    // MARK: GetProductListByTypev6
-    typealias GetProductListByTypeV6Response = GetProductListByTypeV6Service.ProductsResponse
-    
-    typealias GetProductListByTypeV6Completion = (GetProductListByTypeV6Response?) -> Void
-    typealias GetProductListByTypeV6 = (ProductType, @escaping GetProductListByTypeV6Completion) -> Void
-
     let updateInfo: CurrentValueSubject<UpdateInfo, Never>
 
     var getProducts: GetProductListByType
-    var getProductsV6: GetProductListByTypeV6?
+    
+    var getProductsV6: Services.GetProductListByTypeV6?
 
     // services
     internal let sessionAgent: SessionAgentProtocol

@@ -570,7 +570,7 @@ extension Model {
     }
     
     func getProducts_V6(
-        _ getProductsV6: GetProductListByTypeV6,
+        _ getProductsV6: Services.GetProductListByTypeV6,
         _ command: ServerCommands.ProductController.GetProductListByType,
         _ productType: ProductType
     ) {
@@ -582,18 +582,17 @@ extension Model {
     func handleGetProductListByTypeResponse(
         _ productType: ProductType,
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ response: ProductsResponse?
+        _ response: Services.GetProductsResponse?
     ) {
         switch response {
         case .none:
             updateStatus(productType)
             updateInfo(false, productType)
             
-        case let .some(value):
-            let result = Services.mapProductsResponse(value) // перенести в getProductsV6
+        case let .some(result):
             
             updateStatus(productType)
-            let updatedProducts = self.updateProducts(
+            let updatedProducts = updateProducts(
                 productsData: products.value,
                 with: result.productList,
                 for: productType)
@@ -605,7 +604,7 @@ extension Model {
     }
 
     func updateStatus(_ productType: ProductType) {
-        self.productsUpdating.value.removeAll(where: { $0 == productType })
+        productsUpdating.value.removeAll(where: { $0 == productType })
     }
     
     func updateProducts(

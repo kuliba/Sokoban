@@ -10,10 +10,8 @@ import GenericRemoteService
 import GetProductListByTypeV6Service
 
 extension Services {
-            
-    typealias GetProductListByTypeV6Response = GetProductListByTypeV6Service.ProductsResponse
-    
-    typealias GetProductListByTypeV6Completion = (GetProductListByTypeV6Response?) -> Void
+                
+    typealias GetProductListByTypeV6Completion = (GetProductsResponse?) -> Void
     typealias GetProductListByTypeV6 = (ProductType, @escaping GetProductListByTypeV6Completion) -> Void
 
     static func getProductListByTypeV6(
@@ -35,7 +33,7 @@ extension Services {
             
             loggingRemoteService.process((productType, timeout)) { result in
                 
-                completion(try? result.get())
+                completion(try? Services.mapProductsResponse(result.get()))
                 _ = loggingRemoteService
             }
         }
