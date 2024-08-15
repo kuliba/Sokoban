@@ -1,5 +1,5 @@
 //
-//  PayHubTests.swift
+//  PayHubFlowTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
@@ -9,7 +9,7 @@ import Combine
 import PayHub
 import XCTest
 
-class PayHubTests: XCTestCase {
+class PayHubFlowTests: XCTestCase {
     
     typealias Exchange = Flow
     typealias LatestFlow = Flow
@@ -72,7 +72,7 @@ class PayHubTests: XCTestCase {
     }
 }
 
-extension PayHubItem where Exchange: AnyObject, Latest: AnyObject, Templates: AnyObject {
+extension PayHubFlowItem where Exchange: AnyObject, Latest: AnyObject, Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -96,7 +96,7 @@ extension PayHubItem where Exchange: AnyObject, Latest: AnyObject, Templates: An
     }
 }
 
-extension PayHubEvent where Exchange: AnyObject, Latest: AnyObject, Status: Equatable, Templates: AnyObject {
+extension PayHubFlowEvent where Exchange: AnyObject, Latest: AnyObject, Status: Equatable, Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -104,15 +104,15 @@ extension PayHubEvent where Exchange: AnyObject, Latest: AnyObject, Status: Equa
         case let .flowEvent(flowEvent):
             return .flowEvent(flowEvent)
             
-        case let .loaded(loaded):
-            return .loaded(loaded.map(\.equatableProjection))
+        case let .selected(selected):
+            return .selected(selected?.equatableProjection)
         }
     }
     
     enum EquatableProjection: Equatable {
         
         case flowEvent(FlowEvent<Status>)
-        case loaded([PayHubItem<Exchange, Latest, Templates>.EquatableProjection])
+        case selected(PayHubFlowItem<Exchange, Latest, Templates>.EquatableProjection?)
     }
 }
 
