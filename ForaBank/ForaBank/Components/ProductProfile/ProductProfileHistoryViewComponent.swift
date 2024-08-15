@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import UIPrimitives
+import CalendarUI
 
 //MARK: - ViewModel
 
@@ -30,21 +31,39 @@ extension ProductProfileHistoryView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(productId: ProductData.ID, state: Content, model: Model = .emptyMock,
-                      segmentBarVM: SegmentedBarView.ViewModel? = .spending) {
+        let services: () -> Void
+        let filter: () -> FilterState?
+        
+        init(
+            productId: ProductData.ID,
+            state: Content,
+            model: Model = .emptyMock,
+            segmentBarVM: SegmentedBarView.ViewModel? = .spending,
+            filter: @escaping () -> FilterState?,
+            services: @escaping () -> Void
+        ) {
             
             self.productId = productId
             self.content = state
             self.model = model
             self.segmentBarViewModel = segmentBarVM
+            self.filter = filter
+            self.services = services
         }
         
-        init(_ model: Model, productId: ProductData.ID) {
+        init(
+            _ model: Model,
+            productId: ProductData.ID,
+            filter: @escaping () -> FilterState?,
+            services: @escaping () -> Void
+        ) {
             
             self.productId = productId
             self.content = .loading
             self.model = model
- 
+            self.filter = filter
+            self.services = services
+            
             bind()
             action.send(ProductProfileHistoryViewModelAction.DownloadLatest())
         }
@@ -62,6 +81,79 @@ extension ProductProfileHistoryView {
                     case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
                         model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest))
                         
+                    case _ as ProductProfileHistoryViewModelAction.Filter:
+                        guard let storage = model.statements.value[id] else {
+                            return
+                        }
+                     
+                        Task.detached(priority: .high) { [self] in
+                            
+                            var storageData: [ProductStatementData]
+                            let filter = filter()
+                            storageData = storage.statements
+                            
+                            if filter?.selectedTransaction != nil {
+                                
+                                switch filter?.selectedTransaction {
+                                case .debit:
+                                    storageData = storage.statements.filter({
+                                        $0.isDebitType
+                                    })
+                                case .credit:
+                                    storageData = storage.statements.filter({
+                                        $0.isCreditType
+                                    })
+                                case .none:
+                                    break
+                                }
+                            }
+
+                            if filter?.selectedPeriod != nil {
+                                
+                                
+                                switch filter?.selectedPeriod {
+                                case .week:
+                                    storageData = storageData.filter({
+                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .weekdayOrdinal))
+                                    })
+                                    
+                                case .month:
+                                    storageData = storageData.filter({
+                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                    })
+                                case .dates:
+                                    break
+                                case .none:
+                                    break
+                                }
+                            }
+                            
+                            if let services = filter?.selectedServices, services.count >= 1 {
+                                
+                                storageData = storageData.filter({ item in
+                                    print(item)
+                                    
+                                    return item.groupName.contained(in: filter?.selectedServices.sorted() ?? [])
+                                })
+                            }
+                            
+                            let update = await reduce(
+                                content: content,
+                                statements: storageData,
+                                images: model.images.value,
+                                model: model
+                            ) { [weak self] statementId in
+                                {
+                                    self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId))
+                                }
+                            }
+                            
+                            updateContent(with: update.groups)
+                            updateSegmentedBar(
+                                productId: id,
+                                statements: storageData
+                            )
+                        }
                     default:
                         break
                     }
@@ -77,12 +169,23 @@ extension ProductProfileHistoryView {
                     }
                     
                     // isMapped = false  это согласованный костыль
-                    updateSegmentedBar(productId: id, statements: storage.statements, isMapped: false)
+                    updateSegmentedBar(
+                        productId: id,
+                        statements: storage.statements,
+                        isMapped: false
+                    )
                     
                     Task.detached(priority: .high) { [self] in
                         
-                        let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
-                            { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
+                        let update = await reduce(
+                            content: content,
+                            statements: storage.statements,
+                            images: model.images.value,
+                            model: model
+                        ) { [weak self] statementId in
+                            { 
+                                self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId))
+                            }
                         }
                         
                         await MainActor.run {
@@ -94,6 +197,8 @@ extension ProductProfileHistoryView {
                                 updateContent(with: state, storage: storage)
                             }
 
+                            services()
+                            
                             if update.downloadImagesIds.isEmpty == false {
                                 
                                 model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: update.downloadImagesIds))
@@ -139,8 +244,11 @@ extension ProductProfileHistoryView {
                 }.store(in: &bindings)
         }
         
-        func updateSegmentedBar(productId: ProductData.ID,
-                                statements: [ProductStatementData], isMapped: Bool = true ) {
+        func updateSegmentedBar(
+            productId: ProductData.ID,
+            statements: [ProductStatementData],
+            isMapped: Bool = true
+        ) {
             
             guard let product = model.product(productId: productId) else { return }
                 
@@ -377,6 +485,8 @@ enum ProductProfileHistoryViewModelAction {
     }
     
     struct DownloadLatest: Action {}
+    
+    struct Filter: Action {}
 }
 
 //MARK: - Types
@@ -954,9 +1064,9 @@ extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateS
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil }, services: {})
     
-    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ))
+    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ), filter: { nil }, services: {})
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)))
+    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil }, services: {})
 }
