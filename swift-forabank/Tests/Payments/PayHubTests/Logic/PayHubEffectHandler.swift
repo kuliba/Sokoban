@@ -5,9 +5,11 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-final class PayHubEffectHandler<Exchange, Latest, Templates>
+final class PayHubEffectHandler<Exchange, Latest, LatestFlow, Templates>
 where Exchange: FlowEventEmitter,
+      LatestFlow: FlowEventEmitter,
       Templates: FlowEventEmitter,
+      Exchange.Status == LatestFlow.Status ,
       Exchange.Status == Templates.Status {
     
     let microServices: MicroServices
@@ -17,7 +19,7 @@ where Exchange: FlowEventEmitter,
         self.microServices = microServices
     }
     
-    typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, Templates>
+    typealias MicroServices = PayHubEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
 }
 
 extension PayHubEffectHandler {
@@ -31,24 +33,28 @@ extension PayHubEffectHandler {
             let templatesNode = makeTemplatesNode(dispatch)
             let exchangeNode = makeExchangeNode(dispatch)
             
-            microServices.load {
+            microServices.load { [weak self] in
                 
-                let latests = (try? $0.get()) ?? []
-                let loaded = [.templates(templatesNode), .exchange(exchangeNode)
-                ] + latests.map(Item.latest)
+                guard let self else { return }
+                
+                let latests = ((try? $0.get()) ?? [])
+                let latestFlows = latests.map { self.makeLatestNode($0, dispatch) }
+                
+                let loaded = [Item.templates(templatesNode), .exchange(exchangeNode)
+                ] + latestFlows.map(Item.latest)
                 dispatch(.loaded(loaded))
             }
         }
     }
     
-    typealias Item = PayHubItem<Exchange, Latest, Templates>
+    typealias Item = PayHubItem<Exchange, LatestFlow, Templates>
 }
 
 extension PayHubEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubEvent<Exchange, Latest, Exchange.Status, Templates>
+    typealias Event = PayHubEvent<Exchange, LatestFlow, Exchange.Status, Templates>
     typealias Effect = PayHubEffect
 }
 
@@ -63,6 +69,18 @@ private extension PayHubEffectHandler {
             .sink { dispatch(.flowEvent($0)) }
         
         return .init(model: templates, cancellable: cancellable)
+    }
+    
+    func makeLatestNode(
+        _ latest: Latest,
+        _ dispatch: @escaping Dispatch
+    ) -> Node<LatestFlow> {
+        
+        let latestFlow = microServices.makeLatestFlow(latest)
+        let cancellable = latestFlow.eventPublisher
+            .sink { dispatch(.flowEvent($0)) }
+        
+        return .init(model: latestFlow, cancellable: cancellable)
     }
     
     func makeExchangeNode(
