@@ -88,11 +88,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     func test_load_shouldDeliverActiveGetProductListByTypeV6FlagForActiveRetrieveResult() {
         
-        let sut = makeSUT {
-            
-            if case .getProductListByTypeV6Flag = $0 { return "1"}
-            return nil
-        }
+        let sut = makeSUT { $0 == .getProductListByTypeV6Flag ? "1" : nil }
         
         let flags = sut.load()
         
