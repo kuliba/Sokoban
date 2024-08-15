@@ -228,6 +228,42 @@ final class PayHubEffectHandlerTests: XCTestCase {
         ])
     }
     
+    func test_load_shouldDeliverObservableTemplates() {
+        
+        let templates = makeTemplatesFlow()
+        let status = makeStatus()
+        let flowEvent = FlowEvent(isLoading: false, status: status)
+        let (sut, loadPay) = makeSUT(templates: templates)
+        
+        let observed = observed(sut, with: .load, eventsCount: 2) {
+            
+            loadPay.complete(with: .failure(anyError()))
+            templates.emit(flowEvent)
+        }
+        
+        XCTAssertNoDiff(observed.map(\.equatableProjection), [
+            .loaded([.templates(ObjectIdentifier(templates)), .exchange]),
+            .flowEvent(flowEvent)
+        ])
+    }
+    
+    func test_load_shouldDeliverObservableTemplates2() {
+        
+        let templates = makeTemplatesFlow()
+        let (sut, loadPay) = makeSUT(templates: templates)
+        
+        let observed = observed(sut, with: .load, eventsCount: 2) {
+            
+            loadPay.complete(with: .success([]))
+            templates.emit(.init(isLoading: true, status: nil))
+        }
+        
+        XCTAssertNoDiff(observed.map(\.equatableProjection), [
+            .loaded([.templates(ObjectIdentifier(templates)), .exchange]),
+            .flowEvent(.init(isLoading: true, status: nil))
+        ])
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = PayHubEffectHandler<Latest, Status, TemplatesFlow>
@@ -272,7 +308,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         let value: String
     }
     
-    private func Status(
+    private func makeStatus(
         _ value: String = anyMessage()
     ) -> Status {
         
@@ -301,6 +337,7 @@ final class PayHubEffectHandlerTests: XCTestCase {
         return .init()
     }
     
+    @discardableResult
     private func load(
         _ sut: SUT,
         with effect: SUT.Effect,
@@ -332,6 +369,33 @@ final class PayHubEffectHandlerTests: XCTestCase {
             throw NSError(domain: message, code: -1)
         }
     }
+    
+    @discardableResult
+    private func observed(
+        _ sut: SUT,
+        with effect: SUT.Effect,
+        eventsCount: Int,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> [SUT.Event] {
+        
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = eventsCount
+        var events = [SUT.Event]()
+        
+        sut.handleEffect(effect) {
+            
+            events.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
+        
+        return events
+    }
 }
 
 extension PayHubItem where Latest: Equatable, TemplatesFlow: AnyObject {
@@ -355,5 +419,25 @@ extension PayHubItem where Latest: Equatable, TemplatesFlow: AnyObject {
         case exchange
         case latest(Latest)
         case templates(ObjectIdentifier)
+    }
+}
+
+extension PayHubEvent where Latest: Equatable, Status: Equatable, TemplatesFlow: AnyObject {
+    
+    var equatableProjection: EquatableProjection {
+        
+        switch self {
+        case let .flowEvent(flowEvent):
+            return .flowEvent(flowEvent)
+            
+        case let .loaded(loaded):
+            return .loaded(loaded.map(\.equatableProjection))
+        }
+    }
+    
+    enum EquatableProjection: Equatable {
+        
+        case flowEvent(FlowEvent<Status>)
+        case loaded([PayHubItem<Latest, TemplatesFlow>.EquatableProjection])
     }
 }
