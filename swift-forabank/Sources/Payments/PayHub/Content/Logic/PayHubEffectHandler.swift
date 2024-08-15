@@ -29,11 +29,7 @@ public extension PayHubEffectHandler {
                 
                 guard self != nil else { return }
                 
-                let latests = ((try? $0.get()) ?? [])
-                
-                let loaded = [Item.templates, .exchange
-                ] + latests.map(Item.latest)
-                dispatch(.loaded(loaded))
+                dispatch(.loaded(((try? $0.get()) ?? [])))
             }
         }
     }

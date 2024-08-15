@@ -21,7 +21,7 @@ extension PayHubReducer {
         
         switch event {
         case let .loaded(loaded):
-            state = loaded
+            state = [.templates, .exchange] + loaded.map { .latest($0) }
         }
         
         return (state, effect)
@@ -42,30 +42,32 @@ import XCTest
 final class PayHubReducerTests: PayHubTests {
     
     // MARK: - loaded
-    
-    func test_loaded_shouldSetEmptyOnEmpty() {
+        
+    func test_loaded_shouldSetTemplatesWithExchangeOnEmpty() {
         
         assert(.none, event: .loaded([])) {
             
-            $0 = []
+            $0 = [.templates, .exchange]
         }
     }
         
-    func test_loaded_shouldSetOneOnOne() {
-        
-        assert(.none, event: .loaded([.exchange])) {
-            
-            $0 = [.exchange]
-        }
-    }
-        
-    func test_loaded_shouldSetTwoOnTwo() {
+    func test_loaded_shouldSetTemplatesWithExchangeAndOneLatestOnOneLatest() {
         
         let latest = makeLatest()
         
-        assert(.none, event: .loaded([.exchange, .latest(latest)])) {
+        assert(.none, event: .loaded([latest])) {
             
-            $0 = [.exchange, .latest(latest)]
+            $0 = [.templates, .exchange, .latest(latest)]
+        }
+    }
+        
+    func test_loaded_shouldSetTemplatesWithExchangeAndTwoLatestOnTwoLatest() {
+        
+        let (latest1, latest2) = (makeLatest(), makeLatest())
+        
+        assert(.none, event: .loaded([latest1, latest2])) {
+            
+            $0 = [.templates, .exchange, .latest(latest1), .latest(latest2)]
         }
     }
         
