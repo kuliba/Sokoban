@@ -51,6 +51,11 @@ final class PayHubReducerTests: PayHubTests {
         }
     }
         
+    func test_loaded_shouldNotDeliverEffectOnEmpty() {
+        
+        assert(.none, event: .loaded([]), delivers: nil)
+    }
+        
     func test_loaded_shouldSetTemplatesWithExchangeAndOneLatestOnOneLatest() {
         
         let latest = makeLatest()
@@ -61,6 +66,13 @@ final class PayHubReducerTests: PayHubTests {
         }
     }
         
+    func test_loaded_shouldNotDeliverEffectOnOneLatest() {
+        
+        let latest = makeLatest()
+        
+        assert(.none, event: .loaded([latest]), delivers: nil)
+    }
+        
     func test_loaded_shouldSetTemplatesWithExchangeAndTwoLatestOnTwoLatest() {
         
         let (latest1, latest2) = (makeLatest(), makeLatest())
@@ -69,6 +81,13 @@ final class PayHubReducerTests: PayHubTests {
             
             $0 = [.templates, .exchange, .latest(latest1), .latest(latest2)]
         }
+    }
+        
+    func test_loaded_shouldNotDeliverEffectOnTwoLatest() {
+        
+        let (latest1, latest2) = (makeLatest(), makeLatest())
+        
+        assert(.none, event: .loaded([latest1, latest2]), delivers: nil)
     }
         
     // MARK: - Helpers
