@@ -102,46 +102,54 @@ final class PayHubEffectHandlerTests: XCTestCase {
         XCTAssertEqual(loadPay.callCount, 1)
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeOnLoadFailure() {
+    func test_load_shouldDeliverTemplatesAndExchangeOnLoadFailure() throws {
         
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+        let delivered = try deliver(sut, with: .load) {
             
             loadPay.complete(with: .failure(anyError()))
         }
+        
+        XCTAssertNoDiff(delivered, .loaded([.templates, .exchange]))
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() {
+    func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() throws {
         
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+        let delivered = try deliver(sut, with: .load) {
             
             loadPay.complete(with: .success([]))
         }
+        
+        XCTAssertNoDiff(delivered, .loaded([.templates, .exchange]))
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() {
+    func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() throws {
         
         let latest = makeLatest()
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest)])) {
+        let delivered = try deliver(sut, with: .load) {
             
             loadPay.complete(with: .success([latest]))
         }
+        
+        XCTAssertNoDiff(delivered, .loaded([.templates, .exchange, .latest(latest)]))
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() {
+    func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() throws {
         
         let (latest1, latest2) = (makeLatest(), makeLatest())
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest1), .latest(latest2)])) {
+        let delivered = try deliver(sut, with: .load) {
             
             loadPay.complete(with: .success([latest1, latest2]))
         }
+        
+        XCTAssertNoDiff(delivered, .loaded([.templates, .exchange, .latest(latest1), .latest(latest2)]))
     }
     
     // MARK: - Helpers
@@ -181,28 +189,27 @@ final class PayHubEffectHandlerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private func expect(
+    private func deliver(
         _ sut: SUT,
         with effect: SUT.Effect,
-        toDeliver expectedEvents: SUT.Event...,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
-    ) {
+    ) throws -> SUT.Event {
+        
         let exp = expectation(description: "wait for completion")
-        exp.expectedFulfillmentCount = expectedEvents.count
-        var events = [SUT.Event]()
+        var event: SUT.Event?
         
         sut.handleEffect(effect) {
             
-            events.append($0)
+            event = $0
             exp.fulfill()
         }
         
         action()
         
-        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
-        
         wait(for: [exp], timeout: 1)
+        
+        return try XCTUnwrap(event, file: file, line: line)
     }
 }
