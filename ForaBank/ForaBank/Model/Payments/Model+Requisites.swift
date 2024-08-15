@@ -107,7 +107,7 @@ extension Model {
                 
                 //MARK: Name Parameter
                 let nameParameterId = Payments.Parameter.Identifier.requisitsName.rawValue
-                let nameParameter = Payments.ParameterName(id: nameParameterId, value: nil, title: "ФИО Получателя")
+                let nameParameter = Payments.ParameterName(id: nameParameterId, value: nil, title: "ФИО получателя")
                 
                 //MARK: Message parametr validation
                 let messageValidator: Payments.Validation.RulesSystem = {
