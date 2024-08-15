@@ -1,18 +1,18 @@
 //
 //  Node.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
 import Combine
 
-struct Node<Model> {
+public struct Node<Model> {
     
-    let model: Model
+    public let model: Model
     private let cancellables: Set<AnyCancellable>
     
-    init(
+    public init(
         model: Model,
         cancellable: AnyCancellable
     ) {
@@ -20,7 +20,7 @@ struct Node<Model> {
         self.cancellables = [cancellable]
     }
     
-    init(
+    public init(
         model: Model,
         cancellables: Set<AnyCancellable>
     ) {

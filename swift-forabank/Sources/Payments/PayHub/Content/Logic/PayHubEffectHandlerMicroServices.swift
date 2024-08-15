@@ -5,17 +5,20 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-struct PayHubEffectHandlerMicroServices<Latest, TemplatesFlow> {
+public struct PayHubEffectHandlerMicroServices<Latest> {
     
-    let load: Load
-    let makeTemplates: MakeTemplates
+    public let load: Load
+    
+    public init(
+        load: @escaping Load
+    ) {
+        self.load = load
+    }
 }
 
-extension PayHubEffectHandlerMicroServices {
+public extension PayHubEffectHandlerMicroServices {
     
     typealias LoadResult = Result<[Latest], Error>
     typealias LoadCompletion = (LoadResult) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
-    
-    typealias MakeTemplates = () -> TemplatesFlow
 }
