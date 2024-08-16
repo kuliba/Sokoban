@@ -1080,6 +1080,8 @@
 		2A7772462C6F1121009B1676 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772452C6F1121009B1676 /* TabView.swift */; };
 		2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772472C6F1160009B1676 /* TabViewFactory.swift */; };
 		2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772492C6F11B3009B1676 /* TabWrapperView.swift */; };
+		2A77724D2C6F178E009B1676 /* PaymentsTransfersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */; };
+		2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -4394,6 +4396,8 @@
 		2A7772452C6F1121009B1676 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		2A7772472C6F1160009B1676 /* TabViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFactory.swift; sourceTree = "<group>"; };
 		2A7772492C6F11B3009B1676 /* TabWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabWrapperView.swift; sourceTree = "<group>"; };
+		2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModel.swift; sourceTree = "<group>"; };
+		2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModelComposer.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -7762,12 +7766,12 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
+				2A7772502C6F189E009B1676 /* CompositionRoot */,
+				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
 				2A7772352C6F0F41009B1676 /* Tab */,
 				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
 				2A77722A2C6F0CA1009B1676 /* Models */,
 				2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */,
-				2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */,
-				2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */,
 				2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
 				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
@@ -10165,6 +10169,24 @@
 				2A7772472C6F1160009B1676 /* TabViewFactory.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		2A77724B2C6F1766009B1676 /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */,
+			);
+			path = PaymentsTransfers;
+			sourceTree = "<group>";
+		};
+		2A7772502C6F189E009B1676 /* CompositionRoot */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */,
+				2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */,
+				2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */,
+			);
+			path = CompositionRoot;
 			sourceTree = "<group>";
 		};
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
@@ -18552,6 +18574,7 @@
 				2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */,
 				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
 				2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */,
+				2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */,
 				2A77723F2C6F0FE3009B1676 /* TabReducer.swift in Sources */,
 				2A7772372C6F0F59009B1676 /* TabState.swift in Sources */,
 				2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */,
@@ -18560,6 +18583,7 @@
 				2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */,
 				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
 				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
+				2A77724D2C6F178E009B1676 /* PaymentsTransfersModel.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
