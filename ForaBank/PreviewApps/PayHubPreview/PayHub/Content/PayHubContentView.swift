@@ -18,14 +18,11 @@ where ItemLabel: View {
     
     var body: some View {
         
-        Group {
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            switch state {
-            case .none:
-                ProgressView()
+            HStack(spacing: config.spacing) {
                 
-            case let .some(loaded):
-                itemsView(loaded.items)
+                ForEach((state?.latests).uiItems, content: itemView)
             }
         }
         .frame(height: config.height)
@@ -38,7 +35,7 @@ extension PayHubContentView {
     typealias State = PayHubState
     typealias Event = PayHubEvent
     typealias Config = PayHubContentViewConfig
-    typealias Item = PayHubItem<Latest>
+    typealias Item = UIItem<Latest>
 }
 
 extension PayHubItem: Identifiable {
@@ -60,27 +57,26 @@ extension PayHubItem: Identifiable {
 
 private extension PayHubContentView {
     
-    func itemsView(
-        _ items: [Item]
+    @ViewBuilder
+    func itemView(
+        item: UIItem<Latest>
     ) -> some View {
         
-        ScrollView(.horizontal, showsIndicators: false) {
-            
-            HStack(spacing: config.spacing) {
-                
-                ForEach(items, content: itemView)
-            }
-        }
-    }
-    
-    func itemView(item: Item) -> some View {
+        let label = itemLabel(item)
         
-        Button {
-            event(.select(item))
-        } label: {
-            itemLabel(item)
+        switch item {
+        case .placeholder:
+            label
+            
+        case let .selectable(selectable):
+            Button {
+                event(.select(selectable))
+            } label: {
+                label
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(PlainButtonStyle())
         }
-        .buttonStyle(PlainButtonStyle())
     }
 }
 

@@ -10,21 +10,10 @@ import Foundation
 public enum UIItem<Latest> {
     
     case placeholder(UUID)
-    case selectable(Selectable)
-}
-
-public extension UIItem {
-    
-    enum Selectable {
-        
-        case exchange
-        case latest(Latest)
-        case templates
-    }
+    case selectable(PayHubItem<Latest>)
 }
 
 extension UIItem: Equatable where Latest: Equatable {}
-extension UIItem.Selectable: Equatable where Latest: Equatable {}
 
 extension UIItem: Identifiable where Latest: Identifiable {
 
@@ -56,4 +45,3 @@ extension UIItem: Identifiable where Latest: Identifiable {
         case templates
     }
 }
-
