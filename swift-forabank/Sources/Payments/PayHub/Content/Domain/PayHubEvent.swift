@@ -7,7 +7,9 @@
 
 public enum PayHubEvent<Latest> {
     
-    case loaded([PayHubItem<Latest>])
+    case load
+    case loaded([Latest])
+    case select(PayHubItem<Latest>?)
 }
 
 extension PayHubEvent: Equatable where Latest: Equatable {}

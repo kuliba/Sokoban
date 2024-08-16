@@ -46,43 +46,43 @@ final class PayHubEffectHandlerTests: PayHubTests {
         wait(for: [exp], timeout: 0.1)
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeOnLoadFailure() {
+    func test_load_shouldDeliverEmptyOnLoadFailure() {
         
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+        expect(sut, with: .load, toDeliver: .loaded([])) {
             
             loadPay.complete(with: .failure(anyError()))
         }
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeOnLoadEmptySuccess() {
+    func test_load_shouldDeliverEmptyOnLoadEmptySuccess() {
         
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange])) {
+        expect(sut, with: .load, toDeliver: .loaded([])) {
             
             loadPay.complete(with: .success([]))
         }
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithOneOnLoadSuccessWithOne() {
+    func test_load_shouldDeliverOneOnLoadSuccessWithOne() {
         
         let latest = makeLatest()
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest)])) {
+        expect(sut, with: .load, toDeliver: .loaded([latest])) {
             
             loadPay.complete(with: .success([latest]))
         }
     }
     
-    func test_load_shouldDeliverTemplatesAndExchangeWithTwoOnLoadSuccessWithTwo() {
+    func test_load_shouldDeliverTwoOnLoadSuccessWithTwo() {
         
         let (latest1, latest2) = (makeLatest(), makeLatest())
         let (sut, loadPay) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loaded([.templates, .exchange, .latest(latest1), .latest(latest2)])) {
+        expect(sut, with: .load, toDeliver: .loaded([latest1, latest2])) {
             
             loadPay.complete(with: .success([latest1, latest2]))
         }

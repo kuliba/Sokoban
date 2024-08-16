@@ -41,7 +41,7 @@ public extension PayHubFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubFlowEvent<Exchange, LatestFlow, Exchange.Status, Templates>
+    typealias Event = PayHubFlowEvent<Exchange, Latest, LatestFlow, Exchange.Status, Templates>
     typealias Effect = PayHubFlowEffect<Latest>
 }
 

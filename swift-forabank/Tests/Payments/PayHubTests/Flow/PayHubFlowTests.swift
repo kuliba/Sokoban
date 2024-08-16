@@ -39,6 +39,45 @@ class PayHubFlowTests: XCTestCase {
         return .init(value: value)
     }
     
+    func makeExchangeFlow() -> Flow {
+        
+        return .init()
+    }
+    
+    func makeExchangeFlowNode() -> Node<Flow> {
+        
+        let flow = makeExchangeFlow()
+        let cancellable = flow.eventPublisher.sink { _ in }
+        
+        return .init(model: flow, cancellable: cancellable)
+    }
+    
+    func makeLatestFlow() -> Flow {
+        
+        return .init()
+    }
+    
+    func makeLatestFlowNode() -> Node<Flow> {
+        
+        let flow = makeLatestFlow()
+        let cancellable = flow.eventPublisher.sink { _ in }
+        
+        return .init(model: flow, cancellable: cancellable)
+    }
+    
+    func makeTemplatesFlow() -> Flow {
+        
+        return .init()
+    }
+    
+    func makeTemplatesFlowNode() -> Node<Flow> {
+        
+        let flow = makeTemplatesFlow()
+        let cancellable = flow.eventPublisher.sink { _ in }
+        
+        return .init(model: flow, cancellable: cancellable)
+    }
+    
     final class Flow: FlowEventEmitter {
         
         typealias Event = FlowEvent<Status>
@@ -55,24 +94,12 @@ class PayHubFlowTests: XCTestCase {
             subject.send(event)
         }
     }
-    
-    func makeTemplatesFlow() -> Flow {
-        
-        return .init()
-    }
-    
-    func makeExchangeFlow() -> Flow {
-        
-        return .init()
-    }
-    
-    func makeLatestFlow() -> Flow {
-        
-        return .init()
-    }
 }
 
-extension PayHubFlowItem where Exchange: AnyObject, Latest: AnyObject, Templates: AnyObject {
+extension PayHubFlowItem
+where Exchange: AnyObject,
+        Latest: AnyObject,
+      Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
@@ -96,13 +123,44 @@ extension PayHubFlowItem where Exchange: AnyObject, Latest: AnyObject, Templates
     }
 }
 
-extension PayHubFlowEvent where Exchange: AnyObject, Latest: AnyObject, Status: Equatable, Templates: AnyObject {
+extension PayHubFlowState
+where Exchange: AnyObject,
+      Latest: AnyObject,
+      Status: Equatable,
+      Templates: AnyObject {
+    
+    var equatableProjection: EquatableProjection {
+        
+        return .init(
+            isLoading: isLoading,
+            selected: selected?.equatableProjection,
+            status: status
+        )
+    }
+    
+    struct EquatableProjection: Equatable {
+        
+        let isLoading: Bool
+        let selected: PayHubFlowItem<Exchange, Latest, Templates>.EquatableProjection?
+        let status: Status?
+    }
+}
+
+extension PayHubFlowEvent
+where Exchange: AnyObject,
+      Latest: Equatable,
+      LatestFlow: AnyObject,
+      Status: Equatable,
+      Templates: AnyObject {
     
     var equatableProjection: EquatableProjection {
         
         switch self {
         case let .flowEvent(flowEvent):
             return .flowEvent(flowEvent)
+            
+        case let .select(select):
+            return .select(select)
             
         case let .selected(selected):
             return .selected(selected?.equatableProjection)
@@ -112,7 +170,7 @@ extension PayHubFlowEvent where Exchange: AnyObject, Latest: AnyObject, Status: 
     enum EquatableProjection: Equatable {
         
         case flowEvent(FlowEvent<Status>)
-        case selected(PayHubFlowItem<Exchange, Latest, Templates>.EquatableProjection?)
+        case select(PayHubItem<Latest>?)
+        case selected(PayHubFlowItem<Exchange, LatestFlow, Templates>.EquatableProjection?)
     }
 }
-
