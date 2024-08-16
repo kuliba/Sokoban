@@ -1134,7 +1134,7 @@ private extension ProductProfileViewModel {
                         if !(allowCreditValue && productType ) {
                             
                             if let card = productData?.asCard {
-                                createTopUpPanel(card)
+                                topLeftActionForCard(card)
                             }
                             else  {
                                 let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
@@ -1152,13 +1152,8 @@ private extension ProductProfileViewModel {
                     case .topRight:
                         switch product.productType {
                         case .card:
-                            guard let card = productData?.asCard else { return }
+                            topRightActionForCard(productData)
                             
-                            if card.cardType == .additionalOther {
-                                self.event(.alert(.delayAlert(.showTransferAdditionalOther)))
-                            } else {
-                                self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
-                            }
                         case .account:
                             self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
