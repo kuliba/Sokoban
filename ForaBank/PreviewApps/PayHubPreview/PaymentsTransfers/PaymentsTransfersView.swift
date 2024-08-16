@@ -16,12 +16,13 @@ where PayHub: Loadable,
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 32) {
             
             Button("Reload (TBD: replace with \"swipe to refresh\")", action: model.reload)
             
             factory.makePayHubView(model.payHub)
         }
+        .padding(.horizontal)
     }
 }
 
