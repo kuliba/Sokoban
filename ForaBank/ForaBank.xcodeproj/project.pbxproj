@@ -1085,6 +1085,10 @@
 		2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */; };
 		2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */; };
 		2A7772562C6F26D6009B1676 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772552C6F26D6009B1676 /* Loadable.swift */; };
+		2A7772592C6F275D009B1676 /* PayHubStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */; };
+		2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725A2C6F2833009B1676 /* View+ext.swift */; };
+		2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77725C2C6F2892009B1676 /* UIPrimitives */; };
+		2A77725F2C6F2991009B1676 /* PayHubViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -4404,6 +4408,9 @@
 		2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
 		2A7772552C6F26D6009B1676 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubStateWrapperView.swift; sourceTree = "<group>"; };
+		2A77725A2C6F2833009B1676 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
+		2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubViewFactory.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -6513,6 +6520,7 @@
 			files = (
 				2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */,
 				2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */,
+				2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */,
 				2A7772212C6F045D009B1676 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7777,9 +7785,9 @@
 				2A7772352C6F0F41009B1676 /* Tab */,
 				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
 				2A77722A2C6F0CA1009B1676 /* Models */,
-				2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */,
-				2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */,
+				2A7772572C6F2739009B1676 /* PayHub */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
+				2A77725A2C6F2833009B1676 /* View+ext.swift */,
 				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
 			);
 			path = PayHubPreview;
@@ -10196,6 +10204,17 @@
 				2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */,
 			);
 			path = CompositionRoot;
+			sourceTree = "<group>";
+		};
+		2A7772572C6F2739009B1676 /* PayHub */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */,
+				2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */,
+				2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */,
+				2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */,
+			);
+			path = PayHub;
 			sourceTree = "<group>";
 		};
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
@@ -17062,6 +17081,7 @@
 				2ADC2E592C6EFBEF00915F58 /* RxViewModel */,
 				2ADC2E5B2C6EFBF500915F58 /* PayHub */,
 				2A7772202C6F045D009B1676 /* CombineSchedulers */,
+				2A77725C2C6F2892009B1676 /* UIPrimitives */,
 			);
 			productName = PayHubPreview;
 			productReference = 2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */;
@@ -18573,6 +18593,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */,
+				2A7772592C6F275D009B1676 /* PayHubStateWrapperView.swift in Sources */,
+				2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */,
 				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
 				2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */,
 				2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */,
@@ -18592,6 +18614,7 @@
 				2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */,
 				2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */,
 				2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */,
+				2A77725F2C6F2991009B1676 /* PayHubViewFactory.swift in Sources */,
 				2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */,
 				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
 				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
@@ -26283,6 +26306,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
 			productName = CombineSchedulers;
+		};
+		2A77725C2C6F2892009B1676 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2A77FECD2BB4A40500884D87 /* AnywayPayment */ = {
 			isa = XCSwiftPackageProductDependency;
