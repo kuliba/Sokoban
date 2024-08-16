@@ -11,13 +11,12 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-            
-            Text("Hello, world!")
-        }
-        .padding()
+        TabWrapperView(
+            model: .init(), 
+            factory: .init(
+                makeContent: { Text("TBD: \($0.tabTitle)") }
+            )
+        )
     }
 }
 

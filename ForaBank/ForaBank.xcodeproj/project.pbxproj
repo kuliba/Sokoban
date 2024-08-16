@@ -1062,6 +1062,33 @@
 		2A7688D32AF3914C00045293 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D22AF3914C00045293 /* Store.swift */; };
 		2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */; };
 		2A76E0BA2B60F01E00371725 /* OTPInputComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A76E0B92B60F01E00371725 /* OTPInputComponent */; };
+		2A7772212C6F045D009B1676 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7772202C6F045D009B1676 /* CombineSchedulers */; };
+		2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */; };
+		2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */; };
+		2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */; };
+		2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722B2C6F0CAB009B1676 /* Latest.swift */; };
+		2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722D2C6F0CBC009B1676 /* Exchange.swift */; };
+		2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */; };
+		2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772312C6F0CE6009B1676 /* Templates.swift */; };
+		2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772332C6F0D1A009B1676 /* FlowEvent.swift */; };
+		2A7772372C6F0F59009B1676 /* TabState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772362C6F0F59009B1676 /* TabState.swift */; };
+		2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772392C6F0FA3009B1676 /* TabEvent.swift */; };
+		2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77723B2C6F0FC1009B1676 /* TabEffect.swift */; };
+		2A77723F2C6F0FE3009B1676 /* TabReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77723E2C6F0FE3009B1676 /* TabReducer.swift */; };
+		2A7772412C6F1009009B1676 /* TabEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772402C6F1009009B1676 /* TabEffectHandler.swift */; };
+		2A7772442C6F1054009B1676 /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772432C6F1054009B1676 /* TabModel.swift */; };
+		2A7772462C6F1121009B1676 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772452C6F1121009B1676 /* TabView.swift */; };
+		2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772472C6F1160009B1676 /* TabViewFactory.swift */; };
+		2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772492C6F11B3009B1676 /* TabWrapperView.swift */; };
+		2A77724D2C6F178E009B1676 /* PaymentsTransfersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */; };
+		2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */; };
+		2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */; };
+		2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */; };
+		2A7772562C6F26D6009B1676 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772552C6F26D6009B1676 /* Loadable.swift */; };
+		2A7772592C6F275D009B1676 /* PayHubStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */; };
+		2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725A2C6F2833009B1676 /* View+ext.swift */; };
+		2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77725C2C6F2892009B1676 /* UIPrimitives */; };
+		2A77725F2C6F2991009B1676 /* PayHubViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -1473,6 +1500,9 @@
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
 		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
+		2ADC2E582C6EFB3F00915F58 /* PayHubTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */; };
+		2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E592C6EFBEF00915F58 /* RxViewModel */; };
+		2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E5B2C6EFBF500915F58 /* PayHub */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
 		2ADE53332BA70E60003E0EC9 /* StartPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADE53322BA70E60003E0EC9 /* StartPayment.swift */; };
@@ -4361,6 +4391,31 @@
 		2A7688D22AF3914C00045293 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithInMemoryStoreTests.swift; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
+		2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubBinder.swift; sourceTree = "<group>"; };
+		2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubFlow+stub.swift"; sourceTree = "<group>"; };
+		2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubContent+stub.swift"; sourceTree = "<group>"; };
+		2A77722B2C6F0CAB009B1676 /* Latest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Latest.swift; sourceTree = "<group>"; };
+		2A77722D2C6F0CBC009B1676 /* Exchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exchange.swift; sourceTree = "<group>"; };
+		2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestFlow.swift; sourceTree = "<group>"; };
+		2A7772312C6F0CE6009B1676 /* Templates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Templates.swift; sourceTree = "<group>"; };
+		2A7772332C6F0D1A009B1676 /* FlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowEvent.swift; sourceTree = "<group>"; };
+		2A7772362C6F0F59009B1676 /* TabState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabState.swift; sourceTree = "<group>"; };
+		2A7772392C6F0FA3009B1676 /* TabEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEvent.swift; sourceTree = "<group>"; };
+		2A77723B2C6F0FC1009B1676 /* TabEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEffect.swift; sourceTree = "<group>"; };
+		2A77723E2C6F0FE3009B1676 /* TabReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabReducer.swift; sourceTree = "<group>"; };
+		2A7772402C6F1009009B1676 /* TabEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabEffectHandler.swift; sourceTree = "<group>"; };
+		2A7772432C6F1054009B1676 /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
+		2A7772452C6F1121009B1676 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
+		2A7772472C6F1160009B1676 /* TabViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFactory.swift; sourceTree = "<group>"; };
+		2A7772492C6F11B3009B1676 /* TabWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabWrapperView.swift; sourceTree = "<group>"; };
+		2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModel.swift; sourceTree = "<group>"; };
+		2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModelComposer.swift; sourceTree = "<group>"; };
+		2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
+		2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
+		2A7772552C6F26D6009B1676 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubStateWrapperView.swift; sourceTree = "<group>"; };
+		2A77725A2C6F2833009B1676 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
+		2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubViewFactory.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -4755,6 +4810,7 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
+		2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubTypes.swift; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADE53322BA70E60003E0EC9 /* StartPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPayment.swift; sourceTree = "<group>"; };
@@ -6471,6 +6527,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */,
+				2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */,
+				2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */,
+				2A7772212C6F045D009B1676 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7730,7 +7790,14 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
+				2A7772502C6F189E009B1676 /* CompositionRoot */,
+				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
+				2A7772352C6F0F41009B1676 /* Tab */,
+				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
+				2A77722A2C6F0CA1009B1676 /* Models */,
+				2A7772572C6F2739009B1676 /* PayHub */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
+				2A77725A2C6F2833009B1676 /* View+ext.swift */,
 				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
 			);
 			path = PayHubPreview;
@@ -10078,6 +10145,89 @@
 				2A6DC72B2AF3CA0400688401 /* Helpers */,
 			);
 			path = Logging;
+			sourceTree = "<group>";
+		};
+		2A77722A2C6F0CA1009B1676 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772332C6F0D1A009B1676 /* FlowEvent.swift */,
+				2A77722D2C6F0CBC009B1676 /* Exchange.swift */,
+				2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */,
+				2A7772312C6F0CE6009B1676 /* Templates.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2A7772352C6F0F41009B1676 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772382C6F0F95009B1676 /* Domain */,
+				2A77723D2C6F0FD5009B1676 /* Logic */,
+				2A7772422C6F1044009B1676 /* UI */,
+			);
+			path = Tab;
+			sourceTree = "<group>";
+		};
+		2A7772382C6F0F95009B1676 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772362C6F0F59009B1676 /* TabState.swift */,
+				2A7772392C6F0FA3009B1676 /* TabEvent.swift */,
+				2A77723B2C6F0FC1009B1676 /* TabEffect.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A77723D2C6F0FD5009B1676 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				2A77723E2C6F0FE3009B1676 /* TabReducer.swift */,
+				2A7772402C6F1009009B1676 /* TabEffectHandler.swift */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+		2A7772422C6F1044009B1676 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772432C6F1054009B1676 /* TabModel.swift */,
+				2A7772492C6F11B3009B1676 /* TabWrapperView.swift */,
+				2A7772452C6F1121009B1676 /* TabView.swift */,
+				2A7772472C6F1160009B1676 /* TabViewFactory.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2A77724B2C6F1766009B1676 /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */,
+				2A7772552C6F26D6009B1676 /* Loadable.swift */,
+				2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */,
+				2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */,
+			);
+			path = PaymentsTransfers;
+			sourceTree = "<group>";
+		};
+		2A7772502C6F189E009B1676 /* CompositionRoot */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */,
+				2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */,
+				2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */,
+			);
+			path = CompositionRoot;
+			sourceTree = "<group>";
+		};
+		2A7772572C6F2739009B1676 /* PayHub */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */,
+				2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */,
+				2A7772582C6F275D009B1676 /* PayHubStateWrapperView.swift */,
+				2A77725E2C6F2991009B1676 /* PayHubViewFactory.swift */,
+			);
+			path = PayHub;
 			sourceTree = "<group>";
 		};
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
@@ -16949,6 +17099,12 @@
 			dependencies = (
 			);
 			name = PayHubPreview;
+			packageProductDependencies = (
+				2ADC2E592C6EFBEF00915F58 /* RxViewModel */,
+				2ADC2E5B2C6EFBF500915F58 /* PayHub */,
+				2A7772202C6F045D009B1676 /* CombineSchedulers */,
+				2A77725C2C6F2892009B1676 /* UIPrimitives */,
+			);
 			productName = PayHubPreview;
 			productReference = 2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -18459,7 +18615,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */,
+				2A7772592C6F275D009B1676 /* PayHubStateWrapperView.swift in Sources */,
+				2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */,
 				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
+				2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */,
+				2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */,
+				2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */,
+				2A7772412C6F1009009B1676 /* TabEffectHandler.swift in Sources */,
+				2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */,
+				2ADC2E582C6EFB3F00915F58 /* PayHubTypes.swift in Sources */,
+				2A7772442C6F1054009B1676 /* TabModel.swift in Sources */,
+				2A7772562C6F26D6009B1676 /* Loadable.swift in Sources */,
+				2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */,
+				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
+				2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */,
+				2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */,
+				2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */,
+				2A77723F2C6F0FE3009B1676 /* TabReducer.swift in Sources */,
+				2A7772372C6F0F59009B1676 /* TabState.swift in Sources */,
+				2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */,
+				2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */,
+				2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */,
+				2A77725F2C6F2991009B1676 /* PayHubViewFactory.swift in Sources */,
+				2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */,
+				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
+				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
+				2A77724D2C6F178E009B1676 /* PaymentsTransfersModel.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26147,6 +26329,15 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OTPInputComponent;
 		};
+		2A7772202C6F045D009B1676 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2A77725C2C6F2892009B1676 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
 		2A77FECD2BB4A40500884D87 /* AnywayPayment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AnywayPayment;
@@ -26266,6 +26457,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
 			productName = CombineSchedulers;
+		};
+		2ADC2E592C6EFBEF00915F58 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2ADC2E5B2C6EFBF500915F58 /* PayHub */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHub;
 		};
 		2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */ = {
 			isa = XCSwiftPackageProductDependency;
