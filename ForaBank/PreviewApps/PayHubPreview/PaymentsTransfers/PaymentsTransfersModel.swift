@@ -5,13 +5,6 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
-import Foundation
-
-protocol Loadable {
-    
-    func load()
-}
-
 final class PaymentsTransfersModel<PayHub> 
 where PayHub: Loadable {
     
@@ -21,5 +14,13 @@ where PayHub: Loadable {
         payHub: PayHub
     ) {
         self.payHub = payHub
+    }
+}
+
+extension PaymentsTransfersModel {
+    
+    func reload() {
+        
+        payHub.load()
     }
 }
