@@ -134,6 +134,7 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.cardAction = createCardAction(cvvPINServicesClient, model)
+        
         // TODO: add removeDuplicates
         self.bottomSheetSubject
             //.removeDuplicates()
@@ -1880,11 +1881,14 @@ private extension ProductProfileViewModel {
         return ProductProfileHistoryView.ViewModel(
             model,
             productId: productId, 
-            filter: {
-                return self.filterState
+            filter: { [weak self] in
+                return self?.filterState
             },
-            services: {
-                self.event(.filter(.openSheet(self.historyCategories())))
+            services: { [weak self] in
+                if let categories = self?.historyCategories() {
+                    
+                    self?.event(.filter(.openSheet(categories)))
+                }
             })
     }
     

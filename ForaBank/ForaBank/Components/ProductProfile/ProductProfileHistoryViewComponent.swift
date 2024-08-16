@@ -31,8 +31,8 @@ extension ProductProfileHistoryView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        let services: () -> Void
-        let filter: () -> FilterState?
+        private let services: () -> Void
+        private let filter: () -> FilterState?
         
         init(
             productId: ProductData.ID,
