@@ -27,13 +27,13 @@ extension ProductProfileViewModel {
         switch card.cardType {
             
         case .additionalOther:
-            self.event(.alert(.delayAlert(.showTransferAdditionalOther)))
+            event(.alert(.delayAlert(.showTransferAdditionalOther)))
             
         case .additionalCorporate, .corporate, .individualBusinessman:
-            self.event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+            event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
         
         default:
-            self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
+            action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
         }
     }
     
