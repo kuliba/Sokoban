@@ -1063,6 +1063,14 @@
 		2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */; };
 		2A76E0BA2B60F01E00371725 /* OTPInputComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A76E0B92B60F01E00371725 /* OTPInputComponent */; };
 		2A7772212C6F045D009B1676 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7772202C6F045D009B1676 /* CombineSchedulers */; };
+		2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */; };
+		2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */; };
+		2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */; };
+		2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722B2C6F0CAB009B1676 /* Latest.swift */; };
+		2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722D2C6F0CBC009B1676 /* Exchange.swift */; };
+		2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */; };
+		2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772312C6F0CE6009B1676 /* Templates.swift */; };
+		2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772332C6F0D1A009B1676 /* FlowEvent.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -1474,7 +1482,7 @@
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
 		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
-		2ADC2E582C6EFB3F00915F58 /* PayHubBinder+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADC2E572C6EFB3F00915F58 /* PayHubBinder+ext.swift */; };
+		2ADC2E582C6EFB3F00915F58 /* PayHubTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */; };
 		2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E592C6EFBEF00915F58 /* RxViewModel */; };
 		2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E5B2C6EFBF500915F58 /* PayHub */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
@@ -4360,6 +4368,14 @@
 		2A7688D22AF3914C00045293 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithInMemoryStoreTests.swift; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
+		2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubBinder.swift; sourceTree = "<group>"; };
+		2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubFlow+stub.swift"; sourceTree = "<group>"; };
+		2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubContent+stub.swift"; sourceTree = "<group>"; };
+		2A77722B2C6F0CAB009B1676 /* Latest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Latest.swift; sourceTree = "<group>"; };
+		2A77722D2C6F0CBC009B1676 /* Exchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exchange.swift; sourceTree = "<group>"; };
+		2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestFlow.swift; sourceTree = "<group>"; };
+		2A7772312C6F0CE6009B1676 /* Templates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Templates.swift; sourceTree = "<group>"; };
+		2A7772332C6F0D1A009B1676 /* FlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowEvent.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -4754,7 +4770,7 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
-		2ADC2E572C6EFB3F00915F58 /* PayHubBinder+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubBinder+ext.swift"; sourceTree = "<group>"; };
+		2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubTypes.swift; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADE53322BA70E60003E0EC9 /* StartPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPayment.swift; sourceTree = "<group>"; };
@@ -7728,7 +7744,12 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
-				2ADC2E572C6EFB3F00915F58 /* PayHubBinder+ext.swift */,
+				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
+				2A77722A2C6F0CA1009B1676 /* Models */,
+				2ADC2E572C6EFB3F00915F58 /* PayHubTypes.swift */,
+				2A7772282C6F0C33009B1676 /* PayHubContent+stub.swift */,
+				2A7772262C6F0C15009B1676 /* PayHubFlow+stub.swift */,
+				2A7772242C6F0BF2009B1676 /* PayHubBinder.swift */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
 				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
 			);
@@ -10074,6 +10095,17 @@
 				2A6DC72B2AF3CA0400688401 /* Helpers */,
 			);
 			path = Logging;
+			sourceTree = "<group>";
+		};
+		2A77722A2C6F0CA1009B1676 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2A7772332C6F0D1A009B1676 /* FlowEvent.swift */,
+				2A77722D2C6F0CBC009B1676 /* Exchange.swift */,
+				2A77722F2C6F0CDA009B1676 /* LatestFlow.swift */,
+				2A7772312C6F0CE6009B1676 /* Templates.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
@@ -18450,8 +18482,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */,
 				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
-				2ADC2E582C6EFB3F00915F58 /* PayHubBinder+ext.swift in Sources */,
+				2ADC2E582C6EFB3F00915F58 /* PayHubTypes.swift in Sources */,
+				2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */,
+				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
+				2A7772292C6F0C33009B1676 /* PayHubContent+stub.swift in Sources */,
+				2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */,
+				2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */,
+				2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */,
+				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
