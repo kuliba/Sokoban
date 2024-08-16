@@ -125,7 +125,7 @@ extension Model {
                 case .template:
                     messageValue = nil
                 default:
-                    messageValue = "Перевод денежных средств. НДС не облагается"
+                    messageValue = "Перевод денежных средств. НДС не облагается."
                 }
                 
                 let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: messageValue), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
