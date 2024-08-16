@@ -36,7 +36,7 @@ extension String {
         switch type {
         case nil, .main, .regular, .additionalSelfAccOwn, .additionalSelf:
             return "Реквизиты счета и карты"
-        case .additionalOther:
+        case .additionalOther, .corporate, .individualBusinessman, .additionalCorporate, .individualBusinessmanMain:
             return "Реквизиты карты"
         }
     }

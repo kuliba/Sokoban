@@ -202,14 +202,14 @@ extension ProductData.Filter {
             }
             
             switch cardType {
-            case .main, .regular:
-                return nil
-                
             case .additionalSelf, .additionalSelfAccOwn:
                 return true
                 
             case .additionalOther:
                 return false
+                
+            default:
+                return nil
             }
         }
     }
@@ -223,14 +223,15 @@ extension ProductData.Filter {
             }
             
             switch cardType {
-            case .main, .regular:
-                return nil
                 
             case .additionalSelf, .additionalOther:
                 return false
                 
             case .additionalSelfAccOwn:
                 return true
+                
+            default:
+                return nil
             }
         }
     }
