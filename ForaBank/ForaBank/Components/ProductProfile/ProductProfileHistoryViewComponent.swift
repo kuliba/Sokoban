@@ -1018,32 +1018,34 @@ struct HistoryViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-//            
-//            ProductProfileHistoryView(viewModel: .sample, makeHistoryButton: { event in
-//            
-//                    .init(event: { event in })
-//                
-//            })
-//            .previewLayout(.fixed(width: 375, height: 500))
-//            
-//            ProductProfileHistoryView(viewModel: .sampleSecond)
-//                .previewLayout(.fixed(width: 375, height: 400))
-//            
-//            ProductProfileHistoryView.EmptyListView(viewModel: .init())
-//                .previewLayout(.fixed(width: 375, height: 300))
-//            
-//            ProductProfileHistoryView.LoadingView()
-//                .padding(.horizontal, 20)
-//                .previewLayout(.fixed(width: 375, height: 400))
-//            
-//            ProductProfileHistoryView.EldestUpdateFailView(viewModel: .sample)
-//                .padding(.horizontal, 20)
-//                .previewLayout(.fixed(width: 375, height: 80))
-//            
-//            ProductProfileHistoryView.LoadingItemView()
-//                .padding(.horizontal, 20)
-//                .previewLayout(.fixed(width: 375, height: 120))
-//            
+            ProductProfileHistoryView(
+                viewModel: .sample,
+                makeHistoryButton: { .init(event: { event in }, isFiltered: { true })}
+            )
+            .previewLayout(.fixed(width: 375, height: 500))
+            
+            ProductProfileHistoryView(
+                viewModel: .sampleSecond,
+                makeHistoryButton: { .init(event: { event in }, isFiltered: { true })}
+            )
+            .previewLayout(.fixed(width: 375, height: 400))
+            
+            ProductProfileHistoryView.EmptyListView(
+                viewModel: .init()
+            )
+            .previewLayout(.fixed(width: 375, height: 300))
+            
+            ProductProfileHistoryView.LoadingView()
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 400))
+            
+            ProductProfileHistoryView.EldestUpdateFailView(viewModel: .sample)
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 80))
+            
+            ProductProfileHistoryView.LoadingItemView()
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 120))
         }
     }
 }
