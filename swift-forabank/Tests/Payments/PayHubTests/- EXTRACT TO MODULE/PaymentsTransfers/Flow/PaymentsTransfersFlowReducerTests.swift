@@ -10,6 +10,44 @@ import XCTest
 
 final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
+    // MARK: - dismiss
+    
+    func test_dismiss_shouldNotChangeNilDestinationState() {
+        
+        assert(makeState(), event: .dismiss)
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnNilDestination() {
+        
+        assert(makeState(), event: .dismiss, delivers: nil)
+    }
+    
+    func test_dismiss_shouldSetProfileDestinationToNil() {
+        
+        assert(makeState(destination: .profile(makeProfile())), event: .dismiss) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnProfileDestination() {
+        
+        assert(makeState(destination: .profile(makeProfile())), event: .dismiss, delivers: nil)
+    }
+    
+    func test_dismiss_shouldSetQRDestinationToNil() {
+        
+        assert(makeState(destination: .qr(makeQR())), event: .dismiss) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnQRDestination() {
+        
+        assert(makeState(destination: .qr(makeQR())), event: .dismiss, delivers: nil)
+    }
+    
     // MARK: - open
     
     func test_open_profile_shouldNotChangeState() {
@@ -83,9 +121,10 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     }
     
     private func makeState(
+        destination: SUT.State.Destination? = nil
     ) -> SUT.State {
         
-        return .init()
+        return .init(destination: destination)
     }
     
     @discardableResult

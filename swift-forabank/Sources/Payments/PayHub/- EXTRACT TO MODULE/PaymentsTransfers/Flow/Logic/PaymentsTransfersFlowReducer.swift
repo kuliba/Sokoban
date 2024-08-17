@@ -21,6 +21,9 @@ public extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .dismiss:
+            state.destination = nil
+            
         case .open(.profile):
             effect = .profile
             
