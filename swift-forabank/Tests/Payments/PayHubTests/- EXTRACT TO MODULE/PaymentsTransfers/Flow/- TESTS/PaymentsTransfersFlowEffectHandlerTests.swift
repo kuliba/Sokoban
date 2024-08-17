@@ -5,30 +5,35 @@
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
-enum PaymentsTransfersFlowEvent<Profile> {
+enum PaymentsTransfersFlowEvent<Profile, QR> {
     
     case profile(Profile)
+    case qr(QR)
 }
 
-extension PaymentsTransfersFlowEvent: Equatable where Profile: Equatable {}
+extension PaymentsTransfersFlowEvent: Equatable where Profile: Equatable, QR: Equatable {}
 
 enum PaymentsTransfersFlowEffect: Equatable {
     
-    case profile
+    case profile, qr
 }
 
-struct PaymentsTransfersFlowEffectHandlerMicroServices<Profile> {
+struct PaymentsTransfersFlowEffectHandlerMicroServices<Profile, QR> {
     
     let makeProfile: MakeProfile
+    let makeQR: MakeQR
 }
 
 extension PaymentsTransfersFlowEffectHandlerMicroServices {
     
     typealias MakeProfileCompletion = (Profile) -> Void
     typealias MakeProfile = (@escaping MakeProfileCompletion) -> Void
+    
+    typealias MakeQRCompletion = (QR) -> Void
+    typealias MakeQR = (@escaping MakeQRCompletion) -> Void
 }
 
-final class PaymentsTransfersFlowEffectHandler<Profile> {
+final class PaymentsTransfersFlowEffectHandler<Profile, QR> {
     
     private let microServices: MicroServices
     
@@ -38,7 +43,7 @@ final class PaymentsTransfersFlowEffectHandler<Profile> {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PaymentsTransfersFlowEffectHandlerMicroServices<Profile>
+    typealias MicroServices = PaymentsTransfersFlowEffectHandlerMicroServices<Profile, QR>
 }
 
 extension PaymentsTransfersFlowEffectHandler {
@@ -50,6 +55,9 @@ extension PaymentsTransfersFlowEffectHandler {
         switch effect {
         case .profile:
             handleProfile(dispatch)
+
+        case .qr:
+            handleQR(dispatch)
         }
     }
 }
@@ -58,7 +66,7 @@ extension PaymentsTransfersFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersFlowEvent<Profile>
+    typealias Event = PaymentsTransfersFlowEvent<Profile, QR>
     typealias Effect = PaymentsTransfersFlowEffect
 }
 
@@ -68,6 +76,12 @@ private extension PaymentsTransfersFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         microServices.makeProfile { dispatch(.profile($0)) }
+    }
+
+    func handleQR(
+        _ dispatch: @escaping Dispatch
+    ) {
+        microServices.makeQR { dispatch(.qr($0)) }
     }
 }
 
@@ -79,16 +93,17 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
 
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, makeProfile) = makeSUT()
+        let (_, makeProfile, makeQR) = makeSUT()
         
         XCTAssertEqual(makeProfile.callCount, 0)
+        XCTAssertEqual(makeQR.callCount, 0)
     }
     
     // MARK: - profile
     
     func test_profile_shouldCallMakeProfile() {
         
-        let (sut, makeProfile) = makeSUT()
+        let (sut, makeProfile, _) = makeSUT()
 
         sut.handleEffect(.profile) { _ in }
         
@@ -98,7 +113,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     func test_profile_shouldDeliverProfile() {
         
         let profile = makeProfile()
-        let (sut, makeProfile) = makeSUT()
+        let (sut, makeProfile, _) = makeSUT()
 
         expect(sut, with: .profile, toDeliver: .profile(profile)) {
             
@@ -106,33 +121,68 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         }
     }
     
+    // MARK: - QR
+    
+    func test_qr_shouldCallMakeQR() {
+        
+        let (sut, _, makeQR) = makeSUT()
+
+        sut.handleEffect(.qr) { _ in }
+        
+        XCTAssertEqual(makeQR.callCount, 1)
+    }
+    
+    func test_qr_shouldDeliverQR() {
+        
+        let qr = makeQR()
+        let (sut, _, makeQR) = makeSUT()
+
+        expect(sut, with: .qr, toDeliver: .qr(qr)) {
+            
+            makeQR.complete(with: qr)
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias Profile = String
-    private typealias SUT = PaymentsTransfersFlowEffectHandler<Profile>
+    private typealias QR = Int
+    private typealias SUT = PaymentsTransfersFlowEffectHandler<Profile, QR>
     private typealias MakeProfileSpy = Spy<Void, Profile>
+    private typealias MakeQRSpy = Spy<Void, QR>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        makeProfile: MakeProfileSpy
+        makeProfile: MakeProfileSpy,
+        makeQR: MakeQRSpy
     ) {
         let makeProfile = MakeProfileSpy()
+        let makeQR = MakeQRSpy()
         let sut = SUT(microServices: .init(
-            makeProfile: makeProfile.process(completion:)
+            makeProfile: makeProfile.process(completion:),
+            makeQR: makeQR.process(completion:)
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(makeProfile, file: file, line: line)
+        trackForMemoryLeaks(makeQR, file: file, line: line)
         
-        return (sut, makeProfile)
+        return (sut, makeProfile, makeQR)
     }
     
     private func makeProfile(
         _ value: String = anyMessage()
     ) -> Profile {
+        
+        return value
+    }
+
+    private func makeQR(
+        _ value: Int = .random(in: 1...100)
+    ) -> QR {
         
         return value
     }
