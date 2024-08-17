@@ -10,4 +10,8 @@ import RxViewModel
 
 public typealias PaymentsTransfersFlowState = PayHub.PaymentsTransfersFlowState<ProfileModel, QRModel>
 typealias PaymentsTransfersFlowEvent = PayHub.PaymentsTransfersFlowEvent<ProfileModel, QRModel>
+
+typealias PaymentsTransfersFlowReducer = PayHub.PaymentsTransfersFlowReducer<ProfileModel, QRModel>
+typealias PaymentsTransfersFlowEffectHandler = PayHub.PaymentsTransfersFlowEffectHandler<ProfileModel, QRModel>
+
 typealias PaymentsTransfersFlowModel = RxViewModel<PaymentsTransfersFlowState, PaymentsTransfersFlowEvent, PaymentsTransfersFlowEffect>

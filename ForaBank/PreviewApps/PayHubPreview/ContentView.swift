@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.08.2024.
 //
 
+import PayHub
 import SwiftUI
 import UIPrimitives
 
@@ -23,7 +24,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContent: makeContent)
+                    factory: .init(makeContent: makeTabViewContent)
                 )
             }
         )
@@ -33,8 +34,69 @@ struct ContentView: View {
 private extension ContentView {
     
     @ViewBuilder
-    func makeContent(
+    func makeTabViewContent(
         tabState: TabState
+    ) -> some View {
+        
+        #warning("extract Composer and Factory")
+        
+        let reducer = PaymentsTransfersFlowReducer()
+        let effectHandler = PaymentsTransfersFlowEffectHandler(
+            microServices: .init(
+                makeProfile: { $0(ProfileModel()) },
+                makeQR: { $0(QRModel()) }
+            )
+        )
+        let model = PaymentsTransfersFlowModel(
+            initialState: .init(destination: nil),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
+        )
+        
+        PaymentsTransfersFlowStateWrapper(
+            model: model,
+            makeContent: {
+        
+                PaymentsTransfersFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContent: { makeContent(tabState) },
+                        makeDestinationContent: { destination in
+                            
+                            switch destination {
+                            case let .profile(profileModel):
+                                Text(String(describing: profileModel))
+                                
+                            case let .qr(qrModel):
+                                Text(String(describing: qrModel))
+                            }
+                        },
+                        makeProfileButtonLabel: {
+                            
+                            if #available(iOS 14.5, *) {
+                                Label("Profile", systemImage: "person.circle")
+                                    .labelStyle(.titleAndIcon)
+                            } else {
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Profile")
+                                }
+                            }
+                        },
+                        makeQRButtonLabel: {
+                            
+                            Image(systemName: "qrcode")
+                        }
+                    )
+                )
+            }
+        )
+    }
+    
+    @ViewBuilder
+    func makeContent(
+        _ tabState: TabState
     ) -> some View {
         
         let composer = PaymentsTransfersModelComposer()
