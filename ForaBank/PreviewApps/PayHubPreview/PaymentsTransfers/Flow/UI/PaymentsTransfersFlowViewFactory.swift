@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PaymentsTransfersFlowViewFactory<Content: View, DestinationContent: View> {
     
-    let makeContent: MakeContent
-    let makeDestinationContent: MakeDestinationContent
+    @ViewBuilder let makeContent: MakeContent
+    @ViewBuilder let makeDestinationContent: MakeDestinationContent
 }
 
 extension PaymentsTransfersFlowViewFactory {

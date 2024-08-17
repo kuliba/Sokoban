@@ -47,3 +47,62 @@ extension PaymentsTransfersFlowState.Destination: Identifiable {
         case profile, qr
     }
 }
+
+struct PaymentsTransfersFlowView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            paymentsTransfersFlowView(.init(destination: nil))
+                .previewDisplayName("Content")
+            paymentsTransfersFlowView(.init(destination: .profile(.preview())))
+                .previewDisplayName("Profile")
+            paymentsTransfersFlowView(.init(destination: .qr(.preview())))
+                .previewDisplayName("Qr")
+        }
+    }
+    
+    private static func paymentsTransfersFlowView(
+        _ state: PaymentsTransfersFlowState
+    ) -> some View {
+        
+        NavigationView {
+            
+            PaymentsTransfersFlowView(
+                state: state,
+                event: { print($0) },
+                factory: .init(
+                    makeContent: { Text("Content") },
+                    makeDestinationContent: { destination in
+                        
+                        switch destination {
+                        case let .profile(profileModel):
+                            Text(String(describing: profileModel))
+                            
+                        case let .qr(qrModel):
+                            Text(String(describing: qrModel))
+                        }
+                    }
+                )
+            )
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+}
+
+extension ProfileModel {
+    
+    static func preview() -> Self {
+        
+        return .init()
+    }
+}
+
+extension QRModel {
+    
+    static func preview() -> Self {
+        
+        return .init()
+    }
+}
