@@ -5,61 +5,7 @@
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
-struct PaymentsTransfersFlowState<Profile, QR> {
-    
-    var destination: Destination?
-}
-
-extension PaymentsTransfersFlowState {
-    
-    enum Destination {
-        
-        case profile(Profile)
-        case qr(QR)
-    }
-}
-
-extension PaymentsTransfersFlowState: Equatable where Profile: Equatable, QR: Equatable {}
-extension PaymentsTransfersFlowState.Destination: Equatable where Profile: Equatable, QR: Equatable {}
-
-final class PaymentsTransfersFlowReducer<Profile, QR> {}
-
-extension PaymentsTransfersFlowReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case .open(.profile):
-            effect = .profile
-            
-        case .open(.qr):
-            effect = .qr
-            
-        case let .profile(profile):
-            state.destination = .profile(profile)
-            
-        case let .qr(qr):
-            state.destination = .qr(qr)
-        }
-        
-        return (state, effect)
-    }
-}
-
-extension PaymentsTransfersFlowReducer {
-    
-    typealias State = PaymentsTransfersFlowState<Profile, QR>
-    typealias Event = PaymentsTransfersFlowEvent<Profile, QR>
-    typealias Effect = PaymentsTransfersFlowEffect
-}
-
-
+import PayHub
 import XCTest
 
 final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
