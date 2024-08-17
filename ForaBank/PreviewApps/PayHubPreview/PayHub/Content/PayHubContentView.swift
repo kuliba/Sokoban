@@ -178,21 +178,27 @@ struct PayHubContentView_Previews: PreviewProvider {
     private struct PayHubContentViewDemo: View {
         
         @State private var state: PayHubState = .default
+        @State private var loadViaReset = false
         
         var body: some View {
             
-            ZStack(alignment: .bottom) {
+            ZStack(alignment: .top) {
                 
-                VStack(spacing: 32) {
+                Toggle("Load via reset", isOn: $loadViaReset)
+                    .padding(.horizontal)
+                
+                ZStack(alignment: .bottom) {
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 32) {
                         
-                        Button("Reset") { state = .default }
-                        Button("Load 0") { state = .loadedPreview(count: 0) }
-                        Button("Load 1") { state = .loadedPreview(count: 1) }
-                        Button("Load 3") { state = .loadedPreview(count: 3) }
-                        Button("Load 5") { state = .loadedPreview(count: 5) }
-                        Button("Load 10") { state = .loadedPreview(count: 10) }
+                        VStack(spacing: 8) {
+                            
+                            Button("Reset") { state = .default }
+                            Button("Load 0") { load(.loadedPreview(count: 0)) }
+                        Button("Load 1") { load(.loadedPreview(count: 1)) }
+                        Button("Load 3") { load(.loadedPreview(count: 3)) }
+                        Button("Load 5") { load(.loadedPreview(count: 5)) }
+                        Button("Load 10") { load(.loadedPreview(count: 10)) }
                     }
                     
                     payHubContentView(state) {
@@ -208,9 +214,26 @@ struct PayHubContentView_Previews: PreviewProvider {
                 }
                 .frame(maxHeight: .infinity)
                 
-                Text("Selected: " + String(describing: state.selected))
-                    .foregroundColor(state.selected == nil ? .secondary : .primary)
-                    .padding(.horizontal)
+                    Text("Selected: " + String(describing: state.selected))
+                        .foregroundColor(state.selected == nil ? .secondary : .primary)
+                        .padding(.horizontal)
+                }
+            }
+        }
+        
+        private func load(_ state: PayHubState) {
+            
+            if loadViaReset {
+                
+                self.state = .default
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    self.state = state
+                }
+            } else {
+                
+                self.state = state
             }
         }
         
