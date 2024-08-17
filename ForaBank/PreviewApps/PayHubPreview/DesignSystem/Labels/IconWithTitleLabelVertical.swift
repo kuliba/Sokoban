@@ -22,6 +22,7 @@ struct IconWithTitleLabelVertical<Icon: View, Title: View>: View {
                 .frame(width: config.circleSize, height: config.circleSize)
             
             title()
+                .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(config.frame)
     }

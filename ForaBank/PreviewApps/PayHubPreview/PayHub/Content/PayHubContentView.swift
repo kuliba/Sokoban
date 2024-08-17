@@ -127,22 +127,7 @@ struct PayHubContentView_Previews: PreviewProvider {
             config: .preview,
             itemLabel: { item in
                 
-                Group {
-#warning("extract")
-                    switch item {
-                    case .placeholder:
-                        ZStack {
-                            Circle()
-                                .foregroundColor(.gray.opacity(0.1))
-                                ._shimmering()
-                        }
-                        
-                    case let .selectable(item):
-                        RoundedRectangle(cornerRadius: 24)
-                            .foregroundColor(.blue.opacity(0.1))
-                    }
-                }
-                .frame(width: 80, height: 96)
+                UIItemLabel(item: item, config: .preview)
             }
         )
     }
