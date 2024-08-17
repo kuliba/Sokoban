@@ -97,7 +97,7 @@ struct UIItemLabel_Previews: PreviewProvider {
                 
                 uiItemLabel(.placeholder(.init()))
                 uiItemLabel(.selectable(.exchange))
-                uiItemLabel(.selectable(.latest(.preview)))
+                uiItemLabel(.selectable(.latest(.preview())))
                 uiItemLabel(.selectable(.templates))
             }
             .border(.red)
@@ -114,7 +114,7 @@ struct UIItemLabel_Previews: PreviewProvider {
 
 extension Latest {
     
-    static let preview: Self = .init(id: UUID().uuidString)
+    static func preview() -> Self { return .init(id: UUID().uuidString) }
 }
 
 extension UIItemLabelConfig {

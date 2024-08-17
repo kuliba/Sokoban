@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct ContentView: View {
     
@@ -14,7 +15,44 @@ struct ContentView: View {
         TabWrapperView(
             model: .init(), 
             factory: .init(
-                makeContent: { Text("TBD: \($0.tabTitle)") }
+                makeContent: { tabState in
+                    
+                    let composer = PaymentsTransfersModelComposer()
+                    let model = composer.compose(loadResult: tabState.loadResult)
+                    
+                    return PaymentsTransfersView(
+                        model: model,
+                        factory: .init(
+                            makePayHubView: { binder in
+                            
+                                PayHubFlowStateWrapperView(
+                                    binder: binder,
+                                    factory: .init(
+                                        makeContent: { content in
+                                        
+                                            PayHubContentWrapperView(
+                                                model: content,
+                                                makeContentView: { state, event in
+                                                
+                                                    PayHubContentView(
+                                                        state: state, 
+                                                        event: event,
+                                                        config: .preview,
+                                                        itemLabel: { item in
+                                                            
+                                                            UIItemLabel(item: item, config: .preview)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    )
+                                )
+                                .onFirstAppear { binder.content.event(.load) }
+                            }
+                        )
+                    )
+                }
             )
         )
     }
