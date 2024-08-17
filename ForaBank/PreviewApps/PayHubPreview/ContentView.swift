@@ -48,7 +48,7 @@ private extension ContentView {
             )
         )
         let model = PaymentsTransfersFlowModel(
-            initialState: .init(destination: nil),
+            initialState: .none,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
@@ -62,14 +62,22 @@ private extension ContentView {
                     event: $1,
                     factory: .init(
                         makeContent: { makeContent(tabState) },
-                        makeDestinationContent: { destination in
+                        makeDestinationContent: {
                             
-                            switch destination {
+                            switch $0 {
                             case let .profile(profileModel):
                                 Text(String(describing: profileModel))
-                                
+                            }
+                        },
+                        makeFullScreenContent: {
+                            
+                            switch $0 {
                             case let .qr(qrModel):
-                                Text(String(describing: qrModel))
+                                VStack(spacing: 32) {
+                                    
+                                    Text(String(describing: qrModel))
+                                    Button("Close") { model.event(.dismiss) }
+                                }
                             }
                         },
                         makeProfileButtonLabel: {

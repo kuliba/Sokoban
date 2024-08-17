@@ -27,14 +27,14 @@ extension View {
     
     func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
         cover: FullScreenCover?,
-        dismissFullScreenCover: @escaping () -> Void,
+        dismiss: @escaping () -> Void,
         @ViewBuilder content: @escaping (FullScreenCover) -> Content
     ) -> some View {
         
         fullScreenCover(
             item: .init(
                 get: { cover },
-                set: { if $0 == nil { dismissFullScreenCover() }}
+                set: { if $0 == nil { dismiss() }}
             ),
             content: content
         )

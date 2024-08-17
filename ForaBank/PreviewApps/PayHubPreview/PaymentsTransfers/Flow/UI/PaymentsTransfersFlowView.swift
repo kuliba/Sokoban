@@ -8,9 +8,10 @@
 import PayHub
 import SwiftUI
 
-struct PaymentsTransfersFlowView<Content, DestinationContent, ProfileButtonLabel, QRButtonLabel>: View
+struct PaymentsTransfersFlowView<Content, DestinationContent, FullScreenContent, ProfileButtonLabel, QRButtonLabel>: View
 where Content: View,
       DestinationContent: View,
+      FullScreenContent: View,
       ProfileButtonLabel: View,
       QRButtonLabel: View {
     
@@ -27,6 +28,11 @@ where Content: View,
                 dismiss: { event(.dismiss) },
                 content: factory.makeDestinationContent
             )
+            .fullScreenCover(
+                cover: state.fullScreen,
+                dismiss: { event(.dismiss) },
+                content: factory.makeFullScreenContent
+            )
     }
 }
 
@@ -34,22 +40,55 @@ extension PaymentsTransfersFlowView {
     
     typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent
-    typealias Factory = PaymentsTransfersFlowViewFactory<Content, DestinationContent, ProfileButtonLabel, QRButtonLabel>
+    typealias Factory = PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, ProfileButtonLabel, QRButtonLabel>
 }
 
-extension PaymentsTransfersFlowState.Destination: Identifiable {
+extension PaymentsTransfersFlowState {
+    
+    var destination: PaymentsTransfersFlowNavigation.Destination? {
+        
+        guard case let .destination(destination) = self
+        else { return nil }
+        
+        return destination
+    }
+    
+    var fullScreen: PaymentsTransfersFlowNavigation.FullScreen? {
+        
+        guard case let .fullScreen(fullScreen) = self
+        else { return nil }
+        
+        return fullScreen
+    }
+}
+
+extension PaymentsTransfersFlowNavigation.Destination: Identifiable {
     
     public var id: ID {
         
         switch self {
         case .profile: return .profile
+        }
+    }
+    
+    public enum ID: Hashable {
+        
+        case profile
+    }
+}
+
+extension PaymentsTransfersFlowNavigation.FullScreen: Identifiable {
+    
+    public var id: ID {
+        
+        switch self {
         case .qr:      return .qr
         }
     }
     
     public enum ID: Hashable {
         
-        case profile, qr
+        case qr
     }
 }
 
@@ -89,11 +128,11 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
         
         Group {
             
-            paymentsTransfersFlowView(.init(destination: nil))
+            paymentsTransfersFlowView(.none)
                 .previewDisplayName("Content")
-            paymentsTransfersFlowView(.init(destination: .profile(.preview())))
+            paymentsTransfersFlowView(.destination(.profile(.preview())))
                 .previewDisplayName("Profile")
-            paymentsTransfersFlowView(.init(destination: .qr(.preview())))
+            paymentsTransfersFlowView(.fullScreen(.qr(.preview())))
                 .previewDisplayName("Qr")
         }
     }
@@ -109,12 +148,16 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
                 event: { print($0) },
                 factory: .init(
                     makeContent: { Text("Content") },
-                    makeDestinationContent: { destination in
+                    makeDestinationContent: {
                         
-                        switch destination {
+                        switch $0 {
                         case let .profile(profileModel):
                             Text(String(describing: profileModel))
-                            
+                        }
+                    },
+                    makeFullScreenContent: {
+                        
+                        switch $0 {
                         case let .qr(qrModel):
                             Text(String(describing: qrModel))
                         }

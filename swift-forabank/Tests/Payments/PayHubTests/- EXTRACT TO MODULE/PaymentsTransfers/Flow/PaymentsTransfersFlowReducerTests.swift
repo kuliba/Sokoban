@@ -12,21 +12,21 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
     // MARK: - dismiss
     
-    func test_dismiss_shouldNotChangeNilDestinationState() {
+    func test_dismiss_shouldNotChangeNilNavigationState() {
         
-        assert(makeState(), event: .dismiss)
+        assert(nil, event: .dismiss)
     }
     
-    func test_dismiss_shouldNotDeliverEffectOnNilDestination() {
+    func test_dismiss_shouldNotDeliverEffectOnNilNavigation() {
         
-        assert(makeState(), event: .dismiss, delivers: nil)
+        assert(nil, event: .dismiss, delivers: nil)
     }
     
     func test_dismiss_shouldSetProfileDestinationToNil() {
         
         assert(makeState(destination: .profile(makeProfile())), event: .dismiss) {
             
-            $0.destination = nil
+            $0 = nil
         }
     }
     
@@ -37,76 +37,117 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
     func test_dismiss_shouldSetQRDestinationToNil() {
         
-        assert(makeState(destination: .qr(makeQR())), event: .dismiss) {
+        assert(makeState(fullScreen: .qr(makeQR())), event: .dismiss) {
             
-            $0.destination = nil
+            $0 = nil
         }
     }
     
     func test_dismiss_shouldNotDeliverEffectOnQRDestination() {
         
-        assert(makeState(destination: .qr(makeQR())), event: .dismiss, delivers: nil)
+        assert(makeState(fullScreen: .qr(makeQR())), event: .dismiss, delivers: nil)
     }
     
     // MARK: - open
     
-    func test_open_profile_shouldNotChangeState() {
+    func test_open_profile_shouldNotChangeNilNavigationState() {
         
-        assert(makeState(), event: .open(.profile))
+        assert(nil, event: .open(.profile))
     }
     
-    func test_open_profile_shouldDeliverProfileEffect() {
+    func test_open_profile_shouldDeliverProfileEffectOnNilNavigationState() {
         
-        assert(makeState(), event: .open(.profile), delivers: .profile)
+        assert(nil, event: .open(.profile), delivers: .profile)
     }
     
-    func test_open_qr_shouldNotChangeState() {
+    func test_open_profile_shouldNotChangeDestinationState() {
         
-        assert(makeState(), event: .open(.qr))
+        assert(makeState(destination: .profile(makeProfile())), event: .open(.profile))
     }
     
-    func test_open_qr_shouldDeliverProfileEffect() {
+    func test_open_profile_shouldNotDeliverProfileEffectOnDestinationState() {
         
-        assert(makeState(), event: .open(.qr), delivers: .qr)
+        assert(makeState(destination: .profile(makeProfile())), event: .open(.profile), delivers: nil)
+    }
+    
+    func test_open_profile_shouldNotChangeFullScreenState() {
+        
+        assert(makeState(fullScreen: .qr(makeQR())), event: .open(.profile))
+    }
+    
+    func test_open_profile_shouldNotDeliverProfileEffectOnFullScreenState() {
+        
+        assert(makeState(fullScreen: .qr(makeQR())), event: .open(.profile), delivers: nil)
+    }
+    
+    func test_open_qr_shouldNotChangeNilNavigationState() {
+        
+        assert(nil, event: .open(.qr))
+    }
+    
+    func test_open_qr_shouldDeliverProfileEffectOnNilNavigationState() {
+        
+        assert(nil, event: .open(.qr), delivers: .qr)
+    }
+    
+    func test_open_qr_shouldNotChangeDestinationState() {
+        
+        assert(makeState(destination: .profile(makeProfile())), event: .open(.qr))
+    }
+    
+    func test_open_qr_shouldNotDeliverEffectOnDestinationState() {
+        
+        assert(makeState(destination: .profile(makeProfile())), event: .open(.qr), delivers: nil)
+    }
+    
+    func test_open_qr_shouldNotChangeFullScreenState() {
+        
+        assert(makeState(fullScreen: .qr(makeQR())), event: .open(.qr))
+    }
+    
+    func test_open_qr_shouldNotDeliverEffectOnFullScreenState() {
+        
+        assert(makeState(fullScreen: .qr(makeQR())), event: .open(.qr), delivers: nil)
     }
     
     // MARK: - profile
     
-    func test_profile_shouldChangeState() {
+    func test_profile_shouldChangeNilNavigationState() {
         
         let profile = makeProfile()
         
-        assert(makeState(), event: .profile(profile)) {
+        assert(nil, event: .profile(profile)) {
             
-            $0.destination = .profile(profile)
+            $0 = .destination(.profile(profile))
         }
     }
     
-    func test_profile_shouldNotDeliverEffect() {
+    func test_profile_shouldNotDeliverEffectOnNilNavigationState() {
         
-        assert(makeState(), event: .profile(makeProfile()), delivers: nil)
+        assert(nil, event: .profile(makeProfile()), delivers: nil)
     }
     
     // MARK: - QR
     
-    func test_qr_shouldChangeState() {
+    func test_qr_shouldChangeNilNavigationState() {
         
         let qr = makeQR()
         
-        assert(makeState(), event: .qr(qr)) {
+        assert(nil, event: .qr(qr)) {
             
-            $0.destination = .qr(qr)
+            $0 = .fullScreen(.qr(qr))
         }
     }
     
-    func test_qr_shouldNotDeliverEffect() {
+    func test_qr_shouldNotDeliverEffectOnNilNavigationState() {
         
-        assert(makeState(), event: .qr(makeQR()), delivers: nil)
+        assert(nil, event: .qr(makeQR()), delivers: nil)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersFlowReducer<Profile, QR>
+    private typealias Navigation = PaymentsTransfersFlowNavigation<Profile, QR>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -121,10 +162,17 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     }
     
     private func makeState(
-        destination: SUT.State.Destination? = nil
+        destination: Navigation.Destination
     ) -> SUT.State {
         
-        return .init(destination: destination)
+        return .destination(destination)
+    }
+    
+    private func makeState(
+        fullScreen: Navigation.FullScreen
+    ) -> SUT.State {
+        
+        return .fullScreen(fullScreen)
     }
     
     @discardableResult
