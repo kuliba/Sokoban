@@ -9,9 +9,7 @@ import SwiftUI
 
 struct LatestPlaceholderConfig: Equatable {
     
-    let circleSize: CGFloat
-    let frame: CGSize
-    let spacing: CGFloat
+    let label: IconWithTitleLabelVerticalConfig
     let textHeight: CGFloat
     let textSpacing: CGFloat
     let textWidth: CGFloat

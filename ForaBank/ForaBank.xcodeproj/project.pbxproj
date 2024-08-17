@@ -804,6 +804,8 @@
 		2A5738332C7069F1003B255C /* LatestPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5738322C7069F1003B255C /* LatestPlaceholder.swift */; };
 		2A5738362C706CB8003B255C /* LatestPlaceholderConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5738352C706CB8003B255C /* LatestPlaceholderConfig.swift */; };
 		2A5738382C706D9A003B255C /* View+frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5738372C706D9A003B255C /* View+frame.swift */; };
+		2A57383E2C707D10003B255C /* IconWithTitleLabelVertical.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A57383D2C707D10003B255C /* IconWithTitleLabelVertical.swift */; };
+		2A5738422C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5738412C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift */; };
 		2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5762FA2AD805BA0026EBFE /* URLRequestFactory */; };
 		2A5871642A335E9E0059D4B6 /* AvtodorCrutchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */; };
 		2A58FA9F2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FA9E2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift */; };
@@ -4146,6 +4148,8 @@
 		2A5738322C7069F1003B255C /* LatestPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPlaceholder.swift; sourceTree = "<group>"; };
 		2A5738352C706CB8003B255C /* LatestPlaceholderConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPlaceholderConfig.swift; sourceTree = "<group>"; };
 		2A5738372C706D9A003B255C /* View+frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+frame.swift"; sourceTree = "<group>"; };
+		2A57383D2C707D10003B255C /* IconWithTitleLabelVertical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconWithTitleLabelVertical.swift; sourceTree = "<group>"; };
+		2A5738412C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconWithTitleLabelVerticalConfig.swift; sourceTree = "<group>"; };
 		2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvtodorCrutchView.swift; sourceTree = "<group>"; };
 		2A58FA9E2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift"; sourceTree = "<group>"; };
 		2A58FAA02AD6FB4800BD1967 /* Services+EndpointShowCVVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+EndpointShowCVVTests.swift"; sourceTree = "<group>"; };
@@ -7817,6 +7821,7 @@
 				2A5738372C706D9A003B255C /* View+frame.swift */,
 				2A6858D12C6FDBC2003840C4 /* View+_shimmering.swift */,
 				2ADF965F2C705A8F004EE6DE /* PlaceholderView.swift */,
+				2A57383F2C707F34003B255C /* DesignSystem */,
 				2A5738342C706CAB003B255C /* LatestPlaceholder */,
 				2A05ECCA2C6C8C770070C5CF /* Preview Content */,
 			);
@@ -9480,6 +9485,23 @@
 				2A5738352C706CB8003B255C /* LatestPlaceholderConfig.swift */,
 			);
 			path = LatestPlaceholder;
+			sourceTree = "<group>";
+		};
+		2A57383F2C707F34003B255C /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2A5738402C707F3E003B255C /* Labels */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		2A5738402C707F3E003B255C /* Labels */ = {
+			isa = PBXGroup;
+			children = (
+				2A57383D2C707D10003B255C /* IconWithTitleLabelVertical.swift */,
+				2A5738412C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift */,
+			);
+			path = Labels;
 			sourceTree = "<group>";
 		};
 		2A58FAB02AD71F2600BD1967 /* TestHelpers */ = {
@@ -18680,6 +18702,7 @@
 				2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */,
 				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
 				2A5738382C706D9A003B255C /* View+frame.swift in Sources */,
+				2A57383E2C707D10003B255C /* IconWithTitleLabelVertical.swift in Sources */,
 				2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */,
 				2A5738362C706CB8003B255C /* LatestPlaceholderConfig.swift in Sources */,
 				2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */,
@@ -18693,6 +18716,7 @@
 				2A7772272C6F0C15009B1676 /* PayHubFlow+stub.swift in Sources */,
 				2A77725F2C6F2991009B1676 /* PayHubViewFactory.swift in Sources */,
 				2A7772672C6F4A89009B1676 /* PayHubContentView.swift in Sources */,
+				2A5738422C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift in Sources */,
 				2A7772252C6F0BF2009B1676 /* PayHubBinder.swift in Sources */,
 				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
 				2A7772642C6F4A01009B1676 /* PayHubContentWrapperView.swift in Sources */,

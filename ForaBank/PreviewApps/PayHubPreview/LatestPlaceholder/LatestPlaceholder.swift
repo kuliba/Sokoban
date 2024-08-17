@@ -14,29 +14,30 @@ struct LatestPlaceholder: View {
     
     var body: some View {
         
-        VStack(spacing: config.spacing) {
-            
-            placeholder
-                .clipShape(Circle())
-                .frame(width: config.circleSize, height: config.circleSize)
-            
-            VStack(spacing: config.textSpacing) {
-                
-                placeholder
-                    .clipShape(Capsule(style: .continuous))
-                    .frame(width: config.circleSize, height: config.textHeight)
-                
-                placeholder
-                    .clipShape(Capsule(style: .continuous))
-                    .frame(width: config.textWidth, height: config.textHeight)
-            }
-        }
-        .frame(config.frame)
+        IconWithTitleLabelVertical(
+            icon: placeholder,
+            title: title,
+            config: config.label
+        )
     }
     
-    private var placeholder: some View {
+    private func  placeholder() -> some View {
         
         PlaceholderView(opacity: opacity)
+    }
+    
+    private func title() -> some View {
+        
+        VStack(spacing: config.textSpacing) {
+            
+            placeholder()
+                .clipShape(Capsule(style: .continuous))
+                .frame(width: config.label.circleSize, height: config.textHeight)
+            
+            placeholder()
+                .clipShape(Capsule(style: .continuous))
+                .frame(width: config.textWidth, height: config.textHeight)
+        }
     }
 }
 
@@ -69,9 +70,11 @@ struct LatestPlaceholder_Previews: PreviewProvider {
 extension LatestPlaceholderConfig {
     
     static let preview: Self = .init(
-        circleSize: 56,
-        frame: .init(width: 80, height: 96),
-        spacing: 8,
+        label: .init(
+            circleSize: 56,
+            frame: .init(width: 80, height: 96),
+            spacing: 8
+        ),
         textHeight: 8,
         textSpacing: 4,
         textWidth: 48
