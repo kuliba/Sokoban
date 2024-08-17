@@ -12,32 +12,43 @@ final class PayHubReducerTests: PayHubTests {
     
     // MARK: - load
     
-    func test_load_shouldNotChangePlaceholderLoadStateSelectedNil() {
+    func test_load_shouldChangePlaceholderLoadStateSelectedNil() {
+        
+        let state = makePlaceholderState(selected: nil)
+        let ids = makeIDs(count: 9)
+        let sut = makeSUT(ids: ids)
+        
+        assert(sut: sut, state, event: .load) {
+            
+            $0.loadState = .placeholders(ids)
+        }
+    }
+    
+    func test_load_shouldDeliverLoadEffectOnPlaceholderLoadStateSelectedNil() {
         
         let state = makePlaceholderState(selected: nil)
         
-        assert(state, event: .load)
+        assert(state, event: .load, delivers: .load)
     }
     
-    func test_load_shouldNotDeliverLoadEffectOnPlaceholderLoadStateSelectedNil() {
+    func test_load_shouldChangePlaceholderLoadStateSelectedNonNil() {
         
-        let state = makePlaceholderState(selected: nil)
+        let state = makePlaceholderState(selected: .exchange)
+        let ids = makeIDs(count: 9)
+        let sut = makeSUT(ids: ids)
         
-        assert(state, event: .load, delivers: nil)
+        assert(sut: sut, state, event: .load) {
+            
+            $0.loadState = .placeholders(ids)
+            $0.selected = nil
+        }
     }
     
-    func test_load_shouldNotChangePlaceholderLoadStateSelectedNonNil() {
+    func test_load_shouldDeliverLoadEffectOnPlaceholderLoadStateSelectedNonNil() {
         
         let state = makePlaceholderState(selected: .exchange)
         
-        assert(state, event: .load)
-    }
-    
-    func test_load_shouldNotDeliverLoadEffectOnPlaceholderLoadStateSelectedNonNil() {
-        
-        let state = makePlaceholderState(selected: .exchange)
-        
-        assert(state, event: .load, delivers: nil)
+        assert(state, event: .load, delivers: .load)
     }
     
     func test_load_shouldChangeLoadedStateSelectedNilToPlaceholder() {

@@ -58,15 +58,9 @@ private extension PayHubReducer {
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        switch state.loadState {
-        case .loaded:
-            state.loadState = .placeholders(makePlaceholders())
-            state.selected = nil
-            effect = .load
-            
-        case .placeholders:
-            break
-        }
+        state.loadState = .placeholders(makePlaceholders())
+        state.selected = nil
+        effect = .load
     }
     
     func handleLoaded(
