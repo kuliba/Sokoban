@@ -16,6 +16,16 @@ where ItemLabel: View {
     let config: Config
     let itemLabel: (Item) -> ItemLabel
     
+    private let transition: AnyTransition = .opacity
+        .combined(with: .asymmetric(
+            insertion: .identity,
+            removal: .scale
+        ))
+    // .combined(with: .asymmetric(
+    //     insertion: .move(edge: .trailing),
+    //     removal: .move(edge: .leading).combined(with: .scale)
+    // ))
+    
     var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
@@ -46,6 +56,8 @@ private extension PayHubContentView {
     ) -> some View {
         
         let label = itemLabel(item.element)
+            .contentShape(Rectangle())
+            .transition(transition(for: item.element))
         
         switch item.element {
         case .placeholder:
@@ -58,6 +70,23 @@ private extension PayHubContentView {
                 label.contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
+        }
+    }
+    
+    func transition(
+        for item: UIItem<Latest>
+    ) -> AnyTransition {
+        
+        switch item {
+        case .placeholder:
+            return transition
+            
+        case let .selectable(selectable):
+            switch selectable {
+            case .exchange:  return .identity
+            case .latest:    return transition
+            case .templates: return .identity
+            }
         }
     }
 }
@@ -195,25 +224,25 @@ struct PayHubContentView_Previews: PreviewProvider {
                             
                             Button("Reset") { state = .default }
                             Button("Load 0") { load(.loadedPreview(count: 0)) }
-                        Button("Load 1") { load(.loadedPreview(count: 1)) }
-                        Button("Load 3") { load(.loadedPreview(count: 3)) }
-                        Button("Load 5") { load(.loadedPreview(count: 5)) }
-                        Button("Load 10") { load(.loadedPreview(count: 10)) }
-                    }
-                    
-                    payHubContentView(state) {
+                            Button("Load 1") { load(.loadedPreview(count: 1)) }
+                            Button("Load 3") { load(.loadedPreview(count: 3)) }
+                            Button("Load 5") { load(.loadedPreview(count: 5)) }
+                            Button("Load 10") { load(.loadedPreview(count: 10)) }
+                        }
                         
-                        switch $0 {
-                        case let .select(select):
-                            state.selected = select
+                        payHubContentView(state) {
                             
-                        default:
-                            print($0)
+                            switch $0 {
+                            case let .select(select):
+                                state.selected = select
+                                
+                            default:
+                                print($0)
+                            }
                         }
                     }
-                }
-                .frame(maxHeight: .infinity)
-                
+                    .frame(maxHeight: .infinity)
+                    
                     Text("Selected: " + String(describing: state.selected))
                         .foregroundColor(state.selected == nil ? .secondary : .primary)
                         .padding(.horizontal)
@@ -227,7 +256,7 @@ struct PayHubContentView_Previews: PreviewProvider {
                 
                 self.state = .default
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     
                     self.state = state
                 }
