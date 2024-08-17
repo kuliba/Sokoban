@@ -7,4 +7,4 @@
 
 import Foundation
 
-final class QRModel: ObservableObject {}
+public final class QRModel: ObservableObject {}

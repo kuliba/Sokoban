@@ -7,4 +7,4 @@
 
 import Foundation
 
-final class ProfileModel: ObservableObject {}
+public final class ProfileModel: ObservableObject {}
