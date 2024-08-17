@@ -15,6 +15,7 @@ extension PaymentsTransfersFlowState {
     enum Destination {
         
         case profile(Profile)
+        case qr(QR)
     }
 }
 
@@ -37,8 +38,8 @@ extension PaymentsTransfersFlowReducer {
         case let .profile(profile):
             state.destination = .profile(profile)
             
-        default:
-            break
+        case let .qr(qr):
+            state.destination = .qr(qr)
         }
         
         return (state, effect)
@@ -57,6 +58,8 @@ import XCTest
 
 final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
+    // MARK: - profile
+    
     func test_profile_shouldChangeState() {
         
         let profile = makeProfile()
@@ -70,6 +73,23 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     func test_profile_shouldNotDeliverEffect() {
         
         assert(makeState(), event: .profile(makeProfile()), delivers: nil)
+    }
+    
+    // MARK: - QR
+    
+    func test_qr_shouldChangeState() {
+        
+        let qr = makeQR()
+        
+        assert(makeState(), event: .qr(qr)) {
+            
+            $0.destination = .qr(qr)
+        }
+    }
+    
+    func test_qr_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .qr(makeQR()), delivers: nil)
     }
     
     // MARK: - Helpers
