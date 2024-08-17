@@ -10256,10 +10256,7 @@
 		2A77724B2C6F1766009B1676 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
-				2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */,
-				2A7772552C6F26D6009B1676 /* Loadable.swift */,
-				2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */,
-				2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */,
+				2ABDC8DC2C7116C10074BECA /* Content */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -11111,6 +11108,17 @@
 				2ABD9D9C2BDBCF87003830EE /* UtilityServicePrepaymentState+preview.swift */,
 			);
 			path = UtilityServicePrepayment;
+			sourceTree = "<group>";
+		};
+		2ABDC8DC2C7116C10074BECA /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */,
+				2A7772552C6F26D6009B1676 /* Loadable.swift */,
+				2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */,
+				2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */,
+			);
+			path = Content;
 			sourceTree = "<group>";
 		};
 		2ABFB8FB2B55551400D6A0BA /* ThirdPartyDependencies */ = {
