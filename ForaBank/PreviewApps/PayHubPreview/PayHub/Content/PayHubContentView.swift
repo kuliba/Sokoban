@@ -49,7 +49,14 @@ private extension PayHubContentView {
         HStack(spacing: config.spacing) {
             
             ForEach((state?.latests).uiItems, content: itemView)
+                .transition(
+                    .opacity.combined(with: .asymmetric(
+                        insertion: .move(edge: .trailing),
+                        removal: .move(edge: .leading)
+                    ))
+                )
         }
+        .animation(.easeInOut, value: state)
     }
     
     @ViewBuilder
@@ -102,6 +109,15 @@ struct PayHubContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         
+        Group {
+            
+            group()
+            PayHubContentViewDemo()
+        }
+    }
+    
+    private static func group() -> some View {
+        
         VStack(spacing: 8) {
             
             Group {
@@ -130,6 +146,31 @@ struct PayHubContentView_Previews: PreviewProvider {
                 UIItemLabel(item: item, config: .preview)
             }
         )
+    }
+    
+    private struct PayHubContentViewDemo: View {
+        
+        @State private var state: PayHubState = .none
+        
+        var body: some View {
+            
+            VStack(spacing: 32) {
+                
+                Button("Toggle") {
+                    
+                    state = state == .none ? .init(latests: makeLatests()) : .none
+                }
+                
+                payHubContentView(state)
+            }
+        }
+        
+        private func makeLatests(
+            count: Int = .random(in: 0..<20)
+        ) -> [Latest] {
+            
+            (0..<count).map { _ in .init(id: UUID().uuidString) }
+        }
     }
 }
 
