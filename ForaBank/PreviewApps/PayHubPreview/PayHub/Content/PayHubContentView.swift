@@ -18,17 +18,13 @@ where ItemLabel: View {
     
     var body: some View {
         
-        Group {
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            if #available(iOS 16.0, *) {
+            HStack(spacing: config.spacing) {
                 
-                ScrollView(.horizontal, showsIndicators: false, content: itemsView)
-                    .scrollDisabled(state.isLoading)
-            } else {
-                
-                itemsView()
-                    .wrapInScrollView(!state.isLoading, .horizontal, showsIndicators: false)
+                ForEach(state.uiItems, content: itemView)
             }
+            .animation(.easeInOut, value: state)
         }
         .frame(height: config.height)
     }
@@ -43,15 +39,6 @@ extension PayHubContentView {
 }
 
 private extension PayHubContentView {
-    
-    func itemsView() -> some View {
-        
-        HStack(spacing: config.spacing) {
-            
-            ForEach(state.uiItems, content: itemView)
-        }
-        .animation(.easeInOut, value: state)
-    }
     
     @ViewBuilder
     func itemView(
