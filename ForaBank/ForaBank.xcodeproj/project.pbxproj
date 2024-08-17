@@ -1086,7 +1086,7 @@
 		2A7772442C6F1054009B1676 /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772432C6F1054009B1676 /* TabModel.swift */; };
 		2A7772462C6F1121009B1676 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772452C6F1121009B1676 /* TabView.swift */; };
 		2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772472C6F1160009B1676 /* TabViewFactory.swift */; };
-		2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772492C6F11B3009B1676 /* TabWrapperView.swift */; };
+		2A77724A2C6F11B3009B1676 /* TabStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772492C6F11B3009B1676 /* TabStateWrapperView.swift */; };
 		2A77724D2C6F178E009B1676 /* PaymentsTransfersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */; };
 		2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */; };
 		2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */; };
@@ -4427,7 +4427,7 @@
 		2A7772432C6F1054009B1676 /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
 		2A7772452C6F1121009B1676 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		2A7772472C6F1160009B1676 /* TabViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFactory.swift; sourceTree = "<group>"; };
-		2A7772492C6F11B3009B1676 /* TabWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabWrapperView.swift; sourceTree = "<group>"; };
+		2A7772492C6F11B3009B1676 /* TabStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabStateWrapperView.swift; sourceTree = "<group>"; };
 		2A77724C2C6F178E009B1676 /* PaymentsTransfersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModel.swift; sourceTree = "<group>"; };
 		2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModelComposer.swift; sourceTree = "<group>"; };
 		2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
@@ -10246,7 +10246,7 @@
 			isa = PBXGroup;
 			children = (
 				2A7772432C6F1054009B1676 /* TabModel.swift */,
-				2A7772492C6F11B3009B1676 /* TabWrapperView.swift */,
+				2A7772492C6F11B3009B1676 /* TabStateWrapperView.swift */,
 				2A7772452C6F1121009B1676 /* TabView.swift */,
 				2A7772472C6F1160009B1676 /* TabViewFactory.swift */,
 			);
@@ -18704,7 +18704,7 @@
 				2ADF96602C705A8F004EE6DE /* PlaceholderView.swift in Sources */,
 				2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */,
 				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
-				2A77724A2C6F11B3009B1676 /* TabWrapperView.swift in Sources */,
+				2A77724A2C6F11B3009B1676 /* TabStateWrapperView.swift in Sources */,
 				2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */,
 				2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */,
 				2A7772412C6F1009009B1676 /* TabEffectHandler.swift in Sources */,

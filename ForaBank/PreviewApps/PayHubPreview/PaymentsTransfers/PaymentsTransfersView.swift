@@ -11,18 +11,20 @@ struct PaymentsTransfersView<PayHub, PayHubView>: View
 where PayHub: Loadable,
       PayHubView: View {
     
-    let model: Model
+    @StateObject var model: Model
     let factory: Factory
     
     var body: some View {
         
         VStack(spacing: 32) {
             
-            Button("Reload (TBD: replace with \"swipe to refresh\")", action: model.reload)
+            Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
             
             factory.makePayHubView(model.payHub)
+            
+            Spacer()
         }
-        .padding(.horizontal)
+        .padding()
     }
 }
 

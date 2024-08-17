@@ -12,48 +12,68 @@ struct ContentView: View {
     
     var body: some View {
         
-        TabWrapperView(
-            model: .init(), 
-            factory: .init(
-                makeContent: { tabState in
-                    
-                    let composer = PaymentsTransfersModelComposer()
-                    let model = composer.compose(loadResult: tabState.loadResult)
-                    
-                    return PaymentsTransfersView(
-                        model: model,
-                        factory: .init(
-                            makePayHubView: { binder in
-                            
-                                PayHubFlowStateWrapperView(
-                                    binder: binder,
-                                    factory: .init(
-                                        makeContent: { content in
-                                        
-                                            PayHubContentWrapperView(
-                                                model: content,
-                                                makeContentView: { state, event in
-                                                
-                                                    PayHubContentView(
-                                                        state: state, 
-                                                        event: event,
-                                                        config: .preview,
-                                                        itemLabel: { item in
-                                                            
-                                                            UIItemLabel(item: item, config: .preview)
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    )
-                                )
-                                .onFirstAppear { binder.content.event(.load) }
-                            }
-                        )
-                    )
-                }
-            )
+        if #available(iOS 15.0, *) {
+            let _ = Self._printChanges()
+        }
+        
+        TabStateWrapperView(
+            model: .init(),
+            makeContent: { state, event in
+                
+                TabView(
+                    state: state,
+                    event: event,
+                    factory: .init(makeContent: makeContent)
+                )
+            }
+        )
+    }
+}
+
+private extension ContentView {
+    
+    @ViewBuilder
+    func makeContent(
+        tabState: TabState
+    ) -> some View {
+        
+        let composer = PaymentsTransfersModelComposer()
+        let model = composer.compose(loadResult: tabState.loadResult)
+        
+        PaymentsTransfersView(
+            model: model,
+            factory: .init(makePayHubView: makePayHubFlowView)
+        )
+    }
+    
+    private func makePayHubFlowView(
+        _ binder: PayHubBinder
+    ) -> some View {
+        
+        PayHubFlowStateWrapperView(
+            binder: binder,
+            factory: .init(makeContent: makePayHubContentWrapper)
+        )
+    }
+    
+    private func makePayHubContentWrapper(
+        _ content: PayHubContent
+    ) -> some View {
+        
+        PayHubContentWrapperView(
+            model: content,
+            makeContentView: { state, event in
+                
+                PayHubContentView(
+                    state: state,
+                    event: event,
+                    config: .preview,
+                    itemLabel: { item in
+                        
+                        UIItemLabel(item: item, config: .preview)
+                    }
+                )
+            }
         )
     }
 }
@@ -65,12 +85,16 @@ private extension TabState {
         switch self {
         case .noLatest:
             return .failure(NSError(domain: "Error", code: -1))
+            
         case .noCategories:
             return .failure(NSError(domain: "Error", code: -1))
+            
         case .noBoth:
             return .failure(NSError(domain: "Error", code: -1))
+            
         case .okEmpty:
             return .success([])
+            
         case .ok:
             return .success(.preview)
         }
