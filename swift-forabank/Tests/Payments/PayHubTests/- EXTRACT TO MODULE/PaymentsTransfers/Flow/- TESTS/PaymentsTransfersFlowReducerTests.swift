@@ -35,6 +35,12 @@ extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .open(.profile):
+            effect = .profile
+            
+        case .open(.qr):
+            effect = .qr
+            
         case let .profile(profile):
             state.destination = .profile(profile)
             
@@ -57,6 +63,28 @@ extension PaymentsTransfersFlowReducer {
 import XCTest
 
 final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
+    
+    // MARK: - open
+    
+    func test_open_profile_shouldNotChangeState() {
+        
+        assert(makeState(), event: .open(.profile))
+    }
+    
+    func test_open_profile_shouldDeliverProfileEffect() {
+        
+        assert(makeState(), event: .open(.profile), delivers: .profile)
+    }
+    
+    func test_open_qr_shouldNotChangeState() {
+        
+        assert(makeState(), event: .open(.qr))
+    }
+    
+    func test_open_qr_shouldDeliverProfileEffect() {
+        
+        assert(makeState(), event: .open(.qr), delivers: .qr)
+    }
     
     // MARK: - profile
     

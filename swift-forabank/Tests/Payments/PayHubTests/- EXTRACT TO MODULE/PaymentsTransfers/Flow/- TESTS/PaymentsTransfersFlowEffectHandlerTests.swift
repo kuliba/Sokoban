@@ -7,8 +7,17 @@
 
 enum PaymentsTransfersFlowEvent<Profile, QR> {
     
+    case open(Open)
     case profile(Profile)
     case qr(QR)
+}
+
+extension PaymentsTransfersFlowEvent {
+    
+    enum Open {
+        
+        case profile, qr
+    }
 }
 
 extension PaymentsTransfersFlowEvent: Equatable where Profile: Equatable, QR: Equatable {}
