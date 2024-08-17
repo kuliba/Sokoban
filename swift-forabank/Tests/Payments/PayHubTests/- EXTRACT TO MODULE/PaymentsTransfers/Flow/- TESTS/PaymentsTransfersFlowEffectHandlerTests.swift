@@ -55,7 +55,7 @@ extension PaymentsTransfersFlowEffectHandler {
         switch effect {
         case .profile:
             handleProfile(dispatch)
-
+            
         case .qr:
             handleQR(dispatch)
         }
@@ -71,13 +71,13 @@ extension PaymentsTransfersFlowEffectHandler {
 }
 
 private extension PaymentsTransfersFlowEffectHandler {
-
+    
     func handleProfile(
         _ dispatch: @escaping Dispatch
     ) {
         microServices.makeProfile { dispatch(.profile($0)) }
     }
-
+    
     func handleQR(
         _ dispatch: @escaping Dispatch
     ) {
@@ -87,10 +87,10 @@ private extension PaymentsTransfersFlowEffectHandler {
 
 import XCTest
 
-final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
+final class PaymentsTransfersFlowEffectHandlerTests: PaymentsTransfersFlowTests {
     
     // MARK: - init
-
+    
     func test_init_shouldNotCallCollaborators() {
         
         let (_, makeProfile, makeQR) = makeSUT()
@@ -104,7 +104,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     func test_profile_shouldCallMakeProfile() {
         
         let (sut, makeProfile, _) = makeSUT()
-
+        
         sut.handleEffect(.profile) { _ in }
         
         XCTAssertEqual(makeProfile.callCount, 1)
@@ -114,7 +114,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         
         let profile = makeProfile()
         let (sut, makeProfile, _) = makeSUT()
-
+        
         expect(sut, with: .profile, toDeliver: .profile(profile)) {
             
             makeProfile.complete(with: profile)
@@ -126,7 +126,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     func test_qr_shouldCallMakeQR() {
         
         let (sut, _, makeQR) = makeSUT()
-
+        
         sut.handleEffect(.qr) { _ in }
         
         XCTAssertEqual(makeQR.callCount, 1)
@@ -136,7 +136,7 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         
         let qr = makeQR()
         let (sut, _, makeQR) = makeSUT()
-
+        
         expect(sut, with: .qr, toDeliver: .qr(qr)) {
             
             makeQR.complete(with: qr)
@@ -145,8 +145,6 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Profile = String
-    private typealias QR = Int
     private typealias SUT = PaymentsTransfersFlowEffectHandler<Profile, QR>
     private typealias MakeProfileSpy = Spy<Void, Profile>
     private typealias MakeQRSpy = Spy<Void, QR>
@@ -173,20 +171,6 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         return (sut, makeProfile, makeQR)
     }
     
-    private func makeProfile(
-        _ value: String = anyMessage()
-    ) -> Profile {
-        
-        return value
-    }
-
-    private func makeQR(
-        _ value: Int = .random(in: 1...100)
-    ) -> QR {
-        
-        return value
-    }
-
     private func expect(
         _ sut: SUT? = nil,
         with effect: SUT.Effect,
@@ -211,4 +195,5 @@ final class PaymentsTransfersFlowEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(receivedEvents, expectedEvents, file: file, line: line)
         
         wait(for: [exp], timeout: 1)
-    }}
+    }
+}
