@@ -5,22 +5,29 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public typealias PayHubState<Latest> = Optional<LoadedPayHubState<Latest>>
+import Foundation
 
-public struct LoadedPayHubState<Latest> {
+public struct PayHubState<Element> {
     
-    public let latests: [Latest]
+    public var loadState: LoadState
     public var selected: Item?
     
     public init(
-        latests: [Latest],
+        loadState: LoadState, 
         selected: Item? = nil
     ) {
-        self.latests = latests
+        self.loadState = loadState
         self.selected = selected
     }
     
-    public typealias Item = PayHubItem<Latest>
+    public enum LoadState {
+        
+        case loaded([Identified<UUID, Element>])
+        case placeholders([UUID])
+    }
+
+    public typealias Item = PayHubItem<Element>
 }
 
-extension LoadedPayHubState: Equatable where Latest: Equatable {}
+extension PayHubState: Equatable where Element: Equatable {}
+extension PayHubState.LoadState: Equatable where Element: Equatable {}

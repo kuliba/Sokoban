@@ -5,9 +5,19 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public final class PayHubReducer<Latest> {
+import Foundation
+
+public final class PayHubReducer<Element> {
     
-    public init() {}
+    private let makePlaceholders: MakePlaceholders
+    
+    public init(
+        makePlaceholders: @escaping MakePlaceholders
+    ) {
+        self.makePlaceholders = makePlaceholders
+    }
+    
+    public typealias MakePlaceholders = () -> [UUID]
 }
 
 public extension PayHubReducer {
@@ -22,14 +32,13 @@ public extension PayHubReducer {
         
         switch event {
         case .load:
-            state = .none
-            effect = .load
+            load(&state, &effect)
             
-        case let .loaded(latests):
-            state = .init(latests: latests)
+        case let .loaded(elements):
+            handleLoaded(&state, &effect, with: elements)
             
         case let .select(item):
-            state?.selected = item
+            state.selected = item
         }
         
         return (state, effect)
@@ -38,7 +47,39 @@ public extension PayHubReducer {
 
 public extension PayHubReducer {
     
-    typealias State = PayHubState<Latest>
-    typealias Event = PayHubEvent<Latest>
+    typealias State = PayHubState<Element>
+    typealias Event = PayHubEvent<Element>
     typealias Effect = PayHubEffect
+}
+
+private extension PayHubReducer {
+    
+    func load(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        switch state.loadState {
+        case .loaded:
+            state.loadState = .placeholders(makePlaceholders())
+            state.selected = nil
+            effect = .load
+            
+        case .placeholders:
+            break
+        }
+    }
+    
+    func handleLoaded(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with elements: [Element]
+    ) {
+        switch state.loadState {
+        case .loaded:
+            break
+            
+        case let .placeholders(ids):
+            state.loadState = .loaded(ids.assignIDs(elements, UUID.init))
+        }
+    }
 }
