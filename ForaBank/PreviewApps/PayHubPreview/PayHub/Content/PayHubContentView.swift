@@ -18,15 +18,19 @@ where ItemLabel: View {
     
     var body: some View {
         
-        ScrollView(.horizontal, showsIndicators: false) {
+        Group {
             
-            HStack(spacing: config.spacing) {
+            if #available(iOS 16.0, *) {
                 
-                ForEach((state?.latests).uiItems, content: itemView)
+                ScrollView(.horizontal, showsIndicators: false, content: itemsView)
+                    .scrollDisabled(state == .none)
+            } else {
+                
+                itemsView()
+                    .wrapInScrollView(state != .none, .horizontal, showsIndicators: false)
             }
         }
         .frame(height: config.height)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -38,24 +42,15 @@ extension PayHubContentView {
     typealias Item = UIItem<Latest>
 }
 
-extension PayHubItem: Identifiable {
+private extension PayHubContentView {
     
-    public var id: ID {
+    func itemsView() -> some View {
         
-        switch self {
-        case .exchange:  return .exchange
-        case .latest:    return .latest
-        case .templates: return .templates
+        HStack(spacing: config.spacing) {
+            
+            ForEach((state?.latests).uiItems, content: itemView)
         }
     }
-    
-    public enum ID: Hashable {
-        
-        case exchange, latest, templates
-    }
-}
-
-private extension PayHubContentView {
     
     @ViewBuilder
     func itemView(
@@ -72,11 +67,84 @@ private extension PayHubContentView {
             Button {
                 event(.select(selectable))
             } label: {
-                label
-                    .contentShape(Rectangle())
+                label.contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
         }
+    }
+}
+
+private extension View {
+    
+    @ViewBuilder
+    func wrapInScrollView(
+        _ isWrapped: Bool = true,
+        _ axes: Axis.Set = .vertical,
+        showsIndicators: Bool = true
+    ) -> some View {
+        
+        if isWrapped {
+            ScrollView(axes, showsIndicators: showsIndicators) { self }
+        } else {
+            GeometryReader { geometry in
+                
+                self
+                    .frame(width: geometry.size.width, alignment: .leading)
+                    .clipped()
+            }
+        }
+    }
+}
+
+// MARK: - Previews
+
+struct PayHubContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack(spacing: 8) {
+            
+            Group {
+                
+                payHubContentView(.none)
+                payHubContentView(.init(latests: []))
+                payHubContentView(.init(latests: [.init(id: UUID().uuidString)]))
+                payHubContentView(.init(latests: (0..<2).map { _ in .init(id: UUID().uuidString) }))
+                payHubContentView(.init(latests: (0..<10).map { _ in .init(id: UUID().uuidString) }))
+            }
+            .border(.red.opacity(0.2))
+        }
+        .padding()
+    }
+    
+    private static func payHubContentView(
+        _ state: PayHubState
+    ) -> some View {
+        
+        PayHubContentView(
+            state: state,
+            event: { print($0) },
+            config: .preview,
+            itemLabel: { item in
+                
+                Group {
+#warning("extract")
+                    switch item {
+                    case .placeholder:
+                        ZStack {
+                            Circle()
+                                .foregroundColor(.gray.opacity(0.1))
+                                ._shimmering()
+                        }
+                        
+                    case let .selectable(item):
+                        RoundedRectangle(cornerRadius: 24)
+                            .foregroundColor(.blue.opacity(0.1))
+                    }
+                }
+                .frame(width: 80, height: 96)
+            }
+        )
     }
 }
 
