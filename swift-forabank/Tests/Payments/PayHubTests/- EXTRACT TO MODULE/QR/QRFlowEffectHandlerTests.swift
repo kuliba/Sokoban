@@ -35,7 +35,7 @@ final class QRFlowEffectHandlerTests: QRFlowTests {
         let destination = makeDestination()
         let (sut, processScanResult) = makeSUT()
         
-        expect(sut, with: .processScanResult(makeScanResult()), toDeliver: .destination(destination)) {
+        expect(sut, with: .processScanResult(makeScanResult()), toDeliver: .setDestination(destination)) {
             
             processScanResult.complete(with: destination)
         }

@@ -26,7 +26,7 @@ extension QRFlowEffectHandler {
     ) {
         switch effect {
         case let .processScanResult(scanResult):
-            microServices.processScanResult(scanResult) { dispatch(.destination($0)) }
+            microServices.processScanResult(scanResult) { dispatch(.setDestination($0)) }
         }
     }
 }

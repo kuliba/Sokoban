@@ -18,9 +18,6 @@ extension QRFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .destination(destination):
-            state.navigation = .destination(destination)
-            
         case .dismiss:
             state.navigation = .dismissed
             
@@ -29,6 +26,9 @@ extension QRFlowReducer {
             
         case let .receiveScanResult(scanResult):
             effect = .processScanResult(scanResult)
+            
+        case let .setDestination(destination):
+            state.navigation = .destination(destination)
         }
         
         return (state, effect)

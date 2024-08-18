@@ -7,10 +7,10 @@
 
 enum QRFlowEvent<Destination, ScanResult> {
 
-    case destination(Destination)
     case dismiss
     case dismissDestination
     case receiveScanResult(ScanResult)
+    case setDestination(Destination)
 }
 
 extension QRFlowEvent: Equatable where Destination: Equatable, ScanResult: Equatable {}

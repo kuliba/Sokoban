@@ -9,23 +9,6 @@ import XCTest
 
 final class QRFlowReducerTests: QRFlowTests {
     
-    // MARK: - destination
-    
-    func test_destination_shouldSetDestination() {
-        
-        let destination = makeDestination()
-        
-        assert(makeState(), event: .destination(destination)) {
-            
-            $0.navigation = .destination(destination)
-        }
-    }
-    
-    func test_destination_shouldNotDeliverEffect() {
-        
-        assert(makeState(), event: .destination(makeDestination()), delivers: nil)
-    }
-    
     // MARK: - dismiss
     
     func test_dismiss_shouldSetNavigationToDismissed() {
@@ -68,6 +51,23 @@ final class QRFlowReducerTests: QRFlowTests {
         let scanResult = makeScanResult()
         
         assert(makeState(), event: .receiveScanResult(scanResult), delivers: .processScanResult(scanResult))
+    }
+    
+    // MARK: - setDestination
+    
+    func test_setDestination_shouldSetDestination() {
+        
+        let destination = makeDestination()
+        
+        assert(makeState(), event: .setDestination(destination)) {
+            
+            $0.navigation = .destination(destination)
+        }
+    }
+    
+    func test_setDestination_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .setDestination(makeDestination()), delivers: nil)
     }
     
     // MARK: - Helpers
