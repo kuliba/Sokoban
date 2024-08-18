@@ -22,6 +22,21 @@ final class QRFlowButtonReducerTests: QRFlowButtonTests {
         assert(makeState(), event: .buttonTap, delivers: .processButtonTap)
     }
     
+    // MARK: - dismissDestination
+    
+    func test_dismissDestination_shouldSetDestinationToNil() {
+        
+        assert(makeState(destination: makeDestination()), event: .dismissDestination) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_dismissDestination_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .dismissDestination, delivers: nil)
+    }
+    
     // MARK: - setDestination
     
     func test_setDestination_shouldSetDestination() {
@@ -56,9 +71,10 @@ final class QRFlowButtonReducerTests: QRFlowButtonTests {
     }
     
     private func makeState(
+        destination: QRFlowButtonTests.Destination? = nil
     ) -> SUT.State {
         
-        return .init()
+        return .init(destination: destination)
     }
     
     @discardableResult

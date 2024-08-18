@@ -8,6 +8,7 @@
 public enum QRFlowButtonEvent<Destination> {
     
     case buttonTap
+    case dismissDestination
     case setDestination(Destination)
 }
 

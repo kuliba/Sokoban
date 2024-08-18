@@ -24,6 +24,9 @@ public extension QRFlowButtonReducer {
         case .buttonTap:
             effect = .processButtonTap
             
+        case .dismissDestination:
+            state.destination = nil
+            
         case let .setDestination(destination):
             state.destination = destination
         }
