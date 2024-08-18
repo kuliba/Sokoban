@@ -5,64 +5,6 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-enum QRFlowButtonEvent<Destination> {
-    
-    case buttonTap
-    case setDestination(Destination)
-}
-
-extension QRFlowButtonEvent: Equatable where Destination: Equatable {}
-
-enum QRFlowButtonEffect: Equatable {
-    
-    case processButtonTap
-}
-
-struct QRFlowButtonEffectHandlerMicroServices<Destination> {
-    
-    let makeDestination: MakeDestination
-}
-
-extension QRFlowButtonEffectHandlerMicroServices {
-    
-    typealias MakeDestinationCompletion = (Destination) -> Void
-    typealias MakeDestination = (@escaping MakeDestinationCompletion) -> Void
-}
-
-final class QRFlowButtonEffectHandler<Destination> {
-    
-    private let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = QRFlowButtonEffectHandlerMicroServices<Destination>
-}
-
-extension QRFlowButtonEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case .processButtonTap:
-            microServices.makeDestination { dispatch(.setDestination($0)) }
-        }
-    }
-}
-
-extension QRFlowButtonEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = QRFlowButtonEvent<Destination>
-    typealias Effect = QRFlowButtonEffect
-}
-
 import PayHub
 import XCTest
 
@@ -73,7 +15,7 @@ final class QRFlowButtonEffectHandlerTests: QRFlowButtonTests {
     func test_init_shouldNotCallCollaborators() {
         
         let (_, makeDestination) = makeSUT()
-
+        
         XCTAssertEqual(makeDestination.callCount, 0)
     }
     
@@ -101,7 +43,7 @@ final class QRFlowButtonEffectHandlerTests: QRFlowButtonTests {
     
     private typealias SUT = QRFlowButtonEffectHandler<Destination>
     private typealias MakeDestinationSpy = Spy<Void, Destination>
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
