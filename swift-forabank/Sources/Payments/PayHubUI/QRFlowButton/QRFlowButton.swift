@@ -8,16 +8,26 @@
 import PayHub
 import SwiftUI
 
-struct QRFlowButton<Destination, DestinationContent, QRFlowButtonLabel: View>: View
+public struct QRFlowButton<Destination, DestinationContent, QRFlowButtonLabel: View>: View
 where Destination: Identifiable,
       DestinationContent: View {
     
-    @StateObject var model: Model
+    @StateObject private var model: Model
     
-    let buttonLabel: () -> QRFlowButtonLabel
-    let destinationContent: (Destination) -> DestinationContent
+    private let buttonLabel: () -> QRFlowButtonLabel
+    private let destinationContent: (Destination) -> DestinationContent
     
-    var body: some View {
+    public init(
+        model: Model, 
+        buttonLabel: @escaping () -> QRFlowButtonLabel,
+        destinationContent: @escaping (Destination) -> DestinationContent
+    ) {
+        self._model = .init(wrappedValue: model)
+        self.buttonLabel = buttonLabel
+        self.destinationContent = destinationContent
+    }
+    
+    public var body: some View {
         
         Button(action: { model.event(.buttonTap) }, label: buttonLabel)
             .fullScreenCover(
@@ -28,7 +38,7 @@ where Destination: Identifiable,
     }
 }
 
-extension QRFlowButton {
+public extension QRFlowButton {
     
     typealias Model = QRFlowButtonModel<Destination>
 }

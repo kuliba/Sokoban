@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-typealias QRFlowButtonModel<Destination> = RxViewModel<QRFlowButtonState<Destination>, QRFlowButtonEvent<Destination>, QRFlowButtonEffect>
+public typealias QRFlowButtonModel<Destination> = RxViewModel<QRFlowButtonState<Destination>, QRFlowButtonEvent<Destination>, QRFlowButtonEffect>
