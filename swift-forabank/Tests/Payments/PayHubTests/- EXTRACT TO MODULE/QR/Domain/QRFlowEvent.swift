@@ -7,6 +7,7 @@
 
 enum QRFlowEvent<Destination> {
 
+    case cancel
     case destination(Destination)
 }
 
