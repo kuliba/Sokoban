@@ -5,20 +5,20 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-final class QRFlowEffectHandler<Destination, ScanResult> {
+public final class QRFlowEffectHandler<Destination, ScanResult> {
     
     private let microServices: MicroServices
     
-    init(
+    public init(
         microServices: MicroServices
     ) {
         self.microServices = microServices
     }
     
-    typealias MicroServices = QRFlowEffectHandlerMicroServices<Destination, ScanResult>
+    public typealias MicroServices = QRFlowEffectHandlerMicroServices<Destination, ScanResult>
 }
 
-extension QRFlowEffectHandler {
+public extension QRFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -31,7 +31,7 @@ extension QRFlowEffectHandler {
     }
 }
 
-extension QRFlowEffectHandler {
+public extension QRFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     

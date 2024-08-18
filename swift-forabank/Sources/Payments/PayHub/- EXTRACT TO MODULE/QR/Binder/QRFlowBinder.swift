@@ -7,17 +7,17 @@
 
 import Combine
 
-final class QRFlowBinder<Content, Flow>
+public final class QRFlowBinder<Content, Flow>
 where Content: QRFlowContentEventEmitter,
       Flow: QRFlowContentEventReceiver,
       Content.ScanResult == Flow.ScanResult {
     
-    let content: Content
-    let flow: Flow
+    public let content: Content
+    public let flow: Flow
     
     private let cancellable: AnyCancellable
     
-    init(
+    public init(
         content: Content,
         flow: Flow
     ) {

@@ -5,12 +5,18 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-struct QRFlowState<Destination> {
+public struct QRFlowState<Destination> {
     
-    var navigation: Navigation?
+    public var navigation: Navigation?
+    
+    public init(
+        navigation: Navigation? = nil
+    ) {
+        self.navigation = navigation
+    }
 }
 
-extension QRFlowState {
+public extension QRFlowState {
     
     enum Navigation {
         

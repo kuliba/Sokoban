@@ -7,7 +7,7 @@
 
 import Combine
 
-protocol QRFlowContentEventEmitter {
+public protocol QRFlowContentEventEmitter {
     
     associatedtype ScanResult
     

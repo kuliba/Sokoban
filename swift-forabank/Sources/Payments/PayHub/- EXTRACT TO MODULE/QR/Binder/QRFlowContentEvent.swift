@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-enum QRFlowContentEvent<ScanResult> {
+public enum QRFlowContentEvent<ScanResult> {
     
     case dismiss
     case scanResult(ScanResult)
