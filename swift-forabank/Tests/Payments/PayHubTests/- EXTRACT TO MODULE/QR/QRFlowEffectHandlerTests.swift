@@ -5,61 +5,6 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-enum QRFlowEvent: Equatable {}
-
-enum QRFlowEffect<ScanResult> {
-    
-    case processScanResult(ScanResult)
-}
-
-extension QRFlowEffect: Equatable where ScanResult: Equatable {}
-
-struct QRFlowEffectHandlerMicroServices<ScanResult> {
-    
-    let processScanResult: ProcessScanResult
-}
-
-extension QRFlowEffectHandlerMicroServices {
-    
-    typealias ProcessScanResultCompletion = (()) -> Void
-    typealias ProcessScanResult = (ScanResult, @escaping ProcessScanResultCompletion) -> Void
-}
-
-final class QRFlowEffectHandler<ScanResult> {
-    
-    private let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = QRFlowEffectHandlerMicroServices<ScanResult>
-}
-
-extension QRFlowEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .processScanResult(scanResult):
-            microServices.processScanResult(scanResult) { _ in }
-        }
-    }
-}
-
-extension QRFlowEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = QRFlowEvent
-    typealias Effect = QRFlowEffect<ScanResult>
-}
-
-
 import XCTest
 
 final class QRFlowEffectHandlerTests: XCTestCase {
@@ -85,10 +30,21 @@ final class QRFlowEffectHandlerTests: XCTestCase {
         XCTAssertNoDiff(processScanResult.payloads, [scanResult])
     }
     
+    func test_processScanResult_shouldDeliverDestination() {
+    
+        let destination = makeDestination()
+        let (sut, processScanResult) = makeSUT()
+        
+        expect(sut, with: .processScanResult(makeScanResult()), toDeliver: .destination(destination)) {
+            
+            processScanResult.complete(with: destination)
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = QRFlowEffectHandler<ScanResult>
-    private typealias ProcessScanResultSpy = Spy<ScanResult, Void>
+    private typealias SUT = QRFlowEffectHandler<Destination, ScanResult>
+    private typealias ProcessScanResultSpy = Spy<ScanResult, Destination>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -116,6 +72,18 @@ final class QRFlowEffectHandlerTests: XCTestCase {
     private func makeScanResult(
         _ value: String = anyMessage()
     ) -> ScanResult {
+        
+        return .init(value: value)
+    }
+    
+    private struct Destination: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeDestination(
+        _ value: String = anyMessage()
+    ) -> Destination {
         
         return .init(value: value)
     }
