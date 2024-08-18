@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-final class QRFlowButtonReducer<Destination> {}
+public final class QRFlowButtonReducer<Destination> {
+    
+    public init() {}
+}
 
-extension QRFlowButtonReducer {
+public extension QRFlowButtonReducer {
     
     func reduce(
         _ state: State,
@@ -29,7 +32,7 @@ extension QRFlowButtonReducer {
     }
 }
 
-extension QRFlowButtonReducer {
+public extension QRFlowButtonReducer {
     
     typealias State = QRFlowButtonState<Destination>
     typealias Event = QRFlowButtonEvent<Destination>
