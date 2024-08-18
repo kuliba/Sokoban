@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class QRFlowEffectHandlerTests: XCTestCase {
+final class QRFlowEffectHandlerTests: QRFlowTests {
     
     // MARK: - init
     
@@ -62,30 +62,6 @@ final class QRFlowEffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(processScanResult, file: file, line: line)
         
         return (sut, processScanResult)
-    }
-    
-    private struct ScanResult: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeScanResult(
-        _ value: String = anyMessage()
-    ) -> ScanResult {
-        
-        return .init(value: value)
-    }
-    
-    private struct Destination: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeDestination(
-        _ value: String = anyMessage()
-    ) -> Destination {
-        
-        return .init(value: value)
     }
     
     private func expect(
