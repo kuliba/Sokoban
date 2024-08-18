@@ -35,6 +35,6 @@ extension QRFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = QRFlowEvent<Destination>
+    typealias Event = QRFlowEvent<Destination, ScanResult>
     typealias Effect = QRFlowEffect<ScanResult>
 }

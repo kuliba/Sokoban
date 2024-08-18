@@ -1,6 +1,6 @@
 //
 //  QRFlowReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 18.08.2024.
 //
@@ -26,6 +26,9 @@ extension QRFlowReducer {
             
         case .dismissDestination:
             state.navigation = nil
+            
+        case let .receiveScanResult(scanResult):
+            effect = .processScanResult(scanResult)
         }
         
         return (state, effect)
@@ -35,6 +38,6 @@ extension QRFlowReducer {
 extension QRFlowReducer {
     
     typealias State = QRFlowState<Destination>
-    typealias Event = QRFlowEvent<Destination>
+    typealias Event = QRFlowEvent<Destination, ScanResult>
     typealias Effect = QRFlowEffect<ScanResult>
 }

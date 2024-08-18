@@ -56,6 +56,20 @@ final class QRFlowReducerTests: QRFlowTests {
         assert(makeState(), event: .dismissDestination, delivers: nil)
     }
     
+    // MARK: - receiveScanResult
+    
+    func test_receiveScanResult_shouldSetNavigationToCancel() {
+        
+        assert(makeState(), event: .receiveScanResult(makeScanResult()))
+    }
+    
+    func test_receiveScanResult_shouldNotDeliverEffect() {
+        
+        let scanResult = makeScanResult()
+        
+        assert(makeState(), event: .receiveScanResult(scanResult), delivers: .processScanResult(scanResult))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRFlowReducer<Destination, ScanResult>
