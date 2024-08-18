@@ -18,11 +18,11 @@ extension QRFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .cancel:
-            state.navigation = .cancel
-            
         case let .destination(destination):
             state.navigation = .destination(destination)
+            
+        case .dismiss:
+            state.navigation = .dismissed
             
         case .dismissDestination:
             state.navigation = nil

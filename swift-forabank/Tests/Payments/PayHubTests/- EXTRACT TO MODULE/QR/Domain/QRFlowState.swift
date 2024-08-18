@@ -14,8 +14,8 @@ extension QRFlowState {
     
     enum Navigation {
         
-        case cancel
         case destination(Destination)
+        case dismissed
     }
 }
 
