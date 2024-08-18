@@ -9,6 +9,7 @@ enum QRFlowEvent<Destination> {
 
     case cancel
     case destination(Destination)
+    case dismissDestination
 }
 
 extension QRFlowEvent: Equatable where Destination: Equatable{}

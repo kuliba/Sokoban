@@ -23,6 +23,9 @@ extension QRFlowReducer {
             
         case let .destination(destination):
             state.navigation = .destination(destination)
+            
+        case .dismissDestination:
+            state.navigation = nil
         }
         
         return (state, effect)
