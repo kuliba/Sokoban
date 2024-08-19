@@ -18,8 +18,8 @@ extension TabReducer {
         var effect: Effect?
         
         switch event {
-        case let .switchTo(tab):
-            state = tab
+        case let .select(tab):
+            state.selected = tab
         }
         
         return (state, effect)

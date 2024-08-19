@@ -36,8 +36,8 @@ where Destination: Identifiable,
     ///     based on the current `Destination`.
     public init(
         model: Model,
-        buttonLabel: @escaping () -> ButtonLabel,
-        destinationContent: @escaping (Destination) -> DestinationContent
+        @ViewBuilder buttonLabel: @escaping () -> ButtonLabel,
+        @ViewBuilder destinationContent: @escaping (Destination) -> DestinationContent
     ) {
         self._model = .init(wrappedValue: model)
         self.buttonLabel = buttonLabel

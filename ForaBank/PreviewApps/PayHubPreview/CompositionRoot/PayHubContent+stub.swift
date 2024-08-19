@@ -11,7 +11,7 @@ import Foundation
 extension PayHubContent {
     
     static func stub(
-        initialState: PayHubState = .default,
+        initialState: PayHubState = .init(loadState: .placeholders([])),
         loadResult: PayHubEffectHandler.MicroServices.LoadResult,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PayHubContent {
@@ -39,11 +39,4 @@ extension PayHubContent {
             scheduler: scheduler
         )
     }
-}
-
-extension PayHubState {
-    
-    static let `default`: Self = .init(loadState: .placeholders([
-        .init(), .init(), .init(), .init()
-    ]))
 }

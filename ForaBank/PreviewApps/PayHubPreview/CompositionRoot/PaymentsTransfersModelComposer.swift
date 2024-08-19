@@ -7,9 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersModelComposer {
-    
-}
+final class PaymentsTransfersModelComposer {}
 
 extension PaymentsTransfersModelComposer {
     

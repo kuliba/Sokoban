@@ -5,15 +5,27 @@
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
-public typealias PaymentsTransfersFlowState<Profile, QR> = Optional<PaymentsTransfersFlowNavigation<Profile, QR>>
-
-public enum PaymentsTransfersFlowNavigation<Profile, QR> {
+public struct PaymentsTransfersFlowState<Profile, QR> {
     
-    case destination(Destination)
-    case fullScreen(FullScreen)
+    public var navigation: Navigation?
+    
+    public init(
+        navigation: Navigation? = nil
+    ) {
+        self.navigation = navigation
+    }
 }
 
-public extension PaymentsTransfersFlowNavigation {
+public extension PaymentsTransfersFlowState {
+    
+    enum Navigation {
+        
+        case destination(Destination)
+        case fullScreen(FullScreen)
+    }
+}
+
+public extension PaymentsTransfersFlowState.Navigation {
     
     enum Destination {
         
@@ -26,6 +38,7 @@ public extension PaymentsTransfersFlowNavigation {
     }
 }
 
-extension PaymentsTransfersFlowNavigation: Equatable where Profile: Equatable, QR: Equatable {}
-extension PaymentsTransfersFlowNavigation.Destination: Equatable where Profile: Equatable {}
-extension PaymentsTransfersFlowNavigation.FullScreen: Equatable where QR: Equatable {}
+extension PaymentsTransfersFlowState: Equatable where Profile: Equatable, QR: Equatable {}
+extension PaymentsTransfersFlowState.Navigation: Equatable where Profile: Equatable, QR: Equatable {}
+extension PaymentsTransfersFlowState.Navigation.Destination: Equatable where Profile: Equatable {}
+extension PaymentsTransfersFlowState.Navigation.FullScreen: Equatable where QR: Equatable {}

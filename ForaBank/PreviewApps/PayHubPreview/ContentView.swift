@@ -11,6 +11,19 @@ import UIPrimitives
 
 struct ContentView: View {
     
+    private let model: TabModel
+    
+    init(
+        selected: TabState.Selected = .noLatest
+    ) {
+        let flowComposer = PaymentsTransfersModelComposer()
+        let tabComposer = TabModelComposer(
+            makeFlowModel: flowComposer.compose(loadResult:),
+            scheduler: .main
+        )
+        self.model = tabComposer.compose(selected: selected)
+    }
+    
     var body: some View {
         
         if #available(iOS 15.0, *) {
@@ -18,27 +31,48 @@ struct ContentView: View {
         }
         
         TabStateWrapperView(
-            model: .init(),
+            model: model,
             makeContent: { state, event in
                 
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContent: makeTabViewContent)
+                    factory: .init(makeBinderView: makeBinderView)
                 )
             }
         )
     }
 }
 
+#warning("move to factory")
+private typealias ProfileFlowButtonReducer = FlowButtonReducer<DestinationWrapper<ProfileModel>>
+private typealias ProfileFlowButtonEffectHandler = FlowButtonEffectHandler<DestinationWrapper<ProfileModel>>
+
+enum DestinationWrapper<Destination>: Identifiable {
+    
+    case destination(Destination)
+    
+    var id: ID {
+        
+        switch self {
+        case .destination: return .destination
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case destination
+    }
+}
+
 private extension ContentView {
     
     @ViewBuilder
-    func makeTabViewContent(
-        tabState: TabState
+    func makeBinderView(
+        tabState: TabState.Binder
     ) -> some View {
         
-        #warning("extract Composer and Factory")
+#warning("extract Composer and Factory")
         
         let reducer = PaymentsTransfersFlowReducer()
         let effectHandler = PaymentsTransfersFlowEffectHandler(
@@ -48,20 +82,20 @@ private extension ContentView {
             )
         )
         let model = PaymentsTransfersFlowModel(
-            initialState: .none,
+            initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
         
         PaymentsTransfersFlowStateWrapper(
             model: model,
-            makeContent: {
-        
+            makeFlowView: {
+                
                 PaymentsTransfersFlowView(
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makeContent(tabState) },
+                        makeContent: { makePaymentsTransfersContent(tabState) },
                         makeDestinationContent: {
                             
                             switch $0 {
@@ -103,15 +137,12 @@ private extension ContentView {
     }
     
     @ViewBuilder
-    func makeContent(
-        _ tabState: TabState
+    private func makePaymentsTransfersContent(
+        _ binder: TabState.Binder
     ) -> some View {
         
-        let composer = PaymentsTransfersModelComposer()
-        let model = composer.compose(loadResult: tabState.loadResult)
-        
         PaymentsTransfersView(
-            model: model,
+            model: binder.content,
             factory: .init(makePayHubView: makePayHubFlowView)
         )
     }
@@ -146,37 +177,6 @@ private extension ContentView {
             }
         )
     }
-}
-
-private extension TabState {
-    
-    var loadResult: PayHubEffectHandler.MicroServices.LoadResult {
-        
-        switch self {
-        case .noLatest:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .noCategories:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .noBoth:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .okEmpty:
-            return .success([])
-            
-        case .ok:
-            return .success(.preview)
-        }
-    }
-}
-
-extension Array where Element == Latest {
-    
-    static let preview: Self = [
-        .init(id: UUID().uuidString),
-        .init(id: UUID().uuidString),
-    ]
 }
 
 #Preview {
