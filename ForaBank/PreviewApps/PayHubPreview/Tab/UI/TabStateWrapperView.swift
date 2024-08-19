@@ -15,7 +15,7 @@ struct TabStateWrapperView<Content: View>: View {
     
     init(
         model: Model,
-        makeContent: @escaping MakeContent
+        @ViewBuilder makeContent: @escaping MakeContent
     ) {
         self._model = .init(wrappedValue: model)
         self.makeContent = makeContent

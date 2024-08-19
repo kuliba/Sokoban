@@ -1053,6 +1053,7 @@
 		2A7325EA2A30466800C35022 /* PaymentsTypesTransportCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */; };
 		2A7325EC2A304A6E00C35022 /* Model+PaymentsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */; };
 		2A736E012BA1935E00B4E704 /* RootActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A736E002BA1935E00B4E704 /* RootActions.swift */; };
+		2A7385B72C735EE200861881 /* PayHubUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7385B62C735EE200861881 /* PayHubUI */; };
 		2A73C2142A027D3100C68A32 /* createC2BPaymentAcc_5_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2132A027D3100C68A32 /* createC2BPaymentAcc_5_2.json */; };
 		2A73C2162A029D9E00C68A32 /* getScenarioQRData_1_1_1_tweaked.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2152A029D9E00C68A32 /* getScenarioQRData_1_1_1_tweaked.json */; };
 		2A73C21A2A029E8600C68A32 /* createC2BPaymentAcc_5_1_tweaked.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2192A029E8600C68A32 /* createC2BPaymentAcc_5_1_tweaked.json */; };
@@ -6564,6 +6565,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */,
+				2A7385B72C735EE200861881 /* PayHubUI in Frameworks */,
 				2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */,
 				2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */,
 				2A7772212C6F045D009B1676 /* CombineSchedulers in Frameworks */,
@@ -17230,6 +17232,7 @@
 				2ADC2E5B2C6EFBF500915F58 /* PayHub */,
 				2A7772202C6F045D009B1676 /* CombineSchedulers */,
 				2A77725C2C6F2892009B1676 /* UIPrimitives */,
+				2A7385B62C735EE200861881 /* PayHubUI */,
 			);
 			productName = PayHubPreview;
 			productReference = 2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */;
@@ -26468,6 +26471,10 @@
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TransferPublicKey;
+		};
+		2A7385B62C735EE200861881 /* PayHubUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PayHubUI;
 		};
 		2A76E0B92B60F01E00371725 /* OTPInputComponent */ = {
 			isa = XCSwiftPackageProductDependency;

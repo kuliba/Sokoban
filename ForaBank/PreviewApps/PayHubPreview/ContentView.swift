@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import PayHubUI
 import SwiftUI
 import UIPrimitives
 
@@ -28,6 +29,27 @@ struct ContentView: View {
                 )
             }
         )
+    }
+}
+
+#warning("move to factory")
+private typealias ProfileFlowButtonReducer = FlowButtonReducer<DestinationWrapper<ProfileModel>>
+private typealias ProfileFlowButtonEffectHandler = FlowButtonEffectHandler<DestinationWrapper<ProfileModel>>
+
+enum DestinationWrapper<Destination>: Identifiable {
+    
+    case destination(Destination)
+    
+    var id: ID {
+        
+        switch self {
+        case .destination: return .destination
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case destination
     }
 }
 
@@ -100,10 +122,102 @@ private extension ContentView {
                 )
             }
         )
+        .toolbar(content: paymentsTransfersToolbar)
+    }
+    
+    #warning("move to factory")
+    @ToolbarContentBuilder
+    private func paymentsTransfersToolbar(
+    ) -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading, content: profileButton)
+        ToolbarItem(placement: .topBarTrailing, content: qrButton)
     }
     
     @ViewBuilder
-    func makePaymentsTransfersContent(
+    private func profileButton() -> some View {
+        
+        let reducer = FlowButtonReducer<DestinationWrapper<ProfileModel>>()
+        let effectHandler = FlowButtonEffectHandler<DestinationWrapper<ProfileModel>>(
+            microServices: .init(
+                makeDestination: { $0(.destination(.init())) }
+            )
+        )
+        let model = FlowButtonModel(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
+        )
+
+        NavigationDestinationFlowButton(
+            model: model,
+            buttonLabel: {
+                
+#warning("inject")
+                if #available(iOS 14.5, *) {
+                    Label("Profile", systemImage: "person.circle")
+                        .labelStyle(.titleAndIcon)
+                } else {
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("Profile")
+                    }
+                }
+            },
+            destinationContent: {
+                
+                switch $0 {
+                case let .destination(destination):
+                    VStack(spacing: 32) {
+                        
+                        Text(String(describing: destination))
+                        Button("Close") { model.event(.dismissDestination) }
+                    }
+                }
+            }
+        )
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    @ViewBuilder
+    private func qrButton() -> some View {
+        
+        let reducer = FlowButtonReducer<DestinationWrapper<QRModel>>()
+        let effectHandler = FlowButtonEffectHandler<DestinationWrapper<QRModel>>(
+            microServices: .init(
+                makeDestination: { $0(.destination(.init())) }
+            )
+        )
+        let model = FlowButtonModel(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
+        )
+        
+        FullScreenCoverFlowButton(
+            model: model,
+            buttonLabel: {
+
+#warning("inject")
+                Image(systemName: "qrcode")
+            },
+            destinationContent: {
+                
+                switch $0 {
+                case let .destination(destination):
+                    VStack(spacing: 32) {
+                        
+                        Text(String(describing: destination))
+                        Button("Close") { model.event(.dismissDestination) }
+                    }
+                }
+            }
+        )
+        .buttonStyle(PlainButtonStyle())
+    }
+
+    @ViewBuilder
+    private func makePaymentsTransfersContent(
         _ tabState: TabState
     ) -> some View {
         

@@ -22,7 +22,7 @@ where Content: View,
     var body: some View {
         
         factory.makeContent()
-            .toolbar(content: toolbar)
+            // .toolbar(content: toolbar)
             .navigationDestination(
                 destination: state.destination,
                 dismiss: { event(.dismiss) },

@@ -17,7 +17,6 @@ where State == TabState,
     convenience init(
         initialState: TabState = .noLatest
     ) {
-        
         let reducer = TabReducer()
         let effectHandler = TabEffectHandler()
         
