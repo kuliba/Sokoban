@@ -68,30 +68,39 @@ extension Array where Element == ProductData {
         return filter { $0.productType == .card && $0.parentID == nil }
     }
     
-    func removeDuplicateByAccountNumber() -> [ProductData] {
+    // use only main cards, otherwise return random active product
+    private func removingDuplicateByAccountNumber() -> [ProductCardData] {
         
-        var uniqueProductsByAccountNumber = [ProductData]()
+        var unique = [ProductCardData]()
         
         for product in self {
             
-            if !uniqueProductsByAccountNumber.contains(where: { !$0.accountNumber.isNilOrEmpty && $0.accountNumber == product.accountNumber}) {
-                
-                if let accountNumber = product.accountNumber, let activeProduct = cardBy(accountNumber: accountNumber, status: .active) {
-                    uniqueProductsByAccountNumber.append(activeProduct)
-                } else {
-                    uniqueProductsByAccountNumber.append(product)
-                }
+            guard !unique.contains(where: { $0.accountNumber.hasValue && $0.accountNumber == product.accountNumber })
+            else { continue }
+            
+            if let activeCard = cardBy(accountNumber: product.accountNumber, status: .active) {
+                unique.append(activeCard)
+            } else {
+                product.asCard.map { unique.append($0) }
             }
         }
-        return uniqueProductsByAccountNumber
+        return unique
     }
 
-    func cardBy(accountNumber: String, status: ProductCardData.StatusCard) -> ProductData? {
+    func cardBy(
+        accountNumber: String?,
+        status: ProductCardData.StatusCard
+    ) -> ProductCardData? {
         
-        first(where: {
-            if let card = $0.asCard, let statusCard = card.statusCard { return card.accountNumber == accountNumber && statusCard == status }
-            else { return false }
-        })
+        guard let accountNumber else { return nil }
+        
+        let first = first {
+            guard let card = $0.asCard else { return false }
+            
+            return card.accountNumber == accountNumber && card.statusCard == status
+        }
+        
+        return first?.asCard
     }
     
     func productsWithoutCards() -> [ProductData] {
@@ -149,7 +158,7 @@ extension Array where Element == ProductData {
         
         let accountsAndDeposits = filter { $0.productType == .account || $0.productType == .deposit }
         
-        let cardsWithoutAdditional = cardsWithoutAdditional().removeDuplicateByAccountNumber()
+        let cardsWithoutAdditional = cardsWithoutAdditional().removingDuplicateByAccountNumber()
         let cardsWithoutAdditionalIDs = cardsWithoutAdditional.map(\.id)
 
         var productsForBalance: [ProductData] = accountsAndDeposits + cardsWithoutAdditional
@@ -167,5 +176,12 @@ extension Array where Element == ProductData {
         }
         
         return productsForBalance.compactMap(\.balanceRub).reduce(0, +)
+    }
+}
+
+extension Optional where Wrapped == String {
+
+    var hasValue: Bool {
+        !isNilOrEmpty
     }
 }
