@@ -19,7 +19,8 @@ struct ContentView: View {
     ) {
         let flowComposer = PaymentsTransfersModelComposer()
         let tabComposer = TabModelComposer(
-            makeFlowModel: flowComposer.compose(loadResult:)
+            makeFlowModel: flowComposer.compose(loadResult:),
+            scheduler: .main
         )
         self.model = tabComposer.compose(selected: selected)
     }
@@ -37,7 +38,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeFlowView: makeTabViewContent)
+                    factory: .init(makeBinderView: makeBinderView)
                 )
             }
         )
@@ -68,8 +69,8 @@ enum DestinationWrapper<Destination>: Identifiable {
 private extension ContentView {
     
     @ViewBuilder
-    func makeTabViewContent(
-        tabState: TabState.FlowModel
+    func makeBinderView(
+        tabState: TabState.Binder
     ) -> some View {
         
 #warning("extract Composer and Factory")
@@ -230,11 +231,11 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ model: TabState.FlowModel
+        _ binder: TabState.Binder
     ) -> some View {
         
         PaymentsTransfersView(
-            model: model,
+            model: binder.content,
             factory: .init(makePayHubView: makePayHubFlowView)
         )
     }

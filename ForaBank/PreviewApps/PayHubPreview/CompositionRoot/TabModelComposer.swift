@@ -5,16 +5,20 @@
 //  Created by Igor Malyarov on 19.08.2024.
 //
 
+import CombineSchedulers
 import Foundation
 
 final class TabModelComposer {
     
-    let makeFlowModel: MakeFlowModel
-    
+    private let makeFlowModel: MakeFlowModel
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+
     init(
-        makeFlowModel: @escaping MakeFlowModel
+        makeFlowModel: @escaping MakeFlowModel,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.makeFlowModel = makeFlowModel
+        self.scheduler = scheduler
     }
     
     typealias MakeFlowModel = (Result<[Latest], Error>) -> PaymentsTransfersModel<PayHubBinder>
@@ -31,11 +35,11 @@ extension TabModelComposer {
         
         return .init(
             initialState: .init(
-                noLatest: makeFlowModel(.noLatest),
-                noCategories: makeFlowModel(.noCategories),
-                noBoth: makeFlowModel(.noBoth),
-                okEmpty: makeFlowModel(.okEmpty),
-                ok: makeFlowModel(.ok),
+                noLatest: makeBinder(.noLatest),
+                noCategories: makeBinder(.noCategories),
+                noBoth: makeBinder(.noBoth),
+                okEmpty: makeBinder(.okEmpty),
+                ok: makeBinder(.ok),
                 selected: selected
             ),
             reduce: reducer.reduce(_:_:),
@@ -46,13 +50,18 @@ extension TabModelComposer {
 
 private extension TabModelComposer {
     
-    func makeFlowModel(
+    func makeBinder(
         _ tab: TabState.Selected
-    ) -> TabState.FlowModel {
+    ) -> TabState.Binder {
         
-        makeFlowModel(tab.loadResult)
+        let composer = PaymentsTransfersBinderComposer(
+            scheduler: scheduler
+        )
+        return composer.compose(loadResult: tab.loadResult)
     }
 }
+
+// MARK: - stubs
 
 private extension TabState.Selected {
     

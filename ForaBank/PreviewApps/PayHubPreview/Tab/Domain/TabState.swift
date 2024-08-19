@@ -7,18 +7,18 @@
 
 struct TabState {
     
-    let noLatest: FlowModel
-    let noCategories: FlowModel
-    let noBoth: FlowModel
-    let okEmpty: FlowModel
-    let ok: FlowModel
+    let noLatest: Binder
+    let noCategories: Binder
+    let noBoth: Binder
+    let okEmpty: Binder
+    let ok: Binder
     
     var selected: Selected
 }
 
 extension TabState {
     
-    typealias FlowModel = PaymentsTransfersModel<PayHubBinder>
+    typealias Binder = PaymentsTransfersBinder<PayHubBinder>
     
     enum Selected: CaseIterable, Equatable {
         

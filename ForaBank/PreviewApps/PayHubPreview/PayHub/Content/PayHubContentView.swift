@@ -143,10 +143,10 @@ struct PayHubContentView_Previews: PreviewProvider {
                 
                 Group {
                     
-                    payHubContentView(.default)
                     payHubContentView(.placeholderPreview(count: 0))
                     payHubContentView(.placeholderPreview(count: 1))
                     payHubContentView(.placeholderPreview(count: 2))
+                    payHubContentView(.placeholderPreview(count: 5))
                     payHubContentView(.loadedPreview(count: 0))
                     payHubContentView(.loadedPreview(count: 1))
                     payHubContentView(.loadedPreview(count: 2))
@@ -247,15 +247,11 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
 }
 
-extension PayHubContentViewConfig {
+private extension PayHubState {
     
-    static let preview: Self = .init(
-        height: 96,
-        spacing: 4
-    )
-}
-
-extension PayHubState {
+    static let `default`: Self = .init(loadState: .placeholders([
+        .init(), .init(), .init(), .init()
+    ]))
     
     static func loadedPreview(count: Int) -> Self {
         
@@ -270,4 +266,12 @@ extension PayHubState {
             (0..<count).map { _ in .init() }
         ))
     }
+}
+
+extension PayHubContentViewConfig {
+    
+    static let preview: Self = .init(
+        height: 96,
+        spacing: 4
+    )
 }

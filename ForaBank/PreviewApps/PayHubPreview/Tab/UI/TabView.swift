@@ -41,13 +41,13 @@ extension TabView {
 extension TabView {
     
     func navWrapped(
-        _ flowModel: State.FlowModel,
+        _ binder: State.Binder,
         tab: State.Selected
     ) -> some View {
         
         NavigationView {
             
-            factory.makeFlowView(flowModel)
+            factory.makeBinderView(binder)
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
