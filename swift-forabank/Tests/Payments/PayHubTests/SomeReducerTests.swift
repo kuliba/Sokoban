@@ -408,7 +408,7 @@ final class SomeReducerTests: XCTestCase {
         let id = makePlaceholderID()
         let element = makeElement()
         let state = makeState(prefix: [])
-        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
         
         assert(sut: sut, state, event: .loaded([element])) {
             
@@ -431,7 +431,7 @@ final class SomeReducerTests: XCTestCase {
         let element = makeElement()
         let item = makeItem()
         let state = makeState(prefix: [item])
-        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
 
         assert(sut: sut, state, event: .loaded([element])) {
             
@@ -455,7 +455,7 @@ final class SomeReducerTests: XCTestCase {
         let element = makeElement()
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
-        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
 
         assert(sut: sut, state, event: .loaded([element])) {
             
@@ -471,6 +471,130 @@ final class SomeReducerTests: XCTestCase {
         let sut = makeSUT(placeholderIDs: [])
         
         assert(sut: sut, state, event: .loaded([makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldSetTwoOnTwoWithEmptyPrefix() {
+
+        let id = makePlaceholderID()
+        let (element1, element2) = (makeElement(), makeElement())
+        let state = makeState(prefix: [])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([element1, element2])) {
+            
+            $0 = self.makeState(prefix: [], suffix: [
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+            XCTAssertNoDiff($0.items, [
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnTwoWithEmptyPrefix() {
+
+        let state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement(), makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldAddTwoOnTwoWithPrefixOfOne() {
+
+        let id = makePlaceholderID()
+        let (element1, element2) = (makeElement(), makeElement())
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
+
+        assert(sut: sut, state, event: .loaded([element1, element2])) {
+
+            $0 = self.makeState(prefix: [item], suffix: [
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+            XCTAssertNoDiff($0.items, [
+                item,
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnTwoWithPrefixOfOne() {
+
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement(), makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldAddOneOnTwoWithPrefixOfTwo() {
+        
+        let id = makePlaceholderID()
+        let (element1, element2) = (makeElement(), makeElement())
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(makeID: { id }, placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([element1, element2])) {
+            
+            $0 = self.makeState(prefix: [item1, item2], suffix: [
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+            XCTAssertNoDiff($0.items, [
+                item1,
+                item2,
+                .element(.init(id: id, element: element1)),
+                .element(.init(id: id, element: element2))
+            ])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnTwoWithPrefixOfTwo() {
+
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement(), makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldReusePlaceholderID() {
+        
+        let element = makeElement()
+        let id = makePlaceholderID()
+        var state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [id])
+
+        (state, _) = sut.reduce(state, .load)
+        assert(sut: sut, state, event: .loaded([element])) {
+            
+            $0 = self.makeState(prefix: [], suffix: [
+                .element(.init(id: id, element: element))
+            ])
+        }
+    }
+    
+    func test_loaded_shouldReusePlaceholderIDs() {
+        
+        let (element1, element2) = (makeElement(), makeElement())
+        let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
+        var state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [id1, id2])
+
+        (state, _) = sut.reduce(state, .load)
+        assert(sut: sut, state, event: .loaded([element1, element2])) {
+            
+            $0 = self.makeState(prefix: [], suffix: [
+                .element(.init(id: id1, element: element1)),
+                .element(.init(id: id2, element: element2))
+            ])
+        }
     }
     
     // MARK: - Helpers
