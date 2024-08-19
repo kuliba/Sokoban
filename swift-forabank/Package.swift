@@ -32,6 +32,7 @@ let package = Package(
         .serviceCategories,
         .serviceCategoriesBackend,
         .payHub,
+        .payHubUI,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -139,6 +140,7 @@ let package = Package(
         .serviceCategoriesBackendTests,
         .payHub,
         .payHubTests,
+        .payHubUI,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -633,6 +635,13 @@ private extension Product {
         name: .payHub,
         targets: [
             .payHub,
+        ]
+    )
+
+    static let payHubUI = library(
+        name: .payHubUI,
+        targets: [
+            .payHubUI,
         ]
     )
 
@@ -1261,6 +1270,17 @@ private extension Target {
             .payHub,
         ],
         path: "Tests/Payments/\(String.payHubTests)"
+    )
+    
+    static let payHubUI = target(
+        name: .payHubUI,
+        dependencies: [
+            // internal modules
+            .payHub,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/Payments/\(String.payHubUI)"
     )
     
     static let utilityPayment = target(
@@ -2704,6 +2724,10 @@ private extension Target.Dependency {
         name: .payHub
     )
 
+    static let payHubUI = byName(
+        name: .payHubUI
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2980,6 +3004,8 @@ private extension String {
 
     static let payHub = "PayHub"
     static let payHubTests = "PayHubTests"
+    
+    static let payHubUI = "PayHubUI"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
