@@ -159,6 +159,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         id: Int,
         parentID: Int? = nil,
         cardType: ProductCardData.CardType = .main,
+        status: ProductData.Status = .active,
         balanceRub: Double?
     ) -> ProductCardData {
         
@@ -190,7 +191,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             cardId: 0,
             name: "CARD",
             validThru: Date(),
-            status: .active,
+            status: status,
             expireDate: "01/01/01",
             holderName: "Иванов",
             product: nil,
