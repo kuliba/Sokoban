@@ -1,5 +1,5 @@
 //
-//  PayHubStateWrapperView.swift
+//  PayHubFlowStateWrapperView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PayHubStateWrapperView<ContentView>: View 
+struct PayHubFlowStateWrapperView<ContentView>: View 
 where ContentView: View {
     
     @StateObject private var content: PayHubContent
@@ -36,7 +36,7 @@ where ContentView: View {
     }
 }
 
-extension PayHubStateWrapperView {
+extension PayHubFlowStateWrapperView {
     
     typealias Factory = PayHubViewFactory<ContentView>
 }
@@ -59,7 +59,7 @@ extension PayHubFlowItem: Identifiable {
 }
 
 #Preview {
-    PayHubStateWrapperView(
+    PayHubFlowStateWrapperView(
         binder: .preview,
         factory: .init(
             makeContent: { Text(String(describing: $0)) }

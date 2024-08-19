@@ -21,10 +21,7 @@ struct TabView<Content: View>: View {
                 set: { event(.switchTo($0)) }
             )
         ) {
-            navWrapped(.noLatest)
-            navWrapped(.noCategories)
-            navWrapped(.sadBoth)
-            navWrapped(.ok)
+            ForEach(TabState.allCases, id: \.self, content: navWrapped)
         }
         .animation(.easeInOut, value: state)
     }
@@ -61,20 +58,22 @@ extension TabState {
     var tabTitle: String {
         
         switch self {
-        case .ok:           return "OK"
         case .noLatest:     return "No Latest"
         case .noCategories: return "No Categories"
-        case .sadBoth:      return "Sad"
+        case .noBoth:       return "No Both"
+        case .okEmpty:      return "OK Empty"
+        case .ok:           return "OK"
         }
     }
     
     var systemImage: String {
         
         switch self {
-        case .ok:           return "sun.max"
         case .noLatest:     return "cloud.sun.rain"
-        case .noCategories: return "cloud.sun.bolt"
-        case .sadBoth:      return "exclamationmark.octagon"
+        case .noCategories: return "cloud.bolt.rain"
+        case .noBoth:       return "exclamationmark.circle"
+        case .okEmpty:      return "sun.max.trianglebadge.exclamationmark"
+        case .ok:           return "sun.max"
         }
     }
 }

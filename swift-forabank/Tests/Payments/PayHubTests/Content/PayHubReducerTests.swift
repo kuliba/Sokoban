@@ -14,7 +14,7 @@ final class PayHubReducerTests: PayHubTests {
     
     func test_load_shouldSetStateToNil() {
         
-        assert(makeState([.exchange]), event: .load) {
+        assert(makeState([makeLatest()]), event: .load) {
             
             $0 = .none
         }
@@ -22,16 +22,16 @@ final class PayHubReducerTests: PayHubTests {
     
     func test_load_shouldDeliverLoadEffect() {
         
-        assert(makeState([.exchange]), event: .load, delivers: .load)
+        assert(makeState([makeLatest()]), event: .load, delivers: .load)
     }
     
     // MARK: - loaded
     
-    func test_loaded_shouldSetTemplatesWithExchangeOnEmpty() {
+    func test_loaded_shouldSetEmptyOnEmpty() {
         
         assert(.none, event: .loaded([])) {
             
-            $0 = .init(items: [.templates, .exchange])
+            $0 = .init(latests: [])
         }
     }
     
@@ -40,13 +40,13 @@ final class PayHubReducerTests: PayHubTests {
         assert(.none, event: .loaded([]), delivers: nil)
     }
     
-    func test_loaded_shouldSetTemplatesWithExchangeAndOneLatestOnOneLatest() {
+    func test_loaded_shouldSetOneLatestOnOneLatest() {
         
         let latest = makeLatest()
         
         assert(.none, event: .loaded([latest])) {
             
-            $0 = .init(items: [.templates, .exchange, .latest(latest)])
+            $0 = .init(latests: [latest])
         }
     }
     
@@ -57,13 +57,13 @@ final class PayHubReducerTests: PayHubTests {
         assert(.none, event: .loaded([latest]), delivers: nil)
     }
     
-    func test_loaded_shouldSetTemplatesWithExchangeAndTwoLatestOnTwoLatest() {
+    func test_loaded_shouldSetTwoLatestOnTwoLatest() {
         
         let (latest1, latest2) = (makeLatest(), makeLatest())
         
         assert(.none, event: .loaded([latest1, latest2])) {
             
-            $0 = .init(items: [.templates, .exchange, .latest(latest1), .latest(latest2)])
+            $0 = .init(latests: [latest1, latest2])
         }
     }
     
@@ -88,7 +88,7 @@ final class PayHubReducerTests: PayHubTests {
     
     func test_select_shouldChangeNonNilState() {
         
-        assert(makeState([.templates]), event: .select(.templates)) {
+        assert(makeState([makeLatest()]), event: .select(.templates)) {
             
             $0?.selected = .templates
         }
@@ -96,7 +96,7 @@ final class PayHubReducerTests: PayHubTests {
     
     func test_select_shouldNotDeliverEffectOnNonNilState() {
         
-        assert(makeState([.templates]), event: .select(.templates), delivers: .none)
+        assert(makeState([makeLatest()]), event: .select(.templates), delivers: .none)
     }
     
     // MARK: - Helpers
@@ -117,11 +117,11 @@ final class PayHubReducerTests: PayHubTests {
     }
     
     private func makeState(
-        _ items: [Item],
+        _ latests: [Latest],
         selected: Item? = nil
     ) -> SUT.State {
         
-        return .init(items: items, selected: selected)
+        return .init(latests: latests, selected: selected)
     }
     
     @discardableResult

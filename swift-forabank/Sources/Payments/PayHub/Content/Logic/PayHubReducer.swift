@@ -25,8 +25,8 @@ public extension PayHubReducer {
             state = .none
             effect = .load
             
-        case let .loaded(loaded):
-            state = .init(items: [.templates, .exchange] + loaded.map { .latest($0) })
+        case let .loaded(latests):
+            state = .init(latests: latests)
             
         case let .select(item):
             state?.selected = item

@@ -9,14 +9,14 @@ public typealias PayHubState<Latest> = Optional<LoadedPayHubState<Latest>>
 
 public struct LoadedPayHubState<Latest> {
     
-    public let items: [Item]
+    public let latests: [Latest]
     public var selected: Item?
     
     public init(
-        items: [Item], 
+        latests: [Latest],
         selected: Item? = nil
     ) {
-        self.items = items
+        self.latests = latests
         self.selected = selected
     }
     
