@@ -21,7 +21,6 @@ extension QRViewModel: QRScanner {
     
     var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> {
         
-        
         action
             .compactMap { $0 as? QRViewModelAction.Result }
             .map(\.result)
