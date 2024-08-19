@@ -1,5 +1,5 @@
 //
-//  QRFlowButtonEffectHandlerTests.swift
+//  FlowButtonEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class QRFlowButtonEffectHandlerTests: QRFlowButtonTests {
+final class FlowButtonEffectHandlerTests: FlowButtonTests {
     
     // MARK: - init
     
@@ -41,7 +41,7 @@ final class QRFlowButtonEffectHandlerTests: QRFlowButtonTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRFlowButtonEffectHandler<Destination>
+    private typealias SUT = FlowButtonEffectHandler<Destination>
     private typealias MakeDestinationSpy = Spy<Void, Destination>
     
     private func makeSUT(

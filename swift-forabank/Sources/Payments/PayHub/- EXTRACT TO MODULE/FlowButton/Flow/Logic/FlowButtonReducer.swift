@@ -1,16 +1,16 @@
 //
-//  QRFlowButtonReducer.swift
+//  FlowButtonReducer.swift
 //
 //
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-public final class QRFlowButtonReducer<Destination> {
+public final class FlowButtonReducer<Destination> {
     
     public init() {}
 }
 
-public extension QRFlowButtonReducer {
+public extension FlowButtonReducer {
     
     func reduce(
         _ state: State,
@@ -35,9 +35,9 @@ public extension QRFlowButtonReducer {
     }
 }
 
-public extension QRFlowButtonReducer {
+public extension FlowButtonReducer {
     
-    typealias State = QRFlowButtonState<Destination>
-    typealias Event = QRFlowButtonEvent<Destination>
-    typealias Effect = QRFlowButtonEffect
+    typealias State = FlowButtonState<Destination>
+    typealias Event = FlowButtonEvent<Destination>
+    typealias Effect = FlowButtonEffect
 }

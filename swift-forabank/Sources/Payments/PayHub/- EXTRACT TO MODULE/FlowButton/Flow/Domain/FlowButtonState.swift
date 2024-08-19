@@ -1,11 +1,11 @@
 //
-//  QRFlowButtonState.swift
+//  FlowButtonState.swift
 //
 //
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-public struct QRFlowButtonState<Destination> {
+public struct FlowButtonState<Destination> {
     
     public var destination: Destination?
     
@@ -16,4 +16,4 @@ public struct QRFlowButtonState<Destination> {
     }
 }
 
-extension QRFlowButtonState: Equatable where Destination: Equatable {}
+extension FlowButtonState: Equatable where Destination: Equatable {}

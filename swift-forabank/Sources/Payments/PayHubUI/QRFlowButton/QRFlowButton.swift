@@ -85,8 +85,8 @@ struct QRFlowButton_Previews: PreviewProvider {
     private static func qrFlowButton(
     ) -> some View {
         
-        let reducer = QRFlowButtonReducer<QRFlowButtonDestination>()
-        let effectHandler = QRFlowButtonEffectHandler<QRFlowButtonDestination>(
+        let reducer = FlowButtonReducer<QRFlowButtonDestination>()
+        let effectHandler = FlowButtonEffectHandler<QRFlowButtonDestination>(
             microServices: .init(makeDestination: { $0(.open) })
         )
         
