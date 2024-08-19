@@ -84,10 +84,10 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         let products = makeProductsWithBalance(productsInfo: [
             .init(id: 3, parentID: nil, cardType: .main, statusCard: .active, balanceRub: 10),
-            .init(id: 5, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 10),
-            .init(id: 12, parentID: 3, cardType: .additionalSelfAccOwn, statusCard: .active, balanceRub: 10),
-            .init(id: 7, parentID: 3, cardType: .additionalOther, statusCard: .active, balanceRub: 10),
-            .init(id: 11, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 10),
+            .init(id: 5, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 11),
+            .init(id: 12, parentID: 3, cardType: .additionalSelfAccOwn, statusCard: .active, balanceRub: 12),
+            .init(id: 7, parentID: 3, cardType: .additionalOther, statusCard: .active, balanceRub: 13),
+            .init(id: 11, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 14),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 10)
