@@ -83,11 +83,11 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     func test_balanceRub_parentWithAdditionalCards_shouldReturnOnlyParentBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            .init(id: 3, parentID: nil, cardType: .main, status: .active, balanceRub: 10),
-            .init(id: 5, parentID: 3, cardType: .additionalSelf, status: .active, balanceRub: 10),
-            .init(id: 12, parentID: 3, cardType: .additionalSelfAccOwn, status: .active, balanceRub: 10),
-            .init(id: 7, parentID: 3, cardType: .additionalOther, status: .active, balanceRub: 10),
-            .init(id: 11, parentID: 3, cardType: .additionalSelf, status: .active, balanceRub: 10),
+            .init(id: 3, parentID: nil, cardType: .main, statusCard: .active, balanceRub: 10),
+            .init(id: 5, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 10),
+            .init(id: 12, parentID: 3, cardType: .additionalSelfAccOwn, statusCard: .active, balanceRub: 10),
+            .init(id: 7, parentID: 3, cardType: .additionalOther, statusCard: .active, balanceRub: 10),
+            .init(id: 11, parentID: 3, cardType: .additionalSelf, statusCard: .active, balanceRub: 10),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 10)
@@ -96,9 +96,9 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     func test_balanceRub_parentWithAdditionalCards_parentBalanceZero_shouldReturnFirstAdditionalBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            .init(id: 49, parentID: nil, cardType: .main, status: .active, balanceRub: 0),
-            .init(id: 50, parentID: 49, cardType: .additionalSelf, status: .active, balanceRub: 20),
-            .init(id: 51, parentID: 49, cardType: .additionalOther, status: .active, balanceRub: 20),
+            .init(id: 49, parentID: nil, cardType: .main, statusCard: .active, balanceRub: 0),
+            .init(id: 50, parentID: 49, cardType: .additionalSelf, statusCard: .active, balanceRub: 20),
+            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 20),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 20)
@@ -107,15 +107,15 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     func test_balanceRub_parentWithAdditionalCards_parentBalanceNil_shouldReturnFirstAdditionalBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            .init(id: 49, parentID: nil, cardType: .main, status: .active, balanceRub: nil),
-            .init(id: 50, parentID: 49, cardType: .additionalSelf, status: .active, balanceRub: 30),
-            .init(id: 51, parentID: 49, cardType: .additionalOther, status: .active, balanceRub: 30),
+            .init(id: 49, parentID: nil, cardType: .main, statusCard: .active, balanceRub: nil),
+            .init(id: 50, parentID: 49, cardType: .additionalSelf, statusCard: .active, balanceRub: 30),
+            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 30),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 30)
     }
     
-    func test_balanceRub_parentWithAdditionalCorporateCards_shouldReturnOnlyParentBalance(){
+    func test_balanceRub_parentWithAdditionalCorporateCards_shouldReturnOnlySumParentBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
             // 10 rub
@@ -131,16 +131,36 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         XCTAssertNoDiff(products.balanceRub(), 50)
     }
-    
+        
     func test_balanceRub_onlyAdditionalCards_shouldReturnSumBalanceWithOutAdditionalOther(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            .init(id: 9, parentID: 34, cardType: .additionalSelf, status: .active, balanceRub: 30),
-            .init(id: 99, parentID: 134, cardType: .additionalSelfAccOwn, status: .active, balanceRub: 10),
-            .init(id: 48, parentID: 90, cardType: .additionalOther, status: .active, balanceRub: 100),
+            .init(id: 9, parentID: 34, cardType: .additionalSelf, statusCard: .active, balanceRub: 30),
+            .init(id: 99, parentID: 134, cardType: .additionalSelfAccOwn, statusCard: .active, balanceRub: 10),
+            .init(id: 48, parentID: 90, cardType: .additionalOther, statusCard: .active, balanceRub: 100),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 40)
+    }
+    
+    func test_balanceRub_cardsWithEqualAccountNumbers_containsStatusActive_shouldReturnActiveCardBalance(){
+        
+        let products = makeProductsWithBalance(productsInfo: [
+            .init(id: 9, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockAvailable, balanceRub: 50158),
+            .init(id: 99, accountNumber: "1", cardType: .main, statusCard: .active, balanceRub: 50158),
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 50158)
+    }
+    
+    func test_balanceRub_cardsWithEqualAccountNumbers_notContainsStatusActive_shouldReturnFirstCardBalance(){
+        
+        let products = makeProductsWithBalance(productsInfo: [
+            .init(id: 9, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockAvailable, balanceRub: 50158),
+            .init(id: 99, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockNotAvailable, balanceRub: 50158),
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 50158)
     }
                     
     // MARK: - Helpers
@@ -169,18 +189,20 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         return productsInfo.map {
             makeCardProduct(
                 id: $0.id,
+                accountNumber: $0.accountNumber,
                 parentID: $0.parentID,
                 cardType: $0.cardType,
-                status: $0.status,
+                statusCard: $0.statusCard,
                 balanceRub: $0.balanceRub)
         }
     }
     
     func makeCardProduct(
         id: Int,
+        accountNumber: String? = nil,
         parentID: Int? = nil,
         cardType: ProductCardData.CardType = .main,
-        status: ProductData.Status = .active,
+        statusCard: ProductCardData.StatusCard = .active,
         balanceRub: Double?
     ) -> ProductCardData {
         
@@ -189,7 +211,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             productType: .card,
             number: "1111",
             numberMasked: "****",
-            accountNumber: nil,
+            accountNumber: accountNumber,
             balance: nil,
             balanceRub: balanceRub,
             currency: "RUB",
@@ -212,7 +234,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             cardId: 0,
             name: "CARD",
             validThru: Date(),
-            status: status,
+            status: .active,
             expireDate: "01/01/01",
             holderName: "Иванов",
             product: nil,
@@ -228,7 +250,8 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
-            cardType: cardType, 
+            statusCard: statusCard,
+            cardType: cardType,
             idParent: parentID
         )
     }
@@ -236,22 +259,25 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     private struct ProductDataHelper {
         
         let id: Int
+        let accountNumber: String?
         let parentID: Int?
         let cardType: ProductCardData.CardType
-        let status: ProductData.Status
+        let statusCard: ProductCardData.StatusCard
         let balanceRub: Double?
         
         init(
             id: Int,
+            accountNumber: String? = nil,
             parentID: Int? = nil,
             cardType: ProductCardData.CardType = .main,
-            status: ProductData.Status = .active,
+            statusCard: ProductCardData.StatusCard = .active,
             balanceRub: Double?
         ) {
             self.id = id
+            self.accountNumber = accountNumber
             self.parentID = parentID
             self.cardType = cardType
-            self.status = status
+            self.statusCard = statusCard
             self.balanceRub = balanceRub
         }
     }
