@@ -46,7 +46,10 @@ enum SomeEvent: Equatable {
     case load
 }
 
-enum SomeEffect: Equatable {}
+enum SomeEffect: Equatable {
+    
+    case load
+}
 
 private final class SomeReducer<ID, Element>
 where ID: Hashable {
@@ -95,6 +98,7 @@ private extension SomeReducer {
         _ effect: inout Effect?
     ) {
         state.suffix = makePlaceholders().map { .placeholder($0) }
+        effect = .load
     }
 }
 
@@ -116,6 +120,14 @@ final class SomeReducerTests: XCTestCase {
         }
     }
     
+    func test_load_shouldDeliverEffectOnEmptyPrefix_emptyPlaceholders() {
+        
+        let state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
     func test_load_shouldPreserveEmptyPrefix_onePlaceholder() {
         
         let state = makeState(prefix: [])
@@ -129,17 +141,35 @@ final class SomeReducerTests: XCTestCase {
         }
     }
     
+    func test_load_shouldDeliverEffectOnEmptyPrefix_onePlaceholder() {
+        
+        let state = makeState(prefix: [])
+        let id = makePlaceholderID()
+        let sut = makeSUT(placeholderIDs: [id])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
     func test_load_shouldPreserveEmptyPrefix_twoPlaceholders() {
         
         let state = makeState(prefix: [])
         let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
         let sut = makeSUT(placeholderIDs: [id1, id2])
-
+        
         assert(sut: sut, state, event: .load) {
             
             $0 = self.makeState(prefix: [], suffix: [.placeholder(id1), .placeholder(id2)])
             XCTAssertNoDiff($0.items, [.placeholder(id1), .placeholder(id2)])
         }
+    }
+    
+    func test_load_shouldDeliverEffectOnEmptyPrefix_twoPlaceholders() {
+        
+        let state = makeState(prefix: [])
+        let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
+        let sut = makeSUT(placeholderIDs: [id1, id2])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
     }
     
     func test_load_shouldPreservePrefixOfOne_emptyPlaceholders() {
@@ -153,6 +183,15 @@ final class SomeReducerTests: XCTestCase {
             $0 = self.makeState(prefix: [item], suffix: [])
             XCTAssertNoDiff($0.items, [item])
         }
+    }
+    
+    func test_load_shouldDeliverEffectOnPrefixOfOne_emptyPlaceholders() {
+        
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
     }
     
     func test_load_shouldPreservePrefixOfOne_onePlaceholder() {
@@ -169,6 +208,16 @@ final class SomeReducerTests: XCTestCase {
         }
     }
     
+    func test_load_shouldDeliverEffectOnPrefixOfOne_onePlaceholder() {
+        
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let id = makePlaceholderID()
+        let sut = makeSUT(placeholderIDs: [id])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
     func test_load_shouldPreservePrefixOfOne_twoPlaceholders() {
         
         let item = makeItem()
@@ -183,6 +232,16 @@ final class SomeReducerTests: XCTestCase {
         }
     }
     
+    func test_load_shouldDeliverEffectOnPrefixOfOne_twoPlaceholders() {
+        
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
+        let sut = makeSUT(placeholderIDs: [id1, id2])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
     func test_load_shouldPreservePrefixOfTwo_emptyPlaceholders() {
         
         let (item1, item2) = (makeItem(), makeItem())
@@ -194,6 +253,15 @@ final class SomeReducerTests: XCTestCase {
             $0 = self.makeState(prefix: [item1, item2], suffix: [])
             XCTAssertNoDiff($0.items, [item1, item2])
         }
+    }
+    
+    func test_load_shouldDeliverEffectOnPrefixOfTwo_emptyPlaceholders() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
     }
     
     func test_load_shouldPreservePrefixOfTwo_onePlaceholder() {
@@ -210,6 +278,16 @@ final class SomeReducerTests: XCTestCase {
         }
     }
     
+    func test_load_shouldDeliverEffectOnPrefixOfTwo_onePlaceholder() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let id = makePlaceholderID()
+        let sut = makeSUT(placeholderIDs: [id])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
     func test_load_shouldPreservePrefixOfTwo_twoPlaceholders() {
         
         let (item1, item2) = (makeItem(), makeItem())
@@ -222,6 +300,16 @@ final class SomeReducerTests: XCTestCase {
             $0 = self.makeState(prefix: [item1, item2], suffix: [.placeholder(id1), .placeholder(id2)])
             XCTAssertNoDiff($0.items, [item1, item2, .placeholder(id1), .placeholder(id2)])
         }
+    }
+    
+    func test_load_shouldDeliverEffectOnPrefixOfTwo_twoPlaceholders() {
+        
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
+        let sut = makeSUT(placeholderIDs: [id1, id2])
+        
+        assert(sut: sut, state, event: .load, delivers: .load)
     }
     
     // MARK: - Helpers
