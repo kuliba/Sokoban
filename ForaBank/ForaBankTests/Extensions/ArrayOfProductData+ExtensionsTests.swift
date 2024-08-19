@@ -98,7 +98,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         let products = makeProductsWithBalance(productsInfo: [
             .init(id: 49, parentID: nil, cardType: .main, statusCard: .active, balanceRub: 0),
             .init(id: 50, parentID: 49, cardType: .additionalSelf, statusCard: .active, balanceRub: 20),
-            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 20),
+            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 21),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 20)
@@ -109,7 +109,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         let products = makeProductsWithBalance(productsInfo: [
             .init(id: 49, parentID: nil, cardType: .main, statusCard: .active, balanceRub: nil),
             .init(id: 50, parentID: 49, cardType: .additionalSelf, statusCard: .active, balanceRub: 30),
-            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 30),
+            .init(id: 51, parentID: 49, cardType: .additionalOther, statusCard: .active, balanceRub: 31),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 30)
@@ -146,7 +146,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     func test_balanceRub_cardsWithEqualAccountNumbers_containsStatusActive_shouldReturnActiveCardBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            .init(id: 9, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockAvailable, balanceRub: 50158),
+            .init(id: 9, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockAvailable, balanceRub: 501581),
             .init(id: 99, accountNumber: "1", cardType: .main, statusCard: .active, balanceRub: 50158),
         ])
         
@@ -157,7 +157,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         let products = makeProductsWithBalance(productsInfo: [
             .init(id: 9, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockAvailable, balanceRub: 50158),
-            .init(id: 99, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockNotAvailable, balanceRub: 50158),
+            .init(id: 99, accountNumber: "1", cardType: .main, statusCard: .blockedUnlockNotAvailable, balanceRub: 501581),
         ])
         
         XCTAssertNoDiff(products.balanceRub(), 50158)
