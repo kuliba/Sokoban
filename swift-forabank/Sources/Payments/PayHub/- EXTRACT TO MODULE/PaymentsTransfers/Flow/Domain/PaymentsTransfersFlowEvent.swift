@@ -7,6 +7,7 @@
 
 public enum PaymentsTransfersFlowEvent<Profile, QR> {
     
+    case dismiss
     case open(Open)
     case profile(Profile)
     case qr(QR)

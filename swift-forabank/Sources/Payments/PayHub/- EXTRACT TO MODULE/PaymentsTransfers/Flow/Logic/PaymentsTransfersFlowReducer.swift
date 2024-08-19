@@ -6,7 +6,7 @@
 //
 
 public final class PaymentsTransfersFlowReducer<Profile, QR> {
-
+    
     public init() {}
 }
 
@@ -21,17 +21,17 @@ public extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .open(.profile):
-            effect = .profile
+        case .dismiss:
+            state = nil
             
-        case .open(.qr):
-            effect = .qr
+        case let .open(open):
+            handleOpen(&state, &effect, with: open)
             
         case let .profile(profile):
-            state.destination = .profile(profile)
+            state = .destination(.profile(profile))
             
         case let .qr(qr):
-            state.destination = .qr(qr)
+            state = .fullScreen(.qr(qr))
         }
         
         return (state, effect)
@@ -43,4 +43,23 @@ public extension PaymentsTransfersFlowReducer {
     typealias State = PaymentsTransfersFlowState<Profile, QR>
     typealias Event = PaymentsTransfersFlowEvent<Profile, QR>
     typealias Effect = PaymentsTransfersFlowEffect
+}
+
+private extension PaymentsTransfersFlowReducer {
+    
+    func handleOpen(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with open: Event.Open
+    ) {
+        guard state == nil else { return }
+        
+        switch open {
+        case .profile:
+            effect = .profile
+            
+        case .qr:
+            effect = .qr
+        }
+    }
 }
