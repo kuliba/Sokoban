@@ -302,7 +302,8 @@ extension ProductCardData {
         
         return cardType == .additionalSelf ||
         cardType == .additionalSelfAccOwn ||
-        cardType == .additionalOther
+        cardType == .additionalOther ||
+        cardType == .additionalCorporate
     }
 }
 

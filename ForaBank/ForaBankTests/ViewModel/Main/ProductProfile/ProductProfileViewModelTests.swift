@@ -655,6 +655,215 @@ final class ProductProfileViewModelTests: XCTestCase {
         }
     }
     
+    // MARK: - test topLeftActionForCard
+    
+    func test_topLeftActionForCard_additionalCorporate_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.additionalCorporate)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topLeftActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+    
+    func test_topLeftActionForCard_corporate_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.corporate)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topLeftActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+
+    func test_topLeftActionForCard_individualBusinessman_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessman)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topLeftActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+
+    func test_topLeftActionForCard_individualBusinessmanMain_shouldShowNewPanel() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+        XCTAssertNil(sut.optionsPannel)
+
+        sut.topLeftActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
+        XCTAssertNil(sut.optionsPannel)
+
+        XCTAssertNil(sut.link)
+    }
+    
+    // MARK: - test topRightActionForCard
+    
+    func test_topRightActionForCard_additionalCorporate_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.additionalCorporate)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topRightActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+    
+    func test_topRightActionForCard_corporate_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.corporate)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topRightActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+
+    func test_topRightActionForCard_individualBusinessman_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessman)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topRightActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+    
+    func test_topRightActionForCard_additionalOther_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.additionalOther)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+
+        sut.topRightActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.transferAdditionalOther)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+
+    func test_topRightActionForCard_individualBusinessmanMain_shouldSetLinkWithPaymentsTransfersViewModel() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.link)
+
+        sut.topRightActionForCard(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.link)
+        XCTAssertTrue(sut.viewModelByLink is PaymentsTransfersViewModel)
+
+        sut.link = nil
+    }
+
     // MARK: - test show/hide spinner
     func test_showHideSpinner() throws {
         
@@ -1188,5 +1397,13 @@ final class SadShowCVVSadOtpRetryAttemptsCertificateClient: CVVPINServicesClient
     func getPINConfirmationCode(completion: @escaping (Result<String, GetPINConfirmationCodeError>) -> Void) {
         
         completion(.success("+1..22"))
+    }
+}
+
+extension ProductCardData {
+    
+    static func createCardByType(_ cardType: CardType) -> ProductCardData {
+        
+        .init(id: 1, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
     }
 }

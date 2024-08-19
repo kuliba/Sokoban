@@ -16,6 +16,7 @@ struct ProductAlertsViewModel {
     let serviceOnlyOwnerCard: String
     let transferAdditionalOther: String
     let unblockCard: String
+    let serviceOnlyIndividualCard: String
 }
 
 extension ProductAlertsViewModel {
@@ -27,6 +28,7 @@ extension ProductAlertsViewModel {
         serviceOnlyMainCard: "Эта услуга доступна только для основной карты",
         serviceOnlyOwnerCard: "Данной услугой может воспользоваться человек, на которого выпущена карта",
         transferAdditionalOther: "Переводы  с помощью карты может проводить только человек, на которого выпущена карта.\nДля перевода воспользуйтесь картой, которая выпущена на вас.",
-        unblockCard: "Карту можно будет разблокировать в приложении или в колл-центре"
+        unblockCard: "Карту можно будет разблокировать в приложении или в колл-центре", 
+        serviceOnlyIndividualCard: "Данная операция не доступна для сотрудника/держателя корпоративной карты. Обратитесь к своему работодателю. Пополнение и перевод доступны через «Фора Бизнес»."
     )
 }

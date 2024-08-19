@@ -9,6 +9,34 @@ import Foundation
 
 extension ProductProfileViewModel {
     
+    func topLeftActionForCard(_ card: ProductCardData) {
+        
+        switch card.cardType {
+        case .additionalCorporate, .corporate, .individualBusinessman:
+            event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+            
+        default:
+            createTopUpPanel(card)
+        }
+    }
+    
+    func topRightActionForCard(_ productData: ProductData?) {
+        
+        guard let card = productData?.asCard else { return }
+
+        switch card.cardType {
+            
+        case .additionalOther:
+            event(.alert(.delayAlert(.showTransferAdditionalOther)))
+            
+        case .additionalCorporate, .corporate, .individualBusinessman:
+            event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+        
+        default:
+            action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
+        }
+    }
+    
     func createTopUpPanel(_ card: ProductCardData) {
         
         let buttons: [PanelButtonDetails] = [
