@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct TabViewFactory<Content: View> {
+struct TabViewFactory<FlowView: View> {
     
-    let makeContent: MakeContent
+    let makeFlowView: MakeFlowView
 }
 
 extension TabViewFactory {
     
-    typealias MakeContent = (TabState) -> Content
+    typealias MakeFlowView = (TabState.FlowModel) -> FlowView
 }

@@ -9,21 +9,3 @@ import RxViewModel
 
 typealias TabModel = RxViewModel<TabState, TabEvent, TabEffect>
 
-extension TabModel
-where State == TabState,
-      Event == TabEvent,
-      Effect == TabEffect {
-    
-    convenience init(
-        initialState: TabState = .noLatest
-    ) {
-        let reducer = TabReducer()
-        let effectHandler = TabEffectHandler()
-        
-        self.init(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
-        )
-    }
-}

@@ -12,6 +12,18 @@ import UIPrimitives
 
 struct ContentView: View {
     
+    private let model: TabModel
+    
+    init(
+        selected: TabState.Selected = .noLatest
+    ) {
+        let flowComposer = PaymentsTransfersModelComposer()
+        let tabComposer = TabModelComposer(
+            makeFlowModel: flowComposer.compose(loadResult:)
+        )
+        self.model = tabComposer.compose(selected: selected)
+    }
+    
     var body: some View {
         
         if #available(iOS 15.0, *) {
@@ -19,13 +31,13 @@ struct ContentView: View {
         }
         
         TabStateWrapperView(
-            model: .init(),
+            model: model,
             makeContent: { state, event in
                 
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContent: makeTabViewContent)
+                    factory: .init(makeFlowView: makeTabViewContent)
                 )
             }
         )
@@ -57,10 +69,10 @@ private extension ContentView {
     
     @ViewBuilder
     func makeTabViewContent(
-        tabState: TabState
+        tabState: TabState.FlowModel
     ) -> some View {
         
-        #warning("extract Composer and Factory")
+#warning("extract Composer and Factory")
         
         let reducer = PaymentsTransfersFlowReducer()
         let effectHandler = PaymentsTransfersFlowEffectHandler(
@@ -78,7 +90,7 @@ private extension ContentView {
         PaymentsTransfersFlowStateWrapper(
             model: model,
             makeFlowView: {
-        
+                
                 PaymentsTransfersFlowView(
                     state: $0,
                     event: $1,
@@ -125,7 +137,7 @@ private extension ContentView {
         .toolbar(content: paymentsTransfersToolbar)
     }
     
-    #warning("move to factory")
+#warning("move to factory")
     @ToolbarContentBuilder
     private func paymentsTransfersToolbar(
     ) -> some ToolbarContent {
@@ -148,7 +160,7 @@ private extension ContentView {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
-
+        
         NavigationDestinationFlowButton(
             model: model,
             buttonLabel: {
@@ -197,7 +209,7 @@ private extension ContentView {
         FullScreenCoverFlowButton(
             model: model,
             buttonLabel: {
-
+                
 #warning("inject")
                 Image(systemName: "qrcode")
             },
@@ -215,14 +227,11 @@ private extension ContentView {
         )
         .buttonStyle(PlainButtonStyle())
     }
-
+    
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ tabState: TabState
+        _ model: TabState.FlowModel
     ) -> some View {
-        
-        let composer = PaymentsTransfersModelComposer()
-        let model = composer.compose(loadResult: tabState.loadResult)
         
         PaymentsTransfersView(
             model: model,
@@ -260,37 +269,6 @@ private extension ContentView {
             }
         )
     }
-}
-
-private extension TabState {
-    
-    var loadResult: PayHubEffectHandler.MicroServices.LoadResult {
-        
-        switch self {
-        case .noLatest:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .noCategories:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .noBoth:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .okEmpty:
-            return .success([])
-            
-        case .ok:
-            return .success(.preview)
-        }
-    }
-}
-
-extension Array where Element == Latest {
-    
-    static let preview: Self = [
-        .init(id: UUID().uuidString),
-        .init(id: UUID().uuidString),
-    ]
 }
 
 #Preview {
