@@ -8,17 +8,41 @@
 import PayHub
 import SwiftUI
 
+/// A custom button that triggers a full-screen cover when tapped.
+///
+/// `QRFlowButton` is a reusable SwiftUI component that presents a full-screen view (destination)
+/// when the button is tapped. The button label and the full-screen content are provided by the caller.
+/// The component uses a model to manage its state and respond to button tap and dismiss events.
+///
+/// - Parameters:
+///   - Destination: The type of the destination view presented in the full-screen cover.
+///     It must conform to `Identifiable`.
+///   - DestinationContent: The type of the content view displayed in the full-screen cover.
+///   - QRFlowButtonLabel: The type of the view used as the button label.
 public struct QRFlowButton<Destination, DestinationContent, QRFlowButtonLabel: View>: View
 where Destination: Identifiable,
       DestinationContent: View {
     
+    /// The model that manages the state of the `QRFlowButton`.
+    /// It is responsible for handling events and controlling the destination view.
     @StateObject private var model: Model
     
+    /// A closure that returns the view to be used as the button label.
     private let buttonLabel: () -> QRFlowButtonLabel
+    
+    /// A closure that returns the content to be displayed in the full-screen cover.
+    /// The content is determined by the current state of the `Destination`.
     private let destinationContent: (Destination) -> DestinationContent
     
+    /// Initialises a new `QRFlowButton` with the given model, button label, and destination content.
+    ///
+    /// - Parameters:
+    ///   - model: An instance of `QRFlowButtonModel` that manages the state and events for this button.
+    ///   - buttonLabel: A closure that provides the label view for the button.
+    ///   - destinationContent: A closure that provides the content view for the full-screen cover,
+    ///     based on the current `Destination`.
     public init(
-        model: Model, 
+        model: Model,
         buttonLabel: @escaping () -> QRFlowButtonLabel,
         destinationContent: @escaping (Destination) -> DestinationContent
     ) {
