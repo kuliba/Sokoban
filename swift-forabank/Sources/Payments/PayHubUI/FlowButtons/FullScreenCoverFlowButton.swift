@@ -46,12 +46,16 @@ where Destination: Identifiable,
     
     public var body: some View {
         
-        Button(action: { model.event(.buttonTap) }, label: buttonLabel)
-            .fullScreenCover(
-                cover: model.state.destination,
-                dismiss: { model.event(.dismissDestination) },
-                content: destinationContent
-            )
+        Button {
+            model.event(.buttonTap)
+        } label: {
+            buttonLabel().contentShape(Rectangle())
+        }
+        .fullScreenCover(
+            cover: model.state.destination,
+            dismiss: { model.event(.dismissDestination) },
+            content: destinationContent
+        )
     }
 }
 
