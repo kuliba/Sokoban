@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-struct PaymentsTransfersFlowStateWrapper<Content: View>: View {
+struct PaymentsTransfersFlowStateWrapper<FlowView: View>: View {
     
     @StateObject private var model: Model
     
-    private let makeContent: MakeContent
+    private let makeFlowView: MakeFlowView
     
     init(
         model: Model,
-        makeContent: @escaping MakeContent
+        makeFlowView: @escaping MakeFlowView
     ) {
         self._model = .init(wrappedValue: model)
-        self.makeContent = makeContent
+        self.makeFlowView = makeFlowView
     }
     
     var body: some View {
         
-        makeContent(model.state, model.event(_:))
+        makeFlowView(model.state, model.event(_:))
     }
 }
 
@@ -32,6 +32,6 @@ extension PaymentsTransfersFlowStateWrapper {
     typealias Model = PaymentsTransfersFlowModel
     typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent
-    typealias MakeContent = (State, @escaping (Event) -> Void) -> Content
+    typealias MakeFlowView = (State, @escaping (Event) -> Void) -> FlowView
 
 }

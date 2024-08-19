@@ -55,13 +55,13 @@ private extension ContentView {
         
         PaymentsTransfersFlowStateWrapper(
             model: model,
-            makeContent: {
+            makeFlowView: {
         
                 PaymentsTransfersFlowView(
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makeContent(tabState) },
+                        makeContent: { makePaymentsTransfersContent(tabState) },
                         makeDestinationContent: {
                             
                             switch $0 {
@@ -103,7 +103,7 @@ private extension ContentView {
     }
     
     @ViewBuilder
-    func makeContent(
+    func makePaymentsTransfersContent(
         _ tabState: TabState
     ) -> some View {
         
