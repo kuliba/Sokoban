@@ -82,7 +82,7 @@ private extension ContentView {
             )
         )
         let model = PaymentsTransfersFlowModel(
-            initialState: .none,
+            initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )

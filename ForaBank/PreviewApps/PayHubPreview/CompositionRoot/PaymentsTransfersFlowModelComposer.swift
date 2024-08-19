@@ -32,7 +32,7 @@ extension PaymentsTransfersFlowModelComposer {
         )
         
         return .init(
-            initialState: .none,
+            initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler

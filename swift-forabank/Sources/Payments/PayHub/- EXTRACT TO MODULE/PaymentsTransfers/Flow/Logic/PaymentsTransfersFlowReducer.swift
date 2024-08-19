@@ -22,16 +22,16 @@ public extension PaymentsTransfersFlowReducer {
         
         switch event {
         case .dismiss:
-            state = nil
+            state.navigation = nil
             
         case let .open(open):
             handleOpen(&state, &effect, with: open)
             
         case let .profile(profile):
-            state = .destination(.profile(profile))
+            state.navigation = .destination(.profile(profile))
             
         case let .qr(qr):
-            state = .fullScreen(.qr(qr))
+            state.navigation = .fullScreen(.qr(qr))
         }
         
         return (state, effect)
@@ -52,7 +52,7 @@ private extension PaymentsTransfersFlowReducer {
         _ effect: inout Effect?,
         with open: Event.Open
     ) {
-        guard state == nil else { return }
+        guard state.navigation == nil else { return }
         
         switch open {
         case .profile:

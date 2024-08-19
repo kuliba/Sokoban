@@ -23,8 +23,9 @@ where Content: View,
 extension PaymentsTransfersFlowViewFactory {
     
     typealias MakeContent = () -> Content
-    typealias MakeDestinationContent = (PaymentsTransfersFlowNavigation.Destination) -> DestinationContent
-    typealias MakeFullScreenContent = (PaymentsTransfersFlowNavigation.FullScreen) -> FullScreenContent
+    typealias Navigation = PaymentsTransfersFlowState.Navigation
+    typealias MakeDestinationContent = (Navigation.Destination) -> DestinationContent
+    typealias MakeFullScreenContent = (Navigation.FullScreen) -> FullScreenContent
     typealias MakeProfileButtonLabel = () -> ProfileButtonLabel
     typealias MakeQRButtonLabel = () -> QRButtonLabel
 }

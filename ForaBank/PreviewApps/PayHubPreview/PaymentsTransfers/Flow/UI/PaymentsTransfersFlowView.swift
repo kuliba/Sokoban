@@ -45,24 +45,24 @@ extension PaymentsTransfersFlowView {
 
 extension PaymentsTransfersFlowState {
     
-    var destination: PaymentsTransfersFlowNavigation.Destination? {
+    var destination: Navigation.Destination? {
         
-        guard case let .destination(destination) = self
+        guard case let .destination(destination) = navigation
         else { return nil }
         
         return destination
     }
     
-    var fullScreen: PaymentsTransfersFlowNavigation.FullScreen? {
+    var fullScreen: Navigation.FullScreen? {
         
-        guard case let .fullScreen(fullScreen) = self
+        guard case let .fullScreen(fullScreen) = navigation
         else { return nil }
         
         return fullScreen
     }
 }
 
-extension PaymentsTransfersFlowNavigation.Destination: Identifiable {
+extension PaymentsTransfersFlowState.Navigation.Destination: Identifiable {
     
     public var id: ID {
         
@@ -77,7 +77,7 @@ extension PaymentsTransfersFlowNavigation.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersFlowNavigation.FullScreen: Identifiable {
+extension PaymentsTransfersFlowState.Navigation.FullScreen: Identifiable {
     
     public var id: ID {
         
@@ -128,11 +128,11 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
         
         Group {
             
-            paymentsTransfersFlowView(.none)
+            paymentsTransfersFlowView(.init())
                 .previewDisplayName("Content")
-            paymentsTransfersFlowView(.destination(.profile(.preview())))
+            paymentsTransfersFlowView(.init(navigation: .destination(.profile(.preview()))))
                 .previewDisplayName("Profile")
-            paymentsTransfersFlowView(.fullScreen(.qr(.preview())))
+            paymentsTransfersFlowView(.init(navigation: .fullScreen(.qr(.preview()))))
                 .previewDisplayName("Qr")
         }
     }

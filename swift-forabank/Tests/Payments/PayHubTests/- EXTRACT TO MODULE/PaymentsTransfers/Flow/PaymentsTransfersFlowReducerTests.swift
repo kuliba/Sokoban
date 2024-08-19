@@ -14,19 +14,19 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
     func test_dismiss_shouldNotChangeNilNavigationState() {
         
-        assert(nil, event: .dismiss)
+        assert(makeState(), event: .dismiss)
     }
     
     func test_dismiss_shouldNotDeliverEffectOnNilNavigation() {
         
-        assert(nil, event: .dismiss, delivers: nil)
+        assert(makeState(), event: .dismiss, delivers: nil)
     }
     
     func test_dismiss_shouldSetProfileDestinationToNil() {
         
         assert(makeState(destination: .profile(makeProfile())), event: .dismiss) {
             
-            $0 = nil
+            $0.navigation = nil
         }
     }
     
@@ -39,7 +39,7 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
         
         assert(makeState(fullScreen: .qr(makeQR())), event: .dismiss) {
             
-            $0 = nil
+            $0.navigation = nil
         }
     }
     
@@ -52,12 +52,12 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
     func test_open_profile_shouldNotChangeNilNavigationState() {
         
-        assert(nil, event: .open(.profile))
+        assert(makeState(), event: .open(.profile))
     }
     
     func test_open_profile_shouldDeliverProfileEffectOnNilNavigationState() {
         
-        assert(nil, event: .open(.profile), delivers: .profile)
+        assert(makeState(), event: .open(.profile), delivers: .profile)
     }
     
     func test_open_profile_shouldNotChangeDestinationState() {
@@ -82,12 +82,12 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     
     func test_open_qr_shouldNotChangeNilNavigationState() {
         
-        assert(nil, event: .open(.qr))
+        assert(makeState(), event: .open(.qr))
     }
     
     func test_open_qr_shouldDeliverProfileEffectOnNilNavigationState() {
         
-        assert(nil, event: .open(.qr), delivers: .qr)
+        assert(makeState(), event: .open(.qr), delivers: .qr)
     }
     
     func test_open_qr_shouldNotChangeDestinationState() {
@@ -116,15 +116,15 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
         
         let profile = makeProfile()
         
-        assert(nil, event: .profile(profile)) {
+        assert(makeState(), event: .profile(profile)) {
             
-            $0 = .destination(.profile(profile))
+            $0.navigation = .destination(.profile(profile))
         }
     }
     
     func test_profile_shouldNotDeliverEffectOnNilNavigationState() {
         
-        assert(nil, event: .profile(makeProfile()), delivers: nil)
+        assert(makeState(), event: .profile(makeProfile()), delivers: nil)
     }
     
     // MARK: - QR
@@ -133,21 +133,21 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
         
         let qr = makeQR()
         
-        assert(nil, event: .qr(qr)) {
+        assert(makeState(), event: .qr(qr)) {
             
-            $0 = .fullScreen(.qr(qr))
+            $0.navigation = .fullScreen(.qr(qr))
         }
     }
     
     func test_qr_shouldNotDeliverEffectOnNilNavigationState() {
         
-        assert(nil, event: .qr(makeQR()), delivers: nil)
+        assert(makeState(), event: .qr(makeQR()), delivers: nil)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersFlowReducer<Profile, QR>
-    private typealias Navigation = PaymentsTransfersFlowNavigation<Profile, QR>
+    private typealias Navigation = SUT.State.Navigation
     
     private func makeSUT(
         file: StaticString = #file,
@@ -162,17 +162,19 @@ final class PaymentsTransfersFlowReducerTests: PaymentsTransfersFlowTests {
     }
     
     private func makeState(
-        destination: Navigation.Destination
+        destination: Navigation.Destination? = nil
     ) -> SUT.State {
         
-        return .destination(destination)
+        return .init(
+            navigation: destination.map { .destination($0) }
+        )
     }
     
     private func makeState(
         fullScreen: Navigation.FullScreen
     ) -> SUT.State {
         
-        return .fullScreen(fullScreen)
+        return .init(navigation: .fullScreen(fullScreen))
     }
     
     @discardableResult
