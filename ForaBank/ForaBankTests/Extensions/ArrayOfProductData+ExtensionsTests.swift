@@ -86,7 +86,21 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         XCTAssertNoDiff(products.balanceRub(), 130)
     }
+    
+    func test_balanceRub_corporateCards() {
+        
+        let products = makeCorporateProductsWithBalance()
+        
+        XCTAssertNoDiff(products.balanceRub(), 100)
+    }
 
+    func test_balanceRub_allCards() {
+        
+        let products = makeProductsWithBalance() + makeCorporateProductsWithBalance()
+        
+        XCTAssertNoDiff(products.balanceRub(), 230)
+    }
+    
     // MARK: - Helpers
     
     func makeProducts() -> [ProductData] {
@@ -129,6 +143,18 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         ]
     }
     
+    func makeCorporateProductsWithBalance() -> [ProductData] {
+        return [
+            makeCardProduct(id: 55, parentID: 53, cardType: .additionalCorporate, balanceRub: 10),
+            makeCardProduct(id: 53, cardType: .individualBusinessman, balanceRub: 10),
+            makeCardProduct(id: 54, parentID: 56, cardType: .additionalCorporate, balanceRub: 20),
+            makeCardProduct(id: 56, cardType: .individualBusinessmanMain, balanceRub: 20),
+            makeCardProduct(id: 512, parentID: 53, cardType: .additionalCorporate, balanceRub: 10),
+            makeCardProduct(id: 510, cardType: .corporate, balanceRub: 20),
+            makeCardProduct(id: 511, cardType: .additionalCorporate, balanceRub: 50),
+        ]
+    }
+
     func makeCardProduct(
         id: Int,
         parentID: Int? = nil,
