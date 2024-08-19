@@ -30,7 +30,7 @@ where Destination: Identifiable,
     /// Initialises a new `FullScreenCoverFlowButton` with the given model, button label, and destination content.
     ///
     /// - Parameters:
-    ///   - model: An instance of `FullScreenCoverFlowButtonModel` that manages the state and events for this button.
+    ///   - model: An instance of `FlowButtonModel` that manages the state and events for this button.
     ///   - buttonLabel: A closure that provides the label view for the button.
     ///   - destinationContent: A closure that provides the content view for the full-screen cover,
     ///     based on the current `Destination`.
