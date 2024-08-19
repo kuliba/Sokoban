@@ -1,5 +1,5 @@
 //
-//  SomeReducerTests.swift
+//  LoadablePickerReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 19.08.2024.
@@ -7,7 +7,7 @@
 
 import PayHub
 
-private struct SomeState<ID, Element>
+private struct LoadablePickerState<ID, Element>
 where ID: Hashable {
     
     internal var prefix: [Item]
@@ -15,7 +15,7 @@ where ID: Hashable {
     var selected: Element?
     
     init(
-        prefix: [Item], 
+        prefix: [Item],
         suffix: [Item],
         selected: Element? = nil
     ) {
@@ -25,7 +25,7 @@ where ID: Hashable {
     }
 }
 
-extension SomeState {
+extension LoadablePickerState {
     
     var items: [Item] { prefix + suffix }
     
@@ -36,7 +36,7 @@ extension SomeState {
     }
 }
 
-extension SomeState.Item: Identifiable {
+extension LoadablePickerState.Item: Identifiable {
     
     var id: ID {
         
@@ -47,24 +47,24 @@ extension SomeState.Item: Identifiable {
     }
 }
 
-extension SomeState: Equatable where ID: Equatable, Element: Equatable {}
-extension SomeState.Item: Equatable where ID: Equatable, Element: Equatable {}
+extension LoadablePickerState: Equatable where ID: Equatable, Element: Equatable {}
+extension LoadablePickerState.Item: Equatable where ID: Equatable, Element: Equatable {}
 
-enum SomeEvent<Element> {
+enum LoadablePickerEvent<Element> {
     
     case load
     case loaded([Element])
     case select(Element?)
 }
 
-extension SomeEvent: Equatable where Element: Equatable {}
+extension LoadablePickerEvent: Equatable where Element: Equatable {}
 
-enum SomeEffect: Equatable {
+enum LoadablePickerEffect: Equatable {
     
     case load
 }
 
-private final class SomeReducer<ID, Element>
+private final class LoadablePickerReducer<ID, Element>
 where ID: Hashable {
     
     private let makeID: MakeID
@@ -82,7 +82,7 @@ where ID: Hashable {
     public typealias MakePlaceholders = () -> [ID]
 }
 
-extension SomeReducer {
+extension LoadablePickerReducer {
     
     func reduce(
         _ state: State,
@@ -107,14 +107,14 @@ extension SomeReducer {
     }
 }
 
-extension SomeReducer {
+extension LoadablePickerReducer {
     
-    typealias State = SomeState<ID, Element>
-    typealias Event = SomeEvent<Element>
-    typealias Effect = SomeEffect
+    typealias State = LoadablePickerState<ID, Element>
+    typealias Event = LoadablePickerEvent<Element>
+    typealias Effect = LoadablePickerEffect
 }
 
-private extension SomeReducer {
+private extension LoadablePickerReducer {
     
     func load(
         _ state: inout State,
@@ -139,7 +139,7 @@ private extension SomeReducer {
 
 import XCTest
 
-final class SomeReducerTests: XCTestCase {
+final class LoadablePickerReducerTests: XCTestCase {
     
     // MARK: - load
     
@@ -633,10 +633,10 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_select_shouldNotDeliverEffectOnSelectedNil() {
-
+        
         let state = makeState(selected: makeElement())
         let sut = makeSUT(placeholderIDs: [])
-
+        
         assert(sut: sut, state, event: .select(nil), delivers: nil)
     }
     
@@ -653,17 +653,17 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_select_shouldNotDeliverEffectOnSelected() {
-
+        
         let state = makeState(selected: nil)
         let sut = makeSUT(placeholderIDs: [])
-
+        
         assert(sut: sut, state, event: .select(makeElement()), delivers: nil)
     }
     
     // MARK: - Helpers
     
     private typealias ID = UUID
-    private typealias SUT = SomeReducer<ID, Element>
+    private typealias SUT = LoadablePickerReducer<ID, Element>
     
     private func makeSUT(
         makeID: @escaping () -> ID = UUID.init,
