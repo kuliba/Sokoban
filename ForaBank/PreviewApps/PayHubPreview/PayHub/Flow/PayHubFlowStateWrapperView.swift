@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PayHubFlowStateWrapperView<ContentView>: View 
+struct PayHubFlowStateWrapperView<ContentView>: View
 where ContentView: View {
     
     @StateObject private var content: PayHubContent
@@ -28,6 +28,7 @@ where ContentView: View {
     var body: some View {
         
         factory.makeContent(content)
+            .onFirstAppear { content.event(.load) }
             .navigationDestination(
                 destination: flow.state.selected,
                 dismiss: { content.event(.select(nil)) },

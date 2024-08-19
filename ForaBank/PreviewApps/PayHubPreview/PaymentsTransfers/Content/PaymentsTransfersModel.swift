@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
-final class PaymentsTransfersModel<PayHub> 
+import Foundation
+
+final class PaymentsTransfersModel<PayHub>: ObservableObject
 where PayHub: Loadable {
     
     let payHub: PayHub

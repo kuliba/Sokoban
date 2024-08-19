@@ -16,19 +16,25 @@ where ItemLabel: View {
     let config: Config
     let itemLabel: (Item) -> ItemLabel
     
+    private let transition: AnyTransition = .opacity
+        .combined(with: .asymmetric(
+            insertion: .identity,
+            removal: .scale
+        ))
+    // .combined(with: .asymmetric(
+    //     insertion: .move(edge: .trailing),
+    //     removal: .move(edge: .leading).combined(with: .scale)
+    // ))
+    
     var body: some View {
         
-        Group {
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            if #available(iOS 16.0, *) {
+            HStack(spacing: config.spacing) {
                 
-                ScrollView(.horizontal, showsIndicators: false, content: itemsView)
-                    .scrollDisabled(state == .none)
-            } else {
-                
-                itemsView()
-                    .wrapInScrollView(state != .none, .horizontal, showsIndicators: false)
+                ForEach(state.uiItems, content: itemView)
             }
+            .animation(.easeInOut, value: state)
         }
         .frame(height: config.height)
     }
@@ -44,29 +50,16 @@ extension PayHubContentView {
 
 private extension PayHubContentView {
     
-    func itemsView() -> some View {
-        
-        HStack(spacing: config.spacing) {
-            
-            ForEach((state?.latests).uiItems, content: itemView)
-                .transition(
-                    .opacity.combined(with: .asymmetric(
-                        insertion: .move(edge: .trailing),
-                        removal: .move(edge: .leading)
-                    ))
-                )
-        }
-        .animation(.easeInOut, value: state)
-    }
-    
     @ViewBuilder
     func itemView(
-        item: UIItem<Latest>
+        item: Identified<UUID, UIItem<Latest>>
     ) -> some View {
         
-        let label = itemLabel(item)
+        let label = itemLabel(item.element)
+            .contentShape(Rectangle())
+            .transition(transition(for: item.element))
         
-        switch item {
+        switch item.element {
         case .placeholder:
             label
             
@@ -78,6 +71,32 @@ private extension PayHubContentView {
             }
             .buttonStyle(PlainButtonStyle())
         }
+    }
+    
+    func transition(
+        for item: UIItem<Latest>
+    ) -> AnyTransition {
+        
+        switch item {
+        case .placeholder:
+            return transition
+            
+        case let .selectable(selectable):
+            switch selectable {
+            case .exchange:  return .identity
+            case .latest:    return transition
+            case .templates: return .identity
+            }
+        }
+    }
+}
+
+private extension PayHubState {
+    
+    var isLoading: Bool {
+        
+        guard case .placeholders = loadState else { return false }
+        return true
     }
 }
 
@@ -111,35 +130,44 @@ struct PayHubContentView_Previews: PreviewProvider {
         
         Group {
             
-            group()
+            samples()
             PayHubContentViewDemo()
         }
     }
     
-    private static func group() -> some View {
+    private static func samples() -> some View {
         
-        VStack(spacing: 8) {
+        ScrollView(showsIndicators: false) {
             
-            Group {
+            VStack(spacing: 8) {
                 
-                payHubContentView(.none)
-                payHubContentView(.init(latests: []))
-                payHubContentView(.init(latests: [.init(id: UUID().uuidString)]))
-                payHubContentView(.init(latests: (0..<2).map { _ in .init(id: UUID().uuidString) }))
-                payHubContentView(.init(latests: (0..<10).map { _ in .init(id: UUID().uuidString) }))
+                Group {
+                    
+                    payHubContentView(.default)
+                    payHubContentView(.placeholderPreview(count: 0))
+                    payHubContentView(.placeholderPreview(count: 1))
+                    payHubContentView(.placeholderPreview(count: 2))
+                    payHubContentView(.loadedPreview(count: 0))
+                    payHubContentView(.loadedPreview(count: 1))
+                    payHubContentView(.loadedPreview(count: 2))
+                    payHubContentView(.loadedPreview(count: 3))
+                    payHubContentView(.loadedPreview(count: 5))
+                    payHubContentView(.loadedPreview(count: 10))
+                }
+                .border(.red.opacity(0.2))
             }
-            .border(.red.opacity(0.2))
+            .padding()
         }
-        .padding()
     }
     
     private static func payHubContentView(
-        _ state: PayHubState
+        _ state: PayHubState,
+        event: @escaping (PayHubEvent) -> Void = { print($0) }
     ) -> some View {
         
         PayHubContentView(
             state: state,
-            event: { print($0) },
+            event: event,
             config: .preview,
             itemLabel: { item in
                 
@@ -150,18 +178,63 @@ struct PayHubContentView_Previews: PreviewProvider {
     
     private struct PayHubContentViewDemo: View {
         
-        @State private var state: PayHubState = .none
+        @State private var state: PayHubState = .default
+        @State private var loadViaReset = false
         
         var body: some View {
             
-            VStack(spacing: 32) {
+            ZStack(alignment: .top) {
                 
-                Button("Toggle") {
+                Toggle("Load via reset", isOn: $loadViaReset)
+                    .padding(.horizontal)
+                
+                ZStack(alignment: .bottom) {
                     
-                    state = state == .none ? .init(latests: makeLatests()) : .none
+                    VStack(spacing: 32) {
+                        
+                        VStack(spacing: 8) {
+                            
+                            Button("Reset") { state = .default }
+                            Button("Load 0") { load(.loadedPreview(count: 0)) }
+                            Button("Load 1") { load(.loadedPreview(count: 1)) }
+                            Button("Load 3") { load(.loadedPreview(count: 3)) }
+                            Button("Load 5") { load(.loadedPreview(count: 5)) }
+                            Button("Load 10") { load(.loadedPreview(count: 10)) }
+                        }
+                        
+                        payHubContentView(state) {
+                            
+                            switch $0 {
+                            case let .select(select):
+                                state.selected = select
+                                
+                            default:
+                                print($0)
+                            }
+                        }
+                    }
+                    .frame(maxHeight: .infinity)
+                    
+                    Text("Selected: " + String(describing: state.selected))
+                        .foregroundColor(state.selected == nil ? .secondary : .primary)
+                        .padding(.horizontal)
                 }
+            }
+        }
+        
+        private func load(_ state: PayHubState) {
+            
+            if loadViaReset {
                 
-                payHubContentView(state)
+                self.state = .default
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    
+                    self.state = state
+                }
+            } else {
+                
+                self.state = state
             }
         }
         
@@ -180,4 +253,21 @@ extension PayHubContentViewConfig {
         height: 96,
         spacing: 4
     )
+}
+
+extension PayHubState {
+    
+    static func loadedPreview(count: Int) -> Self {
+        
+        return .init(loadState: .loaded(
+            (0..<count).map { _ in .init(.preview()) }
+        ))
+    }
+    
+    static func placeholderPreview(count: Int) -> Self {
+        
+        return .init(loadState: .placeholders(
+            (0..<count).map { _ in .init() }
+        ))
+    }
 }
