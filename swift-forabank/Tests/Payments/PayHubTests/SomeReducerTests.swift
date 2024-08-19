@@ -12,11 +12,16 @@ where ID: Hashable {
     
     internal var prefix: [Item]
     internal var suffix: [Item]
+    var selected: Element?
     
-    init(prefix: [Item], suffix: [Item]) {
-        
+    init(
+        prefix: [Item], 
+        suffix: [Item],
+        selected: Element? = nil
+    ) {
         self.prefix = prefix
         self.suffix = suffix
+        self.selected = selected
     }
 }
 
@@ -49,6 +54,7 @@ enum SomeEvent<Element> {
     
     case load
     case loaded([Element])
+    case select(Element?)
 }
 
 extension SomeEvent: Equatable where Element: Equatable {}
@@ -92,6 +98,9 @@ extension SomeReducer {
             
         case let .loaded(elements):
             handleLoaded(&state, &effect, with: elements)
+            
+        case let .select(element):
+            state.selected = element
         }
         
         return (state, effect)
@@ -112,6 +121,7 @@ private extension SomeReducer {
         _ effect: inout Effect?
     ) {
         state.suffix = makePlaceholders().map { .placeholder($0) }
+        state.selected = nil
         effect = .load
     }
     
@@ -132,6 +142,18 @@ import XCTest
 final class SomeReducerTests: XCTestCase {
     
     // MARK: - load
+    
+    func test_load_shouldSetSelectedToNil() {
+        
+        let state = makeState(prefix: [], selected: makeElement())
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .load) {
+            
+            $0 = self.makeState(prefix: [], suffix: [], selected: nil)
+            XCTAssertNoDiff($0.items, [])
+        }
+    }
     
     func test_load_shouldPreserveEmptyPrefix_emptyPlaceholders() {
         
@@ -340,7 +362,7 @@ final class SomeReducerTests: XCTestCase {
     // MARK: - loaded
     
     func test_loaded_shouldSetEmptyOnEmptyWithEmptyPrefix() {
-
+        
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])
         
@@ -352,7 +374,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnEmptyWithEmptyPrefix() {
-
+        
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])
         
@@ -360,7 +382,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldSetOneOnEmptyWithPrefixOfOne() {
-
+        
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(placeholderIDs: [])
@@ -373,7 +395,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnEmptyWithPrefixOfOne() {
-
+        
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(placeholderIDs: [])
@@ -382,7 +404,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldSetTwoOnEmptyWithPrefixOfTwo() {
-
+        
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
         let sut = makeSUT(placeholderIDs: [])
@@ -395,7 +417,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnEmptyWithPrefixOfTwo() {
-
+        
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
         let sut = makeSUT(placeholderIDs: [])
@@ -404,7 +426,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldSetOneOnOneWithEmptyPrefix() {
-
+        
         let id = makePlaceholderID()
         let element = makeElement()
         let state = makeState(prefix: [])
@@ -418,7 +440,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnOneWithEmptyPrefix() {
-
+        
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])
         
@@ -426,13 +448,13 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldAddOneOnOneWithPrefixOfOne() {
-
+        
         let id = makePlaceholderID()
         let element = makeElement()
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(makeID: { id }, placeholderIDs: [])
-
+        
         assert(sut: sut, state, event: .loaded([element])) {
             
             $0 = self.makeState(prefix: [item], suffix: [.element(.init(id: id, element: element))])
@@ -441,7 +463,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnOneWithPrefixOfOne() {
-
+        
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(placeholderIDs: [])
@@ -450,13 +472,13 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldAddOneOnOneWithPrefixOfTwo() {
-
+        
         let id = makePlaceholderID()
         let element = makeElement()
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
         let sut = makeSUT(makeID: { id }, placeholderIDs: [])
-
+        
         assert(sut: sut, state, event: .loaded([element])) {
             
             $0 = self.makeState(prefix: [item1, item2], suffix: [.element(.init(id: id, element: element))])
@@ -465,7 +487,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnOneWithPrefixOfTwo() {
-
+        
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
         let sut = makeSUT(placeholderIDs: [])
@@ -474,7 +496,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldSetTwoOnTwoWithEmptyPrefix() {
-
+        
         let id = makePlaceholderID()
         let (element1, element2) = (makeElement(), makeElement())
         let state = makeState(prefix: [])
@@ -494,7 +516,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnTwoWithEmptyPrefix() {
-
+        
         let state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [])
         
@@ -502,15 +524,15 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldAddTwoOnTwoWithPrefixOfOne() {
-
+        
         let id = makePlaceholderID()
         let (element1, element2) = (makeElement(), makeElement())
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(makeID: { id }, placeholderIDs: [])
-
+        
         assert(sut: sut, state, event: .loaded([element1, element2])) {
-
+            
             $0 = self.makeState(prefix: [item], suffix: [
                 .element(.init(id: id, element: element1)),
                 .element(.init(id: id, element: element2))
@@ -524,7 +546,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnTwoWithPrefixOfOne() {
-
+        
         let item = makeItem()
         let state = makeState(prefix: [item])
         let sut = makeSUT(placeholderIDs: [])
@@ -556,7 +578,7 @@ final class SomeReducerTests: XCTestCase {
     }
     
     func test_loaded_shouldNotDeliverEffectOnTwoWithPrefixOfTwo() {
-
+        
         let (item1, item2) = (makeItem(), makeItem())
         let state = makeState(prefix: [item1, item2])
         let sut = makeSUT(placeholderIDs: [])
@@ -570,7 +592,7 @@ final class SomeReducerTests: XCTestCase {
         let id = makePlaceholderID()
         var state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [id])
-
+        
         (state, _) = sut.reduce(state, .load)
         assert(sut: sut, state, event: .loaded([element])) {
             
@@ -586,7 +608,7 @@ final class SomeReducerTests: XCTestCase {
         let (id1, id2) = (makePlaceholderID(), makePlaceholderID())
         var state = makeState(prefix: [])
         let sut = makeSUT(placeholderIDs: [id1, id2])
-
+        
         (state, _) = sut.reduce(state, .load)
         assert(sut: sut, state, event: .loaded([element1, element2])) {
             
@@ -595,6 +617,47 @@ final class SomeReducerTests: XCTestCase {
                 .element(.init(id: id2, element: element2))
             ])
         }
+    }
+    
+    // MARK: - select
+    
+    func test_select_shouldSetSelectedToNilOnNil() {
+        
+        let state = makeState(selected: makeElement())
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .select(nil)) {
+            
+            $0.selected = nil
+        }
+    }
+    
+    func test_select_shouldNotDeliverEffectOnSelectedNil() {
+
+        let state = makeState(selected: makeElement())
+        let sut = makeSUT(placeholderIDs: [])
+
+        assert(sut: sut, state, event: .select(nil), delivers: nil)
+    }
+    
+    func test_select_shouldSetSelectedToSelected() {
+        
+        let element = makeElement()
+        let state = makeState(selected: nil)
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .select(element)) {
+            
+            $0.selected = element
+        }
+    }
+    
+    func test_select_shouldNotDeliverEffectOnSelected() {
+
+        let state = makeState(selected: nil)
+        let sut = makeSUT(placeholderIDs: [])
+
+        assert(sut: sut, state, event: .select(makeElement()), delivers: nil)
     }
     
     // MARK: - Helpers
@@ -621,10 +684,11 @@ final class SomeReducerTests: XCTestCase {
     
     private func makeState(
         prefix: [SUT.State.Item] = [],
-        suffix: [SUT.State.Item] = []
+        suffix: [SUT.State.Item] = [],
+        selected: Element? = nil
     ) -> SUT.State {
         
-        return .init(prefix: prefix, suffix: suffix)
+        return .init(prefix: prefix, suffix: suffix, selected: selected)
     }
     
     private func makeItem(
