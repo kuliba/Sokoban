@@ -5,14 +5,7 @@
 //  Created by Igor Malyarov on 19.08.2024.
 //
 
-private struct Identified<ID, Element>: Identifiable
-where ID: Hashable {
-    
-    let id: ID
-    let element: Element
-}
-
-extension Identified: Equatable where Element: Equatable {}
+import PayHub
 
 private struct SomeState<ID, Element>
 where ID: Hashable {
@@ -38,6 +31,17 @@ extension SomeState {
     }
 }
 
+extension SomeState.Item: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .element(element): return element.id
+        case let .placeholder(id):  return id
+        }
+    }
+}
+
 extension SomeState: Equatable where ID: Equatable, Element: Equatable {}
 extension SomeState.Item: Equatable where ID: Equatable, Element: Equatable {}
 
@@ -57,14 +61,18 @@ enum SomeEffect: Equatable {
 private final class SomeReducer<ID, Element>
 where ID: Hashable {
     
+    private let makeID: MakeID
     private let makePlaceholders: MakePlaceholders
     
     public init(
+        makeID: @escaping MakeID,
         makePlaceholders: @escaping MakePlaceholders
     ) {
+        self.makeID = makeID
         self.makePlaceholders = makePlaceholders
     }
     
+    public typealias MakeID = () -> ID
     public typealias MakePlaceholders = () -> [ID]
 }
 
@@ -83,7 +91,7 @@ extension SomeReducer {
             load(&state, &effect)
             
         case let .loaded(elements):
-            break
+            handleLoaded(&state, &effect, with: elements)
         }
         
         return (state, effect)
@@ -105,6 +113,17 @@ private extension SomeReducer {
     ) {
         state.suffix = makePlaceholders().map { .placeholder($0) }
         effect = .load
+    }
+    
+    func handleLoaded(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with elements: [Element]
+    ) {
+        state.suffix = state.suffix
+            .map(\.id)
+            .assignIDs(elements, makeID)
+            .map { State.Item.element($0) }
     }
 }
 
@@ -384,18 +403,92 @@ final class SomeReducerTests: XCTestCase {
         assert(sut: sut, state, event: .loaded([]), delivers: nil)
     }
     
+    func test_loaded_shouldSetOneOnOneWithEmptyPrefix() {
+
+        let id = makePlaceholderID()
+        let element = makeElement()
+        let state = makeState(prefix: [])
+        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([element])) {
+            
+            $0 = self.makeState(prefix: [], suffix: [.element(.init(id: id, element: element))])
+            XCTAssertNoDiff($0.items, [.element(.init(id: id, element: element))])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnOneWithEmptyPrefix() {
+
+        let state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldAddOneOnOneWithPrefixOfOne() {
+
+        let id = makePlaceholderID()
+        let element = makeElement()
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+
+        assert(sut: sut, state, event: .loaded([element])) {
+            
+            $0 = self.makeState(prefix: [item], suffix: [.element(.init(id: id, element: element))])
+            XCTAssertNoDiff($0.items, [item, .element(.init(id: id, element: element))])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnOneWithPrefixOfOne() {
+
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement()]), delivers: nil)
+    }
+    
+    func test_loaded_shouldAddOneOnOneWithPrefixOfTwo() {
+
+        let id = makePlaceholderID()
+        let element = makeElement()
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT( makeID: { id }, placeholderIDs: [])
+
+        assert(sut: sut, state, event: .loaded([element])) {
+            
+            $0 = self.makeState(prefix: [item1, item2], suffix: [.element(.init(id: id, element: element))])
+            XCTAssertNoDiff($0.items, [item1, item2, .element(.init(id: id, element: element))])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnOneWithPrefixOfTwo() {
+
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([makeElement()]), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias ID = UUID
     private typealias SUT = SomeReducer<ID, Element>
     
     private func makeSUT(
+        makeID: @escaping () -> ID = UUID.init,
         placeholderIDs: [ID],
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(makePlaceholders: { placeholderIDs })
+        let sut = SUT(
+            makeID: makeID,
+            makePlaceholders: { placeholderIDs }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -416,6 +509,11 @@ final class SomeReducerTests: XCTestCase {
     ) -> SUT.State.Item {
         
         return .element(.init(id: id, element: element ?? makeElement()))
+    }
+    
+    private func ID() -> ID {
+        
+        return .init()
     }
     
     private func makePlaceholderID() -> ID {
