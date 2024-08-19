@@ -41,10 +41,13 @@ extension SomeState {
 extension SomeState: Equatable where ID: Equatable, Element: Equatable {}
 extension SomeState.Item: Equatable where ID: Equatable, Element: Equatable {}
 
-enum SomeEvent: Equatable {
+enum SomeEvent<Element> {
     
     case load
+    case loaded([Element])
 }
+
+extension SomeEvent: Equatable where Element: Equatable {}
 
 enum SomeEffect: Equatable {
     
@@ -78,6 +81,9 @@ extension SomeReducer {
         switch event {
         case .load:
             load(&state, &effect)
+            
+        case let .loaded(elements):
+            break
         }
         
         return (state, effect)
@@ -87,7 +93,7 @@ extension SomeReducer {
 extension SomeReducer {
     
     typealias State = SomeState<ID, Element>
-    typealias Event = SomeEvent
+    typealias Event = SomeEvent<Element>
     typealias Effect = SomeEffect
 }
 
@@ -310,6 +316,72 @@ final class SomeReducerTests: XCTestCase {
         let sut = makeSUT(placeholderIDs: [id1, id2])
         
         assert(sut: sut, state, event: .load, delivers: .load)
+    }
+    
+    // MARK: - loaded
+    
+    func test_loaded_shouldSetEmptyOnEmptyWithEmptyPrefix() {
+
+        let state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([])) {
+            
+            $0 = self.makeState(prefix: [], suffix: [])
+            XCTAssertNoDiff($0.items, [])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnEmptyWithEmptyPrefix() {
+
+        let state = makeState(prefix: [])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([]), delivers: nil)
+    }
+    
+    func test_loaded_shouldSetOneOnEmptyWithPrefixOfOne() {
+
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([])) {
+            
+            $0 = self.makeState(prefix: [item], suffix: [])
+            XCTAssertNoDiff($0.items, [item])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnEmptyWithPrefixOfOne() {
+
+        let item = makeItem()
+        let state = makeState(prefix: [item])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([]), delivers: nil)
+    }
+    
+    func test_loaded_shouldSetTwoOnEmptyWithPrefixOfTwo() {
+
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([])) {
+            
+            $0 = self.makeState(prefix: [item1, item2], suffix: [])
+            XCTAssertNoDiff($0.items, [item1, item2])
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnEmptyWithPrefixOfTwo() {
+
+        let (item1, item2) = (makeItem(), makeItem())
+        let state = makeState(prefix: [item1, item2])
+        let sut = makeSUT(placeholderIDs: [])
+        
+        assert(sut: sut, state, event: .loaded([]), delivers: nil)
     }
     
     // MARK: - Helpers
