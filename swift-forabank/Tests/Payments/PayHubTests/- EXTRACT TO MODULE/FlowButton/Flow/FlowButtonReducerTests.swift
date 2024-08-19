@@ -1,5 +1,5 @@
 //
-//  QRFlowButtonReducerTests.swift
+//  FlowButtonReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 18.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class QRFlowButtonReducerTests: QRFlowButtonTests {
+final class FlowButtonReducerTests: FlowButtonTests {
     
     // MARK: - buttonTap
     
@@ -56,7 +56,7 @@ final class QRFlowButtonReducerTests: QRFlowButtonTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRFlowButtonReducer<Destination>
+    private typealias SUT = FlowButtonReducer<Destination>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -71,7 +71,7 @@ final class QRFlowButtonReducerTests: QRFlowButtonTests {
     }
     
     private func makeState(
-        destination: QRFlowButtonTests.Destination? = nil
+        destination: Destination? = nil
     ) -> SUT.State {
         
         return .init(destination: destination)

@@ -1,11 +1,11 @@
 //
-//  QRFlowButtonEffectHandlerMicroServices.swift
+//  FlowButtonEffectHandlerMicroServices.swift
 //  
 //
 //  Created by Igor Malyarov on 18.08.2024.
 //
 
-public struct QRFlowButtonEffectHandlerMicroServices<Destination> {
+public struct FlowButtonEffectHandlerMicroServices<Destination> {
     
     public let makeDestination: MakeDestination
     
@@ -16,7 +16,7 @@ public struct QRFlowButtonEffectHandlerMicroServices<Destination> {
     }
 }
 
-public extension QRFlowButtonEffectHandlerMicroServices {
+public extension FlowButtonEffectHandlerMicroServices {
     
     typealias MakeDestinationCompletion = (Destination) -> Void
     typealias MakeDestination = (@escaping MakeDestinationCompletion) -> Void
