@@ -80,51 +80,69 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             [1, 2, 3, 6, 8, 34])
     }
     
-    func test_balanceRub() {
+    func test_balanceRub_parentWithAdditionalCards_shouldReturnOnlyParentBalance(){
         
         let products = makeProductsWithBalance(productsInfo: [
-            // 10 rub
             .init(id: 3, parentID: nil, cardType: .main, status: .active, balanceRub: 10),
             .init(id: 5, parentID: 3, cardType: .additionalSelf, status: .active, balanceRub: 10),
             .init(id: 12, parentID: 3, cardType: .additionalSelfAccOwn, status: .active, balanceRub: 10),
             .init(id: 7, parentID: 3, cardType: .additionalOther, status: .active, balanceRub: 10),
             .init(id: 11, parentID: 3, cardType: .additionalSelf, status: .active, balanceRub: 10),
-            // 20 rub
-            .init(id: 6, parentID: nil, cardType: .main, status: .active, balanceRub: 20),
-            .init(id: 4, parentID: 6, cardType: .additionalSelf, status: .active, balanceRub: 20),
-            // 20 rub
-            .init(id: 8, parentID: nil, cardType: .main, status: .active, balanceRub: 20),
-            // 30 rub
-            .init(id: 9, parentID: 34, cardType: .additionalSelf, status: .active, balanceRub: 30),
-            // 10 rub
-            .init(id: 99, parentID: 134, cardType: .additionalSelfAccOwn, status: .active, balanceRub: 10),
-            // 0 rub
-            .init(id: 48, parentID: 90, cardType: .additionalOther, status: .active, balanceRub: 100),
-            // 20 rub
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 10)
+    }
+    
+    func test_balanceRub_parentWithAdditionalCards_parentBalanceZero_shouldReturnFirstAdditionalBalance(){
+        
+        let products = makeProductsWithBalance(productsInfo: [
             .init(id: 49, parentID: nil, cardType: .main, status: .active, balanceRub: 0),
             .init(id: 50, parentID: 49, cardType: .additionalSelf, status: .active, balanceRub: 20),
             .init(id: 51, parentID: 49, cardType: .additionalOther, status: .active, balanceRub: 20),
-            // 20 rub
-            .init(id: 59, parentID: nil, cardType: .main, status: .active, balanceRub: nil),
-            .init(id: 60, parentID: 59, cardType: .additionalSelf, status: .active, balanceRub: 20),
-            .init(id: 61, parentID: 59, cardType: .additionalOther, status: .active, balanceRub: 20),
-            // corporate cards
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 20)
+    }
+
+    func test_balanceRub_parentWithAdditionalCards_parentBalanceNil_shouldReturnFirstAdditionalBalance(){
+        
+        let products = makeProductsWithBalance(productsInfo: [
+            .init(id: 49, parentID: nil, cardType: .main, status: .active, balanceRub: nil),
+            .init(id: 50, parentID: 49, cardType: .additionalSelf, status: .active, balanceRub: 30),
+            .init(id: 51, parentID: 49, cardType: .additionalOther, status: .active, balanceRub: 30),
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 30)
+    }
+    
+    func test_balanceRub_parentWithAdditionalCorporateCards_shouldReturnOnlyParentBalance(){
+        
+        let products = makeProductsWithBalance(productsInfo: [
             // 10 rub
             .init(id: 53, cardType: .individualBusinessman, balanceRub: 10),
             .init(id: 55, parentID: 53, cardType: .additionalCorporate, balanceRub: 10),
-            .init(id: 512, parentID: 53, cardType: .additionalCorporate, balanceRub: 10),
             // 20 rub
             .init(id: 56, cardType: .individualBusinessmanMain, balanceRub: 20),
             .init(id: 54, parentID: 56, cardType: .additionalCorporate, balanceRub: 20),
             // 20 rub
             .init(id: 510, cardType: .corporate, balanceRub: 20),
-            // 50 rub
-            .init(id: 511, cardType: .additionalCorporate, balanceRub: 50),
+            .init(id: 511, parentID: 510, cardType: .additionalCorporate, balanceRub: 20),
         ])
         
-        XCTAssertNoDiff(products.balanceRub(), 230)
+        XCTAssertNoDiff(products.balanceRub(), 50)
     }
+    
+    func test_balanceRub_onlyAdditionalCards_shouldReturnSumBalanceWithOutAdditionalOther(){
         
+        let products = makeProductsWithBalance(productsInfo: [
+            .init(id: 9, parentID: 34, cardType: .additionalSelf, status: .active, balanceRub: 30),
+            .init(id: 99, parentID: 134, cardType: .additionalSelfAccOwn, status: .active, balanceRub: 10),
+            .init(id: 48, parentID: 90, cardType: .additionalOther, status: .active, balanceRub: 100),
+        ])
+        
+        XCTAssertNoDiff(products.balanceRub(), 40)
+    }
+                    
     // MARK: - Helpers
     
     func makeProducts() -> [ProductData] {
