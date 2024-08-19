@@ -80,21 +80,21 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             [1, 2, 3, 6, 8, 34])
     }
     
-    func test_balanceRub() {
+    func test_balanceRub_shouldReturn130() {
         
         let products = makeProductsWithBalance()
         
         XCTAssertNoDiff(products.balanceRub(), 130)
     }
     
-    func test_balanceRub_corporateCards() {
+    func test_balanceRub_corporateCards_shouldReturn100() {
         
         let products = makeCorporateProductsWithBalance()
         
         XCTAssertNoDiff(products.balanceRub(), 100)
     }
 
-    func test_balanceRub_allCards() {
+    func test_balanceRub_allCards_shouldReturn230() {
         
         let products = makeProductsWithBalance() + makeCorporateProductsWithBalance()
         
