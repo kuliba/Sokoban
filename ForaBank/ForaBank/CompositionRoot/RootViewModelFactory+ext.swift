@@ -12,6 +12,7 @@ import OperatorsListComponents
 import PaymentSticker
 import SberQR
 import SwiftUI
+import PayHub
 
 extension RootViewModelFactory {
     
@@ -297,6 +298,8 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let loadLatestOperations = makeLoadLatestOperations
+        
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -313,7 +316,9 @@ extension RootViewModelFactory {
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            loadLatestOperations: loadLatestOperations,
+            scheduler: scheduler
         )
     }
     
@@ -616,7 +621,9 @@ private extension RootViewModelFactory {
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        loadLatestOperations: @escaping LoadLatestOperations,
+        scheduler: AnySchedulerOfDispatchQueue
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -656,11 +663,10 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                let pickerComposer = PayHubPickerBinderComposer()
-                let composer = PaymentsTransfersBinderComposer(
-                    makePayHubPickerBinder: pickerComposer.compose
+                let binder = makePaymentsTransfersBinder(
+                    loadLatestOperations: loadLatestOperations,
+                    scheduler: scheduler
                 )
-                let binder = composer.compose()
                 return .v1(binder)
                 
             case .inactive:

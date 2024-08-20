@@ -9,11 +9,6 @@ import PayHub
 
 // MARK: - Content
 
-typealias PayHubPickerContent = Void
-typealias PayHubPickerFlow = Void
-
-typealias PayHubPickerBinder = PayHub.Binder<PayHubPickerContent, PayHubPickerFlow>
-
 typealias PaymentsTransfersContentModel = PaymentsTransfersModel<PayHubPickerBinder>
 
 // MARK: - Flow
