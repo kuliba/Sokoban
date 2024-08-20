@@ -149,7 +149,7 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: TabState.Binder.Content
+        _ content: PaymentsTransfersContent
     ) -> some View {
         
         PaymentsTransfersView(

@@ -22,7 +22,7 @@ final class PaymentsTransfersBinderComposer {
 
 extension PaymentsTransfersBinderComposer {
     
-    typealias Binder = PaymentsTransfersBinder<PayHubPickerBinder>
+    typealias Binder = PaymentsTransfersBinder
  
     func compose(
         loadResult: Result<[PayHubPickerItem<Latest>], Error>
