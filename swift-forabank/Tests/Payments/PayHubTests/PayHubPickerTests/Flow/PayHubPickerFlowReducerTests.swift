@@ -1,5 +1,5 @@
 //
-//  PayHubFlowReducerTests.swift
+//  PayHubPickerFlowReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PayHubFlowReducerTests: PayHubFlowTests {
+final class PayHubPickerFlowReducerTests: PayHubPickerFlowTests {
     
     // MARK: - flowEvent
     
@@ -172,7 +172,7 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PayHubFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
+    private typealias SUT = PayHubPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -188,7 +188,7 @@ final class PayHubFlowReducerTests: PayHubFlowTests {
     
     private func makeState(
         isLoading: Bool = false,
-        selected: PayHubFlowItem<Exchange, LatestFlow, Templates>? = nil,
+        selected: PayHubPickerFlowItem<Exchange, LatestFlow, Templates>? = nil,
         status: Status? = nil
     ) -> SUT.State {
         

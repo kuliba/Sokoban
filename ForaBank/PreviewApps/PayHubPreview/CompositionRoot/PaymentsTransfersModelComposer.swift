@@ -12,7 +12,7 @@ final class PaymentsTransfersModelComposer {}
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: PayHubEffectHandler.MicroServices.LoadResult
+        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
     ) -> Model {
         
         return .init(
@@ -20,23 +20,23 @@ extension PaymentsTransfersModelComposer {
         )
     }
     
-    typealias Model = PaymentsTransfersModel<PayHubBinder>
+    typealias Model = PaymentsTransfersModel<PayHubPickerBinder>
 }
 
 private extension PaymentsTransfersModelComposer {
     
     func composePayHubBinder(
-        loadResult: PayHubEffectHandler.MicroServices.LoadResult
-    ) -> PayHubBinder {
+        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
+    ) -> PayHubPickerBinder {
         
-        let content = PayHubContent.stub(loadResult: loadResult)
-        let flow = PayHubFlow.stub()
+        let content = PayHubPickerContent.stub(loadResult: loadResult)
+        let flow = PayHubPickerFlow.stub()
         
         return .init(content: content, flow: flow)
     }
 }
 
-extension PayHubBinder: Loadable {
+extension PayHubPickerBinder: Loadable {
     
     func load() {
         

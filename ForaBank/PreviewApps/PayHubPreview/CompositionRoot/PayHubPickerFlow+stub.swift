@@ -1,5 +1,5 @@
 //
-//  PayHubFlow+stub.swift
+//  PayHubPickerFlow+stub.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,15 +8,15 @@
 import CombineSchedulers
 import Foundation
 
-extension PayHubFlow {
+extension PayHubPickerFlow {
     
     static func stub(
-        initialState: PayHubFlowState = .init(),
+        initialState: PayHubPickerFlowState = .init(),
         scheduler: AnySchedulerOf<DispatchQueue> = .main
-    ) -> PayHubFlow {
+    ) -> PayHubPickerFlow {
         
-        let reducer = PayHubFlowReducer()
-        let effectHandler = PayHubFlowEffectHandler(
+        let reducer = PayHubPickerFlowReducer()
+        let effectHandler = PayHubPickerFlowEffectHandler(
             microServices: .init(
                 makeExchange: Exchange.init,
                 makeLatestFlow: LatestFlow.init,

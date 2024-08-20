@@ -1,5 +1,5 @@
 //
-//  PayHubBinder.swift
+//  PayHubPickerBinder.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -7,16 +7,16 @@
 
 import Combine
 
-final class PayHubBinder {
+final class PayHubPickerBinder {
     
-    let content: PayHubContent
-    let flow: PayHubFlow
+    let content: PayHubPickerContent
+    let flow: PayHubPickerFlow
     
     private let cancellable: AnyCancellable
     
     init(
-        content: PayHubContent,
-        flow: PayHubFlow
+        content: PayHubPickerContent,
+        flow: PayHubPickerFlow
     ) {
         self.content = content
         self.flow = flow

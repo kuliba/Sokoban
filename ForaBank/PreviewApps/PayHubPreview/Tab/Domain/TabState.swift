@@ -18,7 +18,7 @@ struct TabState {
 
 extension TabState {
     
-    typealias Binder = PaymentsTransfersBinder<PayHubBinder>
+    typealias Binder = PaymentsTransfersBinder<PayHubPickerBinder>
     
     enum Selected: CaseIterable, Equatable {
         

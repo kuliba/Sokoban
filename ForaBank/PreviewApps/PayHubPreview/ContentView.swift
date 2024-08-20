@@ -16,11 +16,7 @@ struct ContentView: View {
     init(
         selected: TabState.Selected = .noLatest
     ) {
-        let flowComposer = PaymentsTransfersModelComposer()
-        let tabComposer = TabModelComposer(
-            makeFlowModel: flowComposer.compose(loadResult:),
-            scheduler: .main
-        )
+        let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)
     }
     
@@ -148,30 +144,30 @@ private extension ContentView {
     }
     
     private func makePayHubFlowView(
-        _ binder: PayHubBinder
+        _ binder: PayHubPickerBinder
     ) -> some View {
         
-        PayHubFlowStateWrapperView(
+        PayHubPickerFlowStateWrapperView(
             binder: binder,
             factory: .init(makeContent: makePayHubContentWrapper)
         )
     }
     
     private func makePayHubContentWrapper(
-        _ content: PayHubContent
+        _ content: PayHubPickerContent
     ) -> some View {
         
-        PayHubContentWrapperView(
+        PayHubPickerContentWrapperView(
             model: content,
             makeContentView: { state, event in
                 
-                PayHubContentView(
+                PayHubPickerContentView(
                     state: state,
                     event: event,
                     config: .preview,
                     itemLabel: { item in
                         
-                        UIItemLabel(item: item, config: .preview)
+                        PayHubPickerStateItemLabel(item: item, config: .preview)
                     }
                 )
             }

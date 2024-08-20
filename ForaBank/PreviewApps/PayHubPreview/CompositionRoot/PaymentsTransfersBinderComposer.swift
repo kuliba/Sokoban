@@ -22,10 +22,10 @@ final class PaymentsTransfersBinderComposer {
 
 extension PaymentsTransfersBinderComposer {
     
-    typealias Binder = PaymentsTransfersBinder<PayHubBinder>
+    typealias Binder = PaymentsTransfersBinder<PayHubPickerBinder>
  
     func compose(
-        loadResult: Result<[PayHubItem<Latest>], Error>
+        loadResult: Result<[PayHubPickerItem<Latest>], Error>
     ) -> Binder {
         
         let contentComposer = PaymentsTransfersModelComposer()

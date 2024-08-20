@@ -1,5 +1,5 @@
 //
-//  PayHubFlowStateWrapperView.swift
+//  PayHubPickerFlowStateWrapperView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,16 +8,16 @@
 import PayHub
 import SwiftUI
 
-struct PayHubFlowStateWrapperView<ContentView>: View
+struct PayHubPickerFlowStateWrapperView<ContentView>: View
 where ContentView: View {
     
-    @StateObject private var content: PayHubContent
-    @StateObject private var flow: PayHubFlow
+    @StateObject private var content: PayHubPickerContent
+    @StateObject private var flow: PayHubPickerFlow
     
     private let factory: Factory
     
     init(
-        binder: PayHubBinder,
+        binder: PayHubPickerBinder,
         factory: Factory
     ) {
         self._content = .init(wrappedValue: binder.content)
@@ -37,12 +37,12 @@ where ContentView: View {
     }
 }
 
-extension PayHubFlowStateWrapperView {
+extension PayHubPickerFlowStateWrapperView {
     
-    typealias Factory = PayHubViewFactory<ContentView>
+    typealias Factory = PayHubPickerFlowStateWrapperViewFactory<ContentView>
 }
 
-extension PayHubFlowItem: Identifiable {
+extension PayHubPickerFlowItem: Identifiable {
     
     public var id: ID {
         
@@ -60,7 +60,7 @@ extension PayHubFlowItem: Identifiable {
 }
 
 #Preview {
-    PayHubFlowStateWrapperView(
+    PayHubPickerFlowStateWrapperView(
         binder: .preview,
         factory: .init(
             makeContent: { Text(String(describing: $0)) }
@@ -68,9 +68,9 @@ extension PayHubFlowItem: Identifiable {
     )
 }
 
-private extension PayHubBinder {
+private extension PayHubPickerBinder {
     
-    static let preview: PayHubBinder = .init(
+    static let preview: PayHubPickerBinder = .init(
         content: .stub(loadResult: .success([])),
         flow: .stub()
     )

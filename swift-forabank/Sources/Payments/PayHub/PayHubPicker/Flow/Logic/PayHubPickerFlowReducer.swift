@@ -1,16 +1,16 @@
 //
-//  PayHubFlowReducer.swift
+//  PayHubPickerFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public final class PayHubFlowReducer<Exchange, Latest, LatestFlow, Status, Templates> {
+public final class PayHubPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates> {
     
     public init() {}
 }
 
-public extension PayHubFlowReducer {
+public extension PayHubPickerFlowReducer {
     
     func reduce(
         _ state: State,
@@ -40,9 +40,9 @@ public extension PayHubFlowReducer {
     }
 }
 
-public extension PayHubFlowReducer {
+public extension PayHubPickerFlowReducer {
     
-    typealias State = PayHubFlowState<Exchange, LatestFlow, Status, Templates>
-    typealias Event = PayHubFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
-    typealias Effect = PayHubFlowEffect<Latest>
+    typealias State = PayHubPickerFlowState<Exchange, LatestFlow, Status, Templates>
+    typealias Event = PayHubPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Effect = PayHubPickerFlowEffect<Latest>
 }
