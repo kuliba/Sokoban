@@ -7,22 +7,13 @@
 
 import Foundation
 
-public final class PaymentsTransfersModel<PayHubPicker>: ObservableObject
-where PayHubPicker: Loadable {
+public final class PaymentsTransfersModel<PayHubPicker>: ObservableObject {
     
-    public let payHub: PayHubPicker
+    public let payHubPicker: PayHubPicker
     
     public init(
-        payHub: PayHubPicker
+        payHubPicker: PayHubPicker
     ) {
-        self.payHub = payHub
-    }
-}
-
-public extension PaymentsTransfersModel {
-    
-    func reload() {
-        
-        payHub.load()
+        self.payHubPicker = payHubPicker
     }
 }

@@ -10,7 +10,6 @@ struct TabState {
     let noLatest: Binder
     let noCategories: Binder
     let noBoth: Binder
-    let okEmpty: Binder
     let ok: Binder
     
     var selected: Selected
@@ -22,6 +21,6 @@ extension TabState {
     
     enum Selected: CaseIterable, Equatable {
         
-        case noLatest, noCategories, noBoth, okEmpty, ok
+        case noLatest, noCategories, noBoth, ok
     }
 }

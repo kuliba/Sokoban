@@ -1,0 +1,52 @@
+//
+//  RootViewModelFactory+makePaymentsTransfersBinder.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 20.08.2024.
+//
+
+import CombineSchedulers
+import Foundation
+import PayHub
+
+extension RootViewModelFactory {
+    
+    typealias LoadLatestOperationsCompletion = ([Latest]) -> Void
+    typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
+    
+    static func makePaymentsTransfersBinder(
+        loadLatestOperations: @escaping LoadLatestOperations,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) -> PaymentsTransfersBinder {
+        
+        let pickerContentComposer = LoadablePickerContentComposer<PayHubPickerItem<Latest>>(
+            load: { completion in
+                
+                loadLatestOperations {
+                    
+                    completion($0.map { .latest($0) })
+                }
+            },
+            scheduler: scheduler
+        )
+        let pickerBinderComposer = PayHubPickerBinderComposer(
+            makeContent: {
+                
+                pickerContentComposer.compose(
+                    prefix: [
+                        .element(.init(.templates)),
+                        .element(.init(.exchange))
+                    ],
+                    suffix: [],
+                    placeholderCount: 4
+                )
+            },
+            scheduler: scheduler
+        )
+        let composer = PaymentsTransfersBinderComposer(
+            makePayHubPickerBinder: pickerBinderComposer.compose
+        )
+        
+        return composer.compose()
+    }
+}

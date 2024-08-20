@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 
 extension PayHubPickerContent {
     
@@ -18,7 +19,7 @@ extension PayHubPickerContent {
             ],
             suffix: []
         ),
-        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult,
+        loadResult: [PayHubPickerItem<Latest>],
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PayHubPickerContent {
         

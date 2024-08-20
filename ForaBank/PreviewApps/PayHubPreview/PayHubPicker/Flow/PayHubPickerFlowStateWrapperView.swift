@@ -71,7 +71,7 @@ extension PayHubPickerFlowItem: Identifiable {
 private extension PayHubPickerBinder {
     
     static let preview: PayHubPickerBinder = .init(
-        content: .stub(loadResult: .success([])),
+        content: .stub(loadResult: []),
         flow: .stub()
     )
 }
