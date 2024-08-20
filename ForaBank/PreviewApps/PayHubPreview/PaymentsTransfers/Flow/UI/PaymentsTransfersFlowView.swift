@@ -8,12 +8,11 @@
 import PayHub
 import SwiftUI
 
-struct PaymentsTransfersFlowView<Content, DestinationContent, FullScreenContent, ProfileButtonLabel, QRButtonLabel>: View
+struct PaymentsTransfersFlowView<Content, DestinationContent, FullScreenContent, Toolbar>: View
 where Content: View,
       DestinationContent: View,
       FullScreenContent: View,
-      ProfileButtonLabel: View,
-      QRButtonLabel: View {
+      Toolbar: ToolbarContent {
     
     let state: State
     let event: (Event) -> Void
@@ -22,7 +21,9 @@ where Content: View,
     var body: some View {
         
         factory.makeContent()
-            .toolbar(content: toolbar)
+            .toolbar {
+                factory.makeToolbar({ event(.open($0)) })
+            }
             .navigationDestination(
                 destination: state.destination,
                 dismiss: { event(.dismiss) },
@@ -40,7 +41,7 @@ extension PaymentsTransfersFlowView {
     
     typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent
-    typealias Factory = PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, ProfileButtonLabel, QRButtonLabel>
+    typealias Factory = PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, Toolbar>
 }
 
 extension PaymentsTransfersFlowState {
@@ -92,36 +93,6 @@ extension PaymentsTransfersFlowState.Navigation.FullScreen: Identifiable {
     }
 }
 
-private extension PaymentsTransfersFlowView {
-    
-    @ToolbarContentBuilder
-    func toolbar() -> some ToolbarContent {
-        
-        ToolbarItem(placement: .topBarLeading, content: profileButton)
-        ToolbarItem(placement: .topBarTrailing, content: qrButton)
-    }
-    
-    private func profileButton() -> some View {
-        
-        Button {
-            event(.open(.profile))
-        } label: {
-            factory.makeProfileButtonLabel()
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    private func qrButton() -> some View {
-        
-        Button {
-            event(.open(.qr))
-        } label: {
-            factory.makeQRButtonLabel()
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-}
-
 struct PaymentsTransfersFlowView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -162,21 +133,36 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
                             Text(String(describing: qrModel))
                         }
                     },
-                    makeProfileButtonLabel: {
+                    makeToolbar: { event in
                         
-                        if #available(iOS 14.5, *) {
-                            Label("Profile", systemImage: "person.circle")
-                                .labelStyle(.titleAndIcon)
-                        } else {
-                            HStack {
-                                Image(systemName: "person.circle")
-                                Text("Profile")
+                        ToolbarItem(placement: .topBarLeading) {
+                            
+                            Button {
+                                event(.profile)
+                            } label: {
+                                
+                                if #available(iOS 14.5, *) {
+                                    Label("Profile", systemImage: "person.circle")
+                                        .labelStyle(.titleAndIcon)
+                                } else {
+                                    HStack {
+                                        Image(systemName: "person.circle")
+                                        Text("Profile")
+                                    }
+                                }
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                    },
-                    makeQRButtonLabel: {
                         
-                        Image(systemName: "qrcode")
+                        ToolbarItem(placement: .topBarTrailing) {
+                            
+                            Button {
+                                event(.qr)
+                            } label: {
+                                Image(systemName: "qrcode")
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
                 )
             )

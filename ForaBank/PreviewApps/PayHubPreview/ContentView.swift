@@ -65,7 +65,7 @@ private extension ContentView {
     
     @ViewBuilder
     func makeBinderView(
-        tabState: TabState.Binder
+        binder: TabState.Binder
     ) -> some View {
         
 #warning("extract Composer and Factory")
@@ -91,7 +91,7 @@ private extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makePaymentsTransfersContent(tabState) },
+                        makeContent: { makePaymentsTransfersContent(binder.content) },
                         makeDestinationContent: {
                             
                             switch $0 {
@@ -110,21 +110,36 @@ private extension ContentView {
                                 }
                             }
                         },
-                        makeProfileButtonLabel: {
+                        makeToolbar: { event in
                             
-                            if #available(iOS 14.5, *) {
-                                Label("Profile", systemImage: "person.circle")
-                                    .labelStyle(.titleAndIcon)
-                            } else {
-                                HStack {
-                                    Image(systemName: "person.circle")
-                                    Text("Profile")
+                            ToolbarItem(placement: .topBarLeading) {
+                                
+                                Button {
+                                    event(.profile)
+                                } label: {
+                                    
+                                    if #available(iOS 14.5, *) {
+                                        Label("Profile", systemImage: "person.circle")
+                                            .labelStyle(.titleAndIcon)
+                                    } else {
+                                        HStack {
+                                            Image(systemName: "person.circle")
+                                            Text("Profile")
+                                        }
+                                    }
                                 }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                        },
-                        makeQRButtonLabel: {
                             
-                            Image(systemName: "qrcode")
+                            ToolbarItem(placement: .topBarTrailing) {
+                                
+                                Button {
+                                    event(.qr)
+                                } label: {
+                                    Image(systemName: "qrcode")
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
                     )
                 )
@@ -134,11 +149,11 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ binder: TabState.Binder
+        _ content: PaymentsTransfersContent
     ) -> some View {
         
         PaymentsTransfersView(
-            model: binder.content,
+            model: content,
             factory: .init(makePayHubView: makePayHubFlowView)
         )
     }
