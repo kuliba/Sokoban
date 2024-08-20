@@ -72,6 +72,13 @@ extension Model {
         return (products(.card) ?? []).compactMap(\.asCard?.cardType).uniqued()
     }
     
+    var onlyCorporateCards: Bool {
+        
+        guard productsTypes == [.card] else { return false }
+        
+        return Set(cardsTypes).isDisjoint(with: [.main, .regular, .additionalSelf, .additionalOther, .additionalSelfAccOwn])
+    }
+    
     func product() -> ProductData? {
         
         products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }.first

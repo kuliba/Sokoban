@@ -104,6 +104,82 @@ final class Model_allProductTests: XCTestCase {
         
         XCTAssertNoDiff(products, [])
     }
+    
+    func test_onlyCorporateCards_productsWithoutCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsWithOnlyIndividualCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .regular),
+                makeCardProduct(cardType: .additionalSelf)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsWithIndividualAndCorporateCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .regular),
+                makeCardProduct(cardType: .additionalSelf),
+                makeCardProduct(cardType: .individualBusinessman),
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsEmpty_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [],
+            .card: [],
+            .deposit: [],
+            .loan: []
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsOnlyCorporateCards_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .individualBusinessman),
+                makeCardProduct(cardType: .corporate)
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
 
     // MARK: - Helpers
     
