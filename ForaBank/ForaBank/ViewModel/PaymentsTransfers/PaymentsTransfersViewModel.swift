@@ -985,7 +985,7 @@ private extension PaymentsTransfersViewModel {
     
     func handlePaymentButtonTapped(_ action: any Action) {
         
-        if !model.updateInfo.value.areCardsOrAccountsUpdated, let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+        if !model.updateInfo.value.areCardsOrAccountsUpdated, let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.dataUpdateFailure({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
             event(.setModal(to: .alert(alertViewModel)))
         } else {
             

@@ -98,7 +98,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         )
         
         return .init(
-            makeAlertDataUpdateFailureViewModel: { _ in nil },
+            makeAlertViewModels: .default,
             makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,

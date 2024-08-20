@@ -121,7 +121,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, model,_) = makeSUT(
             flowManager: makeFlowManagerOnlyModalAlert(),
-            makeAlertDataUpdateFailureViewModel: { _ in .dataUpdateFailure {}},
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in .dataUpdateFailure {}},
+                disableForCorporateCard: { _ in nil}),
             updateInfoStatusFlag: .init(rawValue: .active))
         
         let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
@@ -749,7 +751,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         createBlockCardStub: BlockCardServices.BlockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
-        makeAlertDataUpdateFailureViewModel: @escaping PaymentsTransfersFactory.MakeAlertDataUpdateFailureViewModel = { _ in nil },
+        makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .default,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
@@ -824,7 +826,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
+            makeAlertViewModels: makeAlertViewModels,
             makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
