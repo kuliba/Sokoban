@@ -208,7 +208,10 @@ extension DV.RangeSelector {
 
 // MARK: - On Selection Logic
 extension DV.RangeSelector {
-    func onSelection() { if !isFuture() {
-        selectedRange?.wrappedValue?.addToRange(date)
-    }}
+    func onSelection() {
+        if !isFuture() {
+            
+            selectedRange?.wrappedValue?.addToRange(date)
+        }
+    }
 }

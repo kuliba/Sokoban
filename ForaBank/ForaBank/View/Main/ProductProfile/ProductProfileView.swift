@@ -177,10 +177,12 @@ struct ProductProfileView: View {
                 
                 switch state.buttonAction {
                 case .calendar:
-                    CalendarWrapperView(closeAction: {  })
-                        .navigationTitle("Выберите даты или период")
-                        .navigationBarTitleDisplayMode(.inline)
-                
+                    CalendarWrapperView(
+                        closeAction: { self.viewModel.event(.history(.dismiss)) }
+                    )
+                    .navigationTitle("Выберите даты или период")
+                    .navigationBarTitleDisplayMode(.inline)
+                    
                 case .filter:
                     if let filterState = self.viewModel.filterState {
                      
