@@ -1276,6 +1276,8 @@ private extension Target {
     static let payHubUI = target(
         name: .payHubUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
             // internal modules
             .payHub,
             .rxViewModel,
