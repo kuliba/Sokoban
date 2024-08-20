@@ -7,6 +7,6 @@
 
 import PayHub
 
-typealias PaymentsTransfersContent = PaymentsTransfersModel<PayHubPickerBinder>
+typealias PaymentsTransfersContentModel = PaymentsTransfersModel<PayHubPickerBinder>
 
-typealias PaymentsTransfersBinder = PayHub.Binder<PaymentsTransfersModel<PayHubPickerBinder>, PaymentsTransfersFlowModel>
+typealias PaymentsTransfersBinder = PayHub.Binder<PaymentsTransfersContentModel, PaymentsTransfersFlowModel>

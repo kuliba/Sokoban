@@ -150,7 +150,7 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContent
+        _ content: PaymentsTransfersContentModel
     ) -> some View {
         
         PaymentsTransfersView(
