@@ -161,8 +161,8 @@ final class LoadablePickerModelComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias StateItem = LoadablePickerState<UUID, Item>.Item
-    private typealias SUT = LoadablePickerModelComposer<Item>
-    private typealias Model = LoadablePickerModel<Item>
+    private typealias SUT = LoadablePickerModelComposer<UUID, Item>
+    private typealias Model = LoadablePickerModel<UUID, Item>
     private typealias LoadSpy = Spy<Void, [Item]>
     
     private func makeSUT(
