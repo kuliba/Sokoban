@@ -11,14 +11,11 @@ import PayHub
 
 final class TabModelComposer {
     
-    private let makeModel: MakeModel
     private let scheduler: AnySchedulerOf<DispatchQueue>
 
     init(
-        makeModel: @escaping MakeModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.makeModel = makeModel
         self.scheduler = scheduler
     }
     

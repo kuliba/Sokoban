@@ -16,11 +16,7 @@ struct ContentView: View {
     init(
         selected: TabState.Selected = .noLatest
     ) {
-        let flowComposer = PaymentsTransfersModelComposer()
-        let tabComposer = TabModelComposer(
-            makeModel: flowComposer.compose(loadResult:),
-            scheduler: .main
-        )
+        let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)
     }
     
