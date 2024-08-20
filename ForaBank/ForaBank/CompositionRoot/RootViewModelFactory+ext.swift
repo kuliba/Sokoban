@@ -653,10 +653,13 @@ private extension RootViewModelFactory {
         )
         
         let paymentsModel: RootViewModel.PaymentsModel = {
-           
+            
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                let composer = PaymentsTransfersBinderComposer()
+                let pickerComposer = PayHubPickerBinderComposer()
+                let composer = PaymentsTransfersBinderComposer(
+                    makePayHubPickerBinder: pickerComposer.compose
+                )
                 let binder = composer.compose()
                 return .v1(binder)
                 
