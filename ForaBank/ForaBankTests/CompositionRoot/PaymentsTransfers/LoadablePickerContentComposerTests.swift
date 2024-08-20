@@ -216,7 +216,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
 
 // MARK: - DSL
 
-private extension LoadablePickerState {
+extension LoadablePickerState {
     
     var elements: [Element] {
         
