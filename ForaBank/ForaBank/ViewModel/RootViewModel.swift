@@ -537,7 +537,7 @@ extension RootViewModel {
     enum PaymentsModel {
         
         case legacy(PaymentsTransfersViewModel)
-        case v1(PaymentsTransfersModel)
+        case v1(PaymentsTransfersBinder)
     }
 }
 

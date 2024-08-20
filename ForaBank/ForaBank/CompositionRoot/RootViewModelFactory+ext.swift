@@ -643,7 +643,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister
         )
         
-        let paymentsViewModel = PaymentsTransfersViewModel(
+        let paymentsTransfersViewModel = PaymentsTransfersViewModel(
             model: model,
             makeFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
@@ -656,10 +656,12 @@ private extension RootViewModelFactory {
            
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                return .v1(.init())
+                let composer = PaymentsTransfersBinderComposer()
+                let binder = composer.compose()
+                return .v1(binder)
                 
             case .inactive:
-                return .legacy(paymentsViewModel)
+                return .legacy(paymentsTransfersViewModel)
             }
         }()
         
