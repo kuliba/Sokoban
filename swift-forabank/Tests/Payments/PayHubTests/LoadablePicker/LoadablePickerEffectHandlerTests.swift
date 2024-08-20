@@ -41,19 +41,9 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         
         sut?.handleEffect(.load) { _ in exp.fulfill() }
         sut = nil
-        loadSpy.complete(with: .failure(anyError()))
+        loadSpy.complete(with: [])
         
         wait(for: [exp], timeout: 0.1)
-    }
-    
-    func test_load_shouldDeliverEmptyOnLoadFailure() {
-        
-        let (sut, loadPay) = makeSUT()
-        
-        expect(sut, with: .load, toDeliver: .loaded([])) {
-            
-            loadPay.complete(with: .failure(anyError()))
-        }
     }
     
     func test_load_shouldDeliverEmptyOnLoadEmptySuccess() {
@@ -62,7 +52,7 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         
         expect(sut, with: .load, toDeliver: .loaded([])) {
             
-            loadPay.complete(with: .success([]))
+            loadPay.complete(with: [])
         }
     }
     
@@ -73,7 +63,7 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         
         expect(sut, with: .load, toDeliver: .loaded([latest])) {
             
-            loadPay.complete(with: .success([latest]))
+            loadPay.complete(with: [latest])
         }
     }
     
@@ -84,14 +74,14 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         
         expect(sut, with: .load, toDeliver: .loaded([latest1, latest2])) {
             
-            loadPay.complete(with: .success([latest1, latest2]))
+            loadPay.complete(with: [latest1, latest2])
         }
     }
     
     // MARK: - Helpers
     
     private typealias SUT = LoadablePickerEffectHandler<Element>
-    private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
+    private typealias LoadSpy = Spy<Void, [Element]>
     
     private func makeSUT(
         file: StaticString = #file,

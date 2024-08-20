@@ -18,7 +18,6 @@ public struct LoadablePickerEffectHandlerMicroServices<Element> {
 
 public extension LoadablePickerEffectHandlerMicroServices {
     
-    typealias LoadResult = Result<[Element], Error>
-    typealias LoadCompletion = (LoadResult) -> Void
+    typealias LoadCompletion = ([Element]) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
 }

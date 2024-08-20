@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import PayHubUI
 import SwiftUI
 import UIPrimitives
 
@@ -149,7 +150,7 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContent
+        _ content: PaymentsTransfersContentModel
     ) -> some View {
         
         PaymentsTransfersView(
@@ -187,6 +188,14 @@ private extension ContentView {
                 )
             }
         )
+    }
+}
+
+extension PayHubPickerBinder: Loadable {
+    
+    public func load() {
+        
+        content.event(.load)
     }
 }
 

@@ -24,7 +24,6 @@ struct TabView<Content: View>: View {
             navWrapped(state.noLatest, tab: .noLatest)
             navWrapped(state.noCategories, tab: .noCategories)
             navWrapped(state.noBoth, tab: .noBoth)
-            navWrapped(state.okEmpty, tab: .okEmpty)
             navWrapped(state.ok, tab: .ok)
         }
         .animation(.easeInOut, value: state.selected)
@@ -66,7 +65,6 @@ extension TabState.Selected {
         case .noLatest:     return "No Latest"
         case .noCategories: return "No Categories"
         case .noBoth:       return "No Both"
-        case .okEmpty:      return "OK Empty"
         case .ok:           return "OK"
         }
     }
@@ -77,7 +75,6 @@ extension TabState.Selected {
         case .noLatest:     return "cloud.sun.rain"
         case .noCategories: return "cloud.bolt.rain"
         case .noBoth:       return "exclamationmark.circle"
-        case .okEmpty:      return "sun.max.trianglebadge.exclamationmark"
         case .ok:           return "sun.max"
         }
     }

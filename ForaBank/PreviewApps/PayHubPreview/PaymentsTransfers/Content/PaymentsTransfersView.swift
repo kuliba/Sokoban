@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import PayHubUI
 import SwiftUI
 
 struct PaymentsTransfersView<PayHub, PayHubView>: View
@@ -21,11 +22,19 @@ where PayHub: Loadable,
             
             Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
             
-            factory.makePayHubView(model.payHub)
+            factory.makePayHubView(model.payHubPicker)
             
             Spacer()
         }
         .padding()
+    }
+}
+
+extension PaymentsTransfersModel where PayHubPicker: Loadable {
+    
+    func reload() {
+        
+        payHubPicker.load()
     }
 }
 
@@ -54,7 +63,7 @@ where PayHubPicker == PreviewPayHub {
     
     static var preview: PaymentsTransfersModel {
         
-        return .init(payHub: .init())
+        return .init(payHubPicker: .init())
     }
 }
 

@@ -7,17 +7,18 @@
 
 import Foundation
 import PayHub
+import PayHubUI
 
 final class PaymentsTransfersModelComposer {}
 
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
+        loadResult: [PayHubPickerItem<Latest>]
     ) -> Model {
         
         return .init(
-            payHub: composePayHubBinder(loadResult: loadResult)
+            payHubPicker: composePayHubBinder(loadResult: loadResult)
         )
     }
     
@@ -27,20 +28,21 @@ extension PaymentsTransfersModelComposer {
 private extension PaymentsTransfersModelComposer {
     
     func composePayHubBinder(
-        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
+        loadResult: [PayHubPickerItem<Latest>]
     ) -> PayHubPickerBinder {
         
         let content = PayHubPickerContent.stub(loadResult: loadResult)
         let flow = PayHubPickerFlow.stub()
         
-        return .init(content: content, flow: flow)
-    }
-}
-
-extension PayHubPickerBinder: Loadable {
-    
-    func load() {
-        
-        content.event(.load)
+        return .init(
+            content: content, 
+            flow: flow,
+            bind: { content, flow in
+            
+                content.$state
+                    .map(\.selected)
+                    .sink { flow.event(.select($0)) }
+            }
+        )
     }
 }
