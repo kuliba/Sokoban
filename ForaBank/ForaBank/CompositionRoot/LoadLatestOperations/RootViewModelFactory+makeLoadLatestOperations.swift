@@ -8,14 +8,27 @@
 import Foundation
 
 extension RootViewModelFactory {
-        
+    
     static func makeLoadLatestOperations(
-        _ categorySet: CategorySet
-    ) -> (@escaping LoadLatestOperationsCompletion) -> Void {
+        getAllLoadedCategories: @escaping (@escaping ([ServiceCategory]) -> Void) -> Void,
+        getLatestPayments: @escaping ([ServiceCategory], @escaping LoadLatestOperationsCompletion) -> Void
+    ) -> (CategorySet) -> LoadLatestOperations {
         
-        switch categorySet {
-        case .all:
-            return { _ in }
+        return { categorySet in
+            
+            return { completion in
+                
+                switch categorySet {
+                case .all:
+                    getAllLoadedCategories { list in
+                        #warning("add hardcoded: В данный момент блок “Перевести” не динамичен, поэтому последние операции для него, пока вызываем с фронта по типам: isOutsidePayments (за рубеж) и isPhonePayments (По номеру телефона)")
+                        getLatestPayments(list, completion)
+                    }
+                    
+                case let .list(list):
+                    getLatestPayments(list, completion)
+                }
+            }
         }
     }
 }

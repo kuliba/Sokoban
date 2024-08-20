@@ -11,7 +11,7 @@ import Foundation
 extension RootViewModelFactory {
     
     typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
-    typealias LoadLatestOperations = (CategorySet) -> (@escaping LoadLatestOperationsCompletion) -> Void
+    typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
     static func makePaymentsTransfersBinder(
         loadLatestOperations: @escaping LoadLatestOperations,
@@ -21,7 +21,7 @@ extension RootViewModelFactory {
         let pickerContentComposer = PayHubPickerContentComposer(
             load: { completion in
                 
-                loadLatestOperations(.all)() {
+                loadLatestOperations {
                     
                     completion($0.map {
                         

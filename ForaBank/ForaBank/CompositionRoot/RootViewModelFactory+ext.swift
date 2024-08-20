@@ -298,7 +298,28 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let loadLatestOperations = makeLoadLatestOperations
+        final class ServiceCategoryStore {
+            
+            var categories: [ServiceCategory]
+            
+            init(
+                categories: [ServiceCategory] = []
+            ) {
+                self.categories = categories
+            }
+        }
+        
+        let serviceCategoryStore = ServiceCategoryStore()
+        let serviceCategoryLoader = AnyLoader { completion in
+            
+            completion(serviceCategoryStore.categories)
+        }
+        
+        let _makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: serviceCategoryLoader.load,
+            getLatestPayments: NanoServices.getLatestPayments
+        )
+        let loadLatestOperations = _makeLoadLatestOperations(.all)
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
