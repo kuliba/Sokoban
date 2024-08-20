@@ -161,14 +161,3 @@ private extension CalendarView {
     
     func onMonthChange(_ date: Date) { configData.onMonthChange(date) }
 }
-
-//extension CalendarView {
-//    
-//    public init(
-//        _ selectedDate: Date?,
-//        _ selectedRange: MDateRange?,
-//        configBuilder: (CalendarConfig) -> CalendarConfig = { $0 }
-//    ) {
-//        self.init(selectedDate, selectedRange, configBuilder)
-//    }
-//}
