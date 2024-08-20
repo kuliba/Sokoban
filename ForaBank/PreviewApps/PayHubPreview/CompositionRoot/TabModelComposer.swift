@@ -11,18 +11,18 @@ import PayHub
 
 final class TabModelComposer {
     
-    private let makeFlowModel: MakeFlowModel
+    private let makeModel: MakeModel
     private let scheduler: AnySchedulerOf<DispatchQueue>
 
     init(
-        makeFlowModel: @escaping MakeFlowModel,
+        makeModel: @escaping MakeModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.makeFlowModel = makeFlowModel
+        self.makeModel = makeModel
         self.scheduler = scheduler
     }
     
-    typealias MakeFlowModel = (Result<[PayHubItem<Latest>], Error>) -> PaymentsTransfersModel<PayHubBinder>
+    typealias MakeModel = (Result<[PayHubPickerItem<Latest>], Error>) -> PaymentsTransfersModel<PayHubPickerBinder>
 }
 
 extension TabModelComposer {
@@ -66,7 +66,7 @@ private extension TabModelComposer {
 
 private extension TabState.Selected {
     
-    var loadResult: PayHubEffectHandler.MicroServices.LoadResult {
+    var loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult {
         
         switch self {
         case .noLatest:
@@ -87,7 +87,7 @@ private extension TabState.Selected {
     }
 }
 
-private extension Array where Element == PayHubItem<Latest> {
+private extension Array where Element == PayHubPickerItem<Latest> {
     
     static let preview: Self = [
         .latest(.preview()),

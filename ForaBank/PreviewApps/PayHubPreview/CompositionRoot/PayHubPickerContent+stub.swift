@@ -1,5 +1,5 @@
 //
-//  PayHubContent+stub.swift
+//  PayHubPickerContent+stub.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,27 +8,27 @@
 import CombineSchedulers
 import Foundation
 
-extension PayHubContent {
+extension PayHubPickerContent {
     
     static func stub(
-        initialState: PayHubState = .init(
+        initialState: PayHubPickerState = .init(
             prefix: [
                 .element(.init(.templates)),
                 .element(.init(.exchange))
             ],
             suffix: []
         ),
-        loadResult: PayHubEffectHandler.MicroServices.LoadResult,
+        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
-    ) -> PayHubContent {
+    ) -> PayHubPickerContent {
         
-        let reducer = PayHubReducer(
+        let reducer = PayHubPickerReducer(
             makeID: UUID.init,
             makePlaceholders: {
                 [.init(), .init(), .init(), .init()]
             }
         )
-        let effectHandler = PayHubEffectHandler(
+        let effectHandler = PayHubPickerEffectHandler(
             microServices: .init(
                 load: { completion in
                     

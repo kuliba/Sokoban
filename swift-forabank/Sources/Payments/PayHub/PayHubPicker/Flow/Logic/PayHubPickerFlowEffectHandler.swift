@@ -1,11 +1,11 @@
 //
-//  PayHubFlowEffectHandler.swift
+//  PayHubPickerFlowEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public final class PayHubFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
+public final class PayHubPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
 where Exchange: FlowEventEmitter,
       LatestFlow: FlowEventEmitter,
       Templates: FlowEventEmitter,
@@ -22,7 +22,7 @@ where Exchange: FlowEventEmitter,
     public typealias MicroServices = PayHubFlowEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates>
 }
 
-public extension PayHubFlowEffectHandler {
+public extension PayHubPickerFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -34,21 +34,21 @@ public extension PayHubFlowEffectHandler {
         }
     }
     
-    typealias Item = PayHubFlowItem<Exchange, LatestFlow, Templates>
+    typealias Item = PayHubPickerFlowItem<Exchange, LatestFlow, Templates>
 }
 
-public extension PayHubFlowEffectHandler {
+public extension PayHubPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PayHubFlowEvent<Exchange, Latest, LatestFlow, Exchange.Status, Templates>
-    typealias Effect = PayHubFlowEffect<Latest>
+    typealias Event = PayHubPickerFlowEvent<Exchange, Latest, LatestFlow, Exchange.Status, Templates>
+    typealias Effect = PayHubPickerFlowEffect<Latest>
 }
 
-private extension PayHubFlowEffectHandler {
+private extension PayHubPickerFlowEffectHandler {
     
     func select(
-        _ item: PayHubItem<Latest>?,
+        _ item: PayHubPickerItem<Latest>?,
         _ dispatch: @escaping Dispatch
     ) {
         var selected: Item?

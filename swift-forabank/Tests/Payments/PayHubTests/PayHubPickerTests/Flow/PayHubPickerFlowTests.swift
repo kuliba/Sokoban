@@ -1,5 +1,5 @@
 //
-//  PayHubFlowTests.swift
+//  PayHubPickerFlowTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
@@ -9,7 +9,7 @@ import Combine
 import PayHub
 import XCTest
 
-class PayHubFlowTests: XCTestCase {
+class PayHubPickerFlowTests: XCTestCase {
     
     typealias Exchange = Flow
     typealias LatestFlow = Flow
@@ -96,7 +96,7 @@ class PayHubFlowTests: XCTestCase {
     }
 }
 
-extension PayHubFlowItem
+extension PayHubPickerFlowItem
 where Exchange: AnyObject,
         Latest: AnyObject,
       Templates: AnyObject {
@@ -123,7 +123,7 @@ where Exchange: AnyObject,
     }
 }
 
-extension PayHubFlowState
+extension PayHubPickerFlowState
 where Exchange: AnyObject,
       Latest: AnyObject,
       Status: Equatable,
@@ -141,12 +141,12 @@ where Exchange: AnyObject,
     struct EquatableProjection: Equatable {
         
         let isLoading: Bool
-        let selected: PayHubFlowItem<Exchange, Latest, Templates>.EquatableProjection?
+        let selected: PayHubPickerFlowItem<Exchange, Latest, Templates>.EquatableProjection?
         let status: Status?
     }
 }
 
-extension PayHubFlowEvent
+extension PayHubPickerFlowEvent
 where Exchange: AnyObject,
       Latest: Equatable,
       LatestFlow: AnyObject,
@@ -170,7 +170,7 @@ where Exchange: AnyObject,
     enum EquatableProjection: Equatable {
         
         case flowEvent(FlowEvent<Status>)
-        case select(PayHubItem<Latest>?)
-        case selected(PayHubFlowItem<Exchange, LatestFlow, Templates>.EquatableProjection?)
+        case select(PayHubPickerItem<Latest>?)
+        case selected(PayHubPickerFlowItem<Exchange, LatestFlow, Templates>.EquatableProjection?)
     }
 }

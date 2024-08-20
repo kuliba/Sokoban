@@ -41,7 +41,7 @@ struct UIItemLabel: View {
 
 extension UIItemLabel {
     
-    typealias Item = PayHubState.Item
+    typealias Item = PayHubPickerState.Item
     typealias Config = UIItemLabelConfig
 }
 

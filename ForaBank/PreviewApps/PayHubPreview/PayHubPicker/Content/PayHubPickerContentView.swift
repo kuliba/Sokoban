@@ -1,5 +1,5 @@
 //
-//  PayHubContentView.swift
+//  PayHubPickerContentView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PayHubContentView<ItemLabel>: View
+struct PayHubPickerContentView<ItemLabel>: View
 where ItemLabel: View {
     
     let state: State
@@ -40,15 +40,15 @@ where ItemLabel: View {
     }
 }
 
-extension PayHubContentView {
+extension PayHubPickerContentView {
     
-    typealias State = PayHubState
-    typealias Event = PayHubEvent
-    typealias Config = PayHubContentViewConfig
-    typealias Item = PayHubState.Item
+    typealias State = PayHubPickerState
+    typealias Event = PayHubPickerEvent
+    typealias Config = PayHubPickerContentViewConfig
+    typealias Item = PayHubPickerState.Item
 }
 
-private extension PayHubContentView {
+private extension PayHubPickerContentView {
     
     @ViewBuilder
     func itemView(
@@ -130,11 +130,11 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
     
     private static func payHubContentView(
-        _ state: PayHubState,
-        event: @escaping (PayHubEvent) -> Void = { print($0) }
+        _ state: PayHubPickerState,
+        event: @escaping (PayHubPickerEvent) -> Void = { print($0) }
     ) -> some View {
         
-        PayHubContentView(
+        PayHubPickerContentView(
             state: state,
             event: event,
             config: .preview,
@@ -147,7 +147,7 @@ struct PayHubContentView_Previews: PreviewProvider {
     
     private struct PayHubContentViewDemo: View {
         
-        @State private var state: PayHubState = .default
+        @State private var state: PayHubPickerState = .default
         @State private var loadViaReset = false
         
         var body: some View {
@@ -191,7 +191,7 @@ struct PayHubContentView_Previews: PreviewProvider {
             }
         }
         
-        private func load(_ state: PayHubState) {
+        private func load(_ state: PayHubPickerState) {
             
             if loadViaReset {
                 
@@ -216,7 +216,7 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
 }
 
-private extension PayHubState {
+private extension PayHubPickerState {
     
     static let `default`: Self = .init(
         suffix: [
@@ -249,7 +249,7 @@ private extension PayHubState {
     }
 }
 
-extension PayHubContentViewConfig {
+extension PayHubPickerContentViewConfig {
     
     static let preview: Self = .init(
         height: 96,
