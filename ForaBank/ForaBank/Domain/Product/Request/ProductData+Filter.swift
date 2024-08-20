@@ -244,10 +244,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            if cardType.isCorporateCard {
-                return false
-            }
-            return nil
+            return !cardType.isCorporateCard 
         }
     }
     
@@ -255,15 +252,10 @@ extension ProductData.Filter {
         
         func result(_ productData: ProductData) -> Bool? {
             
-            guard let cardType = productData.asCard?.cardType else {
-                return nil
-            }
+            guard let cardType = productData.asCard?.cardType,
+                    cardType.isCorporateCard else { return nil }
             
-            if cardType.isCorporateCard {
-                return cardType == .individualBusinessmanMain
-            }
-            
-            return nil
+            return cardType == .individualBusinessmanMain
         }
     }
 }
