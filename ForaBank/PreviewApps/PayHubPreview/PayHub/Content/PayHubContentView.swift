@@ -32,7 +32,7 @@ where ItemLabel: View {
             
             HStack(spacing: config.spacing) {
                 
-                ForEach(state.uiItems, content: itemView)
+                ForEach(state.items, content: itemView)
             }
             .animation(.easeInOut, value: state)
         }
@@ -45,27 +45,27 @@ extension PayHubContentView {
     typealias State = PayHubState
     typealias Event = PayHubEvent
     typealias Config = PayHubContentViewConfig
-    typealias Item = UIItem<Latest>
+    typealias Item = PayHubState.Item
 }
 
 private extension PayHubContentView {
     
     @ViewBuilder
     func itemView(
-        item: Identified<UUID, UIItem<Latest>>
+        item: Item
     ) -> some View {
         
-        let label = itemLabel(item.element)
+        let label = itemLabel(item)
             .contentShape(Rectangle())
-            .transition(transition(for: item.element))
+            .transition(transition(for: item))
         
-        switch item.element {
+        switch item {
         case .placeholder:
             label
             
-        case let .selectable(selectable):
+        case let .element(identified):
             Button {
-                event(.select(selectable))
+                event(.select(identified.element))
             } label: {
                 label.contentShape(Rectangle())
             }
@@ -74,49 +74,18 @@ private extension PayHubContentView {
     }
     
     func transition(
-        for item: UIItem<Latest>
+        for item: Item
     ) -> AnyTransition {
         
         switch item {
         case .placeholder:
             return transition
             
-        case let .selectable(selectable):
-            switch selectable {
+        case let .element(identified):
+            switch identified.element {
             case .exchange:  return .identity
             case .latest:    return transition
             case .templates: return .identity
-            }
-        }
-    }
-}
-
-private extension PayHubState {
-    
-    var isLoading: Bool {
-        
-        guard case .placeholders = loadState else { return false }
-        return true
-    }
-}
-
-private extension View {
-    
-    @ViewBuilder
-    func wrapInScrollView(
-        _ isWrapped: Bool = true,
-        _ axes: Axis.Set = .vertical,
-        showsIndicators: Bool = true
-    ) -> some View {
-        
-        if isWrapped {
-            ScrollView(axes, showsIndicators: showsIndicators) { self }
-        } else {
-            GeometryReader { geometry in
-                
-                self
-                    .frame(width: geometry.size.width, alignment: .leading)
-                    .clipped()
             }
         }
     }
@@ -249,22 +218,34 @@ struct PayHubContentView_Previews: PreviewProvider {
 
 private extension PayHubState {
     
-    static let `default`: Self = .init(loadState: .placeholders([
-        .init(), .init(), .init(), .init()
-    ]))
+    static let `default`: Self = .init(
+        suffix: [
+            .placeholder(.init()), .placeholder(.init()), .placeholder(.init()), .placeholder(.init()),
+        ])
     
     static func loadedPreview(count: Int) -> Self {
         
-        return .init(loadState: .loaded(
-            (0..<count).map { _ in .init(.preview()) }
-        ))
+        return .init(
+            suffix: (0..<count).map { _ in .element(.init(.latest(.preview()))) }
+        )
     }
     
     static func placeholderPreview(count: Int) -> Self {
         
-        return .init(loadState: .placeholders(
-            (0..<count).map { _ in .init() }
-        ))
+        return .init(
+            suffix: (0..<count).map { _ in .placeholder(.init()) }
+        )
+    }
+    
+    private init(suffix: [Item]) {
+        
+        self.init(
+            prefix: [
+                .element(.init(.templates)),
+                .element(.init(.exchange))
+            ],
+            suffix: suffix
+        )
     }
 }
 

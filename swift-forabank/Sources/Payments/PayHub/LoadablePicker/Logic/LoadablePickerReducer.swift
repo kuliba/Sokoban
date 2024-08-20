@@ -1,26 +1,29 @@
 //
-//  PayHubReducer.swift
+//  LoadablePickerReducer.swift
 //
 //
-//  Created by Igor Malyarov on 15.08.2024.
+//  Created by Igor Malyarov on 20.08.2024.
 //
 
-import Foundation
-
-public final class PayHubReducer<Element> {
+public final class LoadablePickerReducer<ID, Element>
+where ID: Hashable {
     
+    private let makeID: MakeID
     private let makePlaceholders: MakePlaceholders
     
     public init(
+        makeID: @escaping MakeID,
         makePlaceholders: @escaping MakePlaceholders
     ) {
+        self.makeID = makeID
         self.makePlaceholders = makePlaceholders
     }
     
-    public typealias MakePlaceholders = () -> [UUID]
+    public typealias MakeID = () -> ID
+    public typealias MakePlaceholders = () -> [ID]
 }
 
-public extension PayHubReducer {
+public extension LoadablePickerReducer {
     
     func reduce(
         _ state: State,
@@ -37,28 +40,28 @@ public extension PayHubReducer {
         case let .loaded(elements):
             handleLoaded(&state, &effect, with: elements)
             
-        case let .select(item):
-            state.selected = item
+        case let .select(element):
+            state.selected = element
         }
         
         return (state, effect)
     }
 }
 
-public extension PayHubReducer {
+public extension LoadablePickerReducer {
     
-    typealias State = PayHubState<Element>
-    typealias Event = PayHubEvent<Element>
-    typealias Effect = PayHubEffect
+    typealias State = LoadablePickerState<ID, Element>
+    typealias Event = LoadablePickerEvent<Element>
+    typealias Effect = LoadablePickerEffect
 }
 
-private extension PayHubReducer {
+private extension LoadablePickerReducer {
     
     func load(
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        state.loadState = .placeholders(makePlaceholders())
+        state.suffix = makePlaceholders().map { .placeholder($0) }
         state.selected = nil
         effect = .load
     }
@@ -68,12 +71,9 @@ private extension PayHubReducer {
         _ effect: inout Effect?,
         with elements: [Element]
     ) {
-        switch state.loadState {
-        case .loaded:
-            break
-            
-        case let .placeholders(ids):
-            state.loadState = .loaded(ids.assignIDs(elements, UUID.init))
-        }
+        state.suffix = state.suffix
+            .map(\.id)
+            .assignIDs(elements, makeID)
+            .map { State.Item.element($0) }
     }
 }

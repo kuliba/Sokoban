@@ -1,14 +1,14 @@
 //
-//  PayHubEffectHandlerTests.swift
+//  LoadablePickerEffectHandlerTests.swift
+//  
 //
-//
-//  Created by Igor Malyarov on 15.08.2024.
+//  Created by Igor Malyarov on 20.08.2024.
 //
 
 import PayHub
 import XCTest
 
-final class PayHubEffectHandlerTests: PayHubTests {
+final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
     
     // MARK: - init
     
@@ -68,7 +68,7 @@ final class PayHubEffectHandlerTests: PayHubTests {
     
     func test_load_shouldDeliverOneOnLoadSuccessWithOne() {
         
-        let latest = makeLatest()
+        let latest = makeElement()
         let (sut, loadPay) = makeSUT()
         
         expect(sut, with: .load, toDeliver: .loaded([latest])) {
@@ -79,7 +79,7 @@ final class PayHubEffectHandlerTests: PayHubTests {
     
     func test_load_shouldDeliverTwoOnLoadSuccessWithTwo() {
         
-        let (latest1, latest2) = (makeLatest(), makeLatest())
+        let (latest1, latest2) = (makeElement(), makeElement())
         let (sut, loadPay) = makeSUT()
         
         expect(sut, with: .load, toDeliver: .loaded([latest1, latest2])) {
@@ -90,7 +90,7 @@ final class PayHubEffectHandlerTests: PayHubTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PayHubEffectHandler<Latest>
+    private typealias SUT = LoadablePickerEffectHandler<Element>
     private typealias LoadSpy = Spy<Void, SUT.MicroServices.LoadResult>
     
     private func makeSUT(

@@ -17,28 +17,31 @@ struct UIItemLabel: View {
     var body: some View {
         
         switch item {
+        case let .element(identified):
+            switch identified.element {
+            case .exchange:
+                selectableLabel(systemName: "dollarsign.arrow.circlepath", title: "Exchange")
+                
+            case let .latest(latest):
+                selectableLabel(systemName: "l.circle", title: latest.name)
+                
+            case .templates:
+                selectableLabel(systemName: "star", title: "Templates")
+            }
+            
         case .placeholder:
             LatestPlaceholder(
                 opacity: 1,
                 config: config.latestPlaceholder
             )
             ._shimmering()
-            
-        case .selectable(.exchange):
-            selectableLabel(systemName: "dollarsign.arrow.circlepath", title: "Exchange")
-            
-        case let .selectable(.latest(latest)):
-            selectableLabel(systemName: "l.circle", title: latest.name)
-            
-        case .selectable(.templates):
-            selectableLabel(systemName: "star", title: "Templates")
         }
     }
 }
 
 extension UIItemLabel {
     
-    typealias Item = UIItem<Latest>
+    typealias Item = PayHubState.Item
     typealias Config = UIItemLabelConfig
 }
 
@@ -96,9 +99,9 @@ struct UIItemLabel_Previews: PreviewProvider {
             Group {
                 
                 uiItemLabel(.placeholder(.init()))
-                uiItemLabel(.selectable(.exchange))
-                uiItemLabel(.selectable(.latest(.preview())))
-                uiItemLabel(.selectable(.templates))
+                uiItemLabel(.element(.init(.exchange)))
+                uiItemLabel(.element(.init(.latest(.preview()))))
+                uiItemLabel(.element(.init(.templates)))
             }
             .border(.red)
         }

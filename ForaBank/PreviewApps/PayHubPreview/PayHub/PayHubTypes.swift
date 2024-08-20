@@ -5,17 +5,18 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
+import Foundation
 import PayHub
 import RxViewModel
 
 // MARK: - PayHub Content
 
-typealias PayHubState = PayHub.PayHubState<Latest>
-typealias PayHubEvent = PayHub.PayHubEvent<Latest>
-typealias PayHubEffect = PayHub.PayHubEffect
+typealias PayHubState = LoadablePickerState<UUID, PayHubItem<Latest>>
+typealias PayHubEvent = LoadablePickerEvent<PayHubItem<Latest>>
+typealias PayHubEffect = LoadablePickerEffect
 
-typealias PayHubReducer = PayHub.PayHubReducer<Latest>
-typealias PayHubEffectHandler = PayHub.PayHubEffectHandler<Latest>
+typealias PayHubReducer = LoadablePickerReducer<UUID, PayHubItem<Latest>>
+typealias PayHubEffectHandler = LoadablePickerEffectHandler<PayHubItem<Latest>>
 
 typealias PayHubContent = RxViewModel<PayHubState, PayHubEvent, PayHubEffect>
 
