@@ -33,13 +33,22 @@ private extension PaymentsTransfersModelComposer {
         let content = PayHubPickerContent.stub(loadResult: loadResult)
         let flow = PayHubPickerFlow.stub()
         
-        return .init(content: content, flow: flow)
+        return .init(
+            content: content, 
+            flow: flow,
+            bind: { content, flow in
+            
+                content.$state
+                    .map(\.selected)
+                    .sink { flow.event(.select($0)) }
+            }
+        )
     }
 }
 
 extension PayHubPickerBinder: Loadable {
     
-    func load() {
+    public func load() {
         
         content.event(.load)
     }
