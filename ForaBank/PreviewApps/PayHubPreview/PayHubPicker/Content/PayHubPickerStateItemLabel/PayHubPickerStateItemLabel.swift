@@ -1,5 +1,5 @@
 //
-//  UIItemLabel.swift
+//  PayHubPickerStateItemLabel.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -9,7 +9,7 @@ import PayHub
 import SwiftUI
 
 // app specific
-struct UIItemLabel: View {
+struct PayHubPickerStateItemLabel: View {
     
     let item: Item
     let config: Config
@@ -39,10 +39,10 @@ struct UIItemLabel: View {
     }
 }
 
-extension UIItemLabel {
+extension PayHubPickerStateItemLabel {
     
     typealias Item = PayHubPickerState.Item
-    typealias Config = UIItemLabelConfig
+    typealias Config = PayHubPickerStateItemLabelConfig
 }
 
 private extension Latest {
@@ -50,7 +50,7 @@ private extension Latest {
     var name: String { .init(id.prefix(12)) }
 }
 
-private extension UIItemLabel {
+private extension PayHubPickerStateItemLabel {
     
     func selectableLabel(
         systemName: String,
@@ -108,19 +108,22 @@ struct UIItemLabel_Previews: PreviewProvider {
     }
     
     private static func uiItemLabel(
-        _ item: UIItemLabel.Item
+        _ item: PayHubPickerStateItemLabel.Item
     ) -> some View {
         
-        UIItemLabel(item: item, config: .preview)
+        PayHubPickerStateItemLabel(item: item, config: .preview)
     }
 }
 
 extension Latest {
     
-    static func preview() -> Self { return .init(id: UUID().uuidString) }
+    static func preview() -> Self {
+        
+        return .init(id: UUID().uuidString)
+    }
 }
 
-extension UIItemLabelConfig {
+extension PayHubPickerStateItemLabelConfig {
     
     static let preview: Self = .init(
         latestPlaceholder: .preview

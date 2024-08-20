@@ -140,7 +140,7 @@ struct PayHubContentView_Previews: PreviewProvider {
             config: .preview,
             itemLabel: { item in
                 
-                UIItemLabel(item: item, config: .preview)
+                PayHubPickerStateItemLabel(item: item, config: .preview)
             }
         )
     }
