@@ -100,28 +100,6 @@ private extension PayHubState {
     }
 }
 
-private extension View {
-    
-    @ViewBuilder
-    func wrapInScrollView(
-        _ isWrapped: Bool = true,
-        _ axes: Axis.Set = .vertical,
-        showsIndicators: Bool = true
-    ) -> some View {
-        
-        if isWrapped {
-            ScrollView(axes, showsIndicators: showsIndicators) { self }
-        } else {
-            GeometryReader { geometry in
-                
-                self
-                    .frame(width: geometry.size.width, alignment: .leading)
-                    .clipped()
-            }
-        }
-    }
-}
-
 // MARK: - Previews
 
 struct PayHubContentView_Previews: PreviewProvider {
