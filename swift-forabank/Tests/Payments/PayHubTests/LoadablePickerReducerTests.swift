@@ -7,7 +7,7 @@
 
 import PayHub
 
-private struct LoadablePickerState<ID, Element>
+struct LoadablePickerState<ID, Element>
 where ID: Hashable {
     
     internal var prefix: [Item]
@@ -64,7 +64,7 @@ enum LoadablePickerEffect: Equatable {
     case load
 }
 
-private final class LoadablePickerReducer<ID, Element>
+final class LoadablePickerReducer<ID, Element>
 where ID: Hashable {
     
     private let makeID: MakeID
@@ -137,9 +137,11 @@ private extension LoadablePickerReducer {
     }
 }
 
+// add EffectHandler with tests
+
 import XCTest
 
-final class LoadablePickerReducerTests: XCTestCase {
+final class LoadablePickerReducerTests: LoadablePickerTests {
     
     // MARK: - load
     
@@ -662,8 +664,7 @@ final class LoadablePickerReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias ID = UUID
-    private typealias SUT = LoadablePickerReducer<ID, Element>
+    private typealias SUT = Reducer
     
     private func makeSUT(
         makeID: @escaping () -> ID = UUID.init,
@@ -689,36 +690,6 @@ final class LoadablePickerReducerTests: XCTestCase {
     ) -> SUT.State {
         
         return .init(prefix: prefix, suffix: suffix, selected: selected)
-    }
-    
-    private func makeItem(
-        id: ID = .init(),
-        _ element: Element? = nil
-    ) -> SUT.State.Item {
-        
-        return .element(.init(id: id, element: element ?? makeElement()))
-    }
-    
-    private func ID() -> ID {
-        
-        return .init()
-    }
-    
-    private func makePlaceholderID() -> ID {
-        
-        return .init()
-    }
-    
-    private struct Element: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeElement(
-        _ value: String = anyMessage()
-    ) -> Element {
-        
-        return .init(value: value)
     }
     
     @discardableResult
