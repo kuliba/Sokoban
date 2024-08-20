@@ -7,6 +7,7 @@
 
 import Foundation
 import PayHub
+import PayHubUI
 
 final class PaymentsTransfersModelComposer {}
 
@@ -17,7 +18,7 @@ extension PaymentsTransfersModelComposer {
     ) -> Model {
         
         return .init(
-            payHub: composePayHubBinder(loadResult: loadResult)
+            payHubPicker: composePayHubBinder(loadResult: loadResult)
         )
     }
     
@@ -43,13 +44,5 @@ private extension PaymentsTransfersModelComposer {
                     .sink { flow.event(.select($0)) }
             }
         )
-    }
-}
-
-extension PayHubPickerBinder: Loadable {
-    
-    public func load() {
-        
-        content.event(.load)
     }
 }

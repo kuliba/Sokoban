@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import PayHubUI
 import SwiftUI
 import UIPrimitives
 
@@ -187,6 +188,14 @@ private extension ContentView {
                 )
             }
         )
+    }
+}
+
+extension PayHubPickerBinder: Loadable {
+    
+    public func load() {
+        
+        content.event(.load)
     }
 }
 
