@@ -71,21 +71,24 @@ final class ProductFilterTests: XCTestCase {
         )
     }
     
-    func test_CardCorporateIsIndividualBusinessmanMainRule_ShouldReturnIndividualBusinessmanMainExcludeOtherCorporateCards() {
+    func test_CardCorporateIsIndividualBusinessmanMainRule_ShouldReturnCradsWithIndividualBusinessmanMainExcludeOtherCorporateCards() {
         
         let result = filteredProducts(
             products: [
                 ProductCardData(id: 1, cardType: .additionalCorporate),
                 ProductCardData(id: 2, cardType: .corporate),
                 ProductCardData(id: 3, cardType: .individualBusinessman),
-                ProductCardData(id: 4, cardType: .individualBusinessmanMain)
+                ProductCardData(id: 4, cardType: .individualBusinessmanMain),
+                ProductCardData(id: 10, cardType: .main),
+                .accountActiveRub,
+                .depositActiveRub
             ],
             rules: [ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule()]
         )
         
         XCTAssertEqual(
             result.map(\.id),
-            [4]
+            [4, 10, 51, 71]
         )
     }
     
