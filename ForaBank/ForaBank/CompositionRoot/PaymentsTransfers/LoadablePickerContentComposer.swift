@@ -1,5 +1,5 @@
 //
-//  PayHubPickerContentComposer.swift
+//  LoadablePickerContentComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -9,8 +9,11 @@ import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
+import RxViewModel
 
-final class PayHubPickerContentComposer {
+typealias LoadablePickerContent<Item> = RxViewModel<LoadablePickerState<UUID, Item>, LoadablePickerEvent<Item>, LoadablePickerEffect>
+
+final class LoadablePickerContentComposer<Item> {
     
     private let load: Load
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -23,25 +26,24 @@ final class PayHubPickerContentComposer {
         self.scheduler = scheduler
     }
     
-    typealias Item = PayHubPickerItem<Latest>
     typealias LoadCompletion = ([Item]) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
 }
 
-extension PayHubPickerContentComposer {
+extension LoadablePickerContentComposer {
     
     func compose(
-        prefix: [PayHubPickerState.Item],
-        suffix: [PayHubPickerState.Item],
+        prefix: [LoadablePickerState<UUID, Item>.Item],
+        suffix: [LoadablePickerState<UUID, Item>.Item],
         placeholderCount: Int
-    ) -> PayHubPickerContent {
+    ) -> LoadablePickerContent<Item> {
         
         let placeholderIDs = (0..<placeholderCount).map { _ in UUID() }
-        let reducer = PayHubPickerReducer(
+        let reducer = LoadablePickerReducer<UUID, Item>(
             makeID: UUID.init,
             makePlaceholders: { placeholderIDs }
         )
-        let effectHandler = PayHubPickerEffectHandler(
+        let effectHandler = LoadablePickerEffectHandler<Item>(
             microServices: .init(load: load)
         )
         

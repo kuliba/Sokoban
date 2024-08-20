@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 
 extension RootViewModelFactory {
     
@@ -18,7 +19,7 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> PaymentsTransfersBinder {
         
-        let pickerContentComposer = PayHubPickerContentComposer(
+        let pickerContentComposer = LoadablePickerContentComposer<PayHubPickerItem<Latest>>(
             load: { completion in
                 
                 loadLatestOperations {

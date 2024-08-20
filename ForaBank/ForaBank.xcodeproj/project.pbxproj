@@ -1641,7 +1641,7 @@
 		2AF720272C74861600919CAF /* PaymentsTransfersBinderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */; };
 		2AF720292C748B3600919CAF /* PayHubPickerBinderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */; };
 		2AF7202B2C748D0800919CAF /* PayHubPickerBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202A2C748D0800919CAF /* PayHubPickerBinder.swift */; };
-		2AF7202D2C74918600919CAF /* PayHubPickerContentComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202C2C74918600919CAF /* PayHubPickerContentComposer.swift */; };
+		2AF7202D2C74918600919CAF /* LoadablePickerContentComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */; };
 		2AF7202F2C749B8200919CAF /* CategorySet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202E2C749B8200919CAF /* CategorySet.swift */; };
 		2AF720312C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720302C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift */; };
 		2AF720342C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */; };
@@ -4967,7 +4967,7 @@
 		2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersBinderComposer.swift; sourceTree = "<group>"; };
 		2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerBinderComposer.swift; sourceTree = "<group>"; };
 		2AF7202A2C748D0800919CAF /* PayHubPickerBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerBinder.swift; sourceTree = "<group>"; };
-		2AF7202C2C74918600919CAF /* PayHubPickerContentComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerContentComposer.swift; sourceTree = "<group>"; };
+		2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadablePickerContentComposer.swift; sourceTree = "<group>"; };
 		2AF7202E2C749B8200919CAF /* CategorySet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySet.swift; sourceTree = "<group>"; };
 		2AF720302C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperations.swift"; sourceTree = "<group>"; };
 		2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersBinder.swift"; sourceTree = "<group>"; };
@@ -11963,7 +11963,7 @@
 				2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */,
 				2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */,
 				2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */,
-				2AF7202C2C74918600919CAF /* PayHubPickerContentComposer.swift */,
+				2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */,
 				2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */,
 				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
@@ -20365,7 +20365,7 @@
 				2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */,
 				2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
-				2AF7202D2C74918600919CAF /* PayHubPickerContentComposer.swift in Sources */,
+				2AF7202D2C74918600919CAF /* LoadablePickerContentComposer.swift in Sources */,
 				2AA3A9482BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift in Sources */,
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,
 				2A550C5E2C52C3EE00B3F72A /* ServicePaymentFlowStateWrapperView.swift in Sources */,
