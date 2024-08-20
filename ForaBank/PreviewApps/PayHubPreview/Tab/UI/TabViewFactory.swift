@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct TabViewFactory<Content: View> {
+struct TabViewFactory<BinderView: View> {
     
-    let makeContent: MakeContent
+    let makeBinderView: MakeBinderView
 }
 
 extension TabViewFactory {
     
-    typealias MakeContent = (TabState) -> Content
+    typealias MakeBinderView = (TabState.Binder) -> BinderView
 }

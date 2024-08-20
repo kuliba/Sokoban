@@ -22,7 +22,7 @@ final class PayHubBinder {
         self.flow = flow
         
         cancellable = content.$state
-            .map(\.?.selected)
+            .map(\.selected)
             .sink { flow.event(.select($0)) }
     }
 }

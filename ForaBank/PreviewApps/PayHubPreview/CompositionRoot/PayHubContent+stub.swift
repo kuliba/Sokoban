@@ -11,12 +11,23 @@ import Foundation
 extension PayHubContent {
     
     static func stub(
-        initialState: PayHubState = .none,
+        initialState: PayHubState = .init(
+            prefix: [
+                .element(.init(.templates)),
+                .element(.init(.exchange))
+            ],
+            suffix: []
+        ),
         loadResult: PayHubEffectHandler.MicroServices.LoadResult,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PayHubContent {
         
-        let reducer = PayHubReducer()
+        let reducer = PayHubReducer(
+            makeID: UUID.init,
+            makePlaceholders: {
+                [.init(), .init(), .init(), .init()]
+            }
+        )
         let effectHandler = PayHubEffectHandler(
             microServices: .init(
                 load: { completion in

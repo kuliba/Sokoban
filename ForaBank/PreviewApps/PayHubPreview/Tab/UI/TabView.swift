@@ -17,13 +17,17 @@ struct TabView<Content: View>: View {
         
         SwiftUI.TabView(
             selection: .init(
-                get: { state },
-                set: { event(.switchTo($0)) }
+                get: { state.selected },
+                set: { event(.select($0)) }
             )
         ) {
-            ForEach(TabState.allCases, id: \.self, content: navWrapped)
+            navWrapped(state.noLatest, tab: .noLatest)
+            navWrapped(state.noCategories, tab: .noCategories)
+            navWrapped(state.noBoth, tab: .noBoth)
+            navWrapped(state.okEmpty, tab: .okEmpty)
+            navWrapped(state.ok, tab: .ok)
         }
-        .animation(.easeInOut, value: state)
+        .animation(.easeInOut, value: state.selected)
     }
 }
 
@@ -37,12 +41,13 @@ extension TabView {
 extension TabView {
     
     func navWrapped(
-        _ tab: State
+        _ binder: State.Binder,
+        tab: State.Selected
     ) -> some View {
         
         NavigationView {
             
-            factory.makeContent(tab)
+            factory.makeBinderView(binder)
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
@@ -53,7 +58,7 @@ extension TabView {
     }
 }
 
-extension TabState {
+extension TabState.Selected {
     
     var tabTitle: String {
         

@@ -7,5 +7,5 @@
 
 enum TabEvent: Equatable {
     
-    case switchTo(TabState)
+    case select(TabState.Selected)
 }
