@@ -137,8 +137,6 @@ private extension LoadablePickerReducer {
     }
 }
 
-// add EffectHandler with tests
-
 import XCTest
 
 final class LoadablePickerReducerTests: LoadablePickerTests {
