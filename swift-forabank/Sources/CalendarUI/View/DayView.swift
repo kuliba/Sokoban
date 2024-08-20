@@ -49,7 +49,8 @@ public extension DayView {
     
     func content() -> AnyView {
         
-        defaultContent().erased()
+        defaultContent()
+            .erased()
     }
     
     func dayLabel() -> AnyView {
@@ -67,11 +68,13 @@ public extension DayView {
          
             return defaultSelectionView().erased()
         }
-        
     }
     
-    func rangeSelectionView() -> AnyView {    defaultRangeSelectionView().erased() }
+    func rangeSelectionView() -> AnyView {
+        defaultRangeSelectionView().erased()
+    }
 }
+
 private extension DayView {
     
     func defaultContent() -> some View {
@@ -83,7 +86,6 @@ private extension DayView {
             rangeSelectionView()
             
             dayLabel()
-            
             
         }
     }
@@ -149,10 +151,15 @@ private extension DayView {
 
 // MARK: - Default Logic Implementation
 public extension DayView {
+    
     func onAppear() {}
-    func onSelection() { 
-        selectedDate?.wrappedValue = date
-        print("Date selection")
+    
+    func onSelection() {
+        
+        if !isFuture() {
+            
+            selectedRange?.wrappedValue?.addToRange(date)
+        }
     }
 }
 
@@ -170,17 +177,24 @@ public extension DayView {
 // MARK: Date Helpers
 public extension DayView {
     
-    func isPast() -> Bool { date.isBefore(.day, than: .now) }
+    func isPast() -> Bool {
+        date.isBefore(.day, than: .now)
+    }
     
-    func isToday() -> Bool { date.isSame(.day, as: .now) }
+    func isToday() -> Bool { 
+        date.isSame(.day, as: .now)
+    }
     
-    func isFuture() -> Bool { date.isLater(.day, than: .now) }
-    
+    func isFuture() -> Bool {
+        date.isLater(.day, than: .now)
+    }
 }
 
 // MARK: Day Selection Helpers
 public extension DayView {
-    func isSelected() -> Bool { date.isSame(.day, as: selectedDate?.wrappedValue) || isBeginningOfRange() || isEndOfRange() }
+    func isSelected() -> Bool {
+        date.isSame(.day, as: selectedDate?.wrappedValue) || isBeginningOfRange() || isEndOfRange()
+    }
 }
 
 // MARK: Range Selection Helpers
