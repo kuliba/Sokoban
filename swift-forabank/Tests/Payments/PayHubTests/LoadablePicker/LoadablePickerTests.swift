@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
+import PayHub
 import XCTest
 
 class LoadablePickerTests: XCTestCase {

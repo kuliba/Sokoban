@@ -5,57 +5,6 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-struct LoadablePickerEffectHandlerMicroServices<Element> {
-    
-    let load: Load
-}
-
-extension LoadablePickerEffectHandlerMicroServices {
-    
-    typealias LoadResult = Result<[Element], Error>
-    typealias LoadCompletion = (LoadResult) -> Void
-    typealias Load = (@escaping LoadCompletion) -> Void
-}
-
-final class LoadablePickerEffectHandler<Element> {
-    
-    private let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = LoadablePickerEffectHandlerMicroServices<Element>
-}
-
-extension LoadablePickerEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case .load:
-            microServices.load { [weak self] in
-                
-                guard self != nil else { return }
-                
-                dispatch(.loaded(((try? $0.get()) ?? [])))
-            }
-        }
-    }
-}
-
-extension LoadablePickerEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = LoadablePickerEvent<Element>
-    typealias Effect = LoadablePickerEffect
-}
-
 import XCTest
 
 final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
