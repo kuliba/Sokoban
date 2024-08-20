@@ -47,7 +47,7 @@ struct CalendarWrapperView: View {
                                 title: "Показать",
                                 titleConfig: .init(
                                     textFont: .textH3Sb18240(),
-                                    textColor: .textSecondary
+                                    textColor: .white
                                 ),
                                 background: .buttonPrimary
                             ),
@@ -67,28 +67,17 @@ struct CalendarWrapperView: View {
 
 private extension CalendarWrapperView {
     
-    func selectedRangeView() -> some View {
-        SelectedRangeView(selectedRange: $selectedRange)
-    }
-    
     func calendarView() -> some View {
         
         CalendarView(
-            selectedDate: nil,
-            selectedRange: $selectedRange,
-            configBuilder: { config in
-                
-                config
-                     .dayView(RangeSelector.init)
-                     .scrollTo(date: Date())
+            nil,
+            $selectedRange,
+            {
+                $0
+                    .dayView(RangeSelector.init)
+                    .scrollTo(date: Date())
             }
         )
-    }
-    
-    func bottomView() -> some View {
-        Button("Continue", action: closeAction)
-            .padding(.top, 12)
-            .padding(.horizontal, margins)
     }
     
     func simpleButtonView(
@@ -117,74 +106,13 @@ extension CalendarWrapperView {
         let background: Color
     }
 }
-
-// MARK: - Selected Range View
-fileprivate struct SelectedRangeView: View {
-    
-    @Binding var selectedRange: MDateRange?
-
-    var body: some View {
-        HStack(spacing: 12) {
-            dateText(startDateText)
-            arrowIcon()
-            dateText(endDateText)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, margins)
-        .animation(.bouncy, value: selectedRange?.getRange())
-    }
-}
-
-private extension SelectedRangeView {
-    func dateText(_ text: String) -> some View {
-        Text(text)
-            .font(.system(size: 24))
-            .foregroundColor(.black)
-            .lineLimit(1)
-//            .contentTransition(.numericText(countsDown: true))
-    }
-    func arrowIcon() -> some View {
-        Image("arrow-right")
-            .resizable()
-            .frame(width: 28)
-            .foregroundColor(.black)
-    }
-}
-
-private extension SelectedRangeView {
-    var startDateText: String {
-        guard let date = selectedRange?.getRange()?.lowerBound else { return "N/A" }
-        return dateFormatter.string(from: date)
-    }
-    var endDateText: String {
-        guard let date = selectedRange?.getRange()?.upperBound else { return "N/A" }
-        return dateFormatter.string(from: date)
-    }
-}
-
-private extension SelectedRangeView {
-    var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE, MMM d"
-        return dateFormatter
-    }
-}
-
-
-// MARK: - Modifiers
-fileprivate let margins: CGFloat = 24
-
     
 struct RangeSelector: DayView {
     
     let date: Date
     let isCurrentMonth: Bool
     let selectedDate: Binding<Date?>?
-    var selectedRange: Binding<MDateRange?>? {
-        didSet {
-            print("print")
-        }
-    }
+    var selectedRange: Binding<MDateRange?>?
     
     func dayLabel() -> AnyView {
         

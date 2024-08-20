@@ -107,6 +107,7 @@ public protocol WeekdayLabel: View {
 public extension WeekdayLabel {
     func content() -> AnyView { defaultContent().erased() }
 }
+
 private extension WeekdayLabel {
     func defaultContent() -> some View {
         Text(getString(with: .veryShort))
