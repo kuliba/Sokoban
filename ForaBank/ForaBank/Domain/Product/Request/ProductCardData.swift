@@ -358,6 +358,14 @@ extension ProductCardData {
             self == .additionalSelfAccOwn
         }
         
+        var isCorporateCard: Bool {
+            
+            return self == .additionalCorporate ||
+            self == .corporate ||
+            self == .individualBusinessman ||
+            self == .individualBusinessmanMain
+        }
+        
         var controlAbroadType: AbroadType {
             switch self {
             case .main:
