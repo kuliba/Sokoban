@@ -68,6 +68,7 @@ extension ProductsSwapView {
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.DemandDepositRule(),
                             ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                             ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
@@ -78,6 +79,7 @@ extension ProductsSwapView {
                     rules: [ProductData.Filter.CreditRule(),
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                             ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
 

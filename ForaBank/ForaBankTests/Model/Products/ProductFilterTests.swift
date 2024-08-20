@@ -50,6 +50,47 @@ final class ProductFilterTests: XCTestCase {
         )
     }
     
+    func test_CardCorporateRule_ShouldExcludeCorporateCards() {
+        
+        let result = filteredProducts(
+            products: [
+                ProductCardData(id: 1, cardType: .additionalCorporate),
+                ProductCardData(id: 2, cardType: .corporate),
+                ProductCardData(id: 3, cardType: .individualBusinessman),
+                ProductCardData(id: 4, cardType: .individualBusinessmanMain),
+                ProductCardData(id: 10, cardType: .main),
+                .accountActiveRub,
+                .depositActiveRub
+            ],
+            rules: [ProductData.Filter.CardCorporateRule()]
+        )
+        
+        XCTAssertEqual(
+            result.map(\.id),
+            [10, 51, 71]
+        )
+    }
+    
+    func test_CardCorporateIsIndividualBusinessmanMainRule_ShouldReturnCradsWithIndividualBusinessmanMainExcludeOtherCorporateCards() {
+        
+        let result = filteredProducts(
+            products: [
+                ProductCardData(id: 1, cardType: .additionalCorporate),
+                ProductCardData(id: 2, cardType: .corporate),
+                ProductCardData(id: 3, cardType: .individualBusinessman),
+                ProductCardData(id: 4, cardType: .individualBusinessmanMain),
+                ProductCardData(id: 10, cardType: .main),
+                .accountActiveRub,
+                .depositActiveRub
+            ],
+            rules: [ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule()]
+        )
+        
+        XCTAssertEqual(
+            result.map(\.id),
+            [4, 10, 51, 71]
+        )
+    }
     
     func testCardActive_LoanRestricted_AdditionalSelf() {
         
@@ -218,12 +259,12 @@ final class ProductFilterTests: XCTestCase {
 
 private extension ProductCardData {
     
-    convenience init(id: Int, currency: Currency, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active, loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil, statusPc: ProductData.StatusPC = .active, isMain: Bool = true) {
+    convenience init(id: Int, currency: Currency, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active, loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil, statusPc: ProductData.StatusPC = .active, isMain: Bool = true, cardType: ProductCardData.CardType = .main) {
         
-        self.init(id: id, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: ownerId, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: status, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: loanBaseParam, statusPc: statusPc, isMain: isMain, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        self.init(id: id, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: ownerId, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: status, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: loanBaseParam, statusPc: statusPc, isMain: isMain, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
     }
     
-    convenience init(id: Int, currency: Currency, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, cardType: ProductCardData.CardType) {
+    convenience init(id: Int, currency: Currency = .rub, ownerId: Int = 0, allowCredit: Bool = true, allowDebit: Bool = true, cardType: ProductCardData.CardType) {
         
         self.init(id: id, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: ownerId, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
     }
