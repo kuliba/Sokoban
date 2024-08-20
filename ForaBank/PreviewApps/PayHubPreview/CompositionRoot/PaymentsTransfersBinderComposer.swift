@@ -25,7 +25,7 @@ extension PaymentsTransfersBinderComposer {
     typealias Binder = PaymentsTransfersBinder
  
     func compose(
-        loadResult: Result<[PayHubPickerItem<Latest>], Error>
+        loadResult: [PayHubPickerItem<Latest>]
     ) -> Binder {
         
         let contentComposer = PaymentsTransfersModelComposer()

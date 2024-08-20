@@ -30,7 +30,7 @@ public extension LoadablePickerEffectHandler {
                 
                 guard self != nil else { return }
                 
-                dispatch(.loaded(((try? $0.get()) ?? [])))
+                dispatch(.loaded($0))
             }
         }
     }

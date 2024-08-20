@@ -24,8 +24,7 @@ final class PayHubPickerContentComposer {
     }
     
     typealias Item = PayHubPickerItem<Latest>
-    typealias LoadResult = Result<[Item], Error>
-    typealias LoadCompletion = (LoadResult) -> Void
+    typealias LoadCompletion = ([Item]) -> Void
     typealias Load = (@escaping LoadCompletion) -> Void
 }
 

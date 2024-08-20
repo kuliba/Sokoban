@@ -19,7 +19,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeModel = (Result<[PayHubPickerItem<Latest>], Error>) -> PaymentsTransfersModel<PayHubPickerBinder>
+    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersModel<PayHubPickerBinder>
 }
 
 extension TabModelComposer {
@@ -36,7 +36,6 @@ extension TabModelComposer {
                 noLatest: makeBinder(.noLatest),
                 noCategories: makeBinder(.noCategories),
                 noBoth: makeBinder(.noBoth),
-                okEmpty: makeBinder(.okEmpty),
                 ok: makeBinder(.ok),
                 selected: selected
             ),
@@ -63,23 +62,20 @@ private extension TabModelComposer {
 
 private extension TabState.Selected {
     
-    var loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult {
+    var loadResult: [PayHubPickerItem<Latest>] {
         
         switch self {
         case .noLatest:
-            return .failure(NSError(domain: "Error", code: -1))
+            return []
             
         case .noCategories:
-            return .failure(NSError(domain: "Error", code: -1))
+            return []
             
         case .noBoth:
-            return .failure(NSError(domain: "Error", code: -1))
-            
-        case .okEmpty:
-            return .success([])
-            
+            return []
+                        
         case .ok:
-            return .success(.preview)
+            return .preview
         }
     }
 }

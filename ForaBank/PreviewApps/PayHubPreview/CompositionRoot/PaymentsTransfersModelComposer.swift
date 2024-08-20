@@ -14,7 +14,7 @@ final class PaymentsTransfersModelComposer {}
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
+        loadResult: [PayHubPickerItem<Latest>]
     ) -> Model {
         
         return .init(
@@ -28,7 +28,7 @@ extension PaymentsTransfersModelComposer {
 private extension PaymentsTransfersModelComposer {
     
     func composePayHubBinder(
-        loadResult: PayHubPickerEffectHandler.MicroServices.LoadResult
+        loadResult: [PayHubPickerItem<Latest>]
     ) -> PayHubPickerBinder {
         
         let content = PayHubPickerContent.stub(loadResult: loadResult)

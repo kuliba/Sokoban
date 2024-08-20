@@ -10,7 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadLatestOperationsCompletion = ([Latest]) -> Void
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
     static func makePaymentsTransfersBinder(
@@ -23,10 +23,7 @@ extension RootViewModelFactory {
                 
                 loadLatestOperations {
                     
-                    completion($0.map {
-                        
-                        $0.map { .latest($0) }
-                    })
+                    completion($0.map { .latest($0) })
                 }
             },
             scheduler: scheduler

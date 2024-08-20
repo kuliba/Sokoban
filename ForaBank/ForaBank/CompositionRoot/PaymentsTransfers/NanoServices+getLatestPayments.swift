@@ -11,9 +11,9 @@ extension NanoServices {
     
     static func getLatestPayments(
         categories: [ServiceCategory],
-        completion: @escaping (Result<[Latest], Error>) -> Void
+        completion: @escaping ([Latest]) -> Void
     ) {
         #warning("replace stub with implementation")
-        completion(.success([]))
+        completion([])
     }
 }
