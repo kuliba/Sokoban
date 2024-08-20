@@ -65,7 +65,7 @@ private extension ContentView {
     
     @ViewBuilder
     func makeBinderView(
-        tabState: TabState.Binder
+        binder: TabState.Binder
     ) -> some View {
         
 #warning("extract Composer and Factory")
@@ -91,7 +91,7 @@ private extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makePaymentsTransfersContent(tabState) },
+                        makeContent: { makePaymentsTransfersContent(binder.content) },
                         makeDestinationContent: {
                             
                             switch $0 {
@@ -134,11 +134,11 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ binder: TabState.Binder
+        _ content: TabState.Binder.Content
     ) -> some View {
         
         PaymentsTransfersView(
-            model: binder.content,
+            model: content,
             factory: .init(makePayHubView: makePayHubFlowView)
         )
     }
