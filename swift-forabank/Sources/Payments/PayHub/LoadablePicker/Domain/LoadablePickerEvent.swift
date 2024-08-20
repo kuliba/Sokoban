@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-enum LoadablePickerEvent<Element> {
+public enum LoadablePickerEvent<Element> {
     
     case load
     case loaded([Element])

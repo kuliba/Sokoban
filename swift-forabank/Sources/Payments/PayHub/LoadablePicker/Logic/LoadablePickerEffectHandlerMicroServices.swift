@@ -5,12 +5,18 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-struct LoadablePickerEffectHandlerMicroServices<Element> {
+public struct LoadablePickerEffectHandlerMicroServices<Element> {
     
-    let load: Load
+    public let load: Load
+    
+    public init(
+        load: @escaping Load
+    ) {
+        self.load = load
+    }
 }
 
-extension LoadablePickerEffectHandlerMicroServices {
+public extension LoadablePickerEffectHandlerMicroServices {
     
     typealias LoadResult = Result<[Element], Error>
     typealias LoadCompletion = (LoadResult) -> Void

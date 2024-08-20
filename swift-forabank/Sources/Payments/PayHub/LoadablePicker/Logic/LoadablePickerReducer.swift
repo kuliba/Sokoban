@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-final class LoadablePickerReducer<ID, Element>
+public final class LoadablePickerReducer<ID, Element>
 where ID: Hashable {
     
     private let makeID: MakeID
@@ -23,7 +23,7 @@ where ID: Hashable {
     public typealias MakePlaceholders = () -> [ID]
 }
 
-extension LoadablePickerReducer {
+public extension LoadablePickerReducer {
     
     func reduce(
         _ state: State,
@@ -48,7 +48,7 @@ extension LoadablePickerReducer {
     }
 }
 
-extension LoadablePickerReducer {
+public extension LoadablePickerReducer {
     
     typealias State = LoadablePickerState<ID, Element>
     typealias Event = LoadablePickerEvent<Element>

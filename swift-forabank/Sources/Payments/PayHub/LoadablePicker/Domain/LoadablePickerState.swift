@@ -5,16 +5,14 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-import PayHub
-
-struct LoadablePickerState<ID, Element>
+public struct LoadablePickerState<ID, Element>
 where ID: Hashable {
     
     internal var prefix: [Item]
     internal var suffix: [Item]
-    var selected: Element?
+    public var selected: Element?
     
-    init(
+    public init(
         prefix: [Item],
         suffix: [Item],
         selected: Element? = nil
@@ -23,22 +21,22 @@ where ID: Hashable {
         self.suffix = suffix
         self.selected = selected
     }
-}
-
-extension LoadablePickerState {
     
-    var items: [Item] { prefix + suffix }
-    
-    enum Item {
+    public enum Item {
         
         case element(Identified<ID, Element>)
         case placeholder(ID)
     }
 }
 
+public extension LoadablePickerState {
+    
+    var items: [Item] { prefix + suffix }
+}
+
 extension LoadablePickerState.Item: Identifiable {
     
-    var id: ID {
+    public var id: ID {
         
         switch self {
         case let .element(element): return element.id

@@ -5,20 +5,20 @@
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-final class LoadablePickerEffectHandler<Element> {
+public final class LoadablePickerEffectHandler<Element> {
     
     private let microServices: MicroServices
     
-    init(
+    public init(
         microServices: MicroServices
     ) {
         self.microServices = microServices
     }
     
-    typealias MicroServices = LoadablePickerEffectHandlerMicroServices<Element>
+    public typealias MicroServices = LoadablePickerEffectHandlerMicroServices<Element>
 }
 
-extension LoadablePickerEffectHandler {
+public extension LoadablePickerEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -36,7 +36,7 @@ extension LoadablePickerEffectHandler {
     }
 }
 
-extension LoadablePickerEffectHandler {
+public extension LoadablePickerEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
