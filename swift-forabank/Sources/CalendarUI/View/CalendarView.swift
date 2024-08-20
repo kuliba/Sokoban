@@ -46,17 +46,17 @@ struct OptionsViewModel: Identifiable {
 
 public struct CalendarView: View {
     
-    @StateObject var selectedData: CalendarViewModel
+    @StateObject var selectedData: CalendarObserver
     let monthsData: [Month]
     let configData: CalendarConfig
 
-    init(
+
+    public init(
         _ selectedDate: Binding<Date?>?,
         _ selectedRange: Binding<MDateRange?>?,
-        _ configBuilder: (CalendarConfig) -> CalendarConfig)
-    {
-        self._selectedData = .init(wrappedValue: .init(.now, .init(.now.start(of: .weekday), .now.end(of: .weekday))))
-        
+        _ configBuilder: (CalendarConfig) -> CalendarConfig = { $0 }
+    ) {
+        self._selectedData = .init(wrappedValue: .init(selectedDate, selectedRange))
         self.configData = configBuilder(.init())
         self.monthsData = .generate()
     }
@@ -90,30 +90,28 @@ public struct CalendarView: View {
 
 private extension CalendarView {
     
-    func buttonsView() -> some View {
-    
-        Color.red.frame(width: 20, height: 20, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-    }
-    
     func weekdaysView() -> some View {
         configData.weekdaysView().erased()
     }
     
-    func scrollView() -> some View { ScrollViewReader { reader in
+    func scrollView() -> some View {
         
-        ScrollView(showsIndicators: false) {
+        ScrollViewReader { reader in
             
-            LazyVStack(spacing: configData.monthsSpacing) {
+            ScrollView(showsIndicators: false) {
                 
-                ForEach(monthsData, id: \.month, content: monthItem)
+                LazyVStack(spacing: configData.monthsSpacing) {
+                    
+                    ForEach(monthsData, id: \.month, content: monthItem)
+                }
+                .padding(.top, configData.monthsPadding.top)
+                .padding(.bottom, configData.monthsPadding.bottom)
+                .background(configData.monthsViewBackground)
             }
-            .padding(.top, configData.monthsPadding.top)
-            .padding(.bottom, configData.monthsPadding.bottom)
-            .background(configData.monthsViewBackground)
+            .onAppear() { scrollToDate(reader, animatable: false) }
+            .onChange(of: configData.scrollDate) { _ in scrollToDate(reader, animatable: true) }
         }
-        .onAppear() { scrollToDate(reader, animatable: false) }
-        .onChange(of: configData.scrollDate) { _ in scrollToDate(reader, animatable: true) }
-    }}
+    }
 }
 
 private extension CalendarView {
@@ -164,13 +162,13 @@ private extension CalendarView {
     func onMonthChange(_ date: Date) { configData.onMonthChange(date) }
 }
 
-extension CalendarView {
-    
-    public init(
-        selectedDate: Binding<Date?>?,
-        selectedRange: Binding<MDateRange?>?,
-        configBuilder: (CalendarConfig) -> CalendarConfig = { $0 }
-    ) {
-        self.init(selectedDate, selectedRange, configBuilder)
-    }
-}
+//extension CalendarView {
+//    
+//    public init(
+//        _ selectedDate: Date?,
+//        _ selectedRange: MDateRange?,
+//        configBuilder: (CalendarConfig) -> CalendarConfig = { $0 }
+//    ) {
+//        self.init(selectedDate, selectedRange, configBuilder)
+//    }
+//}

@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Comparing
-extension Date {
+public extension Date {
     
     func isLater(
         _ component: Calendar.Component,
