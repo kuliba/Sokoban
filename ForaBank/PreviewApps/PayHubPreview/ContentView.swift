@@ -110,21 +110,36 @@ private extension ContentView {
                                 }
                             }
                         },
-                        makeProfileButtonLabel: {
+                        makeToolbar: { event in
                             
-                            if #available(iOS 14.5, *) {
-                                Label("Profile", systemImage: "person.circle")
-                                    .labelStyle(.titleAndIcon)
-                            } else {
-                                HStack {
-                                    Image(systemName: "person.circle")
-                                    Text("Profile")
+                            ToolbarItem(placement: .topBarLeading) {
+                                
+                                Button {
+                                    event(.profile)
+                                } label: {
+                                    
+                                    if #available(iOS 14.5, *) {
+                                        Label("Profile", systemImage: "person.circle")
+                                            .labelStyle(.titleAndIcon)
+                                    } else {
+                                        HStack {
+                                            Image(systemName: "person.circle")
+                                            Text("Profile")
+                                        }
+                                    }
                                 }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                        },
-                        makeQRButtonLabel: {
                             
-                            Image(systemName: "qrcode")
+                            ToolbarItem(placement: .topBarTrailing) {
+                                
+                                Button {
+                                    event(.qr)
+                                } label: {
+                                    Image(systemName: "qrcode")
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
                     )
                 )

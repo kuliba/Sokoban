@@ -7,17 +7,15 @@
 
 import SwiftUI
 
-struct PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, ProfileButtonLabel, QRButtonLabel>
+struct PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, Toolbar>
 where Content: View,
       DestinationContent: View,
-      ProfileButtonLabel: View,
-      QRButtonLabel: View {
+      Toolbar: ToolbarContent {
     
     @ViewBuilder let makeContent: MakeContent
     @ViewBuilder let makeDestinationContent: MakeDestinationContent
     @ViewBuilder let makeFullScreenContent: MakeFullScreenContent
-    @ViewBuilder let makeProfileButtonLabel: MakeProfileButtonLabel
-    @ViewBuilder let makeQRButtonLabel: MakeQRButtonLabel
+    @ToolbarContentBuilder let makeToolbar: MakeToolbar
 }
 
 extension PaymentsTransfersFlowViewFactory {
@@ -26,6 +24,5 @@ extension PaymentsTransfersFlowViewFactory {
     typealias Navigation = PaymentsTransfersFlowState.Navigation
     typealias MakeDestinationContent = (Navigation.Destination) -> DestinationContent
     typealias MakeFullScreenContent = (Navigation.FullScreen) -> FullScreenContent
-    typealias MakeProfileButtonLabel = () -> ProfileButtonLabel
-    typealias MakeQRButtonLabel = () -> QRButtonLabel
+    typealias MakeToolbar = (@escaping (PaymentsTransfersFlowEvent.Open) -> Void) -> Toolbar
 }
