@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PayHub
 
 final class PaymentsTransfersModelComposer {}
 
