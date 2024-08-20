@@ -49,7 +49,7 @@ extension PaymentsTransfersView {
 }
 
 private extension PaymentsTransfersModel
-where PayHub == PreviewPayHub {
+where PayHubPicker == PreviewPayHub {
     
     static var preview: PaymentsTransfersModel {
         
