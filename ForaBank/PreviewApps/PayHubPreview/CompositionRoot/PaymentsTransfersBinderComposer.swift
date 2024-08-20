@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 
 final class PaymentsTransfersBinderComposer {
     
@@ -24,7 +25,7 @@ extension PaymentsTransfersBinderComposer {
     typealias Binder = PaymentsTransfersBinder<PayHubBinder>
  
     func compose(
-        loadResult: Result<[Latest], Error>
+        loadResult: Result<[PayHubItem<Latest>], Error>
     ) -> Binder {
         
         let contentComposer = PaymentsTransfersModelComposer()

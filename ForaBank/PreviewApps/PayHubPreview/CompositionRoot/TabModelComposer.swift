@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 
 final class TabModelComposer {
     
@@ -21,7 +22,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeFlowModel = (Result<[Latest], Error>) -> PaymentsTransfersModel<PayHubBinder>
+    typealias MakeFlowModel = (Result<[PayHubItem<Latest>], Error>) -> PaymentsTransfersModel<PayHubBinder>
 }
 
 extension TabModelComposer {
@@ -86,11 +87,11 @@ private extension TabState.Selected {
     }
 }
 
-private extension Array where Element == Latest {
+private extension Array where Element == PayHubItem<Latest> {
     
     static let preview: Self = [
-        .init(id: UUID().uuidString),
-        .init(id: UUID().uuidString),
-        .init(id: UUID().uuidString),
+        .latest(.preview()),
+        .latest(.preview()),
+        .latest(.preview())
     ]
 }
