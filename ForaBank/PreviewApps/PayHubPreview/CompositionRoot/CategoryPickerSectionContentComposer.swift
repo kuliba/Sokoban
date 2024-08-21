@@ -32,7 +32,7 @@ extension CategoryPickerSectionContentComposer {
                 self.scheduler.schedule(
                     after: .init(.now().advanced(by: .seconds(2)))
                 ) {
-                    completion(loadedCategories.map { CategoryPickerSectionItem.category($0) })
+                    completion([.showAll] + loadedCategories.map { CategoryPickerSectionItem.category($0) })
                 }
             },
             scheduler: scheduler

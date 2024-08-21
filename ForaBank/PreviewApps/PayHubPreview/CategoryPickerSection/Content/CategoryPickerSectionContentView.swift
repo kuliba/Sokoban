@@ -41,7 +41,20 @@ private extension CategoryPickerSectionState {
     
     var isLoadingFailed: Bool {
         
-        !isLoading && items.isEmpty
+        !isLoading && categories.isEmpty
+    }
+    
+    var categories: [ServiceCategory] {
+        
+        items.compactMap {
+            
+            guard 
+                case let .element(identified) = $0,
+                case let .category(category) = identified.element
+            else { return nil }
+            
+            return category
+        }
     }
 }
 
