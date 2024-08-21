@@ -127,7 +127,7 @@ extension Alert.ViewModel {
     }
 }
 
-private extension String {
+extension String {
     
     static let disableForCorporateCard: Self = "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения."
 }
