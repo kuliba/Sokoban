@@ -19,7 +19,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersModel<PayHubPickerBinder>
+    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersContentModel
 }
 
 extension TabModelComposer {

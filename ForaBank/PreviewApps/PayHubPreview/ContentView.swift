@@ -155,8 +155,18 @@ private extension ContentView {
         
         PaymentsTransfersView(
             model: content,
-            factory: .init(makePayHubView: makePayHubFlowView)
+            factory: .init(
+                makeCategoryPickerView: makeCategoryPickerView,
+                makePayHubView: makePayHubFlowView
+            )
         )
+    }
+    
+    private func makeCategoryPickerView(
+        _ binder: CategoryPickerSectionBinder
+    ) -> some View {
+        
+        Text("TBD: Category picker")
     }
     
     private func makePayHubFlowView(
@@ -188,6 +198,14 @@ private extension ContentView {
                 )
             }
         )
+    }
+}
+
+extension CategoryPickerSectionBinder: Loadable {
+    
+    public func load() {
+         
+        
     }
 }
 
