@@ -205,7 +205,7 @@ extension CategoryPickerSectionBinder: Loadable {
     
     public func load() {
          
-        
+        content.event(.load)
     }
 }
 

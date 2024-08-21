@@ -517,6 +517,8 @@
 		2A273E622C7596F8009935E6 /* CategoryPickerSectionFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E612C7596F8009935E6 /* CategoryPickerSectionFlow.swift */; };
 		2A273E672C759741009935E6 /* CategoryPickerSectionBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E572C75956A009935E6 /* CategoryPickerSectionBinder.swift */; };
 		2A273E692C75996B009935E6 /* PaymentsTransfersContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E682C75996B009935E6 /* PaymentsTransfersContentModel.swift */; };
+		2A273E6C2C759F6B009935E6 /* ServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E6B2C759F6B009935E6 /* ServiceCategory.swift */; };
+		2A273E6F2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E6E2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3876,6 +3878,8 @@
 		2A273E5F2C7596E4009935E6 /* CategoryPickerSectionContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContent.swift; sourceTree = "<group>"; };
 		2A273E612C7596F8009935E6 /* CategoryPickerSectionFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionFlow.swift; sourceTree = "<group>"; };
 		2A273E682C75996B009935E6 /* PaymentsTransfersContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersContentModel.swift; sourceTree = "<group>"; };
+		2A273E6B2C759F6B009935E6 /* ServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategory.swift; sourceTree = "<group>"; };
+		2A273E6E2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContentComposer.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -7867,7 +7871,7 @@
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
 				2A7772502C6F189E009B1676 /* CompositionRoot */,
 				2A7772352C6F0F41009B1676 /* Tab */,
-				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
+				2A273E6D2C759FA8009935E6 /* Domain */,
 				2A77722A2C6F0CA1009B1676 /* Models */,
 				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
 				2A273E562C759556009935E6 /* CategoryPickerSection */,
@@ -8461,6 +8465,15 @@
 				2A7385BA2C7382B900861881 /* PaymentsTransfersBinder.swift */,
 			);
 			path = Binder;
+			sourceTree = "<group>";
+		};
+		2A273E6D2C759FA8009935E6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				2A77722B2C6F0CAB009B1676 /* Latest.swift */,
+				2A273E6B2C759F6B009935E6 /* ServiceCategory.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
@@ -10378,6 +10391,7 @@
 				2A7385BC2C73839700861881 /* PaymentsTransfersBinderComposer.swift */,
 				2A7385BE2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift */,
 				2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */,
+				2A273E6E2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift */,
 				2A7772282C6F0C33009B1676 /* PayHubPickerContent+stub.swift */,
 				2A7772262C6F0C15009B1676 /* PayHubPickerFlow+stub.swift */,
 			);
@@ -18865,6 +18879,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */,
+				2A273E6F2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift in Sources */,
 				2A7772592C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift in Sources */,
 				2A273E622C7596F8009935E6 /* CategoryPickerSectionFlow.swift in Sources */,
 				2ADF96602C705A8F004EE6DE /* PlaceholderView.swift in Sources */,
@@ -18915,6 +18930,7 @@
 				2AB552BE2C7129E800F8D4B3 /* PaymentsTransfersFlowView.swift in Sources */,
 				2A7772642C6F4A01009B1676 /* PayHubPickerContentWrapperView.swift in Sources */,
 				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
+				2A273E6C2C759F6B009935E6 /* ServiceCategory.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
 				2AB552B72C7128A500F8D4B3 /* PaymentsTransfersFlowModel.swift in Sources */,
 			);

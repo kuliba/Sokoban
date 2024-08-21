@@ -5,21 +5,32 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
+import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
 
-final class PaymentsTransfersModelComposer {}
+final class PaymentsTransfersModelComposer {
+    
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.scheduler = scheduler
+    }
+}
 
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: [PayHubPickerItem<Latest>]
+        loadedCategories: [ServiceCategory],
+        loadedItems: [PayHubPickerItem<Latest>]
     ) -> Model {
         
         return .init(
-            categoryPicker: makeCategoryPickerBinder(),
-            payHubPicker: makePayHubBinder(loadResult: loadResult)
+            categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
+            payHubPicker: makePayHubBinder(loadedItems: loadedItems)
         )
     }
     
@@ -29,11 +40,17 @@ extension PaymentsTransfersModelComposer {
 // MARK: - CategoryPicker
 
 private extension PaymentsTransfersModelComposer {
-
+    
     func makeCategoryPickerBinder(
+        loadedCategories: [ServiceCategory]
     ) -> CategoryPickerSectionBinder {
         
-        return .init(content: (), flow: ())
+        let composer = CategoryPickerSectionContentComposer(
+            scheduler: scheduler
+        )
+        let content = composer.compose(loadedCategories: loadedCategories)
+        
+        return .init(content: content, flow: ())
     }
 }
 
@@ -42,17 +59,17 @@ private extension PaymentsTransfersModelComposer {
 private extension PaymentsTransfersModelComposer {
     
     func makePayHubBinder(
-        loadResult: [PayHubPickerItem<Latest>]
+        loadedItems: [PayHubPickerItem<Latest>]
     ) -> PayHubPickerBinder {
         
-        let content = PayHubPickerContent.stub(loadResult: loadResult)
+        let content = PayHubPickerContent.stub(loadResult: loadedItems)
         let flow = PayHubPickerFlow.stub()
         
         return .init(
-            content: content, 
+            content: content,
             flow: flow,
             bind: { content, flow in
-            
+                
                 content.$state
                     .map(\.selected)
                     .sink { flow.event(.select($0)) }
