@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import PayHub
 import XCTest
 
 final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
@@ -59,5 +60,21 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
+    }
+}
+
+// MARK: - DSL
+
+extension LoadablePickerState {
+    
+    var elements: [Element] {
+        
+        items.compactMap {
+            
+            guard case let .element(identified) = $0
+            else { return nil }
+            
+            return identified.element
+        }
     }
 }

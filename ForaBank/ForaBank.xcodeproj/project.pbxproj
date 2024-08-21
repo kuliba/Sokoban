@@ -1637,14 +1637,12 @@
 		2AF5E29729BB4691004D69F3 /* createAnywayTransfer_iFora_4285_9rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6529AE3ED40054B920 /* createAnywayTransfer_iFora_4285_9rub_response.json */; };
 		2AF5E29929BB4691004D69F3 /* createAnywayTransfer_iFora_515A3_10rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iFora_515A3_10rub_response.json */; };
 		2AF718DB2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */; };
-		2AF718DD2C74CB5A00511C02 /* LoadablePickerContentComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DC2C74CB5A00511C02 /* LoadablePickerContentComposerTests.swift */; };
 		2AF718DF2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersBinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersBinderTests.swift */; };
 		2AF720232C74841D00919CAF /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF720222C74841D00919CAF /* PayHub */; };
 		2AF720252C74841D00919CAF /* PayHubUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF720242C74841D00919CAF /* PayHubUI */; };
 		2AF720272C74861600919CAF /* PaymentsTransfersBinderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */; };
 		2AF720292C748B3600919CAF /* PayHubPickerBinderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */; };
 		2AF7202B2C748D0800919CAF /* PayHubPickerBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202A2C748D0800919CAF /* PayHubPickerBinder.swift */; };
-		2AF7202D2C74918600919CAF /* LoadablePickerContentComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */; };
 		2AF7202F2C749B8200919CAF /* CategorySet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF7202E2C749B8200919CAF /* CategorySet.swift */; };
 		2AF720312C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720302C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift */; };
 		2AF720342C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */; };
@@ -4970,12 +4968,11 @@
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperationsTests.swift"; sourceTree = "<group>"; };
-		2AF718DC2C74CB5A00511C02 /* LoadablePickerContentComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadablePickerContentComposerTests.swift; sourceTree = "<group>"; };
 		2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersBinderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersBinderTests.swift"; sourceTree = "<group>"; };
+		2AF718E02C75149100511C02 /* PayHubUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHubUI.xctestplan; sourceTree = "<group>"; };
 		2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersBinderComposer.swift; sourceTree = "<group>"; };
 		2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerBinderComposer.swift; sourceTree = "<group>"; };
 		2AF7202A2C748D0800919CAF /* PayHubPickerBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerBinder.swift; sourceTree = "<group>"; };
-		2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadablePickerContentComposer.swift; sourceTree = "<group>"; };
 		2AF7202E2C749B8200919CAF /* CategorySet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySet.swift; sourceTree = "<group>"; };
 		2AF720302C74AA7B00919CAF /* RootViewModelFactory+makeLoadLatestOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperations.swift"; sourceTree = "<group>"; };
 		2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersBinder.swift"; sourceTree = "<group>"; };
@@ -8701,7 +8698,6 @@
 			children = (
 				2A35DDA82C021AA400EFF0EB /* PaymentsTransfersFlowManagerComposerTests.swift */,
 				2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersBinderTests.swift */,
-				2AF718DC2C74CB5A00511C02 /* LoadablePickerContentComposerTests.swift */,
 				2AA619542C16BF9600043997 /* AnywayTransactionViewModelComposerTests.swift */,
 				2AE838EE2C6B4088009E1E39 /* ServiceCategories */,
 				2A92EA6D2C67357A001452E7 /* Templates */,
@@ -9480,6 +9476,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2AF718E02C75149100511C02 /* PayHubUI.xctestplan */,
 				2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */,
 				2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */,
 				2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */,
@@ -11976,7 +11973,6 @@
 				2AF720262C74861600919CAF /* PaymentsTransfersBinderComposer.swift */,
 				2AF720332C74ACED00919CAF /* RootViewModelFactory+makePaymentsTransfersBinder.swift */,
 				2AF720282C748B3600919CAF /* PayHubPickerBinderComposer.swift */,
-				2AF7202C2C74918600919CAF /* LoadablePickerContentComposer.swift */,
 				2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */,
 				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
@@ -20389,7 +20385,6 @@
 				2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */,
 				2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
-				2AF7202D2C74918600919CAF /* LoadablePickerContentComposer.swift in Sources */,
 				2AA3A9482BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift in Sources */,
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,
 				2A550C5E2C52C3EE00B3F72A /* ServicePaymentFlowStateWrapperView.swift in Sources */,
@@ -21411,7 +21406,6 @@
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
 				2A2D4D332B6E7FA1006912EE /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift in Sources */,
-				2AF718DD2C74CB5A00511C02 /* LoadablePickerContentComposerTests.swift in Sources */,
 				2A0439CF2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift in Sources */,
 				2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */,
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,

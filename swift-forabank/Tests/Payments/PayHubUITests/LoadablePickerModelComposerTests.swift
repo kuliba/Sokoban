@@ -1,15 +1,15 @@
 //
-//  LoadablePickerContentComposerTests.swift
-//  ForaBankTests
+//  LoadablePickerModelComposerTests.swift
+//
 //
 //  Created by Igor Malyarov on 20.08.2024.
 //
 
-@testable import ForaBank
 import PayHub
+import PayHubUI
 import XCTest
 
-final class LoadablePickerContentComposerTests: XCTestCase {
+final class LoadablePickerModelComposerTests: XCTestCase {
     
     // MARK: - init
     
@@ -115,7 +115,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         let content = compose(sut)
-
+        
         content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
@@ -125,7 +125,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         let content = compose(sut)
-
+        
         content.event(.load)
         spy.complete(with: [])
         
@@ -137,7 +137,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
         let item = makeItem()
         let (sut, spy) = makeSUT()
         let content = compose(sut)
-
+        
         content.event(.load)
         spy.complete(with: [item])
         
@@ -150,7 +150,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
         let (item1, item2) = (makeItem(), makeItem())
         let (sut, spy) = makeSUT()
         let content = compose(sut)
-
+        
         content.event(.load)
         spy.complete(with: [item1, item2])
         
@@ -161,9 +161,9 @@ final class LoadablePickerContentComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias StateItem = LoadablePickerState<UUID, Item>.Item
-    private typealias SUT = LoadablePickerContentComposer<Item>
-    private typealias Content = LoadablePickerContent<Item>
-    private typealias LoadSpy = Spy<Void, [Item], Never>
+    private typealias SUT = LoadablePickerModelComposer<UUID, Item>
+    private typealias Model = LoadablePickerModel<UUID, Item>
+    private typealias LoadSpy = Spy<Void, [Item]>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -191,7 +191,7 @@ final class LoadablePickerContentComposerTests: XCTestCase {
         placeholderCount: Int = .random(in: 1...100),
         file: StaticString = #file,
         line: UInt = #line
-    ) -> Content {
+    ) -> Model {
         
         let sut = sut ?? makeSUT(file: file, line: line).sut
         return sut.compose(

@@ -8,45 +8,36 @@
 import CombineSchedulers
 import Foundation
 import PayHub
+import PayHubUI
 
 extension PayHubPickerContent {
     
     static func stub(
-        initialState: PayHubPickerState = .init(
-            prefix: [
-                .element(.init(.templates)),
-                .element(.init(.exchange))
-            ],
-            suffix: []
-        ),
+        prefix: [PayHubPickerState.Item] = [
+            .element(.init(.templates)),
+            .element(.init(.exchange))
+        ],
+        suffix: [PayHubPickerState.Item] = [],
         loadResult: [PayHubPickerItem<Latest>],
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PayHubPickerContent {
         
-        let reducer = PayHubPickerReducer(
-            makeID: UUID.init,
-            makePlaceholders: {
-                [.init(), .init(), .init(), .init()]
-            }
-        )
-        let effectHandler = PayHubPickerEffectHandler(
-            microServices: .init(
-                load: { completion in
-                    
-                    scheduler.schedule(
-                        after: .init(.now().advanced(by: .seconds(2)))
-                    ) {
-                        completion(loadResult)
-                    }
+        let composer = LoadablePickerModelComposer(
+            load: { completion in
+                
+                scheduler.schedule(
+                    after: .init(.now().advanced(by: .seconds(2)))
+                ) {
+                    completion(loadResult)
                 }
-            )
+            },
+            scheduler: scheduler
         )
         
-        return .init(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
+        return composer.compose(
+            prefix: prefix,
+            suffix: suffix,
+            placeholderCount: 4
         )
     }
 }
