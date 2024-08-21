@@ -22,11 +22,20 @@ where ItemLabel: View {
             Text("Failed to load categories")
                 .foregroundColor(.red)
         } else {
-            List {
+            VStack {
                 
-                ForEach(state.items, content: itemView)
+                state.showAll.map {
+                    
+                    itemView(item: $0)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                
+                List {
+                    
+                    ForEach(state.itemsWithoutShowAll, content: itemView)
+                }
+                .listStyle(.plain)
             }
-            .listStyle(PlainListStyle())
         }
     }
 }
@@ -44,17 +53,46 @@ private extension CategoryPickerSectionState {
         !isLoading && categories.isEmpty
     }
     
-    var categories: [ServiceCategory] {
+    var categories: [Item] {
         
-        items.compactMap {
-            
-            guard 
-                case let .element(identified) = $0,
-                case let .category(category) = identified.element
-            else { return nil }
-            
-            return category
+        items.filter { $0.case == .category }
+    }
+    
+    var itemsWithoutShowAll: [Item] {
+        
+        items.filter { $0.case != .showAll }
+    }
+    
+    var showAll: Item? {
+        
+        items.filter { $0.case == .showAll }.first
+    }
+}
+
+private extension CategoryPickerSectionState.Item {
+    
+    var `case`: CategoryPickerSectionItem.Case? {
+        
+        guard case let .element(identified) = self
+        else { return nil }
+        
+        return identified.element.case
+    }
+}
+
+extension CategoryPickerSectionItem {
+    
+    var `case`: Case {
+        
+        switch self {
+        case .category: return .category
+        case .showAll:  return .showAll
         }
+    }
+    
+    enum Case {
+        
+        case category, showAll
     }
 }
 
@@ -81,7 +119,7 @@ private extension CategoryPickerSectionContentView {
                 } label: {
                     label
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
                 
             case .showAll:
                 Button {
@@ -89,7 +127,7 @@ private extension CategoryPickerSectionContentView {
                 } label: {
                     label
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
             }
         }
     }

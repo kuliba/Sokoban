@@ -129,7 +129,7 @@ private extension ContentView {
                                         }
                                     }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                             
                             ToolbarItem(placement: .topBarTrailing) {
@@ -139,7 +139,7 @@ private extension ContentView {
                                 } label: {
                                     Image(systemName: "qrcode")
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                         }
                     )
@@ -196,6 +196,7 @@ private extension ContentView {
                                 
                             case .showAll:
                                 Text("Show All")
+                                    .font(.subheadline)
                             }
                             
                         case .placeholder:

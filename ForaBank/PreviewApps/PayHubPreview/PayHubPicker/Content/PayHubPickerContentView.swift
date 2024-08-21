@@ -70,7 +70,7 @@ private extension PayHubPickerContentView {
             } label: {
                 label
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         }
     }
     

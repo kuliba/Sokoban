@@ -11,8 +11,8 @@ import RxViewModel
 
 enum CategoryPickerSectionItem: Equatable {
     
-    case showAll
     case category(ServiceCategory)
+    case showAll
 }
 
 typealias CategoryPickerSectionState = LoadablePickerState<UUID, CategoryPickerSectionItem>
