@@ -272,6 +272,13 @@ extension MainViewModel {
     ) {
         self.action.send(MainViewModelAction.Show.Requisites(qrCode: qrCode))
     }
+    
+    static func openLinkURL(_ linkURL: URL) {
+        
+        if UIApplication.shared.canOpenURL(linkURL) {
+            UIApplication.shared.open(linkURL, options: [:], completionHandler: nil)
+        }
+    }
 }
 
 private extension MainViewModel {
@@ -910,7 +917,7 @@ private extension MainViewModel {
         
         if model.onlyCorporateCards {
             
-            openLinkURL(model.productsOpenAccountURL)
+            Self.openLinkURL(model.productsOpenAccountURL)
         } else {
             
             let authProductsViewModel = AuthProductsViewModel(
@@ -923,14 +930,7 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-    
-    private func openLinkURL(_ linkURL: URL) {
         
-        if UIApplication.shared.canOpenURL(linkURL) {
-            UIApplication.shared.open(linkURL, options: [:], completionHandler: nil)
-        }
-    }
-    
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),
