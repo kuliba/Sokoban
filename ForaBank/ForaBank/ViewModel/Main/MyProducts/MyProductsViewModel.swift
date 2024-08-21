@@ -262,7 +262,7 @@ class MyProductsViewModel: ObservableObject {
                                 catalogType: .deposit,
                                 dismissAction: {[weak self] in
                                     
-                                    self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                                    self?.action.send(MyProductsViewModelAction.Close.Link()) }, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
                             
                             self.link = .openDeposit(openDepositViewModel)
                         }

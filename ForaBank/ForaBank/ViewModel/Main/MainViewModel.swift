@@ -544,7 +544,7 @@ private extension MainViewModel {
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
                                 guard let depositId = Int(payload.depositProductId),
-                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
+                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
                                     
                                     return
                                 }
@@ -553,7 +553,7 @@ private extension MainViewModel {
                             case _ as BannerActionDepositsList:
                                 route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }))
+                                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
                                 
                             case let payload as BannerActionMigTransfer:
                                 let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
@@ -900,7 +900,8 @@ private extension MainViewModel {
             dismissAction: { [weak self] in
                 
                 self?.action.send(MainViewModelAction.Close.Link())
-            })
+            }, 
+            makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard)
         
         route.destination = .openDepositsList(openDepositViewModel)
     }

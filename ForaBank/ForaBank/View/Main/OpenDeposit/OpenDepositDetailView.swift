@@ -783,5 +783,5 @@ extension OpenDepositDetailViewModel {
             .init(title: "6,85 (7,07)", isEven: true)])
     ])))
         
-    static let sample = OpenDepositDetailViewModel(id: 0, productDetail: productDetailSample, calculator: .sample1, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample)
+    static let sample = OpenDepositDetailViewModel(id: 0, productDetail: productDetailSample, calculator: .sample1, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
 }
