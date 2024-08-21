@@ -8,6 +8,7 @@
 extension CategoryPickerSectionContentViewConfig {
     
     static let preview: Self = .init(
+        headerHeight: 24,
         title: .init(
             text: "Make a Payment",
             config: .init(

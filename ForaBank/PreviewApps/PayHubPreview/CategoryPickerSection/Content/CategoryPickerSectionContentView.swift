@@ -27,6 +27,7 @@ where ItemLabel: View {
             VStack {
                 
                 sectionHeader()
+                    .frame(height: config.headerHeight)
                 
                 List {
                     
