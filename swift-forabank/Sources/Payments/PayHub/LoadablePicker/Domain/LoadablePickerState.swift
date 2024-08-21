@@ -32,6 +32,32 @@ where ID: Hashable {
 public extension LoadablePickerState {
     
     var items: [Item] { prefix + suffix }
+    
+    var elements: [Identified<ID, Element>] {
+        
+        items.compactMap {
+            
+            guard case let .element(element) = $0
+            else { return nil }
+            
+            return element
+        }
+    }
+    
+    var placeholderIDs: [ID] {
+        
+        items.compactMap {
+            
+            guard case let .placeholder(id) = $0
+            else { return nil }
+            
+            return id
+        }
+    }
+    
+    // presuming placeholders are used during load
+    // otherwise `isLoading` should be stored property
+    var isLoading: Bool { !placeholderIDs.isEmpty }
 }
 
 extension LoadablePickerState.Item: Identifiable {
