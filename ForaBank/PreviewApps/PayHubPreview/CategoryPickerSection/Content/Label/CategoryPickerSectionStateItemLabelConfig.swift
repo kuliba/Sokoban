@@ -12,6 +12,9 @@ struct CategoryPickerSectionStateItemLabelConfig: Equatable {
     
     let iconBackground: IconBackground
     let iconSize: CGSize
+    let placeholderSpacing: CGFloat
+    let placeholderRadius: CGFloat
+    let placeholderSize: CGSize
     let spacing: CGFloat
     let title: TextConfig
     let showAll: TitleConfig
@@ -35,7 +38,10 @@ extension CategoryPickerSectionStateItemLabelConfig {
             radius: 8,
             size: .init(width: 48, height: 48)
         ),
-        iconSize: .init(width: 24, height: 24),
+        iconSize: .init(width: 24, height: 24), 
+        placeholderSpacing: 20,
+        placeholderRadius: 90, 
+        placeholderSize: .init(width: 180, height: 14),
         spacing: 16,
         title: .init(textFont: .headline, textColor: .green),
         showAll: .init(

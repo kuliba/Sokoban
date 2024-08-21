@@ -166,9 +166,9 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
         
         Group {
             
-            categoryPickerSectionContentView(.placeholders(count: 0))
             categoryPickerSectionContentView(.placeholders(count: 5))
             categoryPickerSectionContentView(.preview)
+            categoryPickerSectionContentView(.placeholders(count: 0))
         }
     }
     

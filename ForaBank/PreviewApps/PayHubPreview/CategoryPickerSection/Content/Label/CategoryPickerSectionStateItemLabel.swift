@@ -27,7 +27,7 @@ where CategoryIcon: View {
             }
             
         case .placeholder:
-            ProgressView()
+            placeholderView()
         }
     }
 }
@@ -52,5 +52,20 @@ private extension CategoryPickerSectionStateItemLabel {
             
             category.name.text(withConfig: config.title)
         }
+    }
+    
+    func placeholderView() -> some View {
+        
+        HStack(spacing: config.placeholderSpacing) {
+            
+            PlaceholderView(opacity: 0.5)
+                .clipShape(RoundedRectangle(cornerRadius: config.iconBackground.radius))
+                .frame(config.iconBackground.size)
+            
+            PlaceholderView(opacity: 0.5)
+                .clipShape(RoundedRectangle(cornerRadius: config.placeholderRadius))
+                .frame(config.placeholderSize)
+        }
+        ._shimmering()
     }
 }
