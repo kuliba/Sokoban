@@ -18,11 +18,10 @@ struct CategoryPickerSectionStateItemLabel: View {
         case let .element(identified):
             switch identified.element {
             case let .category(category):
-                Label { Text(category.name) } icon: { Text("...") }
+                categoryView(category)
                 
             case .showAll:
-                Text("Show All")
-                    .font(.subheadline)
+                config.showAll.render()
             }
             
         case .placeholder:
@@ -35,4 +34,21 @@ extension CategoryPickerSectionStateItemLabel {
     
     typealias Item = CategoryPickerSectionState.Item
     typealias Config = CategoryPickerSectionStateItemLabelConfig
+}
+
+private extension CategoryPickerSectionStateItemLabel {
+    
+    func categoryView(
+        _ category: ServiceCategory
+    ) -> some View {
+        
+        HStack(spacing: config.spacing) {
+            
+            Color.blue.opacity(0.1)
+                .frame(config.iconSize)
+                .renderIconBackground(with: config.iconBackground)
+            
+            category.name.text(withConfig: config.title)
+        }
+    }
 }

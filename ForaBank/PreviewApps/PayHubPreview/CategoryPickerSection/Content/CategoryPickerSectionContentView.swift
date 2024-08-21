@@ -197,7 +197,7 @@ extension Array where Element == CategoryPickerSectionState.Item {
     
     static var preview: Self {
         
-        [ServiceCategory].preview.map { .element(.init(.category($0))) }
+        [.element(.init(.showAll))] + [ServiceCategory].preview.map { .element(.init(.category($0))) }
     }
 }
 
