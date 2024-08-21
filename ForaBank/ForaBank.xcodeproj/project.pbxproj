@@ -1102,7 +1102,7 @@
 		2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */; };
 		2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */; };
 		2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */; };
-		2A7772592C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772582C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift */; };
+		2A7772592C6F275D009B1676 /* PayHubPickerBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772582C6F275D009B1676 /* PayHubPickerBinderView.swift */; };
 		2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725A2C6F2833009B1676 /* View+ext.swift */; };
 		2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77725C2C6F2892009B1676 /* UIPrimitives */; };
 		2A77725F2C6F2991009B1676 /* PayHubPickerFlowStateWrapperViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725E2C6F2991009B1676 /* PayHubPickerFlowStateWrapperViewFactory.swift */; };
@@ -4469,7 +4469,7 @@
 		2A77724E2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersModelComposer.swift; sourceTree = "<group>"; };
 		2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
-		2A7772582C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerFlowStateWrapperView.swift; sourceTree = "<group>"; };
+		2A7772582C6F275D009B1676 /* PayHubPickerBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerBinderView.swift; sourceTree = "<group>"; };
 		2A77725A2C6F2833009B1676 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A77725E2C6F2991009B1676 /* PayHubPickerFlowStateWrapperViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerFlowStateWrapperViewFactory.swift; sourceTree = "<group>"; };
 		2A7772622C6F49A5009B1676 /* PayHubPickerContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerContentWrapperView.swift; sourceTree = "<group>"; };
@@ -8431,6 +8431,7 @@
 			isa = PBXGroup;
 			children = (
 				2A7772242C6F0BF2009B1676 /* PayHubPickerBinder.swift */,
+				2A7772582C6F275D009B1676 /* PayHubPickerBinderView.swift */,
 			);
 			path = Binder;
 			sourceTree = "<group>";
@@ -10412,7 +10413,6 @@
 			isa = PBXGroup;
 			children = (
 				2A273E592C759644009935E6 /* PayHubPickerFlow.swift */,
-				2A7772582C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift */,
 				2A77725E2C6F2991009B1676 /* PayHubPickerFlowStateWrapperViewFactory.swift */,
 			);
 			path = Flow;
@@ -18880,7 +18880,7 @@
 			files = (
 				2A77722C2C6F0CAB009B1676 /* Latest.swift in Sources */,
 				2A273E6F2C75A250009935E6 /* CategoryPickerSectionContentComposer.swift in Sources */,
-				2A7772592C6F275D009B1676 /* PayHubPickerFlowStateWrapperView.swift in Sources */,
+				2A7772592C6F275D009B1676 /* PayHubPickerBinderView.swift in Sources */,
 				2A273E622C7596F8009935E6 /* CategoryPickerSectionFlow.swift in Sources */,
 				2ADF96602C705A8F004EE6DE /* PlaceholderView.swift in Sources */,
 				2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */,

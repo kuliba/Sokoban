@@ -173,7 +173,7 @@ private extension ContentView {
         _ binder: PayHubPickerBinder
     ) -> some View {
         
-        PayHubPickerFlowStateWrapperView(
+        PayHubPickerBinderView(
             binder: binder,
             factory: .init(makeContent: makePayHubContentWrapper)
         )
