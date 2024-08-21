@@ -182,7 +182,11 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
             config: .preview,
             itemLabel: {
                 
-                CategoryPickerSectionStateItemLabel(item: $0, config: .preview)
+                CategoryPickerSectionStateItemLabel(
+                    item: $0, 
+                    config: .preview,
+                    categoryIcon: { _ in  Color.blue.opacity(0.1) }
+                )
             }
         )
     }

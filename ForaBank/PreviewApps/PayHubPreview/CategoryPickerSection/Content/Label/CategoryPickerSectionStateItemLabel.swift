@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-struct CategoryPickerSectionStateItemLabel: View {
+struct CategoryPickerSectionStateItemLabel<CategoryIcon>: View
+where CategoryIcon: View {
     
     let item: Item
     let config: Config
+    let categoryIcon: (ServiceCategory) -> CategoryIcon
     
     var body: some View {
         
@@ -44,7 +46,7 @@ private extension CategoryPickerSectionStateItemLabel {
         
         HStack(spacing: config.spacing) {
             
-            Color.blue.opacity(0.1)
+            categoryIcon(category)
                 .frame(config.iconSize)
                 .renderIconBackground(with: config.iconBackground)
             

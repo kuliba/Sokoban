@@ -189,11 +189,22 @@ private extension ContentView {
                     config: .preview,
                     itemLabel: {
                         
-                        CategoryPickerSectionStateItemLabel(item: $0, config: .preview)
+                        CategoryPickerSectionStateItemLabel(
+                            item: $0, 
+                            config: .preview,
+                            categoryIcon: categoryIcon
+                        )
                     }
                 )
             }
         )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
     }
     
     private func makePayHubFlowView(
