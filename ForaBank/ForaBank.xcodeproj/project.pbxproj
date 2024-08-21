@@ -2718,6 +2718,8 @@
 		83B6F3DD2AB21E5600A4C427 /* ConfigLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B6F3DC2AB21E5600A4C427 /* ConfigLanding.swift */; };
 		83BCA2092B9711F5002CD83D /* AccountInfoPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCA2082B9711F5002CD83D /* AccountInfoPanelView.swift */; };
 		83BCA20B2B987D7E002CD83D /* RequestFactory+getProductDetailsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCA20A2B987D7E002CD83D /* RequestFactory+getProductDetailsRequest.swift */; };
+		83BD07192C75F6340074F444 /* DisableForCorCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BD07182C75F6340074F444 /* DisableForCorCards.swift */; };
+		83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */; };
 		83C139D32A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */; };
 		83C6F1162B9601BE00EA892A /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 83C6F1152B9601BE00EA892A /* ProductProfileComponents */; };
 		83C8F4432A443A10008203E3 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4422A443A10008203E3 /* ItemView.swift */; };
@@ -6031,6 +6033,8 @@
 		83B6F3DC2AB21E5600A4C427 /* ConfigLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigLanding.swift; sourceTree = "<group>"; };
 		83BCA2082B9711F5002CD83D /* AccountInfoPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoPanelView.swift; sourceTree = "<group>"; };
 		83BCA20A2B987D7E002CD83D /* RequestFactory+getProductDetailsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDetailsRequest.swift"; sourceTree = "<group>"; };
+		83BD07182C75F6340074F444 /* DisableForCorCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableForCorCards.swift; sourceTree = "<group>"; };
+		83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableCorCardsView.swift; sourceTree = "<group>"; };
 		83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponentTests.swift; sourceTree = "<group>"; };
 		83C8F4422A443A10008203E3 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		83C8F4442A444777008203E3 /* ItemsViewOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewOld.swift; sourceTree = "<group>"; };
@@ -13623,6 +13627,7 @@
 				832F830F2BB8290D00C97BBD /* Carousel */,
 				7769F5BB27D3A2EA00F80607 /* MainView.swift */,
 				83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */,
+				83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */,
 				0C5D7DA629898CEE00BC0CCF /* ClientInformView */,
 				5036B0F728E20C710052FACE /* MeToMe */,
 				68E803E127D9200B00B75D41 /* ProductProfile */,
@@ -14177,6 +14182,7 @@
 			isa = PBXGroup;
 			children = (
 				0CA1CDE02840720200021671 /* AddressBookContact.swift */,
+				83BD07182C75F6340074F444 /* DisableForCorCards.swift */,
 				0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */,
 				77DC12702771080400C917B0 /* EmptyData.swift */,
 				77517FCD27A97913005CFB77 /* ColorData.swift */,
@@ -20336,6 +20342,7 @@
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
 				2A3624822C5EB4D500174C50 /* AnywayFlowState.swift in Sources */,
 				2AD15D152C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift in Sources */,
+				83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
 				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
 				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
@@ -21079,6 +21086,7 @@
 				0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */,
 				773D0C7B2886CB2B0088251F /* BottomSheetView.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
+				83BD07192C75F6340074F444 /* DisableForCorCards.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				C18D25F62A25A91400DF5643 /* CircleAnimatableAnge.swift in Sources */,
 				2AE2662D2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift in Sources */,

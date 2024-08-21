@@ -239,7 +239,7 @@ private extension RootViewFactory {
                         makeIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeUpdateInfoView: UpdateInfoView.init(text:),
+                        makeInfoViews: .default,
                         makeUserAccountView: UserAccountView.init(viewModel:)
                     ),
                     productProfileViewFactory: .init(
@@ -252,7 +252,7 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }

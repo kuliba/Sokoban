@@ -32,8 +32,17 @@ struct RootViewFactory {
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUpdateInfoView: MakeUpdateInfoView
+    let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
+}
+
+extension RootViewFactory {
+    
+    struct MakeInfoViews {
+        
+        let makeUpdateInfoView: MakeUpdateInfoView
+        let makeDisableCorCardsInfoView: MakeDisableForCorCardsInfoView
+    }
 }
 
 extension RootViewFactory {
@@ -50,7 +59,7 @@ extension RootViewFactory {
             makeIconView: makeIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUpdateInfoView: makeUpdateInfoView,
+            makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView
         )
     }
