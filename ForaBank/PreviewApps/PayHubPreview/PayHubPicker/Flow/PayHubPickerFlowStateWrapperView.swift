@@ -72,6 +72,7 @@ private extension PayHubPickerBinder {
     
     static let preview: PayHubPickerBinder = .init(
         content: .stub(loadResult: []),
-        flow: .stub()
+        flow: .stub(),
+        bind: { content, flow in content.$state.sink { _ in _ = flow }}
     )
 }

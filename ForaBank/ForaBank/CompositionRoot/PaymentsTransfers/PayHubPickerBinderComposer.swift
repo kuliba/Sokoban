@@ -34,7 +34,8 @@ extension PayHubPickerBinderComposer {
         
         return .init(
             content: content,
-            flow: flow//,
+            flow: flow,
+            bind: { content, flow in content.$state.sink { _ in _ = flow }}
 //            bind: { content, flow in
 //                
 //                content.$state

@@ -24,8 +24,7 @@ extension PaymentsTransfersBinderComposer {
         
         return .init(
             content: makeContent(),
-            flow: makeFlow(), 
-            bind: { _,_ in nil }
+            flow: makeFlow()
         )
     }
 }
