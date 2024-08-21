@@ -166,7 +166,29 @@ private extension ContentView {
         _ binder: CategoryPickerSectionBinder
     ) -> some View {
         
-        Text("TBD: Category picker")
+        CategoryPickerSectionBinderView(
+            binder: binder,
+            factory: .init(
+                makeContentView: makeCategoryPickerSectionContentView,
+                makeDestinationView: EmptyView.init
+            )
+        )
+    }
+    
+    private func makeCategoryPickerSectionContentView(
+        content: CategoryPickerSectionContent
+    ) -> some View {
+        
+        CategoryPickerSectionContentWrapperView(
+            model: content,
+            makeContentView: { state, event in
+             
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event
+                )
+            }
+        )
     }
     
     private func makePayHubFlowView(
@@ -175,11 +197,11 @@ private extension ContentView {
         
         PayHubPickerBinderView(
             binder: binder,
-            factory: .init(makeContent: makePayHubContentWrapper)
+            factory: .init(makeContent: makePayHubContentView)
         )
     }
     
-    private func makePayHubContentWrapper(
+    private func makePayHubContentView(
         _ content: PayHubPickerContent
     ) -> some View {
         
