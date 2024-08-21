@@ -35,10 +35,13 @@ where CategoryPicker: Loadable,
     }
 }
 
-extension PaymentsTransfersModel where PayHubPicker: Loadable {
+extension PaymentsTransfersModel
+where CategoryPicker: Loadable,
+      PayHubPicker: Loadable {
     
     func reload() {
         
+        categoryPicker.load()
         payHubPicker.load()
     }
 }

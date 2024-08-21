@@ -185,7 +185,23 @@ private extension ContentView {
              
                 CategoryPickerSectionContentView(
                     state: state,
-                    event: event
+                    event: event,
+                    itemLabel: { item in
+                        
+                        switch item {
+                        case let .element(identified):
+                            switch identified.element {
+                            case let .category(category):
+                                Label { Text(category.name) } icon: { Text("...") }
+                                
+                            case .showAll:
+                                Text("Show All")
+                            }
+                            
+                        case .placeholder:
+                            ProgressView()
+                        }
+                    }
                 )
             }
         )
