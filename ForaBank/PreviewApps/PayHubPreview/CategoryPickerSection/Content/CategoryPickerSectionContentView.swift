@@ -31,7 +31,8 @@ where ItemLabel: View {
                 
                 List {
                     
-                    ForEach(state.itemsWithoutShowAll, content: itemView)
+                    ForEach(state.suffix, content: itemView)
+                        .animation(.easeInOut, value: state)
                 }
                 .listStyle(.plain)
             }
@@ -50,68 +51,42 @@ private extension CategoryPickerSectionState {
     
     var isLoadingFailed: Bool {
         
-        !isLoading && categories.isEmpty
-    }
-    
-    private var categories: [Item] {
-        
-        items.filter { $0._case == .category }
-    }
-    
-    var itemsWithoutShowAll: [Item] {
-        
-        items.filter { $0._case != .showAll }
-    }
-    
-    var showAll: Item? {
-        
-        items.filter { $0._case == .showAll }.first
-    }
-}
-
-private extension CategoryPickerSectionState.Item {
-    
-    var _case: CategoryPickerSectionItem.Case? {
-        
-        guard case let .element(identified) = self
-        else { return nil }
-        
-        return identified.element._case
-    }
-}
-
-extension CategoryPickerSectionItem {
-    
-    var _case: Case {
-        
-        switch self {
-        case .category: return .category
-        case .showAll:  return .showAll
-        }
-    }
-    
-    enum Case {
-        
-        case category, showAll
+        !isLoading && suffix.isEmpty
     }
 }
 
 private extension CategoryPickerSectionContentView {
     
+    @ViewBuilder
     func sectionHeader() -> some View {
         
         HStack {
             
-            if state.isLoading {
-                titlePlaceholder(config: config.titlePlaceholder)
-            } else {
-                config.title.render()
-            }
-            
-            Spacer()
-            
-            state.showAll.map(itemView(item:))
+            headerTitle()
+            showAll()
         }
+    }
+    
+    func headerTitle() -> some View {
+        
+        ZStack(alignment: .leading) {
+            
+            titlePlaceholder(config: config.titlePlaceholder)
+                .opacity(state.isLoading ? 1 : 0)
+            
+            config.title.render()
+                .opacity(state.isLoading ? 0 : 1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .animation(.easeInOut, value: state.isLoading)
+    }
+    
+    private func showAll() -> some View {
+        
+        itemView(item: .element(.init(.showAll)))
+            .opacity(state.isLoading ? 0 : 1)
+            .transition(transition)
+            .animation(.easeInOut, value: state.isLoading)
     }
     
     private func titlePlaceholder(
@@ -178,7 +153,10 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     ) -> some View {
         
         CategoryPickerSectionContentView(
-            state: .init(prefix: items, suffix: []),
+            state: .init(
+                prefix: [],
+                suffix: items
+            ),
             event: { print($0) },
             config: .preview,
             itemLabel: {
@@ -202,6 +180,6 @@ extension Array where Element == CategoryPickerSectionState.Item {
     
     static var preview: Self {
         
-        [.element(.init(.showAll))] + [ServiceCategory].preview.map { .element(.init(.category($0))) }
+        [ServiceCategory].preview.map { .element(.init(.category($0))) }
     }
 }

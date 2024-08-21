@@ -11,11 +11,14 @@ import PayHubUI
 
 final class CategoryPickerSectionContentComposer {
     
+    private let placeholderCount: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        placeholderCount: Int = 6,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.placeholderCount = placeholderCount
         self.scheduler = scheduler
     }
 }
@@ -32,12 +35,16 @@ extension CategoryPickerSectionContentComposer {
                 self.scheduler.schedule(
                     after: .init(.now().advanced(by: .seconds(2)))
                 ) {
-                    completion([.showAll] + loadedCategories.map { CategoryPickerSectionItem.category($0) })
+                    completion(loadedCategories.map { CategoryPickerSectionItem.category($0) })
                 }
             },
             scheduler: scheduler
         )
         
-        return composer.compose(prefix: [], suffix: [], placeholderCount: 6)
+        return composer.compose(
+            prefix: [],
+            suffix: [],
+            placeholderCount: placeholderCount
+        )
     }
 }

@@ -8,8 +8,8 @@
 public struct LoadablePickerState<ID, Element>
 where ID: Hashable {
     
-    internal var prefix: [Item]
-    internal var suffix: [Item]
+    internal let prefix: [Item]
+    public var suffix: [Item]
     public var selected: Element?
     
     public init(
