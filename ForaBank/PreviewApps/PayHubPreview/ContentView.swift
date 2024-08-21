@@ -15,7 +15,7 @@ struct ContentView: View {
     private let model: TabModel
     
     init(
-        selected: TabState.Selected = .noLatest
+        selected: TabState.Selected = .ok
     ) {
         let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)

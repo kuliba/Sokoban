@@ -9,11 +9,12 @@ extension CategoryPickerSectionContentViewConfig {
     
     static let preview: Self = .init(
         headerHeight: 24,
+        spacing: 16,
         title: .init(
             text: "Make a Payment",
             config: .init(
                 textFont: .title3.bold(),
-                textColor: .green
+                textColor: .primary
             )
         ),
         titlePlaceholder: .init(

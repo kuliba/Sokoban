@@ -51,6 +51,7 @@ private extension CategoryPickerSectionStateItemLabel {
                 .renderIconBackground(with: config.iconBackground)
             
             category.name.text(withConfig: config.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
@@ -62,15 +63,16 @@ private extension CategoryPickerSectionStateItemLabel {
                 .clipShape(RoundedRectangle(
                     cornerRadius: config.placeholder.icon.radius
                 ))
-                .frame(config.placeholder.icon.size)
                 ._shimmering()
+                .frame(config.placeholder.icon.size)
             
             PlaceholderView(opacity: 0.5)
                 .clipShape(RoundedRectangle(
                     cornerRadius: config.placeholder.title.radius
                 ))
-                .frame(config.placeholder.title.size)
                 ._shimmering()
+                .frame(config.placeholder.title.size)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

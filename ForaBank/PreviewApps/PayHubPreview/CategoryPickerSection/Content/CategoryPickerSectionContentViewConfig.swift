@@ -11,6 +11,7 @@ import SwiftUI
 struct CategoryPickerSectionContentViewConfig: Equatable {
     
     let headerHeight: CGFloat
+    let spacing: CGFloat
     let title: TitleConfig
     let titlePlaceholder: TitlePlaceholder
 }
