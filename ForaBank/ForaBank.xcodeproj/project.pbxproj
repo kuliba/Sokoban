@@ -527,6 +527,11 @@
 		2A273E7C2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E7B2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift */; };
 		2A273E7E2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E7D2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift */; };
 		2A273E802C75E614009935E6 /* View+renderIconBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E7F2C75E614009935E6 /* View+renderIconBackground.swift */; };
+		2A273E832C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E822C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift */; };
+		2A273E852C75EC86009935E6 /* CategoryPickerSectionContentViewConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E842C75EC86009935E6 /* CategoryPickerSectionContentViewConfig+preview.swift */; };
+		2A273E872C75ECB8009935E6 /* PayHubPickerContentViewConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E862C75ECB8009935E6 /* PayHubPickerContentViewConfig+preview.swift */; };
+		2A273E892C75ECDF009935E6 /* PayHubPickerStateItemLabelConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E882C75ECDF009935E6 /* PayHubPickerStateItemLabelConfig+preview.swift */; };
+		2A273E8B2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E8A2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3896,6 +3901,11 @@
 		2A273E7B2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionStateItemLabelConfig.swift; sourceTree = "<group>"; };
 		2A273E7D2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContentViewConfig.swift; sourceTree = "<group>"; };
 		2A273E7F2C75E614009935E6 /* View+renderIconBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+renderIconBackground.swift"; sourceTree = "<group>"; };
+		2A273E822C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionStateItemLabelConfig+preview.swift"; sourceTree = "<group>"; };
+		2A273E842C75EC86009935E6 /* CategoryPickerSectionContentViewConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+preview.swift"; sourceTree = "<group>"; };
+		2A273E862C75ECB8009935E6 /* PayHubPickerContentViewConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubPickerContentViewConfig+preview.swift"; sourceTree = "<group>"; };
+		2A273E882C75ECDF009935E6 /* PayHubPickerStateItemLabelConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayHubPickerStateItemLabelConfig+preview.swift"; sourceTree = "<group>"; };
+		2A273E8A2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LatestPlaceholderConfig+preview.swift"; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -7885,6 +7895,7 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
+				2A273E812C75EC2E009935E6 /* Configs */,
 				2A7772502C6F189E009B1676 /* CompositionRoot */,
 				2A7772352C6F0F41009B1676 /* Tab */,
 				2A273E6D2C759FA8009935E6 /* Domain */,
@@ -8507,6 +8518,18 @@
 				2A273E7F2C75E614009935E6 /* View+renderIconBackground.swift */,
 			);
 			path = Label;
+			sourceTree = "<group>";
+		};
+		2A273E812C75EC2E009935E6 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				2A273E862C75ECB8009935E6 /* PayHubPickerContentViewConfig+preview.swift */,
+				2A273E882C75ECDF009935E6 /* PayHubPickerStateItemLabelConfig+preview.swift */,
+				2A273E8A2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift */,
+				2A273E842C75EC86009935E6 /* CategoryPickerSectionContentViewConfig+preview.swift */,
+				2A273E822C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift */,
+			);
+			path = Configs;
 			sourceTree = "<group>";
 		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
@@ -18932,6 +18955,7 @@
 				2AB552B62C71289C00F8D4B3 /* ProfileModel.swift in Sources */,
 				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
 				2A273E792C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift in Sources */,
+				2A273E852C75EC86009935E6 /* CategoryPickerSectionContentViewConfig+preview.swift in Sources */,
 				2A5738382C706D9A003B255C /* View+frame.swift in Sources */,
 				2A8E82582C708A2200366EC9 /* PayHubPickerStateItemLabel.swift in Sources */,
 				2A57383E2C707D10003B255C /* IconWithTitleLabelVertical.swift in Sources */,
@@ -18943,7 +18967,9 @@
 				2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */,
 				2A273E602C7596E4009935E6 /* CategoryPickerSectionContent.swift in Sources */,
 				2A77726B2C6F4B1E009B1676 /* PayHubPickerContentViewConfig.swift in Sources */,
+				2A273E872C75ECB8009935E6 /* PayHubPickerContentViewConfig+preview.swift in Sources */,
 				2A7385B92C7377B100861881 /* TabModelComposer.swift in Sources */,
+				2A273E892C75ECDF009935E6 /* PayHubPickerStateItemLabelConfig+preview.swift in Sources */,
 				2AB552BA2C71294100F8D4B3 /* PaymentsTransfersFlowStateWrapper.swift in Sources */,
 				2A273E7C2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift in Sources */,
 				2A273E712C75A8DA009935E6 /* CategoryPickerSectionBinderView.swift in Sources */,
@@ -18964,7 +18990,9 @@
 				2A5738422C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift in Sources */,
 				2A7772252C6F0BF2009B1676 /* PayHubPickerBinder.swift in Sources */,
 				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
+				2A273E832C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift in Sources */,
 				2A273E732C75A9D8009935E6 /* CategoryPickerSectionBinderViewFactory.swift in Sources */,
+				2A273E8B2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift in Sources */,
 				2AB552B42C71289500F8D4B3 /* QRModel.swift in Sources */,
 				2A7385BF2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift in Sources */,
 				2AB552BE2C7129E800F8D4B3 /* PaymentsTransfersFlowView.swift in Sources */,

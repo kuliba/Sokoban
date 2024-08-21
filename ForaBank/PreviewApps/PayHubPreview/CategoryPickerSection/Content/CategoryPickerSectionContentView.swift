@@ -183,7 +183,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
             itemLabel: {
                 
                 CategoryPickerSectionStateItemLabel(
-                    item: $0, 
+                    item: $0,
                     config: .preview,
                     categoryIcon: { _ in  Color.blue.opacity(0.1) }
                 )
@@ -203,22 +203,4 @@ extension Array where Element == CategoryPickerSectionState.Item {
         
         [.element(.init(.showAll))] + [ServiceCategory].preview.map { .element(.init(.category($0))) }
     }
-}
-
-extension CategoryPickerSectionContentViewConfig {
-    
-    static let preview: Self = .init(
-        title: .init(
-            text: "Make a Payment",
-            config: .init(
-                textFont: .title3.bold(),
-                textColor: .green
-            )
-        ),
-        titlePlaceholder: .init(
-            color: .gray.opacity(0.5),
-            radius: 12,
-            size: .init(width: 148, height: 18)
-        )
-    )
 }

@@ -249,11 +249,3 @@ private extension PayHubPickerState {
         )
     }
 }
-
-extension PayHubPickerContentViewConfig {
-    
-    static let preview: Self = .init(
-        height: 96,
-        spacing: 4
-    )
-}
