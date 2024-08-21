@@ -141,6 +141,7 @@ let package = Package(
         .payHub,
         .payHubTests,
         .payHubUI,
+        .payHubUITests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -1275,12 +1276,25 @@ private extension Target {
     static let payHubUI = target(
         name: .payHubUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
             // internal modules
             .payHub,
             .rxViewModel,
             .uiPrimitives,
         ],
         path: "Sources/Payments/\(String.payHubUI)"
+    )
+    static let payHubUITests = testTarget(
+        name: .payHubUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+            .payHubUI,
+        ],
+        path: "Tests/Payments/\(String.payHubUITests)"
     )
     
     static let utilityPayment = target(
@@ -3006,6 +3020,7 @@ private extension String {
     static let payHubTests = "PayHubTests"
     
     static let payHubUI = "PayHubUI"
+    static let payHubUITests = "PayHubUITests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"

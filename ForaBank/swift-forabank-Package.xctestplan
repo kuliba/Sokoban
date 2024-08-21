@@ -462,7 +462,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "GetProductListByTypeV6ServiceTests",
         "name" : "GetProductListByTypeV6ServiceTests"
       }
@@ -472,6 +472,13 @@
         "containerPath" : "container:",
         "identifier" : "PayHubTests",
         "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
       }
     }
   ],
