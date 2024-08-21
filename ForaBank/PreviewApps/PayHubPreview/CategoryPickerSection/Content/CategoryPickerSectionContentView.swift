@@ -54,34 +54,34 @@ private extension CategoryPickerSectionState {
     
     private var categories: [Item] {
         
-        items.filter { $0.case == .category }
+        items.filter { $0._case == .category }
     }
     
     var itemsWithoutShowAll: [Item] {
         
-        items.filter { $0.case != .showAll }
+        items.filter { $0._case != .showAll }
     }
     
     var showAll: Item? {
         
-        items.filter { $0.case == .showAll }.first
+        items.filter { $0._case == .showAll }.first
     }
 }
 
 private extension CategoryPickerSectionState.Item {
     
-    var `case`: CategoryPickerSectionItem.Case? {
+    var _case: CategoryPickerSectionItem.Case? {
         
         guard case let .element(identified) = self
         else { return nil }
         
-        return identified.element.case
+        return identified.element._case
     }
 }
 
 extension CategoryPickerSectionItem {
     
-    var `case`: Case {
+    var _case: Case {
         
         switch self {
         case .category: return .category
@@ -157,6 +157,47 @@ private extension CategoryPickerSectionContentView {
         case .element:
             return transition
         }
+    }
+}
+
+struct CategoryPickerSectionContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            categoryPickerSectionContentView(.placeholders(count: 0))
+            categoryPickerSectionContentView(.placeholders(count: 5))
+            categoryPickerSectionContentView(.preview)
+        }
+    }
+    
+    private static func categoryPickerSectionContentView(
+        _ items: [CategoryPickerSectionState.Item]
+    ) -> some View {
+        
+        CategoryPickerSectionContentView(
+            state: .init(prefix: items, suffix: []),
+            event: { print($0) },
+            config: .preview,
+            itemLabel: {
+                
+                CategoryPickerSectionStateItemLabel(item: $0, config: .preview)
+            }
+        )
+    }
+}
+
+extension Array where Element == CategoryPickerSectionState.Item {
+    
+    static func placeholders(count: Int) -> Self {
+        
+        (0..<count).map { _ in .placeholder(.init()) }
+    }
+    
+    static var preview: Self {
+        
+        [ServiceCategory].preview.map { .element(.init(.category($0))) }
     }
 }
 

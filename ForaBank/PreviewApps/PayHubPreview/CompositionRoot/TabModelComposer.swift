@@ -95,7 +95,7 @@ private extension Array where Element == PayHubPickerItem<Latest> {
     ]
 }
 
-private extension Array where Element == ServiceCategory {
+extension Array where Element == ServiceCategory {
     
     static let preview: Self = [
         .make("Category A"),
