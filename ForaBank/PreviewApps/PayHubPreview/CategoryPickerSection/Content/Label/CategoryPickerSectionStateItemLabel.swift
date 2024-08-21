@@ -63,13 +63,14 @@ private extension CategoryPickerSectionStateItemLabel {
                     cornerRadius: config.placeholder.icon.radius
                 ))
                 .frame(config.placeholder.icon.size)
+                ._shimmering()
             
             PlaceholderView(opacity: 0.5)
                 .clipShape(RoundedRectangle(
                     cornerRadius: config.placeholder.title.radius
                 ))
                 .frame(config.placeholder.title.size)
+                ._shimmering()
         }
-        ._shimmering()
     }
 }
