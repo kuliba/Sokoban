@@ -67,6 +67,13 @@ struct OpenDepositDetailView: View {
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
         .edgesIgnoringSafeArea(.bottom)
+        .alert(
+            item: .init(
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
+            ),
+            content: Alert.init(with:)
+        )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },

@@ -69,7 +69,8 @@ class OpenDepositDetailViewModel: ObservableObject {
     struct Route {
         
         var destination: Link?
-        
+        var modal: Modal?
+
         static let empty: Self = .init(destination: nil)
         
         enum Link: Identifiable {
@@ -92,14 +93,41 @@ class OpenDepositDetailViewModel: ObservableObject {
         }
     }
     
+    enum Modal {
+        
+        case alert(Alert.ViewModel)
+        
+        var alert: Alert.ViewModel? {
+            
+            if case let .alert(alert) = self {
+                
+                return alert
+            } else {
+                
+                return nil
+            }
+        }
+    }
+    
     func resetDestination() {
         
         route.destination = nil
     }
     
+    func resetModal() {
+        
+        route.modal = nil
+    }
+
     func confirmButtonTapped() {
         
-        route.destination = .confirm(self)
+        if model.onlyCorporateCards {
+            
+            route.modal = .alert(.init(title: "Информация", message: .disableForCorporateCard, primary: .init(type: .cancel, title: "ОК", action: {})))
+        }
+        else {
+            route.destination = .confirm(self)
+        }
     }
 }
 

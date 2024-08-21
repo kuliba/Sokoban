@@ -504,14 +504,7 @@ private extension MainViewModel {
                                 
                             case .card:
                                 
-                                let authProductsViewModel = AuthProductsViewModel(
-                                    self.model,
-                                    products: self.model.catalogProducts.value,
-                                    dismissAction: { [weak self] in
-                                        self?.action.send(MainViewModelAction.Close.Link())
-                                    })
-                                
-                                route.destination =  .openCard(authProductsViewModel)
+                                openCard()
                                 
                             default:
                                 //MARK: Action for Sticker Product
@@ -910,6 +903,31 @@ private extension MainViewModel {
             })
         
         route.destination = .openDepositsList(openDepositViewModel)
+    }
+    
+    private func openCard() {
+        
+        if model.onlyCorporateCards {
+            
+            openLinkURL(model.productsOpenAccountURL)
+        } else {
+            
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                dismissAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())
+                })
+            
+            route.destination = .openCard(authProductsViewModel)
+        }
+    }
+    
+    private func openLinkURL(_ linkURL: URL) {
+        
+        if UIApplication.shared.canOpenURL(linkURL) {
+            UIApplication.shared.open(linkURL, options: [:], completionHandler: nil)
+        }
     }
     
     private typealias DepositeID = Int
