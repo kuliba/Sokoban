@@ -118,6 +118,8 @@ final class Model_allProductTests: XCTestCase {
         XCTAssertFalse(sut.onlyCorporateCards)
     }
 
+    // MARK: - test onlyCorporateCards
+    
     func test_onlyCorporateCards_productsWithOnlyIndividualCards_shouldReturnFalse() {
         
         let sut = makeSUT()
