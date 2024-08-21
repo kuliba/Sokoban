@@ -56,15 +56,19 @@ private extension CategoryPickerSectionStateItemLabel {
     
     func placeholderView() -> some View {
         
-        HStack(spacing: config.placeholderSpacing) {
+        HStack(spacing: config.placeholder.spacing) {
             
             PlaceholderView(opacity: 0.5)
-                .clipShape(RoundedRectangle(cornerRadius: config.iconBackground.radius))
-                .frame(config.iconBackground.size)
+                .clipShape(RoundedRectangle(
+                    cornerRadius: config.placeholder.icon.radius
+                ))
+                .frame(config.placeholder.icon.size)
             
             PlaceholderView(opacity: 0.5)
-                .clipShape(RoundedRectangle(cornerRadius: config.placeholderRadius))
-                .frame(config.placeholderSize)
+                .clipShape(RoundedRectangle(
+                    cornerRadius: config.placeholder.title.radius
+                ))
+                .frame(config.placeholder.title.size)
         }
         ._shimmering()
     }

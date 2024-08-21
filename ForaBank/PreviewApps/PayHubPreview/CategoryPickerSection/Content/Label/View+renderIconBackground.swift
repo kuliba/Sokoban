@@ -16,8 +16,10 @@ extension View {
         ZStack {
             
             config.color
-                .clipShape(RoundedRectangle(cornerRadius: config.radius))
-                .frame(config.size)
+                .clipShape(RoundedRectangle(
+                    cornerRadius: config.roundedRect.radius
+                ))
+                .frame(config.roundedRect.size)
             
             self
         }
