@@ -9,11 +9,14 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct PaymentsTransfersView<PayHub, PayHubView>: View
-where PayHub: Loadable,
+struct PaymentsTransfersView<CategoryPicker, CategoryPickerView, PayHub, PayHubView>: View
+where CategoryPicker: Loadable,
+      CategoryPickerView: View,
+      PayHub: Loadable,
       PayHubView: View {
     
     @StateObject var model: Model
+    
     let factory: Factory
     
     var body: some View {
@@ -24,30 +27,41 @@ where PayHub: Loadable,
             
             factory.makePayHubView(model.payHubPicker)
             
+            factory.makeCategoryPickerView(model.categoryPicker)
+            
             Spacer()
         }
         .padding()
     }
 }
 
-extension PaymentsTransfersModel where PayHubPicker: Loadable {
+extension PaymentsTransfersModel
+where CategoryPicker: Loadable,
+      PayHubPicker: Loadable {
     
     func reload() {
         
+        categoryPicker.load()
         payHubPicker.load()
     }
 }
 
 extension PaymentsTransfersView {
     
-    typealias Model = PaymentsTransfersModel<PayHub>
-    typealias Factory = PaymentsTransfersViewFactory<PayHub, PayHubView>
+    typealias Model = PaymentsTransfersModel<CategoryPicker, PayHub>
+    typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, PayHub, PayHubView>
 }
 
 #Preview {
     PaymentsTransfersView(
         model: .preview,
         factory: .init(
+            makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in
+                
+                Text("TBD")
+                    .padding()
+                    .background(Color.orange.opacity(0.1))
+            },
             makePayHubView: { (payHub: PreviewPayHub) in
                 
                 Text("TBD")
@@ -59,12 +73,21 @@ extension PaymentsTransfersView {
 }
 
 private extension PaymentsTransfersModel
-where PayHubPicker == PreviewPayHub {
+where CategoryPicker == PreviewCategoryPicker,
+      PayHubPicker == PreviewPayHub {
     
     static var preview: PaymentsTransfersModel {
         
-        return .init(payHubPicker: .init())
+        return .init(
+            categoryPicker: .init(),
+            payHubPicker: .init()
+        )
     }
+}
+
+private final class PreviewCategoryPicker: Loadable {
+    
+    func load() {}
 }
 
 private final class PreviewPayHub: Loadable {

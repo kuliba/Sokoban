@@ -129,7 +129,7 @@ private extension ContentView {
                                         }
                                     }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                             
                             ToolbarItem(placement: .topBarTrailing) {
@@ -139,7 +139,7 @@ private extension ContentView {
                                 } label: {
                                     Image(systemName: "qrcode")
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                         }
                     )
@@ -155,21 +155,69 @@ private extension ContentView {
         
         PaymentsTransfersView(
             model: content,
-            factory: .init(makePayHubView: makePayHubFlowView)
+            factory: .init(
+                makeCategoryPickerView: makeCategoryPickerView,
+                makePayHubView: makePayHubFlowView
+            )
         )
+    }
+    
+    private func makeCategoryPickerView(
+        _ binder: CategoryPickerSectionBinder
+    ) -> some View {
+        
+        CategoryPickerSectionBinderView(
+            binder: binder,
+            factory: .init(
+                makeContentView: makeCategoryPickerSectionContentView,
+                makeDestinationView: EmptyView.init
+            )
+        )
+    }
+    
+    private func makeCategoryPickerSectionContentView(
+        content: CategoryPickerSectionContent
+    ) -> some View {
+        
+        CategoryPickerSectionContentWrapperView(
+            model: content,
+            makeContentView: { state, event in
+                
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event,
+                    config: .preview,
+                    itemLabel: {
+                        
+                        CategoryPickerSectionStateItemLabel(
+                            item: $0, 
+                            config: .preview,
+                            categoryIcon: categoryIcon
+                        )
+                    }
+                )
+            }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
     }
     
     private func makePayHubFlowView(
         _ binder: PayHubPickerBinder
     ) -> some View {
         
-        PayHubPickerFlowStateWrapperView(
+        PayHubPickerBinderView(
             binder: binder,
-            factory: .init(makeContent: makePayHubContentWrapper)
+            factory: .init(makeContent: makePayHubContentView)
         )
     }
     
-    private func makePayHubContentWrapper(
+    private func makePayHubContentView(
         _ content: PayHubPickerContent
     ) -> some View {
         
@@ -181,13 +229,21 @@ private extension ContentView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: { item in
+                    itemLabel: {
                         
-                        PayHubPickerStateItemLabel(item: item, config: .preview)
+                        PayHubPickerStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }
         )
+    }
+}
+
+extension CategoryPickerSectionBinder: Loadable {
+    
+    public func load() {
+        
+        content.event(.load)
     }
 }
 

@@ -122,10 +122,3 @@ extension Latest {
         return .init(id: UUID().uuidString)
     }
 }
-
-extension PayHubPickerStateItemLabelConfig {
-    
-    static let preview: Self = .init(
-        latestPlaceholder: .preview
-    )
-}

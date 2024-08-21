@@ -19,7 +19,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersModel<PayHubPickerBinder>
+    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersContentModel
 }
 
 extension TabModelComposer {
@@ -54,7 +54,10 @@ private extension TabModelComposer {
         let composer = PaymentsTransfersBinderComposer(
             scheduler: scheduler
         )
-        return composer.compose(loadResult: tab.loadResult)
+        return composer.compose(
+            loadedCategories: tab.loadedCategories,
+            loadedItems: tab.loadResult
+        )
     }
 }
 
@@ -62,20 +65,23 @@ private extension TabModelComposer {
 
 private extension TabState.Selected {
     
+    var loadedCategories: [ServiceCategory] {
+        
+        switch self {
+        case .noLatest:     return .preview
+        case .noCategories: return []
+        case .noBoth:       return []
+        case .ok:           return .preview
+        }
+    }
+    
     var loadResult: [PayHubPickerItem<Latest>] {
         
         switch self {
-        case .noLatest:
-            return []
-            
-        case .noCategories:
-            return []
-            
-        case .noBoth:
-            return []
-                        
-        case .ok:
-            return .preview
+        case .noLatest:     return []
+        case .noCategories: return .preview
+        case .noBoth:       return []
+        case .ok:           return .preview
         }
     }
 }
@@ -87,4 +93,22 @@ private extension Array where Element == PayHubPickerItem<Latest> {
         .latest(.preview()),
         .latest(.preview())
     ]
+}
+
+extension Array where Element == ServiceCategory {
+    
+    static let preview: Self = [
+        .make("Category A"),
+        .make("Category B"),
+        .make("Category C"),
+        .make("Category D"),
+    ]
+}
+
+private extension ServiceCategory {
+    
+    static func make(_ name: String) -> Self {
+        
+        return .init(name: name)
+    }
 }

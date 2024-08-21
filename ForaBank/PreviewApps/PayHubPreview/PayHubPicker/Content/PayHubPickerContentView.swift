@@ -17,10 +17,11 @@ where ItemLabel: View {
     let itemLabel: (Item) -> ItemLabel
     
     private let transition: AnyTransition = .opacity
-        .combined(with: .asymmetric(
-            insertion: .identity,
-            removal: .scale
-        ))
+        .combined(with: .scale)
+//        .combined(with: .asymmetric(
+//            insertion: .identity,
+//            removal: .scale
+//        ))
     // .combined(with: .asymmetric(
     //     insertion: .move(edge: .trailing),
     //     removal: .move(edge: .leading).combined(with: .scale)
@@ -33,8 +34,8 @@ where ItemLabel: View {
             HStack(spacing: config.spacing) {
                 
                 ForEach(state.items, content: itemView)
+                    .animation(.easeInOut, value: state)
             }
-            .animation(.easeInOut, value: state)
         }
         .frame(height: config.height)
     }
@@ -67,9 +68,9 @@ private extension PayHubPickerContentView {
             Button {
                 event(.select(identified.element))
             } label: {
-                label.contentShape(Rectangle())
+                label
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         }
     }
     
@@ -247,12 +248,4 @@ private extension PayHubPickerState {
             suffix: suffix
         )
     }
-}
-
-extension PayHubPickerContentViewConfig {
-    
-    static let preview: Self = .init(
-        height: 96,
-        spacing: 4
-    )
 }

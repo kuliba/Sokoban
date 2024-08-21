@@ -5,40 +5,71 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
+import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
 
-final class PaymentsTransfersModelComposer {}
+final class PaymentsTransfersModelComposer {
+    
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.scheduler = scheduler
+    }
+}
 
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: [PayHubPickerItem<Latest>]
+        loadedCategories: [ServiceCategory],
+        loadedItems: [PayHubPickerItem<Latest>]
     ) -> Model {
         
         return .init(
-            payHubPicker: composePayHubBinder(loadResult: loadResult)
+            categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
+            payHubPicker: makePayHubBinder(loadedItems: loadedItems)
         )
     }
     
-    typealias Model = PaymentsTransfersModel<PayHubPickerBinder>
+    typealias Model = PaymentsTransfersContentModel
 }
+
+// MARK: - CategoryPicker
 
 private extension PaymentsTransfersModelComposer {
     
-    func composePayHubBinder(
-        loadResult: [PayHubPickerItem<Latest>]
+    func makeCategoryPickerBinder(
+        loadedCategories: [ServiceCategory]
+    ) -> CategoryPickerSectionBinder {
+        
+        let composer = CategoryPickerSectionContentComposer(
+            scheduler: scheduler
+        )
+        let content = composer.compose(loadedCategories: loadedCategories)
+        
+        return .init(content: content, flow: ())
+    }
+}
+
+// MARK: - PayHub
+
+private extension PaymentsTransfersModelComposer {
+    
+    func makePayHubBinder(
+        loadedItems: [PayHubPickerItem<Latest>]
     ) -> PayHubPickerBinder {
         
-        let content = PayHubPickerContent.stub(loadResult: loadResult)
+        let content = PayHubPickerContent.stub(loadResult: loadedItems)
         let flow = PayHubPickerFlow.stub()
         
         return .init(
-            content: content, 
+            content: content,
             flow: flow,
             bind: { content, flow in
-            
+                
                 content.$state
                     .map(\.selected)
                     .sink { flow.event(.select($0)) }

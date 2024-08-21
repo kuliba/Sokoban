@@ -24,8 +24,7 @@ extension PaymentsTransfersBinderComposer {
         
         return .init(
             content: makeContent(),
-            flow: makeFlow(), 
-            bind: { _,_ in nil }
+            flow: makeFlow()
         )
     }
 }
@@ -36,7 +35,7 @@ private extension PaymentsTransfersBinderComposer {
     
     func makeContent() -> PaymentsTransfersContentModel {
         
-        return .init(payHubPicker: makePayHubPickerBinder())
+        return .init(categoryPicker: (), payHubPicker: makePayHubPickerBinder())
     }
 }
 
