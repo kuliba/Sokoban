@@ -182,26 +182,14 @@ private extension ContentView {
         CategoryPickerSectionContentWrapperView(
             model: content,
             makeContentView: { state, event in
-             
+                
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
-                    itemLabel: { item in
+                    config: .preview,
+                    itemLabel: {
                         
-                        switch item {
-                        case let .element(identified):
-                            switch identified.element {
-                            case let .category(category):
-                                Label { Text(category.name) } icon: { Text("...") }
-                                
-                            case .showAll:
-                                Text("Show All")
-                                    .font(.subheadline)
-                            }
-                            
-                        case .placeholder:
-                            ProgressView()
-                        }
+                        CategoryPickerSectionStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }
@@ -230,9 +218,9 @@ private extension ContentView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: { item in
+                    itemLabel: {
                         
-                        PayHubPickerStateItemLabel(item: item, config: .preview)
+                        PayHubPickerStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }
@@ -243,7 +231,7 @@ private extension ContentView {
 extension CategoryPickerSectionBinder: Loadable {
     
     public func load() {
-         
+        
         content.event(.load)
     }
 }

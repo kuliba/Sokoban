@@ -523,6 +523,9 @@
 		2A273E732C75A9D8009935E6 /* CategoryPickerSectionBinderViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E722C75A9D8009935E6 /* CategoryPickerSectionBinderViewFactory.swift */; };
 		2A273E752C75ABB9009935E6 /* CategoryPickerSectionContentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E742C75ABB9009935E6 /* CategoryPickerSectionContentWrapperView.swift */; };
 		2A273E772C75ACAC009935E6 /* CategoryPickerSectionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E762C75ACAC009935E6 /* CategoryPickerSectionContentView.swift */; };
+		2A273E792C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E782C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift */; };
+		2A273E7C2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E7B2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift */; };
+		2A273E7E2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E7D2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -3888,6 +3891,9 @@
 		2A273E722C75A9D8009935E6 /* CategoryPickerSectionBinderViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionBinderViewFactory.swift; sourceTree = "<group>"; };
 		2A273E742C75ABB9009935E6 /* CategoryPickerSectionContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContentWrapperView.swift; sourceTree = "<group>"; };
 		2A273E762C75ACAC009935E6 /* CategoryPickerSectionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContentView.swift; sourceTree = "<group>"; };
+		2A273E782C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionStateItemLabel.swift; sourceTree = "<group>"; };
+		2A273E7B2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionStateItemLabelConfig.swift; sourceTree = "<group>"; };
+		2A273E7D2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContentViewConfig.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -8468,6 +8474,8 @@
 				2A273E5F2C7596E4009935E6 /* CategoryPickerSectionContent.swift */,
 				2A273E742C75ABB9009935E6 /* CategoryPickerSectionContentWrapperView.swift */,
 				2A273E762C75ACAC009935E6 /* CategoryPickerSectionContentView.swift */,
+				2A273E7D2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift */,
+				2A273E7A2C75CC22009935E6 /* Label */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -8487,6 +8495,15 @@
 				2A273E6B2C759F6B009935E6 /* ServiceCategory.swift */,
 			);
 			path = Domain;
+			sourceTree = "<group>";
+		};
+		2A273E7A2C75CC22009935E6 /* Label */ = {
+			isa = PBXGroup;
+			children = (
+				2A273E782C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift */,
+				2A273E7B2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift */,
+			);
+			path = Label;
 			sourceTree = "<group>";
 		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
@@ -18911,10 +18928,12 @@
 				2AB552C12C712AF100F8D4B3 /* PaymentsTransfersFlowViewFactory.swift in Sources */,
 				2AB552B62C71289C00F8D4B3 /* ProfileModel.swift in Sources */,
 				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
+				2A273E792C75CBF4009935E6 /* CategoryPickerSectionStateItemLabel.swift in Sources */,
 				2A5738382C706D9A003B255C /* View+frame.swift in Sources */,
 				2A8E82582C708A2200366EC9 /* PayHubPickerStateItemLabel.swift in Sources */,
 				2A57383E2C707D10003B255C /* IconWithTitleLabelVertical.swift in Sources */,
 				2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */,
+				2A273E7E2C75CEA0009935E6 /* CategoryPickerSectionContentViewConfig.swift in Sources */,
 				2A5738362C706CB8003B255C /* LatestPlaceholderConfig.swift in Sources */,
 				2A77724F2C6F181F009B1676 /* PaymentsTransfersModelComposer.swift in Sources */,
 				2A273E672C759741009935E6 /* CategoryPickerSectionBinder.swift in Sources */,
@@ -18923,6 +18942,7 @@
 				2A77726B2C6F4B1E009B1676 /* PayHubPickerContentViewConfig.swift in Sources */,
 				2A7385B92C7377B100861881 /* TabModelComposer.swift in Sources */,
 				2AB552BA2C71294100F8D4B3 /* PaymentsTransfersFlowStateWrapper.swift in Sources */,
+				2A273E7C2C75CC2E009935E6 /* CategoryPickerSectionStateItemLabelConfig.swift in Sources */,
 				2A273E712C75A8DA009935E6 /* CategoryPickerSectionBinderView.swift in Sources */,
 				2A5738332C7069F1003B255C /* LatestPlaceholder.swift in Sources */,
 				2A77723F2C6F0FE3009B1676 /* TabReducer.swift in Sources */,

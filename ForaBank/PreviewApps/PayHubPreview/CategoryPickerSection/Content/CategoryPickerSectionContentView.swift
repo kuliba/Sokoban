@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
+import SharedConfigs
 import SwiftUI
 
 struct CategoryPickerSectionContentView<ItemLabel>: View
@@ -12,6 +13,7 @@ where ItemLabel: View {
     
     let state: State
     let event: (Event) -> Void
+    let config: Config
     @ViewBuilder let itemLabel: (State.Item) -> ItemLabel
     
     private let transition: AnyTransition = .opacity.combined(with: .scale)
@@ -24,11 +26,7 @@ where ItemLabel: View {
         } else {
             VStack {
                 
-                state.showAll.map {
-                    
-                    itemView(item: $0)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                }
+                sectionHeader()
                 
                 List {
                     
@@ -44,6 +42,7 @@ extension CategoryPickerSectionContentView {
     
     typealias State = CategoryPickerSectionState
     typealias Event = CategoryPickerSectionEvent
+    typealias Config = CategoryPickerSectionContentViewConfig
 }
 
 private extension CategoryPickerSectionState {
@@ -53,7 +52,7 @@ private extension CategoryPickerSectionState {
         !isLoading && categories.isEmpty
     }
     
-    var categories: [Item] {
+    private var categories: [Item] {
         
         items.filter { $0.case == .category }
     }
@@ -98,6 +97,32 @@ extension CategoryPickerSectionItem {
 
 private extension CategoryPickerSectionContentView {
     
+    func sectionHeader() -> some View {
+        
+        HStack {
+            
+            if state.isLoading {
+                titlePlaceholder(config: config.titlePlaceholder)
+            } else {
+                config.title.render()
+            }
+            
+            Spacer()
+            
+            state.showAll.map(itemView(item:))
+        }
+    }
+    
+    private func titlePlaceholder(
+        config: CategoryPickerSectionContentViewConfig.TitlePlaceholder
+    ) -> some View {
+        
+        config.color
+            .clipShape(RoundedRectangle(cornerRadius: config.radius))
+            .frame(config.size)
+            ._shimmering()
+    }
+    
     @ViewBuilder
     func itemView(
         item: State.Item
@@ -111,24 +136,13 @@ private extension CategoryPickerSectionContentView {
         case .placeholder:
             label
             
-        case let .element(element):
-            switch element.element {
-            case let .category(category):
-                Button {
-                    event(.select(.category(category)))
-                } label: {
-                    label
-                }
-                .buttonStyle(.plain)
-                
-            case .showAll:
-                Button {
-                    event(.select(.showAll))
-                } label: {
-                    label
-                }
-                .buttonStyle(.plain)
+        case let .element(identified):
+            Button {
+                event(.select(identified.element))
+            } label: {
+                label
             }
+            .buttonStyle(.plain)
         }
     }
     
@@ -144,4 +158,22 @@ private extension CategoryPickerSectionContentView {
             return transition
         }
     }
+}
+
+extension CategoryPickerSectionContentViewConfig {
+    
+    static let preview: Self = .init(
+        title: .init(
+            text: "Make a Payment",
+            config: .init(
+                textFont: .title3.bold(),
+                textColor: .green
+            )
+        ),
+        titlePlaceholder: .init(
+            color: .gray.opacity(0.5),
+            radius: 12,
+            size: .init(width: 148, height: 18)
+        )
+    )
 }
