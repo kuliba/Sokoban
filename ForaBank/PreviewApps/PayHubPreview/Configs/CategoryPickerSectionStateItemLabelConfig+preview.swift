@@ -22,7 +22,7 @@ extension CategoryPickerSectionStateItemLabelConfig {
             spacing: 20
         ),
         spacing: 16,
-        title: .init(textFont: .headline, textColor: .green),
+        title: .init(textFont: .headline, textColor: .primary),
         showAll: .init(
             text: "show all".uppercased(),
             config: .init(textFont: .caption, textColor: .blue)

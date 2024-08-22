@@ -24,12 +24,12 @@ where ItemLabel: View {
             Text("Failed to load categories")
                 .foregroundColor(.red)
         } else {
-            VStack {
+            VStack(spacing: config.spacing) {
                 
                 sectionHeader()
                     .frame(height: config.headerHeight)
                 
-                List {
+                ScrollView(showsIndicators: false) {
                     
                     ForEach(state.suffix, content: itemView)
                         .animation(.easeInOut, value: state)
