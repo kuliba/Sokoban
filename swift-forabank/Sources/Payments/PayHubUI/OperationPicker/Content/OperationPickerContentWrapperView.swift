@@ -8,14 +8,14 @@
 import PayHub
 import SwiftUI
 
-struct OperationPickerContentWrapperView<ContentView>: View
+public struct OperationPickerContentWrapperView<ContentView, Latest>: View
 where ContentView: View {
     
     @ObservedObject private var model: Model
     
     private let makeContentView: MakeContentView
     
-    init(
+    public init(
         model: Model,
         makeContentView: @escaping MakeContentView
     ) {
@@ -23,16 +23,16 @@ where ContentView: View {
         self.makeContentView = makeContentView
     }
     
-    var body: some View {
+    public var body: some View {
         
         makeContentView(model.state, model.event)
     }
 }
 
-extension OperationPickerContentWrapperView {
+public extension OperationPickerContentWrapperView {
     
-    typealias State = OperationPickerState
-    typealias Event = OperationPickerEvent
+    typealias State = OperationPickerState<Latest>
+    typealias Event = OperationPickerEvent<Latest>
     typealias MakeContentView = (State, @escaping (Event) -> Void) -> ContentView
-    typealias Model = OperationPickerContent
+    typealias Model = OperationPickerContent<Latest>
 }

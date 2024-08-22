@@ -566,6 +566,7 @@
 		2A3011E62A6AB53B00560B98 /* CvvPin in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3011E52A6AB53B00560B98 /* CvvPin */; };
 		2A302AD62C7770500088F6C7 /* CategoryPickerSectionContentViewConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A302AD42C776DB30088F6C7 /* CategoryPickerSectionContentViewConfig+preview.swift */; };
 		2A302AD92C7781730088F6C7 /* CategoryPickerSectionBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A302AD82C7781730088F6C7 /* CategoryPickerSectionBinder.swift */; };
+		2A302ADB2C7785A40088F6C7 /* OperationPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A302ADA2C7785A40088F6C7 /* OperationPickerContent.swift */; };
 		2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039272A17D2150008701D /* PhoneKitTransformerTests.swift */; };
 		2A30392A2A17D25F0008701D /* PhoneTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039292A17D25E0008701D /* PhoneTransformerTests.swift */; };
 		2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30392F2A17D2AC0008701D /* XCTAssertNoDiff.swift */; };
@@ -1109,9 +1110,6 @@
 		2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725A2C6F2833009B1676 /* View+ext.swift */; };
 		2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77725C2C6F2892009B1676 /* UIPrimitives */; };
 		2A77725F2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725E2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift */; };
-		2A7772642C6F4A01009B1676 /* OperationPickerContentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772622C6F49A5009B1676 /* OperationPickerContentWrapperView.swift */; };
-		2A7772672C6F4A89009B1676 /* OperationPickerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772652C6F4A4A009B1676 /* OperationPickerContentView.swift */; };
-		2A77726B2C6F4B1E009B1676 /* OperationPickerContentViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772682C6F4AF8009B1676 /* OperationPickerContentViewConfig.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
@@ -1530,7 +1528,6 @@
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
 		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
-		2ADC2E582C6EFB3F00915F58 /* OperationPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADC2E572C6EFB3F00915F58 /* OperationPickerContent.swift */; };
 		2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E592C6EFBEF00915F58 /* RxViewModel */; };
 		2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E5B2C6EFBF500915F58 /* PayHub */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
@@ -3936,6 +3933,7 @@
 		2A3011E32A6AB4FC00560B98 /* ServerAgentSessionCodeAPIClientAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentSessionCodeAPIClientAdapter.swift; sourceTree = "<group>"; };
 		2A302AD42C776DB30088F6C7 /* CategoryPickerSectionContentViewConfig+preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+preview.swift"; sourceTree = "<group>"; };
 		2A302AD82C7781730088F6C7 /* CategoryPickerSectionBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionBinder.swift; sourceTree = "<group>"; };
+		2A302ADA2C7785A40088F6C7 /* OperationPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContent.swift; sourceTree = "<group>"; };
 		2A3039272A17D2150008701D /* PhoneKitTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneKitTransformerTests.swift; sourceTree = "<group>"; };
 		2A3039292A17D25E0008701D /* PhoneTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTransformerTests.swift; sourceTree = "<group>"; };
 		2A30392F2A17D2AC0008701D /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
@@ -4484,9 +4482,6 @@
 		2A7772582C6F275D009B1676 /* OperationPickerBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerBinderView.swift; sourceTree = "<group>"; };
 		2A77725A2C6F2833009B1676 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A77725E2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowStateWrapperViewFactory.swift; sourceTree = "<group>"; };
-		2A7772622C6F49A5009B1676 /* OperationPickerContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContentWrapperView.swift; sourceTree = "<group>"; };
-		2A7772652C6F4A4A009B1676 /* OperationPickerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContentView.swift; sourceTree = "<group>"; };
-		2A7772682C6F4AF8009B1676 /* OperationPickerContentViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContentViewConfig.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
@@ -4887,7 +4882,6 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
-		2ADC2E572C6EFB3F00915F58 /* OperationPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContent.swift; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADE53322BA70E60003E0EC9 /* StartPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPayment.swift; sourceTree = "<group>"; };
@@ -10485,11 +10479,8 @@
 		2A7772612C6F4999009B1676 /* Content */ = {
 			isa = PBXGroup;
 			children = (
-				2ADC2E572C6EFB3F00915F58 /* OperationPickerContent.swift */,
-				2A7772622C6F49A5009B1676 /* OperationPickerContentWrapperView.swift */,
-				2A7772652C6F4A4A009B1676 /* OperationPickerContentView.swift */,
-				2A7772682C6F4AF8009B1676 /* OperationPickerContentViewConfig.swift */,
 				2A8E82572C708A0D00366EC9 /* OperationPickerStateItemLabel */,
+				2A302ADA2C7785A40088F6C7 /* OperationPickerContent.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -19029,7 +19020,6 @@
 				2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */,
 				2A7772412C6F1009009B1676 /* TabEffectHandler.swift in Sources */,
 				2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */,
-				2ADC2E582C6EFB3F00915F58 /* OperationPickerContent.swift in Sources */,
 				2A7772442C6F1054009B1676 /* TabModel.swift in Sources */,
 				2A7772322C6F0CE6009B1676 /* Templates.swift in Sources */,
 				2AB552C12C712AF100F8D4B3 /* PaymentsTransfersFlowViewFactory.swift in Sources */,
@@ -19041,7 +19031,6 @@
 				2A5738362C706CB8003B255C /* LatestPlaceholderConfig.swift in Sources */,
 				2A77724F2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift in Sources */,
 				2A273E602C7596E4009935E6 /* CategoryPickerSectionContent.swift in Sources */,
-				2A77726B2C6F4B1E009B1676 /* OperationPickerContentViewConfig.swift in Sources */,
 				2A273E872C75ECB8009935E6 /* OperationPickerContentViewConfig+preview.swift in Sources */,
 				2A7385B92C7377B100861881 /* TabModelComposer.swift in Sources */,
 				2A273E892C75ECDF009935E6 /* OperationPickerStateItemLabelConfig+preview.swift in Sources */,
@@ -19055,12 +19044,12 @@
 				2A57383C2C7070AB003B255C /* OperationPickerStateItemLabelConfig.swift in Sources */,
 				2A273E692C75996B009935E6 /* PaymentsTransfersContent.swift in Sources */,
 				2A77725F2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift in Sources */,
-				2A7772672C6F4A89009B1676 /* OperationPickerContentView.swift in Sources */,
 				2A273E5A2C759644009935E6 /* OperationPickerFlow.swift in Sources */,
 				2A7385BB2C7382B900861881 /* PaymentsTransfersBinder.swift in Sources */,
 				2A5738422C707F58003B255C /* IconWithTitleLabelVerticalConfig.swift in Sources */,
 				2A7772252C6F0BF2009B1676 /* OperationPickerBinder.swift in Sources */,
 				2A302AD92C7781730088F6C7 /* CategoryPickerSectionBinder.swift in Sources */,
+				2A302ADB2C7785A40088F6C7 /* OperationPickerContent.swift in Sources */,
 				2A7772302C6F0CDB009B1676 /* LatestFlow.swift in Sources */,
 				2A273E832C75EC48009935E6 /* CategoryPickerSectionStateItemLabelConfig+preview.swift in Sources */,
 				2A273E8B2C75ECFD009935E6 /* LatestPlaceholderConfig+preview.swift in Sources */,
@@ -19068,7 +19057,6 @@
 				2A7385BF2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift in Sources */,
 				2A302AD62C7770500088F6C7 /* CategoryPickerSectionContentViewConfig+preview.swift in Sources */,
 				2AB552BE2C7129E800F8D4B3 /* PaymentsTransfersFlowView.swift in Sources */,
-				2A7772642C6F4A01009B1676 /* OperationPickerContentWrapperView.swift in Sources */,
 				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
 				2A273E6C2C759F6B009935E6 /* ServiceCategory.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
