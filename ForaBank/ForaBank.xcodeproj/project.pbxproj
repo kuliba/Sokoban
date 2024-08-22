@@ -1115,8 +1115,6 @@
 		2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772472C6F1160009B1676 /* TabViewFactory.swift */; };
 		2A77724A2C6F11B3009B1676 /* TabStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772492C6F11B3009B1676 /* TabStateWrapperView.swift */; };
 		2A77724F2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77724E2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift */; };
-		2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */; };
-		2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */; };
 		2A7772592C6F275D009B1676 /* OperationPickerBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7772582C6F275D009B1676 /* OperationPickerBinderView.swift */; };
 		2A77725B2C6F2833009B1676 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77725A2C6F2833009B1676 /* View+ext.swift */; };
 		2A77725D2C6F2892009B1676 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77725C2C6F2892009B1676 /* UIPrimitives */; };
@@ -4503,8 +4501,6 @@
 		2A7772472C6F1160009B1676 /* TabViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFactory.swift; sourceTree = "<group>"; };
 		2A7772492C6F11B3009B1676 /* TabStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabStateWrapperView.swift; sourceTree = "<group>"; };
 		2A77724E2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersContentComposer.swift; sourceTree = "<group>"; };
-		2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
-		2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
 		2A7772582C6F275D009B1676 /* OperationPickerBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerBinderView.swift; sourceTree = "<group>"; };
 		2A77725A2C6F2833009B1676 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A77725E2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowStateWrapperViewFactory.swift; sourceTree = "<group>"; };
@@ -11367,8 +11363,6 @@
 			isa = PBXGroup;
 			children = (
 				2A273E682C75996B009935E6 /* PaymentsTransfersContent.swift */,
-				2A7772512C6F1B15009B1676 /* PaymentsTransfersView.swift */,
-				2A7772532C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -19071,7 +19065,6 @@
 				2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */,
 				2A77724A2C6F11B3009B1676 /* TabStateWrapperView.swift in Sources */,
 				2A77723A2C6F0FA3009B1676 /* TabEvent.swift in Sources */,
-				2A7772522C6F1B15009B1676 /* PaymentsTransfersView.swift in Sources */,
 				2A7772412C6F1009009B1676 /* TabEffectHandler.swift in Sources */,
 				2A7772482C6F1160009B1676 /* TabViewFactory.swift in Sources */,
 				2A6858D32C6FE848003840C4 /* View+_shimmering.swift in Sources */,
@@ -19092,7 +19085,6 @@
 				2A5738362C706CB8003B255C /* LatestPlaceholderConfig.swift in Sources */,
 				2A77724F2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift in Sources */,
 				2A273E672C759741009935E6 /* CategoryPickerSectionBinder.swift in Sources */,
-				2A7772542C6F1C36009B1676 /* PaymentsTransfersViewFactory.swift in Sources */,
 				2A273E602C7596E4009935E6 /* CategoryPickerSectionContent.swift in Sources */,
 				2A77726B2C6F4B1E009B1676 /* OperationPickerContentViewConfig.swift in Sources */,
 				2A273E872C75ECB8009935E6 /* OperationPickerContentViewConfig+preview.swift in Sources */,
