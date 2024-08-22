@@ -1,5 +1,5 @@
 //
-//  PayHubPickerContent+stub.swift
+//  OperationPickerContent+stub.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -10,17 +10,17 @@ import Foundation
 import PayHub
 import PayHubUI
 
-extension PayHubPickerContent {
+extension OperationPickerContent {
     
     static func stub(
-        prefix: [PayHubPickerState.Item] = [
+        prefix: [OperationPickerState.Item] = [
             .element(.init(.templates)),
             .element(.init(.exchange))
         ],
-        suffix: [PayHubPickerState.Item] = [],
-        loadResult: [PayHubPickerItem<Latest>],
+        suffix: [OperationPickerState.Item] = [],
+        loadResult: [OperationPickerItem<Latest>],
         scheduler: AnySchedulerOf<DispatchQueue> = .main
-    ) -> PayHubPickerContent {
+    ) -> OperationPickerContent {
         
         let composer = LoadablePickerModelComposer(
             load: { completion in

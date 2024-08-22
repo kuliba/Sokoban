@@ -25,16 +25,16 @@ extension PaymentsTransfersModelComposer {
     
     func compose(
         loadedCategories: [ServiceCategory],
-        loadedItems: [PayHubPickerItem<Latest>]
+        loadedItems: [OperationPickerItem<Latest>]
     ) -> Model {
         
         return .init(
             categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
-            payHubPicker: makePayHubBinder(loadedItems: loadedItems)
+            operationPicker: makeOperationBinder(loadedItems: loadedItems)
         )
     }
     
-    typealias Model = PaymentsTransfersContentModel
+    typealias Model = PaymentsTransfersContent
 }
 
 // MARK: - CategoryPicker
@@ -58,12 +58,12 @@ private extension PaymentsTransfersModelComposer {
 
 private extension PaymentsTransfersModelComposer {
     
-    func makePayHubBinder(
-        loadedItems: [PayHubPickerItem<Latest>]
-    ) -> PayHubPickerBinder {
+    func makeOperationBinder(
+        loadedItems: [OperationPickerItem<Latest>]
+    ) -> OperationPickerBinder {
         
-        let content = PayHubPickerContent.stub(loadResult: loadedItems)
-        let flow = PayHubPickerFlow.stub()
+        let content = OperationPickerContent.stub(loadResult: loadedItems)
+        let flow = OperationPickerFlow.stub()
         
         return .init(
             content: content,
