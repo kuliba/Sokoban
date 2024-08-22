@@ -192,7 +192,8 @@ private extension ContentView {
                         CategoryPickerSectionStateItemLabel(
                             item: $0, 
                             config: .preview,
-                            categoryIcon: categoryIcon
+                            categoryIcon: categoryIcon,
+                            placeholderView: { PlaceholderView(opacity: 0.5) }
                         )
                     }
                 )

@@ -5,16 +5,37 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
+import PayHub
 import SwiftUI
 
-struct CategoryPickerSectionStateItemLabel<CategoryIcon>: View
-where CategoryIcon: View {
+public protocol Named {
     
-    let item: Item
-    let config: Config
-    let categoryIcon: (ServiceCategory) -> CategoryIcon
+    var name: String { get }
+}
+
+public struct CategoryPickerSectionStateItemLabel<CategoryIcon, PlaceholderView, ServiceCategory>: View
+where CategoryIcon: View,
+      PlaceholderView: View,
+      ServiceCategory: Named {
     
-    var body: some View {
+    private let item: Item
+    private let config: Config
+    private let categoryIcon: (ServiceCategory) -> CategoryIcon
+    private let placeholderView: () -> PlaceholderView
+    
+    public init(
+        item: Item, 
+        config: Config,
+        categoryIcon: @escaping (ServiceCategory) -> CategoryIcon,
+        placeholderView: @escaping () -> PlaceholderView
+    ) {
+        self.item = item
+        self.config = config
+        self.categoryIcon = categoryIcon
+        self.placeholderView = placeholderView
+    }
+    
+    public var body: some View {
         
         switch item {
         case let .element(identified):
@@ -27,14 +48,14 @@ where CategoryIcon: View {
             }
             
         case .placeholder:
-            placeholderView()
+            placeholderLabel()
         }
     }
 }
 
-extension CategoryPickerSectionStateItemLabel {
+public extension CategoryPickerSectionStateItemLabel {
     
-    typealias Item = CategoryPickerSectionState.Item
+    typealias Item = CategoryPickerSectionState<ServiceCategory>.Item
     typealias Config = CategoryPickerSectionStateItemLabelConfig
 }
 
@@ -55,18 +76,18 @@ private extension CategoryPickerSectionStateItemLabel {
         }
     }
     
-    func placeholderView() -> some View {
+    func placeholderLabel() -> some View {
         
         HStack(spacing: config.placeholder.spacing) {
             
-            PlaceholderView(opacity: 0.5)
+            placeholderView()
                 .clipShape(RoundedRectangle(
                     cornerRadius: config.placeholder.icon.radius
                 ))
                 ._shimmering()
                 .frame(config.placeholder.icon.size)
             
-            PlaceholderView(opacity: 0.5)
+            placeholderView()
                 .clipShape(RoundedRectangle(
                     cornerRadius: config.placeholder.title.radius
                 ))

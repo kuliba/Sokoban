@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import PayHubUI
 
-struct ServiceCategory: Equatable {
+struct ServiceCategory: Equatable, Named {
     
     let name: String
 }
