@@ -137,13 +137,14 @@ extension XCTestCase {
             paymentSystemName: nil,
             paymentSystemImage: nil,
             loanBaseParam: nil,
-            statusPc: nil,
+            statusPc: .active,
             isMain: isMain,
             externalId: nil,
             order: 0,
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
+            statusCard: .active,
             cardType: cardType
         )
     }
