@@ -5,40 +5,71 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
+import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
 
-final class PaymentsTransfersModelComposer {}
+final class PaymentsTransfersModelComposer {
+    
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.scheduler = scheduler
+    }
+}
 
 extension PaymentsTransfersModelComposer {
     
     func compose(
-        loadResult: [PayHubPickerItem<Latest>]
+        loadedCategories: [ServiceCategory],
+        loadedItems: [OperationPickerItem<Latest>]
     ) -> Model {
         
         return .init(
-            payHubPicker: composePayHubBinder(loadResult: loadResult)
+            categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
+            operationPicker: makeOperationBinder(loadedItems: loadedItems)
         )
     }
     
-    typealias Model = PaymentsTransfersModel<PayHubPickerBinder>
+    typealias Model = PaymentsTransfersContent
 }
+
+// MARK: - CategoryPicker
 
 private extension PaymentsTransfersModelComposer {
     
-    func composePayHubBinder(
-        loadResult: [PayHubPickerItem<Latest>]
-    ) -> PayHubPickerBinder {
+    func makeCategoryPickerBinder(
+        loadedCategories: [ServiceCategory]
+    ) -> CategoryPickerSectionBinder {
         
-        let content = PayHubPickerContent.stub(loadResult: loadResult)
-        let flow = PayHubPickerFlow.stub()
+        let composer = CategoryPickerSectionContentComposer(
+            scheduler: scheduler
+        )
+        let content = composer.compose(loadedCategories: loadedCategories)
+        
+        return .init(content: content, flow: ())
+    }
+}
+
+// MARK: - PayHub
+
+private extension PaymentsTransfersModelComposer {
+    
+    func makeOperationBinder(
+        loadedItems: [OperationPickerItem<Latest>]
+    ) -> OperationPickerBinder {
+        
+        let content = OperationPickerContent.stub(loadResult: loadedItems)
+        let flow = OperationPickerFlow.stub()
         
         return .init(
-            content: content, 
+            content: content,
             flow: flow,
             bind: { content, flow in
-            
+                
                 content.$state
                     .map(\.selected)
                     .sink { flow.event(.select($0)) }

@@ -7,13 +7,16 @@
 
 import Foundation
 
-public final class PaymentsTransfersModel<PayHubPicker>: ObservableObject {
+public final class PaymentsTransfersModel<CategoryPicker, OperationPicker>: ObservableObject {
     
-    public let payHubPicker: PayHubPicker
+    public let categoryPicker: CategoryPicker
+    public let operationPicker: OperationPicker
     
     public init(
-        payHubPicker: PayHubPicker
+        categoryPicker: CategoryPicker,
+        operationPicker: OperationPicker
     ) {
-        self.payHubPicker = payHubPicker
+        self.categoryPicker = categoryPicker
+        self.operationPicker = operationPicker
     }
 }

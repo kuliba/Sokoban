@@ -151,7 +151,7 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
                                     }
                                 }
                             }
-                            .buttonStyle(PlainButtonStyle())
+                            .buttonStyle(.plain)
                         }
                         
                         ToolbarItem(placement: .topBarTrailing) {
@@ -161,7 +161,7 @@ struct PaymentsTransfersFlowView_Previews: PreviewProvider {
                             } label: {
                                 Image(systemName: "qrcode")
                             }
-                            .buttonStyle(PlainButtonStyle())
+                            .buttonStyle(.plain)
                         }
                     }
                 )

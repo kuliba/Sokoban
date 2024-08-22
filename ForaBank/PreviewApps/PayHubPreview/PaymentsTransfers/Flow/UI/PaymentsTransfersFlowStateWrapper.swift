@@ -29,7 +29,7 @@ struct PaymentsTransfersFlowStateWrapper<FlowView: View>: View {
 
 extension PaymentsTransfersFlowStateWrapper {
     
-    typealias Model = PaymentsTransfersFlowModel
+    typealias Model = PaymentsTransfersFlow
     typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent
     typealias MakeFlowView = (State, @escaping (Event) -> Void) -> FlowView

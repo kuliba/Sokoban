@@ -23,18 +23,24 @@ final class PaymentsTransfersBinderComposer {
 extension PaymentsTransfersBinderComposer {
     
     typealias Binder = PaymentsTransfersBinder
- 
+    
     func compose(
-        loadResult: [PayHubPickerItem<Latest>]
+        loadedCategories: [ServiceCategory],
+        loadedItems: [OperationPickerItem<Latest>]
     ) -> Binder {
         
-        let contentComposer = PaymentsTransfersModelComposer()
+        let contentComposer = PaymentsTransfersModelComposer(
+            scheduler: scheduler
+        )
         let flowComposer = PaymentsTransfersFlowModelComposer(
             scheduler: scheduler
         )
         
         return .init(
-            content: contentComposer.compose(loadResult: loadResult),
+            content: contentComposer.compose(
+                loadedCategories: loadedCategories,
+                loadedItems: loadedItems
+            ),
             flow: flowComposer.compose()
         )
     }

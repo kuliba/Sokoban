@@ -81,8 +81,8 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(paymentsTransfersModel):
-                Text("TBD: v1 for \(String(describing: paymentsTransfersModel))")
+            case let .v1(binder):
+                Text("TBD: v1 for \(String(describing: binder))")
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)

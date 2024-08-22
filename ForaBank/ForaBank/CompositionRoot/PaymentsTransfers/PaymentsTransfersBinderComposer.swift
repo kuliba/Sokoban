@@ -7,15 +7,15 @@
 
 final class PaymentsTransfersBinderComposer {
     
-    let makePayHubPickerBinder: MakePayHubPickerBinder
+    let makeOperationPickerBinder: MakeOperationPickerBinder
     
     init(
-        makePayHubPickerBinder: @escaping MakePayHubPickerBinder
+        makeOperationPickerBinder: @escaping MakeOperationPickerBinder
     ) {
-        self.makePayHubPickerBinder = makePayHubPickerBinder
+        self.makeOperationPickerBinder = makeOperationPickerBinder
     }
     
-    typealias MakePayHubPickerBinder = () -> PayHubPickerBinder
+    typealias MakeOperationPickerBinder = () -> OperationPickerBinder
 }
 
 extension PaymentsTransfersBinderComposer {
@@ -24,8 +24,7 @@ extension PaymentsTransfersBinderComposer {
         
         return .init(
             content: makeContent(),
-            flow: makeFlow(), 
-            bind: { _,_ in nil }
+            flow: makeFlow()
         )
     }
 }
@@ -34,9 +33,9 @@ extension PaymentsTransfersBinderComposer {
 
 private extension PaymentsTransfersBinderComposer {
     
-    func makeContent() -> PaymentsTransfersContentModel {
+    func makeContent() -> PaymentsTransfersContent {
         
-        return .init(payHubPicker: makePayHubPickerBinder())
+        return .init(categoryPicker: (), operationPicker: makeOperationPickerBinder())
     }
 }
 
@@ -44,7 +43,7 @@ private extension PaymentsTransfersBinderComposer {
 
 private extension PaymentsTransfersBinderComposer {
     
-    func makeFlow() -> PaymentsTransfersFlowModel {
+    func makeFlow() -> PaymentsTransfersFlow {
         
         return
     }
