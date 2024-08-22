@@ -5,20 +5,35 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
+import PayHub
 import SharedConfigs
 import SwiftUI
+import UIPrimitives
 
-struct CategoryPickerSectionContentView<ItemLabel>: View
-where ItemLabel: View {
+public struct CategoryPickerSectionContentView<ItemLabel, ServiceCategory>: View
+where ItemLabel: View,
+      ServiceCategory: Equatable {
     
-    let state: State
-    let event: (Event) -> Void
-    let config: Config
-    @ViewBuilder let itemLabel: (State.Item) -> ItemLabel
+    private let state: State
+    private let event: (Event) -> Void
+    private let config: Config
+    private let itemLabel: (State.Item) -> ItemLabel
     
     private let transition: AnyTransition = .opacity.combined(with: .scale)
     
-    var body: some View {
+    public init(
+        state: State, 
+        event: @escaping (Event) -> Void,
+        config: Config,
+        @ViewBuilder itemLabel: @escaping (State.Item) -> ItemLabel
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.itemLabel = itemLabel
+    }
+    
+    public var body: some View {
         
         if state.isLoadingFailed {
             Text("Failed to load categories")
@@ -40,10 +55,10 @@ where ItemLabel: View {
     }
 }
 
-extension CategoryPickerSectionContentView {
+public extension CategoryPickerSectionContentView {
     
-    typealias State = CategoryPickerSectionState
-    typealias Event = CategoryPickerSectionEvent
+    typealias State = CategoryPickerSectionState<ServiceCategory>
+    typealias Event = CategoryPickerSectionEvent<ServiceCategory>
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
@@ -149,29 +164,23 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     }
     
     private static func categoryPickerSectionContentView(
-        _ items: [CategoryPickerSectionState.Item]
+        _ items: [CategoryPickerSectionState<PreviewServiceCategory>.Item]
     ) -> some View {
         
         CategoryPickerSectionContentView(
-            state: .init(
-                prefix: [],
-                suffix: items
-            ),
+            state: .init(prefix: [], suffix: items),
             event: { print($0) },
             config: .preview,
-            itemLabel: {
-                
-                CategoryPickerSectionStateItemLabel(
-                    item: $0,
-                    config: .preview,
-                    categoryIcon: { _ in  Color.blue.opacity(0.1) }
-                )
-            }
+            itemLabel: { Text(String(describing: $0)) }
         )
     }
 }
 
-extension Array where Element == CategoryPickerSectionState.Item {
+struct PreviewServiceCategory: Equatable {
+    
+}
+
+extension Array where Element == CategoryPickerSectionState<PreviewServiceCategory>.Item {
     
     static func placeholders(count: Int) -> Self {
         
@@ -180,6 +189,13 @@ extension Array where Element == CategoryPickerSectionState.Item {
     
     static var preview: Self {
         
-        [ServiceCategory].preview.map { .element(.init(.category($0))) }
+        [PreviewServiceCategory].preview.map { .element(.init(.category($0))) }
     }
+}
+
+extension Array where Element == PreviewServiceCategory {
+    
+    static let preview: Self = [
+        .init(), .init(), .init(), .init()
+    ]
 }
