@@ -1,19 +1,21 @@
 //
 //  PaymentsTransfersFlowStateWrapper.swift
-//  ForaBank
+//
 //
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
+import PayHub
 import SwiftUI
 
-struct PaymentsTransfersFlowStateWrapper<FlowView: View>: View {
+public struct PaymentsTransfersFlowStateWrapper<FlowView, ProfileModel, QRModel>: View
+where FlowView: View {
     
     @StateObject private var model: Model
     
     private let makeFlowView: MakeFlowView
     
-    init(
+    public init(
         model: Model,
         makeFlowView: @escaping MakeFlowView
     ) {
@@ -21,17 +23,16 @@ struct PaymentsTransfersFlowStateWrapper<FlowView: View>: View {
         self.makeFlowView = makeFlowView
     }
     
-    var body: some View {
+    public var body: some View {
         
         makeFlowView(model.state, model.event(_:))
     }
 }
 
-extension PaymentsTransfersFlowStateWrapper {
+public extension PaymentsTransfersFlowStateWrapper {
     
-    typealias Model = PaymentsTransfersFlow
-    typealias State = PaymentsTransfersFlowState
-    typealias Event = PaymentsTransfersFlowEvent
+    typealias Model = PaymentsTransfersFlow<ProfileModel, QRModel>
+    typealias State = PaymentsTransfersFlowState<ProfileModel, QRModel>
+    typealias Event = PaymentsTransfersFlowEvent<ProfileModel, QRModel>
     typealias MakeFlowView = (State, @escaping (Event) -> Void) -> FlowView
-
 }
