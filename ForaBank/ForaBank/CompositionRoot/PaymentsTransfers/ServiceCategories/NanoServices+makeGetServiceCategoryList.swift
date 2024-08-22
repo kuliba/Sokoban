@@ -16,8 +16,8 @@ extension NanoServices {
     typealias GetServiceCategoryList = (@escaping GetServiceCategoryListCompletion) -> Void
     
     static func makeGetServiceCategoryList(
-        _ httpClient: HTTPClient,
-        _ log: @escaping (String, StaticString, UInt) -> Void,
+        httpClient: HTTPClient,
+        log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) -> GetServiceCategoryList {

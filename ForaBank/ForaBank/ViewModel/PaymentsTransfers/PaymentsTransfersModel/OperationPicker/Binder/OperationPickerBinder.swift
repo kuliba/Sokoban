@@ -7,4 +7,4 @@
 
 import PayHub
 
-typealias OperationPickerBinder = Binder<OperationPickerContent, OperationPickerFlow>
+typealias OperationPickerBinder = Holder<OperationPickerContent, OperationPickerFlow>
