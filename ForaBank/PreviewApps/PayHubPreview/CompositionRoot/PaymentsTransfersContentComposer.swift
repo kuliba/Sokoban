@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersModelComposer.swift
+//  PaymentsTransfersContentComposer.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -10,7 +10,7 @@ import Foundation
 import PayHub
 import PayHubUI
 
-final class PaymentsTransfersModelComposer {
+final class PaymentsTransfersContentComposer {
     
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -21,25 +21,23 @@ final class PaymentsTransfersModelComposer {
     }
 }
 
-extension PaymentsTransfersModelComposer {
+extension PaymentsTransfersContentComposer {
     
     func compose(
         loadedCategories: [ServiceCategory],
         loadedItems: [OperationPickerItem<Latest>]
-    ) -> Model {
+    ) -> PaymentsTransfersContent {
         
         return .init(
             categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
             operationPicker: makeOperationBinder(loadedItems: loadedItems)
         )
     }
-    
-    typealias Model = PaymentsTransfersContent
 }
 
 // MARK: - CategoryPicker
 
-private extension PaymentsTransfersModelComposer {
+private extension PaymentsTransfersContentComposer {
     
     func makeCategoryPickerBinder(
         loadedCategories: [ServiceCategory]
@@ -56,7 +54,7 @@ private extension PaymentsTransfersModelComposer {
 
 // MARK: - PayHub
 
-private extension PaymentsTransfersModelComposer {
+private extension PaymentsTransfersContentComposer {
     
     func makeOperationBinder(
         loadedItems: [OperationPickerItem<Latest>]

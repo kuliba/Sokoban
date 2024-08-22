@@ -13,6 +13,7 @@ import PaymentSticker
 import SberQR
 import SwiftUI
 import PayHub
+import Fetcher
 
 extension RootViewModelFactory {
     
@@ -298,28 +299,47 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        final class ServiceCategoryStore {
+        let localServiceCategoryLoader = ServiceCategoryLoader.default
+        let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
+            httpClient:httpClient,
+            log: infoNetworkLog
+        )
+        let getServiceCategoryListLoader = AnyLoader { completion in
             
-            var categories: [ServiceCategory]
-            
-            init(
-                categories: [ServiceCategory] = []
-            ) {
-                self.categories = categories
+            getServiceCategoryList {
+                
+                completion($0.map(\.categoryGroupList))
             }
         }
-        
-        let serviceCategoryStore = ServiceCategoryStore()
-        let serviceCategoryLoader = AnyLoader { completion in
+        let decorated = CacheDecorator(
+            decoratee: getServiceCategoryListLoader,
+            cache: localServiceCategoryLoader.save
+        )
+        let loadServiceCategories: LoadServiceCategories = { completion in
             
-            completion(serviceCategoryStore.categories)
+            decorated.load {
+                
+                let categories = (try? $0.get()) ?? []
+                completion(categories.map { .category($0)})
+            }
         }
-        
+
         let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: serviceCategoryLoader.load,
+            getAllLoadedCategories: localServiceCategoryLoader.load,
             getLatestPayments: NanoServices.getLatestPayments
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
+
+        let _makePaymentsTransfersBinder = {
+            
+            makePaymentsTransfersBinder(
+                categoryPickerPlaceholderCount: 6,
+                operationPickerPlaceholderCount: 4,
+                loadCategories: loadServiceCategories,
+                loadLatestOperations: loadLatestOperations,
+                scheduler: scheduler
+            )
+        }
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -338,8 +358,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            loadLatestOperations: loadLatestOperations,
-            scheduler: scheduler
+            makePaymentsTransfersBinder: _makePaymentsTransfersBinder
         )
     }
     
@@ -643,8 +662,7 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        loadLatestOperations: @escaping LoadLatestOperations,
-        scheduler: AnySchedulerOfDispatchQueue
+        makePaymentsTransfersBinder: @escaping () -> PaymentsTransfersBinder
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -684,11 +702,7 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                let binder = makePaymentsTransfersBinder(
-                    loadLatestOperations: loadLatestOperations,
-                    scheduler: scheduler
-                )
-                return .v1(binder)
+                return .v1(makePaymentsTransfersBinder())
                 
             case .inactive:
                 return .legacy(paymentsTransfersViewModel)

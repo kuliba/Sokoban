@@ -86,6 +86,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category.LatestP
         case .isCharityPayments:                   self = .charity
         case .isEducationPayments:                 self = .education
         case .isDigitalWalletsPayments:            self = .digitalWallets
+        case .isInternetPayments:                  self = .internet
         case .isMobilePayments:                    self = .mobile
         case .isNetworkMarketingPayments:          self = .networkMarketing
         case .isRepaymentLoansAndAccountsPayments: self = .repaymentLoansAndAccounts
@@ -151,6 +152,7 @@ private extension ResponseMapper {
                 case isCharityPayments
                 case isEducationPayments
                 case isDigitalWalletsPayments
+                case isInternetPayments
                 case isMobilePayments
                 case isNetworkMarketingPayments
                 case isRepaymentLoansAndAccountsPayments
