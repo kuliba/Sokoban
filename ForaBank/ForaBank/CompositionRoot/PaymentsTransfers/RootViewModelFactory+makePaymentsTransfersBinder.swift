@@ -20,7 +20,7 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> PaymentsTransfersBinder {
         
-        let pickerContentComposer = LoadablePickerModelComposer<UUID, PayHubPickerItem<Latest>>(
+        let pickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerItem<Latest>>(
             load: { completion in
                 
                 loadLatestOperations {
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             },
             scheduler: scheduler
         )
-        let pickerBinderComposer = PayHubPickerBinderComposer(
+        let pickerBinderComposer = OperationPickerBinderComposer(
             makeContent: {
                 
                 pickerContentComposer.compose(
@@ -45,7 +45,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         let composer = PaymentsTransfersBinderComposer(
-            makePayHubPickerBinder: pickerBinderComposer.compose
+            makeOperationPickerBinder: pickerBinderComposer.compose
         )
         
         return composer.compose()

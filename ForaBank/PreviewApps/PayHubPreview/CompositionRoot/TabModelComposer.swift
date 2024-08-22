@@ -19,7 +19,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeModel = ([PayHubPickerItem<Latest>]) -> PaymentsTransfersContentModel
+    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContent
 }
 
 extension TabModelComposer {
@@ -75,7 +75,7 @@ private extension TabState.Selected {
         }
     }
     
-    var loadResult: [PayHubPickerItem<Latest>] {
+    var loadResult: [OperationPickerItem<Latest>] {
         
         switch self {
         case .noLatest:     return []
@@ -86,7 +86,7 @@ private extension TabState.Selected {
     }
 }
 
-private extension Array where Element == PayHubPickerItem<Latest> {
+private extension Array where Element == OperationPickerItem<Latest> {
     
     static let preview: Self = [
         .latest(.preview()),

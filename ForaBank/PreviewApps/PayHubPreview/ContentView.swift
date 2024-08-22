@@ -78,7 +78,7 @@ private extension ContentView {
                 makeQR: { $0(QRModel()) }
             )
         )
-        let model = PaymentsTransfersFlowModel(
+        let model = PaymentsTransfersFlow(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
@@ -150,7 +150,7 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContentModel
+        _ content: PaymentsTransfersContent
     ) -> some View {
         
         PaymentsTransfersView(
@@ -208,30 +208,30 @@ private extension ContentView {
     }
     
     private func makePayHubFlowView(
-        _ binder: PayHubPickerBinder
+        _ binder: OperationPickerBinder
     ) -> some View {
         
-        PayHubPickerBinderView(
+        OperationPickerBinderView(
             binder: binder,
             factory: .init(makeContent: makePayHubContentView)
         )
     }
     
     private func makePayHubContentView(
-        _ content: PayHubPickerContent
+        _ content: OperationPickerContent
     ) -> some View {
         
-        PayHubPickerContentWrapperView(
+        OperationPickerContentWrapperView(
             model: content,
             makeContentView: { state, event in
                 
-                PayHubPickerContentView(
+                OperationPickerContentView(
                     state: state,
                     event: event,
                     config: .preview,
                     itemLabel: {
                         
-                        PayHubPickerStateItemLabel(item: $0, config: .preview)
+                        OperationPickerStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }
@@ -247,7 +247,7 @@ extension CategoryPickerSectionBinder: Loadable {
     }
 }
 
-extension PayHubPickerBinder: Loadable {
+extension OperationPickerBinder: Loadable {
     
     public func load() {
         

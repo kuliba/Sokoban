@@ -23,7 +23,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        sut.content.payHubPicker.content.event(.load)
+        sut.content.operationPicker.content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
@@ -33,7 +33,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
         
         let sut = makeSUT().sut
         
-        let prefix = sut.content.payHubPicker.content.state.elements.prefix(2)
+        let prefix = sut.content.operationPicker.content.state.elements.prefix(2)
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }

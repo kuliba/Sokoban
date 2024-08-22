@@ -26,7 +26,7 @@ extension PaymentsTransfersBinderComposer {
     
     func compose(
         loadedCategories: [ServiceCategory],
-        loadedItems: [PayHubPickerItem<Latest>]
+        loadedItems: [OperationPickerItem<Latest>]
     ) -> Binder {
         
         let contentComposer = PaymentsTransfersModelComposer(
