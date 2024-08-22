@@ -8,13 +8,14 @@
 import PayHub
 import SwiftUI
 
-struct OperationPickerContentView<ItemLabel>: View
-where ItemLabel: View {
+public struct OperationPickerContentView<ItemLabel, Latest>: View
+where ItemLabel: View,
+      Latest: Equatable {
     
-    let state: State
-    let event: (Event) -> Void
-    let config: Config
-    let itemLabel: (Item) -> ItemLabel
+    private let state: State
+    private let event: (Event) -> Void
+    private let config: Config
+    private let itemLabel: (Item) -> ItemLabel
     
     private let transition: AnyTransition = .opacity
         .combined(with: .scale)
@@ -27,7 +28,19 @@ where ItemLabel: View {
     //     removal: .move(edge: .leading).combined(with: .scale)
     // ))
     
-    var body: some View {
+    public init(
+        state: State, 
+        event: @escaping (Event) -> Void,
+        config: Config,
+        itemLabel: @escaping (Item) -> ItemLabel
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.itemLabel = itemLabel
+    }
+    
+    public var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             
@@ -41,12 +54,12 @@ where ItemLabel: View {
     }
 }
 
-extension OperationPickerContentView {
+public extension OperationPickerContentView {
     
-    typealias State = OperationPickerState
-    typealias Event = OperationPickerEvent
+    typealias State = OperationPickerState<Latest>
+    typealias Event = OperationPickerEvent<Latest>
     typealias Config = OperationPickerContentViewConfig
-    typealias Item = OperationPickerState.Item
+    typealias Item = State.Item
 }
 
 private extension OperationPickerContentView {
@@ -131,24 +144,21 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
     
     private static func payHubContentView(
-        _ state: OperationPickerState,
-        event: @escaping (OperationPickerEvent) -> Void = { print($0) }
+        _ state: OperationPickerState<PreviewLatest>,
+        event: @escaping (OperationPickerEvent<PreviewLatest>) -> Void = { print($0) }
     ) -> some View {
         
         OperationPickerContentView(
             state: state,
             event: event,
             config: .preview,
-            itemLabel: { item in
-                
-                OperationPickerStateItemLabel(item: item, config: .preview)
-            }
+            itemLabel: { Text(String(describing: $0)) }
         )
     }
     
     private struct PayHubContentViewDemo: View {
         
-        @State private var state: OperationPickerState = .default
+        @State private var state: OperationPickerState<PreviewLatest> = .default
         @State private var loadViaReset = false
         
         var body: some View {
@@ -192,8 +202,9 @@ struct PayHubContentView_Previews: PreviewProvider {
             }
         }
         
-        private func load(_ state: OperationPickerState) {
-            
+        private func load(
+            _ state: OperationPickerState<PreviewLatest>
+        ) {
             if loadViaReset {
                 
                 self.state = .default
@@ -210,14 +221,14 @@ struct PayHubContentView_Previews: PreviewProvider {
         
         private func makeLatests(
             count: Int = .random(in: 0..<20)
-        ) -> [Latest] {
+        ) -> [PreviewLatest] {
             
-            (0..<count).map { _ in .init(id: UUID().uuidString) }
+            (0..<count).map { _ in .init(id: .init()) }
         }
     }
 }
 
-private extension OperationPickerState {
+private extension OperationPickerState<PreviewLatest> {
     
     static let `default`: Self = .init(
         suffix: [

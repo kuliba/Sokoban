@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
+import PayHubUI
 import SwiftUI
 
 struct LatestPlaceholder: View {
