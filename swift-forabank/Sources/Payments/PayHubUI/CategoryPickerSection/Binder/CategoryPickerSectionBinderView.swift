@@ -1,23 +1,23 @@
 //
 //  CategoryPickerSectionBinderView.swift
-//  PayHubPreview
+//
 //
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
 import SwiftUI
 
-struct CategoryPickerSectionBinderView<ContentView, Destination, DestinationView>: View
+public struct CategoryPickerSectionBinderView<ContentView, Destination, DestinationView, ServiceCategory>: View
 where ContentView: View,
       DestinationView: View {
     
-    @ObservedObject private var content: CategoryPickerSectionContent
+    @ObservedObject private var content: Content
     // @ObservedObject private var flow: CategoryPickerSectionFlow
     
     private let factory: Factory
     
-    init(
-        binder: CategoryPickerSectionBinder,
+    public init(
+        binder: Binder,
         factory: Factory
     ) {
         self._content = .init(initialValue: binder.content)
@@ -25,7 +25,7 @@ where ContentView: View,
         self.factory = factory
     }
     
-    var body: some View {
+    public var body: some View {
         
         factory.makeContentView(content)
             .onFirstAppear { content.event(.load) }
@@ -37,7 +37,9 @@ where ContentView: View,
     }
 }
 
-extension CategoryPickerSectionBinderView {
+public extension CategoryPickerSectionBinderView {
     
-    typealias Factory = CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView>
+    typealias Binder = CategoryPickerSectionBinder<ServiceCategory>
+    typealias Content = CategoryPickerSectionContent<ServiceCategory>
+    typealias Factory = CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView, ServiceCategory>
 }

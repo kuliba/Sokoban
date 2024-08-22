@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
+import PayHubUI
+
 extension CategoryPickerSectionStateItemLabelConfig {
     
     static let preview: Self = .init(

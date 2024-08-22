@@ -6,20 +6,27 @@
 //
 
 import PayHub
-import PayHubUI
 import SwiftUI
 
-struct PaymentsTransfersView<CategoryPicker, CategoryPickerView, PayHub, PayHubView>: View
+public struct PaymentsTransfersView<CategoryPicker, CategoryPickerView, PayHub, PayHubView>: View
 where CategoryPicker: Loadable,
       CategoryPickerView: View,
       PayHub: Loadable,
       PayHubView: View {
     
-    @StateObject var model: Model
+    @ObservedObject private var model: Model
     
-    let factory: Factory
+    private let factory: Factory
     
-    var body: some View {
+    public init(
+        model: Model, 
+        factory: Factory
+    ) {
+        self.model = model
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 32) {
             
@@ -46,7 +53,7 @@ where CategoryPicker: Loadable,
     }
 }
 
-extension PaymentsTransfersView {
+public extension PaymentsTransfersView {
     
     typealias Model = PaymentsTransfersModel<CategoryPicker, PayHub>
     typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, PayHub, PayHubView>

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
     
     @ViewBuilder
     func _shimmering(
@@ -19,7 +19,7 @@ extension View {
         
         if isActive {
             self.modifier(
-                Shimmering(
+                _Shimmering(
                     animation: animation,
                     gradient: gradient,
                     width: width
@@ -31,14 +31,14 @@ extension View {
     }
 }
 
-extension Animation {
+public extension Animation {
     
     static let shimmerDefault: Self = .linear(duration: 0.9)
         .delay(0.25)
         .repeatForever(autoreverses: false)
 }
 
-extension Gradient {
+public extension Gradient {
     
     static let shimmerDefault: Self = .init(colors: [
         .green.opacity(0.2),
@@ -47,7 +47,7 @@ extension Gradient {
     ])
 }
 
-private struct Shimmering: ViewModifier {
+private struct _Shimmering: ViewModifier {
     
     let animation: Animation
     let gradient: Gradient

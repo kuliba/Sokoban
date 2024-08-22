@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
-import PayHubUI
-
 extension CategoryPickerSectionContentViewConfig {
     
     static let preview: Self = .init(
