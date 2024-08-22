@@ -19,7 +19,7 @@ final class TabModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContentModel
+    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContent
 }
 
 extension TabModelComposer {

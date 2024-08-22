@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowModel.swift
+//  PaymentsTransfersFlow.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -14,4 +14,4 @@ typealias PaymentsTransfersFlowEvent = PayHub.PaymentsTransfersFlowEvent<Profile
 typealias PaymentsTransfersFlowReducer = PayHub.PaymentsTransfersFlowReducer<ProfileModel, QRModel>
 typealias PaymentsTransfersFlowEffectHandler = PayHub.PaymentsTransfersFlowEffectHandler<ProfileModel, QRModel>
 
-typealias PaymentsTransfersFlowModel = RxViewModel<PaymentsTransfersFlowState, PaymentsTransfersFlowEvent, PaymentsTransfersFlowEffect>
+typealias PaymentsTransfersFlow = RxViewModel<PaymentsTransfersFlowState, PaymentsTransfersFlowEvent, PaymentsTransfersFlowEffect>

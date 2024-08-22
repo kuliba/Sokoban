@@ -34,7 +34,7 @@ extension PaymentsTransfersModelComposer {
         )
     }
     
-    typealias Model = PaymentsTransfersContentModel
+    typealias Model = PaymentsTransfersContent
 }
 
 // MARK: - CategoryPicker

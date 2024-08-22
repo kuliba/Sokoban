@@ -78,7 +78,7 @@ private extension ContentView {
                 makeQR: { $0(QRModel()) }
             )
         )
-        let model = PaymentsTransfersFlowModel(
+        let model = PaymentsTransfersFlow(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
@@ -150,7 +150,7 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContentModel
+        _ content: PaymentsTransfersContent
     ) -> some View {
         
         PaymentsTransfersView(

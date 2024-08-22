@@ -33,7 +33,7 @@ extension PaymentsTransfersBinderComposer {
 
 private extension PaymentsTransfersBinderComposer {
     
-    func makeContent() -> PaymentsTransfersContentModel {
+    func makeContent() -> PaymentsTransfersContent {
         
         return .init(categoryPicker: (), operationPicker: makeOperationPickerBinder())
     }
@@ -43,7 +43,7 @@ private extension PaymentsTransfersBinderComposer {
 
 private extension PaymentsTransfersBinderComposer {
     
-    func makeFlow() -> PaymentsTransfersFlowModel {
+    func makeFlow() -> PaymentsTransfersFlow {
         
         return
     }
