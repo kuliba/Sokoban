@@ -152,10 +152,16 @@ extension Model {
             PTSectionPaymentsView.ViewModel()
 
         ]
+        
+        if onlyCorporateCards {
+            sections.insert(DisableForCorCardsPTViewModel(), at: 0)
+        }
+
         if flag.isActive,
             !self.updateInfo.value.areProductsUpdated {
                 sections.insert(UpdateInfoPTViewModel(), at: 0)
         }
+        
         return sections
     }
 }

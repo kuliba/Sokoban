@@ -18,6 +18,7 @@ class PaymentsTransfersSectionViewModel: ObservableObject, Identifiable {
 }
 
 enum PaymentsTransfersSectionType: String {
+    case disableForCorCards
     case updateFailureInfo
     case latestPayments
     case transfers
@@ -25,6 +26,7 @@ enum PaymentsTransfersSectionType: String {
     
     var name: String {
         switch self {
+        case .disableForCorCards: return ""
         case .updateFailureInfo: return ""
         case .latestPayments: return "Платежи"
         case .transfers: return "Перевести"

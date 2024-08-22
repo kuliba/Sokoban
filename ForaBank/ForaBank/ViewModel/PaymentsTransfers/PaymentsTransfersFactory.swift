@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PaymentsTransfersFactory {
     
-    let makeAlertDataUpdateFailureViewModel: MakeAlertDataUpdateFailureViewModel
+    let makeAlertViewModels: MakeAlertViewModels
     let makePaymentProviderPickerFlowModel: MakePaymentProviderPickerFlowModel
     let makePaymentProviderServicePickerFlowModel: MakePaymentProviderServicePickerFlowModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
@@ -21,6 +21,12 @@ struct PaymentsTransfersFactory {
 }
 
 extension PaymentsTransfersFactory {
+    
+    struct MakeAlertViewModels {
+        
+        let dataUpdateFailure: MakeAlertViewModel
+        let disableForCorporateCard: MakeAlertViewModel
+    }
     
     struct MakeUtilitiesPayload {
         
@@ -47,7 +53,7 @@ extension PaymentsTransfersFactory {
     typealias MakeTemplates = (@escaping DismissAction) -> Templates
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
-    typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
+    typealias MakeAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
     typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel
     
@@ -81,7 +87,7 @@ extension PaymentsTransfersFactory {
         )
         
         return .init(
-            makeAlertDataUpdateFailureViewModel: { _ in nil },
+            makeAlertViewModels: .default,
             makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
@@ -91,6 +97,13 @@ extension PaymentsTransfersFactory {
             makeUtilitiesViewModel: { _,_ in }
         )
     }()
+}
+
+extension PaymentsTransfersFactory.MakeAlertViewModels {
+    
+    static let `default`: Self = .init(
+        dataUpdateFailure: { _ in nil },
+        disableForCorporateCard: { _ in nil })
 }
 
 extension PaymentProviderPickerFlowModel {

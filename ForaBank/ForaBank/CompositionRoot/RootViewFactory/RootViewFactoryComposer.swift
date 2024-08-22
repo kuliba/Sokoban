@@ -48,7 +48,7 @@ extension RootViewFactoryComposer {
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUpdateInfoView: UpdateInfoView.init,
+            makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView
         )
     }
@@ -75,7 +75,7 @@ private extension RootViewFactoryComposer {
                 makeIconView: imageCache.makeIconView(for:),
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeUpdateInfoView: UpdateInfoView.init(text:),
+                makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView
             ),
             productProfileViewFactory: .init(
@@ -364,4 +364,12 @@ extension ImageCache {
             publisher: imageSubject.eraseToAnyPublisher()
         )
     }
+}
+
+extension RootViewFactory.MakeInfoViews {
+    
+    static let `default`: Self = .init(
+        makeUpdateInfoView: UpdateInfoView.init(text:),
+        makeDisableCorCardsInfoView: DisableCorCardsView.init(text:)
+    )
 }
