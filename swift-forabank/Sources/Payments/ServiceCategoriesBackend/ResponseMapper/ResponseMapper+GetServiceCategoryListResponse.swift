@@ -76,6 +76,7 @@ extension ResponseMapper.GetServiceCategoryListResponse {
             case charity
             case education
             case digitalWallets
+            case internet
             case mobile
             case networkMarketing
             case repaymentLoansAndAccounts

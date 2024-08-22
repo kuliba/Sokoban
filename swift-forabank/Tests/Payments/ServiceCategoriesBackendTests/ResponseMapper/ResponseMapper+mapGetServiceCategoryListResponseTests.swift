@@ -105,6 +105,12 @@ final class ResponseMapper_mapGetServiceCategoryListResponseTests: XCTestCase {
         try assert(.validData, .valid)
     }
     
+    func test_live_() throws {
+        
+        let response = try map(String.live_20240822.json).get()
+        XCTAssertEqual(response.categoryGroupList.count, 13)
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.GetServiceCategoryListResponse
@@ -435,6 +441,135 @@ private extension String {
       {
         "type": "repaymentLoansAndAccounts",
         "name": "Погашение кредита ",
+        "ord": 90,
+        "md5hash": "9f37d214d2462f2c5dc952c553613cc6",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isRepaymentLoansAndAccountsPayments",
+        "search": true
+      },
+      {
+        "type": "socialAndGames",
+        "name": "Развлечения (игры и соц.сети)",
+        "ord": 100,
+        "md5hash": "d7d1c6adc224e96343c012ca1fcf1472",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isSocialAndGamesPayments",
+        "search": true
+      },
+      {
+        "type": "networkMarketing",
+        "name": "Сетевой маркетинг",
+        "ord": 110,
+        "md5hash": "9a2b90b30cf0e65dccb44f43d3c1e145",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isNetworkMarketingPayments",
+        "search": true
+      },
+      {
+        "type": "education",
+        "name": "Образование",
+        "ord": 120,
+        "md5hash": "a83b5b005fc16c356b2456d5a514c842",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isEducationPayments",
+        "search": true
+      },
+      {
+        "type": "charity",
+        "name": "Благотворительность",
+        "ord": 130,
+        "md5hash": "f7463aa7646d1e2cfe33f71ab4a72d75",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isCharityPayments",
+        "search": true
+      }
+    ]
+  }
+}
+"""
+    
+    static let live_20240822 = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "serial": "84bf007c17787f15f95b7cddafd8f340",
+    "categoryGroupList": [
+      {
+        "type": "qr",
+        "name": "Оплата по QR",
+        "ord": 10,
+        "md5hash": "2d777a4bb3f53d495026b4884bbedde4",
+        "paymentFlow": "QR",
+        "latestPaymentsCategory": null,
+        "search": false
+      },
+      {
+        "type": "mobile",
+        "name": "Мобильная связь",
+        "ord": 20,
+        "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
+        "paymentFlow": "MOBILE",
+        "latestPaymentsCategory": "isMobilePayments",
+        "search": false
+      },
+      {
+        "type": "housingAndCommunalService",
+        "name": "Услуги ЖКХ",
+        "ord": 30,
+        "md5hash": "ffc64acafb053c5e6ebc4e9300f7cccc",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isServicePayments",
+        "search": true
+      },
+      {
+        "type": "internet",
+        "name": "Интернет, ТВ",
+        "ord": 40,
+        "md5hash": "c15643f89507e5fd4f5caef8fbd3e4df",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isInternetPayments",
+        "search": true
+      },
+      {
+        "type": "transport",
+        "name": "Транспорт",
+        "ord": 50,
+        "md5hash": "23d9ad3ce923f736b8ee4c5a11cb1915",
+        "paymentFlow": "TRANSPORT",
+        "latestPaymentsCategory": "isTransportPayments",
+        "search": false
+      },
+      {
+        "type": "taxAndStateService",
+        "name": "Налоги и госуслуги",
+        "ord": 60,
+        "md5hash": "a49599eb358791b62b8d4c6341a163e5",
+        "paymentFlow": "TAX_AND_STATE_SERVICE",
+        "latestPaymentsCategory": "isTaxAndStateServicePayments",
+        "search": false
+      },
+      {
+        "type": "security",
+        "name": "Охранные системы",
+        "ord": 70,
+        "md5hash": "12e2479526b75f3ac2cf2b4bf420626d",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isSecurityPayments",
+        "search": true
+      },
+      {
+        "type": "digitalWallets",
+        "name": "Электронный кошелек",
+        "ord": 80,
+        "md5hash": "39e857d35b8e683526ec4912845f1c55",
+        "paymentFlow": "STANDARD_FLOW",
+        "latestPaymentsCategory": "isDigitalWalletsPayments",
+        "search": false
+      },
+      {
+        "type": "repaymentLoansAndAccounts",
+        "name": "Погашение кредита",
         "ord": 90,
         "md5hash": "9f37d214d2462f2c5dc952c553613cc6",
         "paymentFlow": "STANDARD_FLOW",
