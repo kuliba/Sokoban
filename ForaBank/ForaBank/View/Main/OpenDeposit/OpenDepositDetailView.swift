@@ -68,11 +68,8 @@ struct OpenDepositDetailView: View {
         .foregroundColor(.black)
         .edgesIgnoringSafeArea(.bottom)
         .alert(
-            item: .init(
-                get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.resetModal() } }
-            ),
-            content: Alert.init(with:)
+            item: viewModel.route.modal?.alert,
+            content: alertContent
         )
         .navigationDestination(
             item: .init(
@@ -83,6 +80,13 @@ struct OpenDepositDetailView: View {
         )
     }
     
+    private func alertContent(
+        _ viewModel: Alert.ViewModel
+    ) -> Alert {
+        
+        .init(with: viewModel)
+    }
+
     @ViewBuilder
     private func destinationView(
         destination: OpenDepositDetailViewModel.Route.Link
