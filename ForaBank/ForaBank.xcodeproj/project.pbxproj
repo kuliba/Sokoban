@@ -512,7 +512,7 @@
 		2A248F642C691A5B00082814 /* InitialAnywayTransactionComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F5D2C68EFF600082814 /* InitialAnywayTransactionComposer.swift */; };
 		2A248F652C691A5B00082814 /* InitiateAnywayPaymentMicroService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F4F2C6885FB00082814 /* InitiateAnywayPaymentMicroService.swift */; };
 		2A248F662C691A5B00082814 /* InitiateAnywayPaymentMicroServiceComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A248F512C68862B00082814 /* InitiateAnywayPaymentMicroServiceComposer.swift */; };
-		2A273E5A2C759644009935E6 /* PayHubPickerFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E592C759644009935E6 /* PayHubPickerFlow.swift */; };
+		2A273E5A2C759644009935E6 /* OperationPickerFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E592C759644009935E6 /* OperationPickerFlow.swift */; };
 		2A273E602C7596E4009935E6 /* CategoryPickerSectionContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E5F2C7596E4009935E6 /* CategoryPickerSectionContent.swift */; };
 		2A273E622C7596F8009935E6 /* CategoryPickerSectionFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E612C7596F8009935E6 /* CategoryPickerSectionFlow.swift */; };
 		2A273E672C759741009935E6 /* CategoryPickerSectionBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E572C75956A009935E6 /* CategoryPickerSectionBinder.swift */; };
@@ -3889,7 +3889,7 @@
 		2A248F5B2C68E4D600082814 /* AnywayPaymentTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentTestHelpers.swift; sourceTree = "<group>"; };
 		2A248F5D2C68EFF600082814 /* InitialAnywayTransactionComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialAnywayTransactionComposer.swift; sourceTree = "<group>"; };
 		2A273E572C75956A009935E6 /* CategoryPickerSectionBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionBinder.swift; sourceTree = "<group>"; };
-		2A273E592C759644009935E6 /* PayHubPickerFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPickerFlow.swift; sourceTree = "<group>"; };
+		2A273E592C759644009935E6 /* OperationPickerFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlow.swift; sourceTree = "<group>"; };
 		2A273E5F2C7596E4009935E6 /* CategoryPickerSectionContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContent.swift; sourceTree = "<group>"; };
 		2A273E612C7596F8009935E6 /* CategoryPickerSectionFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionFlow.swift; sourceTree = "<group>"; };
 		2A273E682C75996B009935E6 /* PaymentsTransfersContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersContentModel.swift; sourceTree = "<group>"; };
@@ -10505,7 +10505,7 @@
 		2A7772602C6F4991009B1676 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
-				2A273E592C759644009935E6 /* PayHubPickerFlow.swift */,
+				2A273E592C759644009935E6 /* OperationPickerFlow.swift */,
 				2A77725E2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift */,
 			);
 			path = Flow;
@@ -19021,7 +19021,7 @@
 				2A273E692C75996B009935E6 /* PaymentsTransfersContentModel.swift in Sources */,
 				2A77725F2C6F2991009B1676 /* OperationPickerFlowStateWrapperViewFactory.swift in Sources */,
 				2A7772672C6F4A89009B1676 /* OperationPickerContentView.swift in Sources */,
-				2A273E5A2C759644009935E6 /* PayHubPickerFlow.swift in Sources */,
+				2A273E5A2C759644009935E6 /* OperationPickerFlow.swift in Sources */,
 				2A273E752C75ABB9009935E6 /* CategoryPickerSectionContentWrapperView.swift in Sources */,
 				2A273E802C75E614009935E6 /* View+renderIconBackground.swift in Sources */,
 				2A7385BB2C7382B900861881 /* PaymentsTransfersBinder.swift in Sources */,

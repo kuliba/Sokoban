@@ -12,7 +12,7 @@ struct OperationPickerBinderView<ContentView>: View
 where ContentView: View {
     
     @ObservedObject private var content: OperationPickerContent
-    @ObservedObject private var flow: PayHubPickerFlow
+    @ObservedObject private var flow: OperationPickerFlow
     
     private let factory: Factory
     

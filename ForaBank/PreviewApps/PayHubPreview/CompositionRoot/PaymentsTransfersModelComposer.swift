@@ -63,7 +63,7 @@ private extension PaymentsTransfersModelComposer {
     ) -> OperationPickerBinder {
         
         let content = OperationPickerContent.stub(loadResult: loadedItems)
-        let flow = PayHubPickerFlow.stub()
+        let flow = OperationPickerFlow.stub()
         
         return .init(
             content: content,
