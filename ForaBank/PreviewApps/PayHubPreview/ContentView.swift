@@ -235,12 +235,27 @@ private extension ContentView {
                     config: .preview,
                     itemLabel: {
                         
-                        OperationPickerStateItemLabel(item: $0, config: .preview)
+                        OperationPickerStateItemLabel(
+                            item: $0,
+                            config: .preview,
+                            placeholderView:  {
+                                
+                                LatestPlaceholder(
+                                opacity: 1,
+                                config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
+                            )
+                            }
+                        )
                     }
                 )
             }
         )
     }
+}
+
+extension Latest: Named {
+    
+    var name: String { .init(id.prefix(12)) }
 }
 
 extension CategoryPickerSectionBinder: Loadable {

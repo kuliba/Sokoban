@@ -19,12 +19,6 @@ struct PlaceholderView: View {
     }
 }
 
-extension Color {
-    
-    // Equivalent to #C4C4C4
-    static let solidGrayBackground: Self = .init(white: 0.76)
-}
-
 extension LinearGradient {
     
     static let horizontalWhite: Self = .init(

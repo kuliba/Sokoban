@@ -238,7 +238,7 @@ private extension OperationPickerState<PreviewLatest> {
     static func loadedPreview(count: Int) -> Self {
         
         return .init(
-            suffix: (0..<count).map { _ in .element(.init(.latest(.preview))) }
+            suffix: (0..<count).map { _ in .element(.init(.latest(.preview()))) }
         )
     }
     
@@ -259,14 +259,4 @@ private extension OperationPickerState<PreviewLatest> {
             suffix: suffix
         )
     }
-}
-
-private struct PreviewLatest: Equatable {
-    
-    let id: UUID
-}
-
-extension PreviewLatest {
-    
-    static let preview: Self = .init(id: .init())
 }

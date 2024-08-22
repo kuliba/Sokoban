@@ -112,3 +112,11 @@ private extension ServiceCategory {
         return .init(name: name)
     }
 }
+
+private extension Latest {
+    
+    static func preview() -> Self {
+        
+        return .init(id: UUID().uuidString)
+    }
+}

@@ -9,12 +9,25 @@ import PayHub
 import SwiftUI
 
 // app specific
-struct OperationPickerStateItemLabel: View {
+public struct OperationPickerStateItemLabel<Latest, PlaceholderView>: View
+where Latest: Named,
+      PlaceholderView: View {
     
-    let item: Item
-    let config: Config
+    private let item: Item
+    private let config: Config
+    private let placeholderView: () -> PlaceholderView
     
-    var body: some View {
+    public init(
+        item: Item, 
+        config: Config,
+        placeholderView: @escaping () -> PlaceholderView
+    ) {
+        self.item = item
+        self.config = config
+        self.placeholderView = placeholderView
+    }
+    
+    public var body: some View {
         
         switch item {
         case let .element(identified):
@@ -30,24 +43,16 @@ struct OperationPickerStateItemLabel: View {
             }
             
         case .placeholder:
-            LatestPlaceholder(
-                opacity: 1,
-                config: config.latestPlaceholder
-            )
-            ._shimmering()
+            placeholderView()
+                ._shimmering()
         }
     }
 }
 
-extension OperationPickerStateItemLabel {
+public extension OperationPickerStateItemLabel {
     
-    typealias Item = OperationPickerState.Item
+    typealias Item = OperationPickerState<Latest>.Item
     typealias Config = OperationPickerStateItemLabelConfig
-}
-
-private extension Latest {
-    
-    var name: String { .init(id.prefix(12)) }
 }
 
 private extension OperationPickerStateItemLabel {
@@ -108,14 +113,24 @@ struct UIItemLabel_Previews: PreviewProvider {
     }
     
     private static func uiItemLabel(
-        _ item: OperationPickerStateItemLabel.Item
+        _ item: OperationPickerState<PreviewLatest>.Item
     ) -> some View {
         
-        OperationPickerStateItemLabel(item: item, config: .preview)
+        OperationPickerStateItemLabel(item: item, config: .preview) {
+            
+            Color.green.opacity(0.1)
+        }
     }
 }
 
-extension Latest {
+struct PreviewLatest: Equatable, Named {
+    
+    let id: String
+    
+    var name: String { .init(id.prefix(12)) }
+}
+
+extension PreviewLatest {
     
     static func preview() -> Self {
         
