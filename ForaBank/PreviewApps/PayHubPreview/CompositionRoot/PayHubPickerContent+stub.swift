@@ -18,7 +18,7 @@ extension PayHubPickerContent {
             .element(.init(.exchange))
         ],
         suffix: [PayHubPickerState.Item] = [],
-        loadResult: [PayHubPickerItem<Latest>],
+        loadResult: [OperationPickerItem<Latest>],
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PayHubPickerContent {
         

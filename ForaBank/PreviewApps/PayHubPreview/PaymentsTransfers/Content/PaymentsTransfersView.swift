@@ -25,7 +25,7 @@ where CategoryPicker: Loadable,
             
             Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
             
-            factory.makePayHubView(model.payHubPicker)
+            factory.makePayHubView(model.operationPicker)
             
             factory.makeCategoryPickerView(model.categoryPicker)
             
@@ -37,12 +37,12 @@ where CategoryPicker: Loadable,
 
 extension PaymentsTransfersModel
 where CategoryPicker: Loadable,
-      PayHubPicker: Loadable {
+      OperationPicker: Loadable {
     
     func reload() {
         
         categoryPicker.load()
-        payHubPicker.load()
+        operationPicker.load()
     }
 }
 
@@ -74,7 +74,7 @@ extension PaymentsTransfersView {
 
 private extension PaymentsTransfersModel
 where CategoryPicker == PreviewCategoryPicker,
-      PayHubPicker == PreviewPayHub {
+      OperationPicker == PreviewPayHub {
     
     static var preview: PaymentsTransfersModel {
         

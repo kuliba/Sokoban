@@ -1,5 +1,5 @@
 //
-//  PayHubPickerFlowEffectHandlerTests.swift
+//  OperationPickerFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PayHubPickerFlowEffectHandlerTests: PayHubPickerFlowTests {
+final class OperationPickerFlowEffectHandlerTests: OperationPickerFlowTests {
     
     // MARK: - select
     
@@ -162,7 +162,7 @@ final class PayHubPickerFlowEffectHandlerTests: PayHubPickerFlowTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PayHubPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
+    private typealias SUT = OperationPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
     
     private func makeSUT(
         exchange: Flow? = nil,
@@ -187,7 +187,7 @@ final class PayHubPickerFlowEffectHandlerTests: PayHubPickerFlowTests {
     @discardableResult
     private func select(
         _ sut: SUT,
-        with item: PayHubPickerItem<Latest>?,
+        with item: OperationPickerItem<Latest>?,
         on action: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line

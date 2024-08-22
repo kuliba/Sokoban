@@ -11,11 +11,11 @@ import RxViewModel
 
 typealias Latest = UtilityPaymentLastPayment
 
-typealias OperationPickerPickerState = LoadablePickerState<UUID, PayHubPickerItem<Latest>>
-typealias OperationPickerEvent = LoadablePickerEvent<PayHubPickerItem<Latest>>
+typealias OperationPickerPickerState = LoadablePickerState<UUID, OperationPickerItem<Latest>>
+typealias OperationPickerEvent = LoadablePickerEvent<OperationPickerItem<Latest>>
 typealias OperationPickerEffect = LoadablePickerEffect
 
-typealias OperationPickerReducer = LoadablePickerReducer<UUID, PayHubPickerItem<Latest>>
-typealias OperationPickerEffectHandler = LoadablePickerEffectHandler<PayHubPickerItem<Latest>>
+typealias OperationPickerReducer = LoadablePickerReducer<UUID, OperationPickerItem<Latest>>
+typealias OperationPickerEffectHandler = LoadablePickerEffectHandler<OperationPickerItem<Latest>>
 
 typealias OperationPickerContent = RxViewModel<OperationPickerPickerState, OperationPickerEvent, OperationPickerEffect>

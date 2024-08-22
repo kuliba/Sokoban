@@ -1,5 +1,5 @@
 //
-//  PayHubPickerBinderComposer.swift
+//  OperationPickerBinderComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
-final class PayHubPickerBinderComposer {
+final class OperationPickerBinderComposer {
     
     private let makeContent: MakeContent
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -22,10 +22,10 @@ final class PayHubPickerBinderComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeContent = () -> PayHubPickerContent
+    typealias MakeContent = () -> OperationPickerContent
 }
 
-extension PayHubPickerBinderComposer {
+extension OperationPickerBinderComposer {
     
     func compose() -> OperationPickerBinder {
         
@@ -48,9 +48,9 @@ extension PayHubPickerBinderComposer {
 
 // MARK: - Flow
 
-private extension PayHubPickerBinderComposer {
+private extension OperationPickerBinderComposer {
     
-    func makeFlow() -> PayHubPickerFlow {
+    func makeFlow() -> OperationPickerFlow {
         
     }
 }

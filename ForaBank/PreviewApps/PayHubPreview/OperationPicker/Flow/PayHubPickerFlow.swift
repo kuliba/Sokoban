@@ -8,11 +8,11 @@
 import PayHub
 import RxViewModel
 
-typealias PayHubPickerFlowState = PayHub.PayHubPickerFlowState<Exchange, LatestFlow, Status, Templates>
-typealias PayHubPickerFlowEvent = PayHub.PayHubPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
-typealias PayHubPickerFlowEffect = PayHub.PayHubPickerFlowEffect<Latest>
+typealias PayHubPickerFlowState = PayHub.OperationPickerFlowState<Exchange, LatestFlow, Status, Templates>
+typealias PayHubPickerFlowEvent = PayHub.OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
+typealias PayHubPickerFlowEffect = PayHub.OperationPickerFlowEffect<Latest>
 
-typealias PayHubPickerFlowReducer = PayHub.PayHubPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
-typealias PayHubPickerFlowEffectHandler = PayHub.PayHubPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
+typealias PayHubPickerFlowReducer = PayHub.OperationPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
+typealias PayHubPickerFlowEffectHandler = PayHub.OperationPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
 
 typealias PayHubPickerFlow = RxViewModel<PayHubPickerFlowState, PayHubPickerFlowEvent, PayHubPickerFlowEffect>

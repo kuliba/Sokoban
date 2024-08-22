@@ -42,7 +42,7 @@ extension PayHubPickerBinderView {
     typealias Factory = PayHubPickerFlowStateWrapperViewFactory<ContentView>
 }
 
-extension PayHubPickerFlowItem: Identifiable {
+extension OperationPickerFlowItem: Identifiable {
     
     public var id: ID {
         

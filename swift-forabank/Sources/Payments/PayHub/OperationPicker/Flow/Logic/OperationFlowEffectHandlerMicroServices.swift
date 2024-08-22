@@ -1,11 +1,11 @@
 //
-//  PayHubFlowEffectHandlerMicroServices.swift
+//  OperationFlowEffectHandlerMicroServices.swift
 //
 //
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public struct PayHubFlowEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates> {
+public struct OperationFlowEffectHandlerMicroServices<Exchange, Latest, LatestFlow, Templates> {
     
     public let makeExchange: MakeExchange
     public let makeLatestFlow: MakeLatestFlow
@@ -22,7 +22,7 @@ public struct PayHubFlowEffectHandlerMicroServices<Exchange, Latest, LatestFlow,
     }
 }
 
-public extension PayHubFlowEffectHandlerMicroServices {
+public extension OperationFlowEffectHandlerMicroServices {
     
     typealias MakeExchange = () -> Exchange
     typealias MakeLatestFlow = (Latest) -> LatestFlow
