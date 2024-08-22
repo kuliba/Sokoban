@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-enum PaymentsTransfersToolbarEffect: Equatable {
+public enum PaymentsTransfersToolbarEffect: Equatable {
     
     case select(Select)
 }
 
-extension PaymentsTransfersToolbarEffect {
+public extension PaymentsTransfersToolbarEffect {
     
     enum Select {
         

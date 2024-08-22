@@ -5,12 +5,18 @@
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-struct PaymentsTransfersToolbarState<Profile, QR> {
+public struct PaymentsTransfersToolbarState<Profile, QR> {
     
-    var navigation: Navigation?
+    public var navigation: Navigation?
+    
+    public init(
+        navigation: Navigation? = nil
+    ) {
+        self.navigation = navigation
+    }
 }
 
-extension PaymentsTransfersToolbarState {
+public extension PaymentsTransfersToolbarState {
     
     enum Navigation {
         

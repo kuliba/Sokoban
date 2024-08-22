@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-final class PaymentsTransfersToolbarReducer<Profile, QR> {}
+public final class PaymentsTransfersToolbarReducer<Profile, QR> {
+    
+    public init() {}
+}
 
-extension PaymentsTransfersToolbarReducer {
+public extension PaymentsTransfersToolbarReducer {
     
     func reduce(
         _ state: State,
@@ -35,7 +38,7 @@ extension PaymentsTransfersToolbarReducer {
     }
 }
 
-extension PaymentsTransfersToolbarReducer {
+public extension PaymentsTransfersToolbarReducer {
     
     typealias State = PaymentsTransfersToolbarState<Profile, QR>
     typealias Event = PaymentsTransfersToolbarEvent<Profile, QR>

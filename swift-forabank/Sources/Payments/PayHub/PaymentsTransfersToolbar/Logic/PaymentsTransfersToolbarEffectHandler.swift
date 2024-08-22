@@ -5,20 +5,20 @@
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-final class PaymentsTransfersToolbarEffectHandler<Profile, QR> {
+public final class PaymentsTransfersToolbarEffectHandler<Profile, QR> {
     
     private let microServices: MicroServices
     
-    init(
+    public init(
         microServices: MicroServices
     ) {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PaymentsTransfersToolbarEffectHandlerMicroServices<Profile, QR>
+    public typealias MicroServices = PaymentsTransfersToolbarEffectHandlerMicroServices<Profile, QR>
 }
 
-extension PaymentsTransfersToolbarEffectHandler {
+public extension PaymentsTransfersToolbarEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -31,7 +31,7 @@ extension PaymentsTransfersToolbarEffectHandler {
     }
 }
 
-extension PaymentsTransfersToolbarEffectHandler {
+public extension PaymentsTransfersToolbarEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
