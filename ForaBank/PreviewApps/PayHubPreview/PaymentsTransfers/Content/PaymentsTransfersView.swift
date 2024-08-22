@@ -80,7 +80,7 @@ where CategoryPicker == PreviewCategoryPicker,
         
         return .init(
             categoryPicker: .init(),
-            payHubPicker: .init()
+            operationPicker: .init()
         )
     }
 }

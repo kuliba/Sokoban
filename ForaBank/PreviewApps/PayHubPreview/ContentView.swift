@@ -211,27 +211,27 @@ private extension ContentView {
         _ binder: OperationPickerBinder
     ) -> some View {
         
-        PayHubPickerBinderView(
+        OperationPickerBinderView(
             binder: binder,
             factory: .init(makeContent: makePayHubContentView)
         )
     }
     
     private func makePayHubContentView(
-        _ content: PayHubPickerContent
+        _ content: OperationPickerContent
     ) -> some View {
         
-        PayHubPickerContentWrapperView(
+        OperationPickerContentWrapperView(
             model: content,
             makeContentView: { state, event in
                 
-                PayHubPickerContentView(
+                OperationPickerContentView(
                     state: state,
                     event: event,
                     config: .preview,
                     itemLabel: {
                         
-                        PayHubPickerStateItemLabel(item: $0, config: .preview)
+                        OperationPickerStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }

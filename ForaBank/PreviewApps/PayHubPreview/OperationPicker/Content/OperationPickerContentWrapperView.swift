@@ -1,5 +1,5 @@
 //
-//  PayHubPickerContentWrapperView.swift
+//  OperationPickerContentWrapperView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PayHubPickerContentWrapperView<ContentView>: View
+struct OperationPickerContentWrapperView<ContentView>: View
 where ContentView: View {
     
     @ObservedObject private var model: Model
@@ -29,10 +29,10 @@ where ContentView: View {
     }
 }
 
-extension PayHubPickerContentWrapperView {
+extension OperationPickerContentWrapperView {
     
-    typealias State = PayHubPickerState
-    typealias Event = PayHubPickerEvent
+    typealias State = OperationPickerState
+    typealias Event = OperationPickerEvent
     typealias MakeContentView = (State, @escaping (Event) -> Void) -> ContentView
-    typealias Model = PayHubPickerContent
+    typealias Model = OperationPickerContent
 }

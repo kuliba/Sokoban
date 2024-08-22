@@ -1,5 +1,5 @@
 //
-//  PayHubPickerStateItemLabel.swift
+//  OperationPickerStateItemLabel.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -9,7 +9,7 @@ import PayHub
 import SwiftUI
 
 // app specific
-struct PayHubPickerStateItemLabel: View {
+struct OperationPickerStateItemLabel: View {
     
     let item: Item
     let config: Config
@@ -39,10 +39,10 @@ struct PayHubPickerStateItemLabel: View {
     }
 }
 
-extension PayHubPickerStateItemLabel {
+extension OperationPickerStateItemLabel {
     
-    typealias Item = PayHubPickerState.Item
-    typealias Config = PayHubPickerStateItemLabelConfig
+    typealias Item = OperationPickerState.Item
+    typealias Config = OperationPickerStateItemLabelConfig
 }
 
 private extension Latest {
@@ -50,7 +50,7 @@ private extension Latest {
     var name: String { .init(id.prefix(12)) }
 }
 
-private extension PayHubPickerStateItemLabel {
+private extension OperationPickerStateItemLabel {
     
     func selectableLabel(
         systemName: String,
@@ -108,10 +108,10 @@ struct UIItemLabel_Previews: PreviewProvider {
     }
     
     private static func uiItemLabel(
-        _ item: PayHubPickerStateItemLabel.Item
+        _ item: OperationPickerStateItemLabel.Item
     ) -> some View {
         
-        PayHubPickerStateItemLabel(item: item, config: .preview)
+        OperationPickerStateItemLabel(item: item, config: .preview)
     }
 }
 

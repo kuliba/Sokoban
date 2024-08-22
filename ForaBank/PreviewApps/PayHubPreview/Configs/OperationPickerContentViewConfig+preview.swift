@@ -1,11 +1,11 @@
 //
-//  PayHubPickerContentViewConfig+preview.swift
+//  OperationPickerContentViewConfig+preview.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
-extension PayHubPickerContentViewConfig {
+extension OperationPickerContentViewConfig {
     
     static let preview: Self = .init(
         height: 96,

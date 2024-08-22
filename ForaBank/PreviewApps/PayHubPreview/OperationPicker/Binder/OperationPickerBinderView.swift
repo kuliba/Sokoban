@@ -1,5 +1,5 @@
 //
-//  PayHubPickerBinderView.swift
+//  OperationPickerBinderView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,10 +8,10 @@
 import PayHub
 import SwiftUI
 
-struct PayHubPickerBinderView<ContentView>: View
+struct OperationPickerBinderView<ContentView>: View
 where ContentView: View {
     
-    @ObservedObject private var content: PayHubPickerContent
+    @ObservedObject private var content: OperationPickerContent
     @ObservedObject private var flow: PayHubPickerFlow
     
     private let factory: Factory
@@ -37,9 +37,9 @@ where ContentView: View {
     }
 }
 
-extension PayHubPickerBinderView {
+extension OperationPickerBinderView {
     
-    typealias Factory = PayHubPickerFlowStateWrapperViewFactory<ContentView>
+    typealias Factory = OperationPickerFlowStateWrapperViewFactory<ContentView>
 }
 
 extension OperationPickerFlowItem: Identifiable {
@@ -60,7 +60,7 @@ extension OperationPickerFlowItem: Identifiable {
 }
 
 #Preview {
-    PayHubPickerBinderView(
+    OperationPickerBinderView(
         binder: .preview,
         factory: .init(
             makeContent: { Text(String(describing: $0)) }

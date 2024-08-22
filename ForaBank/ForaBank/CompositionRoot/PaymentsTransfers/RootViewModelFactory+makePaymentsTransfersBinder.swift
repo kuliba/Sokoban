@@ -45,7 +45,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         let composer = PaymentsTransfersBinderComposer(
-            makePayHubPickerBinder: pickerBinderComposer.compose
+            makeOperationPickerBinder: pickerBinderComposer.compose
         )
         
         return composer.compose()

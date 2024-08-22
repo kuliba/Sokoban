@@ -1,5 +1,5 @@
 //
-//  PayHubPickerContentView.swift
+//  OperationPickerContentView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PayHubPickerContentView<ItemLabel>: View
+struct OperationPickerContentView<ItemLabel>: View
 where ItemLabel: View {
     
     let state: State
@@ -41,15 +41,15 @@ where ItemLabel: View {
     }
 }
 
-extension PayHubPickerContentView {
+extension OperationPickerContentView {
     
-    typealias State = PayHubPickerState
-    typealias Event = PayHubPickerEvent
-    typealias Config = PayHubPickerContentViewConfig
-    typealias Item = PayHubPickerState.Item
+    typealias State = OperationPickerState
+    typealias Event = OperationPickerEvent
+    typealias Config = OperationPickerContentViewConfig
+    typealias Item = OperationPickerState.Item
 }
 
-private extension PayHubPickerContentView {
+private extension OperationPickerContentView {
     
     @ViewBuilder
     func itemView(
@@ -131,24 +131,24 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
     
     private static func payHubContentView(
-        _ state: PayHubPickerState,
-        event: @escaping (PayHubPickerEvent) -> Void = { print($0) }
+        _ state: OperationPickerState,
+        event: @escaping (OperationPickerEvent) -> Void = { print($0) }
     ) -> some View {
         
-        PayHubPickerContentView(
+        OperationPickerContentView(
             state: state,
             event: event,
             config: .preview,
             itemLabel: { item in
                 
-                PayHubPickerStateItemLabel(item: item, config: .preview)
+                OperationPickerStateItemLabel(item: item, config: .preview)
             }
         )
     }
     
     private struct PayHubContentViewDemo: View {
         
-        @State private var state: PayHubPickerState = .default
+        @State private var state: OperationPickerState = .default
         @State private var loadViaReset = false
         
         var body: some View {
@@ -192,7 +192,7 @@ struct PayHubContentView_Previews: PreviewProvider {
             }
         }
         
-        private func load(_ state: PayHubPickerState) {
+        private func load(_ state: OperationPickerState) {
             
             if loadViaReset {
                 
@@ -217,7 +217,7 @@ struct PayHubContentView_Previews: PreviewProvider {
     }
 }
 
-private extension PayHubPickerState {
+private extension OperationPickerState {
     
     static let `default`: Self = .init(
         suffix: [
