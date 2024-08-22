@@ -13,6 +13,7 @@ import PaymentSticker
 import SberQR
 import SwiftUI
 import PayHub
+import Fetcher
 
 extension RootViewModelFactory {
     
@@ -298,28 +299,35 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        final class ServiceCategoryStore {
-            
-            var categories: [ServiceCategory]
-            
-            init(
-                categories: [ServiceCategory] = []
-            ) {
-                self.categories = categories
-            }
-        }
-        
-        let serviceCategoryStore = ServiceCategoryStore()
-        let serviceCategoryLoader = AnyLoader { completion in
-            
-            completion(serviceCategoryStore.categories)
-        }
-        
+        let localServiceCategoryLoader = ServiceCategoryLoader.default
         let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: serviceCategoryLoader.load,
+            getAllLoadedCategories: localServiceCategoryLoader.load,
             getLatestPayments: NanoServices.getLatestPayments
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
+        let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
+            httpClient:httpClient,
+            log: infoNetworkLog
+        )
+        let getServiceCategoryListLoader = AnyLoader { completion in
+            
+            getServiceCategoryList {
+                
+                completion($0.map(\.categoryGroupList))
+            }
+        }
+        let decorated = CacheDecorator(
+            decoratee: getServiceCategoryListLoader,
+            cache: localServiceCategoryLoader.save
+        )
+        let loadServiceCategories: LoadServiceCategories = { completion in
+            
+            decorated.load {
+                
+                let l = (try? $0.get()) ?? []
+                completion(l.map { .category($0)})
+            }
+        }
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -339,6 +347,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             loadLatestOperations: loadLatestOperations,
+            loadServiceCategories: loadServiceCategories,
             scheduler: scheduler
         )
     }
@@ -644,6 +653,7 @@ private extension RootViewModelFactory {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         loadLatestOperations: @escaping LoadLatestOperations,
+        loadServiceCategories: @escaping LoadServiceCategories,
         scheduler: AnySchedulerOfDispatchQueue
     ) -> RootViewModel {
                 
@@ -685,6 +695,9 @@ private extension RootViewModelFactory {
             switch paymentsTransfersFlag.rawValue {
             case .active:
                 let binder = makePaymentsTransfersBinder(
+                    categoryPickerPlaceholderCount: 6,
+                    operationPickerPlaceholderCount: 4,
+                    loadCategories: loadServiceCategories,
                     loadLatestOperations: loadLatestOperations,
                     scheduler: scheduler
                 )
