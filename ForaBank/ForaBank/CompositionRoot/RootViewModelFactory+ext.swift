@@ -300,11 +300,6 @@ extension RootViewModelFactory {
         )
         
         let localServiceCategoryLoader = ServiceCategoryLoader.default
-        let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: localServiceCategoryLoader.load,
-            getLatestPayments: NanoServices.getLatestPayments
-        )
-        let loadLatestOperations = _makeLoadLatestOperations(.all)
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
             httpClient:httpClient,
             log: infoNetworkLog
@@ -324,9 +319,26 @@ extension RootViewModelFactory {
             
             decorated.load {
                 
-                let l = (try? $0.get()) ?? []
-                completion(l.map { .category($0)})
+                let categories = (try? $0.get()) ?? []
+                completion(categories.map { .category($0)})
             }
+        }
+
+        let _makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: localServiceCategoryLoader.load,
+            getLatestPayments: NanoServices.getLatestPayments
+        )
+        let loadLatestOperations = _makeLoadLatestOperations(.all)
+
+        let _makePaymentsTransfersBinder = {
+            
+            makePaymentsTransfersBinder(
+                categoryPickerPlaceholderCount: 6,
+                operationPickerPlaceholderCount: 4,
+                loadCategories: loadServiceCategories,
+                loadLatestOperations: loadLatestOperations,
+                scheduler: scheduler
+            )
         }
         
         return make(
@@ -346,9 +358,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            loadLatestOperations: loadLatestOperations,
-            loadServiceCategories: loadServiceCategories,
-            scheduler: scheduler
+            makePaymentsTransfersBinder: _makePaymentsTransfersBinder
         )
     }
     
@@ -652,9 +662,7 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        loadLatestOperations: @escaping LoadLatestOperations,
-        loadServiceCategories: @escaping LoadServiceCategories,
-        scheduler: AnySchedulerOfDispatchQueue
+        makePaymentsTransfersBinder: @escaping () -> PaymentsTransfersBinder
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -694,14 +702,7 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                let binder = makePaymentsTransfersBinder(
-                    categoryPickerPlaceholderCount: 6,
-                    operationPickerPlaceholderCount: 4,
-                    loadCategories: loadServiceCategories,
-                    loadLatestOperations: loadLatestOperations,
-                    scheduler: scheduler
-                )
-                return .v1(binder)
+                return .v1(makePaymentsTransfersBinder())
                 
             case .inactive:
                 return .legacy(paymentsTransfersViewModel)
