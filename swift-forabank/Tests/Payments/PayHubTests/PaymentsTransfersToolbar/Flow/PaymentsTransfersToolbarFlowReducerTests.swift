@@ -188,7 +188,7 @@ final class PaymentsTransfersToolbarFlowReducerTests: PaymentsTransfersToolbarFl
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersToolbarReducer<Profile, QR>
+    private typealias SUT = PaymentsTransfersToolbarFlowReducer<Profile, QR>
     
     private func makeSUT(
         file: StaticString = #file,

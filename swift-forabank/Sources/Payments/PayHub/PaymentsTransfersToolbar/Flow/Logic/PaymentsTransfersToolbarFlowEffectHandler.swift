@@ -1,11 +1,11 @@
 //
-//  PaymentsTransfersToolbarEffectHandler.swift
+//  PaymentsTransfersToolbarFlowEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-public final class PaymentsTransfersToolbarEffectHandler<Profile, QR> {
+public final class PaymentsTransfersToolbarFlowEffectHandler<Profile, QR> {
     
     private let microServices: MicroServices
     
@@ -15,10 +15,10 @@ public final class PaymentsTransfersToolbarEffectHandler<Profile, QR> {
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PaymentsTransfersToolbarEffectHandlerMicroServices<Profile, QR>
+    public typealias MicroServices = PaymentsTransfersToolbarFlowEffectHandlerMicroServices<Profile, QR>
 }
 
-public extension PaymentsTransfersToolbarEffectHandler {
+public extension PaymentsTransfersToolbarFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -31,15 +31,15 @@ public extension PaymentsTransfersToolbarEffectHandler {
     }
 }
 
-public extension PaymentsTransfersToolbarEffectHandler {
+public extension PaymentsTransfersToolbarFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersToolbarEvent<Profile, QR>
-    typealias Effect = PaymentsTransfersToolbarEffect
+    typealias Event = PaymentsTransfersToolbarFlowEvent<Profile, QR>
+    typealias Effect = PaymentsTransfersToolbarFlowEffect
 }
 
-private extension PaymentsTransfersToolbarEffectHandler {
+private extension PaymentsTransfersToolbarFlowEffectHandler {
     
     func handleSelect(
         _ select: Effect.Select,

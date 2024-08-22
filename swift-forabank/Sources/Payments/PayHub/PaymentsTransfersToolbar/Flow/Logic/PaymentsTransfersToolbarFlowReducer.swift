@@ -1,16 +1,16 @@
 //
-//  PaymentsTransfersToolbarReducer.swift
+//  PaymentsTransfersToolbarFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-public final class PaymentsTransfersToolbarReducer<Profile, QR> {
+public final class PaymentsTransfersToolbarFlowReducer<Profile, QR> {
     
     public init() {}
 }
 
-public extension PaymentsTransfersToolbarReducer {
+public extension PaymentsTransfersToolbarFlowReducer {
     
     func reduce(
         _ state: State,
@@ -38,14 +38,14 @@ public extension PaymentsTransfersToolbarReducer {
     }
 }
 
-public extension PaymentsTransfersToolbarReducer {
+public extension PaymentsTransfersToolbarFlowReducer {
     
-    typealias State = PaymentsTransfersToolbarState<Profile, QR>
-    typealias Event = PaymentsTransfersToolbarEvent<Profile, QR>
-    typealias Effect = PaymentsTransfersToolbarEffect
+    typealias State = PaymentsTransfersToolbarFlowState<Profile, QR>
+    typealias Event = PaymentsTransfersToolbarFlowEvent<Profile, QR>
+    typealias Effect = PaymentsTransfersToolbarFlowEffect
 }
 
-private extension PaymentsTransfersToolbarReducer {
+private extension PaymentsTransfersToolbarFlowReducer {
     
     func select(
         _ state: inout State,

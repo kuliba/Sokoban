@@ -65,7 +65,7 @@ final class PaymentsTransfersToolbarFlowEffectHandlerTests: PaymentsTransfersToo
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersToolbarEffectHandler<Profile, QR>
+    private typealias SUT = PaymentsTransfersToolbarFlowEffectHandler<Profile, QR>
     private typealias MakeProfileSpy = Spy<Void, Profile>
     private typealias MakeQRSpy = Spy<Void, QR>
     
