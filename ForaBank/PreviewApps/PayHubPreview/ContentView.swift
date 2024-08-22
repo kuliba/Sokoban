@@ -208,7 +208,7 @@ private extension ContentView {
     }
     
     private func makePayHubFlowView(
-        _ binder: PayHubPickerBinder
+        _ binder: OperationPickerBinder
     ) -> some View {
         
         PayHubPickerBinderView(
@@ -247,7 +247,7 @@ extension CategoryPickerSectionBinder: Loadable {
     }
 }
 
-extension PayHubPickerBinder: Loadable {
+extension OperationPickerBinder: Loadable {
     
     public func load() {
         

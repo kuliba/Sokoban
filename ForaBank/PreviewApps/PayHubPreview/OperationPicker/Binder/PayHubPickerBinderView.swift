@@ -17,7 +17,7 @@ where ContentView: View {
     private let factory: Factory
     
     init(
-        binder: PayHubPickerBinder,
+        binder: OperationPickerBinder,
         factory: Factory
     ) {
         self._content = .init(wrappedValue: binder.content)
@@ -68,9 +68,9 @@ extension PayHubPickerFlowItem: Identifiable {
     )
 }
 
-private extension PayHubPickerBinder {
+private extension OperationPickerBinder {
     
-    static let preview: PayHubPickerBinder = .init(
+    static let preview: OperationPickerBinder = .init(
         content: .stub(loadResult: []),
         flow: .stub(),
         bind: { content, flow in content.$state.sink { _ in _ = flow }}

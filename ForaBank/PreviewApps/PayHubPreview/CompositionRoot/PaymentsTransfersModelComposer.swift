@@ -60,7 +60,7 @@ private extension PaymentsTransfersModelComposer {
     
     func makePayHubBinder(
         loadedItems: [PayHubPickerItem<Latest>]
-    ) -> PayHubPickerBinder {
+    ) -> OperationPickerBinder {
         
         let content = PayHubPickerContent.stub(loadResult: loadedItems)
         let flow = PayHubPickerFlow.stub()

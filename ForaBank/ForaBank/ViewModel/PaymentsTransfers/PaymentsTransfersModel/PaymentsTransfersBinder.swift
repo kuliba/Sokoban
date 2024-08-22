@@ -9,7 +9,7 @@ import PayHub
 
 // MARK: - Content
 
-typealias PaymentsTransfersContentModel = PaymentsTransfersModel<Void, PayHubPickerBinder>
+typealias PaymentsTransfersContentModel = PaymentsTransfersModel<Void, OperationPickerBinder>
 
 // MARK: - Flow
 

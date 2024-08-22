@@ -15,7 +15,7 @@ final class PaymentsTransfersBinderComposer {
         self.makePayHubPickerBinder = makePayHubPickerBinder
     }
     
-    typealias MakePayHubPickerBinder = () -> PayHubPickerBinder
+    typealias MakePayHubPickerBinder = () -> OperationPickerBinder
 }
 
 extension PaymentsTransfersBinderComposer {

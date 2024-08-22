@@ -27,7 +27,7 @@ final class PayHubPickerBinderComposer {
 
 extension PayHubPickerBinderComposer {
     
-    func compose() -> PayHubPickerBinder {
+    func compose() -> OperationPickerBinder {
         
         let content = makeContent()
         let flow = makeFlow()
