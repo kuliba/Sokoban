@@ -7767,6 +7767,7 @@
 		0C6508D028299D6C0058916A /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
+				2A629D602C6C6E9D0087F895 /* v1 */,
 				83FAD87F29CD91A000474B06 /* InternetTV */,
 				0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */,
 				2AECBC272BEBA949000B0C0E /* PaymentsTransfersFlow */,
@@ -7783,7 +7784,6 @@
 				6819084528BCAD3A003E81A3 /* SbpPay */,
 				C113225328CFA78300F90072 /* FastPayments */,
 				C1F8F5FF294A539B00FE5703 /* Requisites */,
-				2A629D602C6C6E9D0087F895 /* PaymentsTransfersModel */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -9887,14 +9887,14 @@
 			path = Flags;
 			sourceTree = "<group>";
 		};
-		2A629D602C6C6E9D0087F895 /* PaymentsTransfersModel */ = {
+		2A629D602C6C6E9D0087F895 /* v1 */ = {
 			isa = PBXGroup;
 			children = (
 				2AE350C62C770C6500A766EE /* PaymentsTransfers */,
 				2A273E8C2C770123009935E6 /* OperationPicker */,
 				2AE350CE2C770F0800A766EE /* CategoryPickerSection */,
 			);
-			path = PaymentsTransfersModel;
+			path = v1;
 			sourceTree = "<group>";
 		};
 		2A62E9612BD94F870044EB39 /* FactoryBasedPreview */ = {
