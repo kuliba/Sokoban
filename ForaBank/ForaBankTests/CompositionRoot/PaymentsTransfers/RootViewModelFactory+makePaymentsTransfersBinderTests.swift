@@ -13,7 +13,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, _, spy) = makeSUT()
         
         XCTAssertEqual(spy.callCount, 0)
         XCTAssertNotNil(sut)
@@ -21,9 +21,9 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
 
     func test_init_shouldCallLoadOnLoad() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, _, spy) = makeSUT()
         
-        sut.content.payHubPicker.content.event(.load)
+        sut.content.operationPicker.content.event(.load)
         
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
@@ -33,7 +33,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
         
         let sut = makeSUT().sut
         
-        let prefix = sut.content.payHubPicker.content.state.elements.prefix(2)
+        let prefix = sut.content.operationPicker.content.state.elements.prefix(2)
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
@@ -41,25 +41,34 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersBinder
-    private typealias LoadSpy = Spy<Void, [Latest], Never>
+    private typealias LoadLatestSpy = Spy<Void, [Latest], Never>
+    private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem], Never>
 
     private func makeSUT(
+        categoryPickerPlaceholderCount: Int = 6,
+        operationPickerPlaceholderCount: Int = 4,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: LoadSpy
+        loadCategoriesSpy: LoadCategoriesSpy,
+        loadLatestSpy: LoadLatestSpy
     ) {
-        let spy = LoadSpy()
+        let loadCategoriesSpy = LoadCategoriesSpy()
+        let loadLatestSpy = LoadLatestSpy()
         let sut = RootViewModelFactory.makePaymentsTransfersBinder(
-            loadLatestOperations: spy.process(completion:),
+            categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
+            operationPickerPlaceholderCount: operationPickerPlaceholderCount,
+            loadCategories: loadCategoriesSpy.process(completion:),
+            loadLatestOperations: loadLatestSpy.process(completion:),
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(loadCategoriesSpy, file: file, line: line)
+        trackForMemoryLeaks(loadLatestSpy, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, loadCategoriesSpy, loadLatestSpy)
     }
 }
 

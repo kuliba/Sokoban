@@ -15,7 +15,7 @@ struct ContentView: View {
     private let model: TabModel
     
     init(
-        selected: TabState.Selected = .noLatest
+        selected: TabState.Selected = .ok
     ) {
         let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)
@@ -78,7 +78,7 @@ private extension ContentView {
                 makeQR: { $0(QRModel()) }
             )
         )
-        let model = PaymentsTransfersFlowModel(
+        let model = PaymentsTransfersFlow(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
@@ -129,7 +129,7 @@ private extension ContentView {
                                         }
                                     }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                             
                             ToolbarItem(placement: .topBarTrailing) {
@@ -139,7 +139,7 @@ private extension ContentView {
                                 } label: {
                                     Image(systemName: "qrcode")
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                             }
                         }
                     )
@@ -150,40 +150,88 @@ private extension ContentView {
     
     @ViewBuilder
     private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContentModel
+        _ content: PaymentsTransfersContent
     ) -> some View {
         
         PaymentsTransfersView(
             model: content,
-            factory: .init(makePayHubView: makePayHubFlowView)
+            factory: .init(
+                makeCategoryPickerView: makeCategoryPickerView,
+                makePayHubView: makePayHubFlowView
+            )
         )
     }
     
-    private func makePayHubFlowView(
-        _ binder: PayHubPickerBinder
+    private func makeCategoryPickerView(
+        _ binder: CategoryPickerSectionBinder
     ) -> some View {
         
-        PayHubPickerFlowStateWrapperView(
+        CategoryPickerSectionBinderView(
             binder: binder,
-            factory: .init(makeContent: makePayHubContentWrapper)
+            factory: .init(
+                makeContentView: makeCategoryPickerSectionContentView,
+                makeDestinationView: EmptyView.init
+            )
         )
     }
     
-    private func makePayHubContentWrapper(
-        _ content: PayHubPickerContent
+    private func makeCategoryPickerSectionContentView(
+        content: CategoryPickerSectionContent
     ) -> some View {
         
-        PayHubPickerContentWrapperView(
+        CategoryPickerSectionContentWrapperView(
             model: content,
             makeContentView: { state, event in
                 
-                PayHubPickerContentView(
+                CategoryPickerSectionContentView(
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: { item in
+                    itemLabel: {
                         
-                        PayHubPickerStateItemLabel(item: item, config: .preview)
+                        CategoryPickerSectionStateItemLabel(
+                            item: $0, 
+                            config: .preview,
+                            categoryIcon: categoryIcon
+                        )
+                    }
+                )
+            }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
+    }
+    
+    private func makePayHubFlowView(
+        _ binder: OperationPickerBinder
+    ) -> some View {
+        
+        OperationPickerBinderView(
+            binder: binder,
+            factory: .init(makeContent: makePayHubContentView)
+        )
+    }
+    
+    private func makePayHubContentView(
+        _ content: OperationPickerContent
+    ) -> some View {
+        
+        OperationPickerContentWrapperView(
+            model: content,
+            makeContentView: { state, event in
+                
+                OperationPickerContentView(
+                    state: state,
+                    event: event,
+                    config: .preview,
+                    itemLabel: {
+                        
+                        OperationPickerStateItemLabel(item: $0, config: .preview)
                     }
                 )
             }
@@ -191,7 +239,15 @@ private extension ContentView {
     }
 }
 
-extension PayHubPickerBinder: Loadable {
+extension CategoryPickerSectionBinder: Loadable {
+    
+    public func load() {
+        
+        content.event(.load)
+    }
+}
+
+extension OperationPickerBinder: Loadable {
     
     public func load() {
         
