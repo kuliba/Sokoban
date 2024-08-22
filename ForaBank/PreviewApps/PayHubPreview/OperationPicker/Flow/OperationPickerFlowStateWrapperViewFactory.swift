@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import PayHub
 
-struct OperationPickerFlowStateWrapperViewFactory<ContentView> {
+struct OperationPickerFlowStateWrapperViewFactory<ContentView, DestinationView> {
     
     let makeContent: MakeContent
+    let makeDestination: MakeDestination
 }
 
 extension OperationPickerFlowStateWrapperViewFactory {
     
     typealias MakeContent = (OperationPickerContent) -> ContentView
+    typealias MakeDestination = (OperationPickerFlowItem<Exchange, LatestFlow, Templates>) -> DestinationView
 }

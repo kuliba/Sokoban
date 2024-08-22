@@ -8,8 +8,9 @@
 import PayHub
 import SwiftUI
 
-struct OperationPickerBinderView<ContentView>: View
-where ContentView: View {
+struct OperationPickerFlowView<ContentView, DestinationView>: View
+where ContentView: View,
+      DestinationView: View {
     
     @ObservedObject private var content: OperationPickerContent
     @ObservedObject private var flow: OperationPickerFlow
@@ -32,14 +33,14 @@ where ContentView: View {
             .navigationDestination(
                 destination: flow.state.selected,
                 dismiss: { content.event(.select(nil)) },
-                content: { Text("TBD: destination " + String(describing: $0)) }
+                content: factory.makeDestination
             )
     }
 }
 
-extension OperationPickerBinderView {
+extension OperationPickerFlowView {
     
-    typealias Factory = OperationPickerFlowStateWrapperViewFactory<ContentView>
+    typealias Factory = OperationPickerFlowStateWrapperViewFactory<ContentView, DestinationView>
 }
 
 extension OperationPickerFlowItem: Identifiable {
@@ -60,10 +61,11 @@ extension OperationPickerFlowItem: Identifiable {
 }
 
 #Preview {
-    OperationPickerBinderView(
+    OperationPickerFlowView(
         binder: .preview,
         factory: .init(
-            makeContent: { Text(String(describing: $0)) }
+            makeContent: { Text(String(describing: $0)) },
+            makeDestination: { Text(String(describing: $0)) }
         )
     )
 }

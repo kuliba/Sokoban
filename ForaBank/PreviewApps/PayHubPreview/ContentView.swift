@@ -212,9 +212,12 @@ private extension ContentView {
         _ binder: OperationPickerBinder
     ) -> some View {
         
-        OperationPickerBinderView(
+        OperationPickerFlowView(
             binder: binder,
-            factory: .init(makeContent: makePayHubContentView)
+            factory: .init(
+                makeContent: makePayHubContentView,
+                makeDestination: { Text("TBD: destination " + String(describing: $0)) }
+            )
         )
     }
     
