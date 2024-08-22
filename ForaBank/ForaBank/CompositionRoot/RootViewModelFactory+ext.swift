@@ -538,10 +538,16 @@ extension ProductProfileViewModel {
                 makeServicePaymentBinder: makeServicePaymentBinder
             )
             
-            let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeAlertDataUpdateFailureViewModel: {
+            let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+                dataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
+                disableForCorporateCard: {
+                    .disableForCorporateCard(primaryAction: $0)
+                })
+            
+            let paymentsTransfersFactory = PaymentsTransfersFactory(
+                makeAlertViewModels: makeAlertViewModels,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
@@ -664,11 +670,17 @@ private extension RootViewModelFactory {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makePaymentsTransfersBinder: @escaping () -> PaymentsTransfersBinder
     ) -> RootViewModel {
-                
-        let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeAlertDataUpdateFailureViewModel: {
+            
+        let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+            dataUpdateFailure: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
-            }, 
+            },
+            disableForCorporateCard: {
+                .disableForCorporateCard(primaryAction: $0)
+            })
+
+        let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeAlertViewModels: makeAlertViewModels, 
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
