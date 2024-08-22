@@ -945,7 +945,8 @@ private extension PaymentsTransfersViewModel {
             dismissAction: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
-            }
+            }, 
+            makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard
         )
         route.destination = .openDepositsList(openDepositViewModel)
     }

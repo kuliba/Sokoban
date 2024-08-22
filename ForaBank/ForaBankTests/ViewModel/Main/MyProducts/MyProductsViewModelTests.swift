@@ -40,7 +40,64 @@ final class MyProductsViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.itemsID, [1, 3, 2])
     }
     
+    func test_tapOpenCard_onlyCorporateCards_shouldNotChangeLink() {
+        
+        let sut = makeSUT(
+            productType: .card,
+            initialProducts: [
+                makeCardProduct(id: 1, cardType: .individualBusinessman),
+                makeCardProduct(id: 2, cardType: .corporate)])
+                
+        XCTAssertNil(sut.link)
+
+        sut.openCard()
+
+        XCTAssertNil(sut.link)
+    }
+
+    func test_tapOpenCard_notOnlyCorporateCards_shouldChangeLinkToOpenCard() {
+        
+        let sut = makeSUT(
+            productType: .card,
+            initialProducts: [
+                makeCardProduct(id: 1, cardType: .individualBusinessman),
+                makeCardProduct(id: 2, cardType: .corporate),
+                makeCardProduct(id: 3, cardType: .main, isMain: true)
+            ])
+                
+        XCTAssertNil(sut.link)
+
+        sut.openCard()
+
+        XCTAssertNoDiff(sut.link?.case, .openCard)
+    }
+    
     // MARK: - Helpers
+    
+    typealias SUT = MyProductsViewModel
+    
+    private func makeSUT(
+        productType: ProductType = .card,
+        initialProducts: [ProductData] = [],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.currencyList.value.append(.rub)
+        model.products.value = [productType: initialProducts]
+        
+        let sut = MyProductsViewModel.init(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            openOrderSticker: {},
+            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { return nil }))
+        
+        trackForMemoryLeaks(model, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+
+        return sut
+    }
     
     private func makeSUT(
         productType: ProductType = .card,
@@ -99,5 +156,22 @@ private extension Array where Element == MyProductsSectionViewModel {
     var itemsID: [ProductData.ID] {
         
         self.first?.itemsId ?? []
+    }
+}
+
+private extension MyProductsViewModel.Link {
+    
+    var `case`: Case? {
+        
+        switch self {
+        case .openCard: return .openCard
+        default:        return .other
+        }
+    }
+    
+    enum Case: Equatable {
+        
+        case openCard
+        case other
     }
 }

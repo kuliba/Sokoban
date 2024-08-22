@@ -67,6 +67,10 @@ struct OpenDepositDetailView: View {
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
         .edgesIgnoringSafeArea(.bottom)
+        .alert(
+            item: viewModel.route.modal?.alert,
+            content: alertContent
+        )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
@@ -76,6 +80,13 @@ struct OpenDepositDetailView: View {
         )
     }
     
+    private func alertContent(
+        _ viewModel: Alert.ViewModel
+    ) -> Alert {
+        
+        .init(with: viewModel)
+    }
+
     @ViewBuilder
     private func destinationView(
         destination: OpenDepositDetailViewModel.Route.Link
@@ -776,5 +787,5 @@ extension OpenDepositDetailViewModel {
             .init(title: "6,85 (7,07)", isEven: true)])
     ])))
         
-    static let sample = OpenDepositDetailViewModel(id: 0, productDetail: productDetailSample, calculator: .sample1, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample)
+    static let sample = OpenDepositDetailViewModel(id: 0, productDetail: productDetailSample, calculator: .sample1, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
 }

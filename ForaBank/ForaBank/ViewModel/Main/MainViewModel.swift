@@ -40,6 +40,9 @@ class MainViewModel: ObservableObject, Resetable {
     
     var rootActions: RootViewModel.RootActions?
     
+    private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
+    }
+    
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
@@ -268,6 +271,13 @@ extension MainViewModel {
         withQR qrCode: QRCode
     ) {
         self.action.send(MainViewModelAction.Show.Requisites(qrCode: qrCode))
+    }
+    
+    static func openLinkURL(_ linkURL: URL) {
+        
+        if UIApplication.shared.canOpenURL(linkURL) {
+            UIApplication.shared.open(linkURL, options: [:], completionHandler: nil)
+        }
     }
 }
 
@@ -501,14 +511,7 @@ private extension MainViewModel {
                                 
                             case .card:
                                 
-                                let authProductsViewModel = AuthProductsViewModel(
-                                    self.model,
-                                    products: self.model.catalogProducts.value,
-                                    dismissAction: { [weak self] in
-                                        self?.action.send(MainViewModelAction.Close.Link())
-                                    })
-                                
-                                route.destination =  .openCard(authProductsViewModel)
+                                openCard()
                                 
                             default:
                                 //MARK: Action for Sticker Product
@@ -529,17 +532,8 @@ private extension MainViewModel {
                         
                         switch action {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
-                            switch payload.operationType {
-                            case .templates:
-                                self.openTemplates()
-                                
-                            case .byPhone:
-                                self.action.send(MainViewModelAction.Show.Contacts())
-                                
-                            case .byQr:
-                                self.openScanner()
-                            }
                             
+                            handleFastPaymentsAction(payload)
                         default:
                             break
                         }
@@ -557,7 +551,7 @@ private extension MainViewModel {
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
                                 guard let depositId = Int(payload.depositProductId),
-                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
+                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
                                     
                                     return
                                 }
@@ -566,7 +560,7 @@ private extension MainViewModel {
                             case _ as BannerActionDepositsList:
                                 route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }))
+                                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
                                 
                             case let payload as BannerActionMigTransfer:
                                 let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
@@ -855,6 +849,26 @@ private extension MainViewModel {
             .store(in: &bindings)
     }
     
+    func handleFastPaymentsAction(_ payload: MainSectionViewModelAction.FastPayment.ButtonTapped) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            switch payload.operationType {
+            case .templates:
+                openTemplates()
+                
+            case .byPhone:
+                action.send(MainViewModelAction.Show.Contacts())
+                
+            case .byQr:
+                openScanner()
+            }
+        }
+    }
+    
     func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
         
         for section in sections {
@@ -893,11 +907,30 @@ private extension MainViewModel {
             dismissAction: { [weak self] in
                 
                 self?.action.send(MainViewModelAction.Close.Link())
-            })
+            }, 
+            makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard)
         
         route.destination = .openDepositsList(openDepositViewModel)
     }
     
+    private func openCard() {
+        
+        if model.onlyCorporateCards {
+            
+            Self.openLinkURL(model.productsOpenAccountURL)
+        } else {
+            
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                dismissAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())
+                })
+            
+            route.destination = .openCard(authProductsViewModel)
+        }
+    }
+        
     private typealias DepositeID = Int
     private func returnFirstExpiredDepositID(
         previousData: (expired: Date?, DepositeID?),
@@ -1677,38 +1710,45 @@ extension MainViewModel {
     
     func orderSticker() {
         
-        let productsCard = model.products(.card)
-        
-        if productsCard == nil ||
-            productsCard?.contains(where: {
-                ($0 as? ProductCardData)?.isMain == true }) == false
-        {
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
             
-            self.route.modal = .alert(.init(
-                title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
-                    type: .default, title: "Отмена", action: {}), secondary: .init(
-                        type: .default, title: "Продолжить", action: {
-                            
-                            DispatchQueue.main.async {
-                                let authProductsViewModel = AuthProductsViewModel(
-                                    self.model,
-                                    products: self.model.catalogProducts.value,
-                                    dismissAction: { [weak self] in
-                                        self?.action.send(MyProductsViewModelAction.Close.Link()) })
-                                
-                                self.route.destination = .openCard(authProductsViewModel)
-                            }
-                        }
-                    )))
+            route.modal = .alert(alertViewModel)
         } else {
             
-            self.route.destination = .paymentSticker
+            let productsCard = model.products(.card)
+            
+            if productsCard == nil ||
+                productsCard?.contains(where: {
+                    ($0 as? ProductCardData)?.isMain == true }) == false
+            {
+                
+                self.route.modal = .alert(.init(
+                    title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
+                        type: .default, title: "Отмена", action: {}), secondary: .init(
+                            type: .default, title: "Продолжить", action: {
+                                
+                                DispatchQueue.main.async {
+                                    let authProductsViewModel = AuthProductsViewModel(
+                                        self.model,
+                                        products: self.model.catalogProducts.value,
+                                        dismissAction: { [weak self] in
+                                            self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                                    
+                                    self.route.destination = .openCard(authProductsViewModel)
+                                }
+                            }
+                        )))
+            } else {
+                
+                self.route.destination = .paymentSticker
+            }
+            
+            /* TODO: v4 сейчас нет
+             если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
+             cardType: MAIN - главная карта. или cardType: REGULAR - обычная карта.
+             */
         }
-        
-        /* TODO: v4 сейчас нет
-         если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
-         cardType: MAIN - главная карта. или cardType: REGULAR - обычная карта.
-         */
     }
 }
 

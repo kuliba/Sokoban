@@ -103,7 +103,8 @@ extension PaymentsTransfersFactory.MakeAlertViewModels {
     
     static let `default`: Self = .init(
         dataUpdateFailure: { _ in nil },
-        disableForCorporateCard: { _ in nil })
+        disableForCorporateCard: {                     .disableForCorporateCard(primaryAction: $0)
+        })
 }
 
 extension PaymentProviderPickerFlowModel {
