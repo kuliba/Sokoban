@@ -1,10 +1,10 @@
 //
 //  CategoryPickerSectionBinder.swift
-//  ForaBank
+//  PayHubPreview
 //
-//  Created by Igor Malyarov on 21.08.2024.
+//  Created by Igor Malyarov on 22.08.2024.
 //
 
-import PayHub
+import PayHubUI
 
-typealias CategoryPickerSectionBinder = Holder<CategoryPickerSectionContent, CategoryPickerSectionFlow>
+typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory>
