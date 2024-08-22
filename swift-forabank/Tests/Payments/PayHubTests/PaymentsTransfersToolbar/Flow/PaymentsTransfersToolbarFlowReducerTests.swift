@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersToolbarReducerTests.swift
+//  PaymentsTransfersToolbarFlowReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 22.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PaymentsTransfersToolbarReducerTests: PaymentsTransfersToolbarTests {
+final class PaymentsTransfersToolbarFlowReducerTests: PaymentsTransfersToolbarFlowTests {
     
     // MARK: - dismiss
     

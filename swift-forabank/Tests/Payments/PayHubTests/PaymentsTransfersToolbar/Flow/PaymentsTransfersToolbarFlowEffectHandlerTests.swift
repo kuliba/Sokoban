@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersToolbarEffectHandlerTests.swift
+//  PaymentsTransfersToolbarFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 22.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PaymentsTransfersToolbarEffectHandlerTests: PaymentsTransfersToolbarTests {
+final class PaymentsTransfersToolbarFlowEffectHandlerTests: PaymentsTransfersToolbarFlowTests {
     
     // MARK: - init
     
