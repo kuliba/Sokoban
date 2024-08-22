@@ -2107,7 +2107,8 @@ extension ProductProfileViewModel {
                 catalogType: .deposit,
                 dismissAction: {
                     controlPanelViewModel.event(.dismiss(.destination))
-                })
+                }, 
+                makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard)
 
             controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
         }
@@ -2115,7 +2116,7 @@ extension ProductProfileViewModel {
     
     func openDeposit(_ depositId: Int ) {
         
-        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model) {
+        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) {
 
             controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
         }

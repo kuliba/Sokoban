@@ -45,7 +45,7 @@ final class MainViewModelTests: XCTestCase {
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.fastPayment?.tapTemplatesAndWait()
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
         
         XCTAssertNoDiff(linkSpy.values, [nil, .templates])
     }
@@ -54,7 +54,7 @@ final class MainViewModelTests: XCTestCase {
         
         let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapTemplatesAndWait()
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .templates)
         
         sut.templatesListViewModel?.closeAndWait()
         
@@ -134,6 +134,138 @@ final class MainViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNotNil(sut.route.modal?.alert)
+    }
+    
+    func test_orderSticker_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        sut.orderSticker()
+        
+        XCTAssertNotNil(sut.route.modal?.alert)
+    }
+    
+    func test_orderSticker_notOnlyCorporateCards_shouldSetLinkToPaymentSticker() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
+    }
+    
+    func test_tapQr_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.modal)
+
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
+
+        XCTAssertNotNil(sut.route.modal?.alert)
+    }
+    
+    func test_tapQr_notOnlyCorporateCards_shouldSetModalToQrScanner() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.modal)
+
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(sut.route.modal?.case, .qrScanner)
+    }
+    
+    func test_tapByPhone_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.modal)
+
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+
+        XCTAssertNotNil(sut.route.modal?.alert)
+    }
+
+    func test_tapByPhone_notOnlyCorporateCards_shouldSetModalToByPhone() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.modal)
+
+        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byPhone)
+
+        XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
+    }
+    
+    func test_tapOpenCard_onlyCorporateCards_shouldNotChangeDestination() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+
+        XCTAssertNil(sut.route.destination)
+    }
+    
+    func test_tapOpenCard_notOnlyCorporateCards_shouldSetRouteToOpenCard() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+
+        XCTAssertNoDiff(sut.route.case, .openCard)
     }
  
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
@@ -498,25 +630,68 @@ private extension MainViewModel.Route {
     var `case`: Case? {
         
         switch destination {
-        case .none:      return .none
-        case .templates: return .templates
-        default:         return .other
+        case .none:         return .none
+        case .templates:    return .templates
+        case .paymentSticker: return .paymentSticker
+        case .openCard:     return .openCard
+        default:            return .other
         }
     }
     
     enum Case: Equatable {
         
+        case openCard
+        case paymentSticker
         case templates
+        case other
+    }
+}
+
+private extension MainViewModel.Modal {
+    
+    var `case`: Case? {
+        
+        switch self {
+        case let .fullScreenSheet(fullScreenSheet):
+            switch fullScreenSheet.type {
+            case .qrScanner: return .qrScanner
+            case .success: return .success
+            }
+        case let .sheet(sheet):
+            switch sheet.type {
+            case .byPhone: return .byPhone
+            default: return .other
+            }
+        default: return .other
+        }
+    }
+    
+    enum Case: Equatable {
+        
+        case qrScanner
+        case success
+        case byPhone
         case other
     }
 }
 
 private extension MainSectionFastOperationView.ViewModel {
     
-    func tapTemplatesAndWait(timeout: TimeInterval = 0.05) {
+    func tapFastPaymentButtonAndWait(type: FastOperations, timeout: TimeInterval = 0.05) {
         
-        let templatesAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: .templates)
-        action.send(templatesAction)
+        let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
+        action.send(fastPaymentAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension MainSectionOpenProductView.ViewModel {
+    
+    func tapOpenProductButtonAndWait(type: ProductType, timeout: TimeInterval = 0.05) {
+        
+        let openProductAction = MainSectionViewModelAction.OpenProduct.ButtonTapped.init(productType: type)
+        action.send(openProductAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }

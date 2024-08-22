@@ -26,7 +26,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_meToMe_shouldNotDeliverActionOnMeToMeSendSuccess() throws {
         
-        let (product1, product2) = makeTwoProducts()
+        let (product1, product2) = makeTwoCards()
         let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
@@ -46,30 +46,29 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertEqual(spy.values.count, 0)
     }
     
-#warning("fix and restore")
-    //    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetClosed() throws {
-    //
-    //        let (product1, product2) = makeTwoProducts()
-    //        let (sut, model, _) = makeSUT(products: [product1, product2])
-    //
-    //        sut.sendBetweenSelf()
-    //
-    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
-    //
-    //        try sut.selectMeToMeProductTo(product2, model: model)
-    //        let spy = ValueSpy(model.action)
-    //
-    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
-    //
-    //        XCTAssertEqual(spy.values.count, 0)
-    //
-    //        sut.meToMeSendSuccess(model: model)
-    //        XCTAssertEqual(spy.values.count, 0)
-    //        sut.closeBottomSheet()
-    //
-    //        XCTAssertEqual(spy.values.count, 0)
-    //        XCTAssertNil(sut.meToMe)
-    //    }
+    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetClosed() throws {
+        
+        let (product1, product2) = makeTwoCards()
+        let (sut, model, _) = makeSUT(products: [product1, product2])
+        
+        sut.sendBetweenSelf()
+        
+        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
+        
+        try sut.selectMeToMeProductTo(product2, model: model)
+        let spy = ValueSpy(model.action)
+        
+        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
+        
+        XCTAssertEqual(spy.values.count, 0)
+        
+        sut.meToMeSendSuccess(model: model)
+        XCTAssertEqual(spy.values.count, 0)
+        sut.closeBottomSheet()
+        
+        XCTAssertEqual(spy.values.count, 0)
+        XCTAssertNil(sut.meToMe)
+    }
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
@@ -240,7 +239,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         sut.section?.tapTransferAndWait(type: .betweenSelf)
 
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
     }
     
     func test_tapTransfer_betweenSelf_notOnlyCorporateProducts_shouldNotPresentAlert() {
@@ -264,7 +263,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         sut.section?.tapTransferAndWait(type: .betweenSelf)
 
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
     }
     
     func test_tapCurrencyWallet_onlyCorporateCards_shouldPresentAlert() {
@@ -948,11 +947,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private typealias State = SUT.Route
     private typealias Event = PaymentsTransfersEvent
     private typealias Effect = PaymentsTransfersEffect
-    
-    private func makeTwoProducts() -> (ProductData, ProductData) {
-        let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
-        let product2 = anyProduct(id: 2, productType: .card, currency: "USD")
         
+    private func makeTwoCards() -> (ProductData, ProductData) {
+        let product1 = makeCardProduct(id: 1, currency: "RUB", cardType: .main, isMain: true)
+        let product2 = makeCardProduct(id: 2, currency: "USD", cardType: .regular, isMain: true)
+
         return (product1, product2)
     }
     
