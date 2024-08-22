@@ -103,13 +103,8 @@ class OpenDepositDetailViewModel: ObservableObject {
         
         var alert: Alert.ViewModel? {
             
-            if case let .alert(alert) = self {
-                
-                return alert
-            } else {
-                
-                return nil
-            }
+            guard case let .alert(alert) = self else { return nil }
+            return alert
         }
     }
     

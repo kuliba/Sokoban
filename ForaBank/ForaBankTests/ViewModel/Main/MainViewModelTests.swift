@@ -234,6 +234,39 @@ final class MainViewModelTests: XCTestCase {
 
         XCTAssertNoDiff(sut.route.modal?.case, .byPhone)
     }
+    
+    func test_tapOpenCard_onlyCorporateCards_shouldNotChangeDestination() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+
+        XCTAssertNil(sut.route.destination)
+    }
+    
+    func test_tapOpenCard_notOnlyCorporateCards_shouldSetRouteToOpenCard() {
+        
+        let (sut, model) = makeSUT()
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.destination)
+
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+
+        XCTAssertNoDiff(sut.route.case, .openCard)
+    }
  
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
 
@@ -600,12 +633,14 @@ private extension MainViewModel.Route {
         case .none:         return .none
         case .templates:    return .templates
         case .paymentSticker: return .paymentSticker
+        case .openCard:     return .openCard
         default:            return .other
         }
     }
     
     enum Case: Equatable {
         
+        case openCard
         case paymentSticker
         case templates
         case other
@@ -646,6 +681,17 @@ private extension MainSectionFastOperationView.ViewModel {
         
         let fastPaymentAction = MainSectionViewModelAction.FastPayment.ButtonTapped.init(operationType: type)
         action.send(fastPaymentAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension MainSectionOpenProductView.ViewModel {
+    
+    func tapOpenProductButtonAndWait(type: ProductType, timeout: TimeInterval = 0.05) {
+        
+        let openProductAction = MainSectionViewModelAction.OpenProduct.ButtonTapped.init(productType: type)
+        action.send(openProductAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
