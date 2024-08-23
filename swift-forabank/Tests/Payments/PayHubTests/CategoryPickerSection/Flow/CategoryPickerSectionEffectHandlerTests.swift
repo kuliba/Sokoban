@@ -23,22 +23,30 @@ extension CategoryPickerSectionState {
 extension CategoryPickerSectionState: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
 extension CategoryPickerSectionState.Destination: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
 
-enum CategoryPickerSectionEvent<Category, CategoryList> {
+enum CategoryPickerSectionEvent<Category, CategoryModel, CategoryList> {
     
     case receive(Receive)
+    case select(Select?)
 }
 
 extension CategoryPickerSectionEvent {
     
     enum Receive {
         
-        case category(Category)
+        case category(CategoryModel)
         case list(CategoryList)
+    }
+    
+    enum Select {
+        
+        case category(Category)
+        case list
     }
 }
 
-extension CategoryPickerSectionEvent: Equatable where Category: Equatable, CategoryList: Equatable {}
-extension CategoryPickerSectionEvent.Receive: Equatable where Category: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionEvent: Equatable where Category: Equatable, CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionEvent.Receive: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionEvent.Select: Equatable where Category: Equatable, CategoryList: Equatable {}
 
 enum CategoryPickerSectionEffect<Category> {
     
@@ -93,7 +101,7 @@ extension CategoryPickerSectionEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CategoryPickerSectionEvent<CategoryModel, CategoryList>
+    typealias Event = CategoryPickerSectionEvent<Category, CategoryModel, CategoryList>
     typealias Effect = CategoryPickerSectionEffect<Category>
 }
 
@@ -159,6 +167,20 @@ extension CategoryPickerSectionReducer {
             case let .list(list):
                 state.destination = .list(list)
             }
+            
+        case let .select(select):
+            state.destination = nil
+
+            switch select {
+            case .none:
+                break
+                
+            case let .category(category):
+                effect = .showCategory(category)
+                
+            case .list:
+                effect = .showAll
+            }
         }
         
         return (state, effect)
@@ -168,7 +190,7 @@ extension CategoryPickerSectionReducer {
 extension CategoryPickerSectionReducer {
     
     typealias State = CategoryPickerSectionState<CategoryModel, CategoryList>
-    typealias Event = CategoryPickerSectionEvent<CategoryModel, CategoryList>
+    typealias Event = CategoryPickerSectionEvent<Category, CategoryModel, CategoryList>
     typealias Effect = CategoryPickerSectionEffect<Category>
 }
 
@@ -204,6 +226,61 @@ final class CategoryPickerSectionReducerTests: CategoryPickerSectionTests {
     func test_receive_list_shouldNotDeliverEffect() {
         
         assert(makeState(destination: nil), event: .receive(.list(makeCategoryList())), delivers: nil)
+    }
+    
+    // MARK: - select
+    
+    func test_deselect_shouldResetCategoryDestination() {
+        
+        let state = makeState(destination: .category(makeCategoryModel()))
+        
+        assert(state, event: .select(nil)) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_deselect_shouldNotDeliverEffect() {
+        
+        let state = makeState(destination: .category(makeCategoryModel()))
+        
+        assert(state, event: .select(nil), delivers: nil)
+    }
+    
+    func test_select_category_shouldResetDestination() {
+        
+        let category = makeCategory()
+        
+        assert(
+            makeState(destination: .category(makeCategoryModel())),
+            event: .select(.category(category))
+        ) {
+            $0.destination = nil
+        }
+    }
+    
+    func test_select_category_shouldDeliverEffect() {
+        
+        let category = makeCategory()
+        
+        assert(makeState(), event: .select(.category(category)), delivers: .showCategory(category))
+    }
+    
+    func test_select_list_shouldResetDestination() {
+        
+        let category = makeCategory()
+        
+        assert(
+            makeState(destination: .category(makeCategoryModel())),
+            event: .select(.list)
+        ) {
+            $0.destination = nil
+        }
+    }
+    
+    func test_select_list_shouldDeliverEffect() {
+        
+        assert(makeState(), event: .select(.list), delivers: .showAll)
     }
     
     // MARK: - Helpers
