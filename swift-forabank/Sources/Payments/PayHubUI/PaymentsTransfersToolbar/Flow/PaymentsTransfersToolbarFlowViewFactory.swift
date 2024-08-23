@@ -11,17 +11,17 @@ import SwiftUI
 public struct PaymentsTransfersToolbarFlowViewFactory<ContentView, Profile, ProfileView, QR, QRView> {
     
     public let makeContent: MakeContent
-    public let makeDestinationContent: MakeDestinationContent
-    public let makeFullScreenContent: MakeFullScreenContent
+    public let makeDestination: MakeDestination
+    public let makeFullScreen: MakeFullScreen
     
     public init(
         @ViewBuilder makeContent: @escaping MakeContent,
-        @ViewBuilder makeDestinationContent: @escaping MakeDestinationContent,
-        @ViewBuilder makeFullScreenContent: @escaping MakeFullScreenContent
+        @ViewBuilder makeDestination: @escaping MakeDestination,
+        @ViewBuilder makeFullScreen: @escaping MakeFullScreen
     ) {
         self.makeContent = makeContent
-        self.makeDestinationContent = makeDestinationContent
-        self.makeFullScreenContent = makeFullScreenContent
+        self.makeDestination = makeDestination
+        self.makeFullScreen = makeFullScreen
     }
 }
 
@@ -32,8 +32,8 @@ public extension PaymentsTransfersToolbarFlowViewFactory {
     typealias State = PaymentsTransfersToolbarFlowState<Profile, QR>
     
     typealias Destination = State.Destination
-    typealias MakeDestinationContent = (Destination) -> ProfileView
+    typealias MakeDestination = (Destination) -> ProfileView
     
     typealias FullScreen = State.FullScreen
-    typealias MakeFullScreenContent = (FullScreen) -> QRView
+    typealias MakeFullScreen = (FullScreen) -> QRView
 }

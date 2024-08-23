@@ -70,59 +70,8 @@ private extension ContentView {
         binder: PaymentsTransfersToolbarBinder
     ) -> some View {
         
-        PaymentsTransfersToolbarFlowWrapperView(
-            model: binder.flow
-        ) {
-            PaymentsTransfersToolbarFlowView(
-                state: $0,
-                event: $1,
-                factory: .init(
-                    makeContent: {
-                        
-                        PaymentsTransfersToolbarContentWrapperView(
-                            model: binder.content,
-                            makeContentView: {
-                                
-                                PaymentsTransfersToolbarContentView(
-                                    state: $0,
-                                    event: $1,
-                                    factory: .init(
-                                        makeProfileLabel: {
-                                            
-                                            HStack {
-                                                Image(systemName: "person.circle")
-                                                Text("Profile")
-                                            }
-                                        },
-                                        makeQRLabel: {
-                                            Image(systemName: "qrcode")
-                                        }
-                                    )
-                                )
-                            }
-                        )
-                    },
-                    makeDestinationContent: {
-                        
-                        switch $0 {
-                        case let .profile(profileModel):
-                            Text(String(describing: profileModel))
-                        }
-                    },
-                    makeFullScreenContent: {
-                        
-                        switch $0 {
-                        case let .qr(qrModel):
-                            VStack(spacing: 32) {
-                                
-                                Text(String(describing: qrModel))
-                                Button("Close") { binder.flow.event(.dismiss) }
-                            }
-                        }
-                    }
-                )
-            )
-        }
+        let composer = PaymentsTransfersToolbarComposer<ProfileModel, QRModel>()
+        return composer.compose(binder: binder)
     }
     
     @ViewBuilder

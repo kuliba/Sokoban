@@ -33,12 +33,12 @@ where ContentView: View,
             .navigationDestination(
                 destination: state.destination,
                 dismiss: { event(.dismiss) },
-                content: factory.makeDestinationContent
+                content: factory.makeDestination
             )
             .fullScreenCover(
                 cover: state.fullScreen,
                 dismiss: { event(.dismiss) },
-                content: factory.makeFullScreenContent
+                content: factory.makeFullScreen
             )
     }
 }
