@@ -92,6 +92,41 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
   
+    func test_updateProducts_onlyCorporateProducts_shouldAddDisableForCorCardsInformer() {
+        
+        let (sut, model,_) = makeSUT()
+        
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(sut.sections.first?.type, .disableForCorCards)
+    }
+    
+    func test_updateProducts_notOnlyCorporateProducts_shouldNotChange() {
+        
+        let (sut, model,_) = makeSUT()
+        
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+    }
+
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
 
     /*func test_tapTemplates_updateCardFailureAccountFailure_shouldPresentAlert_flagActive() {
