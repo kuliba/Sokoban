@@ -71,6 +71,7 @@ struct PaymentsTransfersToolbarContentView_Previews: PreviewProvider {
                         }
                     },
                     makeQRLabel: {
+                        
                         Image(systemName: "qrcode")
                     }
                 )
