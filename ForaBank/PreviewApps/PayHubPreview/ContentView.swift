@@ -69,23 +69,8 @@ private extension ContentView {
         binder: TabState.Binder
     ) -> some View {
         
-#warning("extract Composer and Factory")
-        
-        let reducer = PaymentsTransfersFlowReducer()
-        let effectHandler = PaymentsTransfersFlowEffectHandler(
-            microServices: .init(
-                makeProfile: { $0(ProfileModel()) },
-                makeQR: { $0(QRModel()) }
-            )
-        )
-        let model = PaymentsTransfersFlow(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
-        )
-        
         PaymentsTransfersFlowStateWrapper(
-            model: model,
+            model: binder.flow,
             makeFlowView: {
                 
                 PaymentsTransfersFlowView(
@@ -107,7 +92,7 @@ private extension ContentView {
                                 VStack(spacing: 32) {
                                     
                                     Text(String(describing: qrModel))
-                                    Button("Close") { model.event(.dismiss) }
+                                    Button("Close") { binder.flow.event(.dismiss) }
                                 }
                             }
                         },

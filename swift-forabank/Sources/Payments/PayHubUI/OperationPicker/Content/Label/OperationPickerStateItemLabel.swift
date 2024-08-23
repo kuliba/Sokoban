@@ -1,6 +1,6 @@
 //
 //  OperationPickerStateItemLabel.swift
-//  PayHubPreview
+//
 //
 //  Created by Igor Malyarov on 17.08.2024.
 //
@@ -8,7 +8,6 @@
 import PayHub
 import SwiftUI
 
-// app specific
 public struct OperationPickerStateItemLabel<Latest, PlaceholderView>: View
 where Latest: Named,
       PlaceholderView: View {
@@ -18,7 +17,7 @@ where Latest: Named,
     private let placeholderView: () -> PlaceholderView
     
     public init(
-        item: Item, 
+        item: Item,
         config: Config,
         placeholderView: @escaping () -> PlaceholderView
     ) {

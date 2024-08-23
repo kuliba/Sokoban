@@ -15,8 +15,8 @@ public struct LatestPlaceholderConfig: Equatable {
     public let textWidth: CGFloat
     
     public init(
-        label: IconWithTitleLabelVerticalConfig, 
-        textHeight: CGFloat, 
+        label: IconWithTitleLabelVerticalConfig,
+        textHeight: CGFloat,
         textSpacing: CGFloat,
         textWidth: CGFloat
     ) {
