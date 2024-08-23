@@ -6,13 +6,39 @@
 //
 #warning("add binder composer with tests for subscription")
 
+struct CategoryPickerSectionState<CategoryModel, CategoryList> {
+    
+    var destination: Destination?
+}
+
+extension CategoryPickerSectionState {
+    
+    enum Destination {
+        
+        case category(CategoryModel)
+        case list(CategoryList)
+    }
+}
+
+extension CategoryPickerSectionState: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionState.Destination: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+
 enum CategoryPickerSectionEvent<Category, CategoryList> {
     
-    case category(Category)
-    case list(CategoryList)
+    case receive(Receive)
+}
+
+extension CategoryPickerSectionEvent {
+    
+    enum Receive {
+        
+        case category(Category)
+        case list(CategoryList)
+    }
 }
 
 extension CategoryPickerSectionEvent: Equatable where Category: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionEvent.Receive: Equatable where Category: Equatable, CategoryList: Equatable {}
 
 enum CategoryPickerSectionEffect<Category> {
     
@@ -55,10 +81,10 @@ extension CategoryPickerSectionEffectHandler {
     ) {
         switch effect {
         case .showAll:
-            microServices.showAll { dispatch(.list($0)) }
+            microServices.showAll { dispatch(.receive(.list($0))) }
             
         case let .showCategory(category):
-            microServices.showCategory(category) { dispatch(.category($0)) }
+            microServices.showCategory(category) { dispatch(.receive(.category($0))) }
         }
     }
 }
@@ -112,6 +138,149 @@ class CategoryPickerSectionTests: XCTestCase {
     }
 }
 
+final class CategoryPickerSectionReducer<Category, CategoryModel, CategoryList> {}
+
+extension CategoryPickerSectionReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .receive(receive):
+            switch receive {
+            case let .category(category):
+                state.destination = .category(category)
+                
+            case let .list(list):
+                state.destination = .list(list)
+            }
+        }
+        
+        return (state, effect)
+    }
+}
+
+extension CategoryPickerSectionReducer {
+    
+    typealias State = CategoryPickerSectionState<CategoryModel, CategoryList>
+    typealias Event = CategoryPickerSectionEvent<CategoryModel, CategoryList>
+    typealias Effect = CategoryPickerSectionEffect<Category>
+}
+
+final class CategoryPickerSectionReducerTests: CategoryPickerSectionTests {
+    
+    // MARK: - receive
+    
+    func test_receive_category_shouldSetDestinationToCategory() {
+        
+        let category = makeCategoryModel()
+        
+        assert(makeState(destination: nil), event: .receive(.category(category))) {
+            
+            $0.destination = .category(category)
+        }
+    }
+    
+    func test_receive_category_shouldNotDeliverEffect() {
+        
+        assert(makeState(destination: nil), event: .receive(.category(makeCategoryModel())), delivers: nil)
+    }
+    
+    func test_receive_list_shouldSetDestinationToCategory() {
+        
+        let list = makeCategoryList()
+        
+        assert(makeState(destination: nil), event: .receive(.list(list))) {
+            
+            $0.destination = .list(list)
+        }
+    }
+    
+    func test_receive_list_shouldNotDeliverEffect() {
+        
+        assert(makeState(destination: nil), event: .receive(.list(makeCategoryList())), delivers: nil)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = CategoryPickerSectionReducer<Category, CategoryModel, CategoryList>
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let sut = SUT()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
+    
+    private func makeState(
+        destination: SUT.State.Destination? = nil
+    ) -> SUT.State {
+        
+        return .init(destination: destination)
+    }
+    
+    @discardableResult
+    private func assert(
+        sut: SUT? = nil,
+        _ state: SUT.State,
+        event: SUT.Event,
+        updateStateToExpected: ((inout SUT.State) -> Void)? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT.State {
+        
+        let sut = sut ?? makeSUT(file: file, line: line)
+        
+        var expectedState = state
+        updateStateToExpected?(&expectedState)
+        
+        let (receivedState, _) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedState,
+            expectedState,
+            "\nExpected \(String(describing: expectedState)), but got \(String(describing: receivedState)) instead.",
+            file: file, line: line
+        )
+        
+        return receivedState
+    }
+    
+    @discardableResult
+    private func assert(
+        sut: SUT? = nil,
+        _ state: SUT.State,
+        event: SUT.Event,
+        delivers expectedEffect: SUT.Effect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT.Effect? {
+        
+        let sut = sut ?? makeSUT(file: file, line: line)
+        
+        let (_, receivedEffect) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+        
+        return receivedEffect
+    }
+}
+
 final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionTests {
     
     // MARK: - init
@@ -141,7 +310,7 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionTests 
         let categoryList = makeCategoryList()
         let (sut, showAll, _) = makeSUT()
         
-        expect(sut, with: .showAll, toDeliver: .list(categoryList)) {
+        expect(sut, with: .showAll, toDeliver: .receive(.list(categoryList))) {
             
             showAll.complete(with: categoryList)
         }
@@ -164,7 +333,7 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionTests 
         let model = makeCategoryModel()
         let (sut, _, showCategory) = makeSUT()
         
-        expect(sut, with: .showCategory(makeCategory()), toDeliver: .category(model)) {
+        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(model))) {
             
             showCategory.complete(with: model)
         }
