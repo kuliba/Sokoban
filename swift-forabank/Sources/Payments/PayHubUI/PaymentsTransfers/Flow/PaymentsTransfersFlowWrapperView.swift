@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowStateWrapper.swift
+//  PaymentsTransfersFlowWrapperView.swift
 //
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -8,10 +8,10 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersFlowStateWrapper<FlowView, ProfileModel, QRModel>: View
+public struct PaymentsTransfersFlowWrapperView<FlowView, ProfileModel, QRModel>: View
 where FlowView: View {
     
-    @StateObject private var model: Model
+    @ObservedObject private var model: Model
     
     private let makeFlowView: MakeFlowView
     
@@ -29,7 +29,7 @@ where FlowView: View {
     }
 }
 
-public extension PaymentsTransfersFlowStateWrapper {
+public extension PaymentsTransfersFlowWrapperView {
     
     typealias Model = PaymentsTransfersFlow<ProfileModel, QRModel>
     typealias State = PaymentsTransfersFlowState<ProfileModel, QRModel>

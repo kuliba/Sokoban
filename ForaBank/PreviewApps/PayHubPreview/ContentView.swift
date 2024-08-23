@@ -69,7 +69,7 @@ private extension ContentView {
         binder: TabState.Binder
     ) -> some View {
         
-        PaymentsTransfersFlowStateWrapper(
+        PaymentsTransfersFlowWrapperView(
             model: binder.flow,
             makeFlowView: {
                 
