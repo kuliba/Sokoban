@@ -55,6 +55,22 @@ extension Model {
         }
     }
     
+    func firstProduct(with filter: ProductData.Filter, excluding: ProductData) -> ProductData? {
+        
+        if let preferredProductID {
+            
+            let filteredProducts = filter.filteredProducts(allProducts)
+            let preferedProduct = filteredProducts.first(where: { $0.id == preferredProductID })
+            
+            return preferedProduct ?? filteredProducts.first
+
+        } else {
+            
+            return filter.filteredProducts(allProducts).first(where: { $0.id != excluding.id})
+        }
+    }
+
+    
     var isAllProductsHidden: Bool {
         products.value.values
             .flatMap { $0 }
