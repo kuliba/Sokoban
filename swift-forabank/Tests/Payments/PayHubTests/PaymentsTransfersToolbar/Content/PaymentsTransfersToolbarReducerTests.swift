@@ -33,9 +33,9 @@ final class PaymentsTransfersToolbarReducerTests: XCTestCase {
         
         let state = makeState(selection: nil)
         
-        assert(state, event: .select(.qr)) {
+        assert(state, event: .select(.profile)) {
             
-            $0.selection = .qr
+            $0.selection = .profile
         }
     }
     

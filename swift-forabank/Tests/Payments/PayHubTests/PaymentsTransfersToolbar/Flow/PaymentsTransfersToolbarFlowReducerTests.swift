@@ -128,7 +128,7 @@ final class PaymentsTransfersToolbarFlowReducerTests: PaymentsTransfersToolbarFl
         
         let state = makeState(navigation: nil)
         
-        assert(state, event: .select(.qr))
+        assert(state, event: .select(.profile))
     }
     
     func test_select_profile_shouldDeliverEffectOnNilState() {
