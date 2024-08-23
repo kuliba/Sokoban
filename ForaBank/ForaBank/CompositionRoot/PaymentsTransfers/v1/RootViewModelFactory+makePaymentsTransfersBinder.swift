@@ -78,7 +78,9 @@ extension RootViewModelFactory {
         
         let content = PaymentsTransfersContent(
             categoryPicker: categoryPicker,
-            operationPicker: operationPicker
+            operationPicker: operationPicker,
+            toolbar: (),
+            reload: {}
         )
         let flow = PaymentsTransfersFlow()
         

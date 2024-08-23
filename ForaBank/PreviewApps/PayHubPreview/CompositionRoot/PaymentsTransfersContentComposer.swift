@@ -28,10 +28,18 @@ extension PaymentsTransfersContentComposer {
         loadedItems: [OperationPickerItem<Latest>]
     ) -> PaymentsTransfersContent {
         
+        let categoryPicker = makeCategoryPickerBinder(loadedCategories: loadedCategories)
+        let operationPicker = makeOperationBinder(loadedItems: loadedItems)
+        
         return .init(
-            categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
-            operationPicker: makeOperationBinder(loadedItems: loadedItems), 
-            toolbar: makePaymentsTransfersToolbarBinder()
+            categoryPicker: categoryPicker,
+            operationPicker: operationPicker,
+            toolbar: makePaymentsTransfersToolbarBinder(),
+            reload: {
+                
+                categoryPicker.content.event(.load)
+                operationPicker.content.event(.load)
+            }
         )
     }
 }
@@ -44,12 +52,23 @@ private extension PaymentsTransfersContentComposer {
         loadedCategories: [ServiceCategory]
     ) -> CategoryPickerSectionBinder {
         
-        let composer = CategoryPickerSectionContentComposer(
+        let composer = CategoryPickerSectionBinderComposer(
+            load: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    
+                    completion(loadedCategories.map { .category($0) })
+                }
+            },
+            microServices: .init(
+                showAll: { $0(CategoryListModel()) },
+                showCategory: { $1(CategoryModel(category: $0)) }
+            ),
+            placeholderCount: 6,
             scheduler: scheduler
         )
-        let content = composer.compose(loadedCategories: loadedCategories)
         
-        return .init(content: content, flow: (), bind: { _,_ in [] })
+        return composer.compose()
     }
 }
 

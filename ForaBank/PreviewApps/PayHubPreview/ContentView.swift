@@ -91,15 +91,15 @@ private extension ContentView {
     private func makePaymentsTransfersContent(
         _ content: PaymentsTransfersContent
     ) -> some View {
-                
-//        PaymentsTransfersView(
-//            model: content,
-//            factory: .init(
-//                makeCategoryPickerView: makeCategoryPickerView,
-//                makeOperationPickerView: makeOperationPickerView,
-//                makeToolbarView: paymentsTransfersToolbar
-//            )
-//        )
+        
+        PaymentsTransfersView(
+            model: content,
+            factory: .init(
+                makeCategoryPickerView: makeCategoryPickerView,
+                makeOperationPickerView: makeOperationPickerView,
+                makeToolbarView: paymentsTransfersToolbar
+            )
+        )
     }
     
     private func makeCategoryPickerView(
@@ -205,22 +205,6 @@ extension Latest: Named {
     
     var name: String { .init(id.prefix(12)) }
 }
-
-extension CategoryPickerSectionBinder: Loadable {
-    
-    public func load() {
-        
-        content.event(.load)
-    }
-}
-
-//extension OperationPickerBinder: Loadable {
-//    
-//    public func load() {
-//        
-//        content.event(.load)
-//    }
-//}
 
 #Preview {
     ContentView()

@@ -9,9 +9,7 @@ import PayHub
 import SwiftUI
 
 public struct PaymentsTransfersView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
-where CategoryPicker: Loadable,
-      CategoryPickerView: View,
-      OperationPicker: Loadable,
+where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View {
     
@@ -33,8 +31,6 @@ where CategoryPicker: Loadable,
             
             Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
             
-            factory.makeToolbarView(model.toolbar)
-            
             factory.makeOperationPickerView(model.operationPicker)
             
             factory.makeCategoryPickerView(model.categoryPicker)
@@ -42,6 +38,7 @@ where CategoryPicker: Loadable,
             Spacer()
         }
         .padding()
+        .background(factory.makeToolbarView(model.toolbar))
     }
 }
 
@@ -49,17 +46,6 @@ public extension PaymentsTransfersView {
     
     typealias Model = PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>
     typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
-}
-
-extension PaymentsTransfersModel
-where CategoryPicker: Loadable,
-      OperationPicker: Loadable {
-    
-    func reload() {
-        
-        categoryPicker.load()
-        operationPicker.load()
-    }
 }
 
 // MARK: - Previews
@@ -100,19 +86,14 @@ where CategoryPicker == PreviewCategoryPicker,
         return .init(
             categoryPicker: .init(),
             operationPicker: .init(),
-            toolbar: .init()
+            toolbar: .init(),
+            reload: {}
         )
     }
 }
 
-private final class PreviewCategoryPicker: Loadable {
-    
-    func load() {}
-}
+private final class PreviewCategoryPicker {}
 
-private final class PreviewPayHub: Loadable {
-    
-    func load() {}
-}
+private final class PreviewPayHub {}
 
 private final class PreviewToolbar {}
