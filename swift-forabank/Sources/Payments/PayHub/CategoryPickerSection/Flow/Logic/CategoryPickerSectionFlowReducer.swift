@@ -21,6 +21,9 @@ public extension CategoryPickerSectionFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .dismiss:
+            state.destination = nil
+            
         case let .receive(receive):
             switch receive {
             case let .category(category):

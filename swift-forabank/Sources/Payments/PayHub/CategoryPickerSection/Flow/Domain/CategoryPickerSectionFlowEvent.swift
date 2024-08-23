@@ -7,6 +7,7 @@
 
 public enum CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList> {
     
+    case dismiss
     case receive(Receive)
     case select(Select?)
 }

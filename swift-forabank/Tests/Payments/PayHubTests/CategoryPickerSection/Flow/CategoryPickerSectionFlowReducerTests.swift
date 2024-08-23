@@ -10,6 +10,21 @@ import XCTest
 
 final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTests {
     
+    // MARK: - dismiss
+    
+    func test_dismiss_shouldResetDestination() {
+        
+        assert(makeState(destination: .category(makeCategoryModel())), event: .dismiss) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotNotDeliverEffect() {
+        
+        assert(makeState(destination: .category(makeCategoryModel())), event: .dismiss, delivers: nil)
+    }
+    
     // MARK: - receive
     
     func test_receive_category_shouldSetDestinationToCategory() {
