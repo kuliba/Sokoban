@@ -52,6 +52,8 @@ extension String {
         switch type {
         case .additionalSelf, .additionalOther:
             return "Выписку может заказать владелец основной карты и счета"
+        case .additionalCorporate, .individualBusinessman, .corporate:
+            return "Заказать выписку можно в приложении «Фора Бизнес»"
         default:
             return nil
         }

@@ -110,6 +110,7 @@ enum AlertEvent {
         case showServiceOnlyOwnerCard
         case showTransferAdditionalOther
         case showServiceOnlyIndividualCard
+        case showDisableForCorCard
     }
 }
 
