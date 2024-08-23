@@ -234,6 +234,34 @@ final class ProductFilterTests: XCTestCase {
         XCTAssertEqual(result, [.card])
     }
     
+    func testFilteredProductTypes_generalToWithDepositAndIndividualBusinessmanMain() {
+        
+        let result = filteredProducts(
+            products: [
+                makeCardProduct(id: 1, cardType: .additionalCorporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessmanMain),
+                .accountActiveRub,
+                .depositActiveRub
+                ],
+            rules: ProductData.Filter.generalToWithDepositAndIndividualBusinessmanMain.rules)
+        
+        XCTAssertEqual(result.map(\.id), [2, 51, 71])
+    }
+    
+    func testFilteredProductTypes_generalFromWithIndividualBusinessmanMain() {
+        
+        let result = filteredProducts(
+            products: [
+                makeCardProduct(id: 1, cardType: .additionalCorporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessmanMain),
+                .accountActiveRub,
+                .depositActiveRub
+                ],
+            rules: ProductData.Filter.generalFromWithIndividualBusinessmanMain.rules)
+        
+        XCTAssertEqual(result.map(\.id), [2, 51])
+    }
+
     // MARK: - Helpers
     
     private func filteredProducts(
@@ -290,7 +318,7 @@ private extension ProductDepositData {
     
     convenience init(id: Int, currency: Currency, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active) {
         
-        self.init(id: id, productType: .account, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], depositProductId: 0, depositId: 0, interestRate: 0, accountId: 0, creditMinimumAmount: 0, minimumBalance: 0, endDate: nil, endDateNf: true, isDemandDeposit: true, isDebitInterestAvailable: false, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        self.init(id: id, productType: .deposit, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], depositProductId: 0, depositId: 0, interestRate: 0, accountId: 0, creditMinimumAmount: 0, minimumBalance: 0, endDate: nil, endDateNf: true, isDemandDeposit: true, isDebitInterestAvailable: false, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     }
 }
 
@@ -298,7 +326,7 @@ private extension ProductLoanData {
     
     convenience init(id: Int, currency: Currency, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active) {
         
-        self.init(id: id, productType: .account, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], currencyNumber: 0, bankProductId: 0, amount: 0, currentInterestRate: 0, principalDebt: 0, defaultPrincipalDebt: nil, totalAmountDebt: nil, principalDebtAccount: "", settlementAccount: "", settlementAccountId: 0, dateLong: Date(), strDateLong: "", order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        self.init(id: id, productType: .loan, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], currencyNumber: 0, bankProductId: 0, amount: 0, currentInterestRate: 0, principalDebt: 0, defaultPrincipalDebt: nil, totalAmountDebt: nil, principalDebtAccount: "", settlementAccount: "", settlementAccountId: 0, dateLong: Date(), strDateLong: "", order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     }
 }
 
