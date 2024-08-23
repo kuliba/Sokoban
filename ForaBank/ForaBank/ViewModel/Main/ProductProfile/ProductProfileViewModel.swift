@@ -2950,7 +2950,7 @@ extension ProductProfileViewModel {
         switch productData.cardType {
             
         case .individualBusinessmanMain:
-            self.event(.alert(.delayAlert(.showDisableForCorCard)))
+            self.event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
 
         case .additionalSelf, .additionalOther:
             self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))

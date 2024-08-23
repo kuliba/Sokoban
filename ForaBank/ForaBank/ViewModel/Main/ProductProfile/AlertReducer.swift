@@ -79,8 +79,6 @@ extension ProductAlertsViewModel {
             return transferAdditionalOther
         case .showServiceOnlyIndividualCard:
             return serviceOnlyIndividualCard
-        case .showDisableForCorCard:
-            return disableForCorCard
         }
     }
 }
