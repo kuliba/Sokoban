@@ -9,22 +9,13 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, Toolbar>
-where Content: View,
-      DestinationContent: View,
-      Toolbar: ToolbarContent {
+struct PaymentsTransfersFlowViewFactory<ContentView>
+where ContentView: View {
     
-    @ViewBuilder let makeContent: MakeContent
-    @ViewBuilder let makeDestinationContent: MakeDestinationContent
-    @ViewBuilder let makeFullScreenContent: MakeFullScreenContent
-    @ToolbarContentBuilder let makeToolbar: MakeToolbar
+    @ViewBuilder let makeContentView: MakeContentView
 }
 
 extension PaymentsTransfersFlowViewFactory {
     
-    typealias MakeContent = () -> Content
-    typealias Navigation = PaymentsTransfersFlowState.Navigation
-    typealias MakeDestinationContent = (Navigation.Destination) -> DestinationContent
-    typealias MakeFullScreenContent = (Navigation.FullScreen) -> FullScreenContent
-    typealias MakeToolbar = (@escaping (PaymentsTransfersFlowEvent.Open) -> Void) -> Toolbar
+    typealias MakeContentView = () -> ContentView
 }

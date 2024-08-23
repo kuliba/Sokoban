@@ -64,16 +64,6 @@ enum DestinationWrapper<Destination>: Identifiable {
 
 private extension ContentView {
     
-    typealias PaymentsTransfersToolbarBinder = PayHubUI.PaymentsTransfersToolbarBinder<ProfileModel, QRModel>
-    
-    func paymentsTransfersToolbar(
-        binder: PaymentsTransfersToolbarBinder
-    ) -> some View {
-        
-        let composer = PaymentsTransfersToolbarComposer<ProfileModel, QRModel>()
-        return composer.compose(binder: binder)
-    }
-    
     @ViewBuilder
     func makeBinderView(
         binder: TabState.Binder
@@ -87,55 +77,9 @@ private extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makePaymentsTransfersContent(binder.content) },
-                        makeDestinationContent: {
+                        makeContentView: {
                             
-                            switch $0 {
-                            case let .profile(profileModel):
-                                Text(String(describing: profileModel))
-                            }
-                        },
-                        makeFullScreenContent: {
-                            
-                            switch $0 {
-                            case let .qr(qrModel):
-                                VStack(spacing: 32) {
-                                    
-                                    Text(String(describing: qrModel))
-                                    Button("Close") { binder.flow.event(.dismiss) }
-                                }
-                            }
-                        },
-                        makeToolbar: { event in
-                            
-                            ToolbarItem(placement: .topBarLeading) {
-                                
-                                Button {
-                                    event(.profile)
-                                } label: {
-                                    
-                                    if #available(iOS 14.5, *) {
-                                        Label("Profile", systemImage: "person.circle")
-                                            .labelStyle(.titleAndIcon)
-                                    } else {
-                                        HStack {
-                                            Image(systemName: "person.circle")
-                                            Text("Profile")
-                                        }
-                                    }
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            
-                            ToolbarItem(placement: .topBarTrailing) {
-                                
-                                Button {
-                                    event(.qr)
-                                } label: {
-                                    Image(systemName: "qrcode")
-                                }
-                                .buttonStyle(.plain)
-                            }
+                            makePaymentsTransfersContent(binder.content)
                         }
                     )
                 )
@@ -147,14 +91,15 @@ private extension ContentView {
     private func makePaymentsTransfersContent(
         _ content: PaymentsTransfersContent
     ) -> some View {
-        
-        PaymentsTransfersView(
-            model: content,
-            factory: .init(
-                makeCategoryPickerView: makeCategoryPickerView,
-                makePayHubView: makePayHubFlowView
-            )
-        )
+                
+//        PaymentsTransfersView(
+//            model: content,
+//            factory: .init(
+//                makeCategoryPickerView: makeCategoryPickerView,
+//                makeOperationPickerView: makeOperationPickerView,
+//                makeToolbarView: paymentsTransfersToolbar
+//            )
+//        )
     }
     
     private func makeCategoryPickerView(
@@ -203,7 +148,7 @@ private extension ContentView {
         Color.blue.opacity(0.1)
     }
     
-    private func makePayHubFlowView(
+    private func makeOperationPickerView(
         _ binder: OperationPickerBinder
     ) -> some View {
         
@@ -236,15 +181,23 @@ private extension ContentView {
                             placeholderView:  {
                                 
                                 LatestPlaceholder(
-                                opacity: 1,
-                                config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
-                            )
+                                    opacity: 1,
+                                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
+                                )
                             }
                         )
                     }
                 )
             }
         )
+    }
+    
+    func paymentsTransfersToolbar(
+        binder: PaymentsTransfersToolbarBinder
+    ) -> some View {
+        
+        let composer = PaymentsTransfersToolbarComposer()
+        return composer.compose(binder: binder)
     }
 }
 
@@ -261,13 +214,13 @@ extension CategoryPickerSectionBinder: Loadable {
     }
 }
 
-extension OperationPickerBinder: Loadable {
-    
-    public func load() {
-        
-        content.event(.load)
-    }
-}
+//extension OperationPickerBinder: Loadable {
+//    
+//    public func load() {
+//        
+//        content.event(.load)
+//    }
+//}
 
 #Preview {
     ContentView()

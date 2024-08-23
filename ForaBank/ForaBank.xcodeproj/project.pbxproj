@@ -1286,6 +1286,7 @@
 		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
 		2AA94CAB2C7894F200830659 /* PaymentsTransfersToolbarComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA94CAA2C7894F200830659 /* PaymentsTransfersToolbarComposer.swift */; };
+		2AA94CAF2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA94CAE2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift */; };
 		2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */; };
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
@@ -4650,6 +4651,7 @@
 		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA94CAA2C7894F200830659 /* PaymentsTransfersToolbarComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersToolbarComposer.swift; sourceTree = "<group>"; };
+		2AA94CAE2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersToolbarBinder.swift; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHub.xctestplan; sourceTree = "<group>"; };
@@ -7883,6 +7885,7 @@
 				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
 				2A273E562C759556009935E6 /* CategoryPickerSection */,
 				2A7772572C6F2739009B1676 /* OperationPicker */,
+				2AA94CAC2C78971D00830659 /* PaymentsTransfersToolbar */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
 				2A77725A2C6F2833009B1676 /* View+ext.swift */,
 				2ADF965F2C705A8F004EE6DE /* PlaceholderView.swift */,
@@ -11046,6 +11049,22 @@
 				2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */,
 			);
 			path = SharedAPIInfra;
+			sourceTree = "<group>";
+		};
+		2AA94CAC2C78971D00830659 /* PaymentsTransfersToolbar */ = {
+			isa = PBXGroup;
+			children = (
+				2AA94CAD2C78972F00830659 /* Binder */,
+			);
+			path = PaymentsTransfersToolbar;
+			sourceTree = "<group>";
+		};
+		2AA94CAD2C78972F00830659 /* Binder */ = {
+			isa = PBXGroup;
+			children = (
+				2AA94CAE2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift */,
+			);
+			path = Binder;
 			sourceTree = "<group>";
 		};
 		2AA9F30A2A52148C00D2C435 /* Helpers */ = {
@@ -18993,6 +19012,7 @@
 				2AB552B62C71289C00F8D4B3 /* ProfileModel.swift in Sources */,
 				2A7772342C6F0D1A009B1676 /* FlowEvent.swift in Sources */,
 				2A77723C2C6F0FC1009B1676 /* TabEffect.swift in Sources */,
+				2AA94CAF2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift in Sources */,
 				2A77724F2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift in Sources */,
 				2A273E602C7596E4009935E6 /* CategoryPickerSectionContent.swift in Sources */,
 				2A273E872C75ECB8009935E6 /* OperationPickerContentViewConfig+preview.swift in Sources */,

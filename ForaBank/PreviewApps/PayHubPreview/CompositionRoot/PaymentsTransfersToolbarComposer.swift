@@ -10,12 +10,12 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-final class PaymentsTransfersToolbarComposer<Profile, QR> {}
+final class PaymentsTransfersToolbarComposer {}
 
 extension PaymentsTransfersToolbarComposer {
     
     func compose(
-        binder: PaymentsTransfersToolbarBinder<Profile, QR>
+        binder: PaymentsTransfersToolbarBinder
     ) -> some View {
         
         PaymentsTransfersToolbarFlowWrapperView(
@@ -80,7 +80,7 @@ extension PaymentsTransfersToolbarComposer {
     #warning("inject")
     @ViewBuilder
     private func makeDestination(
-        destination: PaymentsTransfersToolbarFlowState<Profile, QR>.Destination
+        destination: PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.Destination
     ) -> some View {
         
         switch destination {
@@ -92,8 +92,8 @@ extension PaymentsTransfersToolbarComposer {
 #warning("inject")
     @ViewBuilder
     private func makeFullScreen(
-        fullScreen: PaymentsTransfersToolbarFlowState<Profile, QR>.FullScreen,
-        event: @escaping (PaymentsTransfersToolbarFlowEvent<Profile, QR>) -> Void
+        fullScreen: PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.FullScreen,
+        event: @escaping (PaymentsTransfersToolbarFlowEvent<ProfileModel, QRModel>) -> Void
     ) -> some View {
         
         switch fullScreen {

@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersFlowWrapperView<FlowView, ProfileModel, QRModel>: View
+public struct PaymentsTransfersFlowWrapperView<FlowView>: View
 where FlowView: View {
     
     @ObservedObject private var model: Model
@@ -31,8 +31,8 @@ where FlowView: View {
 
 public extension PaymentsTransfersFlowWrapperView {
     
-    typealias Model = PaymentsTransfersFlow<ProfileModel, QRModel>
-    typealias State = PaymentsTransfersFlowState<ProfileModel, QRModel>
-    typealias Event = PaymentsTransfersFlowEvent<ProfileModel, QRModel>
+    typealias Model = PaymentsTransfersFlow
+    typealias State = PaymentsTransfersFlowState
+    typealias Event = PaymentsTransfersFlowEvent
     typealias MakeFlowView = (State, @escaping (Event) -> Void) -> FlowView
 }

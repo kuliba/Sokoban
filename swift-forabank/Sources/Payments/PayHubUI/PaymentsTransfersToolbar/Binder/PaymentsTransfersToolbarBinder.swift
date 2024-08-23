@@ -7,4 +7,4 @@
 
 import PayHub
 
-public typealias PaymentsTransfersToolbarBinder<ProfileModel, QRModel> = Binder<PaymentsTransfersToolbarContent, PaymentsTransfersToolbarFlow<ProfileModel, QRModel>>
+public typealias PaymentsTransfersToolbarBinder<Profile, QR> = Binder<PaymentsTransfersToolbarContent, PaymentsTransfersToolbarFlow<Profile, QR>>

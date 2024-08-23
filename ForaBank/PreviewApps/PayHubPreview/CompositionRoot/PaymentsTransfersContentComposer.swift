@@ -30,7 +30,8 @@ extension PaymentsTransfersContentComposer {
         
         return .init(
             categoryPicker: makeCategoryPickerBinder(loadedCategories: loadedCategories),
-            operationPicker: makeOperationBinder(loadedItems: loadedItems)
+            operationPicker: makeOperationBinder(loadedItems: loadedItems), 
+            toolbar: makePaymentsTransfersToolbarBinder()
         )
     }
 }
@@ -48,11 +49,11 @@ private extension PaymentsTransfersContentComposer {
         )
         let content = composer.compose(loadedCategories: loadedCategories)
         
-        return .init(content: content, flow: ())
+        return .init(content: content, flow: (), bind: { _,_ in [] })
     }
 }
 
-// MARK: - PayHub
+// MARK: - OperationPicker
 
 private extension PaymentsTransfersContentComposer {
     
@@ -73,5 +74,23 @@ private extension PaymentsTransfersContentComposer {
                     .sink { flow.event(.select($0)) }
             }
         )
+    }
+}
+
+// MARK: - Toolbar
+
+private extension PaymentsTransfersContentComposer {
+    
+    func makePaymentsTransfersToolbarBinder(
+    ) -> PaymentsTransfersToolbarBinder {
+        
+        let composer = PaymentsTransfersToolbarBinderComposer(
+            microServices: .init(
+                makeProfile: { $0(ProfileModel()) },
+                makeQR: { $0(QRModel()) }
+            ),
+            scheduler: scheduler
+        )
+        return composer.compose()
     }
 }
