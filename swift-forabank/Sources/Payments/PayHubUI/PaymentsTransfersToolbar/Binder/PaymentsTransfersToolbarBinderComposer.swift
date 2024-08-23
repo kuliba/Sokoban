@@ -39,8 +39,8 @@ public extension PaymentsTransfersToolbarBinderComposer {
         return .init(content: content, flow: flow, bind: bind)
     }
     
-    typealias Content = RxViewModel<PaymentsTransfersToolbarState, PaymentsTransfersToolbarEvent, PaymentsTransfersToolbarEffect>
-    typealias Flow = RxViewModel<PaymentsTransfersToolbarFlowState<Profile, QR>, PaymentsTransfersToolbarFlowEvent<Profile, QR>, PaymentsTransfersToolbarFlowEffect>
+    typealias Content = PaymentsTransfersToolbarContent
+    typealias Flow = PaymentsTransfersToolbarFlow<Profile, QR>
 }
 
 // MARK: - Content
