@@ -15,6 +15,9 @@ extension ProductProfileViewModel {
         case .additionalCorporate, .corporate, .individualBusinessman:
             event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
             
+        case .individualBusinessmanMain:
+            event(.init(productID: card.cardId, type: .accountOurBank))
+            
         default:
             createTopUpPanel(card)
         }
