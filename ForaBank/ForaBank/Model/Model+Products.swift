@@ -66,7 +66,8 @@ extension Model {
 
         } else {
             
-            return filter.filteredProducts(allProducts).first(where: { $0.id != excluding.id})
+            let filteredProducts = filter.filteredProducts(allProducts)
+            return filteredProducts.first(where: { $0.id != excluding.id}) ?? filteredProducts.first
         }
     }
 
