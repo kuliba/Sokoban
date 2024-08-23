@@ -15,9 +15,9 @@ public struct PaymentsTransfersToolbarFlowViewFactory<ContentView, Profile, Prof
     public let makeFullScreenContent: MakeFullScreenContent
     
     public init(
-        makeContent: @escaping MakeContent,
-        makeDestinationContent: @escaping MakeDestinationContent,
-        makeFullScreenContent: @escaping MakeFullScreenContent
+        @ViewBuilder makeContent: @escaping MakeContent,
+        @ViewBuilder makeDestinationContent: @escaping MakeDestinationContent,
+        @ViewBuilder makeFullScreenContent: @escaping MakeFullScreenContent
     ) {
         self.makeContent = makeContent
         self.makeDestinationContent = makeDestinationContent

@@ -13,8 +13,8 @@ public struct PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, P
     public let makePayHubView: MakePayHubView
     
     public init(
-        makeCategoryPickerView: @escaping MakeCategoryPickerView,
-        makePayHubView: @escaping MakePayHubView
+        @ViewBuilder makeCategoryPickerView: @escaping MakeCategoryPickerView,
+        @ViewBuilder makePayHubView: @escaping MakePayHubView
     ) {
         self.makeCategoryPickerView = makeCategoryPickerView
         self.makePayHubView = makePayHubView
