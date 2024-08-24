@@ -10,12 +10,14 @@ import PayHubUI
 import SwiftUI
 import UIPrimitives
 
+typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
+
 struct ContentView: View {
     
-    private let model: TabModel
+    private let model: TabModel<PaymentsTransfersBinder>
     
     init(
-        selected: TabState.Selected = .ok
+        selected: PaymentsTransfersTabState.Selected = .ok
     ) {
         let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)
@@ -34,7 +36,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeBinderView: makeBinderView)
+                    factory: .init(makeContentView: makeBinderView)
                 )
             }
         )
@@ -66,7 +68,7 @@ private extension ContentView {
     
     @ViewBuilder
     func makeBinderView(
-        binder: TabState.Binder
+        binder: PaymentsTransfersBinder
     ) -> some View {
         
         PaymentsTransfersFlowWrapperView(

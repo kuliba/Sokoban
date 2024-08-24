@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
-final class TabReducer {}
+final class TabReducer<Content> {}
 
 extension TabReducer {
     
@@ -28,7 +28,7 @@ extension TabReducer {
 
 extension TabReducer {
     
-    typealias State = TabState
-    typealias Event = TabEvent
+    typealias State = TabState<Content>
+    typealias Event = TabEvent<Content>
     typealias Effect = TabEffect
 }

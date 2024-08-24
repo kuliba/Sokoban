@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
-final class TabEffectHandler {}
+final class TabEffectHandler<Content> {}
 
 extension TabEffectHandler {
     
@@ -23,6 +23,6 @@ extension TabEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = TabEvent
+    typealias Event = TabEvent<Content>
     typealias Effect = TabEffect
 }

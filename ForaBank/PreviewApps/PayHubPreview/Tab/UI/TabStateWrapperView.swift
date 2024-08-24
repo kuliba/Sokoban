@@ -7,15 +7,16 @@
 
 import SwiftUI
 
-struct TabStateWrapperView<Content: View>: View {
+struct TabStateWrapperView<Content, ContentView>: View
+where ContentView: View {
     
     @StateObject private var model: Model
     
-    private let makeContent: MakeContent
+    private let makeContent: MakeContentView
     
     init(
         model: Model,
-        @ViewBuilder makeContent: @escaping MakeContent
+        @ViewBuilder makeContent: @escaping MakeContentView
     ) {
         self._model = .init(wrappedValue: model)
         self.makeContent = makeContent
@@ -29,6 +30,6 @@ struct TabStateWrapperView<Content: View>: View {
 
 extension TabStateWrapperView {
     
-    typealias Model = TabModel
-    typealias MakeContent = (TabState, @escaping (TabEvent) -> Void) -> Content
+    typealias Model = TabModel<Content>
+    typealias MakeContentView = (TabState<Content>, @escaping (TabEvent<Content>) -> Void) -> ContentView
 }
