@@ -99,7 +99,7 @@ private extension ContentView {
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerView,
                 makeOperationPickerView: makeOperationPickerView,
-                makeToolbarView: paymentsTransfersToolbar
+                makeToolbarView: PaymentsTransfersToolbarBinderView.init
             )
         )
     }
@@ -192,14 +192,6 @@ private extension ContentView {
                 )
             }
         )
-    }
-    
-    func paymentsTransfersToolbar(
-        binder: PaymentsTransfersToolbarBinder
-    ) -> some View {
-        
-        let composer = PaymentsTransfersToolbarComposer()
-        return composer.compose(binder: binder)
     }
 }
 

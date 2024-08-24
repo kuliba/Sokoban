@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersToolbarComposer.swift
+//  PaymentsTransfersToolbarBinderView.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -10,13 +10,11 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-final class PaymentsTransfersToolbarComposer {}
+struct PaymentsTransfersToolbarBinderView: View {
 
-extension PaymentsTransfersToolbarComposer {
+    let binder: PaymentsTransfersToolbarBinder
     
-    func compose(
-        binder: PaymentsTransfersToolbarBinder
-    ) -> some View {
+    var body: some View {
         
         PaymentsTransfersToolbarFlowWrapperView(
             model: binder.flow
@@ -40,7 +38,7 @@ extension PaymentsTransfersToolbarComposer {
     }
 }
 
-extension PaymentsTransfersToolbarComposer {
+extension PaymentsTransfersToolbarBinderView {
     
     func makeContent(
         _ content: PaymentsTransfersToolbarContent
