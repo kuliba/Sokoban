@@ -21,8 +21,8 @@ where ContentView: View,
         binder: OperationPickerBinder,
         factory: Factory
     ) {
-        self._content = .init(wrappedValue: binder.content)
-        self._flow = .init(wrappedValue: binder.flow)
+        self.content = binder.content
+        self.flow = binder.flow
         self.factory = factory
     }
     
