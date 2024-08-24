@@ -7880,10 +7880,7 @@
 				2A7772352C6F0F41009B1676 /* Tab */,
 				2A273E6D2C759FA8009935E6 /* Domain */,
 				2A77722A2C6F0CA1009B1676 /* Models */,
-				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
-				2A273E562C759556009935E6 /* CategoryPickerSection */,
-				2A7772572C6F2739009B1676 /* OperationPicker */,
-				2AA94CAC2C78971D00830659 /* PaymentsTransfersToolbar */,
+				2A147F442C79AE520097F714 /* PaymentsTransfers */,
 				2A05ECC82C6C8C770070C5CF /* Assets.xcassets */,
 				2A77725A2C6F2833009B1676 /* View+ext.swift */,
 				2ADF965F2C705A8F004EE6DE /* PlaceholderView.swift */,
@@ -8167,6 +8164,17 @@
 				2A147F402C79A04F0097F714 /* CategoryPickerSection */,
 				2A147F412C79A07A0097F714 /* OperationPicker */,
 				2A147F422C79A09C0097F714 /* Toolbar */,
+			);
+			path = PaymentsTransfers;
+			sourceTree = "<group>";
+		};
+		2A147F442C79AE520097F714 /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724B2C6F1766009B1676 /* PaymentsTransfers */,
+				2A273E562C759556009935E6 /* CategoryPickerSection */,
+				2A7772572C6F2739009B1676 /* OperationPicker */,
+				2AA94CAC2C78971D00830659 /* PaymentsTransfersToolbar */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
