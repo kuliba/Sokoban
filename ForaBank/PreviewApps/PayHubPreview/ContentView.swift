@@ -98,7 +98,7 @@ private extension ContentView {
             model: content,
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerView,
-                makeOperationPickerView: makeOperationPickerView,
+                makeOperationPickerView: OperationPickerBinderView.init,
                 makeToolbarView: PaymentsTransfersToolbarBinderView.init
             )
         )
@@ -148,50 +148,6 @@ private extension ContentView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
-    }
-    
-    private func makeOperationPickerView(
-        _ binder: OperationPickerBinder
-    ) -> some View {
-        
-        OperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeContent: makePayHubContentView,
-                makeDestination: { Text("TBD: destination " + String(describing: $0)) }
-            )
-        )
-    }
-    
-    private func makePayHubContentView(
-        _ content: OperationPickerContent
-    ) -> some View {
-        
-        OperationPickerContentWrapperView(
-            model: content,
-            makeContentView: { state, event in
-                
-                OperationPickerContentView(
-                    state: state,
-                    event: event,
-                    config: .preview,
-                    itemLabel: {
-                        
-                        OperationPickerStateItemLabel(
-                            item: $0,
-                            config: .preview,
-                            placeholderView:  {
-                                
-                                LatestPlaceholder(
-                                    opacity: 1,
-                                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
-                                )
-                            }
-                        )
-                    }
-                )
-            }
-        )
     }
 }
 
