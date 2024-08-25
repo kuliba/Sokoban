@@ -729,23 +729,20 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert?.secondary)
     }
 
-    func test_topLeftActionForCard_individualBusinessmanMain_shouldShowNewPanel() throws {
+    func test_topLeftActionForCard_individualBusinessmanMain_shouldShowBottomSheet() throws {
+              
+        let card = makeCardProduct(id: 1, cardType: .individualBusinessmanMain)
         
-        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
+        let sut = try makeSUT(card: card, products: [.card: [card, .cardActiveMainDebitOnlyRub]])
         
-        let (sut, _, _) = try makeSUT()
-        
-        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
-        XCTAssertNil(sut.optionsPannel)
+        XCTAssertNil(sut.bottomSheet)
 
         sut.topLeftActionForCard(card)
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        // in code delay 0.4
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
 
-        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
-        XCTAssertNil(sut.optionsPannel)
-
-        XCTAssertNil(sut.link)
+        XCTAssertNoDiff(sut.bottomSheet?.case, .meToMe)
     }
     
     // MARK: - test topRightActionForCard
@@ -1036,6 +1033,42 @@ final class ProductProfileViewModelTests: XCTestCase {
         return (sut, model, card)
     }
     
+    private func makeSUT(
+        card: ProductCardData,
+        products: ProductsData = [:],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> ProductProfileViewModel {
+        
+        let model = Model.mockWithEmptyExcept()
+        model.products.value = products
+                
+        let sut = try XCTUnwrap(
+            ProductProfileViewModel(
+                model,
+                fastPaymentsFactory: .legacy,
+                makePaymentsTransfersFlowManager: { _ in .preview },
+                userAccountNavigationStateManager: .preview,
+                sberQRServices: .empty(),
+                productProfileServices: .preview,
+                qrViewModelFactory: .preview(),
+                paymentsTransfersFactory: .preview,
+                operationDetailFactory: .preview,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: card,
+                productNavigationStateManager: .preview,
+                productProfileViewModelFactory: .preview,
+                rootView: "",
+                dismissAction: {}
+            )
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return sut
+    }
+    
     func makeModelWithProducts(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
         
         let model = Model.mockWithEmptyExcept()
@@ -1157,7 +1190,7 @@ private extension ProductCardData {
             fontDesignColor: .init(description: ""),
             background: [],
             accountId: nil,
-            cardId: 0,
+            cardId: id,
             name: "",
             validThru: Date(),
             status: .active,
@@ -1404,6 +1437,26 @@ extension ProductCardData {
     
     static func createCardByType(_ cardType: CardType) -> ProductCardData {
         
-        .init(id: 1, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
+        .init(id: 1, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 1, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
     }
+}
+
+private extension ProductProfileViewModel.BottomSheet {
+    
+    var `case`: Case? {
+        
+        switch type {
+        case .meToMe:       return .meToMe
+        case .meToMeLegacy: return .meToMeLegacy
+        default:            return .other
+        }
+    }
+    
+    enum Case: Equatable {
+        
+        case meToMe
+        case meToMeLegacy
+        case other
+    }
+
 }

@@ -125,7 +125,7 @@ extension XCTestCase {
             fontDesignColor: anyColorData(),
             background: [],
             accountId: nil,
-            cardId: 0,
+            cardId: id,
             name: "CARD",
             validThru: Date(),
             status: status,

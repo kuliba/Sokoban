@@ -910,6 +910,14 @@ private extension PaymentsTransfersViewModel {
     }
     
     func updateSections(_ updateInfo: UpdateInfo) {
+       
+        if model.onlyCorporateCards {
+            let containDisableCorporateSection: Bool = sections.first(where: { $0.type == .disableForCorCards }) is DisableForCorCardsPTViewModel
+            if !containDisableCorporateSection {
+                sections.insert(DisableForCorCardsPTViewModel.init(), at: 0)
+            }
+        }
+        
         let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateFailureInfo }) is UpdateInfoPTViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
