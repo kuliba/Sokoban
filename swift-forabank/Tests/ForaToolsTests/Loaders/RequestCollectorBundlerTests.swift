@@ -39,22 +39,6 @@ final class RequestCollectorBundlerTests: XCTestCase {
         XCTAssertEqual(performRequest.callCount, 0)
     }
     
-    func test_process_shouldNotCallPerformRequestWithDifferentRequestsWithinCollectionPeriod() {
-        
-        let (sut, scheduler, performRequest) = makeSUT(
-            collectionPeriod: .milliseconds(100)
-        )
-        
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
-        
-        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
-        
-        XCTAssertEqual(performRequest.callCount, 0)
-    }
-    
     func test_process_shouldCallPerformRequestOnceOnSameRequestAfterCollectionPeriod() {
         
         let request = makeRequest()
@@ -71,6 +55,83 @@ final class RequestCollectorBundlerTests: XCTestCase {
         scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
         
         XCTAssertEqual(performRequest.callCount, 1)
+    }
+    
+    func test_process_shouldCallPerformRequestOnceForMultipleCollectionPeriodsOnNoResultDelivered() {
+        
+        let request = makeRequest()
+        let collectionPeriod: DispatchTimeInterval = .milliseconds(100)
+        let (sut, scheduler, performRequest) = makeSUT(
+            collectionPeriod: collectionPeriod
+        )
+        
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 0)
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 1)
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 1)
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        sut.process(request) { _ in }
+                
+        XCTAssertEqual(performRequest.callCount, 1)
+    }
+    
+    func test_process_shouldCallPerformRequestOnceForEachCollectionPeriodsOnResultDelivered() {
+        
+        let request = makeRequest()
+        let collectionPeriod: DispatchTimeInterval = .milliseconds(100)
+        let (sut, scheduler, performRequest) = makeSUT(
+            collectionPeriod: collectionPeriod
+        )
+        
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(50))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 0)
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 1)
+        
+        performRequest.complete(with: makeResponse())
+        wait(timeout: 0.01) // wait for RequestBundler queue
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(150))))
+        sut.process(request) { _ in }
+
+        XCTAssertEqual(performRequest.callCount, 1)
+
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(200))))
+        sut.process(request) { _ in }
+                
+        XCTAssertEqual(performRequest.callCount, 2)
+    }
+    
+    func test_process_shouldNotCallPerformRequestWithDifferentRequestsWithinCollectionPeriod() {
+        
+        let (sut, scheduler, performRequest) = makeSUT(
+            collectionPeriod: .milliseconds(100)
+        )
+        
+        sut.process(makeRequest()) { _ in }
+        sut.process(makeRequest()) { _ in }
+        sut.process(makeRequest()) { _ in }
+        sut.process(makeRequest()) { _ in }
+        
+        scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
+        
+        XCTAssertEqual(performRequest.callCount, 0)
     }
     
     func test_process_shouldCallPerformRequestWithDifferentRequestsAfterCollectionPeriod() {
@@ -103,10 +164,9 @@ final class RequestCollectorBundlerTests: XCTestCase {
         sut.process(request) { receivedResponses.append($0) }
         
         scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
-        performRequest.complete(with: response)
         
-        // wait for RequestBundler queue
-        wait(timeout: 0.01)
+        performRequest.complete(with: response)
+        wait(timeout: 0.01) // wait for RequestBundler queue
         
         XCTAssertNoDiff(receivedResponses, [response, response, response])
     }
