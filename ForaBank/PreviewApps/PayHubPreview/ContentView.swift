@@ -9,6 +9,7 @@ import PayHub
 import PayHubUI
 import SwiftUI
 import UIPrimitives
+import RxViewModel
 
 typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
 
@@ -71,9 +72,9 @@ private extension ContentView {
         binder: PaymentsTransfersBinder
     ) -> some View {
         
-        PaymentsTransfersFlowWrapperView(
+        RxWrapperView(
             model: binder.flow,
-            makeFlowView: {
+            makeContentView: {
                 
                 PaymentsTransfersFlowView(
                     state: $0,
