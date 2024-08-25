@@ -5,62 +5,7 @@
 //  Created by Igor Malyarov on 25.08.2024.
 //
 
-#warning("unimplemented: workaround for Void as Request since Void is not Hashable")
-//extension RequestCollectorBundler where Request == Void {
-//
-//}
-
 import CombineSchedulers
-import Foundation
-
-public final class RequestCollectorBundler<Request, Response>
-where Request: Hashable {
-    
-    private let requestCollector: RequestCollector<Request, Response>
-    
-    /// Initialises a new instance of `RequestCollectorBundler`.
-    ///
-    /// - Parameters:
-    ///   - collectionPeriod: The period over which requests are collected before processing.
-    ///   - scheduler: The scheduler used to manage the timing of request processing.
-    ///   - performRequest: A closure that performs the request and returns the response.
-    public init(
-        collectionPeriod: DispatchTimeInterval,
-        scheduler: AnySchedulerOf<DispatchQueue>,
-        performRequest: @escaping PerformRequest
-    ) {
-        let bundler = RequestBundler(performRequest: performRequest)
-        self.requestCollector = .init(
-            collectionPeriod: collectionPeriod,
-            performRequests: { requests, completion in
-                
-                bundler.load(requests: requests) {
-                    
-                    completion([$0 : $1])
-                }
-            },
-            scheduler: scheduler
-        )
-    }
-    
-    public typealias PerformRequest = (Request, @escaping (Response) -> Void) -> Void
-}
-
-extension RequestCollectorBundler {
-    
-    /// Processes a new request by first collecting it, then bundling and executing it.
-    ///
-    /// - Parameters:
-    ///   - request: The request to be processed.
-    ///   - completion: The completion handler to be called with the response.
-    public func process(
-        _ request: Request,
-        _ completion: @escaping (Response) -> Void
-    ) {
-        requestCollector.process(request, completion)
-    }
-}
-
 import ForaTools
 import XCTest
 
