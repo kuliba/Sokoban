@@ -76,7 +76,7 @@ public extension RequestBundler {
     ///   - requests: An array of requests to be loaded.
     ///   - completion: A completion handler that is called for each individual response.
     func load(
-        _ requests: [Request],
+        requests: [Request],
         _ completion: @escaping (Request, Response) -> Void
     ) {
         for request in requests {

@@ -5,10 +5,16 @@
 //  Created by Igor Malyarov on 25.08.2024.
 //
 
+#warning("unimplemented: workaround for Void as Request since Void is not Hashable")
+//extension RequestCollectorBundler where Request == Void {
+//
+//}
+
 import CombineSchedulers
 import Foundation
 
-public final class RequestCollectorBundler<Request: Hashable, Response> {
+public final class RequestCollectorBundler<Request, Response>
+where Request: Hashable {
     
     private let requestCollector: RequestCollector<Request, Response>
     
@@ -21,21 +27,23 @@ public final class RequestCollectorBundler<Request: Hashable, Response> {
     public init(
         collectionPeriod: DispatchTimeInterval,
         scheduler: AnySchedulerOf<DispatchQueue>,
-        performRequest: @escaping RequestBundler<Request, Response>.PerformRequest
+        performRequest: @escaping PerformRequest
     ) {
+        let bundler = RequestBundler(performRequest: performRequest)
         self.requestCollector = .init(
             collectionPeriod: collectionPeriod,
             performRequests: { requests, completion in
                 
-                let bundler = RequestBundler(performRequest: performRequest)
-                for request in requests {
+                bundler.load(requests: requests) {
                     
-                    bundler.load(request) { completion([request: $0]) }
+                    completion([$0 : $1])
                 }
             },
             scheduler: scheduler
         )
     }
+    
+    public typealias PerformRequest = (Request, @escaping (Response) -> Void) -> Void
 }
 
 extension RequestCollectorBundler {
@@ -52,11 +60,6 @@ extension RequestCollectorBundler {
         requestCollector.process(request, completion)
     }
 }
-
-#warning("unimplemented: workaround for Void as Request since Void is not Hashable")
-//extension RequestCollectorBundler where Request == Void {
-//    
-//}
 
 import ForaTools
 import XCTest
@@ -79,7 +82,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
         let (sut, scheduler, performRequest) = makeSUT(
             collectionPeriod: .milliseconds(100)
         )
-
+        
         sut.process(makeRequest()) { _ in }
         sut.process(makeRequest()) { _ in }
         sut.process(makeRequest()) { _ in }
@@ -140,6 +143,28 @@ final class RequestCollectorBundlerTests: XCTestCase {
         XCTAssertNoDiff(Set(performRequest.payloads), [request1, request2])
     }
     
+    func test_process_shouldDeliverSameResponseForClientsWithSameRequest() {
+        
+        let (request, response) = (makeRequest(), makeResponse())
+        let collectionPeriod: DispatchTimeInterval = .milliseconds(100)
+        let (sut, scheduler, performRequest) = makeSUT(
+            collectionPeriod: collectionPeriod
+        )
+        var receivedResponses = [Response]()
+        
+        sut.process(request) { receivedResponses.append($0) }
+        sut.process(request) { receivedResponses.append($0) }
+        sut.process(request) { receivedResponses.append($0) }
+        
+        scheduler.advance(to: .init(.now().advanced(by: collectionPeriod)))
+        performRequest.complete(with: response)
+        
+        // wait for RequestBundler queue
+        wait(timeout: 0.01)
+        
+        XCTAssertNoDiff(receivedResponses, [response, response, response])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RequestCollectorBundler<Request, Response>
@@ -162,10 +187,7 @@ final class RequestCollectorBundlerTests: XCTestCase {
             performRequest: performRequest.process(_:completion:)
         )
         
-        #warning("restore memory leaks tracking")
-//        trackForMemoryLeaks(sut, file: file, line: line)
-//        trackForMemoryLeaks(scheduler, file: file, line: line)
-//        trackForMemoryLeaks(performRequest, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, scheduler, performRequest)
     }
