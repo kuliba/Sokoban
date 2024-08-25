@@ -22,16 +22,17 @@ final class RequestCollectorBundlerTests: XCTestCase {
     
     // MARK: - process
     
-    func test_process_shouldNotCallPerformRequestWithinCollectionPeriod() {
+    func test_process_shouldNotCallPerformRequestWithSameRequestWithinCollectionPeriod() {
         
+        let request = makeRequest()
         let (sut, scheduler, performRequest) = makeSUT(
             collectionPeriod: .milliseconds(100)
         )
         
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
-        sut.process(makeRequest()) { _ in }
+        sut.process(request) { _ in }
+        sut.process(request) { _ in }
+        sut.process(request) { _ in }
+        sut.process(request) { _ in }
         
         scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
         
