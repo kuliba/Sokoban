@@ -6,33 +6,7 @@
 //
 
 import PayHub
+import RxViewModel
 import SwiftUI
 
-public struct PaymentsTransfersToolbarFlowWrapperView<FlowView, Profile, QR>: View
-where FlowView: View {
-    
-    @ObservedObject private var model: Model
-    
-    private let makeFlowView: MakeFlowView
-    
-    public init(
-        model: Model,
-        makeFlowView: @escaping MakeFlowView
-    ) {
-        self.model = model
-        self.makeFlowView = makeFlowView
-    }
-    
-    public var body: some View {
-        
-        makeFlowView(model.state, model.event(_:))
-    }
-}
-
-public extension PaymentsTransfersToolbarFlowWrapperView {
-    
-    typealias Model = PaymentsTransfersToolbarFlow<Profile, QR>
-    typealias State = PaymentsTransfersToolbarFlowState<Profile, QR>
-    typealias Event = PaymentsTransfersToolbarFlowEvent<Profile, QR>
-    typealias MakeFlowView = (State, @escaping (Event) -> Void) -> FlowView
-}
+public typealias PaymentsTransfersToolbarFlowWrapperView<FlowView, Profile, QR> = RxWrapperView<FlowView, PaymentsTransfersToolbarFlowState<Profile, QR>, PaymentsTransfersToolbarFlowEvent<Profile, QR>, PaymentsTransfersToolbarFlowEffect> where FlowView: View
