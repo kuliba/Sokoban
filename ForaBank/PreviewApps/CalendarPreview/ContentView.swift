@@ -83,7 +83,11 @@ private extension CalendarViewWrapper {
     }
     
     func createCalendarView() -> some View {
-        CalendarView(selectedDate: nil, selectedRange: $selectedRange, configBuilder: configureCalendar)
+        CalendarView(
+            nil,
+            selectedRange,
+            configureCalendar
+        )
     }
     
     func createBottomView() -> some View {

@@ -432,6 +432,8 @@
 		2A147F3C2C78D9190097F714 /* CategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A147F3B2C78D9190097F714 /* CategoryModel.swift */; };
 		2A147F3E2C78D9350097F714 /* CategoryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A147F3D2C78D9350097F714 /* CategoryListModel.swift */; };
 		2A147F462C79B53B0097F714 /* OperationPickerBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A147F452C79B53B0097F714 /* OperationPickerBinderView.swift */; };
+		2A147F512C7B01070097F714 /* LoadServiceCategoriesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A147F502C7B01070097F714 /* LoadServiceCategoriesComposerTests.swift */; };
+		2A147F532C7B0B630097F714 /* XCTestCase+wait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A147F522C7B0B630097F714 /* XCTestCase+wait.swift */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
 		2A14A8592A2750460018511E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A8582A2750460018511E /* Assets.xcassets */; };
@@ -3794,6 +3796,8 @@
 		2A147F3B2C78D9190097F714 /* CategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModel.swift; sourceTree = "<group>"; };
 		2A147F3D2C78D9350097F714 /* CategoryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListModel.swift; sourceTree = "<group>"; };
 		2A147F452C79B53B0097F714 /* OperationPickerBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerBinderView.swift; sourceTree = "<group>"; };
+		2A147F502C7B01070097F714 /* LoadServiceCategoriesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadServiceCategoriesComposerTests.swift; sourceTree = "<group>"; };
+		2A147F522C7B0B630097F714 /* XCTestCase+wait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+wait.swift"; sourceTree = "<group>"; };
 		2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFieldViewVithBindingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewVithBindingPreviewApp.swift; sourceTree = "<group>"; };
 		2A14A8562A2750450018511E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -12000,6 +12004,8 @@
 			isa = PBXGroup;
 			children = (
 				2AE838F12C6B415E009E1E39 /* NanoServices+makeGetServiceCategoryListTests.swift */,
+				2A147F502C7B01070097F714 /* LoadServiceCategoriesComposerTests.swift */,
+				2A147F522C7B0B630097F714 /* XCTestCase+wait.swift */,
 			);
 			path = ServiceCategories;
 			sourceTree = "<group>";
@@ -21557,6 +21563,7 @@
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				2A1F083F2A7901FF00C5B11B /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */,
 				2A8A28402A4089B2000D3807 /* OperatorGroupData+test.swift in Sources */,
+				2A147F512C7B01070097F714 /* LoadServiceCategoriesComposerTests.swift in Sources */,
 				2A58FAC12AD735DA00BD1967 /* makeSessionID.swift in Sources */,
 				778426302A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
@@ -21684,6 +21691,7 @@
 				833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */,
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */,
+				2A147F532C7B0B630097F714 /* XCTestCase+wait.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
 				8375C01E2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift in Sources */,
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
