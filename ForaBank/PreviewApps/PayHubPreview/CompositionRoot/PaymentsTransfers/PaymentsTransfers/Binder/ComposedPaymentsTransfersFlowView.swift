@@ -1,5 +1,5 @@
 //
-//  ComposedPaymentsTransfersFlowWrapperView.swift
+//  ComposedPaymentsTransfersFlowView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 26.08.2024.
@@ -9,7 +9,7 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersFlowWrapperView<CategoryPickerView, OperationPickerView, ToolbarView>: View
+struct ComposedPaymentsTransfersFlowView<CategoryPickerView, OperationPickerView, ToolbarView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View {
@@ -41,7 +41,7 @@ where CategoryPickerView: View,
     }
 }
 
-extension ComposedPaymentsTransfersFlowWrapperView {
+extension ComposedPaymentsTransfersFlowView {
     
     typealias Factory = PaymentsTransfersViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
 }

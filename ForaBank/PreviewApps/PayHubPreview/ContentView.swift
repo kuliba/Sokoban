@@ -68,24 +68,30 @@ private extension ContentView {
         binder: PaymentsTransfersBinder
     ) -> some View {
         
-        ComposedPaymentsTransfersFlowWrapperView(
+        ComposedPaymentsTransfersFlowView(
             binder: binder,
             factory: .init(
                 makeCategoryPickerView: {
                     
-                    ComposedCategoryPickerSectionFlowWrapperView(
+                    ComposedCategoryPickerSectionFlowView(
                         binder: $0,
                         itemLabel: itemLabel
                     )
                 },
-                makeOperationPickerView: ComposedOperationPickerFlowView.init,
+                makeOperationPickerView: {
+                    
+                    ComposedOperationPickerFlowView(
+                        binder: $0,
+                        itemLabel: itemLabel
+                    )
+                },
                 makeToolbarView: PaymentsTransfersToolbarBinderView.init
             )
         )
     }
     
     private func itemLabel(
-        item: CategoryPickerItem
+        item: CategoryPickerSectionState.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -93,6 +99,23 @@ private extension ContentView {
             config: .preview,
             categoryIcon: categoryIcon,
             placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private func itemLabel(
+        item: OperationPickerState.Item
+    ) -> some View {
+        
+        OperationPickerStateItemLabel(
+            item: item,
+            config: .preview,
+            placeholderView:  {
+                
+                LatestPlaceholder(
+                    opacity: 1,
+                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
+                )
+            }
         )
     }
     

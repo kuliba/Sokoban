@@ -1,5 +1,5 @@
 //
-//  ComposedCategoryPickerSectionFlowWrapperView.swift
+//  ComposedCategoryPickerSectionFlowView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 26.08.2024.
@@ -9,11 +9,11 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedCategoryPickerSectionFlowWrapperView<CategoryPickerItemLabel>: View
+struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel>: View
 where CategoryPickerItemLabel: View {
     
     let binder: CategoryPickerSectionBinder
-    let itemLabel: (CategoryPickerItem) -> CategoryPickerItemLabel
+    let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
     
     var body: some View {
         
@@ -39,7 +39,7 @@ where CategoryPickerItemLabel: View {
     }
 }
 
-private extension ComposedCategoryPickerSectionFlowWrapperView {
+private extension ComposedCategoryPickerSectionFlowView {
     
     func makeCategoryPickerSectionContentView(
         content: CategoryPickerSectionContent

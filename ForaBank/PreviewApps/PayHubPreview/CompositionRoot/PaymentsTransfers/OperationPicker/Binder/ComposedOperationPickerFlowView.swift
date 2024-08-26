@@ -8,9 +8,11 @@
 import PayHubUI
 import SwiftUI
 
-struct ComposedOperationPickerFlowView: View {
+struct ComposedOperationPickerFlowView<ItemLabel>: View
+where ItemLabel: View {
     
     let binder: OperationPickerBinder
+    let itemLabel: (Item) -> ItemLabel
     
     var body: some View {
         
@@ -37,6 +39,11 @@ struct ComposedOperationPickerFlowView: View {
     }
 }
 
+extension ComposedOperationPickerFlowView {
+
+    typealias Item = OperationPickerState.Item
+}
+
 private extension ComposedOperationPickerFlowView {
     
     func makeContentView(
@@ -51,24 +58,10 @@ private extension ComposedOperationPickerFlowView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: {
-                        
-                        OperationPickerStateItemLabel(
-                            item: $0,
-                            config: .preview,
-                            placeholderView:  {
-                                
-                                LatestPlaceholder(
-                                    opacity: 1,
-                                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
-                                )
-                            }
-                        )
-                    }
+                    itemLabel: itemLabel
                 )
             }
         )
         .onFirstAppear { content.event(.load) }
     }
-
 }
