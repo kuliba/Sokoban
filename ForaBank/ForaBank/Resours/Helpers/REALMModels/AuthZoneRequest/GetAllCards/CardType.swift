@@ -23,6 +23,14 @@ enum CardType: Codable {
     var isAdditional: Bool {
         self == .additionalOther ||
         self == .additionalSelf ||
-        self == .additionalSelfAccOwn
+        self == .additionalSelfAccOwn ||
+        self == .additionalCorporate
+    }
+    
+    var isCorporate: Bool {
+        self == .corporate ||
+        self == .additionalCorporate ||
+        self == .individualBusinessman ||
+        self == .individualBusinessmanMain
     }
 }
