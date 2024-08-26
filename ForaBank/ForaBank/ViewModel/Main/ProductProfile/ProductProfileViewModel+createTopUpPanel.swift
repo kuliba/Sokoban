@@ -14,10 +14,7 @@ extension ProductProfileViewModel {
         switch card.cardType {
         case .additionalCorporate, .corporate, .individualBusinessman:
             event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
-            
-        case .individualBusinessmanMain:
-            event(.init(productID: card.cardId, type: .accountOurBank))
-            
+                        
         default:
             createTopUpPanel(card)
         }
@@ -78,6 +75,8 @@ extension String {
         switch type {
         case .additionalSelf, .additionalOther:
             return "Эта услуга доступна только для основной карты"
+        case .individualBusinessman, .corporate, .additionalCorporate, .individualBusinessmanMain:
+            return "Эта услуга доступна только для продуктов ФЛ"
         default:
             return nil
         }

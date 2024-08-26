@@ -729,20 +729,25 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert?.secondary)
     }
 
-    func test_topLeftActionForCard_individualBusinessmanMain_shouldShowBottomSheet() throws {
-              
-        let card = makeCardProduct(id: 1, cardType: .individualBusinessmanMain)
+    func test_topLeftActionForCard_individualBusinessmanMain_shouldShowNewPanel() throws {
         
-        let sut = try makeSUT(card: card, products: [.card: [card, .cardActiveMainDebitOnlyRub]])
+        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
         
-        XCTAssertNil(sut.bottomSheet)
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+        XCTAssertNil(sut.optionsPannel)
 
         sut.topLeftActionForCard(card)
         
-        // in code delay 0.4
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
-        XCTAssertNoDiff(sut.bottomSheet?.case, .meToMe)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
+        XCTAssertNoDiff(sut.optionsPanelNew.first?.subtitle, "Эта услуга доступна только для продуктов ФЛ")
+
+        XCTAssertNil(sut.optionsPannel)
+
+        XCTAssertNil(sut.link)
     }
     
     // MARK: - test topRightActionForCard
