@@ -125,7 +125,7 @@ where Exchange: AnyObject,
 
 extension OperationPickerFlowState
 where Exchange: AnyObject,
-      Latest: AnyObject,
+      LatestFlow: AnyObject,
       Status: Equatable,
       Templates: AnyObject {
     
@@ -141,7 +141,7 @@ where Exchange: AnyObject,
     struct EquatableProjection: Equatable {
         
         let isLoading: Bool
-        let selected: OperationPickerFlowItem<Exchange, Latest, Templates>.EquatableProjection?
+        let selected: OperationPickerFlowItem<Exchange, LatestFlow, Templates>.EquatableProjection?
         let status: Status?
     }
 }

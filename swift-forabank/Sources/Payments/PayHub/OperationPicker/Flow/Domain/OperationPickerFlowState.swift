@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.08.2024.
 //
 
-public struct OperationPickerFlowState<Exchange, Latest, Status, Templates> {
+public struct OperationPickerFlowState<Exchange, LatestFlow, Status, Templates> {
     
     public var isLoading = false
     public var selected: Selected?
@@ -21,7 +21,7 @@ public struct OperationPickerFlowState<Exchange, Latest, Status, Templates> {
         self.status = status
     }
     
-    public typealias Selected = OperationPickerFlowItem<Exchange, Latest, Templates>
+    public typealias Selected = OperationPickerFlowItem<Exchange, LatestFlow, Templates>
 }
 
-extension OperationPickerFlowState: Equatable where Exchange: Equatable, Latest: Equatable, Status: Equatable, Templates: Equatable {}
+extension OperationPickerFlowState: Equatable where Exchange: Equatable, LatestFlow: Equatable, Status: Equatable, Templates: Equatable {}
