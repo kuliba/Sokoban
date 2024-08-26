@@ -8,4 +8,4 @@
 import PayHub
 import PayHubUI
 
-typealias PaymentsTransfersBinder = Binder<PaymentsTransfersContent, PaymentsTransfersFlow>
+//typealias PaymentsTransfersBinder = Binder<PaymentsTransfersContent, PaymentsTransfersFlow>

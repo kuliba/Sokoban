@@ -7,4 +7,4 @@
 
 import PayHubUI
 
-typealias PaymentsTransfersContent = PaymentsTransfersModel<CategoryPickerSectionBinder, OperationPickerBinder, Void>
+typealias PaymentsTransfersContent = PaymentsTransfersModel<CategoryPickerSectionBinder, OperationPickerBinder, PaymentsTransfersToolbarBinder>

@@ -7,9 +7,9 @@
 
 import PayHubUI
 
-typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, CategoryModel, CategoryListModel>
+typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, CategoryModelStub, CategoryListModelStub>
 
-final class CategoryModel {
+final class CategoryModelStub {
     
     let category: ServiceCategory
     
@@ -19,4 +19,4 @@ final class CategoryModel {
     }
 }
 
-final class CategoryListModel {}
+final class CategoryListModelStub {}

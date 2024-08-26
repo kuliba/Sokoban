@@ -82,7 +82,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(binder):
-                ComposedPaymentsTransfersFlowWrapperView(binder: binder)
+                paymentsTransfersFlowView(binder)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -127,6 +127,32 @@ struct RootView: View {
                 PaymentsView(viewModel: paymentsViewModel)
             }
         }
+    }
+}
+
+private extension RootView {
+    
+    func paymentsTransfersFlowView(
+        _ binder: PaymentsTransfersBinder
+    ) -> some View {
+        
+        ComposedPaymentsTransfersFlowView(
+            binder: binder,
+            factory: .init(
+                makeCategoryPickerView: {
+                    
+                    Text(String(describing: $0))
+                },
+                makeOperationPickerView: {
+                    
+                    Text(String(describing: $0))
+                },
+                makeToolbarView: {
+                    
+                    Text(String(describing: $0))
+                }
+            )
+        )
     }
 }
 
