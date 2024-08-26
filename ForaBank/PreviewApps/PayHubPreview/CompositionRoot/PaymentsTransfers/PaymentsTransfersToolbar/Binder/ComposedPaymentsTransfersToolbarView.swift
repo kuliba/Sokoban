@@ -10,8 +10,9 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersToolbarView<ProfileLabel, QRLabel>: View
-where ProfileLabel: View,
+struct ComposedPaymentsTransfersToolbarView<DestinationView, ProfileLabel, QRLabel>: View
+where DestinationView: View,
+      ProfileLabel: View,
       QRLabel: View {
     
     let binder: PaymentsTransfersToolbarBinder
@@ -27,7 +28,7 @@ where ProfileLabel: View,
                 event: $1,
                 factory: .init(
                     makeContent: { self.makeContent(binder.content) },
-                    makeDestination: self.makeDestination,
+                    makeDestination: factory.makeDestinationView,
                     makeFullScreen: {
                         
                         self.makeFullScreen(
@@ -43,7 +44,7 @@ where ProfileLabel: View,
 
 extension ComposedPaymentsTransfersToolbarView {
     
-    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<ProfileLabel, QRLabel>
+    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<DestinationView, ProfileLabel, QRLabel>
 }
 
 extension ComposedPaymentsTransfersToolbarView {
@@ -66,18 +67,6 @@ extension ComposedPaymentsTransfersToolbarView {
                 )
             }
         )
-    }
-    
-#warning("inject")
-    @ViewBuilder
-    private func makeDestination(
-        destination: PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .profile(profileModel):
-            Text(String(describing: profileModel))
-        }
     }
     
 #warning("inject")

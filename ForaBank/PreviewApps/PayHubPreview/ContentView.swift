@@ -91,6 +91,13 @@ private extension ContentView {
                     ComposedPaymentsTransfersToolbarView(
                         binder: $0,
                         factory: .init(
+                            makeDestinationView: {
+                                
+                                switch $0 {
+                                case let .profile(profileModel):
+                                    Text(String(describing: profileModel))
+                                }
+                            },
                             makeProfileLabel: {
                                 
                                 HStack {
