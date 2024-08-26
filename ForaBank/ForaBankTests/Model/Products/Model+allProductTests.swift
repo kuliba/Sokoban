@@ -169,6 +169,35 @@ final class Model_allProductTests: XCTestCase {
                 
         XCTAssertFalse(sut.onlyCorporateCards)
     }
+    
+    func test_onlyCorporateCards_productsIndividualAndCorporateCardsWithoutActiveProduct_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .main, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .regular, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .additionalSelf, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .individualBusinessman),
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsOnlyIndividualCardsWithoutActiveProduct_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .main, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .regular, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .additionalSelf, status: .blockedUnlockAvailable)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
 
     func test_onlyCorporateCards_productsOnlyCorporateCards_shouldReturnTrue() {
         
@@ -198,7 +227,8 @@ final class Model_allProductTests: XCTestCase {
     }
     
     private func makeCardProduct(
-        cardType: ProductCardData.CardType
+        cardType: ProductCardData.CardType,
+        status: ProductCardData.StatusCard = .active
     ) -> ProductCardData {
         
         .init(
@@ -245,6 +275,7 @@ final class Model_allProductTests: XCTestCase {
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
+            statusCard: status, 
             cardType: cardType,
             idParent: nil
         )
