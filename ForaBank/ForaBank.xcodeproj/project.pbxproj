@@ -7884,7 +7884,6 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
-				2A2B91CE2C7C6F42008F5186 /* ComposedPaymentsTransfersFlowWrapperView.swift */,
 				2A273E812C75EC2E009935E6 /* Configs */,
 				2A7772502C6F189E009B1676 /* CompositionRoot */,
 				2A7772352C6F0F41009B1676 /* Tab */,
@@ -8135,9 +8134,9 @@
 		2A147F3F2C79A0030097F714 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
-				2A7385BC2C73839700861881 /* PaymentsTransfersBinderComposer.swift */,
-				2A7385BE2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift */,
-				2A77724E2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift */,
+				2A2B91D12C7C8AE8008F5186 /* Binder */,
+				2A2B91D32C7C8B01008F5186 /* Content */,
+				2A2B91D22C7C8AF6008F5186 /* Flow */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -8573,6 +8572,31 @@
 				2A273E922C7701FD009935E6 /* OperationPickerFlow.swift */,
 			);
 			path = Flow;
+			sourceTree = "<group>";
+		};
+		2A2B91D12C7C8AE8008F5186 /* Binder */ = {
+			isa = PBXGroup;
+			children = (
+				2A7385BC2C73839700861881 /* PaymentsTransfersBinderComposer.swift */,
+				2A2B91CE2C7C6F42008F5186 /* ComposedPaymentsTransfersFlowWrapperView.swift */,
+			);
+			path = Binder;
+			sourceTree = "<group>";
+		};
+		2A2B91D22C7C8AF6008F5186 /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				2A7385BE2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
+		2A2B91D32C7C8B01008F5186 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				2A77724E2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift */,
+			);
+			path = Content;
 			sourceTree = "<group>";
 		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
