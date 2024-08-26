@@ -109,11 +109,8 @@ extension Model {
         
         guard productsTypes == [.card] else { return false }
         
-        guard Set(cardsTypes).contains(where: { 
-            $0 == .individualBusinessman ||
-            $0 == .individualBusinessmanMain ||
-            $0 == .additionalCorporate ||
-            $0 == .corporate} ) else { return false }
+        guard Set(cardsTypes).contains(where: { $0.isCorporateCard })
+        else { return false }
                 
         return Set(cardsStatus).isDisjoint(with: [
             .init(type: .main, status: .active),
