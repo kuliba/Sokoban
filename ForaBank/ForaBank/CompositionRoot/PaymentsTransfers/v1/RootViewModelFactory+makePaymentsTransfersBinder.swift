@@ -82,8 +82,18 @@ extension RootViewModelFactory {
             toolbar: (),
             reload: {}
         )
-        let flow = PaymentsTransfersFlow()
         
-        return .init(content: content, flow: flow)
+        let reducer = PayHub.PaymentsTransfersFlowReducer()
+        let effectHandler = PayHub.PaymentsTransfersFlowEffectHandler(
+            microServices: .init()
+        )
+        let flow = PaymentsTransfersFlow(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
+        
+        return .init(content: content, flow: flow, bind: { _,_ in [] })
     }
 }

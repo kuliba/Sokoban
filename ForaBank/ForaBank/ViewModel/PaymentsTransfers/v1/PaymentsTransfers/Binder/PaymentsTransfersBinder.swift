@@ -6,5 +6,6 @@
 //
 
 import PayHub
+import PayHubUI
 
-typealias PaymentsTransfersBinder = Holder<PaymentsTransfersContent, PaymentsTransfersFlow>
+typealias PaymentsTransfersBinder = Binder<PaymentsTransfersContent, PaymentsTransfersFlow>
