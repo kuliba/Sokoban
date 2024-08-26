@@ -83,7 +83,9 @@ private extension ContentView {
                     
                     ComposedOperationPickerFlowView(
                         binder: $0,
-                        itemLabel: itemLabel
+                        factory: .init(
+                            makeItemLabel: itemLabel
+                        )
                     )
                 },
                 makeToolbarView: {

@@ -12,7 +12,7 @@ struct ComposedOperationPickerFlowView<ItemLabel>: View
 where ItemLabel: View {
     
     let binder: OperationPickerBinder
-    let itemLabel: (Item) -> ItemLabel
+    let factory: Factory
     
     var body: some View {
         
@@ -41,7 +41,7 @@ where ItemLabel: View {
 
 extension ComposedOperationPickerFlowView {
 
-    typealias Item = OperationPickerState.Item
+    typealias Factory = ComposedOperationPickerFlowViewFactory<ItemLabel>
 }
 
 private extension ComposedOperationPickerFlowView {
@@ -58,7 +58,7 @@ private extension ComposedOperationPickerFlowView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: itemLabel
+                    itemLabel: factory.makeItemLabel
                 )
             }
         )
