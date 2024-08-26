@@ -563,31 +563,10 @@ private extension MainViewModel {
                                 }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
                                 
                             case let payload as BannerActionMigTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                    
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                }
-                                bind(paymentsViewModel)
-                                
-                                self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                                openMigTransfer(payload)
                                 
                             case let payload as BannerActionContactTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                    
-                                    guard let self else { return }
-                                    
-                                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    self.action.send(DelayWrappedAction(
-                                        delayMS: 300,
-                                        action: MainViewModelAction.Show.Countries())
-                                    )
-                                }
-                                bind(paymentsViewModel)
-                                
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 300,
-                                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                                )
+                                openContactTransfer(payload)
                                 
                             default:
                                 handleLandingAction(.sticker)
@@ -644,37 +623,16 @@ private extension MainViewModel {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
+                        openCurrencyWallet(payload.code, .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
+                        openCurrencyWallet(payload.code, .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .sell, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
-                        
+                        openCurrencyWallet(payload.code, .sell)
+
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
@@ -761,6 +719,29 @@ private extension MainViewModel {
             .map(\.external)
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
+    }
+    
+    func openCurrencyWallet( _ code: Currency, _ operation: CurrencySwapView.ViewModel.CurrencyOperation) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            guard let walletViewModel = CurrencyWalletViewModel(
+                currency: code,
+                currencyOperation: operation,
+                model: model,
+                dismissAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())})
+            else {
+                return
+            }
+            
+            model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+            model.action.send(ModelAction.Account.ProductList.Request())
+            route.destination = .currencyWallet(walletViewModel)
+        }
     }
     
     private func handleTemplatesFlowState(
@@ -978,6 +959,55 @@ private extension MainViewModel {
     }
 }
 
+// MARK: Banner Action
+
+extension MainViewModel {
+    
+    func openMigTransfer(_ payload: BannerActionMigTransfer) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            
+            let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+            bind(paymentsViewModel)
+            
+            action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+        }
+    }
+    
+    func openContactTransfer(_ payload: BannerActionContactTransfer) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            
+            let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                
+                guard let self else { return }
+                
+                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: MainViewModelAction.Show.Countries())
+                )
+            }
+            bind(paymentsViewModel)
+            
+            action.send(DelayWrappedAction(
+                delayMS: 300,
+                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            )
+        }
+    }
+}
 // MARK: - QR
 
 extension MainViewModel {
