@@ -369,6 +369,76 @@ final class MainViewModelTests: XCTestCase {
 
         XCTAssertNoDiff(sut.route.case, .currencyWallet)
     }
+    
+    func test_openMigTransfer_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.destination)
+        XCTAssertNil(sut.route.modal)
+
+        sut.openMigTransfer(.init(countryId: "810"))
+
+        XCTAssertNoDiff(sut.route.modal?.case, .alert)
+    }
+    
+    func test_openMigTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.destination)
+
+        sut.openMigTransfer(.init(countryId: "810"))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+
+        XCTAssertNoDiff(sut.route.case, .payments)
+    }
+    
+    func test_openContactTransfer_onlyCorporateCards_shouldShowAlert() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+        
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate)
+        ]
+        
+        XCTAssertNil(sut.route.destination)
+        XCTAssertNil(sut.route.modal)
+
+        sut.openContactTransfer(.init(countryId: "810"))
+
+        XCTAssertNoDiff(sut.route.modal?.case, .alert)
+    }
+    
+    func test_openContactTransfer_notOnlyCorporateCards_shouldSetRouteToPayments() {
+        
+        let (sut, model) = makeSUT(currencyList: [.rub], currencyWalletList: [.rub])
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .individualBusinessman),
+            makeCardProduct(id: 2, cardType: .corporate),
+            makeCardProduct(id: 3, cardType: .main, isMain: true),
+        ]
+
+        XCTAssertNil(sut.route.destination)
+
+        sut.openContactTransfer(.init(countryId: "810"))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+
+        XCTAssertNoDiff(sut.route.case, .payments)
+    }
 
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
 
@@ -782,6 +852,7 @@ private extension MainViewModel.Route {
         case .paymentSticker: return .paymentSticker
         case .openCard:       return .openCard
         case .currencyWallet: return .currencyWallet
+        case .payments:       return .payments
         default:              return .other
         }
     }
@@ -790,6 +861,7 @@ private extension MainViewModel.Route {
         
         case currencyWallet
         case openCard
+        case payments
         case paymentSticker
         case templates
         case other

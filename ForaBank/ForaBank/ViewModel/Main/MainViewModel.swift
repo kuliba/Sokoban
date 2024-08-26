@@ -563,31 +563,10 @@ private extension MainViewModel {
                                 }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
                                 
                             case let payload as BannerActionMigTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                    
-                                    self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                }
-                                bind(paymentsViewModel)
-                                
-                                self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                                openMigTransfer(payload)
                                 
                             case let payload as BannerActionContactTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
-                                    
-                                    guard let self else { return }
-                                    
-                                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                    self.action.send(DelayWrappedAction(
-                                        delayMS: 300,
-                                        action: MainViewModelAction.Show.Countries())
-                                    )
-                                }
-                                bind(paymentsViewModel)
-                                
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 300,
-                                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                                )
+                                openContactTransfer(payload)
                                 
                             default:
                                 handleLandingAction(.sticker)
@@ -980,6 +959,55 @@ private extension MainViewModel {
     }
 }
 
+// MARK: Banner Action
+
+extension MainViewModel {
+    
+    func openMigTransfer(_ payload: BannerActionMigTransfer) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            
+            let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+            bind(paymentsViewModel)
+            
+            action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+        }
+    }
+    
+    func openContactTransfer(_ payload: BannerActionContactTransfer) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            
+            let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                
+                guard let self else { return }
+                
+                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: MainViewModelAction.Show.Countries())
+                )
+            }
+            bind(paymentsViewModel)
+            
+            action.send(DelayWrappedAction(
+                delayMS: 300,
+                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            )
+        }
+    }
+}
 // MARK: - QR
 
 extension MainViewModel {
