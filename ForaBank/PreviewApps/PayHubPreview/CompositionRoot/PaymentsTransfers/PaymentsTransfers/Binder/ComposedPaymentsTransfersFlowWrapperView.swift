@@ -9,11 +9,13 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersFlowWrapperView<CategoryPickerItemLabel>: View
-where CategoryPickerItemLabel: View {
+struct ComposedPaymentsTransfersFlowWrapperView<CategoryPickerView, OperationPickerView, ToolbarView>: View
+where CategoryPickerView: View,
+      OperationPickerView: View,
+      ToolbarView: View {
     
     let binder: PaymentsTransfersBinder
-    let itemLabel: (CategoryPickerItem) -> CategoryPickerItemLabel
+    let factory: Factory
     
     var body: some View {
         
@@ -25,7 +27,13 @@ where CategoryPickerItemLabel: View {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContentView: makeContentView
+                        makeContentView: {
+                            
+                            PaymentsTransfersView(
+                                model: binder.content,
+                                factory: factory
+                            )
+                        }
                     )
                 )
             }
@@ -33,69 +41,7 @@ where CategoryPickerItemLabel: View {
     }
 }
 
-private extension ComposedPaymentsTransfersFlowWrapperView {
+extension ComposedPaymentsTransfersFlowWrapperView {
     
-    func makeContentView(
-    ) -> some View {
-        
-        PaymentsTransfersView(
-            model: binder.content,
-            factory: .init(
-                makeCategoryPickerView: makeCategoryPickerView,
-                makeOperationPickerView: OperationPickerBinderView.init,
-                makeToolbarView: PaymentsTransfersToolbarBinderView.init
-            )
-        )
-    }
-    
-    private func makeCategoryPickerView(
-        _ binder: CategoryPickerSectionBinder
-    ) -> some View {
-        
-        CategoryPickerSectionFlowWrapperView(
-            model: binder.flow,
-            makeContentView: {
-                
-                CategoryPickerSectionFlowView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeContentView: {
-                            
-                            makeCategoryPickerSectionContentView(
-                                content: binder.content
-                            )
-                        },
-                        makeDestinationView: makeCategoryPickerSectionDestinationView
-                    )
-                )
-            }
-        )
-    }
-    
-    private func makeCategoryPickerSectionContentView(
-        content: CategoryPickerSectionContent
-    ) -> some View {
-        
-        CategoryPickerSectionContentWrapperView(
-            model: content,
-            makeContentView: { state, event in
-                
-                CategoryPickerSectionContentView(
-                    state: state,
-                    event: event,
-                    config: .preview,
-                    itemLabel: itemLabel
-                )
-            }
-        )
-        .onFirstAppear { content.event(.load) }
-    }
-    
-    private func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModel, CategoryListModel>
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")
-    }
+    typealias Factory = PaymentsTransfersViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
 }

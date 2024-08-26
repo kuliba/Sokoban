@@ -70,15 +70,17 @@ private extension ContentView {
         
         ComposedPaymentsTransfersFlowWrapperView(
             binder: binder,
-            itemLabel: {
-                
-                CategoryPickerSectionStateItemLabel(
-                    item: $0,
-                    config: .preview,
-                    categoryIcon: categoryIcon,
-                    placeholderView: { PlaceholderView(opacity: 0.5) }
-                )
-            }
+            factory: .init(
+                makeCategoryPickerView: {
+                    
+                    ComposedCategoryPickerSectionFlowWrapperView(
+                        binder: $0,
+                        itemLabel: itemLabel
+                    )
+                },
+                makeOperationPickerView: OperationPickerBinderView.init,
+                makeToolbarView: PaymentsTransfersToolbarBinderView.init
+            )
         )
     }
     
