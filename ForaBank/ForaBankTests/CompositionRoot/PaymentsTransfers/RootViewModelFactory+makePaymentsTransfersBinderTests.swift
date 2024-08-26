@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import PayHub
+import PayHubUI
 import XCTest
 
 final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
@@ -42,7 +43,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
     
     private typealias SUT = PaymentsTransfersBinder
     private typealias LoadLatestSpy = Spy<Void, [Latest], Never>
-    private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem], Never>
+    private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem<ServiceCategory>], Never>
 
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,
