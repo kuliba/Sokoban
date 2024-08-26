@@ -18,12 +18,7 @@ public struct CategoryPickerSectionFlowState<CategoryModel, CategoryList> {
 
 public extension CategoryPickerSectionFlowState {
     
-    enum Destination {
-        
-        case category(CategoryModel)
-        case list(CategoryList)
-    }
+    typealias Destination = CategoryPickerSectionDestination<CategoryModel, CategoryList>
 }
 
 extension CategoryPickerSectionFlowState: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
-extension CategoryPickerSectionFlowState.Destination: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
