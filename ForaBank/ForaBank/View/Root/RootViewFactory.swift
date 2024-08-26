@@ -13,7 +13,7 @@ typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> Sber
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
-typealias MakeHistoryButtonView = (@escaping () -> Bool, @escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void, @escaping () -> Bool,  @escaping () -> Void) -> HistoryButtonView?
 typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 
 struct RootViewFactory {
@@ -67,7 +67,7 @@ extension RootViewFactory {
 struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
-    let makeHistoryButton: (@escaping () -> Bool, @escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void, @escaping () -> Bool, @escaping () -> Void) -> HistoryButtonView?
     let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
 }
 
@@ -101,6 +101,7 @@ struct HistoryButtonView: View {
     
     let event: (HistoryEvent) -> Void
     let isFiltered: () -> Bool
+    let clearOptions: () -> Void
     
     var body: some View {
         
@@ -152,9 +153,7 @@ struct HistoryButtonView: View {
             
             if isFiltered() {
                 
-                Button(action: {
-                    event(.clearOptions)
-                }) {
+                Button(action: clearOptions) {
                     
                     ZStack {
                         
