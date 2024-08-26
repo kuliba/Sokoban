@@ -70,7 +70,27 @@ private extension ContentView {
         
         ComposedPaymentsTransfersFlowWrapperView(
             binder: binder,
-            categoryIcon: categoryIcon
+            itemLabel: {
+                
+                CategoryPickerSectionStateItemLabel(
+                    item: $0,
+                    config: .preview,
+                    categoryIcon: categoryIcon,
+                    placeholderView: { PlaceholderView(opacity: 0.5) }
+                )
+            }
+        )
+    }
+    
+    private func itemLabel(
+        item: CategoryPickerItem
+    ) -> some View {
+        
+        CategoryPickerSectionStateItemLabel(
+            item: item,
+            config: .preview,
+            categoryIcon: categoryIcon,
+            placeholderView: { PlaceholderView(opacity: 0.5) }
         )
     }
     

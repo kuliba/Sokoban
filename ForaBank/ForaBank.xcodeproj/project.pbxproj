@@ -8159,20 +8159,12 @@
 			path = OperationPicker;
 			sourceTree = "<group>";
 		};
-		2A147F422C79A09C0097F714 /* Toolbar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Toolbar;
-			sourceTree = "<group>";
-		};
 		2A147F432C79A0B00097F714 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
 				2A147F3F2C79A0030097F714 /* PaymentsTransfers */,
 				2A147F402C79A04F0097F714 /* CategoryPickerSection */,
 				2A147F412C79A07A0097F714 /* OperationPicker */,
-				2A147F422C79A09C0097F714 /* Toolbar */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";

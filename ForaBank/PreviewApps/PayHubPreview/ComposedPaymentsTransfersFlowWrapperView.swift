@@ -5,14 +5,15 @@
 //  Created by Igor Malyarov on 26.08.2024.
 //
 
+import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersFlowWrapperView<CategoryIcon>: View
-where CategoryIcon: View {
+struct ComposedPaymentsTransfersFlowWrapperView<CategoryPickerItemLabel>: View
+where CategoryPickerItemLabel: View {
     
     let binder: PaymentsTransfersBinder
-    let categoryIcon: (ServiceCategory) -> CategoryIcon
+    let itemLabel: (CategoryPickerItem) -> CategoryPickerItemLabel
     
     var body: some View {
         
@@ -24,10 +25,7 @@ where CategoryIcon: View {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContentView: {
-                            
-                            makePaymentsTransfersContent(binder.content)
-                        }
+                        makeContentView: makeContentView
                     )
                 )
             }
@@ -37,12 +35,11 @@ where CategoryIcon: View {
 
 private extension ComposedPaymentsTransfersFlowWrapperView {
     
-    func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContent
+    func makeContentView(
     ) -> some View {
         
         PaymentsTransfersView(
-            model: content,
+            model: binder.content,
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerView,
                 makeOperationPickerView: OperationPickerBinderView.init,
@@ -76,15 +73,7 @@ private extension ComposedPaymentsTransfersFlowWrapperView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: {
-                        
-                        CategoryPickerSectionStateItemLabel(
-                            item: $0,
-                            config: .preview,
-                            categoryIcon: categoryIcon,
-                            placeholderView: { PlaceholderView(opacity: 0.5) }
-                        )
-                    }
+                    itemLabel: itemLabel
                 )
             }
         )
