@@ -31,7 +31,8 @@ extension RootViewModelFactory {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        scheduler: AnySchedulerOfDispatchQueue = .main
+        mainScheduler: AnySchedulerOfDispatchQueue = .main,
+        backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
         let httpClient: HTTPClient = model.authenticatedHTTPClient()
@@ -98,11 +99,11 @@ extension RootViewModelFactory {
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts(model: model),
                 c2bSubscription: model.subscriptions.value,
-                scheduler: scheduler
+                scheduler: mainScheduler
             ),
             duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
             log: infoNetworkLog,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -115,7 +116,7 @@ extension RootViewModelFactory {
             logger: logger,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
@@ -199,7 +200,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let makeTemplates = templatesComposer.compose
         
@@ -208,7 +209,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -227,7 +228,7 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
         
@@ -256,7 +257,7 @@ extension RootViewModelFactory {
             factory: servicePickerFlowModelFactory,
             microServices: asyncPickerComposer.compose(),
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let makePaymentProviderPickerFlowModel = makePaymentProviderPickerFlowModel(
@@ -264,7 +265,7 @@ extension RootViewModelFactory {
             log: logger.log(level:category:message:file:line:),
             model: model,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
@@ -272,7 +273,7 @@ extension RootViewModelFactory {
             log: logger.log(level:category:message:file:line:),
             model: model,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
@@ -291,7 +292,7 @@ extension RootViewModelFactory {
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts(model: model),
                 c2bSubscription: model.subscriptions.value,
-                scheduler: scheduler
+                scheduler: mainScheduler
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
@@ -337,7 +338,8 @@ extension RootViewModelFactory {
                 operationPickerPlaceholderCount: 4,
                 loadCategories: loadServiceCategories,
                 loadLatestOperations: loadLatestOperations,
-                scheduler: scheduler
+                mainScheduler: mainScheduler,
+                backgroundScheduler: backgroundScheduler
             )
         }
         

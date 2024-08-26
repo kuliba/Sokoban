@@ -61,7 +61,8 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             loadCategories: loadCategoriesSpy.process(completion:),
             loadLatestOperations: loadLatestSpy.process(completion:),
-            scheduler: .immediate
+            mainScheduler: .immediate,
+            backgroundScheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

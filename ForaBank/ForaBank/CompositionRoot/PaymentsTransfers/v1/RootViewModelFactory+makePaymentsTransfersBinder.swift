@@ -23,17 +23,18 @@ extension RootViewModelFactory {
         operationPickerPlaceholderCount: Int,
         loadCategories: @escaping LoadServiceCategories,
         loadLatestOperations: @escaping LoadLatestOperations,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        mainScheduler: AnySchedulerOf<DispatchQueue>,
+        backgroundScheduler: AnySchedulerOf<DispatchQueue>
     ) -> PaymentsTransfersBinder {
         
         // MARK: - CategoryPicker
         
         let categoryPickerContentComposer = LoadablePickerModelComposer(
             load: loadCategories,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let categoryPickerFlowComposer = CategoryPickerSectionFlowComposer(
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let categoryPickerContent = categoryPickerContentComposer.compose(
             prefix: [],
@@ -55,7 +56,7 @@ extension RootViewModelFactory {
                     completion($0.map { .latest($0) })
                 }
             },
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let operationPickerContent = operationPickerContentComposer.compose(
             prefix: [
@@ -66,7 +67,7 @@ extension RootViewModelFactory {
             placeholderCount: operationPickerPlaceholderCount
         )
         let operationPickerFlowComposer = OperationPickerFlowComposer(
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let operationPickerFlow = operationPickerFlowComposer.compose()
         let operationPicker = OperationPickerBinder(
@@ -91,7 +92,7 @@ extension RootViewModelFactory {
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         return .init(content: content, flow: flow, bind: { _,_ in [] })
