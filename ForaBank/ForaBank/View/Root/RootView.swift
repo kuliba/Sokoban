@@ -156,7 +156,39 @@ private extension RootView {
                 },
                 makeToolbarView: {
                     
-                    Text(String(describing: $0).prefix(32))
+                    ComposedPaymentsTransfersToolbarView(
+                        binder: $0,
+                        factory: .init(
+                            makeDestinationView: {
+                                
+                                switch $0 {
+                                case let .profile(profileModel):
+                                    Text(String(describing: profileModel))
+                                }
+                            },
+                            makeFullScreenView: {
+                                
+                                switch $0 {
+                                case let .qr(qrModel):
+                                    VStack(spacing: 32) {
+                                        
+                                        Text(String(describing: qrModel))
+                                    }
+                                }
+                            },
+                            makeProfileLabel: {
+                                
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Profile")
+                                }
+                            },
+                            makeQRLabel: {
+                                
+                                Image(systemName: "qrcode")
+                            }
+                        )
+                    )
                 }
             )
         )
