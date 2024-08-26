@@ -644,37 +644,16 @@ private extension MainViewModel {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
+                        openCurrencyWallet(payload.code, .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
+                        openCurrencyWallet(payload.code, .buy)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .sell, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
-                        model.action.send(ModelAction.Account.ProductList.Request())
-                        route.destination = .currencyWallet(walletViewModel)
-                        
+                        openCurrencyWallet(payload.code, .sell)
+
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
@@ -761,6 +740,29 @@ private extension MainViewModel {
             .map(\.external)
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
+    }
+    
+    func openCurrencyWallet( _ code: Currency, _ operation: CurrencySwapView.ViewModel.CurrencyOperation) {
+        
+        if model.onlyCorporateCards,
+           let alertViewModel = disableAlertViewModel {
+            
+            route.modal = .alert(alertViewModel)
+        } else {
+            guard let walletViewModel = CurrencyWalletViewModel(
+                currency: code,
+                currencyOperation: operation,
+                model: model,
+                dismissAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())})
+            else {
+                return
+            }
+            
+            model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
+            model.action.send(ModelAction.Account.ProductList.Request())
+            route.destination = .currencyWallet(walletViewModel)
+        }
     }
     
     private func handleTemplatesFlowState(
