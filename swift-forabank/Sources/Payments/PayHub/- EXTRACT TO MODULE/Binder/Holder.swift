@@ -8,6 +8,7 @@
 import Combine
 
 /// Like `Binder` but without subscription.
+@available(*, deprecated, message: "use `Binder`")
 public final class Holder<Content, Flow> {
     
     public let content: Content

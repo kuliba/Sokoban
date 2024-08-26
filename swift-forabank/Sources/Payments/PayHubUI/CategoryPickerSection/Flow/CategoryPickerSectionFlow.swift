@@ -5,4 +5,7 @@
 //  Created by Igor Malyarov on 21.08.2024.
 //
 
-public typealias CategoryPickerSectionFlow = Void
+import PayHub
+import RxViewModel
+
+public typealias CategoryPickerSectionFlow<Category, CategoryModel, CategoryList> = RxViewModel<CategoryPickerSectionFlowState<CategoryModel, CategoryList>, CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>, CategoryPickerSectionFlowEffect<Category>>

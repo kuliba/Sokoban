@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
-public final class PaymentsTransfersFlowEffectHandler<Profile, QR> {
+public final class PaymentsTransfersFlowEffectHandler {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class PaymentsTransfersFlowEffectHandler<Profile, QR> {
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PaymentsTransfersFlowEffectHandlerMicroServices<Profile, QR>
+    public typealias MicroServices = PaymentsTransfersFlowEffectHandlerMicroServices
 }
 
 public extension PaymentsTransfersFlowEffectHandler {
@@ -25,11 +25,6 @@ public extension PaymentsTransfersFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .profile:
-            handleProfile(dispatch)
-            
-        case .qr:
-            handleQR(dispatch)
         }
     }
 }
@@ -38,21 +33,6 @@ public extension PaymentsTransfersFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersFlowEvent<Profile, QR>
+    typealias Event = PaymentsTransfersFlowEvent
     typealias Effect = PaymentsTransfersFlowEffect
-}
-
-private extension PaymentsTransfersFlowEffectHandler {
-    
-    func handleProfile(
-        _ dispatch: @escaping Dispatch
-    ) {
-        microServices.makeProfile { dispatch(.profile($0)) }
-    }
-    
-    func handleQR(
-        _ dispatch: @escaping Dispatch
-    ) {
-        microServices.makeQR { dispatch(.qr($0)) }
-    }
 }

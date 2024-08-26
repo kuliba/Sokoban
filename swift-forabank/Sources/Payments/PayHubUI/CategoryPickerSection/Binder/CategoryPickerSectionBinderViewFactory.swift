@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView, ServiceCategory> {
+public struct CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView, Category> {
     
     public let makeContentView: MakeContentView
     public let makeDestinationView: MakeDestinationView
@@ -23,7 +23,7 @@ public struct CategoryPickerSectionBinderViewFactory<ContentView, Destination, D
 
 public extension CategoryPickerSectionBinderViewFactory {
     
-    typealias Content = CategoryPickerSectionContent<ServiceCategory>
+    typealias Content = CategoryPickerSectionContent<Category>
     typealias MakeContentView = (Content) -> ContentView
     typealias MakeDestinationView = (Destination) -> DestinationView
 }

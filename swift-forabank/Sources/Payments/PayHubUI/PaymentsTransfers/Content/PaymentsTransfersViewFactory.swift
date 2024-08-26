@@ -7,22 +7,26 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, PayHub, PayHubView> {
+public struct PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView> {
     
     public let makeCategoryPickerView: MakeCategoryPickerView
-    public let makePayHubView: MakePayHubView
+    public let makeOperationPickerView: MakeOperationPickerView
+    public let makeToolbarView: MakeToolbarView
     
     public init(
-        makeCategoryPickerView: @escaping MakeCategoryPickerView,
-        makePayHubView: @escaping MakePayHubView
+        @ViewBuilder makeCategoryPickerView: @escaping MakeCategoryPickerView,
+        @ViewBuilder makeOperationPickerView: @escaping MakeOperationPickerView,
+        @ViewBuilder makeToolbarView: @escaping MakeToolbarView
     ) {
         self.makeCategoryPickerView = makeCategoryPickerView
-        self.makePayHubView = makePayHubView
+        self.makeOperationPickerView = makeOperationPickerView
+        self.makeToolbarView = makeToolbarView
     }
 }
 
 public extension PaymentsTransfersViewFactory {
     
     typealias MakeCategoryPickerView = (CategoryPicker) -> CategoryPickerView
-    typealias MakePayHubView = (PayHub) -> PayHubView
+    typealias MakeOperationPickerView = (OperationPicker) -> OperationPickerView
+    typealias MakeToolbarView = (Toolbar) -> ToolbarView
 }

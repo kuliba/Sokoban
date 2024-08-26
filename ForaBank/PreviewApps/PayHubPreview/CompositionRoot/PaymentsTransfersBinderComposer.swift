@@ -41,7 +41,8 @@ extension PaymentsTransfersBinderComposer {
                 loadedCategories: loadedCategories,
                 loadedItems: loadedItems
             ),
-            flow: flowComposer.compose()
+            flow: flowComposer.compose(), 
+            bind: { _,_ in [] }
         )
     }
 }

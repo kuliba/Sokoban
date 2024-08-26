@@ -8,11 +8,8 @@
 import PayHub
 import SwiftUI
 
-struct PaymentsTransfersFlowView<Content, DestinationContent, FullScreenContent, Toolbar>: View
-where Content: View,
-      DestinationContent: View,
-      FullScreenContent: View,
-      Toolbar: ToolbarContent {
+struct PaymentsTransfersFlowView<Content>: View
+where Content: View {
     
     let state: State
     let event: (Event) -> Void
@@ -20,20 +17,7 @@ where Content: View,
     
     var body: some View {
         
-        factory.makeContent()
-            .toolbar {
-                factory.makeToolbar({ event(.open($0)) })
-            }
-            .navigationDestination(
-                destination: state.destination,
-                dismiss: { event(.dismiss) },
-                content: factory.makeDestinationContent
-            )
-            .fullScreenCover(
-                cover: state.fullScreen,
-                dismiss: { event(.dismiss) },
-                content: factory.makeFullScreenContent
-            )
+        factory.makeContentView()
     }
 }
 
@@ -41,135 +25,86 @@ extension PaymentsTransfersFlowView {
     
     typealias State = PaymentsTransfersFlowState
     typealias Event = PaymentsTransfersFlowEvent
-    typealias Factory = PaymentsTransfersFlowViewFactory<Content, DestinationContent, FullScreenContent, Toolbar>
+    typealias Factory = PaymentsTransfersFlowViewFactory<Content>
 }
 
-extension PaymentsTransfersFlowState {
-    
-    var destination: Navigation.Destination? {
-        
-        guard case let .destination(destination) = navigation
-        else { return nil }
-        
-        return destination
-    }
-    
-    var fullScreen: Navigation.FullScreen? {
-        
-        guard case let .fullScreen(fullScreen) = navigation
-        else { return nil }
-        
-        return fullScreen
-    }
-}
-
-extension PaymentsTransfersFlowState.Navigation.Destination: Identifiable {
-    
-    public var id: ID {
-        
-        switch self {
-        case .profile: return .profile
-        }
-    }
-    
-    public enum ID: Hashable {
-        
-        case profile
-    }
-}
-
-extension PaymentsTransfersFlowState.Navigation.FullScreen: Identifiable {
-    
-    public var id: ID {
-        
-        switch self {
-        case .qr:      return .qr
-        }
-    }
-    
-    public enum ID: Hashable {
-        
-        case qr
-    }
-}
-
-struct PaymentsTransfersFlowView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        Group {
-            
-            paymentsTransfersFlowView(.init())
-                .previewDisplayName("Content")
-            paymentsTransfersFlowView(.init(navigation: .destination(.profile(.preview()))))
-                .previewDisplayName("Profile")
-            paymentsTransfersFlowView(.init(navigation: .fullScreen(.qr(.preview()))))
-                .previewDisplayName("Qr")
-        }
-    }
-    
-    private static func paymentsTransfersFlowView(
-        _ state: PaymentsTransfersFlowState
-    ) -> some View {
-        
-        NavigationView {
-            
-            PaymentsTransfersFlowView(
-                state: state,
-                event: { print($0) },
-                factory: .init(
-                    makeContent: { Text("Content") },
-                    makeDestinationContent: {
-                        
-                        switch $0 {
-                        case let .profile(profileModel):
-                            Text(String(describing: profileModel))
-                        }
-                    },
-                    makeFullScreenContent: {
-                        
-                        switch $0 {
-                        case let .qr(qrModel):
-                            Text(String(describing: qrModel))
-                        }
-                    },
-                    makeToolbar: { event in
-                        
-                        ToolbarItem(placement: .topBarLeading) {
-                            
-                            Button {
-                                event(.profile)
-                            } label: {
-                                
-                                if #available(iOS 14.5, *) {
-                                    Label("Profile", systemImage: "person.circle")
-                                        .labelStyle(.titleAndIcon)
-                                } else {
-                                    HStack {
-                                        Image(systemName: "person.circle")
-                                        Text("Profile")
-                                    }
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        
-                        ToolbarItem(placement: .topBarTrailing) {
-                            
-                            Button {
-                                event(.qr)
-                            } label: {
-                                Image(systemName: "qrcode")
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                )
-            )
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-    }
-}
+//struct PaymentsTransfersFlowView_Previews: PreviewProvider {
+//    
+//    static var previews: some View {
+//        
+//        Group {
+//            
+//            paymentsTransfersFlowView(.init())
+//                .previewDisplayName("Content")
+//            paymentsTransfersFlowView(.init(navigation: .destination(.profile(.preview()))))
+//                .previewDisplayName("Profile")
+//            paymentsTransfersFlowView(.init(navigation: .fullScreen(.qr(.preview()))))
+//                .previewDisplayName("Qr")
+//        }
+//    }
+//    
+//    private static func paymentsTransfersFlowView(
+//        _ state: PaymentsTransfersFlowState
+//    ) -> some View {
+//        
+//        NavigationView {
+//            
+//            PaymentsTransfersFlowView(
+//                state: state,
+//                event: { print($0) },
+//                factory: .init(
+//                    makeContent: { Text("Content") },
+//                    makeDestinationContent: {
+//                        
+//                        switch $0 {
+//                        case let .profile(profileModel):
+//                            Text(String(describing: profileModel))
+//                        }
+//                    },
+//                    makeFullScreenContent: {
+//                        
+//                        switch $0 {
+//                        case let .qr(qrModel):
+//                            Text(String(describing: qrModel))
+//                        }
+//                    },
+//                    makeToolbar: { event in
+//                        
+//                        ToolbarItem(placement: .topBarLeading) {
+//                            
+//                            Button {
+//                                event(.profile)
+//                            } label: {
+//                                
+//                                if #available(iOS 14.5, *) {
+//                                    Label("Profile", systemImage: "person.circle")
+//                                        .labelStyle(.titleAndIcon)
+//                                } else {
+//                                    HStack {
+//                                        Image(systemName: "person.circle")
+//                                        Text("Profile")
+//                                    }
+//                                }
+//                            }
+//                            .buttonStyle(.plain)
+//                        }
+//                        
+//                        ToolbarItem(placement: .topBarTrailing) {
+//                            
+//                            Button {
+//                                event(.qr)
+//                            } label: {
+//                                Image(systemName: "qrcode")
+//                            }
+//                            .buttonStyle(.plain)
+//                        }
+//                    }
+//                )
+//            )
+//        }
+//        .navigationViewStyle(StackNavigationViewStyle())
+//    }
+//}
 
 extension ProfileModel {
     

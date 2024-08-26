@@ -69,7 +69,7 @@ private extension ContentView {
         binder: TabState.Binder
     ) -> some View {
         
-        PaymentsTransfersFlowStateWrapper(
+        PaymentsTransfersFlowWrapperView(
             model: binder.flow,
             makeFlowView: {
                 
@@ -77,55 +77,9 @@ private extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContent: { makePaymentsTransfersContent(binder.content) },
-                        makeDestinationContent: {
+                        makeContentView: {
                             
-                            switch $0 {
-                            case let .profile(profileModel):
-                                Text(String(describing: profileModel))
-                            }
-                        },
-                        makeFullScreenContent: {
-                            
-                            switch $0 {
-                            case let .qr(qrModel):
-                                VStack(spacing: 32) {
-                                    
-                                    Text(String(describing: qrModel))
-                                    Button("Close") { binder.flow.event(.dismiss) }
-                                }
-                            }
-                        },
-                        makeToolbar: { event in
-                            
-                            ToolbarItem(placement: .topBarLeading) {
-                                
-                                Button {
-                                    event(.profile)
-                                } label: {
-                                    
-                                    if #available(iOS 14.5, *) {
-                                        Label("Profile", systemImage: "person.circle")
-                                            .labelStyle(.titleAndIcon)
-                                    } else {
-                                        HStack {
-                                            Image(systemName: "person.circle")
-                                            Text("Profile")
-                                        }
-                                    }
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            
-                            ToolbarItem(placement: .topBarTrailing) {
-                                
-                                Button {
-                                    event(.qr)
-                                } label: {
-                                    Image(systemName: "qrcode")
-                                }
-                                .buttonStyle(.plain)
-                            }
+                            makePaymentsTransfersContent(binder.content)
                         }
                     )
                 )
@@ -142,7 +96,8 @@ private extension ContentView {
             model: content,
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerView,
-                makePayHubView: makePayHubFlowView
+                makeOperationPickerView: makeOperationPickerView,
+                makeToolbarView: paymentsTransfersToolbar
             )
         )
     }
@@ -193,7 +148,7 @@ private extension ContentView {
         Color.blue.opacity(0.1)
     }
     
-    private func makePayHubFlowView(
+    private func makeOperationPickerView(
         _ binder: OperationPickerBinder
     ) -> some View {
         
@@ -226,9 +181,9 @@ private extension ContentView {
                             placeholderView:  {
                                 
                                 LatestPlaceholder(
-                                opacity: 1,
-                                config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
-                            )
+                                    opacity: 1,
+                                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
+                                )
                             }
                         )
                     }
@@ -236,27 +191,19 @@ private extension ContentView {
             }
         )
     }
+    
+    func paymentsTransfersToolbar(
+        binder: PaymentsTransfersToolbarBinder
+    ) -> some View {
+        
+        let composer = PaymentsTransfersToolbarComposer()
+        return composer.compose(binder: binder)
+    }
 }
 
 extension Latest: Named {
     
     var name: String { .init(id.prefix(12)) }
-}
-
-extension CategoryPickerSectionBinder: Loadable {
-    
-    public func load() {
-        
-        content.event(.load)
-    }
-}
-
-extension OperationPickerBinder: Loadable {
-    
-    public func load() {
-        
-        content.event(.load)
-    }
 }
 
 #Preview {

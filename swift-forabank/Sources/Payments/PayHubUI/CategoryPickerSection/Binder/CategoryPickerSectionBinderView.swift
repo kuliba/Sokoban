@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CategoryPickerSectionBinderView<ContentView, Destination, DestinationView, ServiceCategory>: View
+public struct CategoryPickerSectionBinderView<Category, CategoryModel, CategoryList, ContentView, Destination, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -39,7 +39,7 @@ where ContentView: View,
 
 public extension CategoryPickerSectionBinderView {
     
-    typealias Binder = CategoryPickerSectionBinder<ServiceCategory>
-    typealias Content = CategoryPickerSectionContent<ServiceCategory>
-    typealias Factory = CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView, ServiceCategory>
+    typealias Binder = CategoryPickerSectionBinder<Category, CategoryModel, CategoryList>
+    typealias Content = CategoryPickerSectionContent<Category>
+    typealias Factory = CategoryPickerSectionBinderViewFactory<ContentView, Destination, DestinationView, Category>
 }

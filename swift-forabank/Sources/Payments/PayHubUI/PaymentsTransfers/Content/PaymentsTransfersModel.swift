@@ -7,16 +7,30 @@
 
 import Foundation
 
-public final class PaymentsTransfersModel<CategoryPicker, OperationPicker>: ObservableObject {
+public final class PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>: ObservableObject {
     
     public let categoryPicker: CategoryPicker
     public let operationPicker: OperationPicker
+    public let toolbar: Toolbar
+    private let _reload: () -> Void
     
     public init(
         categoryPicker: CategoryPicker,
-        operationPicker: OperationPicker
+        operationPicker: OperationPicker,
+        toolbar: Toolbar,
+        reload: @escaping () -> Void
     ) {
         self.categoryPicker = categoryPicker
         self.operationPicker = operationPicker
+        self.toolbar = toolbar
+        self._reload = reload
+    }
+}
+
+public extension PaymentsTransfersModel {
+    
+    func reload() {
+        
+        _reload()
     }
 }

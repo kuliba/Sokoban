@@ -7,6 +7,7 @@
 
 import CombineSchedulers
 import Foundation
+import PayHub
 
 final class PaymentsTransfersFlowModelComposer {
     
@@ -25,10 +26,7 @@ extension PaymentsTransfersFlowModelComposer {
         
         let reducer = PaymentsTransfersFlowReducer()
         let effectHandler = PaymentsTransfersFlowEffectHandler(
-            microServices: .init(
-                makeProfile: { $0(ProfileModel()) },
-                makeQR: { $0(QRModel()) }
-            )
+            microServices: .init()
         )
         
         return .init(
