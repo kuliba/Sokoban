@@ -38,6 +38,7 @@ where ItemLabel: View,
         if state.isLoadingFailed {
             Text("Failed to load categories")
                 .foregroundColor(.red)
+                .frame(maxHeight: .infinity)
         } else {
             VStack(spacing: config.spacing) {
                 
@@ -49,7 +50,6 @@ where ItemLabel: View,
                     ForEach(state.suffix, content: itemView)
                         .animation(.easeInOut, value: state)
                 }
-                .listStyle(.plain)
             }
         }
     }
