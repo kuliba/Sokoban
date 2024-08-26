@@ -9,4 +9,4 @@ import PayHub
 import RxViewModel
 import SwiftUI
 
-public typealias OperationPickerFlowWrapperView<ContentView, Exchange, Latest, LatestFlow, Status, Templates> = RxWrapperView<ContentView, OperationPickerFlowState<Exchange, Latest, Status, Templates>, OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>, OperationPickerFlowEffect<Latest>> where ContentView: View
+public typealias OperationPickerFlowWrapperView<ContentView, Exchange, Latest, LatestFlow, Status, Templates> = RxWrapperView<ContentView, OperationPickerFlowState<Exchange, LatestFlow, Status, Templates>, OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>, OperationPickerFlowEffect<Latest>> where ContentView: View
