@@ -37,7 +37,9 @@ extension QRViewModelFactory {
     }
 }
 
-extension QRModelWrapper where QRResult == QRViewModel.ScanResult {
+extension QRModelWrapper
+where QRResult == QRViewModel.ScanResult,
+      QRModel == QRViewModel {
     
     static func preview() -> QRModelWrapper {
         
@@ -49,7 +51,9 @@ extension QRModelWrapper where QRResult == QRViewModel.ScanResult {
     }
 }
 
-extension QRModelWrapper where QRResult == QRModelResult {
+extension QRModelWrapper
+where QRResult == QRModelResult,
+      QRModel == QRViewModel {
     
     static func preview() -> QRModelWrapper {
         

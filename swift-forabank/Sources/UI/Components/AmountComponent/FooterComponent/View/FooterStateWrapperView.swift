@@ -86,7 +86,7 @@ private extension FooterStateWrapperView {
             textFieldConfig: .init(
                 font: config.amountFont,
                 textColor: config.amount.textColor,
-                tintColor: .accentColor,
+                tintColor: .white, // TODO: add to config
                 backgroundColor: .clear,
                 placeholderColor: .clear
             )

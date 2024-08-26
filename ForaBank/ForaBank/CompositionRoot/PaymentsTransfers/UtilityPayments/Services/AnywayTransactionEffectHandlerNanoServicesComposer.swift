@@ -345,6 +345,9 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure
                 case (102, "Введен некорректный код. Попробуйте еще раз."):
                     self = .otpFailure(errorMessage)
                     
+                case let (102, errorMessage):
+                    self = .terminal(errorMessage)
+                    
                 default:
                     self = .terminalFailure
                 }

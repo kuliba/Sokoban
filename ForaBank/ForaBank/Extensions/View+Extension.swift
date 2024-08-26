@@ -23,11 +23,4 @@ extension View {
         case false: self
         }
     }
-    
-    /// SwiftUI `frame` overload.
-    @ViewBuilder
-    func frame(_ size: CGSize) -> some View {
-        
-        self.frame(width: size.width, height: size.height)
-    }
 }

@@ -367,7 +367,8 @@ private extension PaymentsTransfersFlowReducer {
     ) {
         switch dismiss {
         case .alert:
-            state.setUtilityPrepaymentAlert(to: nil)
+            state.destination = nil
+            // state.setUtilityPrepaymentAlert(to: nil)
             
         case .destination:
             hideKeyboard()

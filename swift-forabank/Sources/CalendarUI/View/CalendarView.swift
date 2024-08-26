@@ -50,10 +50,10 @@ public struct CalendarView: View {
     let monthsData: [Month]
     let configData: CalendarConfig
 
-    init(
-        _ selectedDate: Binding<Date?>?,
-        _ selectedRange: Binding<MDateRange?>?,
-        _ configBuilder: (CalendarConfig) -> CalendarConfig)
+    public init(
+        _ selectedDate: Date?,
+        _ selectedRange: MDateRange?,
+        _ configBuilder: (CalendarConfig) -> CalendarConfig = { $0 })
     {
         self._selectedData = .init(wrappedValue: .init(selectedDate, selectedRange))
         self.configData = configBuilder(.init())
@@ -161,15 +161,4 @@ private extension CalendarView {
     }
     
     func onMonthChange(_ date: Date) { configData.onMonthChange(date) }
-}
-
-extension CalendarView {
-    
-    public init(
-        selectedDate: Binding<Date?>?,
-        selectedRange: Binding<MDateRange?>?,
-        configBuilder: (CalendarConfig) -> CalendarConfig = { $0 }
-    ) {
-        self.init(selectedDate, selectedRange, configBuilder)
-    }
 }

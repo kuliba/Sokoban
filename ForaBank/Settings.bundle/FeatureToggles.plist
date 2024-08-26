@@ -58,6 +58,16 @@
 			<key>Key</key>
 			<string>changeSVCardLimits</string>
 		</dict>
+        <dict>
+            <key>Type</key>
+            <string>PSToggleSwitchSpecifier</string>
+            <key>DefaultValue</key>
+            <false/>
+            <key>Title</key>
+            <string>Функционал корпоративных карт</string>
+            <key>Key</key>
+            <string>getProductListByTypeV6</string>
+        </dict>
 	</array>
 </dict>
 </plist>

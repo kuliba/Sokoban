@@ -20,6 +20,7 @@ class OpenDepositListViewModel: ObservableObject {
     @Published private(set) var route: Route
     
     let catalogType: CatalogType
+    let makeAlertViewModel: PaymentsTransfersFactory.MakeAlertViewModel
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -29,26 +30,30 @@ class OpenDepositListViewModel: ObservableObject {
         navigationBar: NavigationBarView.ViewModel,
         products offers: [OfferProductView.ViewModel],
         catalogType: CatalogType,
-        route: Route = .empty
+        route: Route = .empty,
+        makeAlertViewModel: @escaping PaymentsTransfersFactory.MakeAlertViewModel
     ) {
         self.navigationBar = navigationBar
         self.catalogType = catalogType
         self.offers = offers
         self.model = model
         self.route = route
+        self.makeAlertViewModel = makeAlertViewModel
     }
     
     init(
         _ model: Model,
         catalogType: CatalogType,
         route: Route = .empty,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        makeAlertViewModel: @escaping PaymentsTransfersFactory.MakeAlertViewModel
     ) {
         self.navigationBar = .init(title: "Вклады", leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
         self.model = model
         self.offers = []
         self.catalogType = catalogType
         self.route = route
+        self.makeAlertViewModel = makeAlertViewModel
         
         bind()
         
@@ -211,7 +216,7 @@ class OpenDepositListViewModel: ObservableObject {
     func orderButtonTapped(depositID: DepositProductData.ID?) {
         
         if let depositID,
-           let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositID, model: model) {
+           let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositID, model: model, makeAlertViewModel: makeAlertViewModel) {
             
             route.destination = .openDeposit(openDepositViewModel)
         }

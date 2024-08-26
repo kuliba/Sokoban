@@ -16,7 +16,7 @@ extension QRScannerView {
     
     class ViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
+        let action: PassthroughSubject<QRScannerViewAction, Never> = .init()
     }
 }
 
@@ -35,18 +35,7 @@ struct QRScannerView: UIViewControllerRepresentable {
 
 //MARK: - Action
 
-enum QRScannerViewAction {
-    
-    struct Scanned: Action {
-        
-        let value: String
-    }
-    
-    struct Fail: Action {
-        
-        let error: QRScannerViewModelError
-    }
-}
+typealias QRScannerViewAction = Result<String, QRScannerViewModelError>
 
 class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
@@ -71,7 +60,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
         let captureSession = AVCaptureSession()
         
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
-            self.viewModel.action.send(QRScannerViewAction.Fail(error: .unableCreateVideoCaptureDevice))
+            self.viewModel.action.send(.failure(.unableCreateVideoCaptureDevice))
             return
         }
         
@@ -82,7 +71,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
             
         } catch {
-            self.viewModel.action.send(QRScannerViewAction.Fail(error: .unableCreateVideoInput))
+            self.viewModel.action.send(.failure(.unableCreateVideoInput))
             return
         }
         
@@ -90,7 +79,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             captureSession.addInput(videoInput)
             
         } else {
-            self.viewModel.action.send(QRScannerViewAction.Fail(error: .unableAddVideoInputToCaptureSession))
+            self.viewModel.action.send(.failure(.unableAddVideoInputToCaptureSession))
             return
         }
         
@@ -100,7 +89,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             captureSession.addOutput(metadataOutput)
             
         } else {
-            self.viewModel.action.send(QRScannerViewAction.Fail(error: .unableAddMetadataOutputToCaptureSession))
+            self.viewModel.action.send(.failure(.unableAddMetadataOutputToCaptureSession))
             return
         }
         
@@ -136,7 +125,7 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
             return
         }
         
-        self.viewModel.action.send(QRScannerViewAction.Scanned(value: stringValue))
+        self.viewModel.action.send(.success(stringValue))
         captureSession?.stopRunning()
     }
     

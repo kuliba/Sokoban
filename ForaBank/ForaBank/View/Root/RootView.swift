@@ -81,8 +81,8 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(paymentsTransfersModel):
-                Text("TBD: v1 for \("paymentsTransfersModel")")
+            case let .v1(binder):
+                Text("TBD: v1 for \(String(describing: binder))")
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -239,7 +239,7 @@ private extension RootViewFactory {
                         makeIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeUpdateInfoView: UpdateInfoView.init(text:),
+                        makeInfoViews: .default,
                         makeUserAccountView: UserAccountView.init(viewModel:)
                     ),
                     productProfileViewFactory: .init(
@@ -252,7 +252,7 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }

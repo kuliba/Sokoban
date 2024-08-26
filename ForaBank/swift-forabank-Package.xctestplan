@@ -455,9 +455,30 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "ServiceCategoriesBackendTests",
         "name" : "ServiceCategoriesBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV6ServiceTests",
+        "name" : "GetProductListByTypeV6ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
       }
     }
   ],

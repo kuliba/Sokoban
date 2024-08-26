@@ -471,6 +471,20 @@
         "identifier" : "ServiceCategoriesBackendTests",
         "name" : "ServiceCategoriesBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
+      }
     }
   ],
   "version" : 1

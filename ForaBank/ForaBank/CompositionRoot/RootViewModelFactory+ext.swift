@@ -12,6 +12,8 @@ import OperatorsListComponents
 import PaymentSticker
 import SberQR
 import SwiftUI
+import PayHub
+import Fetcher
 
 extension RootViewModelFactory {
     
@@ -26,6 +28,7 @@ extension RootViewModelFactory {
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
+        getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
@@ -35,7 +38,11 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
+        if getProductListByTypeV6Flag.isActive {
+            model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
+        } else {
+            model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
+        }
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -292,6 +299,48 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let localServiceCategoryLoader = ServiceCategoryLoader.default
+        let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
+            httpClient:httpClient,
+            log: infoNetworkLog
+        )
+        let getServiceCategoryListLoader = AnyLoader { completion in
+            
+            getServiceCategoryList {
+                
+                completion($0.map(\.categoryGroupList))
+            }
+        }
+        let decorated = CacheDecorator(
+            decoratee: getServiceCategoryListLoader,
+            cache: localServiceCategoryLoader.save
+        )
+        let loadServiceCategories: LoadServiceCategories = { completion in
+            
+            decorated.load {
+                
+                let categories = (try? $0.get()) ?? []
+                completion(categories.map { .category($0)})
+            }
+        }
+
+        let _makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: localServiceCategoryLoader.load,
+            getLatestPayments: NanoServices.getLatestPayments
+        )
+        let loadLatestOperations = _makeLoadLatestOperations(.all)
+
+        let _makePaymentsTransfersBinder = {
+            
+            makePaymentsTransfersBinder(
+                categoryPickerPlaceholderCount: 6,
+                operationPickerPlaceholderCount: 4,
+                loadCategories: loadServiceCategories,
+                loadLatestOperations: loadLatestOperations,
+                scheduler: scheduler
+            )
+        }
+        
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -308,7 +357,8 @@ extension RootViewModelFactory {
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
-            makeServicePaymentBinder: makeServicePaymentBinder
+            makeServicePaymentBinder: makeServicePaymentBinder,
+            makePaymentsTransfersBinder: _makePaymentsTransfersBinder
         )
     }
     
@@ -488,10 +538,16 @@ extension ProductProfileViewModel {
                 makeServicePaymentBinder: makeServicePaymentBinder
             )
             
-            let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeAlertDataUpdateFailureViewModel: {
+            let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+                dataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
+                disableForCorporateCard: {
+                    .disableForCorporateCard(primaryAction: $0)
+                })
+            
+            let paymentsTransfersFactory = PaymentsTransfersFactory(
+                makeAlertViewModels: makeAlertViewModels,
                 makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
@@ -611,13 +667,20 @@ private extension RootViewModelFactory {
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
-        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
+        makePaymentsTransfersBinder: @escaping () -> PaymentsTransfersBinder
     ) -> RootViewModel {
-                
-        let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeAlertDataUpdateFailureViewModel: {
+            
+        let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+            dataUpdateFailure: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
-            }, 
+            },
+            disableForCorporateCard: {
+                .disableForCorporateCard(primaryAction: $0)
+            })
+
+        let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeAlertViewModels: makeAlertViewModels, 
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -638,7 +701,7 @@ private extension RootViewModelFactory {
             onRegister: onRegister
         )
         
-        let paymentsViewModel = PaymentsTransfersViewModel(
+        let paymentsTransfersViewModel = PaymentsTransfersViewModel(
             model: model,
             makeFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
@@ -648,13 +711,13 @@ private extension RootViewModelFactory {
         )
         
         let paymentsModel: RootViewModel.PaymentsModel = {
-           
+            
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                return .v1(.init())
+                return .v1(makePaymentsTransfersBinder())
                 
             case .inactive:
-                return .legacy(paymentsViewModel)
+                return .legacy(paymentsTransfersViewModel)
             }
         }()
         

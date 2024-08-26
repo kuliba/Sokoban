@@ -31,6 +31,8 @@ let package = Package(
         .latestPayments,
         .serviceCategories,
         .serviceCategoriesBackend,
+        .payHub,
+        .payHubUI,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -49,6 +51,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         .getProductListByTypeService,
+        .getProductListByTypeV6Service,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -135,6 +138,10 @@ let package = Package(
         .serviceCategoriesTests,
         .serviceCategoriesBackend,
         .serviceCategoriesBackendTests,
+        .payHub,
+        .payHubTests,
+        .payHubUI,
+        .payHubUITests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -172,6 +179,8 @@ let package = Package(
         .urlRequestFactoryTests,
         .getProductListByTypeService,
         .getProductListByTypeServiceTests,
+        .getProductListByTypeV6Service,
+        .getProductListByTypeV6ServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -623,6 +632,20 @@ private extension Product {
         ]
     )
 
+    static let payHub = library(
+        name: .payHub,
+        targets: [
+            .payHub,
+        ]
+    )
+
+    static let payHubUI = library(
+        name: .payHubUI,
+        targets: [
+            .payHubUI,
+        ]
+    )
+
     static let utilityPayment = library(
         name: .utilityPayment,
         targets: [
@@ -744,6 +767,13 @@ private extension Product {
         name: .getProductListByTypeService,
         targets: [
             .getProductListByTypeService
+        ]
+    )
+    
+    static let getProductListByTypeV6Service = library(
+        name: .getProductListByTypeV6Service,
+        targets: [
+            .getProductListByTypeV6Service
         ]
     )
     
@@ -1225,6 +1255,48 @@ private extension Target {
         path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
     )
     
+    static let payHub = target(
+        name: .payHub,
+        dependencies: [
+            // internal modules
+        ],
+        path: "Sources/Payments/\(String.payHub)"
+    )
+    static let payHubTests = testTarget(
+        name: .payHubTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+        ],
+        path: "Tests/Payments/\(String.payHubTests)"
+    )
+    
+    static let payHubUI = target(
+        name: .payHubUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .payHub,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/Payments/\(String.payHubUI)"
+    )
+    static let payHubUITests = testTarget(
+        name: .payHubUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+            .payHubUI,
+        ],
+        path: "Tests/Payments/\(String.payHubUITests)"
+    )
+    
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
@@ -1570,6 +1642,32 @@ private extension Target {
             .getProductListByTypeService
         ],
         path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+    
+    static let getProductListByTypeV6Service = target(
+        name: .getProductListByTypeV6Service,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeV6Service)"
+    )
+    
+    static let getProductListByTypeV6ServiceTests = testTarget(
+        name: .getProductListByTypeV6ServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeV6Service
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeV6ServiceTests)",
         resources: [
             .copy("Responses/GetProductListByType_Account_Response.json"),
             .copy("Responses/GetProductListByType_Card_Response.json"),
@@ -2636,6 +2734,14 @@ private extension Target.Dependency {
         name: .serviceCategoriesBackend
     )
 
+    static let payHub = byName(
+        name: .payHub
+    )
+
+    static let payHubUI = byName(
+        name: .payHubUI
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2704,6 +2810,10 @@ private extension Target.Dependency {
     
     static let getProductListByTypeService = byName(
         name: .getProductListByTypeService
+    )
+    
+    static let getProductListByTypeV6Service = byName(
+        name: .getProductListByTypeV6Service
     )
     
     // MARK: - Tools
@@ -2906,6 +3016,12 @@ private extension String {
     static let serviceCategoriesBackend = "ServiceCategoriesBackend"
     static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
 
+    static let payHub = "PayHub"
+    static let payHubTests = "PayHubTests"
+    
+    static let payHubUI = "PayHubUI"
+    static let payHubUITests = "PayHubUITests"
+
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
 
@@ -2961,6 +3077,9 @@ private extension String {
 
     static let getProductListByTypeService = "GetProductListByTypeService"
     static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
+    
+    static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
+    static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
 
     // MARK: - Tools
     

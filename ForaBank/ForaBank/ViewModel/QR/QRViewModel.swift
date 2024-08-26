@@ -91,12 +91,22 @@ class QRViewModel: ObservableObject {
             .store(in: &bindings)
         
         scanner.action
-            .compactMap { $0 as? QRScannerViewAction.Scanned }
-            .map(\.value)
+            .compactMap(\.scannedString)
             .map(qrResolve)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] in self.handleScanResult($0) }
             .store(in: &bindings)
+    }
+}
+
+private extension QRScannerViewAction {
+    
+    var scannedString: String? {
+        
+        guard case let .success(string) = self
+        else { return nil }
+        
+        return string
     }
 }
 

@@ -11,6 +11,7 @@ import CloudKit
 import ForaTools
 import Foundation
 import ServerAgent
+import GetProductListByTypeV6Service
 
 //MARK: - Actions
 
@@ -54,6 +55,23 @@ extension Model {
         }
     }
     
+    func firstProduct(with filter: ProductData.Filter, excluding: ProductData) -> ProductData? {
+        
+        if let preferredProductID {
+            
+            let filteredProducts = filter.filteredProducts(allProducts)
+            let preferedProduct = filteredProducts.first(where: { $0.id == preferredProductID })
+            
+            return preferedProduct ?? filteredProducts.first
+
+        } else {
+            
+            let filteredProducts = filter.filteredProducts(allProducts)
+            return filteredProducts.first(where: { $0.id != excluding.id}) ?? filteredProducts.first
+        }
+    }
+
+    
     var isAllProductsHidden: Bool {
         products.value.values
             .flatMap { $0 }
@@ -69,6 +87,25 @@ extension Model {
     var cardsTypes: [ProductCardData.CardType] {
         
         return (products(.card) ?? []).compactMap(\.asCard?.cardType).uniqued()
+    }
+    
+    var onlyCorporateCards: Bool {
+        
+        guard productsTypes == [.card] else { return false }
+        
+        return Set(cardsTypes).isDisjoint(with: [.main, .regular, .additionalSelf, .additionalOther, .additionalSelfAccOwn])
+    }
+    
+    var containsLessThenTwoIndividualBusinessmanMainCard: Bool {
+        
+        guard productsTypes.contains(.card), let cards = products(.card) else { return false }
+
+        let individualBusinessmanMainCards = cards.filter {
+            guard let cardType = $0.asCard?.cardType else { return false }
+            return cardType == .individualBusinessmanMain
+        }
+        
+        return individualBusinessmanMainCards.count < 2
     }
     
     func product() -> ProductData? {
@@ -498,7 +535,15 @@ extension Model {
     }
     
     func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
-            
+        if let getProductsV6 {
+            getProducts_V6(getProductsV6, command, productType)
+        } else {
+            getProductsV5(command, productType)
+        }
+    }
+    
+    func getProductsV5(_ command: ServerCommands.ProductController.GetProductListByType, _ productType: ProductType) {
+        
         getProducts(productType) { response in
             
             if let response {
@@ -560,6 +605,107 @@ extension Model {
         }
     }
     
+    func getProducts_V6(
+        _ getProductsV6: Services.GetProductListByTypeV6,
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ productType: ProductType
+    ) {
+        getProductsV6(productType) { response in
+            self.handleGetProductListByTypeResponse(productType, command, response)
+        }
+    }
+    
+    func handleGetProductListByTypeResponse(
+        _ productType: ProductType,
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ response: Services.GetProductsResponse?
+    ) {
+        switch response {
+        case .none:
+            updateStatus(productType)
+            updateInfo(false, productType)
+            
+        case let .some(result):
+            
+            updateStatus(productType)
+            let updatedProducts = updateProducts(
+                productsData: products.value,
+                with: result.productList,
+                for: productType)
+            
+            loadImages(result.productList)
+            productsCacheStore(command, updatedProducts)
+            additionalUpdateIfNeed(productType: productType)
+        }
+    }
+
+    func updateStatus(_ productType: ProductType) {
+        productsUpdating.value.removeAll(where: { $0 == productType })
+    }
+    
+    func updateProducts(
+        productsData: ProductsData,
+        with productsList: [ProductData],
+        for productType: ProductType
+    ) -> ProductsData {
+        
+        let updatedProducts = Self.reduce(products: productsData, with: productsList, for: productType)
+        products.value = updatedProducts
+        updateInfo(true, productType)
+        return updatedProducts
+    }
+    
+    func updateInfo (
+        _ status: Bool,
+        _ productType: ProductType
+    ) {
+        updateInfo.value.setValue(status, for: productType)
+    }
+    
+    func loadImages(_ products: [ProductData]) {
+        
+        //md5hash -> image
+        let md5Products = products.reduce(Set<String>(), {
+            $0.union([$1.smallDesignMd5hash,
+                      $1.smallBackgroundDesignHash,
+                      $1.xlDesignMd5Hash,
+                      $1.largeDesignMd5Hash,
+                      $1.mediumDesignMd5Hash,
+                      $1.paymentSystemMd5Hash
+                     ]) })
+        
+        let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
+        if !md5ToUpload.isEmpty {
+            action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+        }
+    }
+    
+    func productsCacheStore(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ updatedProducts: ProductsData
+    ) {
+        do {
+            try productsCacheStore(productsData: updatedProducts)
+        } catch {
+            handleServerCommandCachingError(error: error, command: command)
+        }
+    }
+    
+    func additionalUpdateIfNeed(
+        productType: ProductType
+    ) {
+        switch productType {
+        case .deposit:
+            action.send(ModelAction.Deposits.Info.All())
+            
+        case .loan:
+            action.send(ModelAction.Loans.Update.All())
+            
+        default:
+            break
+        }
+    }
+
     func handleProductsUpdateVisibility(_ payload: ModelAction.Products.UpdateVisibility) {
         
         guard !productsVisibilityUpdating.value.contains(payload.productId) else { return }

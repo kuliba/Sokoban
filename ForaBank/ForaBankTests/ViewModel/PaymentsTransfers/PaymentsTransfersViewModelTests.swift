@@ -26,7 +26,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_meToMe_shouldNotDeliverActionOnMeToMeSendSuccess() throws {
         
-        let (product1, product2) = makeTwoProducts()
+        let (product1, product2) = makeTwoCards()
         let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
@@ -46,30 +46,29 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertEqual(spy.values.count, 0)
     }
     
-#warning("fix and restore")
-    //    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetClosed() throws {
-    //
-    //        let (product1, product2) = makeTwoProducts()
-    //        let (sut, model, _) = makeSUT(products: [product1, product2])
-    //
-    //        sut.sendBetweenSelf()
-    //
-    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
-    //
-    //        try sut.selectMeToMeProductTo(product2, model: model)
-    //        let spy = ValueSpy(model.action)
-    //
-    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
-    //
-    //        XCTAssertEqual(spy.values.count, 0)
-    //
-    //        sut.meToMeSendSuccess(model: model)
-    //        XCTAssertEqual(spy.values.count, 0)
-    //        sut.closeBottomSheet()
-    //
-    //        XCTAssertEqual(spy.values.count, 0)
-    //        XCTAssertNil(sut.meToMe)
-    //    }
+    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetClosed() throws {
+        
+        let (product1, product2) = makeTwoCards()
+        let (sut, model, _) = makeSUT(products: [product1, product2])
+        
+        sut.sendBetweenSelf()
+        
+        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
+        
+        try sut.selectMeToMeProductTo(product2, model: model)
+        let spy = ValueSpy(model.action)
+        
+        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
+        
+        XCTAssertEqual(spy.values.count, 0)
+        
+        sut.meToMeSendSuccess(model: model)
+        XCTAssertEqual(spy.values.count, 0)
+        sut.closeBottomSheet()
+        
+        XCTAssertEqual(spy.values.count, 0)
+        XCTAssertNil(sut.meToMe)
+    }
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
@@ -93,6 +92,41 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
   
+    func test_updateProducts_onlyCorporateProducts_shouldAddDisableForCorCardsInformer() {
+        
+        let (sut, model,_) = makeSUT()
+        
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(sut.sections.first?.type, .disableForCorCards)
+    }
+    
+    func test_updateProducts_notOnlyCorporateProducts_shouldNotChange() {
+        
+        let (sut, model,_) = makeSUT()
+        
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(sut.sections.first?.type, .latestPayments)
+    }
+
     // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
 
     /*func test_tapTemplates_updateCardFailureAccountFailure_shouldPresentAlert_flagActive() {
@@ -121,13 +155,62 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, model,_) = makeSUT(
             flowManager: makeFlowManagerOnlyModalAlert(),
-            makeAlertDataUpdateFailureViewModel: { _ in .dataUpdateFailure {}},
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in .dataUpdateFailure {}},
+                disableForCorporateCard: { _ in nil}),
             updateInfoStatusFlag: .init(rawValue: .active))
         
         let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
 
         model.updateInfo.value.setValue(false, for: .card)
         model.updateInfo.value.setValue(true, for: .account)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
+    }
+    
+    func test_tapTemplates_onlyCorporateCards_shouldPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, .disableForCorporateCard])
+    }
+    
+    func test_tapTemplates_notOnlyCorporateProducts_shouldNotPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
 
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
@@ -147,6 +230,172 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
 //        XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
 //    }
     
+    func test_tapTransfer_betweenSelf_onlyCorporateCardsWithOneIndividualBusinessmanMainCard_shouldPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTransferAndWait(type: .betweenSelf)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, .disableForCorporateCard])
+    }
+    
+    func test_tapTransfer_betweenSelf_onlyCorporateCardsWithMoreThenOneIndividualBusinessmanMainCard_shouldNotPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .individualBusinessmanMain),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTransferAndWait(type: .betweenSelf)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
+    }
+    
+    func test_tapTransfer_betweenSelf_notOnlyCorporateProducts_shouldNotPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTransferAndWait(type: .betweenSelf)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
+    }
+    
+    func test_tapCurrencyWallet_onlyCorporateCards_shouldPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapCurrencyWalletAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, .disableForCorporateCard])
+    }
+    
+    func test_tapCurrencyWallet_notOnlyCorporateProducts_shouldNotPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapCurrencyWalletAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+    }
+
+    func test_tapQRButton_onlyCorporateCards_shouldPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        XCTAssertNoDiff(sut.navButtonsRight.count, 1)
+
+        sut.navButtonsRight[0].action()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, .disableForCorporateCard])
+    }
+    
+    func test_tapQRButton_notOnlyCorporateProducts_shouldNotPresentAlert() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertViewModels: .init(
+                dataUpdateFailure: { _ in nil},
+                disableForCorporateCard: { _ in .disableForCorporateCard {}}))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.products.value[.card] = [
+            makeCardProduct(id: 1, cardType: .corporate),
+            makeCardProduct(id: 2, cardType: .individualBusinessman),
+            makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            makeCardProduct(id: 4, cardType: .main),
+        ]
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.navButtonsRight[0].action()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
+    }
+
     // MARK: - event(_:)
     
     func test_init_shouldNotSetDestination() {
@@ -733,11 +982,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private typealias State = SUT.Route
     private typealias Event = PaymentsTransfersEvent
     private typealias Effect = PaymentsTransfersEffect
-    
-    private func makeTwoProducts() -> (ProductData, ProductData) {
-        let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
-        let product2 = anyProduct(id: 2, productType: .card, currency: "USD")
         
+    private func makeTwoCards() -> (ProductData, ProductData) {
+        let product1 = makeCardProduct(id: 1, currency: "RUB", cardType: .main, isMain: true)
+        let product2 = makeCardProduct(id: 2, currency: "USD", cardType: .regular, isMain: true)
+
         return (product1, product2)
     }
     
@@ -749,7 +998,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         createBlockCardStub: BlockCardServices.BlockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
-        makeAlertDataUpdateFailureViewModel: @escaping PaymentsTransfersFactory.MakeAlertDataUpdateFailureViewModel = { _ in nil },
+        makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .default,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
@@ -824,7 +1073,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
+            makeAlertViewModels: makeAlertViewModels,
             makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
@@ -1095,6 +1344,25 @@ private extension PaymentsTransfersSectionViewModel {
         
         let templatesAction = LatestPaymentsViewModelAction.ButtonTapped.Templates()
         action.send(templatesAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func tapTransferAndWait(
+        type: PTSectionTransfersView.ViewModel.TransfersButtonType,
+        timeout: TimeInterval = 0.05
+    ) {
+        
+        let transferAction = PTSectionTransfersViewAction.ButtonTapped.Transfer.init(type: type)
+        action.send(transferAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func tapCurrencyWalletAndWait(timeout: TimeInterval = 0.05) {
+        
+        let сurrencyWalletAction =     LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet()
+        action.send(сurrencyWalletAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }

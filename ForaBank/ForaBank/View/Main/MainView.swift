@@ -115,7 +115,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch section {
         case let updateInfoViewModel as UpdateInfoViewModel:
-            viewFactory.makeUpdateInfoView(updateInfoViewModel.content)
+            viewFactory.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
             
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             MainSectionProductsView(viewModel: productsSectionViewModel)
@@ -545,7 +545,7 @@ extension MainViewFactory {
                     config: .iFora
                 )
             },
-            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }

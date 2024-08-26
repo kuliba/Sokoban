@@ -1,0 +1,51 @@
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "serial": "111",
+    "productList": [
+      {
+        "number": "40817810623000001135",
+        "numberMasked": "40817-810-X-ХXXX-0001135",
+        "balance": 22601.59,
+        "currency": "RUB",
+        "productType": "ACCOUNT",
+        "productName": "Текущие счета физ.лиц",
+        "ownerID": 10002053887,
+        "accountNumber": "40817810623000001135",
+        "allowDebit": true,
+        "allowCredit": true,
+        "customName": null,
+        "fontDesignColor": "FFFFFF",
+        "mainField": "Текущий",
+        "additionalField": null,
+        "smallDesignMd5hash": "9cd404ac011454ad95146de6560dd794",
+        "mediumDesignMd5hash": "121b73bb50858e76e33b176686d8e940",
+        "background": [
+          "FF3636"
+        ],
+        "openDate": 1596402000000,
+        "branchId": 2000,
+        "visibility": true,
+        "order": 0,
+        "smallBackgroundDesignHash": "714bbb74c410e835ce7f8e47dafe27a6",
+        "productState": [
+          "DEFAULT",
+          "NOT_VISIBILITY"
+        ],
+        "externalID": 10002053887,
+        "name": "ВСФ",
+        "dateOpen": 1596402000000,
+        "status": "NOT_BLOCKED",
+        "branchName": "АКБ \"ФОРА-БАНК\" (АО)",
+        "miniStatement": [],
+        "detailedRatesUrl": "https://www.forabank.ru/user-upload/tarif-fl-ul/Moscow_Kotelniki_OrekhovoZuevo_Reutov_Tver_tarifi.pdf",
+        "detailedConditionUrl": "https://www.forabank.ru/dkbo/dkbo.pdf",
+        "largeDesignMd5hash": "2a3bf21fe2b8e28f3944ab0968f6759d",
+        "id": 10003827714,
+        "balanceRUB": 22601.59,
+        "XLDesignMd5hash": "bf552f2c1d4d174decf46b7acd115068"
+      }
+    ]
+  }
+}
