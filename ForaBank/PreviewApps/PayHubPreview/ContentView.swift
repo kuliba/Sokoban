@@ -84,6 +84,10 @@ private extension ContentView {
                     ComposedOperationPickerFlowView(
                         binder: $0,
                         factory: .init(
+                            makeDestinationView: {
+                                
+                                Text("TBD: destination " + String(describing: $0))
+                            },
                             makeItemLabel: itemLabel
                         )
                     )

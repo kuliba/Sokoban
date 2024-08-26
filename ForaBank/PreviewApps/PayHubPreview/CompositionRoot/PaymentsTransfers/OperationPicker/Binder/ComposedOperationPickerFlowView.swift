@@ -8,8 +8,9 @@
 import PayHubUI
 import SwiftUI
 
-struct ComposedOperationPickerFlowView<ItemLabel>: View
-where ItemLabel: View {
+struct ComposedOperationPickerFlowView<DestinationView, ItemLabel>: View
+where DestinationView: View,
+      ItemLabel: View {
     
     let binder: OperationPickerBinder
     let factory: Factory
@@ -28,10 +29,7 @@ where ItemLabel: View {
                             
                             makeContentView(binder.content)
                         },
-                        makeDestination: {
-                            
-                            Text("TBD: destination " + String(describing: $0))
-                        }
+                        makeDestination: factory.makeDestinationView
                     )
                 )
             }
@@ -40,8 +38,8 @@ where ItemLabel: View {
 }
 
 extension ComposedOperationPickerFlowView {
-
-    typealias Factory = ComposedOperationPickerFlowViewFactory<ItemLabel>
+    
+    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel>
 }
 
 private extension ComposedOperationPickerFlowView {
