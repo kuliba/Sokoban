@@ -430,6 +430,7 @@ class RootViewModel: ObservableObject, Resetable {
             .combineLatest(paymentsViewModelHasDestination)
             .map { $0 || $1 }
             .removeDuplicates()
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
     }
@@ -574,14 +575,18 @@ extension PaymentsTransfersBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
-        Publishers.Merge(
-            content.categoryPicker.hasDestination,
-            //     content.operationPicker,
-            content.toolbar.hasDestination
-            //   flow.$state
-        ) 
-        .scan(false) { $0 || $1 }
-        .removeDuplicates()
+        let categoryPicker = content.categoryPicker.hasDestination
+        let operationPicker = content.operationPicker.hasDestination
+        let toolbar = content.toolbar.hasDestination
+        let flowHasDestination = Just(false)
+        
+        return Publishers.CombineLatest4(
+            categoryPicker,
+            operationPicker,
+            toolbar,
+            flowHasDestination
+        )
+        .map { $0 || $1 || $2 || $3 }
         .eraseToAnyPublisher()
     }
 }
