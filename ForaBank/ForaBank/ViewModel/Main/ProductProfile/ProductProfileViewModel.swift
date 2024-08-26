@@ -2948,6 +2948,10 @@ extension ProductProfileViewModel {
     
     func showPaymentAnotherBank(_ productData: ProductCardData) {
         switch productData.cardType {
+            
+        case .individualBusinessmanMain:
+            self.event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+
         case .additionalSelf, .additionalOther:
             self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
