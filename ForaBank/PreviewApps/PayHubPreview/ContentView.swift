@@ -37,16 +37,13 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContentView: makeBinderView)
+                    factory: .init(
+                        makeContentView: makeBinderView)
                 )
             }
         )
     }
 }
-
-#warning("move to factory")
-private typealias ProfileFlowButtonReducer = FlowButtonReducer<DestinationWrapper<ProfileModel>>
-private typealias ProfileFlowButtonEffectHandler = FlowButtonEffectHandler<DestinationWrapper<ProfileModel>>
 
 enum DestinationWrapper<Destination>: Identifiable {
     
@@ -67,80 +64,13 @@ enum DestinationWrapper<Destination>: Identifiable {
 
 private extension ContentView {
     
-    @ViewBuilder
     func makeBinderView(
         binder: PaymentsTransfersBinder
     ) -> some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: {
-                
-                PaymentsTransfersFlowView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeContentView: {
-                            
-                            makePaymentsTransfersContent(binder.content)
-                        }
-                    )
-                )
-            }
-        )
-    }
-    
-    @ViewBuilder
-    private func makePaymentsTransfersContent(
-        _ content: PaymentsTransfersContent
-    ) -> some View {
-        
-        PaymentsTransfersView(
-            model: content,
-            factory: .init(
-                makeCategoryPickerView: makeCategoryPickerView,
-                makeOperationPickerView: OperationPickerBinderView.init,
-                makeToolbarView: PaymentsTransfersToolbarBinderView.init
-            )
-        )
-    }
-    
-    private func makeCategoryPickerView(
-        _ binder: CategoryPickerSectionBinder
-    ) -> some View {
-        
-        CategoryPickerSectionBinderView(
+        ComposedPaymentsTransfersFlowWrapperView(
             binder: binder,
-            factory: .init(
-                makeContentView: makeCategoryPickerSectionContentView,
-                makeDestinationView: EmptyView.init
-            )
-        )
-    }
-    
-    private func makeCategoryPickerSectionContentView(
-        content: CategoryPickerSectionContent
-    ) -> some View {
-        
-        CategoryPickerSectionContentWrapperView(
-            model: content,
-            makeContentView: { state, event in
-                
-                CategoryPickerSectionContentView(
-                    state: state,
-                    event: event,
-                    config: .preview,
-                    itemLabel: {
-                        
-                        CategoryPickerSectionStateItemLabel(
-                            item: $0,
-                            config: .preview,
-                            categoryIcon: categoryIcon,
-                            placeholderView: { PlaceholderView(opacity: 0.5) }
-                        )
-                    }
-                )
-            }
+            categoryIcon: categoryIcon
         )
     }
     
