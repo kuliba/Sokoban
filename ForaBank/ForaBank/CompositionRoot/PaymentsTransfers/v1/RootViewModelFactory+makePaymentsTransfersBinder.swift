@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     typealias LoadLatestOperationsCompletion = ([Latest]) -> Void
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
-    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem]) -> Void
+    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     static func makePaymentsTransfersBinder(

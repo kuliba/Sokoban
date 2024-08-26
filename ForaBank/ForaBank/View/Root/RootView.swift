@@ -8,6 +8,7 @@
 import ActivateSlider
 import InfoComponent
 import PaymentSticker
+import PayHubUI
 import SberQR
 import SwiftUI
 
@@ -130,6 +131,8 @@ struct RootView: View {
     }
 }
 
+// MARK: - PaymentsTransfers v1
+
 private extension RootView {
     
     func paymentsTransfersFlowView(
@@ -141,20 +144,45 @@ private extension RootView {
             factory: .init(
                 makeCategoryPickerView: {
                     
-                    Text(String(describing: $0))
+                    ComposedCategoryPickerSectionFlowView(
+                        binder: $0,
+                        config: .iFora,
+                        itemLabel: itemLabel
+                    )
                 },
                 makeOperationPickerView: {
                     
-                    Text(String(describing: $0))
+                    Text(String(describing: $0).prefix(32))
                 },
                 makeToolbarView: {
                     
-                    Text(String(describing: $0))
+                    Text(String(describing: $0).prefix(32))
                 }
             )
         )
     }
+    
+    private func itemLabel(
+        item: CategoryPickerSectionState.Item
+    ) -> some View {
+        
+        CategoryPickerSectionStateItemLabel(
+            item: item,
+            config: .iFora,
+            categoryIcon: categoryIcon,
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
+    }
 }
+
+extension ServiceCategory: Named {}
 
 extension View {
     

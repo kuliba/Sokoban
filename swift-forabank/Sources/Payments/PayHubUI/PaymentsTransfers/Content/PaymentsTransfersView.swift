@@ -34,8 +34,6 @@ where CategoryPickerView: View,
             factory.makeOperationPickerView(model.operationPicker)
             
             factory.makeCategoryPickerView(model.categoryPicker)
-            
-            Spacer()
         }
         .padding()
         .background(factory.makeToolbarView(model.toolbar))
