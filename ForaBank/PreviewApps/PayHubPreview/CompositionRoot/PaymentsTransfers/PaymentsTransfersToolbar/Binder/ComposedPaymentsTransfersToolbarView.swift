@@ -10,7 +10,7 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct PaymentsTransfersToolbarBinderView: View {
+struct ComposedPaymentsTransfersToolbarView: View {
 
     let binder: PaymentsTransfersToolbarBinder
     
@@ -38,7 +38,7 @@ struct PaymentsTransfersToolbarBinderView: View {
     }
 }
 
-extension PaymentsTransfersToolbarBinderView {
+extension ComposedPaymentsTransfersToolbarView {
     
     func makeContent(
         _ content: PaymentsTransfersToolbarContent

@@ -86,7 +86,7 @@ private extension ContentView {
                         itemLabel: itemLabel
                     )
                 },
-                makeToolbarView: PaymentsTransfersToolbarBinderView.init
+                makeToolbarView: ComposedPaymentsTransfersToolbarView.init
             )
         )
     }
