@@ -52,12 +52,24 @@ private extension ComposedPaymentsTransfersFlowWrapperView {
         _ binder: CategoryPickerSectionBinder
     ) -> some View {
         
-        CategoryPickerSectionBinderView(
-            binder: binder,
-            factory: .init(
-                makeContentView: makeCategoryPickerSectionContentView,
-                makeDestinationView: EmptyView.init
-            )
+        CategoryPickerSectionFlowWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContentView: {
+                            
+                            makeCategoryPickerSectionContentView(
+                                content: binder.content
+                            )
+                        },
+                        makeDestinationView: makeCategoryPickerSectionDestinationView
+                    )
+                )
+            }
         )
     }
     
@@ -77,5 +89,13 @@ private extension ComposedPaymentsTransfersFlowWrapperView {
                 )
             }
         )
+        .onFirstAppear { content.event(.load) }
+    }
+    
+    private func makeCategoryPickerSectionDestinationView(
+        destination: CategoryPickerSectionDestination<CategoryModel, CategoryListModel>
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")
     }
 }
