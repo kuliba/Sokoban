@@ -38,7 +38,7 @@ public enum GetInfoRepeatPaymentMapper {
         let data: DecodableGetInfoRepeatPaymentCode?
     }
     
-    struct DecodableGetInfoRepeatPaymentCode: Decodable {
+    public struct DecodableGetInfoRepeatPaymentCode: Decodable {
         
         public let type: TransferType
         public let parameterList: [Transfer]
@@ -47,14 +47,14 @@ public enum GetInfoRepeatPaymentMapper {
         public init(
             type: TransferType,
             parameterList: [Transfer],
-            productTemplate: ProductTemplate
+            productTemplate: ProductTemplate?
         ) {
             self.type = type
             self.parameterList = parameterList
             self.productTemplate = productTemplate
         }
         
-        enum TransferType: String, Decodable {
+        public enum TransferType: String, Decodable {
             
             case betweenTheir = "BETWEEN_THEIR"
             case contactAddressless = "CONTACT_ADDRESSLESS"
@@ -71,46 +71,89 @@ public enum GetInfoRepeatPaymentMapper {
             case taxes = "TAX_AND_STATE_SERVICE"
         }
         
-        struct Transfer: Decodable {
+        public struct Transfer: Decodable {
             
-            let check: Bool
-            let amount: Double
-            let currencyAmount: String
-            let payer: Payer
-            let comment: String?
-            let puref: String
-            let additional: [Additional]
-            let mcc: String?
+            public let check: Bool
+            public let amount: Double
+            public let currencyAmount: String
+            public let payer: Payer
+            public let comment: String?
+            public let puref: String?
+            public let payeeInternal: PayeeInternal?
+            public let payeeExternal: PayeeExternal?
+            public let additional: [Additional]?
+            public let mcc: String?
 
-            struct Additional: Decodable {
-            
-                let fieldname: String
-                let fieldid: Int
-                let fieldvalue: String
-            }
-            
-            struct Payer: Decodable {
+            public struct PayeeInternal: Decodable, Equatable {
                 
-                let cardId: Int
-                let cardNumber: String?
                 let accountId: Int?
                 let accountNumber: String?
+                let cardId: Int?
+                let cardNumber: String?
                 let phoneNumber: String?
-                let INN: String?
+                let productCustomName: String?
+            }
+            
+            public struct PayeeExternal: Decodable, Equatable {
+                
+                public let inn: String?
+                public let kpp: String?
+                public let accountId: Int?
+                public let accountNumber: String
+                public let bankBIC: String?
+                public let cardId: Int?
+                public let cardNumber: String?
+                public let compilerStatus: String?
+                public let date: String?
+                public let name: String
+                public let tax: Tax?
+                
+                public struct Tax: Decodable, Equatable {
+                    
+                    public let bcc: String?
+                    public let date: String?
+                    public let documentNumber: String?
+                    public let documentType: String?
+                    public let oktmo: String?
+                    public let period: String?
+                    public let reason: String?
+                    public let uin: String?
+                }
+                
+                private enum CodingKeys : String, CodingKey {
+                    case inn = "INN", kpp = "KPP", accountId, accountNumber, bankBIC, cardId, cardNumber, compilerStatus, date, name, tax
+                }
+            }
+            
+            public struct Additional: Decodable {
+            
+                public let fieldname: String
+                public let fieldid: Int
+                public let fieldvalue: String
+            }
+            
+            public struct Payer: Decodable {
+                
+                public let cardId: Int
+                public let cardNumber: String?
+                public let accountId: Int?
+                public let accountNumber: String?
+                public let phoneNumber: String?
+                public let INN: String?
             }
         }
         
-        struct ProductTemplate: Decodable {
+        public struct ProductTemplate: Decodable {
             
-            let id: Int?
-            let numberMask: String?
-            let customName: String?
-            let currency: String?
-            let type: ProductType?
-            let smallDesign: String?
-            let paymentSystemImage: String?
+            public let id: Int?
+            public let numberMask: String?
+            public let customName: String?
+            public let currency: String?
+            public let type: ProductType?
+            public let smallDesign: String?
+            public let paymentSystemImage: String?
             
-            enum ProductType: Decodable {
+            public enum ProductType: Decodable {
                 
                 case account
                 case card
@@ -167,25 +210,7 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     init(decodableGetInfoRepeatPaymentCode: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode) {
      
         self.type = decodableGetInfoRepeatPaymentCode.type.transferType
-        self.parameterList = decodableGetInfoRepeatPaymentCode.parameterList.map({
-            .init(
-                check: $0.check,
-                amount: $0.amount,
-                currencyAmount: $0.currencyAmount,
-                payer: .init(
-                    cardId: $0.payer.cardId,
-                    cardNumber: $0.payer.cardNumber,
-                    accountId: $0.payer.accountId,
-                    accountNumber: $0.payer.accountNumber,
-                    phoneNumber: $0.payer.phoneNumber,
-                    inn: $0.payer.INN
-                ),
-                comment: $0.comment,
-                puref: $0.puref,
-                additional: $0.additional.map({ .init(fieldname: $0.fieldname, fieldid: $0.fieldid, fieldvalue: $0.fieldvalue)}),
-                mcc: $0.mcc
-            )
-        })
+        self.parameterList = decodableGetInfoRepeatPaymentCode.parameterList.map({ .init(transfer: $0) })
         
         self.productTemplate = .init(
             id: decodableGetInfoRepeatPaymentCode.productTemplate?.id,
