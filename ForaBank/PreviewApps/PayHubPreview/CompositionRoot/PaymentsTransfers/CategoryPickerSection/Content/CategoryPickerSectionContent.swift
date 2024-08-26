@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import PayHubUI
 import PayHub
+import PayHubUI
 
 typealias CategoryPickerSectionState = PayHubUI.CategoryPickerSectionState<ServiceCategory>
 typealias CategoryPickerSectionEvent = PayHubUI.CategoryPickerSectionEvent<ServiceCategory>

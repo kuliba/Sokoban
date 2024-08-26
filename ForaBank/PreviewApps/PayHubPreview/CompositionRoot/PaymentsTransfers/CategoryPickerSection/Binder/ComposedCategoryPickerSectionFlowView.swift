@@ -13,6 +13,7 @@ struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel>: View
 where CategoryPickerItemLabel: View {
     
     let binder: CategoryPickerSectionBinder
+    let config: Config
     let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
     
     var body: some View {
@@ -39,6 +40,11 @@ where CategoryPickerItemLabel: View {
     }
 }
 
+extension ComposedCategoryPickerSectionFlowView {
+
+    typealias Config = CategoryPickerSectionContentViewConfig
+}
+
 private extension ComposedCategoryPickerSectionFlowView {
     
     func makeCategoryPickerSectionContentView(
@@ -52,7 +58,7 @@ private extension ComposedCategoryPickerSectionFlowView {
                 CategoryPickerSectionContentView(
                     state: state,
                     event: event,
-                    config: .preview,
+                    config: config,
                     itemLabel: itemLabel
                 )
             }

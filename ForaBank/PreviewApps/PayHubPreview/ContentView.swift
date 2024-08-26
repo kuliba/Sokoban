@@ -75,6 +75,7 @@ private extension ContentView {
                     
                     ComposedCategoryPickerSectionFlowView(
                         binder: $0,
+                        config: .preview,
                         itemLabel: itemLabel
                     )
                 },
