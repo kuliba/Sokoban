@@ -6,33 +6,7 @@
 //
 
 import PayHub
+import RxViewModel
 import SwiftUI
 
-public struct OperationPickerContentWrapperView<ContentView, Latest>: View
-where ContentView: View {
-    
-    @ObservedObject private var model: Model
-    
-    private let makeContentView: MakeContentView
-    
-    public init(
-        model: Model,
-        makeContentView: @escaping MakeContentView
-    ) {
-        self.model = model
-        self.makeContentView = makeContentView
-    }
-    
-    public var body: some View {
-        
-        makeContentView(model.state, model.event)
-    }
-}
-
-public extension OperationPickerContentWrapperView {
-    
-    typealias State = OperationPickerState<Latest>
-    typealias Event = OperationPickerEvent<Latest>
-    typealias MakeContentView = (State, @escaping (Event) -> Void) -> ContentView
-    typealias Model = OperationPickerContent<Latest>
-}
+public typealias OperationPickerContentWrapperView<ContentView, Latest> = RxWrapperView<ContentView, OperationPickerState<Latest>, OperationPickerEvent<Latest>, OperationPickerEffect> where ContentView: View

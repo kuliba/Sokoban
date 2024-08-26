@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.08.2024.
 //
 
-enum TabEvent: Equatable {
+enum TabEvent<Content>: Equatable {
     
-    case select(TabState.Selected)
+    case select(TabState<Content>.Selected)
 }

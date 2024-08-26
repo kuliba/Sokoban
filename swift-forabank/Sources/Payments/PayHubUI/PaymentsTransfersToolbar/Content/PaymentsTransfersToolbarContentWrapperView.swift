@@ -6,33 +6,7 @@
 //
 
 import PayHub
+import RxViewModel
 import SwiftUI
 
-public struct PaymentsTransfersToolbarContentWrapperView<ContentView>: View
-where ContentView: View {
-    
-    @ObservedObject private var model: Model
-    
-    private let makeContentView: MakeContentView
-    
-    public init(
-        model: Model,
-        makeContentView: @escaping MakeContentView
-    ) {
-        self.model = model
-        self.makeContentView = makeContentView
-    }
-    
-    public var body: some View {
-        
-        makeContentView(model.state, model.event(_:))
-    }
-}
-
-public extension PaymentsTransfersToolbarContentWrapperView {
-    
-    typealias Model = PaymentsTransfersToolbarContent
-    typealias State = PaymentsTransfersToolbarState
-    typealias Event = PaymentsTransfersToolbarEvent
-    typealias MakeContentView = (State, @escaping (Event) -> Void) -> ContentView
-}
+public typealias PaymentsTransfersToolbarContentWrapperView<ContentView> = RxWrapperView<ContentView, PaymentsTransfersToolbarState, PaymentsTransfersToolbarEvent, PaymentsTransfersToolbarEffect> where ContentView: View

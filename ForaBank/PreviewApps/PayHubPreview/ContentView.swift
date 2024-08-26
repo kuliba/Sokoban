@@ -9,13 +9,16 @@ import PayHub
 import PayHubUI
 import SwiftUI
 import UIPrimitives
+import RxViewModel
+
+typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
 
 struct ContentView: View {
     
-    private let model: TabModel
+    private let model: TabModel<PaymentsTransfersBinder>
     
     init(
-        selected: TabState.Selected = .ok
+        selected: PaymentsTransfersTabState.Selected = .ok
     ) {
         let tabComposer = TabModelComposer(scheduler: .main)
         self.model = tabComposer.compose(selected: selected)
@@ -34,7 +37,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeBinderView: makeBinderView)
+                    factory: .init(makeContentView: makeBinderView)
                 )
             }
         )
@@ -66,12 +69,12 @@ private extension ContentView {
     
     @ViewBuilder
     func makeBinderView(
-        binder: TabState.Binder
+        binder: PaymentsTransfersBinder
     ) -> some View {
         
-        PaymentsTransfersFlowWrapperView(
+        RxWrapperView(
             model: binder.flow,
-            makeFlowView: {
+            makeContentView: {
                 
                 PaymentsTransfersFlowView(
                     state: $0,
@@ -96,8 +99,8 @@ private extension ContentView {
             model: content,
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerView,
-                makeOperationPickerView: makeOperationPickerView,
-                makeToolbarView: paymentsTransfersToolbar
+                makeOperationPickerView: OperationPickerBinderView.init,
+                makeToolbarView: PaymentsTransfersToolbarBinderView.init
             )
         )
     }
@@ -146,58 +149,6 @@ private extension ContentView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
-    }
-    
-    private func makeOperationPickerView(
-        _ binder: OperationPickerBinder
-    ) -> some View {
-        
-        OperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeContent: makePayHubContentView,
-                makeDestination: { Text("TBD: destination " + String(describing: $0)) }
-            )
-        )
-    }
-    
-    private func makePayHubContentView(
-        _ content: OperationPickerContent
-    ) -> some View {
-        
-        OperationPickerContentWrapperView(
-            model: content,
-            makeContentView: { state, event in
-                
-                OperationPickerContentView(
-                    state: state,
-                    event: event,
-                    config: .preview,
-                    itemLabel: {
-                        
-                        OperationPickerStateItemLabel(
-                            item: $0,
-                            config: .preview,
-                            placeholderView:  {
-                                
-                                LatestPlaceholder(
-                                    opacity: 1,
-                                    config: OperationPickerStateItemLabelConfig.preview.latestPlaceholder
-                                )
-                            }
-                        )
-                    }
-                )
-            }
-        )
-    }
-    
-    func paymentsTransfersToolbar(
-        binder: PaymentsTransfersToolbarBinder
-    ) -> some View {
-        
-        let composer = PaymentsTransfersToolbarComposer()
-        return composer.compose(binder: binder)
     }
 }
 

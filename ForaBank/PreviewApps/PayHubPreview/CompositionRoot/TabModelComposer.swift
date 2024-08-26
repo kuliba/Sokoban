@@ -25,11 +25,11 @@ final class TabModelComposer {
 extension TabModelComposer {
     
     func compose(
-        selected: TabState.Selected
-    ) -> TabModel {
+        selected: PaymentsTransfersTabState.Selected
+    ) -> TabModel<PaymentsTransfersBinder> {
         
-        let reducer = TabReducer()
-        let effectHandler = TabEffectHandler()
+        let reducer = TabReducer<PaymentsTransfersBinder>()
+        let effectHandler = TabEffectHandler<PaymentsTransfersBinder>()
         
         return .init(
             initialState: .init(
@@ -48,8 +48,8 @@ extension TabModelComposer {
 private extension TabModelComposer {
     
     func makeBinder(
-        _ tab: TabState.Selected
-    ) -> TabState.Binder {
+        _ tab: PaymentsTransfersTabState.Selected
+    ) -> PaymentsTransfersBinder {
         
         let composer = PaymentsTransfersBinderComposer(
             scheduler: scheduler

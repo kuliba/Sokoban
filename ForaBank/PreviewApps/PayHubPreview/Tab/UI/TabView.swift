@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct TabView<Content: View>: View {
+struct TabView<Content, ContentView>: View
+where ContentView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -32,21 +33,21 @@ struct TabView<Content: View>: View {
 
 extension TabView {
     
-    typealias State = TabState
-    typealias Event = TabEvent
-    typealias Factory = TabViewFactory<Content>
+    typealias State = TabState<Content>
+    typealias Event = TabEvent<Content>
+    typealias Factory = TabViewFactory<Content, ContentView>
 }
 
 extension TabView {
     
     func navWrapped(
-        _ binder: State.Binder,
+        _ content: Content,
         tab: State.Selected
     ) -> some View {
         
         NavigationView {
             
-            factory.makeBinderView(binder)
+            factory.makeContentView(content)
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {

@@ -6,5 +6,6 @@
 //
 
 import PayHub
+import PayHubUI
 
 typealias PaymentsTransfersBinder = PayHub.Binder<PaymentsTransfersContent, PaymentsTransfersFlow>

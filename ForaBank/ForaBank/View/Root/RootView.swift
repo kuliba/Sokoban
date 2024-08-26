@@ -7,9 +7,9 @@
 
 import ActivateSlider
 import InfoComponent
+import PaymentSticker
 import SberQR
 import SwiftUI
-import PaymentSticker
 
 struct RootView: View {
     
@@ -82,7 +82,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(binder):
-                Text("TBD: v1 for \(String(describing: binder))")
+                ComposedPaymentsTransfersFlowWrapperView(binder: binder)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)

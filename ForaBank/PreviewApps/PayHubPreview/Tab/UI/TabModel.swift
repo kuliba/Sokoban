@@ -7,5 +7,5 @@
 
 import RxViewModel
 
-typealias TabModel = RxViewModel<TabState, TabEvent, TabEffect>
+typealias TabModel<Content> = RxViewModel<TabState<Content>, TabEvent<Content>, TabEffect>
 
