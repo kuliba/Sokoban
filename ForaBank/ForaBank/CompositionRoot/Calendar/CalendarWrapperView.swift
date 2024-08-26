@@ -12,56 +12,78 @@ import SharedConfigs
 
 struct CalendarWrapperView: View {
     
-    @State private var selectedRange: MDateRange? = .init()
+    @ObservedObject var selectedRange: MDateRange
     let closeAction: () -> Void
     
     var body: some View {
-
-        VStack(spacing: 24) {
+        
+        VStack(spacing: 16) {
             
             ZStack {
                 
-                calendarView()
-                    .padding(10)
-                
-                VStack {
+                HStack {
+                    
+                    Button(action: closeAction, label: {
+                        Image.ic24ArrowLeft
+                            .foregroundColor(.textSecondary)
+                    })
                     
                     Spacer()
+                }
+                .padding(.horizontal, 16)
+                
+                Text("Выберите даты или период")
+                    .foregroundColor(.textSecondary)
+                    .font(.textH3M18240())
+                    .multilineTextAlignment(.center)
+            }
+            
+            VStack(spacing: 24) {
+                
+                ZStack {
                     
-                    HStack {
+                    calendarView()
+                        .padding(10)
+                    
+                    VStack {
                         
-                        simpleButtonView(
-                            config: .init(
-                                title: "Закрыть",
-                                titleConfig: .init(
-                                    textFont: .textH3Sb18240(),
-                                    textColor: .textSecondary
+                        Spacer()
+                        
+                        HStack {
+                            
+                            simpleButtonView(
+                                config: .init(
+                                    title: "Закрыть",
+                                    titleConfig: .init(
+                                        textFont: .textH3Sb18240(),
+                                        textColor: .textSecondary
+                                    ),
+                                    background: .buttonSecondary
                                 ),
-                                background: .buttonSecondary
-                            ),
-                            action: closeAction
-                        )
-                        
-                        simpleButtonView(
-                            config: .init(
-                                title: "Показать",
-                                titleConfig: .init(
-                                    textFont: .textH3Sb18240(),
-                                    textColor: .white
+                                action: closeAction
+                            )
+                            
+                            simpleButtonView(
+                                config: .init(
+                                    title: "Показать",
+                                    titleConfig: .init(
+                                        textFont: .textH3Sb18240(),
+                                        textColor: .white
+                                    ),
+                                    background: .buttonPrimary
                                 ),
-                                background: .buttonPrimary
-                            ),
-                            action: closeAction
-                        )
-                        .allowsHitTesting(selectedRange?.rangeSelected == true ? false : true)
-                        
+                                action: closeAction
+                            )
+                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
+                            
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 30)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 30)
-                    
                 }
             }
         }
+        .padding(.top, 16)
     }
 }
 
@@ -71,7 +93,8 @@ private extension CalendarWrapperView {
         
         CalendarView(
             nil,
-            $selectedRange,
+            selectedRange,
+            [],
             {
                 $0
                     .dayView(RangeSelector.init)
@@ -100,19 +123,20 @@ private extension CalendarWrapperView {
 extension CalendarWrapperView {
     
     struct SimpleButtonConfig {
-    
+        
         let title: String
         let titleConfig: TextConfig
         let background: Color
     }
 }
-    
+
 struct RangeSelector: DayView {
     
     let date: Date
     let isCurrentMonth: Bool
-    let selectedDate: Binding<Date?>?
-    var selectedRange: Binding<MDateRange?>?
+    let selectedDate: Date?
+    var selectedRange: MDateRange?
+    let selectDate: (Date) -> Void
     
     func dayLabel() -> AnyView {
         
@@ -124,8 +148,7 @@ struct RangeSelector: DayView {
     }
     
     func onSelection() {
-        if !isFuture() {
-            selectedRange?.wrappedValue?.addToRange(date)
-        }
+        
+        selectDate(date)
     }
 }
