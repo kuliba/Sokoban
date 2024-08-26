@@ -86,7 +86,21 @@ private extension ContentView {
                         itemLabel: itemLabel
                     )
                 },
-                makeToolbarView: ComposedPaymentsTransfersToolbarView.init
+                makeToolbarView: {
+                    
+                    ComposedPaymentsTransfersToolbarView(
+                        binder: $0,
+                        factory: .init(
+                            makeProfileLabel: {
+                                
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Profile")
+                                }
+                            }
+                        )
+                    )
+                }
             )
         )
     }
