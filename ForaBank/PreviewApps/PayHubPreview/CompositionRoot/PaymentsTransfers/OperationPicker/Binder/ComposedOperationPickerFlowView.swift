@@ -1,5 +1,5 @@
 //
-//  OperationPickerBinderView.swift
+//  ComposedOperationPickerFlowView.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 24.08.2024.
@@ -8,7 +8,7 @@
 import PayHubUI
 import SwiftUI
 
-struct OperationPickerBinderView: View {
+struct ComposedOperationPickerFlowView: View {
     
     let binder: OperationPickerBinder
     
@@ -24,7 +24,7 @@ struct OperationPickerBinderView: View {
     }
 }
 
-private extension OperationPickerBinderView {
+private extension ComposedOperationPickerFlowView {
     
     func makeOperationPickerContentView(
         _ content: OperationPickerContent

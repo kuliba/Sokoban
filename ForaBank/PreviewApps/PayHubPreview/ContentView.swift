@@ -78,7 +78,7 @@ private extension ContentView {
                         itemLabel: itemLabel
                     )
                 },
-                makeOperationPickerView: OperationPickerBinderView.init,
+                makeOperationPickerView: ComposedOperationPickerFlowView.init,
                 makeToolbarView: PaymentsTransfersToolbarBinderView.init
             )
         )
