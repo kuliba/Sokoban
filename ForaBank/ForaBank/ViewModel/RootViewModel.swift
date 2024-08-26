@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PayHub
 import SwiftUI
 
 class RootViewModel: ObservableObject, Resetable {
@@ -563,11 +564,62 @@ extension RootViewModel.PaymentsModel: Resetable {
                 .map { $0.destination != nil }
                 .eraseToAnyPublisher()
             
-        case let .v1(paymentsTransfersModel):
-#warning("unimplemented")
-            return Just(false).eraseToAnyPublisher()
+        case let .v1(binder):
+            return binder.hasDestination
         }
     }
+}
+
+extension PaymentsTransfersBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        Publishers.Merge(
+            content.categoryPicker.hasDestination,
+            //     content.operationPicker,
+            content.toolbar.hasDestination
+            //   flow.$state
+        ) 
+        .scan(false) { $0 || $1 }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionFlowState {
+    
+    var hasDestination: Bool { destination != nil }
+}
+
+private extension OperationPickerBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+       // flow.$state.map(\.hasDestination)
+        Just(false)
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersToolbarBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersToolbarFlowState {
+    
+    var hasDestination: Bool { navigation != nil }
 }
 
 extension RootViewModel.RootActions {
