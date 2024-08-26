@@ -29,22 +29,16 @@ extension RootViewModelFactory {
         
         // MARK: - CategoryPicker
         
-        let categoryPickerContentComposer = LoadablePickerModelComposer(
+        let categoryPickerComposer = CategoryPickerSectionBinderComposer(
             load: loadCategories,
+            microServices: .init(
+                showAll: { $0(CategoryListModel()) },
+                showCategory: { $1(CategoryModel(category: $0)) }
+            ),
+            placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
         )
-        let categoryPickerFlowComposer = CategoryPickerSectionFlowComposer(
-            scheduler: mainScheduler
-        )
-        let categoryPickerContent = categoryPickerContentComposer.compose(
-            prefix: [],
-            suffix: [],
-            placeholderCount: categoryPickerPlaceholderCount
-        )
-        let categoryPicker = CategoryPickerSectionBinder(
-            content: categoryPickerContent,
-            flow: categoryPickerFlowComposer.compose()
-        )
+        let categoryPicker = categoryPickerComposer.compose()
         
         // MARK: - OperationPicker
         

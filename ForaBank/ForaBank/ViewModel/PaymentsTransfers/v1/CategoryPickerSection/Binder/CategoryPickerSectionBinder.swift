@@ -5,6 +5,18 @@
 //  Created by Igor Malyarov on 22.08.2024.
 //
 
-import PayHub
+import PayHubUI
 
-typealias CategoryPickerSectionBinder = Holder<CategoryPickerSectionContent, CategoryPickerSectionFlow>
+typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, CategoryModel, CategoryListModel>
+
+final class CategoryModel {
+    
+    let category: ServiceCategory
+    
+    init(category: ServiceCategory) {
+     
+        self.category = category
+    }
+}
+
+final class CategoryListModel {}
