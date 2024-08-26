@@ -7,19 +7,26 @@
 
 import Foundation
 import PayHub
-import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersToolbarView<DestinationView, FullScreenView, ProfileLabel, QRLabel>: View
+public struct ComposedPaymentsTransfersToolbarView<DestinationView, FullScreenView, Profile, ProfileLabel, QR, QRLabel>: View
 where DestinationView: View,
       FullScreenView: View,
       ProfileLabel: View,
       QRLabel: View {
     
-    let binder: PaymentsTransfersToolbarBinder
-    let factory: Factory
+    private let binder: Binder
+    private let factory: Factory
     
-    var body: some View {
+    public init(
+        binder: Binder,
+        factory: Factory
+    ) {
+        self.binder = binder
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         PaymentsTransfersToolbarFlowWrapperView(
             model: binder.flow
@@ -37,12 +44,13 @@ where DestinationView: View,
     }
 }
 
-extension ComposedPaymentsTransfersToolbarView {
+public extension ComposedPaymentsTransfersToolbarView {
     
-    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<DestinationView, FullScreenView, ProfileLabel, QRLabel>
+    typealias Binder = PaymentsTransfersToolbarBinder<Profile, QR>
+    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<DestinationView, FullScreenView, Profile, ProfileLabel, QR, QRLabel>
 }
 
-extension ComposedPaymentsTransfersToolbarView {
+private extension ComposedPaymentsTransfersToolbarView {
     
     func makeContent(
         _ content: PaymentsTransfersToolbarContent
