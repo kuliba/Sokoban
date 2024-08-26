@@ -11,7 +11,7 @@ extension CategoryPickerSectionStateItemLabelConfig {
     
     static let iFora: Self = .init(
         iconBackground: .init(
-            color: .gray.opacity(0.1), // main colors/Gray lightest,
+            color: .mainColorsGrayLightest,
             roundedRect: .icon
         ),
         iconSize: .init(width: 24, height: 24),
@@ -24,10 +24,16 @@ extension CategoryPickerSectionStateItemLabelConfig {
             spacing: 20
         ),
         spacing: 16,
-        title: .init(textFont: .headline, textColor: .primary),
+        title: .init(
+            textFont: .textH4R16240(),
+            textColor: .textSecondary
+        ),
         showAll: .init(
-            text: "show all".uppercased(),
-            config: .init(textFont: .caption, textColor: .blue)
+            text: "См. все",
+            config: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textSecondary
+            )
         )
     )
 }

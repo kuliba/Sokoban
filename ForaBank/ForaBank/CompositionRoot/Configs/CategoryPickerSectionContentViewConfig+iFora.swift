@@ -13,10 +13,10 @@ extension CategoryPickerSectionContentViewConfig {
         headerHeight: 24,
         spacing: 16,
         title: .init(
-            text: "Make a Payment",
+            text: "Оплатить",
             config: .init(
-                textFont: .title3.bold(),
-                textColor: .primary
+                textFont: .textH2Sb20282(),
+                textColor: .textSecondary
             )
         ),
         titlePlaceholder: .init(

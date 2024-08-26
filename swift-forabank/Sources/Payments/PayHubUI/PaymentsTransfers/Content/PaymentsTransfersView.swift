@@ -35,7 +35,8 @@ where CategoryPickerView: View,
             
             factory.makeCategoryPickerView(model.categoryPicker)
         }
-        .padding()
+        .padding(.top)
+        .padding(.horizontal)
         .background(factory.makeToolbarView(model.toolbar))
     }
 }
