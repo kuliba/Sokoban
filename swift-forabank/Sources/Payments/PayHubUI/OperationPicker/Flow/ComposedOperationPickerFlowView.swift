@@ -5,17 +5,25 @@
 //  Created by Igor Malyarov on 24.08.2024.
 //
 
-import PayHubUI
 import SwiftUI
 
-struct ComposedOperationPickerFlowView<DestinationView, ItemLabel>: View
+public struct ComposedOperationPickerFlowView<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>: View
 where DestinationView: View,
-      ItemLabel: View {
+      ItemLabel: View,
+      Latest: Equatable {
     
-    let binder: OperationPickerBinder
-    let factory: Factory
+    private let binder: Binder
+    private let factory: Factory
     
-    var body: some View {
+    public init(
+        binder: Binder,
+        factory: Factory
+    ) {
+        self.binder = binder
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         OperationPickerFlowWrapperView(
             model: binder.flow,
@@ -37,15 +45,16 @@ where DestinationView: View,
     }
 }
 
-extension ComposedOperationPickerFlowView {
+public extension ComposedOperationPickerFlowView {
     
-    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel>
+    typealias Binder = OperationPickerBinder<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Templates>
 }
 
 private extension ComposedOperationPickerFlowView {
     
     func makeContentView(
-        _ content: OperationPickerContent
+        _ content: OperationPickerContent<Latest>
     ) -> some View {
         
         OperationPickerContentWrapperView(
