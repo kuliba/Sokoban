@@ -87,7 +87,11 @@ extension RootViewModelFactory {
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
             toolbar: toolbar,
-            reload: {}
+            reload: {
+                
+                categoryPicker.content.event(.load)
+                operationPicker.content.event(.load)
+            }
         )
         
         let reducer = PayHub.PaymentsTransfersFlowReducer()
