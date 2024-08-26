@@ -14,19 +14,32 @@ struct ComposedOperationPickerFlowView: View {
     
     var body: some View {
         
-        OperationPickerFlowView(
-            binder: binder,
-            factory: .init(
-                makeContent: makeOperationPickerContentView,
-                makeDestination: { Text("TBD: destination " + String(describing: $0)) }
-            )
+        OperationPickerFlowWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                OperationPickerFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContent: {
+                            
+                            makeContentView(binder.content)
+                        },
+                        makeDestination: {
+                            
+                            Text("TBD: destination " + String(describing: $0))
+                        }
+                    )
+                )
+            }
         )
     }
 }
 
 private extension ComposedOperationPickerFlowView {
     
-    func makeOperationPickerContentView(
+    func makeContentView(
         _ content: OperationPickerContent
     ) -> some View {
         
@@ -55,6 +68,7 @@ private extension ComposedOperationPickerFlowView {
                 )
             }
         )
+        .onFirstAppear { content.event(.load) }
     }
 
 }

@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import PayHubUI
 import RxViewModel
 
 typealias OperationPickerFlowState = PayHub.OperationPickerFlowState<Exchange, LatestFlow, Status, Templates>
@@ -15,4 +16,4 @@ typealias OperationPickerFlowEffect = PayHub.OperationPickerFlowEffect<Latest>
 typealias OperationPickerFlowReducer = PayHub.OperationPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
 typealias OperationPickerFlowEffectHandler = PayHub.OperationPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
 
-typealias OperationPickerFlow = RxViewModel<OperationPickerFlowState, OperationPickerFlowEvent, OperationPickerFlowEffect>
+typealias OperationPickerFlow = PayHubUI.OperationPickerFlow<Exchange, Latest, LatestFlow, Status, Templates>
