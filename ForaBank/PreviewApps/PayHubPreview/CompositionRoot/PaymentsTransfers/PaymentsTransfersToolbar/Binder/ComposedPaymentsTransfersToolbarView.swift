@@ -10,8 +10,9 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersToolbarView<DestinationView, ProfileLabel, QRLabel>: View
+struct ComposedPaymentsTransfersToolbarView<DestinationView, FullScreenView, ProfileLabel, QRLabel>: View
 where DestinationView: View,
+      FullScreenView: View,
       ProfileLabel: View,
       QRLabel: View {
     
@@ -29,13 +30,7 @@ where DestinationView: View,
                 factory: .init(
                     makeContent: { self.makeContent(binder.content) },
                     makeDestination: factory.makeDestinationView,
-                    makeFullScreen: {
-                        
-                        self.makeFullScreen(
-                            fullScreen: $0,
-                            event: binder.flow.event
-                        )
-                    }
+                    makeFullScreen: factory.makeFullScreenView
                 )
             )
         }
@@ -44,7 +39,7 @@ where DestinationView: View,
 
 extension ComposedPaymentsTransfersToolbarView {
     
-    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<DestinationView, ProfileLabel, QRLabel>
+    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<DestinationView, FullScreenView, ProfileLabel, QRLabel>
 }
 
 extension ComposedPaymentsTransfersToolbarView {
@@ -67,22 +62,5 @@ extension ComposedPaymentsTransfersToolbarView {
                 )
             }
         )
-    }
-    
-#warning("inject")
-    @ViewBuilder
-    private func makeFullScreen(
-        fullScreen: PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.FullScreen,
-        event: @escaping (PaymentsTransfersToolbarFlowEvent<ProfileModel, QRModel>) -> Void
-    ) -> some View {
-        
-        switch fullScreen {
-        case let .qr(qrModel):
-            VStack(spacing: 32) {
-                
-                Text(String(describing: qrModel))
-                Button("Close") { event(.dismiss) }
-            }
-        }
     }
 }

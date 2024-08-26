@@ -98,6 +98,16 @@ private extension ContentView {
                                     Text(String(describing: profileModel))
                                 }
                             },
+                            makeFullScreenView: {
+                                
+                                switch $0 {
+                                case let .qr(qrModel):
+                                    VStack(spacing: 32) {
+                                        
+                                        Text(String(describing: qrModel))
+                                    }
+                                }
+                            },
                             makeProfileLabel: {
                                 
                                 HStack {

@@ -7,9 +7,10 @@
 
 import PayHub
 
-struct ComposedPaymentsTransfersToolbarViewFactory<DestinationView, ProfileLabel, QRLabel> {
+struct ComposedPaymentsTransfersToolbarViewFactory<DestinationView, FullScreenView, ProfileLabel, QRLabel> {
     
     let makeDestinationView: MakeDestinationView
+    let makeFullScreenView: MakeFullScreenView
     let makeProfileLabel: MakeProfileLabel
     let makeQRLabel: MakeQRLabel
 }
@@ -17,6 +18,7 @@ struct ComposedPaymentsTransfersToolbarViewFactory<DestinationView, ProfileLabel
 extension ComposedPaymentsTransfersToolbarViewFactory {
     
     typealias MakeDestinationView = (PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.Destination) -> DestinationView
+    typealias MakeFullScreenView = (PaymentsTransfersToolbarFlowState<ProfileModel, QRModel>.FullScreen) -> FullScreenView
     typealias MakeProfileLabel = () -> ProfileLabel
     typealias MakeQRLabel = () -> QRLabel
 }
