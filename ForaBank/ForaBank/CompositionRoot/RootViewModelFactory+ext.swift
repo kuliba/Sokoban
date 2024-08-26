@@ -307,9 +307,12 @@ extension RootViewModelFactory {
         )
         let getServiceCategoryListLoader = AnyLoader { completion in
             
-            getServiceCategoryList {
+            backgroundScheduler.delay(for: .seconds(2)) {
                 
-                completion($0.map(\.categoryGroupList))
+                getServiceCategoryList {
+                    
+                    completion($0.map(\.categoryGroupList))
+                }
             }
         }
         let decorated = CacheDecorator(
