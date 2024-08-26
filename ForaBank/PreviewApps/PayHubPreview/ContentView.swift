@@ -97,6 +97,10 @@ private extension ContentView {
                                     Image(systemName: "person.circle")
                                     Text("Profile")
                                 }
+                            },
+                            makeQRLabel: {
+                                
+                                Image(systemName: "qrcode")
                             }
                         )
                     )

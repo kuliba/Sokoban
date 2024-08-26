@@ -10,8 +10,9 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersToolbarView<ProfileLabel>: View
-where ProfileLabel: View {
+struct ComposedPaymentsTransfersToolbarView<ProfileLabel, QRLabel>: View
+where ProfileLabel: View,
+      QRLabel: View {
     
     let binder: PaymentsTransfersToolbarBinder
     let factory: Factory
@@ -42,7 +43,7 @@ where ProfileLabel: View {
 
 extension ComposedPaymentsTransfersToolbarView {
     
-    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<ProfileLabel>
+    typealias Factory = ComposedPaymentsTransfersToolbarViewFactory<ProfileLabel, QRLabel>
 }
 
 extension ComposedPaymentsTransfersToolbarView {
@@ -60,17 +61,11 @@ extension ComposedPaymentsTransfersToolbarView {
                     event: $1,
                     factory: .init(
                         makeProfileLabel: factory.makeProfileLabel,
-                        makeQRLabel: self.makeQRLabel
+                        makeQRLabel: factory.makeQRLabel
                     )
                 )
             }
         )
-    }
-    
-#warning("inject")
-    private func makeQRLabel() -> some View  {
-        
-        Image(systemName: "qrcode")
     }
     
 #warning("inject")
