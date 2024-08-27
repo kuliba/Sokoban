@@ -1300,6 +1300,8 @@
 		2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */; };
 		2AAB56F52C7D8AAF002D96BC /* ProductIDEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */; };
 		2AAB56F72C7D8ACE002D96BC /* TemplateEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */; };
+		2AAB56F92C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F82C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift */; };
+		2AAB56FB2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56FA2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift */; };
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AAF3E242BF37C1800A623DA /* CacheSberOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAF3E232BF37C1800A623DA /* CacheSberOperator.swift */; };
@@ -4673,6 +4675,8 @@
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
 		2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductIDEmitter.swift; sourceTree = "<group>"; };
 		2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEmitter.swift; sourceTree = "<group>"; };
+		2AAB56F82C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
+		2AAB56FA2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift; sourceTree = "<group>"; };
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHub.xctestplan; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
@@ -10710,6 +10714,7 @@
 			children = (
 				2A248F482C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift */,
 				2A92EA6B2C667D68001452E7 /* TemplatesListFlowModelComposer.swift */,
+				2AAB56F82C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift */,
 				2A248F3E2C67609400082814 /* TemplatesListFlowEffectHandlerNanoServices.swift */,
 			);
 			path = Templates;
@@ -10783,6 +10788,7 @@
 			isa = PBXGroup;
 			children = (
 				2A92EA6E2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift */,
+				2AAB56FA2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift */,
 			);
 			path = Templates;
 			sourceTree = "<group>";
@@ -20566,6 +20572,7 @@
 				77DC12612770F03D00C917B0 /* TransferData.swift in Sources */,
 				0CA7D0BA29F6F45800986C80 /* TemplatesToolbarViews.swift in Sources */,
 				2A5D2FBB2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift in Sources */,
+				2AAB56F92C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift in Sources */,
 				77D0387429891A7F00FBE5AB /* PaymentsSubscriberViewComponent.swift in Sources */,
 				EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */,
 				EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */,
@@ -21636,6 +21643,7 @@
 				2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */,
 				2A31446E29FA46E500AB062D /* OrderProductViewComponentTests.swift in Sources */,
 				77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */,
+				2AAB56FB2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift in Sources */,
 				2AB93D092A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift in Sources */,
 				2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */,
 				2A01BAFF29A8F3AA0021833F /* String+Extension.swift in Sources */,

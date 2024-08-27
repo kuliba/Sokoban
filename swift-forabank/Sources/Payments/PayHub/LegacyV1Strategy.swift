@@ -47,6 +47,7 @@ public extension LegacyV1Strategy {
     /// - v1: Indicates that the processing was done using the V1 method,
     ///       and contains the resulting V1 value wrapped in a `Result` to account for success or failure.
     enum Response {
+        
         case legacy(Legacy)
         case v1(Result<V1, Failure>)
     }
