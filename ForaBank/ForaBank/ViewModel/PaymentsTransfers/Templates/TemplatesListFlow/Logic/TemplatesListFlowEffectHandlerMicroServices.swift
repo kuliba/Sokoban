@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 09.08.2024.
 //
 
-struct TemplatesListFlowEffectHandlerMicroServices<PaymentFlow> {
+struct TemplatesListFlowEffectHandlerMicroServices<Legacy, V1> {
     
     let makePayment: MakePayment
 }
@@ -20,7 +20,7 @@ extension TemplatesListFlowEffectHandlerMicroServices {
     
     enum Payment {
         
-        case legacy(PaymentsViewModel)
-        case v1(PaymentFlow)
+        case legacy(Legacy)
+        case v1(V1)
     }
 }

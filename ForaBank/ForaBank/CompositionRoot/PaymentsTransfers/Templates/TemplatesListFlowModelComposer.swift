@@ -104,7 +104,7 @@ private extension TemplatesListFlowModelComposer {
         return .init(microServices: microServices)
     }
     
-    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<AnywayFlowModel>
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentsViewModel, AnywayFlowModel>
     
     private func makePayment(
         payload: MicroServices.MakePaymentPayload,
