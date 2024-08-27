@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-final class LegacyV1Strategy<Payload, Legacy, V1> {
+final class LegacyV1Strategy<Payload, Legacy, V1, Failure: Error> {
     
     private let makeLegacy: MakeLegacy
     private let makeV1: MakeV1
@@ -19,7 +19,7 @@ final class LegacyV1Strategy<Payload, Legacy, V1> {
     }
     
     typealias MakeLegacy = (Payload) -> Legacy
-    typealias MakeV1 = (Payload, @escaping (Result<V1, Error>) -> Void) -> Void
+    typealias MakeV1 = (Payload, @escaping (Result<V1, Failure>) -> Void) -> Void
 }
 
 extension LegacyV1Strategy {
@@ -27,7 +27,7 @@ extension LegacyV1Strategy {
     enum Response {
         
         case legacy(Legacy)
-        case v1(Result<V1, Error>)
+        case v1(Result<V1, Failure>)
     }
     
     typealias Completion = (Response) -> Void
@@ -106,14 +106,15 @@ final class LegacyV1StrategyTests: XCTestCase {
     
     func test_compose_shouldDeliverFailureOnV1Failure_isLegacyFalse() {
         
+        let failure = makeFailure()
         let (sut, _, v1Spy) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.compose(isLegacy: false, payload: makePayload()) {
             
             switch $0 {
-            case .v1(.failure):
-                break
+            case let .v1(.failure(receivedFailure)):
+                XCTAssertNoDiff(receivedFailure, failure)
                 
             default:
                 XCTFail("Expected failure, got \($0) instead")
@@ -122,7 +123,7 @@ final class LegacyV1StrategyTests: XCTestCase {
             exp.fulfill()
         }
         
-        v1Spy.complete(with: .failure(anyError()))
+        v1Spy.complete(with: .failure(failure))
         
         wait(for: [exp], timeout: 0.05)
     }
@@ -153,9 +154,9 @@ final class LegacyV1StrategyTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = LegacyV1Strategy<Payload, Legacy, V1>
+    private typealias SUT = LegacyV1Strategy<Payload, Legacy, V1, Failure>
     private typealias LegacySpy = CallSpy<Payload, Legacy>
-    private typealias V1Spy = Spy<Payload, Result<V1, Error>>
+    private typealias V1Spy = Spy<Payload, Result<V1, Failure>>
     
     private func makeSUT(
         legacy: Legacy? = nil,
@@ -212,6 +213,18 @@ final class LegacyV1StrategyTests: XCTestCase {
     private func makePayload(
         _ value: String = anyMessage()
     ) -> Payload {
+        
+        return .init(value: value)
+    }
+    
+    private struct Failure: Error, Equatable {
+        
+        let value: String
+    }
+    
+    private func makeFailure(
+        _ value: String = anyMessage()
+    ) -> Failure {
         
         return .init(value: value)
     }
