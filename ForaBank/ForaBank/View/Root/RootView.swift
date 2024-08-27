@@ -152,7 +152,16 @@ private extension RootView {
                 },
                 makeOperationPickerView: {
                     
-                    Text(String(describing: $0).prefix(32))
+                    ComposedOperationPickerFlowView(
+                        binder: $0,
+                        factory: .init(
+                            makeDestinationView: {
+                                
+                                Text("TBD: destination " + String(describing: $0))
+                            },
+                            makeItemLabel: itemLabel
+                        )
+                    )
                 },
                 makeToolbarView: {
                     
@@ -206,6 +215,23 @@ private extension RootView {
         )
     }
     
+    private func itemLabel(
+        item: OperationPickerState<Latest>.Item
+    ) -> some View {
+        
+        OperationPickerStateItemLabel(
+            item: item,
+            config: .iFora,
+            placeholderView:  {
+                
+                LatestPlaceholder(
+                    opacity: 1,
+                    config: OperationPickerStateItemLabelConfig.iFora.latestPlaceholder
+                )
+            }
+        )
+    }
+    
     private func categoryIcon(
         category: ServiceCategory
     ) -> some View {
@@ -214,6 +240,7 @@ private extension RootView {
     }
 }
 
+extension Latest: Named {}
 extension ServiceCategory: Named {}
 
 extension View {

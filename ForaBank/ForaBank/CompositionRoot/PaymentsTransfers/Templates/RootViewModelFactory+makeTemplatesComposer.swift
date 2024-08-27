@@ -19,14 +19,14 @@ extension RootViewModelFactory {
     ) -> TemplatesListFlowModelComposer {
         
         let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,
             scheduler: scheduler
         )
         let anywayFlowComposer = AnywayFlowComposer(
-            composer: anywayTransactionViewModelComposer,
+            makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
             model: model,
             scheduler: scheduler
         )
@@ -65,7 +65,7 @@ extension RootViewModelFactory {
         }
         
         return .init(
-            composer: anywayFlowComposer,
+            makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
             nanoServices: .init(
                 initiatePayment: initiatePaymentFromTemplate
@@ -76,7 +76,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension PaymentTemplateData {
+private extension PaymentTemplateData {
     
     var puref: String? {
         

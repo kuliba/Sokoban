@@ -67,7 +67,12 @@ extension RootViewModelFactory {
         let operationPicker = OperationPickerBinder(
             content: operationPickerContent,
             flow: operationPickerFlow,
-            bind: { _,_ in [] }
+            bind: { content, flow in
+                
+                content.$state
+                    .map(\.selected)
+                    .sink { flow.event(.select($0)) }
+            }
         )
         
         // MARK: - Toolbar

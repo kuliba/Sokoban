@@ -31,7 +31,7 @@ where ContentView: View,
         factory.makeContentView()
             .navigationDestination(
                 destination: state.destination,
-                dismiss: { event(.select(nil)) },
+                dismiss: { event(.dismiss) },
                 content: factory.makeDestinationView
             )
     }

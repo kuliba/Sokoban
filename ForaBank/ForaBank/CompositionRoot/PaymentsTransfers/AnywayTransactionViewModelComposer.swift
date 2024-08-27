@@ -36,7 +36,7 @@ final class AnywayTransactionViewModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
+    typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
@@ -110,7 +110,7 @@ private extension AnywayTransactionViewModelComposer {
         typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
         
         let nanoServicesComposer = NanoServicesComposer(
-            flag: flag.optionOrStub,
+            flag: flag,
             httpClient: httpClient,
             log: log
         )

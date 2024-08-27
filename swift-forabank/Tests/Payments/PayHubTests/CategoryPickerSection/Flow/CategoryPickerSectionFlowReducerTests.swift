@@ -59,23 +59,6 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - select
     
-    func test_deselect_shouldResetCategoryDestination() {
-        
-        let state = makeState(destination: .category(makeCategoryModel()))
-        
-        assert(state, event: .select(nil)) {
-            
-            $0.destination = nil
-        }
-    }
-    
-    func test_deselect_shouldNotDeliverEffect() {
-        
-        let state = makeState(destination: .category(makeCategoryModel()))
-        
-        assert(state, event: .select(nil), delivers: nil)
-    }
-    
     func test_select_category_shouldResetDestination() {
         
         let category = makeCategory()
@@ -96,8 +79,6 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     }
     
     func test_select_list_shouldResetDestination() {
-        
-        let category = makeCategory()
         
         assert(
             makeState(destination: .category(makeCategoryModel())),
