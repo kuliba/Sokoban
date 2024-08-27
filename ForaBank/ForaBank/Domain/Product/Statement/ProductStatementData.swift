@@ -7,6 +7,34 @@
 
 import Foundation
 
+struct ProductStatementWithExtendedInfo: Codable, Equatable {
+
+    let summary: ProductStatementSummary?
+    let aggregated: [ProductStatementAggregated]?
+    let operationList: [ProductStatementData]
+    
+    struct ProductStatementSummary: Codable, Equatable {
+    
+        let currencyCodeNumeric: String?
+        let creditOperation: Bool?
+        let debitOperation: Bool?
+    }
+    
+    struct ProductStatementAggregated: Codable, Equatable {
+        
+        let groupByName: String?
+        let baseColor: String?
+        let debit: ProductStatementAmountAndPercent?
+        let credit: ProductStatementAmountAndPercent?
+    }
+    
+    struct ProductStatementAmountAndPercent: Codable, Equatable {
+        
+        let amount: Double?
+        let amountPercent: Double?
+    }
+}
+
 struct ProductStatementData: Identifiable, Equatable, Hashable {
     
     var id: String { operationId + operationType.rawValue }
