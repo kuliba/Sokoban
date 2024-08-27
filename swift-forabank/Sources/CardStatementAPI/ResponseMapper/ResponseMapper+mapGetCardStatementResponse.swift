@@ -12,59 +12,91 @@ public extension ResponseMapper {
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<[ProductStatementData], MappingError> {
+    ) -> Swift.Result<ProductStatementWithExtendedInfo, MappingError> {
         
         map(data, response, mapOrThrow: map)
     }
     
     private static func map(
         _ data: _Data
-    ) throws -> [ProductStatementData] {
+    ) throws -> ProductStatementWithExtendedInfo {
         
-        data.map { .init(data: $0) }
+        .init(
+            summary: .init(data: data.summary),
+            aggregated: data.aggregated.map({ $0.map({ .init(data: $0) }) }),
+            operationList: data.operationList.map({ .init(data: $0 )})
+        )
     }
 }
 
 private extension ResponseMapper {
     
-    typealias _Data = [_DTO]
+    typealias _Data = _DTO
 }
 
 private extension ResponseMapper {
     
     struct _DTO: Decodable, Equatable {
         
-        let type: OperationEnvironment
-        let accountID: Int?
-        let operationType: OperationType
-        let paymentDetailType: Kind
-        let amount: Decimal?
-        let documentAmount: Decimal?
-        let comment: String
-        let documentID: Int?
-        let accountNumber: String
-        let currencyCodeNumeric: Int
-        let merchantName: String?
-        let merchantNameRus: String?
-        let groupName: String
-        let md5hash: String
-        let svgImage: String? // add svgKit
-        let fastPayment: FastPayment?
-        let terminalCode: String?
-        let deviceCode: String?
-        let country: String?
-        let city: String?
-        let operationId: String
-        let isCancellation: Bool?
-        let cardTranNumber: String?
-        let opCode: Int?
-        let date: Date
-        let tranDate: Date?
-        let MCC: Int?
+        let summary: ProductStatementSummary
+        let aggregated: [ProductStatementAggregated]?
+        let operationList: [ProductStatementData]
+        
+        public struct ProductStatementSummary: Decodable, Equatable {
+        
+            let currencyCodeNumeric: String?
+            let creditOperation: Bool?
+            let debitOperation: Bool?
+        }
+        
+        public struct ProductStatementAggregated: Decodable, Equatable {
+            
+            let groupByName: String?
+            let baseColor: String?
+            let debit: ProductStatementAmountAndPercent?
+            let credit: ProductStatementAmountAndPercent?
+        }
+        
+        public struct ProductStatementAmountAndPercent: Decodable, Equatable {
+            
+            let amount: Double?
+            let amountPercent: Double?
+        }
+        
+        struct ProductStatementData: Decodable, Equatable {
+            
+            let type: OperationEnvironment
+            let accountID: Int?
+            let operationType: OperationType
+            let paymentDetailType: Kind
+            let amount: Decimal?
+            let documentAmount: Decimal?
+            let comment: String
+            let documentID: Int?
+            let accountNumber: String
+            let currencyCodeNumeric: Int
+            let merchantName: String?
+            let merchantNameRus: String?
+            let groupName: String
+            let md5hash: String
+            let svgImage: String? // add svgKit
+            let fastPayment: FastPayment?
+            let terminalCode: String?
+            let deviceCode: String?
+            let country: String?
+            let city: String?
+            let operationId: String
+            let isCancellation: Bool?
+            let cardTranNumber: String?
+            let opCode: Int?
+            let date: Date
+            let tranDate: Date?
+            let MCC: Int?
+        }
     }
 }
 
-private extension ResponseMapper._DTO {
+private extension ResponseMapper._DTO.ProductStatementData {
     
     var amountValue: Decimal { amount ?? 0 }
     var documentAmountValue:  Decimal { documentAmount ?? 0 }
@@ -243,10 +275,34 @@ private struct GetCardStatementForPeriodResponse: Decodable {
     let data: ResponseMapper._Data?
 }
 
+private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
+
+    init(data: ResponseMapper._DTO.ProductStatementAggregated?) {
+        self.init(
+            groupByName: data?.groupByName,
+            baseColor: data?.baseColor,
+            debit: data?.debit.map({ .init(amount: $0.amount, amountPercent: $0.amountPercent) }),
+            credit: data?.credit.map({ .init(amount: $0.amount, amountPercent: $0.amountPercent) })
+        )
+    }
+}
+
+private extension ProductStatementWithExtendedInfo.ProductStatementSummary {
+
+    init(data: ResponseMapper._DTO.ProductStatementSummary?) {
+        
+        self.init(
+            currencyCodeNumeric: data?.currencyCodeNumeric,
+            creditOperation: data?.creditOperation,
+            debitOperation: data?.debitOperation
+        )
+    }
+}
+
 private extension ProductStatementData {
     
     init(
-        data: ResponseMapper._DTO
+        data: ResponseMapper._DTO.ProductStatementData
     ) {
         
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map {
