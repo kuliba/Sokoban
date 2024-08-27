@@ -58,7 +58,7 @@ public enum GetInfoRepeatPaymentMapper {
             
             case betweenTheir = "BETWEEN_THEIR"
             case contactAddressless = "CONTACT_ADDRESSLESS"
-            case direct = "DIRECT"
+            case direct = "NEW_DIRECT"
             case externalEntity = "EXTERNAL_ENTITY"
             case externalIndivudual = "EXTERNAL_INDIVIDUAL"
             case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
@@ -74,9 +74,9 @@ public enum GetInfoRepeatPaymentMapper {
         public struct Transfer: Decodable {
             
             public let check: Bool
-            public let amount: Double
-            public let currencyAmount: String
-            public let payer: Payer
+            public let amount: Double?
+            public let currencyAmount: String?
+            public let payer: Payer?
             public let comment: String?
             public let puref: String?
             public let payeeInternal: PayeeInternal?

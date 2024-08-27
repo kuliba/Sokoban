@@ -66,21 +66,21 @@ extension GetInfoRepeatPaymentDomain {
         public struct Transfer: Equatable {
             
             let check: Bool
-            let amount: Double
-            let currencyAmount: String
-            let payer: Payer
-            let comment: String?
-            let puref: String?
-            let payeeInternal: PayeeInternal?
-            let payeeExternal: PayeeExternal?
-            let additional: [Additional]?
+            public let amount: Double?
+            let currencyAmount: String?
+            public let payer: Payer?
+            public let comment: String?
+            public let puref: String?
+            public let payeeInternal: PayeeInternal?
+            public let payeeExternal: PayeeExternal?
+            public let additional: [Additional]?
             let mcc: String?
 
             public init(
                 check: Bool,
-                amount: Double,
-                currencyAmount: String,
-                payer: Payer,
+                amount: Double?,
+                currencyAmount: String?,
+                payer: Payer?,
                 comment: String?,
                 puref: String?,
                 payeeInternal: PayeeInternal?,
@@ -123,12 +123,12 @@ extension GetInfoRepeatPaymentDomain {
             
             public struct PayeeInternal: Equatable {
                 
-                let accountId: Int?
-                let accountNumber: String?
-                let cardId: Int?
-                let cardNumber: String?
-                let phoneNumber: String?
-                let productCustomName: String?
+                public  let accountId: Int?
+                public let accountNumber: String?
+                public let cardId: Int?
+                public let cardNumber: String?
+                public let phoneNumber: String?
+                public let productCustomName: String?
                 
                 public init(
                     accountId: Int?,
@@ -160,16 +160,16 @@ extension GetInfoRepeatPaymentDomain {
             
             public struct PayeeExternal: Equatable {
                 
-                let inn: String?
-                let kpp: String?
-                let accountId: Int?
-                let accountNumber: String
-                let bankBIC: String?
-                let cardId: Int?
-                let cardNumber: String?
-                let compilerStatus: String?
-                let date: String?
-                let name: String
+                public let inn: String?
+                public let kpp: String?
+                public let accountId: Int?
+                public let accountNumber: String
+                public let bankBIC: String?
+                public let cardId: Int?
+                public let cardNumber: String?
+                public let compilerStatus: String?
+                public let date: String?
+                public let name: String
                 
                 public init(
                     inn: String?,
@@ -245,19 +245,19 @@ extension GetInfoRepeatPaymentDomain {
             
             public struct Additional: Equatable {
             
-                let fieldname: String
-                let fieldid: Int
-                let fieldvalue: String
+                public let fieldname: String
+                public let fieldid: Int
+                public let fieldvalue: String
             }
             
             public struct Payer: Equatable {
                 
-                let cardId: Int
-                let cardNumber: String?
-                let accountId: Int?
-                let accountNumber: String?
-                let phoneNumber: String?
-                let inn: String?
+                public let cardId: Int?
+                public let cardNumber: String?
+                public let accountId: Int?
+                public let accountNumber: String?
+                public let phoneNumber: String?
+                public let inn: String?
                 
                 public init(
                     cardId: Int,
@@ -276,14 +276,14 @@ extension GetInfoRepeatPaymentDomain {
                 }
                 
                 public init(
-                    payer: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer.Payer
+                    payer: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.Transfer.Payer?
                 ) {
-                    self.cardId = payer.cardId
-                    self.cardNumber = payer.cardNumber
-                    self.accountId = payer.accountId
-                    self.accountNumber = payer.accountNumber
-                    self.phoneNumber = payer.phoneNumber
-                    self.inn = payer.INN
+                    self.cardId = payer?.cardId
+                    self.cardNumber = payer?.cardNumber
+                    self.accountId = payer?.accountId
+                    self.accountNumber = payer?.accountNumber
+                    self.phoneNumber = payer?.phoneNumber
+                    self.inn = payer?.INN
                 }
             }
         }
