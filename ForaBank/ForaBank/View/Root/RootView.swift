@@ -8,6 +8,7 @@
 import ActivateSlider
 import InfoComponent
 import PaymentSticker
+import PayHubUI
 import SberQR
 import SwiftUI
 
@@ -82,7 +83,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(binder):
-                ComposedPaymentsTransfersFlowWrapperView(binder: binder)
+                paymentsTransfersFlowView(binder)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -129,6 +130,91 @@ struct RootView: View {
         }
     }
 }
+
+// MARK: - PaymentsTransfers v1
+
+private extension RootView {
+    
+    func paymentsTransfersFlowView(
+        _ binder: PaymentsTransfersBinder
+    ) -> some View {
+        
+        ComposedPaymentsTransfersFlowView(
+            binder: binder,
+            factory: .init(
+                makeCategoryPickerView: {
+                    
+                    ComposedCategoryPickerSectionFlowView(
+                        binder: $0,
+                        config: .iFora,
+                        itemLabel: itemLabel
+                    )
+                },
+                makeOperationPickerView: {
+                    
+                    Text(String(describing: $0).prefix(32))
+                },
+                makeToolbarView: {
+                    
+                    ComposedPaymentsTransfersToolbarView(
+                        binder: $0,
+                        factory: .init(
+                            makeDestinationView: {
+                                
+                                switch $0 {
+                                case let .profile(profileModel):
+                                    Text(String(describing: profileModel))
+                                }
+                            },
+                            makeFullScreenView: {
+                                
+                                switch $0 {
+                                case let .qr(qrModel):
+                                    VStack(spacing: 32) {
+                                        
+                                        Text(String(describing: qrModel))
+                                    }
+                                }
+                            },
+                            makeProfileLabel: {
+                                
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Profile")
+                                }
+                            },
+                            makeQRLabel: {
+                                
+                                Image(systemName: "qrcode")
+                            }
+                        )
+                    )
+                }
+            )
+        )
+    }
+    
+    private func itemLabel(
+        item: CategoryPickerSectionState.Item
+    ) -> some View {
+        
+        CategoryPickerSectionStateItemLabel(
+            item: item,
+            config: .iFora,
+            categoryIcon: categoryIcon,
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
+    }
+}
+
+extension ServiceCategory: Named {}
 
 extension View {
     

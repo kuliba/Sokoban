@@ -75,6 +75,7 @@ private extension ContentView {
                     
                     ComposedCategoryPickerSectionFlowView(
                         binder: $0,
+                        config: .preview,
                         itemLabel: itemLabel
                     )
                 },
@@ -85,7 +86,42 @@ private extension ContentView {
                         itemLabel: itemLabel
                     )
                 },
-                makeToolbarView: PaymentsTransfersToolbarBinderView.init
+                makeToolbarView: {
+                    
+                    ComposedPaymentsTransfersToolbarView(
+                        binder: $0,
+                        factory: .init(
+                            makeDestinationView: {
+                                
+                                switch $0 {
+                                case let .profile(profileModel):
+                                    Text(String(describing: profileModel))
+                                }
+                            },
+                            makeFullScreenView: {
+                                
+                                switch $0 {
+                                case let .qr(qrModel):
+                                    VStack(spacing: 32) {
+                                        
+                                        Text(String(describing: qrModel))
+                                    }
+                                }
+                            },
+                            makeProfileLabel: {
+                                
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Profile")
+                                }
+                            },
+                            makeQRLabel: {
+                                
+                                Image(systemName: "qrcode")
+                            }
+                        )
+                    )
+                }
             )
         )
     }

@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     typealias LoadLatestOperationsCompletion = ([Latest]) -> Void
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
-    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem]) -> Void
+    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     static func makePaymentsTransfersBinder(
@@ -32,8 +32,8 @@ extension RootViewModelFactory {
         let categoryPickerComposer = CategoryPickerSectionBinderComposer(
             load: loadCategories,
             microServices: .init(
-                showAll: { $0(CategoryListModel()) },
-                showCategory: { $1(CategoryModel(category: $0)) }
+                showAll: { $0(CategoryListModelStub()) },
+                showCategory: { $1(CategoryModelStub(category: $0)) }
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
@@ -66,16 +66,32 @@ extension RootViewModelFactory {
         let operationPickerFlow = operationPickerFlowComposer.compose()
         let operationPicker = OperationPickerBinder(
             content: operationPickerContent,
-            flow: operationPickerFlow
+            flow: operationPickerFlow,
+            bind: { _,_ in [] }
         )
+        
+        // MARK: - Toolbar
+        
+        let toolbarComposer = PaymentsTransfersToolbarBinderComposer(
+            microServices: .init(
+                makeProfile: { $0(ProfileModelStub()) },
+                makeQR: { $0(QRModelStub()) }
+            ),
+            scheduler: mainScheduler
+        )
+        let toolbar = toolbarComposer.compose()
         
         // MARK: - PaymentsTransfers
         
         let content = PaymentsTransfersContent(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
-            toolbar: (),
-            reload: {}
+            toolbar: toolbar,
+            reload: {
+                
+                categoryPicker.content.event(.load)
+                operationPicker.content.event(.load)
+            }
         )
         
         let reducer = PayHub.PaymentsTransfersFlowReducer()

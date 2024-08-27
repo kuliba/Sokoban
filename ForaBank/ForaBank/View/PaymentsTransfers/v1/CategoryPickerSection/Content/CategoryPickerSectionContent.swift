@@ -1,8 +1,8 @@
 //
 //  CategoryPickerSectionContent.swift
-//  PayHubPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 21.08.2024.
+//  Created by Igor Malyarov on 26.08.2024.
 //
 
 import Foundation

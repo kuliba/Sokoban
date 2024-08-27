@@ -1,6 +1,6 @@
 //
 //  ComposedCategoryPickerSectionFlowView.swift
-//  PayHubPreview
+//  ForaBank
 //
 //  Created by Igor Malyarov on 26.08.2024.
 //
@@ -67,7 +67,7 @@ private extension ComposedCategoryPickerSectionFlowView {
     }
     
     private func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModel, CategoryListModel>
+        destination: CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
     ) -> some View {
         
         Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")
