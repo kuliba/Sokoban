@@ -160,7 +160,7 @@ private extension View {
     }
 }
 
-private extension Decimal {
+extension Decimal {
     
  func rounded(toDecimalPlace digit: Int = 2) -> Decimal {
     var initialDecimal = self

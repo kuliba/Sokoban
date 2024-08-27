@@ -757,7 +757,7 @@ private extension MainViewModel {
             rootActions?.spinner.hide()
             action.send(MainViewModelAction.Close.Link())
             
-            delay(for: .milliseconds(800)) { [weak self] in
+            delay(for: .milliseconds(1300)) { [weak self] in
                 
                 self?.action.send(
                     MainViewModelAction.Show.ProductProfile(

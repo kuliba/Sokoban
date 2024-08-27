@@ -2656,30 +2656,56 @@ extension ProductProfileViewModel {
             
             guard let self else { return }
             
-            if case let .productInfo(productInfoViewModel) = self.link {
-                productInfoViewModel.action.send(DelayWrappedAction(
-                    delayMS: 10,
-                    action: InfoProductModelAction.Spinner.Show()))
-            }
-            else {
+            switch self.link {
+                
+            case .none:
                 self.action.send(DelayWrappedAction(
                     delayMS: 10,
                     action:ProductProfileViewModelAction.Spinner.Show()))
+                
+            case let .some(destination):
+                switch destination {
+                case let .productInfo(productInfoViewModel):
+                    productInfoViewModel.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action: InfoProductModelAction.Spinner.Show()))
+
+                case let .controlPanel(controlPanel):
+                    controlPanel.event(.showSpinner)
+                    
+                default:
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action:ProductProfileViewModelAction.Spinner.Show()))
+                }
             }
         }
     }
     
     func hideSpinner() {
         
-        if case let .productInfo(productInfoViewModel) = self.link {
-            productInfoViewModel.action.send(DelayWrappedAction(
-                delayMS: 10,
-                action: InfoProductModelAction.Spinner.Hide()))
-        }
-        else {
+        switch self.link {
+            
+        case .none:
             self.action.send(DelayWrappedAction(
                 delayMS: 10,
                 action:ProductProfileViewModelAction.Spinner.Hide()))
+            
+        case let .some(destination):
+            switch destination {
+            case let .productInfo(productInfoViewModel):
+                productInfoViewModel.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action: InfoProductModelAction.Spinner.Hide()))
+                
+            case let .controlPanel(controlPanel):
+                controlPanel.event(.hideSpinner)
+                
+            default:
+                self.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action:ProductProfileViewModelAction.Spinner.Hide()))
+            }
         }
     }
     
@@ -2692,21 +2718,7 @@ extension ProductProfileViewModel {
             
             guard let self else { return }
             
-            DispatchQueue.main.async { [weak self] in
-                
-                guard let self else { return }
-                
-                if case let .productInfo(productInfoViewModel) = self.link {
-                    productInfoViewModel.action.send(DelayWrappedAction(
-                        delayMS: 10,
-                        action: InfoProductModelAction.Spinner.Hide()))
-                }
-                else {
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 10,
-                        action: ProductProfileViewModelAction.Spinner.Hide()))
-                }
-            }
+            hideSpinner()
             
             switch result {
             case let .failure(error):
@@ -2932,17 +2944,24 @@ extension ProductProfileViewModel {
     func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
-            self.event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
+            event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
             
         default:
-            guard let viewModel = PaymentsMeToMeViewModel(
-                self.model,
-                mode: .makePaymentTo(productData, 0.0))
-            else { return }
             
-            self.bind(viewModel)
-            
-            self.event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            if model.needDisableForIndividualBusinessmanMainCardAlert(
+                product: productData,
+                with: .generalToWithDepositAndIndividualBusinessmanMain) {
+                event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+            } else {
+                guard let viewModel = PaymentsMeToMeViewModel(
+                    model,
+                    mode: .makePaymentTo(productData, 0.0))
+                else { return }
+                
+                bind(viewModel)
+                
+                event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            }
         }
     }
     

@@ -528,6 +528,29 @@ final class ControlPanelReducerTests: XCTestCase {
         )
     }
     
+    func test_reduce_showSpinner_shouldSpinnerNotNil() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .showSpinner,
+            on: initialState(buttons: .buttons(card))) {
+                $0.spinner = .init()
+            }
+    }
+    
+    func test_reduce_hideSpinner_shouldSpinnerToNil() {
+        
+        let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
+        
+        assertState(
+            .hideSpinner,
+            on: initialState(buttons: .buttons(card), spinner: .init())) {
+                
+                $0.spinner = nil
+            }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ControlPanelReducer
@@ -669,6 +692,7 @@ final class ControlPanelReducerTests: XCTestCase {
     private func initialState(
         buttons: [ControlPanelButtonDetails],
         alert: Alert.ViewModel? = nil,
+        spinner: SpinnerView.ViewModel? = nil,
         navigationBarInfo: SUT.State.NavigationBarInfo = .default,
         landingWrapperViewModel: LandingWrapperViewModel? = nil,
         destination: ControlPanelState.Destination? = nil
@@ -677,6 +701,7 @@ final class ControlPanelReducerTests: XCTestCase {
         .init(
             buttons: buttons,
             alert: alert,
+            spinner: spinner,
             navigationBarInfo: navigationBarInfo,
             landingWrapperViewModel: landingWrapperViewModel,
             destination: destination

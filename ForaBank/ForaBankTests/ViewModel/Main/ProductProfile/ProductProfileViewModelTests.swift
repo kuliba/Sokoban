@@ -866,6 +866,42 @@ final class ProductProfileViewModelTests: XCTestCase {
         sut.link = nil
     }
 
+    func test_showPaymentOurBank_onlyIndividualBusinessmanMain_shouldShowAlert() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
+        
+        let sut = try makeSUT(card: card, products: [.card: [card]])
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showPaymentOurBank(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, ProductAlertsViewModel.default.serviceOnlyIndividualCard)
+    }
+    
+    func test_showPaymentOurBank_notOnlyIndividualBusinessmanMain_shouldShowBottomSheet() throws {
+        
+        let card: ProductCardData = .createCardByType(.individualBusinessmanMain)
+        
+        let sut = try makeSUT(card: card, products: [.card: [card, .cardActiveAddCreditOnlyRub]])
+        
+        XCTAssertNil(sut.bottomSheet)
+        
+        sut.showPaymentOurBank(card)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.bottomSheet)
+        
+        XCTAssertNoDiff(sut.bottomSheet?.case, .meToMe)
+    }
+
+
     // MARK: - test show/hide spinner
     func test_showHideSpinner() throws {
         
@@ -1442,7 +1478,7 @@ extension ProductCardData {
     
     static func createCardByType(_ cardType: CardType) -> ProductCardData {
         
-        .init(id: 1, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 1, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
+        .init(id: 1, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 1, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: .active, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "", cardType: cardType)
     }
 }
 

@@ -261,6 +261,40 @@ final class ProductFilterTests: XCTestCase {
         
         XCTAssertEqual(result.map(\.id), [2, 51])
     }
+    
+    func testFilteredProducts_closeDepositTo() {
+        
+        let result = filteredProducts(
+            products: [
+                makeCardProduct(id: 1, cardType: .additionalCorporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessmanMain),
+                makeCardProduct(id: 3, cardType: .main),
+                .accountActiveRub,
+                .depositActiveRub,
+                .accountBlockedRub,
+                .loanActiveUsd
+                ],
+            rules: ProductData.Filter.closeDepositTo.rules)
+        
+        XCTAssertEqual(result.map(\.id), [2, 3, 51, 71])
+    }
+    
+    func testFilteredProducts_closeAccountTo() {
+        
+        let result = filteredProducts(
+            products: [
+                makeCardProduct(id: 1, cardType: .additionalCorporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessmanMain),
+                makeCardProduct(id: 3, cardType: .main),
+                .accountActiveRub,
+                .depositActiveRub,
+                .accountBlockedRub,
+                .loanActiveUsd
+                ],
+            rules: ProductData.Filter.closeAccountTo.rules)
+        
+        XCTAssertEqual(result.map(\.id), [2, 3, 51])
+    }
 
     // MARK: - Helpers
     
