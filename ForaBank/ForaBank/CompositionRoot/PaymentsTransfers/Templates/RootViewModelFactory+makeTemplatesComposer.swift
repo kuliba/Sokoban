@@ -76,7 +76,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension PaymentTemplateData {
+private extension PaymentTemplateData {
     
     var puref: String? {
         
