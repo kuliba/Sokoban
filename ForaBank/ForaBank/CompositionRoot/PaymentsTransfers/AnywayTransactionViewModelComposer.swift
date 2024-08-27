@@ -50,7 +50,9 @@ extension AnywayTransactionViewModelComposer {
         typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
         
         let elementMapperComposer = AnywayElementModelMapperComposer(model: model)
-        let elementMapper = elementMapperComposer.compose(flag: flag)
+        let elementMapper = elementMapperComposer.compose(
+            flag: flag.optionOrStub
+        )
         
         let composer = ReducerComposer()
         let reducer = composer.compose()
