@@ -5,46 +5,7 @@
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-final class LegacyV1Strategy<Payload, Legacy, V1, Failure: Error> {
-    
-    private let makeLegacy: MakeLegacy
-    private let makeV1: MakeV1
-    
-    init(
-        makeLegacy: @escaping MakeLegacy,
-        makeV1: @escaping MakeV1
-    ) {
-        self.makeLegacy = makeLegacy
-        self.makeV1 = makeV1
-    }
-    
-    typealias MakeLegacy = (Payload) -> Legacy
-    typealias MakeV1 = (Payload, @escaping (Result<V1, Failure>) -> Void) -> Void
-}
-
-extension LegacyV1Strategy {
-    
-    enum Response {
-        
-        case legacy(Legacy)
-        case v1(Result<V1, Failure>)
-    }
-    
-    typealias Completion = (Response) -> Void
-    
-    func compose(
-        isLegacy: Bool,
-        payload: Payload,
-        _ completion: @escaping Completion
-    ) {
-        if isLegacy {
-            completion(.legacy(makeLegacy(payload)))
-        } else {
-            makeV1(payload) { completion(.v1($0)) }
-        }
-    }
-}
-
+import PayHub
 import XCTest
 
 final class LegacyV1StrategyTests: XCTestCase {
