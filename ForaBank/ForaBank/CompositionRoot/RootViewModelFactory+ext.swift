@@ -224,7 +224,7 @@ extension RootViewModelFactory {
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
             fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -241,7 +241,7 @@ extension RootViewModelFactory {
             validator: .init()
         )
         let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: logger.log,
@@ -264,7 +264,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
             model: model,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             scheduler: mainScheduler
         )
         
@@ -272,7 +272,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
             model: model,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             scheduler: mainScheduler
         )
         

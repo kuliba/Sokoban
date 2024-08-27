@@ -67,7 +67,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
         qrCode: QRCode? = nil,
         qrMapping: QRMapping = .init(parameters: [], operators: []),
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag = .init(.active(.stub)),
+        flag: StubbedFeatureFlag.Option = .stub,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -81,7 +81,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
             httpClient: httpClient,
             log: { _,_,_,_,_ in },
             model: model,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            flag: flag,
             scheduler: .immediate
         )
         let mix = mix ?? .init(.provider(makeSegmentedProvider()), .provider(makeSegmentedProvider()))

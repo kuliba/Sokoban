@@ -15,12 +15,12 @@ extension RootViewModelFactory {
         log: @escaping Log,
         model: Model,
         pageSize: Int = 50,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        flag: StubbedFeatureFlag.Option,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> AnywayServicePickerFlowModelComposer {
         
         let transactionModelComposer = AnywayTransactionViewModelComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
+            flag: flag,
             model: model,
             httpClient: httpClient,
             log: log,
@@ -32,7 +32,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
+            flag: flag,
             model: model,
             pageSize: pageSize
         )
@@ -42,7 +42,7 @@ extension RootViewModelFactory {
         )
         let loadOperators = loaderComposer.loadOperators(completion:)
         let pickerNanoServicesComposer = UtilityPaymentNanoServicesComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: flag,
             model: model,
             httpClient: httpClient,
             log: log,
