@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     ) -> AnywayServicePickerFlowModelComposer {
         
         let transactionModelComposer = AnywayTransactionViewModelComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,

@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     ) -> TemplatesListFlowModelComposer {
         
         let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,

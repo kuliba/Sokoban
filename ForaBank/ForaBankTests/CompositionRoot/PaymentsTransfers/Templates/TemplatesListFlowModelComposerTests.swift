@@ -118,7 +118,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         let model: Model = .emptyMock
         let spy = InitiatePaymentSpy()
         let transactionComposer = AnywayTransactionViewModelComposer(
-            flag: .init(flag),
+            flag: UtilitiesPaymentsFlag(flag).optionOrStub,
             model: model,
             httpClient: httpClient,
             log: { _,_,_,_,_ in },

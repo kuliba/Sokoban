@@ -36,7 +36,7 @@ final class AnywayTransactionViewModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
+    typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
@@ -50,9 +50,7 @@ extension AnywayTransactionViewModelComposer {
         typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
         
         let elementMapperComposer = AnywayElementModelMapperComposer(model: model)
-        let elementMapper = elementMapperComposer.compose(
-            flag: flag.optionOrStub
-        )
+        let elementMapper = elementMapperComposer.compose(flag: flag)
         
         let composer = ReducerComposer()
         let reducer = composer.compose()
@@ -112,7 +110,7 @@ private extension AnywayTransactionViewModelComposer {
         typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
         
         let nanoServicesComposer = NanoServicesComposer(
-            flag: flag.optionOrStub,
+            flag: flag,
             httpClient: httpClient,
             log: log
         )
