@@ -89,11 +89,30 @@ extension Model {
         return (products(.card) ?? []).compactMap(\.asCard?.cardType).uniqued()
     }
     
+    struct CardInfo: Hashable {
+        
+        let type: ProductCardData.CardType
+        let status: ProductCardData.StatusCard
+    }
+    
+    var cardsStatus: [CardInfo?] {
+        
+        return (products(.card) ?? []).compactMap{
+            
+            guard let cardType = $0.asCard?.cardType, let status = $0.asCard?.statusCard
+            else { return nil }
+            return .init(type: cardType, status: status)
+        }.uniqued()
+    }
+
     var onlyCorporateCards: Bool {
         
         guard productsTypes == [.card] else { return false }
         
-        return Set(cardsTypes).isDisjoint(with: [.main, .regular, .additionalSelf, .additionalOther, .additionalSelfAccOwn])
+        guard Set(cardsTypes).contains(where: { $0.isCorporateCard })
+        else { return false }
+                
+        return Set(cardsStatus).isDisjoint(with: .individualActiveCards)
     }
     
     var containsLessThenTwoIndividualBusinessmanMainCard: Bool {
@@ -1616,4 +1635,17 @@ enum ModelProductsError: Swift.Error {
     case unableCacheUnknownProductType
     case cacheStoreErrors([Error])
     case cacheClearErrors([Error])
+}
+
+//MARK: - Helpers
+
+extension Set where Element == Model.CardInfo {
+    
+    static let individualActiveCards: Self = [
+       .init(type: .main, status: .active),
+       .init(type: .regular, status: .active),
+       .init(type: .additionalSelf, status: .active),
+       .init(type: .additionalOther, status: .active),
+       .init(type: .additionalSelfAccOwn, status: .active)
+   ]
 }
