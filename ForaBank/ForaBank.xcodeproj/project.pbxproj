@@ -1298,6 +1298,8 @@
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
 		2AA94CAF2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA94CAE2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift */; };
 		2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */; };
+		2AAB56F52C7D8AAF002D96BC /* ProductIDEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */; };
+		2AAB56F72C7D8ACE002D96BC /* TemplateEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */; };
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AAF3E242BF37C1800A623DA /* CacheSberOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAF3E232BF37C1800A623DA /* CacheSberOperator.swift */; };
@@ -4669,6 +4671,8 @@
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA94CAE2C78973A00830659 /* PaymentsTransfersToolbarBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersToolbarBinder.swift; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
+		2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductIDEmitter.swift; sourceTree = "<group>"; };
+		2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEmitter.swift; sourceTree = "<group>"; };
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHub.xctestplan; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
@@ -10296,6 +10300,8 @@
 			isa = PBXGroup;
 			children = (
 				2A6CF7342C662BCB00F2B85A /* TemplatesListFlowModel.swift */,
+				2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */,
+				2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */,
 				2A6CF7382C662EF200F2B85A /* TemplatesListFlowView.swift */,
 			);
 			path = UI;
@@ -19730,6 +19736,7 @@
 				2A8A8FA42C00D5CD001ECAA3 /* OtherConfigs.swift in Sources */,
 				83CFA29B2C2D7302003B5E49 /* ControlPanelViewConfig.swift in Sources */,
 				774A8B702865FEB200B81140 /* OptionSelectorViewComponent.swift in Sources */,
+				2AAB56F72C7D8ACE002D96BC /* TemplateEmitter.swift in Sources */,
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				2A3624952C5F400100174C50 /* AnywayServicePickerFlowState.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
@@ -19873,6 +19880,7 @@
 				6845336C279843DF00104A8B /* ServerCommands+Utility.swift in Sources */,
 				0C9CC08728992517000DB396 /* ProductStatementMerchantGroup.swift in Sources */,
 				68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */,
+				2AAB56F52C7D8AAF002D96BC /* ProductIDEmitter.swift in Sources */,
 				83CDE9912AAF4C0A00212FAA /* LandingViewModel.swift in Sources */,
 				2A5457572A3B48F9007617C3 /* TransportPaymentsView.swift in Sources */,
 				774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */,
