@@ -36,10 +36,7 @@ public extension CategoryPickerSectionFlowReducer {
         case let .select(select):
             state.destination = nil
 
-            switch select {
-            case .none:
-                break
-                
+            switch select {                
             case let .category(category):
                 effect = .showCategory(category)
                 
