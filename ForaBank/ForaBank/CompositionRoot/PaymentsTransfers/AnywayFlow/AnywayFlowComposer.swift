@@ -10,24 +10,24 @@ import Foundation
 
 final class AnywayFlowComposer {
     
-    private let composer: Composer
+    private let makeAnywayTransactionViewModel: MakeAnywayTransactionViewModel
     private let fraudDelay: Double
     private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        composer: Composer,
+        makeAnywayTransactionViewModel: @escaping MakeAnywayTransactionViewModel,
         fraudDelay: Double = 120,
         model: Model,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.composer = composer
+        self.makeAnywayTransactionViewModel = makeAnywayTransactionViewModel
         self.fraudDelay = fraudDelay
         self.model = model
         self.scheduler = scheduler
     }
     
-    typealias Composer = AnywayTransactionViewModelComposer
+    typealias MakeAnywayTransactionViewModel = (AnywayTransactionState.Transaction) -> AnywayTransactionViewModel
 }
 
 extension AnywayFlowComposer {
@@ -57,7 +57,7 @@ private extension AnywayFlowComposer {
     ) -> AnywayFlowModel.State {
         
         return .init(
-            content: composer.compose(transaction: transaction),
+            content: makeAnywayTransactionViewModel(transaction),
             status: destination
         )
     }

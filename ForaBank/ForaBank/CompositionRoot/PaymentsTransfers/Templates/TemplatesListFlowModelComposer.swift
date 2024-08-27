@@ -11,26 +11,27 @@ import Foundation
 
 final class TemplatesListFlowModelComposer {
     
-    private let composer: AnywayFlowComposer
+    private let makeAnywayFlowModel: MakeAnywayFlowModel
     private let model: Model
     private let nanoServices: NanoServices
     private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        composer: AnywayFlowComposer,
+        makeAnywayFlowModel: @escaping MakeAnywayFlowModel,
         model: Model,
         nanoServices: NanoServices,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.composer = composer
+        self.makeAnywayFlowModel = makeAnywayFlowModel
         self.model = model
         self.nanoServices = nanoServices
         self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
         self.scheduler = scheduler
     }
     
+    typealias MakeAnywayFlowModel = (AnywayTransactionState.Transaction) -> AnywayFlowModel
     typealias NanoServices = TemplatesListFlowEffectHandlerNanoServices
 }
 
@@ -146,7 +147,7 @@ private extension TemplatesListFlowModelComposer {
                 completion(.failure(serviceFailure))
                 
             case let .success(transaction):
-                completion(.success(.v1(composer.compose(transaction: transaction))))
+                completion(.success(.v1(makeAnywayFlowModel(transaction))))
             }
         }
     }

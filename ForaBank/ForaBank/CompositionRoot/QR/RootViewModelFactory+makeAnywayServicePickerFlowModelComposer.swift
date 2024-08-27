@@ -27,7 +27,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         let anywayComposer = AnywayFlowComposer(
-            composer: transactionModelComposer,
+            makeAnywayTransactionViewModel: transactionModelComposer.compose(transaction:),
             model: model,
             scheduler: scheduler
         )
