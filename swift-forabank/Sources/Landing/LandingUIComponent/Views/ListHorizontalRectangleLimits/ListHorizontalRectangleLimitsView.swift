@@ -379,7 +379,8 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? value.formattedValue : "0"
+            let valueRounded = value.rounded(toDecimalPlace: 0)
+            return valueRounded > 0 ? valueRounded.formattedValue : "0"
         }
     }
 }
