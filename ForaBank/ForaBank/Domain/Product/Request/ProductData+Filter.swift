@@ -402,7 +402,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardCorporateRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -419,7 +419,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardCorporateRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     

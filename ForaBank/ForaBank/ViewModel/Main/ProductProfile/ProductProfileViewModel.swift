@@ -2932,17 +2932,24 @@ extension ProductProfileViewModel {
     func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
-            self.event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
+            event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
             
         default:
-            guard let viewModel = PaymentsMeToMeViewModel(
-                self.model,
-                mode: .makePaymentTo(productData, 0.0))
-            else { return }
             
-            self.bind(viewModel)
-            
-            self.event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            if model.needDisableForIndividualBusinessmanMainCardAlert(
+                product: productData,
+                with: .generalToWithDepositAndIndividualBusinessmanMain) {
+                event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+            } else {
+                guard let viewModel = PaymentsMeToMeViewModel(
+                    model,
+                    mode: .makePaymentTo(productData, 0.0))
+                else { return }
+                
+                bind(viewModel)
+                
+                event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            }
         }
     }
     

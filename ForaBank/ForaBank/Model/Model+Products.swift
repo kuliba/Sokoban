@@ -71,6 +71,15 @@ extension Model {
         }
     }
 
+    func needDisableForIndividualBusinessmanMainCardAlert(
+        product: ProductData,
+        with filter: ProductData.Filter
+    ) -> Bool {
+        
+        guard product.asCard?.cardType == .individualBusinessmanMain else { return false }
+        
+        return filter.filteredProducts(allProducts).count < 2
+    }
     
     var isAllProductsHidden: Bool {
         products.value.values
