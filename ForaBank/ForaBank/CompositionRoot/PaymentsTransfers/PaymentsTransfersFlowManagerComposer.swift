@@ -191,7 +191,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> PrepaymentFlowEffectHandler.MicroServices {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
-            flag: flag,
+            flag: flag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,

@@ -117,18 +117,20 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         let httpClient = HTTPClientSpy()
         let model: Model = .emptyMock
         let spy = InitiatePaymentSpy()
+        let transactionComposer = AnywayTransactionViewModelComposer(
+            flag: UtilitiesPaymentsFlag(flag).optionOrStub,
+            model: model,
+            httpClient: httpClient,
+            log: { _,_,_,_,_ in },
+            scheduler: .immediate
+        )
+        let composer = AnywayFlowComposer(
+            makeAnywayTransactionViewModel: transactionComposer.compose(transaction:),
+            model: model,
+            scheduler: .immediate
+        )
         let sut = SUT(
-            composer: .init(
-                composer: .init(
-                    flag: .init(flag),
-                    model: model,
-                    httpClient: httpClient,
-                    log: { _,_,_,_,_ in },
-                    scheduler: .immediate
-                ),
-                model: model,
-                scheduler: .immediate
-            ),
+            makeAnywayFlowModel: composer.compose(transaction:),
             model: model,
             nanoServices: .init(initiatePayment: spy.process(_:completion:)),
             utilitiesPaymentsFlag: .init(flag),

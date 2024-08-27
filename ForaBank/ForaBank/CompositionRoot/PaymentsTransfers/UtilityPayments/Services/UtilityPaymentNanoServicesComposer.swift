@@ -22,32 +22,21 @@ final class UtilityPaymentNanoServicesComposer {
     private let loadOperators: LoadOperators
     
     init(
-        flag: UtilitiesPaymentsFlag,
+        flag: Flag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
-        self.flag = .init(flag)
+        self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
         self.loadOperators = loadOperators
     }
     
-    enum Flag {
+    typealias Flag = StubbedFeatureFlag.Option
         
-        case live, stub
-        
-        init(_ flag: UtilitiesPaymentsFlag) {
-            
-            switch flag.rawValue {
-            case .inactive, .active(.live): self = .live
-            case .active(.stub):            self = .stub
-            }
-        }
-    }
-    
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     typealias LoadOperatorsCompletion = ([Operator]) -> Void

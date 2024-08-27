@@ -5,16 +5,25 @@
 //  Created by Igor Malyarov on 24.08.2024.
 //
 
-import PayHubUI
 import SwiftUI
 
-struct ComposedOperationPickerFlowView<ItemLabel>: View
-where ItemLabel: View {
+public struct ComposedOperationPickerFlowView<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>: View
+where DestinationView: View,
+      ItemLabel: View,
+      Latest: Equatable {
     
-    let binder: OperationPickerBinder
-    let itemLabel: (Item) -> ItemLabel
+    private let binder: Binder
+    private let factory: Factory
     
-    var body: some View {
+    public init(
+        binder: Binder,
+        factory: Factory
+    ) {
+        self.binder = binder
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         OperationPickerFlowWrapperView(
             model: binder.flow,
@@ -28,10 +37,7 @@ where ItemLabel: View {
                             
                             makeContentView(binder.content)
                         },
-                        makeDestination: {
-                            
-                            Text("TBD: destination " + String(describing: $0))
-                        }
+                        makeDestination: factory.makeDestinationView
                     )
                 )
             }
@@ -39,15 +45,16 @@ where ItemLabel: View {
     }
 }
 
-extension ComposedOperationPickerFlowView {
-
-    typealias Item = OperationPickerState.Item
+public extension ComposedOperationPickerFlowView {
+    
+    typealias Binder = OperationPickerBinder<Exchange, Latest, LatestFlow, Status, Templates>
+    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Templates>
 }
 
 private extension ComposedOperationPickerFlowView {
     
     func makeContentView(
-        _ content: OperationPickerContent
+        _ content: OperationPickerContent<Latest>
     ) -> some View {
         
         OperationPickerContentWrapperView(
@@ -58,7 +65,7 @@ private extension ComposedOperationPickerFlowView {
                     state: state,
                     event: event,
                     config: .preview,
-                    itemLabel: itemLabel
+                    itemLabel: factory.makeItemLabel
                 )
             }
         )

@@ -14,6 +14,9 @@ extension NanoServices {
         completion: @escaping ([Latest]) -> Void
     ) {
         #warning("replace stub with implementation")
-        completion([])
+        DispatchQueue.global(qos: .userInitiated).delay(for: .seconds(2)) {
+            
+            completion([])
+        }
     }
 }

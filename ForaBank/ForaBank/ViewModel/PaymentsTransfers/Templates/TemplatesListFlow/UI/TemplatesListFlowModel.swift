@@ -9,18 +9,6 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-protocol ProductIDEmitter {
-    
-    typealias ProductID = ProductData.ID
-    
-    var productIDPublisher: AnyPublisher<ProductID, Never> { get }
-}
-
-protocol TemplateEmitter {
-    
-    var templatePublisher: AnyPublisher<PaymentTemplateData, Never> { get }
-}
-
 final class TemplatesListFlowModel<Content, PaymentFlow>: ObservableObject
 where Content: ProductIDEmitter & TemplateEmitter {
     

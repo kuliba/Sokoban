@@ -35,7 +35,7 @@ final class ServicePaymentBinderComposer {
         self.scheduler = scheduler
     }
     
-    typealias Flag = UtilitiesPaymentsFlag
+    typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 

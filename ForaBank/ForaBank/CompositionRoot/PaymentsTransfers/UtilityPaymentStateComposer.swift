@@ -66,7 +66,12 @@ extension UtilityPaymentStateComposer {
     ) -> AnywayTransactionViewModelComposer {
         
         return .init(
-            flag: flag, model: model, httpClient: httpClient, log: log, scheduler: .main)
+            flag: flag.optionOrStub,
+            model: model, 
+            httpClient: httpClient,
+            log: log,
+            scheduler: .main
+        )
     }
     
     private func format(currency: String?, amount: Decimal) -> String {
