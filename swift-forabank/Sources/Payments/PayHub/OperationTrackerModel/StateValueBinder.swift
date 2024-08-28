@@ -19,12 +19,13 @@ public final class StateValueBinder<State, Value> {
     /// A closure that receives the `Value` produced by the `process` closure.
     private let receive: Receive
     
-    /// Initialises the `StateValueBinder` with a publisher, process closure, and receive closure.
+    /// Initialises the `StateValueBinder` with a publisher, an asynchronous process closure, and a receive closure.
     ///
     /// - Parameters:
     ///   - publisher: A publisher that emits `State` values.
-    ///   - process: A closure that processes the emitted `State` and produces a `Value`.
-    ///   - receive: A closure that handles the `Value` produced by the `process` closure.
+    ///   - process: An asynchronous closure that processes the emitted `State` and produces a `Value`,
+    ///              which is passed to a completion handler.
+    ///   - receive: A closure that handles the `Value` produced by the asynchronous `process` closure.
     public init(
         publisher: AnyPublisher<State, Never>,
         process: @escaping Process,
@@ -46,11 +47,11 @@ public final class StateValueBinder<State, Value> {
 
 public extension StateValueBinder {
     
-    /// Starts the binding process, subscribing to the `State` publisher, processing each emitted state,
+    /// Establishes a binding by subscribing to the `State` publisher, asynchronously processing each emitted state,
     /// and passing the resulting `Value` to the receive closure.
     ///
     /// - Returns: An `AnyCancellable` instance that represents the subscription. You must retain
-    ///            this to keep the subscription alive.
+    ///            this to keep the subscription active.
     func bind() -> AnyCancellable {
         
         publisher

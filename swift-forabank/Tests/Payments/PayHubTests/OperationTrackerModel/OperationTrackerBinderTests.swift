@@ -10,14 +10,14 @@ import XCTest
 
 final class OperationTrackerBinderTests: XCTestCase {
     
-    func test_load_shouldEmitResponse() {
+    func test_start_shouldEmitResponse() {
         
         let response = makeResponse()
-        let (sut, loadSpy, responseSpy) = makeSUT()
+        let (sut, startSpy, responseSpy) = makeSUT()
         
-        sut.load()
-        loadSpy.complete(with: response)
-        loadSpy.complete(with: response, at: 1)
+        sut.start()
+        startSpy.complete(with: response)
+        startSpy.complete(with: response, at: 1)
         
         XCTAssertNoDiff(responseSpy.payloads, [response])
     }
@@ -25,7 +25,7 @@ final class OperationTrackerBinderTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = OperationTrackerBinder<ResponseSpy, Response>
-    private typealias LoadSpy = Spy<Void, Response>
+    private typealias StartSpy = Spy<Void, Response>
     private typealias ResponseSpy = CallSpy<Response?, Void>
     
     private func makeSUT(
@@ -33,23 +33,23 @@ final class OperationTrackerBinderTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadSpy: LoadSpy,
+        startSpy: StartSpy,
         responseSpy: ResponseSpy
     ) {
-        let loadSpy = LoadSpy()
+        let startSpy = StartSpy()
         let responseSpy = ResponseSpy()
         let sut = SUT(
-            load: loadSpy.process(completion:),
+            start: startSpy.process(completion:),
             client: .init(),
             receive: { _ in { responseSpy.call(payload: $0) }},
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(startSpy, file: file, line: line)
         trackForMemoryLeaks(responseSpy, file: file, line: line)
         
-        return (sut, loadSpy, responseSpy)
+        return (sut, startSpy, responseSpy)
     }
     
     private struct Response: Equatable {

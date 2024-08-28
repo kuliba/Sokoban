@@ -19,12 +19,12 @@ final class OperationTrackerModelTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [.failure])
     }
     
-    func test_load_shouldChangeState_failed() {
+    func test_start_shouldChangeState_failure() {
     
-        let (sut, stateSpy, loadSpy) = makeSUT()
+        let (sut, stateSpy, startSpy) = makeSUT()
         
         sut.event(.start)
-        loadSpy.complete(with: .failure(anyError()))
+        startSpy.complete(with: .failure(anyError()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
@@ -33,12 +33,12 @@ final class OperationTrackerModelTests: XCTestCase {
         ])
     }
 
-    func test_load_shouldChangeState_loaded() {
+    func test_start_shouldChangeState_success() {
     
-        let (sut, stateSpy, loadSpy) = makeSUT()
+        let (sut, stateSpy, startSpy) = makeSUT()
         
         sut.event(.start)
-        loadSpy.complete(with: .success(makeResponse()))
+        startSpy.complete(with: .success(makeResponse()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
@@ -51,7 +51,7 @@ final class OperationTrackerModelTests: XCTestCase {
     
     private typealias SUT = OperationTrackerModel
     private typealias StateSpy = ValueSpy<OperationTrackerState>
-    private typealias LoadSpy = Spy<Void, Result<Response, Error>>
+    private typealias StartSpy = Spy<Void, Result<Response, Error>>
     
     private func makeSUT(
         initialState: OperationTrackerState = .notStarted,
@@ -60,21 +60,21 @@ final class OperationTrackerModelTests: XCTestCase {
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
-        loadSpy: LoadSpy
+        startSpy: StartSpy
     ) {
-        let loadSpy = LoadSpy()
+        let startSpy = StartSpy()
         let sut = SUT(
             initialState: initialState,
-            load: loadSpy.process(completion:),
+            start: startSpy.process(completion:),
             scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(stateSpy, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(startSpy, file: file, line: line)
         
-        return (sut, stateSpy, loadSpy)
+        return (sut, stateSpy, startSpy)
     }
     
     private struct Response: Equatable {
