@@ -122,6 +122,12 @@ extension CardStatementAPI.ProductStatementData.Kind {
             return .charity
         case .socialAndGame:
             return .socialAndGame
+        case .education:
+            return .education
+        case .security:
+            return .security
+        case .repayment:
+            return .repayment
         }
     }
 }
