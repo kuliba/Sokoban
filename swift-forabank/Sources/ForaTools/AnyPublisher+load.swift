@@ -1,5 +1,5 @@
 //
-//  AnyPublisher+load.swift
+//  AnyPublisher+perform.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -7,25 +7,25 @@
 
 import Combine
 
-/// Extension to handle stateful loading operations for `AnyPublisher` where the output is `OperationTrackerState`
+/// Extension to handle stateful operations for `AnyPublisher` where the output is `OperationTrackerState`
 /// and the failure type is `Never`.
 public extension AnyPublisher
 where Output == OperationTrackerState,
       Failure == Never {
     
-    /// Transforms a `OperationTrackerState` stream into a stream that triggers
-    /// loading operations based on the state and returns a result or a predefined failure value.
+    /// Transforms an `OperationTrackerState` stream into a stream that triggers
+    /// operations based on whether the state is terminated and returns a result or a predefined failure value.
     ///
-    /// This method observes state changes and triggers a loading operation when the state is `.loaded`.
-    /// If the state is `.failed`, it emits a predefined failure value. States `.loading` and `.notStarted`
-    /// are filtered out and do not trigger any actions.
+    /// This method observes the `isTerminated` projection of the state. If the state is `.success`,
+    /// it triggers the operation and returns the result. If the state is `.failure`, it emits a predefined
+    /// failure value. States `.inflight` and `.notStarted` are ignored as they are non-terminal.
     ///
     /// - Parameters:
-    ///   - block: A closure that performs the loading operation and provides the result through a completion handler.
-    ///   - failureValue: A value to emit when the state is `.failed`.
-    /// - Returns: An `AnyPublisher` that emits the loaded value on success or the predefined failure value.
-    func load<T>(
-        _ block: @escaping (@escaping (T) -> Void) -> Void,
+    ///   - operation: A closure that performs the operation and provides the result through a completion handler.
+    ///   - failureValue: A value to emit when the state is `.failure`.
+    /// - Returns: An `AnyPublisher` that emits the result on success or the predefined failure value.
+    func perform<T>(
+        _ operation: @escaping (@escaping (T) -> Void) -> Void,
         failureValue: T
     ) -> AnyPublisher<T, Never> {
         
@@ -33,8 +33,8 @@ where Output == OperationTrackerState,
             .compactMap(\.isTerminated)
             .flatMap {
                 
-                if $0 {
-                    return AnyPublisher<T, Never>(block)
+                if $0 == true {
+                    return AnyPublisher<T, Never>(operation)
                 } else {
                     return Just(failureValue).eraseToAnyPublisher()
                 }
@@ -42,18 +42,18 @@ where Output == OperationTrackerState,
             .eraseToAnyPublisher()
     }
     
-    /// Transforms a `OperationTrackerState` stream into a stream that triggers
-    /// loading operations based on the state and returns an optional result.
+    /// Transforms an `OperationTrackerState` stream into a stream that triggers
+    /// operations based on whether the state is terminated and returns an optional result.
     ///
-    /// This method is similar to the above `load` method but returns `nil` when the state is `.failed`,
-    /// indicating a failure. If the state is `.loaded`, it triggers the loading operation.
+    /// This method is similar to the above `perform` method but returns `nil` when the state is `.failure`,
+    /// indicating a failure. If the state is `.success`, it triggers the operation.
     ///
-    /// - Parameter block: A closure that performs the loading operation and provides the result through a completion handler.
-    /// - Returns: An `AnyPublisher` that emits the loaded value on success or `nil` on failure.
-    func load<T>(
-        _ block: @escaping (@escaping (T) -> Void) -> Void
+    /// - Parameter operation: A closure that performs the operation and provides the result through a completion handler.
+    /// - Returns: An `AnyPublisher` that emits the result on success or `nil` on failure.
+    func perform<T>(
+        _ operation: @escaping (@escaping (T) -> Void) -> Void
     ) -> AnyPublisher<T?, Never> {
         
-        return load(block, failureValue: nil)
+        return perform(operation, failureValue: nil)
     }
 }

@@ -1,6 +1,6 @@
 //
-//  AnyPublisher+loadTests.swift
-//  
+//  AnyPublisher+performTests.swift
+//
 //
 //  Created by Igor Malyarov on 28.08.2024.
 //
@@ -9,56 +9,56 @@ import Combine
 import ForaTools
 import XCTest
 
-final class AnyPublisher_loadTests: XCTestCase {
+final class AnyPublisher_performTests: XCTestCase {
     
-    func test_load_shouldNotDeliverValueInitially() {
+    func test_perform_shouldNotDeliverValueInitially() {
         
         let (_, spy, _) = makeSUT()
         
         XCTAssertTrue(spy.values.isEmpty)
     }
     
-    func test_load_shouldNotCallLoadOnStateChangeToFailed() {
+    func test_perform_shouldNotCallLoadOnStateChangeToFailed() {
         
-        let (subject, spy, loadSpy) = makeSUT()
+        let (subject, spy, performSpy) = makeSUT()
         
         subject.send(.failure)
         
-        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(performSpy.callCount, 0)
         XCTAssertNotNil(spy)
     }
     
-    func test_load_shouldNotCallLoadOnStateChangeToLoading() {
+    func test_perform_shouldNotCallLoadOnStateChangeToLoading() {
         
-        let (subject, spy, loadSpy) = makeSUT()
+        let (subject, spy, performSpy) = makeSUT()
         
         subject.send(.inflight)
         
-        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(performSpy.callCount, 0)
         XCTAssertNotNil(spy)
     }
     
-    func test_load_shouldCallLoadOnStateChangeToLoaded() {
+    func test_perform_shouldCallLoadOnStateChangeToLoaded() {
         
-        let (subject, spy, loadSpy) = makeSUT()
+        let (subject, spy, performSpy) = makeSUT()
         
         subject.send(.success)
         
-        XCTAssertEqual(loadSpy.callCount, 1)
+        XCTAssertEqual(performSpy.callCount, 1)
         XCTAssertNotNil(spy)
     }
     
-    func test_load_shouldNotCallLoadOnStateChangeToNotStarted() {
+    func test_perform_shouldNotCallLoadOnStateChangeToNotStarted() {
         
-        let (subject, spy, loadSpy) = makeSUT()
+        let (subject, spy, performSpy) = makeSUT()
         
         subject.send(.notStarted)
         
-        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(performSpy.callCount, 0)
         XCTAssertNotNil(spy)
     }
     
-    func test_load_shouldDeliverFailureValueOnStateChangeToFailed() {
+    func test_perform_shouldDeliverFailureValueOnStateChangeToFailed() {
         
         let failureValue = makeResponse()
         let (subject, spy, _) = makeSUT(failureValue: failureValue)
@@ -68,7 +68,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [failureValue])
     }
     
-    func test_load_shouldNotDeliverValueOnStateChangeToLoading() {
+    func test_perform_shouldNotDeliverValueOnStateChangeToLoading() {
         
         let (subject, spy, _) = makeSUT()
         
@@ -77,18 +77,18 @@ final class AnyPublisher_loadTests: XCTestCase {
         XCTAssertTrue(spy.values.isEmpty)
     }
     
-    func test_load_shouldDeliverLoadedValueOnStateChangeToLoaded() {
+    func test_perform_shouldDeliverLoadedValueOnStateChangeToLoaded() {
         
-        let loadedValue = makeResponse()
-        let (subject, spy, loadSpy) = makeSUT()
+        let performedValue = makeResponse()
+        let (subject, spy, performSpy) = makeSUT()
         
         subject.send(.success)
-        loadSpy.complete(with: loadedValue)
+        performSpy.complete(with: performedValue)
         
-        XCTAssertNoDiff(spy.values, [loadedValue])
+        XCTAssertNoDiff(spy.values, [performedValue])
     }
     
-    func test_load_shouldNotDeliverValueOnStateChangeToNotStarted() {
+    func test_perform_shouldNotDeliverValueOnStateChangeToNotStarted() {
         
         let (subject, spy, _) = makeSUT()
         
@@ -101,7 +101,7 @@ final class AnyPublisher_loadTests: XCTestCase {
     
     private typealias SUT = AnyPublisher<OperationTrackerState, Never>
     private typealias Subject = PassthroughSubject<OperationTrackerState, Never>
-    private typealias LoadSpy = Spy<Void, Response>
+    private typealias PerformSpy = Spy<Void, Response>
     
     private func makeSUT(
         failureValue: Response? = nil,
@@ -110,24 +110,24 @@ final class AnyPublisher_loadTests: XCTestCase {
     ) -> (
         subject: Subject,
         spy: ValueSpy<Response>,
-        loadSpy: LoadSpy
+        performSpy: PerformSpy
     ) {
         let subject = Subject()
-        let loadSpy = LoadSpy()
+        let performSpy = PerformSpy()
         let spy = ValueSpy(
             subject
                 .eraseToAnyPublisher()
-                .load(
-                    loadSpy.process(completion:),
+                .perform(
+                    performSpy.process(completion:),
                     failureValue: failureValue ?? makeResponse()
                 )
         )
         
         trackForMemoryLeaks(subject, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(performSpy, file: file, line: line)
         
-        return (subject, spy, loadSpy)
+        return (subject, spy, performSpy)
     }
     
     private struct Response: Equatable {

@@ -50,7 +50,7 @@ public final class OperationTrackerBinder<Client, T> {
         
         self.cancellable = loader.$state
             .eraseToAnyPublisher()
-            .load(load, failureValue: nil)
+            .perform(load, failureValue: nil)
             .sink(receiveValue: receive(client))
     }
     
