@@ -115,6 +115,9 @@ private extension ResponseMapper._DTO {
         case digitalWallet = "DIGITAL_WALLETS_SERVICE"
         case charity = "CHARITY_SERVICE"
         case socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
+        case education = "EDUCATION_SERVICE"
+        case security = "SECURITY_SERVICE"
+        case repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
     }
 }
 
@@ -172,6 +175,12 @@ private extension ResponseMapper._DTO.Kind {
             return .charity
         case .socialAndGame:
             return .socialAndGame
+        case .education:
+            return .education
+        case .security:
+            return .security
+        case .repayment:
+            return .repayment
         }
     }
 }

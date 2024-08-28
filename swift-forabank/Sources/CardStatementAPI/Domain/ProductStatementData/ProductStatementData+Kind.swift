@@ -35,5 +35,8 @@ public extension ProductStatementData {
         case digitalWallet
         case charity
         case socialAndGame
+        case education
+        case security
+        case repayment
     }
 }
