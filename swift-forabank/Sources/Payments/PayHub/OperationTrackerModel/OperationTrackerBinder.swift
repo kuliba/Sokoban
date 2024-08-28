@@ -9,13 +9,13 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-/// A binder class that connects a client with a stateful loader, managing state transitions and the loading process.
+/// A binder class that connects a client with a stateful operation tracker, managing state transitions and the loading process.
 ///
-/// This class is designed to handle stateful loading operations in a way that decouples the client from the specifics
+/// This class is designed to handle stateful operations in a way that decouples the client from the specifics
 /// of the loading mechanism. The `OperationTrackerBinder` is generic over the type of client and the type of response
 /// it handles.
 ///
-/// The `scheduler` provided during initialisation does not have to be `DispatchQueue.main` since `OperationTrackerModel`
+/// The `scheduler` provided during initialisation does not have to be `DispatchQueue.main` since `OperationTrackerBinder`
 /// is not intended for direct use with the UI. However, if this binder is used in a UI context, it is recommended to use
 /// `DispatchQueue.main` to ensure UI updates occur on the main thread.
 public final class OperationTrackerBinder<Client, T> {
