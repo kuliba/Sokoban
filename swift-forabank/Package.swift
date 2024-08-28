@@ -1259,6 +1259,7 @@ private extension Target {
         name: .payHub,
         dependencies: [
             // internal modules
+            .rxViewModel,
         ],
         path: "Sources/Payments/\(String.payHub)"
     )
