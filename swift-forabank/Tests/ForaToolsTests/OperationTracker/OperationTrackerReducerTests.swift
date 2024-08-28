@@ -10,84 +10,22 @@ import XCTest
 
 final class OperationTrackerReducerTests: XCTestCase {
     
-    func test_load_shouldChangeNotStartedStateToLoading() {
+    func test_fail_shouldChangeState() {
         
-        assert(.notStarted, event: .load) {
+        assert(.inflight, event: .fail) {
             
-            $0 = .loading
+            $0 = .failure
         }
     }
     
-    func test_load_shouldDeliverLoadEffectOnNotStartedState() {
+    func test_fail_shouldNotDeliverEffect() {
         
-        assert(.notStarted, event: .load, delivers: .load)
-    }
-    
-    func test_load_shouldChangeFailedStateToLoading() {
-        
-        assert(.failed, event: .load) {
-            
-            $0 = .loading
-        }
-    }
-    
-    func test_load_shouldDeliverLoadEffectOnLoadedState() {
-        
-        assert(.loaded, event: .load, delivers: .load)
-    }
-    
-    func test_load_shouldChangeLoadedStateToLoading() {
-        
-        assert(.loaded, event: .load) {
-            
-            $0 = .loading
-        }
-    }
-    
-    func test_load_shouldDeliverLoadEffectOnFailedState() {
-        
-        assert(.failed, event: .load, delivers: .load)
-    }
-    
-    func test_load_shouldNotChangeLoadingState() {
-        
-        assert(.loading, event: .load)
-    }
-    
-    func test_load_shouldNotDeliverEffectOnLoadingState() {
-        
-        assert(.loading, event: .load, delivers: nil)
-    }
-    
-    func test_loadFailure_shouldChangeState() {
-        
-        assert(.loading, event: .loadFailure) {
-            
-            $0 = .failed
-        }
-    }
-    
-    func test_loadFailure_shouldNotDeliverEffect() {
-        
-        assert(.loading, event: .loadFailure, delivers: nil)
-    }
-    
-    func test_loadSuccess_shouldChangeState() {
-        
-        assert(.loading, event: .loadSuccess) {
-            
-            $0 = .loaded
-        }
-    }
-    
-    func test_loadSuccess_shouldNotDeliverEffect() {
-        
-        assert(.loading, event: .loadSuccess, delivers: nil)
+        assert(.inflight, event: .fail, delivers: nil)
     }
     
     func test_reset_shouldResetFailedState() {
         
-        assert(.failed, event: .reset) {
+        assert(.failure, event: .reset) {
             
             $0 = .notStarted
         }
@@ -95,22 +33,22 @@ final class OperationTrackerReducerTests: XCTestCase {
     
     func test_reset_shouldNotDeliverEffectOnFailedState() {
         
-        assert(.failed, event: .reset, delivers: nil)
+        assert(.failure, event: .reset, delivers: nil)
     }
     
     func test_reset_shouldNotChangeLoadingState() {
         
-        assert(.loading, event: .reset)
+        assert(.inflight, event: .reset)
     }
     
     func test_reset_shouldNotDeliverEffectOnLoadingState() {
         
-        assert(.loading, event: .reset, delivers: nil)
+        assert(.inflight, event: .reset, delivers: nil)
     }
     
     func test_reset_shouldResetLoadedState() {
         
-        assert(.loaded, event: .reset) {
+        assert(.success, event: .reset) {
             
             $0 = .notStarted
         }
@@ -118,7 +56,7 @@ final class OperationTrackerReducerTests: XCTestCase {
     
     func test_reset_shouldNotDeliverEffectOnLoadedState() {
         
-        assert(.loaded, event: .reset, delivers: nil)
+        assert(.success, event: .reset, delivers: nil)
     }
     
     func test_reset_shouldNotChangeNotStartedState() {
@@ -132,6 +70,68 @@ final class OperationTrackerReducerTests: XCTestCase {
     func test_reset_shouldNotDeliverEffectOnNotStartedState() {
         
         assert(.notStarted, event: .reset, delivers: nil)
+    }
+    
+    func test_start_shouldChangeNotStartedStateToLoading() {
+        
+        assert(.notStarted, event: .start) {
+            
+            $0 = .inflight
+        }
+    }
+    
+    func test_start_shouldDeliverStartEffectOnNotStartedState() {
+        
+        assert(.notStarted, event: .start, delivers: .start)
+    }
+    
+    func test_start_shouldChangeFailedStateToLoading() {
+        
+        assert(.failure, event: .start) {
+            
+            $0 = .inflight
+        }
+    }
+    
+    func test_start_shouldDeliverStartEffectOnLoadedState() {
+        
+        assert(.success, event: .start, delivers: .start)
+    }
+    
+    func test_start_shouldChangeLoadedStateToLoading() {
+        
+        assert(.success, event: .start) {
+            
+            $0 = .inflight
+        }
+    }
+    
+    func test_start_shouldDeliverStartEffectOnFailedState() {
+        
+        assert(.failure, event: .start, delivers: .start)
+    }
+    
+    func test_start_shouldNotChangeLoadingState() {
+        
+        assert(.inflight, event: .start)
+    }
+    
+    func test_start_shouldNotDeliverEffectOnLoadingState() {
+        
+        assert(.inflight, event: .start, delivers: nil)
+    }
+    
+    func test_succeed_shouldChangeState() {
+        
+        assert(.inflight, event: .succeed) {
+            
+            $0 = .success
+        }
+    }
+    
+    func test_succeed_shouldNotDeliverEffect() {
+        
+        assert(.inflight, event: .succeed, delivers: nil)
     }
     
     // MARK: - Helpers

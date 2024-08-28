@@ -12,7 +12,7 @@ import RxViewModel
 
 /// A typealias for the `RxViewModel` that manages the state, events, and effects of an operation tracking process.
 ///
-/// This view model is designed to handle different states of an operation (e.g., not started, loading, failed, loaded)
+/// This view model is designed to handle different states of an operation (e.g., not started, inflight, failed, loaded)
 /// and to manage the associated side effects. The model can be initialized with different types of loaders depending on the needs
 /// of the application.
 public typealias OperationTrackerModel = RxViewModel<OperationTrackerState, OperationTrackerEvent, OperationTrackerEffect>

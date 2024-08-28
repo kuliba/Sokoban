@@ -14,22 +14,22 @@ final class OperationTrackerModelTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
     
-        let (_, stateSpy, _) = makeSUT(initialState: .failed)
+        let (_, stateSpy, _) = makeSUT(initialState: .failure)
         
-        XCTAssertNoDiff(stateSpy.values, [.failed])
+        XCTAssertNoDiff(stateSpy.values, [.failure])
     }
     
     func test_load_shouldChangeState_failed() {
     
         let (sut, stateSpy, loadSpy) = makeSUT()
         
-        sut.event(.load)
+        sut.event(.start)
         loadSpy.complete(with: .failure(anyError()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
-            .loading,
-            .failed
+            .inflight,
+            .failure
         ])
     }
 
@@ -37,13 +37,13 @@ final class OperationTrackerModelTests: XCTestCase {
     
         let (sut, stateSpy, loadSpy) = makeSUT()
         
-        sut.event(.load)
+        sut.event(.start)
         loadSpy.complete(with: .success(makeResponse()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
-            .loading,
-            .loaded
+            .inflight,
+            .success
         ])
     }
 

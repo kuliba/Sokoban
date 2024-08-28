@@ -73,6 +73,6 @@ public extension OperationTrackerBinder {
     /// This method initiates the loading process managed by the `OperationTrackerModel` by transitioning its state to `.loading`
     /// and subsequently handling the result.
     func load() {
-        loader.event(.load)
+        loader.event(.start)
     }
 }

@@ -22,7 +22,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         
         let (subject, spy, loadSpy) = makeSUT()
         
-        subject.send(.failed)
+        subject.send(.failure)
         
         XCTAssertEqual(loadSpy.callCount, 0)
         XCTAssertNotNil(spy)
@@ -32,7 +32,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         
         let (subject, spy, loadSpy) = makeSUT()
         
-        subject.send(.loading)
+        subject.send(.inflight)
         
         XCTAssertEqual(loadSpy.callCount, 0)
         XCTAssertNotNil(spy)
@@ -42,7 +42,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         
         let (subject, spy, loadSpy) = makeSUT()
         
-        subject.send(.loaded)
+        subject.send(.success)
         
         XCTAssertEqual(loadSpy.callCount, 1)
         XCTAssertNotNil(spy)
@@ -63,7 +63,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         let failureValue = makeResponse()
         let (subject, spy, _) = makeSUT(failureValue: failureValue)
         
-        subject.send(.failed)
+        subject.send(.failure)
         
         XCTAssertNoDiff(spy.values, [failureValue])
     }
@@ -72,7 +72,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         
         let (subject, spy, _) = makeSUT()
         
-        subject.send(.loading)
+        subject.send(.inflight)
         
         XCTAssertTrue(spy.values.isEmpty)
     }
@@ -82,7 +82,7 @@ final class AnyPublisher_loadTests: XCTestCase {
         let loadedValue = makeResponse()
         let (subject, spy, loadSpy) = makeSUT()
         
-        subject.send(.loaded)
+        subject.send(.success)
         loadSpy.complete(with: loadedValue)
         
         XCTAssertNoDiff(spy.values, [loadedValue])

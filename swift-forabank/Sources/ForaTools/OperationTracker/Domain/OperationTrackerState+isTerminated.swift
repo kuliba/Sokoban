@@ -10,9 +10,9 @@ public extension OperationTrackerState {
     var isTerminated: Bool? {
         
         switch self {
-        case .failed:     return false
-        case .loaded:     return true
-        case .loading:    return nil
+        case .failure:     return false
+        case .success:     return true
+        case .inflight:    return nil
         case .notStarted: return nil
         }
     }
