@@ -196,6 +196,7 @@ extension RootViewModelFactory {
         )
         
         let templatesComposer = makeTemplatesComposer(
+            paymentsTransfersFlag: paymentsTransfersFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
