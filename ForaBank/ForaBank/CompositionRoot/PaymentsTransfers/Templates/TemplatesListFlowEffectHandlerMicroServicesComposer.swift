@@ -8,27 +8,28 @@
 import Foundation
 import PayHub
 
-final class TemplatesListFlowEffectHandlerMicroServicesComposer<Payment> {
+final class TemplatesListFlowEffectHandlerMicroServicesComposer<Legacy, V1> {
     
     private let initiatePayment: InitiatePayment
-    private let model: Model
+    private let makeLegacyPayment: MakeLegacyPayment
     private let paymentsTransfersFlag: PaymentsTransfersFlag
     private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     
     init(
         initiatePayment: @escaping InitiatePayment,
-        model: Model,
+        makeLegacyPayment: @escaping MakeLegacyPayment,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     ) {
         self.initiatePayment = initiatePayment
-        self.model = model
+        self.makeLegacyPayment = makeLegacyPayment
         self.paymentsTransfersFlag = paymentsTransfersFlag
         self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
     }
     
-    typealias InitiatePaymentCompletion = (Result<Payment, ServiceFailureAlert.ServiceFailure>) -> Void
+    typealias InitiatePaymentCompletion = (Result<V1, ServiceFailureAlert.ServiceFailure>) -> Void
     typealias InitiatePayment = (PaymentTemplateData, @escaping InitiatePaymentCompletion) -> Void
+    typealias MakeLegacyPayment = (MicroServices.MakePaymentPayload) -> Legacy
 }
 
 extension TemplatesListFlowEffectHandlerMicroServicesComposer {
@@ -57,7 +58,7 @@ extension TemplatesListFlowEffectHandlerMicroServicesComposer {
         })
     }
     
-    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<Payment>
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<Legacy, V1>
 }
 
 private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
@@ -96,19 +97,6 @@ private extension TemplatesListFlowEffectHandlerMicroServicesComposer {
     ) -> Bool {
         
         output(for: templateType).isLegacy
-    }
-    
-    private func makeLegacyPayment(
-        payload: MicroServices.MakePaymentPayload
-    ) -> PaymentsViewModel {
-        
-        let (template, close) = payload
-        
-        return .init(
-            source: .template(template.id),
-            model: model,
-            closeAction: close
-        )
     }
     
     private func makeV1Payment(

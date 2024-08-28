@@ -267,7 +267,7 @@ final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     private typealias SUT = TemplatesListFlowModel<Content, PaymentFlow>
     private typealias ProductID = ProductData.ID
     private typealias StatusSpy = ValueSpy<SUT.State.EquatableState>
-    private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentFlow>
+    private typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentsViewModel, PaymentFlow>
     private typealias Transaction = AnywayTransactionState.Transaction
     private typealias MakePaymentSpy = Spy<MicroServices.MakePaymentPayload, MicroServices.Payment, ServiceFailure>
     private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure

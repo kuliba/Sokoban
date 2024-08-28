@@ -199,7 +199,7 @@ extension TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel> {
     static var sampleComplete: Self {
         
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel, AnywayFlowModel>()
-        let microServices = TemplatesListFlowEffectHandlerMicroServices<AnywayFlowModel>(
+        let microServices = TemplatesListFlowEffectHandlerMicroServices<PaymentsViewModel, AnywayFlowModel>(
             makePayment: { payload, completion in
                 
                 let (template, close) = payload

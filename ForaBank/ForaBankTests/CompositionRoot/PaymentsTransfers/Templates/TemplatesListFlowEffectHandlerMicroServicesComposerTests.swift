@@ -23,7 +23,9 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
     
     func test_compose_shouldDeliverLegacy_inactivePaymentsTransfers_inactiveUtilitiesPayments() {
         
+        let legacy = makeLegacy()
         let (sut, _) = makeSUT(
+            legacy: legacy,
             paymentsTransfersFlag: .inactive,
             utilitiesPaymentsFlag: .inactive
         )
@@ -31,9 +33,9 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         makePayment(sut) {
             
             switch $0 {
-            case .success(.legacy):
-                break
-                
+            case let .success(.legacy(receivedLegacy)):
+                XCTAssertNoDiff(receivedLegacy, legacy)
+
             default:
                 XCTFail("Expected legacy, but got \(String(describing: $0)) instead.")
             }
@@ -139,7 +141,9 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
     
     func test_compose_shouldDeliverLegacy_inactivePaymentsTransfers_activeUtilitiesPayments_nonHousing() {
         
+        let legacy = makeLegacy()
         let (sut, _) = makeSUT(
+            legacy: legacy,
             paymentsTransfersFlag: .inactive,
             utilitiesPaymentsFlag: .active(.live)
         )
@@ -147,8 +151,8 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         sut.makePayment((makeTemplate(type: .sfp), {})) {
             
             switch $0 {
-            case .success(.legacy):
-                break
+            case let .success(.legacy(receivedLegacy)):
+                XCTAssertNoDiff(receivedLegacy, legacy)
                 
             default:
                 XCTFail("Expected legacy, but got \(String(describing: $0)) instead.")
@@ -348,12 +352,14 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         
     // MARK: - Helpers
     
-    private typealias Composer = TemplatesListFlowEffectHandlerMicroServicesComposer<Payment>
-    private typealias SUT = TemplatesListFlowEffectHandlerMicroServices<Payment>
+    private typealias Composer = TemplatesListFlowEffectHandlerMicroServicesComposer<Legacy, Payment>
+    private typealias SUT = TemplatesListFlowEffectHandlerMicroServices<Legacy, Payment>
     private typealias InitiatePaymentSpy = Spy<PaymentTemplateData, Payment, ServiceFailure>
     private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
+    private typealias MakeLegacy = CallSpy<SUT.MakePaymentPayload, Legacy>
     
     private func makeSUT(
+        legacy: Legacy? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag.RawValue,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag.RawValue,
         file: StaticString = #file,
@@ -362,11 +368,11 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         sut: SUT,
         spy: InitiatePaymentSpy
     ) {
-        let model: Model = .mockWithEmptyExcept()
         let spy = InitiatePaymentSpy()
+        let makeLegacy = MakeLegacy(stubs: [legacy ?? makeLegacy()])
         let composer = Composer(
             initiatePayment: spy.process(_:completion:),
-            model: model,
+            makeLegacyPayment: makeLegacy.call(payload:),
             paymentsTransfersFlag: .init(paymentsTransfersFlag),
             utilitiesPaymentsFlag: .init(utilitiesPaymentsFlag)
         )
@@ -386,6 +392,18 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
     private func makePayment(
         _ value: String = anyMessage()
     ) -> Payment {
+        
+        return .init(value: value)
+    }
+    
+    private struct Legacy: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeLegacy(
+        _ value: String = anyMessage()
+    ) -> Legacy {
         
         return .init(value: value)
     }
