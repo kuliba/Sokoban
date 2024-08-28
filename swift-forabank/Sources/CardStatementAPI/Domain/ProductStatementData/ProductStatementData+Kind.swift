@@ -31,5 +31,9 @@ public extension ProductStatementData {
         case c2b
         case insideDeposit
         case sberQRPayment
+        case networkMarketing
+        case digitalWallet
+        case charity
+        case socialAndGame
     }
 }
