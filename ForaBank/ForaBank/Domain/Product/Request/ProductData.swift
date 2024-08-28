@@ -445,7 +445,8 @@ extension ProductData {
 }
 
 extension ProductData {
-
-   var asAccount: ProductAccountData? { self as? ProductAccountData }
-   var asCard: ProductCardData? { self as? ProductCardData }
+    
+    var asAccount: ProductAccountData? { self as? ProductAccountData }
+    var asCard: ProductCardData? { self as? ProductCardData }
+    var asDeposit: ProductDepositData? { self as? ProductDepositData }
 }

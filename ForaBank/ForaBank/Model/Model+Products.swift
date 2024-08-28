@@ -116,7 +116,10 @@ extension Model {
 
     var onlyCorporateCards: Bool {
         
-        guard productsTypes == [.card] else { return false }
+        guard productsTypes == [.card] ||
+                (productsTypes.onlyCardsWithDeposits &&
+                 !hasDemandDepositWithAllowDebit())
+        else { return false }
         
         guard Set(cardsTypes).contains(where: { $0.isCorporateCard })
         else { return false }
@@ -217,6 +220,18 @@ extension Model {
     func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
         
         return filteredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
+    }
+    
+    func hasDemandDepositWithAllowDebit() -> Bool {
+        
+        let deposits = products(.deposit)
+        return deposits?.filter {
+            guard let deposit = $0.asDeposit, 
+                    deposit.isDemandDeposit,
+                    deposit.allowDebit
+            else { return false }
+            return true
+        }.count ?? 0 > 0
     }
     
     private func filteredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {
@@ -1657,4 +1672,11 @@ extension Set where Element == Model.CardInfo {
        .init(type: .additionalOther, status: .active),
        .init(type: .additionalSelfAccOwn, status: .active)
    ]
+}
+
+extension Array where Element == ProductType {
+    
+    var onlyCardsWithDeposits: Bool {
+        sorted(by: \.rawValue) == [.card, .deposit]
+    }
 }
