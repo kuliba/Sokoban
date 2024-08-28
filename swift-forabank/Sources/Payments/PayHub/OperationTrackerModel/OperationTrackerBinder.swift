@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderBinder.swift
+//  OperationTrackerBinder.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -12,24 +12,24 @@ import Foundation
 /// A binder class that connects a client with a stateful loader, managing state transitions and the loading process.
 ///
 /// This class is designed to handle stateful loading operations in a way that decouples the client from the specifics
-/// of the loading mechanism. The `StatefulLoaderBinder` is generic over the type of client and the type of response
+/// of the loading mechanism. The `OperationTrackerBinder` is generic over the type of client and the type of response
 /// it handles.
 ///
-/// The `scheduler` provided during initialisation does not have to be `DispatchQueue.main` since `StatefulLoaderModel`
+/// The `scheduler` provided during initialisation does not have to be `DispatchQueue.main` since `OperationTrackerModel`
 /// is not intended for direct use with the UI. However, if this binder is used in a UI context, it is recommended to use
 /// `DispatchQueue.main` to ensure UI updates occur on the main thread.
-public final class StatefulLoaderBinder<Client, T> {
+public final class OperationTrackerBinder<Client, T> {
     
     /// The client instance that will receive the loaded data.
     public let client: Client
     
     /// The stateful loader model that manages the state of the loading process.
-    public let loader: StatefulLoaderModel
+    public let loader: OperationTrackerModel
     
     /// The cancellable object that manages the subscription to state changes.
     private let cancellable: AnyCancellable
     
-    /// Initialises a new instance of `StatefulLoaderBinder`.
+    /// Initialises a new instance of `OperationTrackerBinder`.
     ///
     /// - Parameters:
     ///   - load: A closure that defines the loading process. This closure receives a completion handler that should be called
@@ -66,11 +66,11 @@ public final class StatefulLoaderBinder<Client, T> {
     public typealias Receive = (Client) -> (T?) -> Void
 }
 
-public extension StatefulLoaderBinder {
+public extension OperationTrackerBinder {
     
     /// Triggers the loading process by sending a load event to the stateful loader.
     ///
-    /// This method initiates the loading process managed by the `StatefulLoaderModel` by transitioning its state to `.loading`
+    /// This method initiates the loading process managed by the `OperationTrackerModel` by transitioning its state to `.loading`
     /// and subsequently handling the result.
     func load() {
         loader.event(.load)

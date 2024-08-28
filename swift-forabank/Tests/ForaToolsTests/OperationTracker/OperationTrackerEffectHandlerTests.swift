@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderEffectHandlerTests.swift
+//  OperationTrackerEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import XCTest
 
-final class StatefulLoaderEffectHandlerTests: XCTestCase {
+final class OperationTrackerEffectHandlerTests: XCTestCase {
     
     // MARK: - init
     
@@ -52,7 +52,7 @@ final class StatefulLoaderEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderEffectHandler
+    private typealias SUT = OperationTrackerEffectHandler
     private typealias LoadSpy = Spy<Void, Bool>
     
     private func makeSUT(

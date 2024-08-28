@@ -1,12 +1,12 @@
 //
-//  StatefulLoaderEvent.swift
+//  OperationTrackerEvent.swift
 //  
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-/// Represents the possible events that can trigger state changes in the `StatefulLoader`.
-public enum StatefulLoaderEvent: Equatable {
+/// Represents the possible events that can trigger state changes in the `OperationTracker`.
+public enum OperationTrackerEvent: Equatable {
     
     /// Initiates the loading process.
     case load

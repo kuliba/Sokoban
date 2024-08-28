@@ -1,18 +1,18 @@
 //
-//  StatefulLoaderReducer.swift
+//  OperationTrackerReducer.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-/// A reducer that manages state transitions in the `StatefulLoader` based on incoming events.
-public final class StatefulLoaderReducer {
+/// A reducer that manages state transitions in the `OperationTracker` based on incoming events.
+public final class OperationTrackerReducer {
     
-    /// Initialises a new instance of the `StatefulLoaderReducer`.
+    /// Initialises a new instance of the `OperationTrackerReducer`.
     public init() {}
 }
 
-public extension StatefulLoaderReducer {
+public extension OperationTrackerReducer {
     
     /// Reduces the current state based on the given event and returns the new state and any triggered effect.
     /// - Parameters:
@@ -45,17 +45,17 @@ public extension StatefulLoaderReducer {
     }
 }
 
-public extension StatefulLoaderReducer {
+public extension OperationTrackerReducer {
     
-    /// Typealias for the possible states of the StatefulLoader.
-    typealias State = StatefulLoaderState
+    /// Typealias for the possible states of the OperationTracker.
+    typealias State = OperationTrackerState
     /// Typealias for the possible events that can trigger state changes.
-    typealias Event = StatefulLoaderEvent
+    typealias Event = OperationTrackerEvent
     /// Typealias for the possible effects that can be triggered.
-    typealias Effect = StatefulLoaderEffect
+    typealias Effect = OperationTrackerEffect
 }
 
-private extension StatefulLoaderReducer {
+private extension OperationTrackerReducer {
     
     /// Handles the logic for transitioning to the `loading` state and triggering the `load` effect.
     /// - Parameters:

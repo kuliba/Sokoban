@@ -1,11 +1,11 @@
 //
-//  StatefulLoaderState+isTerminated.swift
+//  OperationTrackerState+isTerminated.swift
 //  
 //
 //  Created by Igor Malyarov on 28.08.2024.
 //
 
-public extension StatefulLoaderState {
+public extension OperationTrackerState {
     
     var isTerminated: Bool? {
         

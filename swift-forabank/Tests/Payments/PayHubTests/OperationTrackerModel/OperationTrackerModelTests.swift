@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderModelTests.swift
+//  OperationTrackerModelTests.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -10,7 +10,7 @@ import ForaTools
 import PayHub
 import XCTest
 
-final class StatefulLoaderModelTests: XCTestCase {
+final class OperationTrackerModelTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
     
@@ -49,12 +49,12 @@ final class StatefulLoaderModelTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderModel
-    private typealias StateSpy = ValueSpy<StatefulLoaderState>
+    private typealias SUT = OperationTrackerModel
+    private typealias StateSpy = ValueSpy<OperationTrackerState>
     private typealias LoadSpy = Spy<Void, Result<Response, Error>>
     
     private func makeSUT(
-        initialState: StatefulLoaderState = .notStarted,
+        initialState: OperationTrackerState = .notStarted,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

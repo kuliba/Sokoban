@@ -7,13 +7,13 @@
 
 import Combine
 
-/// Extension to handle stateful loading operations for `AnyPublisher` where the output is `StatefulLoaderState`
+/// Extension to handle stateful loading operations for `AnyPublisher` where the output is `OperationTrackerState`
 /// and the failure type is `Never`.
 public extension AnyPublisher
-where Output == StatefulLoaderState,
+where Output == OperationTrackerState,
       Failure == Never {
     
-    /// Transforms a `StatefulLoaderState` stream into a stream that triggers
+    /// Transforms a `OperationTrackerState` stream into a stream that triggers
     /// loading operations based on the state and returns a result or a predefined failure value.
     ///
     /// This method observes state changes and triggers a loading operation when the state is `.loaded`.
@@ -42,7 +42,7 @@ where Output == StatefulLoaderState,
             .eraseToAnyPublisher()
     }
     
-    /// Transforms a `StatefulLoaderState` stream into a stream that triggers
+    /// Transforms a `OperationTrackerState` stream into a stream that triggers
     /// loading operations based on the state and returns an optional result.
     ///
     /// This method is similar to the above `load` method but returns `nil` when the state is `.failed`,

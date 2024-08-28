@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderBinderTests.swift
+//  OperationTrackerBinderTests.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class StatefulLoaderBinderTests: XCTestCase {
+final class OperationTrackerBinderTests: XCTestCase {
     
     func test_load_shouldEmitResponse() {
         
@@ -24,7 +24,7 @@ final class StatefulLoaderBinderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderBinder<ResponseSpy, Response>
+    private typealias SUT = OperationTrackerBinder<ResponseSpy, Response>
     private typealias LoadSpy = Spy<Void, Response>
     private typealias ResponseSpy = CallSpy<Response?, Void>
     

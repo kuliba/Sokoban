@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderTests.swift
+//  OperationTrackerTests.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import XCTest
 
-final class StatefulLoaderReducerTests: XCTestCase {
+final class OperationTrackerReducerTests: XCTestCase {
     
     func test_load_shouldChangeNotStartedStateToLoading() {
         
@@ -136,7 +136,7 @@ final class StatefulLoaderReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderReducer
+    private typealias SUT = OperationTrackerReducer
     
     private func makeSUT(
         file: StaticString = #file,

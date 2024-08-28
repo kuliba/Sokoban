@@ -1,12 +1,12 @@
 //
-//  StatefulLoaderState.swift
+//  OperationTrackerState.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-/// Represents the possible states of the `StatefulLoader`.
-public enum StatefulLoaderState: Equatable {
+/// Represents the possible states of the `OperationTracker`.
+public enum OperationTrackerState: Equatable {
     
     /// The loader has failed to load the resource.
     case failed

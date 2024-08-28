@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderModel.swift
+//  OperationTrackerModel.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -15,11 +15,11 @@ import RxViewModel
 /// This view model is designed to handle different states of a loading operation (e.g., not started, loading, failed, loaded)
 /// and to manage the associated side effects. The model can be initialised with different types of loaders depending on the needs
 /// of the application.
-public typealias StatefulLoaderModel = RxViewModel<StatefulLoaderState, StatefulLoaderEvent, StatefulLoaderEffect>
+public typealias OperationTrackerModel = RxViewModel<OperationTrackerState, OperationTrackerEvent, OperationTrackerEffect>
 
-public extension StatefulLoaderModel {
+public extension OperationTrackerModel {
 
-    /// Initialises a `StatefulLoaderModel` with a `Bool`-based loader.
+    /// Initialises a `OperationTrackerModel` with a `Bool`-based loader.
     ///
     /// - Parameters:
     ///   - initialState: The initial state of the loader. Defaults to `.notStarted`.
@@ -30,12 +30,12 @@ public extension StatefulLoaderModel {
     /// This initialiser is useful when the result of the loading operation can be expressed as a simple `Bool`
     /// indicating success or failure.
     convenience init(
-        initialState: StatefulLoaderState = .notStarted,
+        initialState: OperationTrackerState = .notStarted,
         load: @escaping (@escaping (Bool) -> Void) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        let reducer = StatefulLoaderReducer()
-        let effectHandler = StatefulLoaderEffectHandler(load: load)
+        let reducer = OperationTrackerReducer()
+        let effectHandler = OperationTrackerEffectHandler(load: load)
         
         self.init(
             initialState: initialState,
@@ -45,7 +45,7 @@ public extension StatefulLoaderModel {
         )
     }
     
-    /// Initialises a `StatefulLoaderModel` with a generic `Result`-based loader.
+    /// Initialises a `OperationTrackerModel` with a generic `Result`-based loader.
     ///
     /// - Parameters:
     ///   - initialState: The initial state of the loader. Defaults to `.notStarted`.
@@ -57,7 +57,7 @@ public extension StatefulLoaderModel {
     /// converted into `true` if the `Result` is successful (i.e., `Result.success`), and `false` if the
     /// `Result` is a failure (i.e., `Result.failure`) for state management.
     convenience init<T>(
-        initialState: StatefulLoaderState = .notStarted,
+        initialState: OperationTrackerState = .notStarted,
         load: @escaping (@escaping (Result<T, Error>) -> Void) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
@@ -68,7 +68,7 @@ public extension StatefulLoaderModel {
         )
     }
     
-    /// Initialises a `StatefulLoaderModel` with an optional value-based loader.
+    /// Initialises a `OperationTrackerModel` with an optional value-based loader.
     ///
     /// - Parameters:
     ///   - initialState: The initial state of the loader. Defaults to `.notStarted`.
@@ -80,7 +80,7 @@ public extension StatefulLoaderModel {
     /// This initialiser is useful when the loading operation provides an optional value, where a `nil` value
     /// indicates failure, and a non-`nil` value indicates success.
     convenience init<T>(
-        initialState: StatefulLoaderState = .notStarted,
+        initialState: OperationTrackerState = .notStarted,
         load: @escaping (@escaping (T?) -> Void) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {

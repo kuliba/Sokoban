@@ -1,20 +1,20 @@
 //
-//  StatefulLoaderEffectHandler.swift
+//  OperationTrackerEffectHandler.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
 /// A handler responsible for executing effects and dispatching corresponding events
-/// based on the results of those effects in the `StatefulLoader`.
-public final class StatefulLoaderEffectHandler {
+/// based on the results of those effects in the `OperationTracker`.
+public final class OperationTrackerEffectHandler {
     
     /// A closure that performs the loading operation.
     /// The closure accepts a callback that should be invoked with `true` if the load
     /// succeeds and `false` if it fails.
     private let load: Load
     
-    /// Initialises the `StatefulLoaderEffectHandler` with a specific load operation.
+    /// Initialises the `OperationTrackerEffectHandler` with a specific load operation.
     /// - Parameter load: A closure that performs the load operation and provides the
     /// result via a callback.
     public init(
@@ -28,7 +28,7 @@ public final class StatefulLoaderEffectHandler {
     public typealias Load = (@escaping (Bool) -> Void) -> Void
 }
 
-public extension StatefulLoaderEffectHandler {
+public extension OperationTrackerEffectHandler {
     
     /// Handles the given effect and dispatches events based on the outcome of the effect.
     /// - Parameters:
@@ -52,14 +52,14 @@ public extension StatefulLoaderEffectHandler {
     }
 }
 
-public extension StatefulLoaderEffectHandler {
+public extension OperationTrackerEffectHandler {
     
     /// Typealias representing the dispatch closure used to send events back to the reducer.
     typealias Dispatch = (Event) -> Void
     
     /// Typealias for the events that can be dispatched by the effect handler.
-    typealias Event = StatefulLoaderEvent
+    typealias Event = OperationTrackerEvent
     
     /// Typealias for the effects that can be handled by the effect handler.
-    typealias Effect = StatefulLoaderEffect
+    typealias Effect = OperationTrackerEffect
 }

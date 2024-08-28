@@ -99,8 +99,8 @@ final class AnyPublisher_loadTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = AnyPublisher<StatefulLoaderState, Never>
-    private typealias Subject = PassthroughSubject<StatefulLoaderState, Never>
+    private typealias SUT = AnyPublisher<OperationTrackerState, Never>
+    private typealias Subject = PassthroughSubject<OperationTrackerState, Never>
     private typealias LoadSpy = Spy<Void, Response>
     
     private func makeSUT(
