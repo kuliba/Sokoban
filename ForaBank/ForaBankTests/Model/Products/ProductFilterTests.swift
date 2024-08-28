@@ -350,9 +350,9 @@ private extension ProductAccountData {
 
 private extension ProductDepositData {
     
-    convenience init(id: Int, currency: Currency, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active) {
+    convenience init(id: Int, currency: Currency, allowCredit: Bool = true, allowDebit: Bool = true, status: ProductData.Status = .active, isDemandDeposit: Bool = true) {
         
-        self.init(id: id, productType: .deposit, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], depositProductId: 0, depositId: 0, interestRate: 0, accountId: 0, creditMinimumAmount: 0, minimumBalance: 0, endDate: nil, endDateNf: true, isDemandDeposit: true, isDebitInterestAvailable: false, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        self.init(id: id, productType: .deposit, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: currency.description, mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], depositProductId: 0, depositId: 0, interestRate: 0, accountId: 0, creditMinimumAmount: 0, minimumBalance: 0, endDate: nil, endDateNf: true, isDemandDeposit: isDemandDeposit, isDebitInterestAvailable: false, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     }
 }
 
@@ -440,6 +440,9 @@ extension ProductData {
     
     static let depositActiveRub = ProductDepositData(id: 71, currency: .rub)
     static let depositActiveUsd = ProductDepositData(id: 72, currency: .rub)
+    
+    static let depositActiveRubNotDemand = ProductDepositData(id: 73, currency: .rub, isDemandDeposit: false)
+    static let depositActiveRubDemand = ProductDepositData(id: 74, currency: .rub, isDemandDeposit: true)
 }
 
 extension Array where Element == ProductData {

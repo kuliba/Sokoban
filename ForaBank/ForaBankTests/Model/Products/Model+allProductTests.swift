@@ -211,6 +211,38 @@ final class Model_allProductTests: XCTestCase {
                 
         XCTAssertTrue(sut.onlyCorporateCards)
     }
+    
+    func test_onlyCorporateCards_productsCorporateCardsWithNotDemandDeposits_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .deposit: [
+                .depositActiveRubNotDemand,
+            ],
+            .card: [
+                makeCardProduct(cardType: .corporate),
+                makeCardProduct(cardType: .individualBusinessmanMain)
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsCorporateCardsWithDemandDeposits_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .deposit: [
+                .depositActiveRubDemand,
+            ],
+            .card: [
+                makeCardProduct(cardType: .corporate),
+                makeCardProduct(cardType: .individualBusinessmanMain)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
 
     // MARK: - Helpers
     
