@@ -111,6 +111,10 @@ private extension ResponseMapper._DTO {
         case c2b = "C2B_PAYMENT"
         case insideDeposit = "INSIDE_DEPOSIT"
         case sberQRPayment = "SBER_QR_PAYMENT"
+        case networkMarketing = "NETWORK_MARKETING_SERVICE"
+        case digitalWallet = "DIGITAL_WALLETS_SERVICE"
+        case charity = "CHARITY_SERVICE"
+        case socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
     }
 }
 
@@ -160,6 +164,14 @@ private extension ResponseMapper._DTO.Kind {
             return .insideDeposit
         case .sberQRPayment:
             return .sberQRPayment
+        case .networkMarketing:
+            return .networkMarketing
+        case .digitalWallet:
+            return .digitalWallet
+        case .charity:
+            return .charity
+        case .socialAndGame:
+            return .socialAndGame
         }
     }
 }
