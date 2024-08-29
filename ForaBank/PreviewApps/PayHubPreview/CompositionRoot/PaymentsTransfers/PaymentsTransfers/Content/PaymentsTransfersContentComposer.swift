@@ -68,7 +68,7 @@ private extension PaymentsTransfersContentComposer {
             scheduler: scheduler
         )
         
-        return composer.compose()
+        return composer.compose(prefix: [], suffix: [])
     }
 }
 

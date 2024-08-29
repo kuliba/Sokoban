@@ -37,8 +37,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(
-                        makeContentView: makeBinderView)
+                    factory: .init(makeContentView: makeBinderView)
                 )
             }
         )
