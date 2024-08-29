@@ -342,7 +342,10 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        loadServiceCategories { _ in }
+        loadServiceCategories { 
+            
+            paymentsTransfersBinder.content.categoryPicker.content.event(.loaded($0))
+        }
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,

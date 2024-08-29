@@ -32,6 +32,37 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         ])
     }
     
+    func test_shouldSetCategoryPickerStateToLoading() throws {
+        
+        let (sut, _,_) = makeSUT()
+        
+        let initialState = try sut.categoryPickerContent().state
+        
+        XCTAssertNoDiff(initialState.isLoading, true)
+    }
+    
+    func test_shouldNotChangeCategoryPickerStateOnNoHTTPCompletion() throws {
+        
+        let (sut, _, backgroundScheduler) = makeSUT()
+        let initialState = try sut.categoryPickerContent().state
+        
+        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
+        
+        let state = try sut.categoryPickerContent().state
+        XCTAssertNoDiff(state, initialState)
+    }
+    
+    func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
+        
+        let (sut, httpClient, backgroundScheduler) = makeSUT()
+        
+        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
+        httpClient.complete(with: success())
+        
+        let state = try sut.categoryPickerContent().state
+        XCTAssertNoDiff(state.isLoading, false)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RootViewModel
@@ -63,5 +94,53 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         return (sut, httpClient, backgroundScheduler)
+    }
+    
+    private func success(
+    ) -> Result<(Data, HTTPURLResponse), any Error> {
+        
+        return .success((validData(), anyHTTPURLResponse()))
+    }
+    
+    private func validData(
+    ) -> Data {
+        
+        return .init(validJSON().utf8)
+    }
+    
+    private func validJSON(
+    ) -> String {
+        
+        return """
+"""
+    }
+}
+
+// MARK: - DSL
+
+private extension RootViewModel {
+    
+    func categoryPickerContent(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> CategoryPickerSectionContent {
+        
+        let v1 = try paymentsModelV1(file: file, line: line)
+        
+        return v1.content.categoryPicker.content
+    }
+    
+    func paymentsModelV1(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PaymentsTransfersBinder {
+        
+        try XCTUnwrap(binder, "Expected to have v1", file: file, line: line)
+    }
+    
+    private var binder: PaymentsTransfersBinder? {
+        
+        guard case let .v1(binder) = paymentsModel else { return nil }
+        return binder
     }
 }
