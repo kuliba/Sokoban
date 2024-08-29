@@ -67,10 +67,10 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: URLSessionTaskDelegate,
-        spy: LoggingSpy,
+        spy: LoggerSpy,
         session: URLSession
     ) {
-        let spy = LoggingSpy()
+        let spy = LoggerSpy()
         let sut = LoggingURLSessionDelegate(log: spy.log(level:category:message:file:line:))
         let session = URLSession.shared
         
@@ -80,20 +80,20 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
         return (sut, spy, session)
     }
     
-    private final class LoggingSpy: LoggerAgentProtocol {
-        
-        typealias Event = (level: LoggerAgentLevel, category: LoggerAgentCategory, message: String)
-        
-        private(set) var events = [Event]()
-        
-        func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: StaticString, line: UInt) {
-            
-            events.append((level, category, message))
-        }
-    }
-    
     private struct URLSessionDelegateError: LocalizedError {
         
         var errorDescription: String? { "session error" }
+    }
+}
+
+final class LoggerSpy: LoggerAgentProtocol {
+    
+    typealias Event = (level: LoggerAgentLevel, category: LoggerAgentCategory, message: String)
+    
+    private(set) var events = [Event]()
+    
+    func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: StaticString, line: UInt) {
+        
+        events.append((level, category, message))
     }
 }
