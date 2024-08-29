@@ -38,6 +38,7 @@ let package = Package(
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
+        .getBannerCatalogListAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -153,6 +154,8 @@ let package = Package(
         .cardStatementAPITests,
         .svCardLimitAPI,
         .svCardLimitAPITests,
+        .getBannerCatalogListAPI,
+        .getBannerCatalogListAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -675,6 +678,13 @@ private extension Product {
         name: .svCardLimitAPI,
         targets: [
             .svCardLimitAPI,
+        ]
+    )
+    
+    static let getBannerCatalogListAPI = library(
+        name: .getBannerCatalogListAPI,
+        targets: [
+            .getBannerCatalogListAPI,
         ]
     )
 
@@ -1415,6 +1425,26 @@ private extension Target {
         //TODO: add resources
     )
 
+    static let getBannerCatalogListAPI = target(
+        name: .getBannerCatalogListAPI,
+        dependencies: [
+            .remoteServices,
+        ],
+        path: "Sources/\(String.getBannerCatalogListAPI)"
+    )
+    static let getBannerCatalogListAPITests = testTarget(
+        name: .getBannerCatalogListAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .getBannerCatalogListAPI,
+        ],
+        path: "Tests/\(String.getBannerCatalogListAPITests)"
+        //TODO: add resources
+    )
+    
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -2765,6 +2795,10 @@ private extension Target.Dependency {
         name: .svCardLimitAPI
     )
 
+    static let getBannerCatalogListAPI = byName(
+        name: .getBannerCatalogListAPI
+    )
+    
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -3039,6 +3073,9 @@ private extension String {
 
     static let svCardLimitAPI = "SVCardLimitAPI"
     static let svCardLimitAPITests = "SVCardLimitAPITests"
+
+    static let getBannerCatalogListAPI = "GetBannerCatalogListAPI"
+    static let getBannerCatalogListAPITests = "GetBannerCatalogListAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"

@@ -6116,6 +6116,7 @@
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD89129CDB4F400474B06 /* PaymentsServicesOperatorItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesOperatorItemView.swift; sourceTree = "<group>"; };
 		83FAD89A29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionView.swift; sourceTree = "<group>"; };
+		83FD8FB22C807BBC003A5C93 /* GetBannerCatalogListAPI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetBannerCatalogListAPI.xctestplan; sourceTree = "<group>"; };
 		83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfoFeatureFlag.swift; sourceTree = "<group>"; };
 		840749962AE67C5E000A7352 /* ConfigSticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigSticker.swift; sourceTree = "<group>"; };
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
@@ -9717,6 +9718,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				83FD8FB22C807BBC003A5C93 /* GetBannerCatalogListAPI.xctestplan */,
 				2AF718E02C75149100511C02 /* PayHubUI.xctestplan */,
 				2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */,
 				2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */,
