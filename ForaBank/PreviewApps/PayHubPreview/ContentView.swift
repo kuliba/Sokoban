@@ -15,6 +15,8 @@ typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
 
 struct ContentView: View {
     
+    @State private var isCorporate = false
+    
     private let model: TabModel<PaymentsTransfersBinder>
     
     init(
@@ -37,7 +39,15 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContentView: makeBinderView)
+                    factory: .init(
+                        makeContentView: {
+                            
+                            makeBinderView(
+                                isCorporate: $isCorporate,
+                                binder: $0
+                            )
+                        }
+                    )
                 )
             }
         )
@@ -62,6 +72,20 @@ enum DestinationWrapper<Destination>: Identifiable {
 }
 
 private extension ContentView {
+    
+    func makeBinderView(
+        isCorporate: Binding<Bool>,
+        binder: PaymentsTransfersBinder
+    ) -> some View {
+        
+        VStack {
+            
+            Toggle("Corporate only", isOn: $isCorporate)
+                .padding(.horizontal)
+            
+            makeBinderView(binder: binder)
+        }
+    }
     
     func makeBinderView(
         binder: PaymentsTransfersBinder
