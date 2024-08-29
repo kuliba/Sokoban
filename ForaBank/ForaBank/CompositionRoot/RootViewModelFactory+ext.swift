@@ -35,8 +35,6 @@ extension RootViewModelFactory {
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
-        let httpClient: HTTPClient = model.authenticatedHTTPClient()
-        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -303,7 +301,7 @@ extension RootViewModelFactory {
         
         let localServiceCategoryLoader = ServiceCategoryLoader.default
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
-            httpClient:httpClient,
+            httpClient: httpClient,
             log: infoNetworkLog
         )
         let getServiceCategoryListLoader = AnyLoader { completion in
