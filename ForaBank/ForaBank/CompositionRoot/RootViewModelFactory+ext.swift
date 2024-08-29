@@ -165,7 +165,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
+        
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -175,7 +175,7 @@ extension RootViewModelFactory {
             createSVCardLanding: landingService,
             repeatPayment: infoPaymentService,
             makeSVCardLandingViewModel: makeSVCardLandig,
-            makeInformer: {                
+            makeInformer: {
                 model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
             }
         )
@@ -326,24 +326,23 @@ extension RootViewModelFactory {
                 completion(categories.map { .category($0)})
             }
         }
-
+        
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,
             getLatestPayments: NanoServices.getLatestPayments
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
-
-        let _makePaymentsTransfersBinder = {
-            
-            makePaymentsTransfersBinder(
-                categoryPickerPlaceholderCount: 6,
-                operationPickerPlaceholderCount: 4,
-                loadCategories: loadServiceCategories,
-                loadLatestOperations: loadLatestOperations,
-                mainScheduler: mainScheduler,
-                backgroundScheduler: backgroundScheduler
-            )
-        }
+        
+        let paymentsTransfersBinder = makePaymentsTransfersBinder(
+            categoryPickerPlaceholderCount: 6,
+            operationPickerPlaceholderCount: 4,
+            loadCategories: loadServiceCategories,
+            loadLatestOperations: loadLatestOperations,
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        
+        loadServiceCategories { _ in }
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -362,7 +361,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makePaymentsTransfersBinder: _makePaymentsTransfersBinder
+            paymentsTransfersBinder: paymentsTransfersBinder
         )
     }
     
@@ -672,7 +671,7 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        makePaymentsTransfersBinder: @escaping () -> PaymentsTransfersBinder
+        paymentsTransfersBinder: PaymentsTransfersBinder
     ) -> RootViewModel {
             
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -718,7 +717,7 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                return .v1(makePaymentsTransfersBinder())
+                return .v1(paymentsTransfersBinder)
                 
             case .inactive:
                 return .legacy(paymentsTransfersViewModel)
