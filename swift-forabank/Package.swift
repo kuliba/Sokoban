@@ -1430,7 +1430,7 @@ private extension Target {
         dependencies: [
             .remoteServices,
         ],
-        path: "Sources/\(String.getBannerCatalogListAPI)"
+        path: "Sources/Services/\(String.getBannerCatalogListAPI)"
     )
     static let getBannerCatalogListAPITests = testTarget(
         name: .getBannerCatalogListAPITests,
@@ -1441,7 +1441,7 @@ private extension Target {
             // internal modules
             .getBannerCatalogListAPI,
         ],
-        path: "Tests/\(String.getBannerCatalogListAPITests)"
+        path: "Tests/Services/\(String.getBannerCatalogListAPITests)"
         //TODO: add resources
     )
     
