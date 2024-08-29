@@ -15,6 +15,9 @@ public struct CardStatementForPeriodPayload: Equatable {
     public let period: Period
     public let statementFormat: StatementFormat?
     public let cardNumber: CardNumber?
+    public let operationType: [OperationType]?
+    public let operationGroup: [OperationGroup]?
+    public let includeAdditionalCards: Bool?
     
     public typealias ProductID = Tagged<_ProductID, Int>
     public enum _ProductID {}
@@ -25,12 +28,66 @@ public struct CardStatementForPeriodPayload: Equatable {
     public typealias CardNumber = Tagged<_CardNumber, String>
     public enum _CardNumber {}
     
-    public init(id: ProductID, name: Name?, period: Period, statementFormat: StatementFormat?, cardNumber: CardNumber?) {
+    public init(
+        id: ProductID,
+        name: Name?,
+        period: Period,
+        statementFormat: StatementFormat?,
+        cardNumber: CardNumber?,
+        operationType: [OperationType]?,
+        operationGroup: [OperationGroup]?,
+        includeAdditionalCards: Bool?
+    ) {
         self.id = id
         self.name = name
         self.period = period
         self.statementFormat = statementFormat
         self.cardNumber = cardNumber
+        self.operationType = operationType
+        self.operationGroup = operationGroup
+        self.includeAdditionalCards = includeAdditionalCards
+    }
+}
+
+extension CardStatementForPeriodPayload {
+
+    public enum OperationGroup: String, Identifiable, Equatable {
+     
+        case internalOperations = "Перевод внутри банка"
+        case services = "Услуги"
+        case others = "Прочие операции"
+        case beauty = "Красота"
+        case education = "Образование"
+        case hobby = "Хобби и развлечения"
+        case stateServices = "Оплата услуг/Налоги и госуслуги"
+        case transport = "Транспорт"
+        case communicationInternetTV = "Оплата услуг/Связь, интернет, ТВ"
+        case aviaTickets = "Авиа билеты"
+        case health = "Здоровье"
+        case houseRenovation = "Дом, ремонт"
+        case variousGoods = "Различные товары"
+        case supermarket = "Супермаркет"
+        case trainTickets = "Ж/д билеты"
+        case restaurantsAndCafes = "Рестораны и кафе"
+        case multimedia = "Мультимедиа"
+        case restAndTravel = "Отдых и путешествия"
+        case clothesAnAccessories = "Одежда и аксессуары"
+        
+        public var id: String { self.rawValue }
+    }
+}
+
+extension CardStatementForPeriodPayload {
+
+    public enum OperationType: String, Equatable {
+        
+        case credit = "CREDIT"
+        case creditPlan = "CREDIT_PLAN"
+        case creditFict = "CREDIT_FICT"
+        
+        case debit = "DEBIT"
+        case debitPlan = "DEBIT_PLAN"
+        case debitFict = "DEBIT_FICT"
     }
 }
 
