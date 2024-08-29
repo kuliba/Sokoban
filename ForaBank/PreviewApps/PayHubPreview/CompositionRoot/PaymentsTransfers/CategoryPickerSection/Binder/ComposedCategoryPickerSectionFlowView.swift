@@ -63,7 +63,6 @@ private extension ComposedCategoryPickerSectionFlowView {
                 )
             }
         )
-        .onFirstAppear { content.event(.load) }
     }
     
     private func makeCategoryPickerSectionDestinationView(

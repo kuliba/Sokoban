@@ -39,6 +39,13 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
 
+    func test_shouldSetCategoryPickerContentStateToLoading() {
+        
+        let state = makeSUT().sut.content.categoryPicker.content.state
+        
+        XCTAssertTrue(state.isLoading)
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersBinder

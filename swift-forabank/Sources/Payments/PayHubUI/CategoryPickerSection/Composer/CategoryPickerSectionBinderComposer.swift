@@ -29,17 +29,20 @@ public final class CategoryPickerSectionBinderComposer<Category, CategoryModel, 
         self.placeholderCount = placeholderCount
         self.scheduler = scheduler
     }
-    
     public typealias Item = CategoryPickerSectionItem<Category>
+    public typealias CategoryPickerItem = LoadablePickerState<UUID, Item>.Item
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
     public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, CategoryModel, CategoryList>
 }
 
 public extension CategoryPickerSectionBinderComposer {
     
-    func compose() -> Binder {
+    func compose(
+        prefix: [CategoryPickerItem],
+        suffix: [CategoryPickerItem]
+    ) -> Binder {
         
-        let content = makeContent()
+        let content = makeContent(prefix: prefix, suffix: suffix)
         let flow = makeFlow()
         
         return .init(content: content, flow: flow, bind: bind)
@@ -54,7 +57,10 @@ public extension CategoryPickerSectionBinderComposer {
 
 private extension CategoryPickerSectionBinderComposer {
     
-    func makeContent() -> Content {
+    func makeContent(
+        prefix: [CategoryPickerItem],
+        suffix: [CategoryPickerItem]
+    ) -> Content {
         
         let composer = LoadablePickerModelComposer(
             load: load,
@@ -62,8 +68,8 @@ private extension CategoryPickerSectionBinderComposer {
         )
         
         return composer.compose(
-            prefix: [],
-            suffix: [],
+            prefix: prefix,
+            suffix: suffix,
             placeholderCount: placeholderCount
         )
     }

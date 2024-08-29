@@ -38,7 +38,10 @@ extension RootViewModelFactory {
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
         )
-        let categoryPicker = categoryPickerComposer.compose()
+        let categoryPicker = categoryPickerComposer.compose(
+            prefix: [],
+            suffix: (0..<6).map { _ in .placeholder(.init()) }
+        )
         
         // MARK: - OperationPicker
         
