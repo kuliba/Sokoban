@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderModelTests.swift
+//  OperationTrackerModelTests.swift
 //
 //
 //  Created by Igor Malyarov on 28.08.2024.
@@ -10,71 +10,71 @@ import ForaTools
 import PayHub
 import XCTest
 
-final class StatefulLoaderModelTests: XCTestCase {
+final class OperationTrackerModelTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
     
-        let (_, stateSpy, _) = makeSUT(initialState: .failed)
+        let (_, stateSpy, _) = makeSUT(initialState: .failure)
         
-        XCTAssertNoDiff(stateSpy.values, [.failed])
+        XCTAssertNoDiff(stateSpy.values, [.failure])
     }
     
-    func test_load_shouldChangeState_failed() {
+    func test_start_shouldChangeState_failure() {
     
-        let (sut, stateSpy, loadSpy) = makeSUT()
+        let (sut, stateSpy, startSpy) = makeSUT()
         
-        sut.event(.load)
-        loadSpy.complete(with: .failure(anyError()))
+        sut.event(.start)
+        startSpy.complete(with: .failure(anyError()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
-            .loading,
-            .failed
+            .inflight,
+            .failure
         ])
     }
 
-    func test_load_shouldChangeState_loaded() {
+    func test_start_shouldChangeState_success() {
     
-        let (sut, stateSpy, loadSpy) = makeSUT()
+        let (sut, stateSpy, startSpy) = makeSUT()
         
-        sut.event(.load)
-        loadSpy.complete(with: .success(makeResponse()))
+        sut.event(.start)
+        startSpy.complete(with: .success(makeResponse()))
         
         XCTAssertNoDiff(stateSpy.values, [
             .notStarted,
-            .loading,
-            .loaded
+            .inflight,
+            .success
         ])
     }
 
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderModel
-    private typealias StateSpy = ValueSpy<StatefulLoaderState>
-    private typealias LoadSpy = Spy<Void, Result<Response, Error>>
+    private typealias SUT = OperationTrackerModel
+    private typealias StateSpy = ValueSpy<OperationTrackerState>
+    private typealias StartSpy = Spy<Void, Result<Response, Error>>
     
     private func makeSUT(
-        initialState: StatefulLoaderState = .notStarted,
+        initialState: OperationTrackerState = .notStarted,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         stateSpy: StateSpy,
-        loadSpy: LoadSpy
+        startSpy: StartSpy
     ) {
-        let loadSpy = LoadSpy()
+        let startSpy = StartSpy()
         let sut = SUT(
             initialState: initialState,
-            load: loadSpy.process(completion:),
+            start: startSpy.process(completion:),
             scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(stateSpy, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(startSpy, file: file, line: line)
         
-        return (sut, stateSpy, loadSpy)
+        return (sut, stateSpy, startSpy)
     }
     
     private struct Response: Equatable {

@@ -1,5 +1,5 @@
 //
-//  StatefulLoaderEffectHandlerTests.swift
+//  OperationTrackerEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
@@ -8,67 +8,67 @@
 import ForaTools
 import XCTest
 
-final class StatefulLoaderEffectHandlerTests: XCTestCase {
+final class OperationTrackerEffectHandlerTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldNotCallCollaborator() {
         
-        let (_, loadSpy) = makeSUT()
+        let (_, startSpy) = makeSUT()
         
-        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(startSpy.callCount, 0)
     }
     
-    // MARK: - load
+    // MARK: - start
     
-    func test_load_shouldCallLoad() {
+    func test_start_shouldCallStart() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, startSpy) = makeSUT()
         
-        sut.handleEffect(.load) { _ in }
+        sut.handleEffect(.start) { _ in }
         
-        XCTAssertEqual(loadSpy.callCount, 1)
+        XCTAssertEqual(startSpy.callCount, 1)
     }
     
-    func test_load_shouldDeliverLoadFailureEvent() {
+    func test_start_shouldDeliverStartFailureEvent() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, startSpy) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loadFailure) {
+        expect(sut, with: .start, toDeliver: .fail) {
             
-            loadSpy.complete(with: false)
+            startSpy.complete(with: false)
         }
     }
     
-    func test_load_shouldDeliverLoadSuccessEvent() {
+    func test_start_shouldDeliverStartSuccessEvent() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, startSpy) = makeSUT()
         
-        expect(sut, with: .load, toDeliver: .loadSuccess) {
+        expect(sut, with: .start, toDeliver: .succeed) {
             
-            loadSpy.complete(with: true)
+            startSpy.complete(with: true)
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = StatefulLoaderEffectHandler
-    private typealias LoadSpy = Spy<Void, Bool>
+    private typealias SUT = OperationTrackerEffectHandler
+    private typealias StartSpy = Spy<Void, Bool>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadSpy: LoadSpy
+        startSpy: StartSpy
     ) {
-        let loadSpy = LoadSpy()
-        let sut = SUT(load: loadSpy.process(completion:))
+        let startSpy = StartSpy()
+        let sut = SUT(start: startSpy.process(completion:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        trackForMemoryLeaks(startSpy, file: file, line: line)
         
-        return (sut, loadSpy)
+        return (sut, startSpy)
     }
     
     private func expect(

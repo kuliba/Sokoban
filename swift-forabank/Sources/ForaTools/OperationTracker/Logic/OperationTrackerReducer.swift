@@ -1,22 +1,22 @@
 //
-//  StatefulLoaderReducer.swift
+//  OperationTrackerReducer.swift
 //
 //
 //  Created by Igor Malyarov on 27.08.2024.
 //
 
-/// A reducer that manages state transitions in the `StatefulLoader` based on incoming events.
-public final class StatefulLoaderReducer {
+/// A reducer that manages state transitions in the `OperationTracker` based on incoming events.
+public final class OperationTrackerReducer {
     
-    /// Initialises a new instance of the `StatefulLoaderReducer`.
+    /// Initialises a new instance of the `OperationTrackerReducer`.
     public init() {}
 }
 
-public extension StatefulLoaderReducer {
+public extension OperationTrackerReducer {
     
     /// Reduces the current state based on the given event and returns the new state and any triggered effect.
     /// - Parameters:
-    ///   - state: The current state of the loader.
+    ///   - state: The current state of the tracker.
     ///   - event: The event that triggers a state transition.
     /// - Returns: A tuple containing the new state and an optional effect that was triggered.
     func reduce(
@@ -28,47 +28,49 @@ public extension StatefulLoaderReducer {
         var effect: Effect?
         
         switch event {
-        case .load:
-            load(&state, &effect)
-            
-        case .loadFailure:
-            state = .failed
-            
-        case .loadSuccess:
-            state = .loaded
+        case .fail:
+            state = .failure
             
         case .reset:
             reset(&state, &effect)
+            
+        case .start:
+            start(&state, &effect)
+            
+        case .succeed:
+            state = .success
         }
         
         return (state, effect)
     }
 }
 
-public extension StatefulLoaderReducer {
+public extension OperationTrackerReducer {
     
-    /// Typealias for the possible states of the StatefulLoader.
-    typealias State = StatefulLoaderState
+    /// Typealias for the possible states of the OperationTracker.
+    typealias State = OperationTrackerState
+    
     /// Typealias for the possible events that can trigger state changes.
-    typealias Event = StatefulLoaderEvent
+    typealias Event = OperationTrackerEvent
+    
     /// Typealias for the possible effects that can be triggered.
-    typealias Effect = StatefulLoaderEffect
+    typealias Effect = OperationTrackerEffect
 }
 
-private extension StatefulLoaderReducer {
+private extension OperationTrackerReducer {
     
-    /// Handles the logic for transitioning to the `loading` state and triggering the `load` effect.
+    /// Handles the logic for transitioning to the `inflight` state and triggering the `start` effect.
     /// - Parameters:
-    ///   - state: The current state, which will be updated to `loading` if appropriate.
-    ///   - effect: An optional effect that will be set to `load` if the transition occurs.
-    func load(
+    ///   - state: The current state, which will be updated to `inflight` if appropriate.
+    ///   - effect: An optional effect that will be set to `start` if the transition occurs.
+    func start(
         _ state: inout State,
         _ effect: inout Effect?
     ) {
         switch state {
-        case .failed, .loaded, .notStarted:
-            state = .loading
-            effect = .load
+        case .failure, .success, .notStarted:
+            state = .inflight
+            effect = .start
             
         default:
             break
@@ -84,7 +86,7 @@ private extension StatefulLoaderReducer {
         _ effect: inout Effect?
     ) {
         switch state {
-        case .failed, .loaded:
+        case .failure, .success:
             state = .notStarted
             
         default:
