@@ -11,18 +11,29 @@ import SwiftUI
 import UIPrimitives
 import RxViewModel
 
-typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
+typealias PaymentsTransfersTabState = TabState<PaymentsTransfersSwitcher>
+
+final class ContentViewModel: ObservableObject {
+    
+    @Published var isCorporate = false
+    
+}
 
 struct ContentView: View {
     
-    @State private var isCorporate = false
+    @StateObject private var contentModel: ContentViewModel
     
-    private let model: TabModel<PaymentsTransfersBinder>
+    private let model: TabModel<PaymentsTransfersSwitcher>
     
     init(
         selected: PaymentsTransfersTabState.Selected = .ok
     ) {
-        let tabComposer = TabModelComposer(scheduler: .main)
+        let contentModel = ContentViewModel()
+        let tabComposer = TabModelComposer(
+            isCorporateOnly: contentModel.$isCorporate.eraseToAnyPublisher(),
+            scheduler: .main
+        )
+        self._contentModel = .init(wrappedValue: contentModel)
         self.model = tabComposer.compose(selected: selected)
     }
     
@@ -39,15 +50,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(
-                        makeContentView: {
-                            
-                            makeBinderView(
-                                isCorporate: $isCorporate,
-                                binder: $0
-                            )
-                        }
-                    )
+                    factory: .init(makeContentView: makeSwitcherView)
                 )
             }
         )
@@ -73,17 +76,34 @@ enum DestinationWrapper<Destination>: Identifiable {
 
 private extension ContentView {
     
-    func makeBinderView(
-        isCorporate: Binding<Bool>,
-        binder: PaymentsTransfersBinder
+    func makeSwitcherView(
+        switcher: PaymentsTransfersSwitcher
     ) -> some View {
         
-        VStack {
+        ZStack(alignment: .top) {
             
-            Toggle("Corporate only", isOn: $isCorporate)
-                .padding(.horizontal)
+            switch switcher.state {
+            case let .corporate(corporate):
+                Text(String(describing: corporate))
+                    .frame(maxHeight: .infinity)
+                    .toolbar {
+                     
+                        ToolbarItem(placement: .topBarLeading) {
+                            Text("TBD: Profile without QR")
+                        }
+                    }
+                
+            case let .personal(binder):
+                makeBinderView(binder: binder)
+            }
             
-            makeBinderView(binder: binder)
+            Button(contentModel.isCorporate ? "Corporate" : "Personal") {
+                
+                contentModel.isCorporate.toggle()
+            }
+            .foregroundColor(contentModel.isCorporate ? .orange : .green)
+            .padding(.horizontal)
+            .offset(y: -8)
         }
     }
     
