@@ -38,10 +38,11 @@ public final class CategoryPickerSectionBinderComposer<Category, CategoryModel, 
 public extension CategoryPickerSectionBinderComposer {
     
     func compose(
-        prefix: [CategoryPickerItem]
+        prefix: [CategoryPickerItem],
+        suffix: [CategoryPickerItem]
     ) -> Binder {
         
-        let content = makeContent(prefix: prefix)
+        let content = makeContent(prefix: prefix, suffix: suffix)
         let flow = makeFlow()
         
         return .init(content: content, flow: flow, bind: bind)
@@ -57,7 +58,8 @@ public extension CategoryPickerSectionBinderComposer {
 private extension CategoryPickerSectionBinderComposer {
     
     func makeContent(
-        prefix: [CategoryPickerItem]
+        prefix: [CategoryPickerItem],
+        suffix: [CategoryPickerItem]
     ) -> Content {
         
         let composer = LoadablePickerModelComposer(
@@ -67,7 +69,7 @@ private extension CategoryPickerSectionBinderComposer {
         
         return composer.compose(
             prefix: prefix,
-            suffix: [],
+            suffix: suffix,
             placeholderCount: placeholderCount
         )
     }

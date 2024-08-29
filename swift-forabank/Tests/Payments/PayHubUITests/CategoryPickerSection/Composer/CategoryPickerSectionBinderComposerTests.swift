@@ -71,8 +71,64 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     }
     
     // MARK: - suffix
+    
+    func test_shouldSetEmptyContentStateSuffixOnEmpty() {
+        
+        let (sut, _,_,_, _) = makeSUT(suffix: [])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[]])
+    }
 
-    func test_shouldSetContentStateSuffix() { XCTFail("unimplemented") }
+    func test_shouldSetContentStateSuffixWithOneElementOnOneElement() {
+        
+        let element = makeCategoryPickerItemElement()
+        let (sut, _,_,_, _) = makeSUT(suffix: [element])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[element]])
+    }
+
+    func test_shouldSetContentStateSuffixWithOnePlaceholderOnOnePlaceholder() {
+        
+        let placeholder = makeCategoryPickerItemPlaceholder()
+        let (sut, _,_,_, _) = makeSUT(suffix: [placeholder])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[placeholder]])
+    }
+
+    func test_shouldSetContentStateSuffixWithTwoElementsOnTwoElements() {
+        
+        let element1 = makeCategoryPickerItemElement()
+        let element2 = makeCategoryPickerItemElement()
+        let (sut, _,_,_, _) = makeSUT(suffix: [element1, element2])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[element1, element2]])
+    }
+
+    func test_shouldSetContentStateSuffixWithTwoPlaceholdersOnTwoPlaceholders() {
+        
+        let placeholder1 = makeCategoryPickerItemPlaceholder()
+        let placeholder2 = makeCategoryPickerItemPlaceholder()
+        let (sut, _,_,_, _) = makeSUT(suffix: [placeholder1, placeholder2])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[placeholder1, placeholder2]])
+    }
+
+    func test_shouldSetContentStateSuffixWithElementAndPlaceholderOnElementAndPlaceholder() {
+        
+        let element = makeCategoryPickerItemElement()
+        let placeholder = makeCategoryPickerItemPlaceholder()
+        let (sut, _,_,_, _) = makeSUT(suffix: [element, placeholder])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.items))
+        
+        XCTAssertNoDiff(contentSpy.values, [[element, placeholder]])
+    }
+    
+    // MARK: - flow
     
     func test_shouldNotChangeFlowNavigationOnContentDeselectEvent() {
         
@@ -171,6 +227,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     private func makeSUT(
         placeholderCount: Int = 6,
         prefix: [Composer.CategoryPickerItem] = [],
+        suffix: [Composer.CategoryPickerItem] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -193,7 +250,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
             placeholderCount: placeholderCount,
             scheduler: scheduler.eraseToAnyScheduler()
         )
-        let sut = composer.compose(prefix: prefix)
+        let sut = composer.compose(prefix: prefix, suffix: suffix)
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
