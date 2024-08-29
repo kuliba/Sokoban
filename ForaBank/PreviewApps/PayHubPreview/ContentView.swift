@@ -39,10 +39,6 @@ struct ContentView: View {
     
     var body: some View {
         
-        if #available(iOS 15.0, *) {
-            let _ = Self._printChanges()
-        }
-        
         TabStateWrapperView(
             model: model,
             makeContent: { state, event in
@@ -82,20 +78,11 @@ private extension ContentView {
         
         ZStack(alignment: .top) {
             
-            switch switcher.state {
-            case let .corporate(corporate):
-                Text(String(describing: corporate))
-                    .frame(maxHeight: .infinity)
-                    .toolbar {
-                     
-                        ToolbarItem(placement: .topBarLeading) {
-                            Text("TBD: Profile without QR")
-                        }
-                    }
-                
-            case let .personal(binder):
-                makeBinderView(binder: binder)
-            }
+            PaymentsTransfersSwitcherView(
+                model: switcher,
+                corporateView: corporateView,
+                personalView: personalView
+            )
             
             Button(contentModel.isCorporate ? "Corporate" : "Personal") {
                 
@@ -107,7 +94,22 @@ private extension ContentView {
         }
     }
     
-    func makeBinderView(
+    func corporateView(
+        corporate: PaymentsTransfersCorporate
+    ) -> some View {
+        
+        Text(String(describing: corporate))
+            .frame(maxHeight: .infinity)
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Text("TBD: Profile without QR")
+                }
+            }
+    }
+    
+    func personalView(
         binder: PaymentsTransfersBinder
     ) -> some View {
         
