@@ -49,6 +49,7 @@ extension GetInfoRepeatPaymentDomain {
         public enum TransferType: String {
             
             case betweenTheir = "BETWEEN_THEIR"
+            case byPhone = "BY_PHONE"
             case contactAddressless = "CONTACT_ADDRESSLESS"
             case direct = "DIRECT"
             case externalEntity = "EXTERNAL_ENTITY"

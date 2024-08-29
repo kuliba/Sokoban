@@ -57,6 +57,7 @@ public enum GetInfoRepeatPaymentMapper {
         public enum TransferType: String, Decodable {
             
             case betweenTheir = "BETWEEN_THEIR"
+            case byPhone = "BY_PHONE"
             case contactAddressless = "CONTACT_ADDRESSLESS"
             case direct = "NEW_DIRECT"
             case externalEntity = "EXTERNAL_ENTITY"
@@ -177,6 +178,8 @@ private extension GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.T
         switch self {
         case .betweenTheir:
             return .betweenTheir
+        case .byPhone:
+            return .byPhone
         case .contactAddressless:
             return .contactAddressless
         case .direct:
