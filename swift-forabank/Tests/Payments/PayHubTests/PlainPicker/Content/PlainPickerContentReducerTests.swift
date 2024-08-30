@@ -21,6 +21,11 @@ final class PlainPickerContentReducerTests: PlainPickerContentTests {
         }
     }
     
+    func test_select_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .select(makeElement()), delivers: nil)
+    }
+    
     func test_deselect_shouldResetSelection() {
         
         let state = makeState(selection: makeElement())
@@ -29,6 +34,11 @@ final class PlainPickerContentReducerTests: PlainPickerContentTests {
             
             $0.selection = nil
         }
+    }
+    
+    func test_deselect_shouldNotDeliverEffect() {
+        
+        assert(makeState(selection: makeElement()), event: .select(nil), delivers: nil)
     }
     
     // MARK: - Helpers
@@ -52,7 +62,7 @@ final class PlainPickerContentReducerTests: PlainPickerContentTests {
         selection: Element? = nil
     ) -> SUT.State {
         
-        return .init(elements:elements, selection: selection)
+        return .init(elements: elements, selection: selection)
     }
     
     @discardableResult
