@@ -123,7 +123,7 @@ private extension ContentView {
                         binder: $0,
                         config: .preview,
                         itemLabel: itemLabel,
-                        makeDestinationView: CategoryPickerSectionDestinationView.init
+                        makeDestinationView: makeCategoryPickerSectionDestinationView
                     )
                 },
                 makeOperationPickerView: {
@@ -178,6 +178,33 @@ private extension ContentView {
             )
         )
     }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionDestinationView(
+        destination: CategoryPickerSectionDestination<CategoryModelStub, PlainCategoryPickerBinder>
+    ) -> some View {
+        
+        switch destination {
+        case let .category(categoryModelStub):
+            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+            
+        case let .list(plainCategoryPickerBinder):
+            ComposedPlainPickerView(
+                binder: plainCategoryPickerBinder,
+                makeContentView: { state, event in
+                
+                    Text("TBD: content view for \(String(describing: state))")
+                        .padding()
+                },
+                makeDestinationView: {
+                
+                    Text("TBD: destination view for \(String(describing: $0))")
+                        .padding()
+                }
+            )
+        }
+    }
+
     
     private func itemLabel(
         item: CategoryPickerSectionState.Item

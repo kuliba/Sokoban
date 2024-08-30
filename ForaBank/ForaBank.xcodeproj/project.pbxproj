@@ -1548,7 +1548,6 @@
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADC2E5A2C6EFBEF00915F58 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E592C6EFBEF00915F58 /* RxViewModel */; };
 		2ADC2E5C2C6EFBF500915F58 /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADC2E5B2C6EFBF500915F58 /* PayHub */; };
-		2ADCAF202C8215D6008AE754 /* CategoryPickerSectionDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADCAF1F2C8215D6008AE754 /* CategoryPickerSectionDestinationView.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
 		2ADE53332BA70E60003E0EC9 /* StartPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADE53322BA70E60003E0EC9 /* StartPayment.swift */; };
@@ -4919,7 +4918,6 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
-		2ADCAF1F2C8215D6008AE754 /* CategoryPickerSectionDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionDestinationView.swift; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADE53322BA70E60003E0EC9 /* StartPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPayment.swift; sourceTree = "<group>"; };
@@ -7921,7 +7919,6 @@
 			children = (
 				2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */,
 				2A05ECC62C6C8C740070C5CF /* ContentView.swift */,
-				2ADCAF1F2C8215D6008AE754 /* CategoryPickerSectionDestinationView.swift */,
 				2A273E812C75EC2E009935E6 /* Configs */,
 				2A7772502C6F189E009B1676 /* CompositionRoot */,
 				2A7772352C6F0F41009B1676 /* Tab */,
@@ -19186,7 +19183,6 @@
 				2A7385BF2C73843E00861881 /* PaymentsTransfersFlowModelComposer.swift in Sources */,
 				2A302AD62C7770500088F6C7 /* CategoryPickerSectionContentViewConfig+preview.swift in Sources */,
 				2A7772462C6F1121009B1676 /* TabView.swift in Sources */,
-				2ADCAF202C8215D6008AE754 /* CategoryPickerSectionDestinationView.swift in Sources */,
 				2A273E6C2C759F6B009935E6 /* ServiceCategory.swift in Sources */,
 				2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */,
 			);
