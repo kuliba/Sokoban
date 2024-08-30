@@ -122,7 +122,11 @@ private extension ContentView {
                     ComposedCategoryPickerSectionFlowView(
                         binder: $0,
                         config: .preview,
-                        itemLabel: itemLabel
+                        itemLabel: itemLabel,
+                        makeDestinationView: { 
+                            
+                            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: $0))")
+                        }
                     )
                 },
                 makeOperationPickerView: {
