@@ -1,16 +1,16 @@
 //
-//  PlainPickerReducer.swift
+//  PlainPickerContentReducer.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
-public final class PlainPickerReducer<Element> {
+public final class PlainPickerContentReducer<Element> {
     
     public init() {}
 }
 
-public extension PlainPickerReducer {
+public extension PlainPickerContentReducer {
     
     func reduce(
         _ state: State,
@@ -29,9 +29,9 @@ public extension PlainPickerReducer {
     }
 }
 
-public extension PlainPickerReducer {
+public extension PlainPickerContentReducer {
     
-    typealias State = PlainPickerState<Element>
-    typealias Event = PlainPickerEvent<Element>
-    typealias Effect = PlainPickerEffect
+    typealias State = PlainPickerContentState<Element>
+    typealias Event = PlainPickerContentEvent<Element>
+    typealias Effect = PlainPickerContentEffect
 }

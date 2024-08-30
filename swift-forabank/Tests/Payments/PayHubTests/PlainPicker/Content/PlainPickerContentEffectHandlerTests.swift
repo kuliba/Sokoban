@@ -1,5 +1,5 @@
 //
-//  PlainPickerEffectHandlerTests.swift
+//  PlainPickerContentEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
@@ -8,11 +8,11 @@
 import PayHub
 import XCTest
 
-final class PlainPickerEffectHandlerTests: PlainPickerTests {
+final class PlainPickerContentEffectHandlerTests: PlainPickerContentTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PlainPickerEffectHandler<Element>
+    private typealias SUT = PlainPickerContentEffectHandler<Element>
     
     private func makeSUT(
         file: StaticString = #file,

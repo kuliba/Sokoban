@@ -1,5 +1,5 @@
 //
-//  PlainPickerTests.swift
+//  PlainPickerContentTests.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class PlainPickerTests: XCTestCase {
+class PlainPickerContentTests: XCTestCase {
     
     struct Element: Equatable {
         
