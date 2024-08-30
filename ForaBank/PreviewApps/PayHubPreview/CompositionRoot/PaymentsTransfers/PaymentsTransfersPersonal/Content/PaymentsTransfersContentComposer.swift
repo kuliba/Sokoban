@@ -52,11 +52,11 @@ private extension PaymentsTransfersContentComposer {
         loadedCategories: [ServiceCategory]
     ) -> CategoryPickerSectionBinder {
         
-        let plainPickerComposer = PlainPickerBinderComposer<ServiceCategory, Void>(
+        let plainPickerComposer = PlainPickerBinderComposer<ServiceCategory, UUIDIdentified<Void>>(
             microServices: .init(
                 makeNavigation: { _, completion in
                 
-                    completion(())
+                    completion(.init(()))
                 }
             ),
             scheduler: scheduler
