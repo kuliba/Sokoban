@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import PhoneNumberWrapper
 
 final class OperationDetailInfoViewModel: Identifiable {
     
@@ -556,7 +557,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 logo = image
             }
             
-            if let payeePhone = operation?.payeePhone {
+            if let payeePhone = operation?.payeePhone?.addCodeRuIfNeeded() {
                 let phoneFormatter = PhoneNumberKitFormater()
                 let formattedPhone = phoneFormatter.format(payeePhone)
                 cells.append(PropertyCellViewModel(

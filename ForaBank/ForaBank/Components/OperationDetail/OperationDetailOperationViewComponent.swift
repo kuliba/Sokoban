@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhoneNumberWrapper
 
 //MARK: - View Model
 
@@ -205,7 +206,7 @@ extension OperationDetailViewModel {
                 }
                 
             case .mobile:
-                if let payeePhone = operation.payeePhone {
+                if let payeePhone = operation.payeePhone?.addCodeRuIfNeeded() {
                     let phoneFormatter = PhoneNumberKitFormater()
                     let formattedPhone = phoneFormatter.format(payeePhone)
                     
