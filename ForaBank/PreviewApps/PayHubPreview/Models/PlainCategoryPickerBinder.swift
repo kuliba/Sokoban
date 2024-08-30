@@ -5,22 +5,6 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-final class PlainCategoryPickerBinder {
-    
-    let categories: [ServiceCategory]
-    
-    init(categories: [ServiceCategory]) {
-     
-        self.categories = categories
-    }
-}
+import PayHubUI
 
-final class PlainCategoryPickerBinderComposer {
-    
-    func compose(
-        categories: [ServiceCategory]
-    ) -> PlainCategoryPickerBinder {
-        
-        return .init(categories: categories)
-    }
-}
+typealias PlainCategoryPickerBinder = PlainPickerBinder<ServiceCategory, Void>
