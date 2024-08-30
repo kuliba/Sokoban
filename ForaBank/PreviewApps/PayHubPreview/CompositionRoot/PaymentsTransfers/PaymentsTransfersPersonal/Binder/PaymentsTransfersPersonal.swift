@@ -8,4 +8,4 @@
 import PayHub
 import PayHubUI
 
-typealias PaymentsTransfersPersonal = PayHub.Binder<PaymentsTransfersContent, PaymentsTransfersFlow>
+typealias PaymentsTransfersPersonal = PayHub.Binder<PaymentsTransfersContent, PaymentsTransfersPersonalFlow>

@@ -29,7 +29,7 @@ public extension PaymentsTransfersFlowReducer {
 
 public extension PaymentsTransfersFlowReducer {
     
-    typealias State = PaymentsTransfersFlowState
+    typealias State = PaymentsTransfersPersonalFlowState
     typealias Event = PaymentsTransfersFlowEvent
     typealias Effect = PaymentsTransfersFlowEffect
 }

@@ -23,7 +23,7 @@ final class PaymentsTransfersFlowModelComposer {
 
 extension PaymentsTransfersFlowModelComposer {
     
-    func compose() -> PaymentsTransfersFlow {
+    func compose() -> PaymentsTransfersPersonalFlow {
         
         let reducer = PaymentsTransfersFlowReducer()
         let effectHandler = PaymentsTransfersFlowEffectHandler(
