@@ -11,7 +11,7 @@ import Foundation
 
 public final class ProfileSwitcherModel<Corporate, Personal>: ObservableObject {
     
-    @Published public private(set) var state: State
+    @Published public private(set) var state: State?
     
     public init(
         isCorporateOnly: AnyPublisher<Bool, Never>,
@@ -19,8 +19,6 @@ public final class ProfileSwitcherModel<Corporate, Personal>: ObservableObject {
         personal: Personal,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
-        self.state = .personal(personal)
-        
         isCorporateOnly
             .removeDuplicates()
             .map { $0 ? .corporate(corporate) : .personal(personal) }

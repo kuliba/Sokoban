@@ -81,7 +81,8 @@ private extension ContentView {
             PaymentsTransfersSwitcherView(
                 model: switcher,
                 corporateView: corporateView,
-                personalView: personalView
+                personalView: personalView,
+                undefinedView: undefinedView
             )
             
             Button(contentModel.isCorporate ? "Corporate" : "Personal") {
@@ -211,6 +212,12 @@ private extension ContentView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+    
+    private func undefinedView(
+    ) -> some View {
+        
+        Text("TBD: products not loaded")
     }
 }
 

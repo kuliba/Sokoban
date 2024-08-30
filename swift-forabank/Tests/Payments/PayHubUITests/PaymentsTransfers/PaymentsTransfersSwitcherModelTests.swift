@@ -12,16 +12,15 @@ import XCTest
 
 final class ProfileSwitcherModelTests: XCTestCase {
     
-    func test_init_shouldSetStateToPersonal() {
+    func test_init_shouldSetStateToNil() {
         
-        let personal = makePersonal()
-        let (sut, _, spy) = makeSUT(corporate: makeCorporate(), personal: personal)
+        let (sut, _, spy) = makeSUT()
         
-        XCTAssertNoDiff(spy.values, [.personal(personal)])
+        XCTAssertNoDiff(spy.values, [nil])
         XCTAssertNotNil(sut)
     }
     
-    func test_shouldSetStateOnIsCorporateOnlyValueChange() {
+    func test_shouldChangeStateOnIsCorporateOnlyValueChange() {
         
         let (corporate, personal) = (makeCorporate(), makePersonal())
         let (_, subject, spy) = makeSUT(corporate: corporate, personal: personal)
@@ -29,14 +28,14 @@ final class ProfileSwitcherModelTests: XCTestCase {
         subject.send(true)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .corporate(corporate)
         ])
         
         subject.send(false)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .corporate(corporate),
             .personal(personal),
         ])
@@ -50,14 +49,14 @@ final class ProfileSwitcherModelTests: XCTestCase {
         subject.send(false)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .personal(personal),
         ])
         
         subject.send(false)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .personal(personal),
         ])
     }
@@ -70,14 +69,14 @@ final class ProfileSwitcherModelTests: XCTestCase {
         subject.send(true)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .corporate(corporate)
         ])
         
         subject.send(true)
         
         XCTAssertNoDiff(spy.values, [
-            .personal(personal),
+            .none,
             .corporate(corporate),
         ])
     }
@@ -86,7 +85,7 @@ final class ProfileSwitcherModelTests: XCTestCase {
     
     private typealias SUT = ProfileSwitcherModel<Corporate, Personal>
     private typealias Subject = PassthroughSubject<Bool, Never>
-    private typealias StateSpy = ValueSpy<SUT.State>
+    private typealias StateSpy = ValueSpy<SUT.State?>
     
     private func makeSUT(
         corporate: Corporate? = nil,
