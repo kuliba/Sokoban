@@ -9,12 +9,6 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-typealias PaymentsTransfersBinder = PayHub.Binder<PaymentsTransfersContent, PaymentsTransfersFlow>
-typealias PaymentsTransfersToolbarBinder = PayHubUI.PaymentsTransfersToolbarBinder<ProfileModelStub, QRModelStub>
-
-final class ProfileModelStub {}
-final class QRModelStub {}
-
 struct ComposedPaymentsTransfersFlowView<CategoryPickerView, OperationPickerView, ToolbarView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,

@@ -1227,6 +1227,12 @@
 		2A9D79C72C80A70100A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79C22C80A62100A17677 /* PaymentsTransfersSwitcher.swift */; };
 		2A9D79C82C80A70100A17677 /* PaymentsTransfersCorporate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79C52C80A67A00A17677 /* PaymentsTransfersCorporate.swift */; };
 		2A9D79CC2C80D4B500A17677 /* PaymentsTransfersSwitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79C92C80D0BA00A17677 /* PaymentsTransfersSwitcherView.swift */; };
+		2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */; };
+		2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */; };
+		2A9D79DC2C81862F00A17677 /* PaymentsTransfersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D12C81835800A17677 /* PaymentsTransfersBinder.swift */; };
+		2A9D79DD2C81862F00A17677 /* PaymentsTransfersToolbarBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D32C81837400A17677 /* PaymentsTransfersToolbarBinder.swift */; };
+		2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */; };
+		2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D79D82C8183B900A17677 /* QRModelStub.swift */; };
 		2A9E054B2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2A55F2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */; };
@@ -4607,6 +4613,12 @@
 		2A9D79C22C80A62100A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
 		2A9D79C52C80A67A00A17677 /* PaymentsTransfersCorporate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporate.swift; sourceTree = "<group>"; };
 		2A9D79C92C80D0BA00A17677 /* PaymentsTransfersSwitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcherView.swift; sourceTree = "<group>"; };
+		2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSwitcher.swift; sourceTree = "<group>"; };
+		2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporate.swift; sourceTree = "<group>"; };
+		2A9D79D12C81835800A17677 /* PaymentsTransfersBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersBinder.swift; sourceTree = "<group>"; };
+		2A9D79D32C81837400A17677 /* PaymentsTransfersToolbarBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersToolbarBinder.swift; sourceTree = "<group>"; };
+		2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModelStub.swift; sourceTree = "<group>"; };
+		2A9D79D82C8183B900A17677 /* QRModelStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelStub.swift; sourceTree = "<group>"; };
 		2A9E054A2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeNavigationStateManager.swift"; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelTests.swift; sourceTree = "<group>"; };
@@ -8628,6 +8640,11 @@
 		2A2B91DC2C7CB5BD008F5186 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
+				2A9D79CD2C8182D400A17677 /* PaymentsTransfersSwitcher.swift */,
+				2A9D79CF2C8182E900A17677 /* PaymentsTransfersCorporate.swift */,
+				2A9D79D12C81835800A17677 /* PaymentsTransfersBinder.swift */,
+				2A9D79D32C81837400A17677 /* PaymentsTransfersToolbarBinder.swift */,
+				2A9D79D52C81839000A17677 /* Stubs */,
 				2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersFlowView.swift */,
 			);
 			path = PaymentsTransfers;
@@ -10902,6 +10919,15 @@
 				2A9D79C52C80A67A00A17677 /* PaymentsTransfersCorporate.swift */,
 			);
 			path = PaymentsTransfersCorporate;
+			sourceTree = "<group>";
+		};
+		2A9D79D52C81839000A17677 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				2A9D79D62C8183A500A17677 /* ProfileModelStub.swift */,
+				2A9D79D82C8183B900A17677 /* QRModelStub.swift */,
+			);
+			path = Stubs;
 			sourceTree = "<group>";
 		};
 		2A9E881E2AE9166500551DF7 /* Crypto */ = {
@@ -20421,6 +20447,12 @@
 				839914772C6CF72300E9D275 /* GetProductListByTypeV6Flag.swift in Sources */,
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
+				2A9D79DA2C81862F00A17677 /* PaymentsTransfersSwitcher.swift in Sources */,
+				2A9D79DB2C81862F00A17677 /* PaymentsTransfersCorporate.swift in Sources */,
+				2A9D79DC2C81862F00A17677 /* PaymentsTransfersBinder.swift in Sources */,
+				2A9D79DD2C81862F00A17677 /* PaymentsTransfersToolbarBinder.swift in Sources */,
+				2A9D79DE2C81862F00A17677 /* ProfileModelStub.swift in Sources */,
+				2A9D79DF2C81862F00A17677 /* QRModelStub.swift in Sources */,
 				C14C57CF2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift in Sources */,
 				68D06F2D26C405FB00F9BE4C /* ProductCell.swift in Sources */,
 				2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */,
