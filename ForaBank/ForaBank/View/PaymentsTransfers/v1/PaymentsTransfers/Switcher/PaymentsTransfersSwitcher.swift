@@ -8,5 +8,3 @@
 import PayHubUI
 
 typealias PaymentsTransfersSwitcher = ProfileSwitcherModel<PaymentsTransfersCorporate, PaymentsTransfersPersonal>
-
-typealias PaymentsTransfersPersonal = PaymentsTransfersBinder

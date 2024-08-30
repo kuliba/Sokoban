@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentsTransfersBinder.swift
+//  RootViewModelFactory+makePaymentsTransfersPersonal.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -18,14 +18,14 @@ extension RootViewModelFactory {
     typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
-    static func makePaymentsTransfersBinder(
+    static func makePaymentsTransfersPersonal(
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         loadCategories: @escaping LoadServiceCategories,
         loadLatestOperations: @escaping LoadLatestOperations,
         mainScheduler: AnySchedulerOf<DispatchQueue>,
         backgroundScheduler: AnySchedulerOf<DispatchQueue>
-    ) -> PaymentsTransfersBinder {
+    ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
         

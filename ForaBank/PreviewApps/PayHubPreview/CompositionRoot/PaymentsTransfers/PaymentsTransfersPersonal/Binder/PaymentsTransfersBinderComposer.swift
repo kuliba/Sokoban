@@ -22,7 +22,7 @@ final class PaymentsTransfersBinderComposer {
 
 extension PaymentsTransfersBinderComposer {
     
-    typealias Binder = PaymentsTransfersBinder
+    typealias Binder = PaymentsTransfersPersonal
     
     func compose(
         loadedCategories: [ServiceCategory],

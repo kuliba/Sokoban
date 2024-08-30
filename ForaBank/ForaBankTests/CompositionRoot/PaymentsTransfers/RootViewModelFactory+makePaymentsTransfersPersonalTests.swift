@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentsTransfersBinderTests.swift
+//  RootViewModelFactory+makePaymentsTransfersPersonalTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -10,7 +10,7 @@ import PayHub
 import PayHubUI
 import XCTest
 
-final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
+final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -48,7 +48,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersBinder
+    private typealias SUT = PaymentsTransfersPersonal
     private typealias LoadLatestSpy = Spy<Void, [Latest], Never>
     private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem<ServiceCategory>], Never>
 
@@ -64,7 +64,7 @@ final class RootViewModelFactory_makePaymentsTransfersBinderTests: XCTestCase {
     ) {
         let loadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
-        let sut = RootViewModelFactory.makePaymentsTransfersBinder(
+        let sut = RootViewModelFactory.makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             loadCategories: loadCategoriesSpy.process(completion:),

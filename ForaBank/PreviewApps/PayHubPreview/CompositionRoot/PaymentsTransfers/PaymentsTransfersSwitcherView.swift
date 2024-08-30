@@ -16,7 +16,7 @@ where CorporateView: View,
     @ObservedObject var model: PaymentsTransfersSwitcher
     
     let corporateView: (PaymentsTransfersCorporate) -> CorporateView
-    let personalView: (PaymentsTransfersBinder) -> PersonalView
+    let personalView: (PaymentsTransfersPersonal) -> PersonalView
     let undefinedView: () -> UndefinedView
     
     var body: some View {
@@ -40,7 +40,7 @@ where CorporateView: View,
 }
 
 private extension Optional
-where Wrapped == ProfileState<PaymentsTransfersCorporate, PaymentsTransfersBinder> {
+where Wrapped == ProfileState<PaymentsTransfersCorporate, PaymentsTransfersPersonal> {
     
     var id: ID {
         

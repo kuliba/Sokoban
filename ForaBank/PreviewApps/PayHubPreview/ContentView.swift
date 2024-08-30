@@ -111,11 +111,11 @@ private extension ContentView {
     }
     
     func personalView(
-        binder: PaymentsTransfersBinder
+        personal: PaymentsTransfersPersonal
     ) -> some View {
         
-        ComposedPaymentsTransfersFlowView(
-            binder: binder,
+        ComposedPaymentsTransfersPersonalFlowView(
+            personal: personal,
             factory: .init(
                 makeCategoryPickerView: {
                     

@@ -333,7 +333,7 @@ extension RootViewModelFactory {
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         
-        let paymentsTransfersBinder = makePaymentsTransfersBinder(
+        let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             loadCategories: loadServiceCategories,
@@ -344,7 +344,7 @@ extension RootViewModelFactory {
         
         loadServiceCategories { 
             
-            paymentsTransfersBinder.content.categoryPicker.content.event(.loaded($0))
+            paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
         }
         
         return make(
@@ -364,7 +364,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            paymentsTransfersBinder: paymentsTransfersBinder
+            paymentsTransfersPersonal: paymentsTransfersPersonal
         )
     }
     
@@ -674,7 +674,7 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        paymentsTransfersBinder: PaymentsTransfersBinder
+        paymentsTransfersPersonal: PaymentsTransfersPersonal
     ) -> RootViewModel {
             
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -720,7 +720,7 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                return .v1(paymentsTransfersBinder)
+                return .v1(paymentsTransfersPersonal)
                 
             case .inactive:
                 return .legacy(paymentsTransfersViewModel)

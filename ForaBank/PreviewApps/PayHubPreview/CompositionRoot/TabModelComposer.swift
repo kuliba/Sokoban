@@ -65,7 +65,7 @@ private extension TabModelComposer {
     
     func makeBinder(
         _ tab: PaymentsTransfersTabState.Selected
-    ) -> PaymentsTransfersBinder {
+    ) -> PaymentsTransfersPersonal {
         
         let composer = PaymentsTransfersBinderComposer(
             scheduler: scheduler
