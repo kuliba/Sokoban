@@ -78,7 +78,7 @@ private extension ContentView {
         
         ZStack(alignment: .top) {
             
-            PaymentsTransfersSwitcherView(
+            ComposedProfileSwitcherView(
                 model: switcher,
                 corporateView: corporateView,
                 personalView: personalView,
