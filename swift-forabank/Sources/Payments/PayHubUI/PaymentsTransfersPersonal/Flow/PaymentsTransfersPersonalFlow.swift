@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-public typealias PaymentsTransfersPersonalFlow = RxViewModel<PaymentsTransfersPersonalFlowState, PaymentsTransfersFlowEvent, PaymentsTransfersFlowEffect>
+public typealias PaymentsTransfersPersonalFlow = RxViewModel<PaymentsTransfersPersonalFlowState, PaymentsTransfersPersonalFlowEvent, PaymentsTransfersPersonalFlowEffect>

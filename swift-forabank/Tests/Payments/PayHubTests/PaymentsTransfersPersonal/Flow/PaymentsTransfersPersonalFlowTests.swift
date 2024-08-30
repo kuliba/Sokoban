@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowTests.swift
+//  PaymentsTransfersPersonalFlowTests.swift
 //  
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class PaymentsTransfersFlowTests: XCTestCase {
+class PaymentsTransfersPersonalFlowTests: XCTestCase {
     
     typealias Profile = String
     typealias QR = Int

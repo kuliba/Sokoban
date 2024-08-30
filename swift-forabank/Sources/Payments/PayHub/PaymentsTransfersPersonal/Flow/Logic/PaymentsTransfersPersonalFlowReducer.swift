@@ -1,16 +1,16 @@
 //
-//  PaymentsTransfersFlowReducer.swift
+//  PaymentsTransfersPersonalFlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 17.08.2024.
 //
 
-public final class PaymentsTransfersFlowReducer {
+public final class PaymentsTransfersPersonalFlowReducer {
     
     public init() {}
 }
 
-public extension PaymentsTransfersFlowReducer {
+public extension PaymentsTransfersPersonalFlowReducer {
     
     func reduce(
         _ state: State,
@@ -27,9 +27,9 @@ public extension PaymentsTransfersFlowReducer {
     }
 }
 
-public extension PaymentsTransfersFlowReducer {
+public extension PaymentsTransfersPersonalFlowReducer {
     
     typealias State = PaymentsTransfersPersonalFlowState
-    typealias Event = PaymentsTransfersFlowEvent
-    typealias Effect = PaymentsTransfersFlowEffect
+    typealias Event = PaymentsTransfersPersonalFlowEvent
+    typealias Effect = PaymentsTransfersPersonalFlowEffect
 }

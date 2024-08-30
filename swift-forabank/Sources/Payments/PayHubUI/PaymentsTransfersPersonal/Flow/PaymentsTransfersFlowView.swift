@@ -34,6 +34,6 @@ where Content: View {
 public extension PaymentsTransfersFlowView {
     
     typealias State = PaymentsTransfersPersonalFlowState
-    typealias Event = PaymentsTransfersFlowEvent
+    typealias Event = PaymentsTransfersPersonalFlowEvent
     typealias Factory = PaymentsTransfersFlowViewFactory<Content>
 }

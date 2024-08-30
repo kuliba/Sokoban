@@ -9,4 +9,4 @@ import PayHub
 import RxViewModel
 import SwiftUI
 
-public typealias PaymentsTransfersFlowWrapperView<FlowView> = RxWrapperView<FlowView, PaymentsTransfersPersonalFlowState, PaymentsTransfersFlowEvent, PaymentsTransfersFlowEffect> where FlowView: View
+public typealias PaymentsTransfersFlowWrapperView<FlowView> = RxWrapperView<FlowView, PaymentsTransfersPersonalFlowState, PaymentsTransfersPersonalFlowEvent, PaymentsTransfersPersonalFlowEffect> where FlowView: View

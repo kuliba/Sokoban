@@ -25,8 +25,8 @@ extension PaymentsTransfersFlowModelComposer {
     
     func compose() -> PaymentsTransfersPersonalFlow {
         
-        let reducer = PaymentsTransfersFlowReducer()
-        let effectHandler = PaymentsTransfersFlowEffectHandler(
+        let reducer = PaymentsTransfersPersonalFlowReducer()
+        let effectHandler = PaymentsTransfersPersonalFlowEffectHandler(
             microServices: .init()
         )
         

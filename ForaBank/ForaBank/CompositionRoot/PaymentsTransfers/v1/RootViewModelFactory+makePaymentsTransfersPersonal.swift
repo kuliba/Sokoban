@@ -102,8 +102,8 @@ extension RootViewModelFactory {
             }
         )
         
-        let reducer = PayHub.PaymentsTransfersFlowReducer()
-        let effectHandler = PayHub.PaymentsTransfersFlowEffectHandler(
+        let reducer = PayHub.PaymentsTransfersPersonalFlowReducer()
+        let effectHandler = PayHub.PaymentsTransfersPersonalFlowEffectHandler(
             microServices: .init()
         )
         let flow = PaymentsTransfersPersonalFlow(
