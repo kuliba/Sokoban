@@ -125,22 +125,25 @@ private extension RootViewModel {
         line: UInt = #line
     ) throws -> CategoryPickerSectionContent {
         
-        let v1 = try paymentsModelV1(file: file, line: line)
+        let v1 = try personal(file: file, line: line)
         
         return v1.content.categoryPicker.content
     }
     
-    func paymentsModelV1(
+    func personal(
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> PaymentsTransfersPersonal {
         
-        try XCTUnwrap(binder, "Expected to have v1", file: file, line: line)
+        try XCTUnwrap(personal, "Expected to have v1", file: file, line: line)
     }
     
-    private var binder: PaymentsTransfersPersonal? {
+    private var personal: PaymentsTransfersPersonal? {
         
-        guard case let .v1(binder) = paymentsModel else { return nil }
-        return binder
+        guard case let .v1(switcher) = paymentsModel,
+              case let .personal(personal) = switcher.state
+        else { return nil }
+        
+        return personal
     }
 }

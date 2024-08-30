@@ -539,7 +539,7 @@ extension RootViewModel {
     enum PaymentsModel {
         
         case legacy(PaymentsTransfersViewModel)
-        case v1(PaymentsTransfersPersonal)
+        case v1(PaymentsTransfersSwitcher)
     }
 }
 
@@ -551,7 +551,7 @@ extension RootViewModel.PaymentsModel: Resetable {
         case let .legacy(paymentsTransfersViewModel):
             paymentsTransfersViewModel.reset()
             
-        case let .v1(paymentsTransfersModel):
+        case let .v1(paymentsTransfersSwitcher):
 #warning("unimplemented")
             break
         }
@@ -565,9 +565,35 @@ extension RootViewModel.PaymentsModel: Resetable {
                 .map { $0.destination != nil }
                 .eraseToAnyPublisher()
             
-        case let .v1(binder):
-            return binder.hasDestination
+        case let .v1(switcher):
+            return switcher.hasDestination
         }
+    }
+}
+
+extension PaymentsTransfersSwitcher {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        switch state {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .corporate(corporate):
+            return corporate.hasDestination
+            
+        case let .personal(personal):
+            return personal.hasDestination
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+#warning("unimplemented")
+        return Empty().eraseToAnyPublisher()
     }
 }
 
