@@ -14,12 +14,12 @@ public final class ProfileSwitcherModel<Corporate, Personal>: ObservableObject {
     @Published public private(set) var state: State?
     
     public init(
-        isCorporateOnly: AnyPublisher<Bool, Never>,
+        hasCorporateCardsOnly: AnyPublisher<Bool, Never>,
         corporate: Corporate,
         personal: Personal,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
-        isCorporateOnly
+        hasCorporateCardsOnly
             .removeDuplicates()
             .map { $0 ? .corporate(corporate) : .personal(personal) }
             .receive(on: scheduler)

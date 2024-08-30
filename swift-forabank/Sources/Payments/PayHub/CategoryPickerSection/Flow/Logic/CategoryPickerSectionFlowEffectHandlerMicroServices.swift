@@ -21,6 +21,6 @@ public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Category, Cate
 
 public extension CategoryPickerSectionFlowEffectHandlerMicroServices {
     
-    typealias ShowAll = (@escaping (CategoryList) -> Void) -> Void
+    typealias ShowAll = ([Category], @escaping (CategoryList) -> Void) -> Void
     typealias ShowCategory = (Category, @escaping (CategoryModel) -> Void) -> Void
 }

@@ -7,7 +7,7 @@
 
 public enum CategoryPickerSectionFlowEffect<Category> {
     
-    case showAll
+    case showAll([Category])
     case showCategory(Category)
 }
 

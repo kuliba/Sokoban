@@ -99,7 +99,7 @@ final class ProfileSwitcherModelTests: XCTestCase {
     ) {
         let subject = Subject()
         let sut = SUT(
-            isCorporateOnly: subject.eraseToAnyPublisher(),
+            hasCorporateCardsOnly: subject.eraseToAnyPublisher(),
             corporate: corporate ?? makeCorporate(),
             personal: personal ?? makePersonal(),
             scheduler: .immediate

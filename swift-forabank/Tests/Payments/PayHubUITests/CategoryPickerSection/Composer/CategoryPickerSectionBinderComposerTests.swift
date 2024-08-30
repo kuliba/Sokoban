@@ -146,7 +146,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         XCTAssertNoDiff(flowSpy.values, [nil, nil])
     }
     
-    func test_shouldChangeFlowNavigationOnContentSelectEvent_showAll() {
+    func test_shouldChangeFlowNavigationOnContentSelectEvent_showAll_empty() {
         
         let list = makeCategoryList()
         let (sut, _, showAll, _, scheduler) = makeSUT()
@@ -160,6 +160,34 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
         XCTAssertNoDiff(flowSpy.values, [nil, nil])
+        XCTAssertNoDiff(showAll.payloads, [[]])
+        
+        showAll.complete(with: list)
+        scheduler.advance()
+        
+        XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .list(list)])
+    }
+    
+    func test_shouldChangeFlowNavigationOnContentSelectEvent_showAll_nonEmpty() {
+        
+        let (category1, category2) = (makeCategory(), makeCategory())
+        let list = makeCategoryList()
+        let (sut, _, showAll, _, scheduler) = makeSUT(suffix: [
+            .element(.init(.category(category1))),
+            .element(.init(.category(category2))),
+        ])
+        let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        XCTAssertNoDiff(contentSpy.values, [nil])
+        XCTAssertNoDiff(flowSpy.values, [nil])
+        
+        sut.content.event(.select(.showAll))
+        scheduler.advance()
+        
+        XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil])
+        XCTAssertNoDiff(showAll.payloads, [[category1, category2]])
         
         showAll.complete(with: list)
         scheduler.advance()
@@ -221,7 +249,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     private typealias Flow = Composer.Flow
     private typealias SUT = Binder<Content, Flow>
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
-    private typealias ShowAllSpy = Spy<Void, CategoryList>
+    private typealias ShowAllSpy = Spy<[Category], CategoryList>
     private typealias ShowCategorySpy = Spy<Category, CategoryModel>
     
     private func makeSUT(

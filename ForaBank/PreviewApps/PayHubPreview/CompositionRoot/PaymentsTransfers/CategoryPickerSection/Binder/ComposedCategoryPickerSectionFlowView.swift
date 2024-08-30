@@ -66,7 +66,7 @@ private extension ComposedCategoryPickerSectionFlowView {
     }
     
     private func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModel, CategoryListModel>
+        destination: CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
     ) -> some View {
         
         Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")

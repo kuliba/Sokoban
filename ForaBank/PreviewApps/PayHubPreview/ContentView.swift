@@ -15,7 +15,7 @@ typealias PaymentsTransfersTabState = TabState<PaymentsTransfersSwitcher>
 
 final class ContentViewModel: ObservableObject {
     
-    @Published var isCorporate = false
+    @Published var hasCorporateCardsOnly = false
     
 }
 
@@ -30,7 +30,7 @@ struct ContentView: View {
     ) {
         let contentModel = ContentViewModel()
         let tabComposer = TabModelComposer(
-            isCorporateOnly: contentModel.$isCorporate.eraseToAnyPublisher(),
+            hasCorporateCardsOnly: contentModel.$hasCorporateCardsOnly.eraseToAnyPublisher(),
             scheduler: .main
         )
         self._contentModel = .init(wrappedValue: contentModel)
@@ -85,11 +85,11 @@ private extension ContentView {
                 undefinedView: undefinedView
             )
             
-            Button(contentModel.isCorporate ? "Corporate" : "Personal") {
+            Button(contentModel.hasCorporateCardsOnly ? "Corporate" : "Personal") {
                 
-                contentModel.isCorporate.toggle()
+                contentModel.hasCorporateCardsOnly.toggle()
             }
-            .foregroundColor(contentModel.isCorporate ? .orange : .green)
+            .foregroundColor(contentModel.hasCorporateCardsOnly ? .orange : .green)
             .padding(.horizontal)
             .offset(y: -8)
         }

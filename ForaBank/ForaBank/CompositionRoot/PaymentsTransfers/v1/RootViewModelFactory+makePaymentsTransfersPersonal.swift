@@ -32,7 +32,7 @@ extension RootViewModelFactory {
         let categoryPickerComposer = CategoryPickerSectionBinderComposer(
             load: loadCategories,
             microServices: .init(
-                showAll: { $0(CategoryListModelStub()) },
+                showAll: { $1(CategoryListModelStub(categories: $0)) },
                 showCategory: { $1(CategoryModelStub(category: $0)) }
             ),
             placeholderCount: categoryPickerPlaceholderCount,

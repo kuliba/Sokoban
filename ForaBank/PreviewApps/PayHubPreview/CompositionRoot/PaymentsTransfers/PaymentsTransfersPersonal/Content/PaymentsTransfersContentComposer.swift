@@ -61,8 +61,8 @@ private extension PaymentsTransfersContentComposer {
                 }
             },
             microServices: .init(
-                showAll: { $0(CategoryListModel()) },
-                showCategory: { $1(CategoryModel(category: $0)) }
+                showAll: { $1(CategoryListModelStub(categories: $0)) },
+                showCategory: { $1(CategoryModelStub(category: $0)) }
             ),
             placeholderCount: 6,
             scheduler: scheduler

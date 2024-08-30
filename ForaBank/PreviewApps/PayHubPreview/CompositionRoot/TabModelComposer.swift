@@ -12,18 +12,18 @@ import PayHub
 
 final class TabModelComposer {
     
-    private let isCorporateOnly: IsCorporateOnly
+    private let hasCorporateCardsOnly: HasCorporateCardsOnly
     private let scheduler: AnySchedulerOf<DispatchQueue>
 
     init(
-        isCorporateOnly: IsCorporateOnly,
+        hasCorporateCardsOnly: HasCorporateCardsOnly,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.isCorporateOnly = isCorporateOnly
+        self.hasCorporateCardsOnly = hasCorporateCardsOnly
         self.scheduler = scheduler
     }
     
-    typealias IsCorporateOnly = AnyPublisher<Bool, Never>
+    typealias HasCorporateCardsOnly = AnyPublisher<Bool, Never>
     typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContent
 }
 
@@ -57,7 +57,7 @@ private extension TabModelComposer {
     ) -> PaymentsTransfersSwitcher {
         
         return .init(
-            isCorporateOnly: isCorporateOnly,
+            hasCorporateCardsOnly: hasCorporateCardsOnly,
             corporate: .init(),
             personal: makeBinder(tab)
         )
