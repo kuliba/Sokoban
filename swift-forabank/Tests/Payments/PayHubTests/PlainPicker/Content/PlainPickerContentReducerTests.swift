@@ -1,5 +1,5 @@
 //
-//  PlainPickerReducerTests.swift
+//  PlainPickerContentReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PlainPickerReducerTests: PlainPickerTests {
+final class PlainPickerContentReducerTests: PlainPickerContentTests {
     
     func test_select_shouldSetSelection() {
         
@@ -21,6 +21,11 @@ final class PlainPickerReducerTests: PlainPickerTests {
         }
     }
     
+    func test_select_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .select(makeElement()), delivers: nil)
+    }
+    
     func test_deselect_shouldResetSelection() {
         
         let state = makeState(selection: makeElement())
@@ -31,9 +36,14 @@ final class PlainPickerReducerTests: PlainPickerTests {
         }
     }
     
+    func test_deselect_shouldNotDeliverEffect() {
+        
+        assert(makeState(selection: makeElement()), event: .select(nil), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PlainPickerReducer<Element>
+    private typealias SUT = PlainPickerContentReducer<Element>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -52,7 +62,7 @@ final class PlainPickerReducerTests: PlainPickerTests {
         selection: Element? = nil
     ) -> SUT.State {
         
-        return .init(elements:elements, selection: selection)
+        return .init(elements: elements, selection: selection)
     }
     
     @discardableResult

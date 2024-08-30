@@ -20,4 +20,16 @@ class PlainPickerTests: XCTestCase {
         
         return .init(value: value)
     }
+    
+    struct Navigation: Equatable {
+        
+        let value: String
+    }
+    
+    func makeNavigation(
+        _ value: String = anyMessage()
+    ) -> Navigation {
+        
+        return .init(value: value)
+    }
 }
