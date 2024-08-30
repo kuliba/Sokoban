@@ -181,7 +181,7 @@ private extension ContentView {
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModelStub, PlainCategoryPickerBinder>
+        destination: CategoryPickerSectionDestination
     ) -> some View {
         
         switch destination {
@@ -193,8 +193,14 @@ private extension ContentView {
                 binder: plainCategoryPickerBinder,
                 makeContentView: { state, event in
                 
-                    Text("TBD: content view for \(String(describing: state))")
-                        .padding()
+                    List {
+                        
+                        ForEach(state.elements) { category in
+                            
+                            Button(category.name) { event(.select(category)) }
+                        }
+                    }
+                    .listStyle(.plain)
                 },
                 makeDestinationView: {
                 
