@@ -19,8 +19,8 @@ where ContentView: View,
     
     public init(
         binder: Binder,
-        makeContentView: @escaping MakeContentView,
-        makeDestinationView: @escaping MakeDestinationView
+        @ViewBuilder makeContentView: @escaping MakeContentView,
+        @ViewBuilder makeDestinationView: @escaping MakeDestinationView
     ) {
         self.binder = binder
         self.makeContentView = makeContentView
