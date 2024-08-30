@@ -11,24 +11,33 @@ import SwiftUI
 import UIPrimitives
 import RxViewModel
 
-typealias PaymentsTransfersTabState = TabState<PaymentsTransfersBinder>
+typealias PaymentsTransfersTabState = TabState<PaymentsTransfersSwitcher>
+
+final class ContentViewModel: ObservableObject {
+    
+    @Published var isCorporate = false
+    
+}
 
 struct ContentView: View {
     
-    private let model: TabModel<PaymentsTransfersBinder>
+    @StateObject private var contentModel: ContentViewModel
+    
+    private let model: TabModel<PaymentsTransfersSwitcher>
     
     init(
         selected: PaymentsTransfersTabState.Selected = .ok
     ) {
-        let tabComposer = TabModelComposer(scheduler: .main)
+        let contentModel = ContentViewModel()
+        let tabComposer = TabModelComposer(
+            isCorporateOnly: contentModel.$isCorporate.eraseToAnyPublisher(),
+            scheduler: .main
+        )
+        self._contentModel = .init(wrappedValue: contentModel)
         self.model = tabComposer.compose(selected: selected)
     }
     
     var body: some View {
-        
-        if #available(iOS 15.0, *) {
-            let _ = Self._printChanges()
-        }
         
         TabStateWrapperView(
             model: model,
@@ -37,7 +46,7 @@ struct ContentView: View {
                 TabView(
                     state: state,
                     event: event,
-                    factory: .init(makeContentView: makeBinderView)
+                    factory: .init(makeContentView: makeSwitcherView)
                 )
             }
         )
@@ -63,12 +72,50 @@ enum DestinationWrapper<Destination>: Identifiable {
 
 private extension ContentView {
     
-    func makeBinderView(
-        binder: PaymentsTransfersBinder
+    func makeSwitcherView(
+        switcher: PaymentsTransfersSwitcher
     ) -> some View {
         
-        ComposedPaymentsTransfersFlowView(
-            binder: binder,
+        ZStack(alignment: .top) {
+            
+            ComposedProfileSwitcherView(
+                model: switcher,
+                corporateView: corporateView,
+                personalView: personalView,
+                undefinedView: undefinedView
+            )
+            
+            Button(contentModel.isCorporate ? "Corporate" : "Personal") {
+                
+                contentModel.isCorporate.toggle()
+            }
+            .foregroundColor(contentModel.isCorporate ? .orange : .green)
+            .padding(.horizontal)
+            .offset(y: -8)
+        }
+    }
+    
+    func corporateView(
+        corporate: PaymentsTransfersCorporate
+    ) -> some View {
+        
+        Text(String(describing: corporate))
+            .frame(maxHeight: .infinity)
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Text("TBD: Profile without QR")
+                }
+            }
+    }
+    
+    func personalView(
+        personal: PaymentsTransfersPersonal
+    ) -> some View {
+        
+        ComposedPaymentsTransfersPersonalFlowView(
+            personal: personal,
             factory: .init(
                 makeCategoryPickerView: {
                     
@@ -165,6 +212,12 @@ private extension ContentView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+    
+    private func undefinedView(
+    ) -> some View {
+        
+        Text("TBD: products not loaded")
     }
 }
 

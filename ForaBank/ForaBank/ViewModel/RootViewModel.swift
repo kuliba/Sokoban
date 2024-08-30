@@ -539,7 +539,7 @@ extension RootViewModel {
     enum PaymentsModel {
         
         case legacy(PaymentsTransfersViewModel)
-        case v1(PaymentsTransfersBinder)
+        case v1(PaymentsTransfersPersonal)
     }
 }
 
@@ -571,7 +571,7 @@ extension RootViewModel.PaymentsModel: Resetable {
     }
 }
 
-extension PaymentsTransfersBinder {
+extension PaymentsTransfersPersonal {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

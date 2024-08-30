@@ -5,20 +5,25 @@
 //  Created by Igor Malyarov on 19.08.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
 
 final class TabModelComposer {
     
+    private let isCorporateOnly: IsCorporateOnly
     private let scheduler: AnySchedulerOf<DispatchQueue>
 
     init(
+        isCorporateOnly: IsCorporateOnly,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.isCorporateOnly = isCorporateOnly
         self.scheduler = scheduler
     }
     
+    typealias IsCorporateOnly = AnyPublisher<Bool, Never>
     typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContent
 }
 
@@ -26,17 +31,17 @@ extension TabModelComposer {
     
     func compose(
         selected: PaymentsTransfersTabState.Selected
-    ) -> TabModel<PaymentsTransfersBinder> {
+    ) -> TabModel<PaymentsTransfersSwitcher> {
         
-        let reducer = TabReducer<PaymentsTransfersBinder>()
-        let effectHandler = TabEffectHandler<PaymentsTransfersBinder>()
+        let reducer = TabReducer<PaymentsTransfersSwitcher>()
+        let effectHandler = TabEffectHandler<PaymentsTransfersSwitcher>()
         
         return .init(
             initialState: .init(
-                noLatest: makeBinder(.noLatest),
-                noCategories: makeBinder(.noCategories),
-                noBoth: makeBinder(.noBoth),
-                ok: makeBinder(.ok),
+                noLatest: makeSwitcher(.noLatest),
+                noCategories: makeSwitcher(.noCategories),
+                noBoth: makeSwitcher(.noBoth),
+                ok: makeSwitcher(.ok),
                 selected: selected
             ),
             reduce: reducer.reduce(_:_:),
@@ -47,9 +52,20 @@ extension TabModelComposer {
 
 private extension TabModelComposer {
     
+    func makeSwitcher(
+        _ tab: PaymentsTransfersTabState.Selected
+    ) -> PaymentsTransfersSwitcher {
+        
+        return .init(
+            isCorporateOnly: isCorporateOnly,
+            corporate: .init(),
+            personal: makeBinder(tab)
+        )
+    }
+    
     func makeBinder(
         _ tab: PaymentsTransfersTabState.Selected
-    ) -> PaymentsTransfersBinder {
+    ) -> PaymentsTransfersPersonal {
         
         let composer = PaymentsTransfersBinderComposer(
             scheduler: scheduler

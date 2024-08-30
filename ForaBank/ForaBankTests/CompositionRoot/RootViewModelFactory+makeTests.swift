@@ -133,12 +133,12 @@ private extension RootViewModel {
     func paymentsModelV1(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> PaymentsTransfersBinder {
+    ) throws -> PaymentsTransfersPersonal {
         
         try XCTUnwrap(binder, "Expected to have v1", file: file, line: line)
     }
     
-    private var binder: PaymentsTransfersBinder? {
+    private var binder: PaymentsTransfersPersonal? {
         
         guard case let .v1(binder) = paymentsModel else { return nil }
         return binder

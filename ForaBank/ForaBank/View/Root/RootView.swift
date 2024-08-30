@@ -83,7 +83,7 @@ struct RootView: View {
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
             case let .v1(binder):
-                paymentsTransfersFlowView(binder)
+                paymentsTransfersPersonalFlowView(binder)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -135,12 +135,12 @@ struct RootView: View {
 
 private extension RootView {
     
-    func paymentsTransfersFlowView(
-        _ binder: PaymentsTransfersBinder
+    func paymentsTransfersPersonalFlowView(
+        _ personal: PaymentsTransfersPersonal
     ) -> some View {
         
-        ComposedPaymentsTransfersFlowView(
-            binder: binder,
+        ComposedPaymentsTransfersPersonalFlowView(
+            personal: personal,
             factory: .init(
                 makeCategoryPickerView: {
                     

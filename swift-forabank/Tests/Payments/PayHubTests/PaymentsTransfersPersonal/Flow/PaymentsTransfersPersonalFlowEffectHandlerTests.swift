@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowEffectHandlerTests.swift
+//  PaymentsTransfersPersonalFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -8,11 +8,11 @@
 import PayHub
 import XCTest
 
-final class PaymentsTransfersFlowEffectHandlerTests: PaymentsTransfersFlowTests {
+final class PaymentsTransfersPersonalFlowEffectHandlerTests: PaymentsTransfersPersonalFlowTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersFlowEffectHandler
+    private typealias SUT = PaymentsTransfersPersonalFlowEffectHandler
     
     private func makeSUT(
         file: StaticString = #file,
