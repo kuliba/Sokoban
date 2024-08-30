@@ -1,11 +1,14 @@
 //
 //  PlainPickerEffectHandler.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
-public final class PlainPickerEffectHandler<Element> {}
+public final class PlainPickerEffectHandler<Element> {
+    
+    public init() {}
+}
 
 public extension PlainPickerEffectHandler {
     

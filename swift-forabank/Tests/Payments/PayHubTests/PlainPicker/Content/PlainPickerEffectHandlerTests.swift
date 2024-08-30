@@ -5,13 +5,14 @@
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
+import PayHub
 import XCTest
 
 final class PlainPickerEffectHandlerTests: PlainPickerTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PlainPickerEffectHandler
+    private typealias SUT = PlainPickerEffectHandler<Element>
     
     private func makeSUT(
         file: StaticString = #file,

@@ -21,7 +21,8 @@ public extension PlainPickerReducer {
         var effect: Effect?
         
         switch event {
-            
+        case let .select(element):
+            state.selection = element
         }
         
         return (state, effect)

@@ -5,9 +5,31 @@
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
+import PayHub
 import XCTest
 
 final class PlainPickerReducerTests: PlainPickerTests {
+    
+    func test_select_shouldSetSelection() {
+        
+        let element = makeElement()
+        let state = makeState()
+        
+        assert(state, event: .select(element)) {
+            
+            $0.selection = element
+        }
+    }
+    
+    func test_deselect_shouldResetSelection() {
+        
+        let state = makeState(selection: makeElement())
+        
+        assert(state, event: .select(nil)) {
+            
+            $0.selection = nil
+        }
+    }
     
     // MARK: - Helpers
     
@@ -23,6 +45,14 @@ final class PlainPickerReducerTests: PlainPickerTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState(
+        elements: [Element] = [],
+        selection: Element? = nil
+    ) -> SUT.State {
+        
+        return .init(elements:elements, selection: selection)
     }
     
     @discardableResult
