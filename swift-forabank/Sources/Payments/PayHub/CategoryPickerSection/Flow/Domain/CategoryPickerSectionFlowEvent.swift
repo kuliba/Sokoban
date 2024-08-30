@@ -23,7 +23,7 @@ public extension CategoryPickerSectionFlowEvent {
     enum Select {
         
         case category(Category)
-        case list
+        case list([Category])
     }
 }
 

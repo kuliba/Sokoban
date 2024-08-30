@@ -112,18 +112,29 @@ private extension CategoryPickerSectionBinderComposer {
             .sink { _ in content.event(.select(nil)) }
         
         let select = content.$state
-            .compactMap(\.selected)
-            .sink {
+            .sink { state in
                 
-                switch $0 {
+                switch state.selected {
+                case .none:
+                    break
+                    
                 case let .category(category):
                     flow.event(.select(.category(category)))
                     
                 case .showAll:
-                    flow.event(.select(.list))
+                    let categories: [Category] = state.items.compactMap {
+                        
+                        guard case let .element(element) = $0,
+                              case let .category(category) = element.element
+                        else { return nil }
+                        
+                        return category
+                    }
+                    flow.event(.select(.list(categories)))
                 }
             }
         
         return [dismiss, select]
     }
 }
+ 

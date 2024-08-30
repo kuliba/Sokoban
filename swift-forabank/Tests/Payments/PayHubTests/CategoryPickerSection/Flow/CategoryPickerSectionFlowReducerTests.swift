@@ -1,6 +1,6 @@
 //
 //  CategoryPickerSectionFlowReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 23.08.2024.
 //
@@ -22,7 +22,11 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_dismiss_shouldNotNotDeliverEffect() {
         
-        assert(makeState(destination: .category(makeCategoryModel())), event: .dismiss, delivers: nil)
+        assert(
+            makeState(destination: .category(makeCategoryModel())),
+            event: .dismiss,
+            delivers: nil
+        )
     }
     
     // MARK: - receive
@@ -39,7 +43,11 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_receive_category_shouldNotDeliverEffect() {
         
-        assert(makeState(destination: nil), event: .receive(.category(makeCategoryModel())), delivers: nil)
+        assert(
+            makeState(destination: nil),
+            event: .receive(.category(makeCategoryModel())),
+            delivers: nil
+        )
     }
     
     func test_receive_list_shouldSetDestinationToCategory() {
@@ -54,7 +62,11 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_receive_list_shouldNotDeliverEffect() {
         
-        assert(makeState(destination: nil), event: .receive(.list(makeCategoryList())), delivers: nil)
+        assert(
+            makeState(destination: nil),
+            event: .receive(.list(makeCategoryList())),
+            delivers: nil
+        )
     }
     
     // MARK: - select
@@ -75,22 +87,62 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         let category = makeCategory()
         
-        assert(makeState(), event: .select(.category(category)), delivers: .showCategory(category))
+        assert(
+            makeState(),
+            event: .select(.category(category)),
+            delivers: .showCategory(category)
+        )
     }
     
-    func test_select_list_shouldResetDestination() {
+    func test_select_list_shouldResetDestination_empty() {
         
         assert(
             makeState(destination: .category(makeCategoryModel())),
-            event: .select(.list)
+            event: .select(.list([]))
         ) {
             $0.destination = nil
         }
     }
     
-    func test_select_list_shouldDeliverEffect() {
+    func test_select_list_shouldDeliverEffect_empty() {
         
-        assert(makeState(), event: .select(.list), delivers: .showAll)
+        assert(
+            makeState(),
+            event: .select(.list([])),
+            delivers: .showAll([])
+        )
+    }
+    
+    func test_select_list_shouldResetDestination_nonEmpty() {
+        
+        assert(
+            makeState(destination: .category(makeCategoryModel())),
+            event: .select(.list([makeCategory()]))
+        ) {
+            $0.destination = nil
+        }
+    }
+    
+    func test_select_list_shouldDeliverEffect_one() {
+        
+        let category = makeCategory()
+        
+        assert(
+            makeState(),
+            event: .select(.list([category])),
+            delivers: .showAll([category])
+        )
+    }
+    
+    func test_select_list_shouldDeliverEffect_two() {
+        
+        let (category1, category2) = (makeCategory(), makeCategory())
+        
+        assert(
+            makeState(),
+            event: .select(.list([category1, category2])),
+            delivers: .showAll([category1, category2])
+        )
     }
     
     // MARK: - Helpers

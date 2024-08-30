@@ -23,13 +23,33 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTe
     
     // MARK: - showAll
     
-    func test_showAll_shouldCallShowAll() {
+    func test_showAll_shouldCallShowAllWithEmptyCategoriesOnEmpty() {
         
         let (sut, showAll, _) = makeSUT()
         
-        sut.handleEffect(.showAll) { _ in }
+        sut.handleEffect(.showAll([])) { _ in }
         
-        XCTAssertEqual(showAll.callCount, 1)
+        XCTAssertEqual(showAll.payloads, [[]])
+    }
+    
+    func test_showAll_shouldCallShowAllWithOneCategoryOnOne() {
+        
+        let category = makeCategory()
+        let (sut, showAll, _) = makeSUT()
+        
+        sut.handleEffect(.showAll([category])) { _ in }
+        
+        XCTAssertEqual(showAll.payloads, [[category]])
+    }
+    
+    func test_showAll_shouldCallShowAllWithTwoCategoriesOmTwo() {
+        
+        let (category1, category2) = (makeCategory(), makeCategory())
+        let (sut, showAll, _) = makeSUT()
+        
+        sut.handleEffect(.showAll([category1, category2])) { _ in }
+        
+        XCTAssertEqual(showAll.payloads, [[category1, category2]])
     }
     
     func test_showAll_shouldDeliverCategoryList() {
@@ -37,7 +57,7 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTe
         let categoryList = makeCategoryList()
         let (sut, showAll, _) = makeSUT()
         
-        expect(sut, with: .showAll, toDeliver: .receive(.list(categoryList))) {
+        expect(sut, with: .showAll([]), toDeliver: .receive(.list(categoryList))) {
             
             showAll.complete(with: categoryList)
         }
@@ -69,7 +89,7 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTe
     // MARK: - Helpers
     
     private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, CategoryModel, CategoryList>
-    private typealias ShowAllSpy = Spy<Void, CategoryList>
+    private typealias ShowAllSpy = Spy<[Category], CategoryList>
     private typealias ShowCategorySpy = Spy<Category, CategoryModel>
     
     private func makeSUT(

@@ -19,4 +19,12 @@ final class CategoryModelStub {
     }
 }
 
-final class CategoryListModelStub {}
+final class CategoryListModelStub {
+    
+    let categories: [ServiceCategory]
+    
+    init(categories: [ServiceCategory]) {
+     
+        self.categories = categories
+    }
+}
