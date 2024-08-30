@@ -53,7 +53,7 @@ where CategoryPickerItemLabel: View,
 
 extension ComposedCategoryPickerSectionFlowView {
     
-    typealias Destination = CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
+    typealias Destination = CategoryPickerSectionDestination<CategoryModelStub, PlainCategoryPickerBinder>
     typealias MakeDestinationView = (Destination) -> DestinationView
     typealias Config = CategoryPickerSectionContentViewConfig
 }
