@@ -7,7 +7,7 @@
 
 import ServiceCategoriesBackend
 
-struct PaymentFlowMicroService<Mobile, QR, Standard> {
+struct PaymentFlowMicroService<Mobile, QR, Standard, Tax> {
     
     let makePaymentFlow: MakePaymentFlow
 }
@@ -18,18 +18,18 @@ extension PaymentFlowMicroService {
     typealias ServiceCategory = ResponseMapper.GetServiceCategoryListResponse.Category
     
     typealias MakePaymentFlow = (ServiceCategory, @escaping (Flow) -> Void) -> Void
-    typealias Flow = PaymentFlow<Mobile, QR, Standard>
+    typealias Flow = PaymentFlow<Mobile, QR, Standard, Tax>
 }
 
-enum PaymentFlow<Mobile, QR, Standard> {
+enum PaymentFlow<Mobile, QR, Standard, Tax> {
     
     case mobile(Mobile)
     case qr(QR)
     case standard(Standard)
-    case taxAndStateServices
+    case taxAndStateServices(Tax)
     case transport
 }
-extension PaymentFlow: Equatable where Mobile: Equatable, QR: Equatable, Standard: Equatable {}
+extension PaymentFlow: Equatable where Mobile: Equatable, QR: Equatable, Standard: Equatable, Tax: Equatable {}
 
 extension PaymentFlow {
     
@@ -54,11 +54,12 @@ extension PaymentFlow {
     }
 }
 
-struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard> {
+struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax> {
     
     let makeMobile: MakeMobile
     let makeQR: MakeQR
     let makeStandard: MakeStandard
+    let makeTax: MakeTax
 }
 
 extension PaymentFlowMicroServiceComposerNanoServices {
@@ -66,9 +67,10 @@ extension PaymentFlowMicroServiceComposerNanoServices {
     typealias MakeMobile = (@escaping (Mobile) -> Void) -> Void
     typealias MakeQR = (@escaping (QR) -> Void) -> Void
     typealias MakeStandard = (@escaping (Standard) -> Void) -> Void
+    typealias MakeTax = (@escaping (Tax) -> Void) -> Void
 }
 
-final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard> {
+final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax> {
     
     private let nanoServices: NanoServices
     
@@ -77,17 +79,17 @@ final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard> {
         self.nanoServices = nanoServices
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax>
 }
 
 extension PaymentFlowMicroServiceComposer {
     
-    func compose() -> PaymentFlowMicroService<Mobile, QR, Standard> {
+    func compose() -> PaymentFlowMicroService<Mobile, QR, Standard, Tax> {
         
         return .init(makePaymentFlow: makePaymentFlow)
     }
     
-    typealias MicroService = PaymentFlowMicroService<Mobile, QR, Standard>
+    typealias MicroService = PaymentFlowMicroService<Mobile, QR, Standard, Tax>
 }
 
 private extension PaymentFlowMicroServiceComposer {
@@ -107,7 +109,7 @@ private extension PaymentFlowMicroServiceComposer {
             nanoServices.makeStandard { completion(.standard($0)) }
             
         case .taxAndStateServices:
-            completion(.taxAndStateServices)
+            nanoServices.makeTax { completion(.taxAndStateServices($0)) }
             
         case .transport:
             completion(.transport)
@@ -124,11 +126,12 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, mobileSpy, qrSpy, standardSpy) = makeSUT()
+        let (sut, mobileSpy, qrSpy, standardSpy, taxSpy) = makeSUT()
         
         XCTAssertEqual(mobileSpy.callCount, 0)
         XCTAssertEqual(qrSpy.callCount, 0)
         XCTAssertEqual(standardSpy.callCount, 0)
+        XCTAssertEqual(taxSpy.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -136,7 +139,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverMobileFlowIDOnMobile() {
         
-        let (sut, mobileSpy, _,_) = makeSUT()
+        let (sut, mobileSpy, _,_,_) = makeSUT()
         
         expectFlow(sut, with: makeCategory(flow: .mobile), hasID: .mobile) {
             
@@ -146,7 +149,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverQRFlowIDOnQR() {
     
-        let (sut, _, makeQR, _) = makeSUT()
+        let (sut, _, makeQR, _,_) = makeSUT()
         
         expectFlow(sut, with: makeCategory(flow: .qr), hasID: .qr) {
             
@@ -156,7 +159,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverStandardFlowIDOnStandart() {
         
-        let (sut, _,_, standardSpy) = makeSUT()
+        let (sut, _,_, standardSpy, _) = makeSUT()
 
         expectFlow(sut, with: makeCategory(flow: .standard), hasID: .standard) {
             
@@ -166,7 +169,12 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverTaxAnDStateServicesFlowIDOnTaxAnDStateServices() {
         
-        expectFlow(with: makeCategory(flow: .taxAndStateServices), hasID: .taxAndStateServices) {}
+        let (sut, _,_,_, makeTax) = makeSUT()
+        
+        expectFlow(sut, with: makeCategory(flow: .taxAndStateServices), hasID: .taxAndStateServices) {
+            
+            makeTax.complete(with: self.makeTax())
+        }
     }
     
     func test_shouldDeliverTransportFlowIDOnTransport() {
@@ -178,7 +186,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverMobileFlowOnMobile() {
         
-        let (sut, mobileSpy, _,_) = makeSUT()
+        let (sut, mobileSpy, _,_,_) = makeSUT()
         
         expectMobile(sut, with: makeCategory(flow: .mobile), is: Mobile.self) {
             
@@ -188,7 +196,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverQRFlowOnQR() {
         
-        let (sut, _, qrSpy, _) = makeSUT()
+        let (sut, _, qrSpy, _,_) = makeSUT()
         
         expectQR(sut, with: makeCategory(flow: .qr), is: QR.self) {
             
@@ -198,7 +206,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     func test_shouldDeliverStandardFlowOnStandard() {
         
-        let (sut, _,_, standardSpy) = makeSUT()
+        let (sut, _,_, standardSpy, _) = makeSUT()
         
         expectStandard(sut, with: makeCategory(flow: .standard), is: Standard.self) {
             
@@ -218,12 +226,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = PaymentFlowMicroServiceComposer<Mobile, QR, Standard>
-    private typealias SUT = PaymentFlowMicroService<Mobile, QR, Standard>
+    private typealias Composer = PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax>
+    private typealias SUT = PaymentFlowMicroService<Mobile, QR, Standard, Tax>
     private typealias Flow = SUT.Flow
     private typealias MakeMobileSpy = Spy<Void, Mobile>
     private typealias MakeQRSpy = Spy<Void, QR>
     private typealias MakeStandardSpy = Spy<Void, Standard>
+    private typealias MakeTaxSpy = Spy<Void, Tax>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -232,15 +241,18 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         sut: SUT,
         makeMobile: MakeMobileSpy,
         makeQR: MakeQRSpy,
-        makeStandard: MakeStandardSpy
+        makeStandard: MakeStandardSpy,
+        makeTax: MakeTaxSpy
     ) {
         let makeMobile = MakeMobileSpy()
         let makeQR = MakeQRSpy()
         let makeStandard = MakeStandardSpy()
+        let makeTax = MakeTaxSpy()
         let composer = Composer(nanoServices: .init(
             makeMobile: makeMobile.process(completion:),
             makeQR: makeQR.process(completion:),
-            makeStandard: makeStandard.process(completion:)
+            makeStandard: makeStandard.process(completion:),
+            makeTax: makeTax.process(completion:)
         ))
         let sut = composer.compose()
         
@@ -248,8 +260,9 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         trackForMemoryLeaks(makeMobile, file: file, line: line)
         trackForMemoryLeaks(makeQR, file: file, line: line)
         trackForMemoryLeaks(makeStandard, file: file, line: line)
+        trackForMemoryLeaks(makeTax, file: file, line: line)
         
-        return (sut, makeMobile, makeQR, makeStandard)
+        return (sut, makeMobile, makeQR, makeStandard, makeTax)
     }
     
     private func makeCategory(
@@ -365,6 +378,23 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         XCTAssert(standard is T, "Expected standard to be of type \(T.self), but got \(type(of: standard)) instead.", file: file, line: line)
     }
     
+    private func expectTax<T>(
+        _ sut: SUT? = nil,
+        with category: SUT.ServiceCategory,
+        is expectedType: T.Type,
+        action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let flow = try? flow(sut, with: category, action: action)
+        guard case let .taxAndStateServices(taxAndStateServices) = flow else {
+            
+            return XCTFail("Expected flow taxAndStateServices case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
+        }
+        
+        XCTAssert(taxAndStateServices is T, "Expected taxAndStateServices to be of type \(T.self), but got \(type(of: taxAndStateServices)) instead.", file: file, line: line)
+    }
+    
     private struct Mobile: Equatable {
         
         let value: String
@@ -397,6 +427,18 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     private func makeStandard(
         _ value: String = anyMessage()
     ) -> Standard {
+        
+        return .init(value: value)
+    }
+    
+    private struct Tax: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeTax(
+        _ value: String = anyMessage()
+    ) -> Tax {
         
         return .init(value: value)
     }
