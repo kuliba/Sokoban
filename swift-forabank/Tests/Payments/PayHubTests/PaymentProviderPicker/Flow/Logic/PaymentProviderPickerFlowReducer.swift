@@ -21,6 +21,9 @@ extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
+        case let .initiatePaymentFailure(serviceFailure):
+            #warning("FIXME")
+            
         case let .select(select):
             self.select(&state, &effect, with: select)
         }

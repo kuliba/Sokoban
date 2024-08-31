@@ -7,6 +7,7 @@
 
 enum PaymentProviderPickerFlowEvent<Latest, Provider> {
     
+    case initiatePaymentFailure(ServiceFailure)
     case select(Select)
 }
 

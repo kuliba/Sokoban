@@ -32,4 +32,12 @@ class PaymentProviderPickerFlowTests: XCTestCase {
         
         return .init(value: value)
     }
+    
+    func makeServiceFailure(
+        message: String = anyMessage(),
+        source: ServiceFailure.Source = .connectivity
+    ) -> ServiceFailure {
+        
+        return .init(message: message, source: source)
+    }
 }
