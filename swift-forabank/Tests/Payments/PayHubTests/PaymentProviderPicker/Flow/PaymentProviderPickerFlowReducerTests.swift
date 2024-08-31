@@ -8,17 +8,19 @@
 struct PaymentProviderPickerFlowState: Equatable {
     
     var isLoading: Bool
-    
-    init(
-        isLoading: Bool = false
-    ) {
-        self.isLoading = isLoading
-    }
+    var navigation: Navigation?
 }
 
+ extension PaymentProviderPickerFlowState {
+     
+     enum Navigation: Equatable {
+         
+         case back, chat, qr
+     }
+ }
 // extension PaymentProviderPickerFlowState: Equatable {}
 
-enum PaymentProviderPickerFlowEvent<Latest> {
+enum PaymentProviderPickerFlowEvent<Latest, Provider> {
     
     case select(Select)
 }
@@ -27,14 +29,19 @@ extension PaymentProviderPickerFlowEvent {
     
     enum Select {
         
+        case back
+        case chat
         case latest(Latest)
+        case payByInstructions
+        case provider(Provider)
+        case qr
     }
 }
 
-extension PaymentProviderPickerFlowEvent: Equatable where Latest: Equatable {}
-extension PaymentProviderPickerFlowEvent.Select: Equatable where Latest: Equatable {}
+extension PaymentProviderPickerFlowEvent: Equatable where Latest: Equatable, Provider: Equatable {}
+extension PaymentProviderPickerFlowEvent.Select: Equatable where Latest: Equatable, Provider: Equatable {}
 
-enum PaymentProviderPickerFlowEffect<Latest> {
+enum PaymentProviderPickerFlowEffect<Latest, Provider> {
     
     case select(Select)
 }
@@ -44,13 +51,15 @@ extension PaymentProviderPickerFlowEffect {
     enum Select {
         
         case latest(Latest)
+        case payByInstructions
+        case provider(Provider)
     }
 }
 
-extension PaymentProviderPickerFlowEffect: Equatable where Latest: Equatable {}
-extension PaymentProviderPickerFlowEffect.Select: Equatable where Latest: Equatable {}
+extension PaymentProviderPickerFlowEffect: Equatable where Latest: Equatable, Provider: Equatable {}
+extension PaymentProviderPickerFlowEffect.Select: Equatable where Latest: Equatable, Provider: Equatable {}
 
-final class PaymentProviderPickerFlowReducer<Latest> {
+final class PaymentProviderPickerFlowReducer<Latest, Provider> {
     
     init() {}
 }
@@ -77,8 +86,8 @@ extension PaymentProviderPickerFlowReducer {
 extension PaymentProviderPickerFlowReducer {
     
     typealias State = PaymentProviderPickerFlowState
-    typealias Event = PaymentProviderPickerFlowEvent<Latest>
-    typealias Effect = PaymentProviderPickerFlowEffect<Latest>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, Provider>
+    typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
 private extension PaymentProviderPickerFlowReducer {
@@ -88,10 +97,26 @@ private extension PaymentProviderPickerFlowReducer {
         _ effect: inout Effect?,
         with select: Event.Select
     ) {
-        state.isLoading = true
         switch select {
+        case .back:
+            state.navigation = .back
+            
+        case .chat:
+            state.navigation = .chat
+            
         case let .latest(latest):
+            state.isLoading = true
             effect = .select(.latest(latest))
+            
+        case .payByInstructions:
+            effect = .select(.payByInstructions)
+            
+        case let .provider(provider):
+            state.isLoading = true
+            effect = .select(.provider(provider))
+            
+        case .qr:
+            state.navigation = .qr
         }
     }
 }
@@ -117,9 +142,73 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         assert(makeState(), event: .select(.latest(latest)), delivers: .select(.latest(latest)))
     }
     
+    func test_select_provider_shouldSetStateToLoading() {
+        
+        assert(makeState(), event: .select(.provider(makeProvider()))) {
+            
+            $0.isLoading = true
+        }
+    }
+    
+    func test_select_provider_shouldDeliverSelectProviderEffect() {
+        
+        let provider = makeProvider()
+        
+        assert(makeState(), event: .select(.provider(provider)), delivers: .select(.provider(provider)))
+    }
+    
+    func test_select_chat_shouldSetStateChat() {
+        
+        assert(makeState(), event: .select(.chat)) {
+            
+            $0.navigation = .chat
+        }
+    }
+    
+    func test_select_chat_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .select(.chat), delivers: nil)
+    }
+    
+    func test_select_payByInstructions_shouldNotChangeState() {
+        
+        assert(makeState(), event: .select(.payByInstructions))
+    }
+    
+    func test_select_payByInstructions_shouldDeliverEffect() {
+        
+        assert(makeState(), event: .select(.payByInstructions), delivers: .select(.payByInstructions))
+    }
+    
+    func test_select_qr_shouldSetStateChat() {
+        
+        assert(makeState(), event: .select(.qr)) {
+            
+            $0.navigation = .qr
+        }
+    }
+    
+    func test_select_qr_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .select(.qr), delivers: nil)
+    }
+    
+    func test_select_back_shouldSetStateChat() {
+        
+        assert(makeState(), event: .select(.back)) {
+            
+            $0.navigation = .back
+        }
+    }
+    
+    func test_select_back_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .select(.back), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowReducer<Latest>
+    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, Provider>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -134,9 +223,11 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     }
     
     private func makeState(
+        isLoading: Bool = false,
+        navigation: SUT.State.Navigation? = nil
     ) -> SUT.State {
         
-        return .init()
+        return .init(isLoading: isLoading, navigation: navigation)
     }
     
     @discardableResult
