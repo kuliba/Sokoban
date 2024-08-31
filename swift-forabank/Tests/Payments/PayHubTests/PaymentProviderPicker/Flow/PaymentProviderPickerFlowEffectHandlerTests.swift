@@ -23,7 +23,7 @@ extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     
     typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
     
-    typealias ProcessProvider = (Provider, @escaping (ProcessProviderResult<Service>) -> Void) -> Void
+    typealias ProcessProvider = (Provider, @escaping (ProcessProviderResult<Payment, Service>) -> Void) -> Void
 }
 
 enum InitiatePaymentPayload<Latest> {
@@ -31,9 +31,11 @@ enum InitiatePaymentPayload<Latest> {
     case latest(Latest)
 }
 
-enum ProcessProviderResult<Service> {
+enum ProcessProviderResult<Payment, Service> {
     
+    case failure(ServiceFailure)
     case services(Services)
+    case success(Payment)
 }
 
 extension ProcessProviderResult {
@@ -41,7 +43,7 @@ extension ProcessProviderResult {
     typealias Services = MultiElementArray<Service>
 }
 
-extension ProcessProviderResult: Equatable where Service: Equatable {}
+extension ProcessProviderResult: Equatable where Payment: Equatable, Service: Equatable {}
 
 extension InitiatePaymentPayload: Equatable where Latest: Equatable {}
 
@@ -84,8 +86,14 @@ extension PaymentProviderPickerFlowEffectHandler {
                 microServices.processProvider(provider) {
                     
                     switch $0 {
+                    case let .failure(serviceFailure):
+                        dispatch(.failure(serviceFailure))
+                        
                     case let .services(services):
                         dispatch(.services(services))
+                        
+                    case let .success(payment):
+                        dispatch(.paymentInitiated(payment))
                     }
                 }
             }
@@ -183,12 +191,34 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         }
     }
     
+    func test_select_provider_shouldDeliverServiceFailureOnServiceFailure() {
+        
+        let failure = makeServiceFailure()
+        let (sut, _,_, providerProcess) = makeSUT()
+        
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .failure(failure)) {
+            
+            providerProcess.complete(with: .failure(failure))
+        }
+    }
+    
+    func test_select_provider_shouldDeliverPaymentOnPayment() {
+        
+        let payment = makePayment()
+        let (sut, _,_, providerProcess) = makeSUT()
+        
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .paymentInitiated(payment)) {
+            
+            providerProcess.complete(with: .success(payment))
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest>, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Service>>
+    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service>>
     
     private func makeSUT(
         file: StaticString = #file,
