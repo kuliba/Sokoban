@@ -5,120 +5,6 @@
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
-import ServiceCategoriesBackend
-
-struct PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
-    
-    let makePaymentFlow: MakePaymentFlow
-}
-
-extension PaymentFlowMicroService {
-    
-#warning("decouple")
-    typealias ServiceCategory = ResponseMapper.GetServiceCategoryListResponse.Category
-    
-    typealias MakePaymentFlow = (ServiceCategory, @escaping (Flow) -> Void) -> Void
-    typealias Flow = PaymentFlow<Mobile, QR, Standard, Tax, Transport>
-}
-
-enum PaymentFlow<Mobile, QR, Standard, Tax, Transport> {
-    
-    case mobile(Mobile)
-    case qr(QR)
-    case standard(Standard)
-    case taxAndStateServices(Tax)
-    case transport(Transport)
-}
-extension PaymentFlow: Equatable where Mobile: Equatable, QR: Equatable, Standard: Equatable, Tax: Equatable, Transport: Equatable {}
-
-extension PaymentFlow {
-    
-    var id: ID {
-        
-        switch self {
-        case .mobile:              return .mobile
-        case .qr:                  return .qr
-        case .standard:            return .standard
-        case .taxAndStateServices: return .taxAndStateServices
-        case .transport:           return .transport
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case mobile
-        case qr
-        case standard
-        case taxAndStateServices
-        case transport
-    }
-}
-
-struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport> {
-    
-    let makeMobile: MakeMobile
-    let makeQR: MakeQR
-    let makeStandard: MakeStandard
-    let makeTax: MakeTax
-    let makeTransport: MakeTransport
-}
-
-extension PaymentFlowMicroServiceComposerNanoServices {
-    
-    typealias MakeMobile = (@escaping (Mobile) -> Void) -> Void
-    typealias MakeQR = (@escaping (QR) -> Void) -> Void
-    typealias MakeStandard = (@escaping (Standard) -> Void) -> Void
-    typealias MakeTax = (@escaping (Tax) -> Void) -> Void
-    typealias MakeTransport = (@escaping (Transport) -> Void) -> Void
-}
-
-final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Transport> {
-    
-    private let nanoServices: NanoServices
-    
-    init(nanoServices: NanoServices) {
-        
-        self.nanoServices = nanoServices
-    }
-    
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport>
-}
-
-extension PaymentFlowMicroServiceComposer {
-    
-    func compose() -> PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
-        
-        return .init(makePaymentFlow: makePaymentFlow)
-    }
-    
-    typealias MicroService = PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport>
-}
-
-private extension PaymentFlowMicroServiceComposer {
-    
-    func makePaymentFlow(
-        category: MicroService.ServiceCategory,
-        completion: @escaping (MicroService.Flow) -> Void
-    ) {
-        switch category.paymentFlow {
-        case .mobile:
-            nanoServices.makeMobile { completion(.mobile($0)) }
-            
-        case .qr:
-            nanoServices.makeQR { completion(.qr($0)) }
-            
-        case .standard:
-            nanoServices.makeStandard { completion(.standard($0)) }
-            
-        case .taxAndStateServices:
-            nanoServices.makeTax { completion(.taxAndStateServices($0)) }
-            
-        case .transport:
-            nanoServices.makeTransport { completion(.transport($0)) }
-        }
-    }
-}
-
 import XCTest
 import RemoteServices
 
@@ -144,7 +30,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, mobileSpy, _,_,_,_) = makeSUT()
         
-        expectFlow(sut, with: makeCategory(flow: .mobile), hasID: .mobile) {
+        expectFlow(sut, with: .mobile, hasID: .mobile) {
             
             mobileSpy.complete(with: self.makeMobile())
         }
@@ -154,7 +40,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _, makeQR, _,_,_) = makeSUT()
         
-        expectFlow(sut, with: makeCategory(flow: .qr), hasID: .qr) {
+        expectFlow(sut, with: .qr, hasID: .qr) {
             
             makeQR.complete(with: self.makeQR())
         }
@@ -164,7 +50,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_, standardSpy, _,_) = makeSUT()
         
-        expectFlow(sut, with: makeCategory(flow: .standard), hasID: .standard) {
+        expectFlow(sut, with: .standard, hasID: .standard) {
             
             standardSpy.complete(with: self.makeStandard())
         }
@@ -174,7 +60,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_,_, makeTax, _) = makeSUT()
         
-        expectFlow(sut, with: makeCategory(flow: .taxAndStateServices), hasID: .taxAndStateServices) {
+        expectFlow(sut, with: .taxAndStateServices, hasID: .taxAndStateServices) {
             
             makeTax.complete(with: self.makeTax())
         }
@@ -184,7 +70,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_,_,_, makeTransport) = makeSUT()
         
-        expectFlow(sut, with: makeCategory(flow: .transport), hasID: .transport) {
+        expectFlow(sut, with: .transport, hasID: .transport) {
             
             makeTransport.complete(with: self.makeTransport())
         }
@@ -196,7 +82,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, mobileSpy, _,_,_,_) = makeSUT()
         
-        expectMobile(sut, with: makeCategory(flow: .mobile), is: Mobile.self) {
+        expectMobile(sut, with: .mobile, is: Mobile.self) {
             
             mobileSpy.complete(with: self.makeMobile())
         }
@@ -206,7 +92,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _, qrSpy, _,_,_) = makeSUT()
         
-        expectQR(sut, with: makeCategory(flow: .qr), is: QR.self) {
+        expectQR(sut, with: .qr, is: QR.self) {
             
             qrSpy.complete(with: self.makeQR())
         }
@@ -216,7 +102,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_, standardSpy, _,_) = makeSUT()
         
-        expectStandard(sut, with: makeCategory(flow: .standard), is: Standard.self) {
+        expectStandard(sut, with: .standard, is: Standard.self) {
             
             standardSpy.complete(with: self.makeStandard())
         }
@@ -226,7 +112,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_,_, makeTax, _) = makeSUT()
         
-        expectTax(sut, with: makeCategory(flow: .taxAndStateServices), is: Tax.self) {
+        expectTax(sut, with: .taxAndStateServices, is: Tax.self) {
             
             makeTax.complete(with: self.makeTax())
         }
@@ -236,7 +122,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         let (sut, _,_,_,_, makeTransport) = makeSUT()
         
-        expectTransport(sut, with: makeCategory(flow: .transport), is: Transport.self) {
+        expectTransport(sut, with: .transport, is: Transport.self) {
             
             makeTransport.complete(with: self.makeTransport())
         }
@@ -288,30 +174,9 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         return (sut, makeMobile, makeQR, makeStandard, makeTax, makeTransport)
     }
     
-    private func makeCategory(
-        latestPaymentsCategory: SUT.ServiceCategory.LatestPaymentsCategory? = nil,
-        md5Hash: String = anyMessage(),
-        name: String = anyMessage(),
-        ord: Int = .random(in: 1...100),
-        flow paymentFlow: SUT.ServiceCategory.PaymentFlow = .mobile,
-        search: Bool = true,
-        type: SUT.ServiceCategory.CategoryType = .charity
-    ) -> SUT.ServiceCategory {
-        
-        return .init(
-            latestPaymentsCategory: latestPaymentsCategory,
-            md5Hash: md5Hash,
-            name: name,
-            ord: ord,
-            paymentFlow: paymentFlow,
-            search: search,
-            type: type
-        )
-    }
-    
     private func flow(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -321,7 +186,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         var flow: Flow?
         
-        sut.makePaymentFlow(category) {
+        sut.makePaymentFlow(id) {
             
             flow = $0
             exp.fulfill()
@@ -336,14 +201,14 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectFlow(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         hasID expectedID: Flow.ID,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         do {
-            let flow = try flow(sut, with: category, action: action)
+            let flow = try flow(sut, with: id, action: action)
             XCTAssertNoDiff(flow.id, expectedID, file: file, line: line)
         } catch {
             XCTFail("Expected flow, but got nil instead.", file: file, line: line)
@@ -352,13 +217,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectMobile<T>(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let flow = try? flow(sut, with: category, action: action)
+        let flow = try? flow(sut, with: id, action: action)
         guard case let .mobile(mobile) = flow else {
             
             return XCTFail("Expected flow mobile case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
@@ -369,13 +234,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectQR<T>(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let flow = try? flow(sut, with: category, action: action)
+        let flow = try? flow(sut, with: id, action: action)
         guard case let .qr(qr) = flow else {
             
             return XCTFail("Expected flow qr case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
@@ -386,13 +251,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectStandard<T>(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let flow = try? flow(sut, with: category, action: action)
+        let flow = try? flow(sut, with: id, action: action)
         guard case let .standard(standard) = flow else {
             
             return XCTFail("Expected flow standard case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
@@ -403,13 +268,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectTax<T>(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let flow = try? flow(sut, with: category, action: action)
+        let flow = try? flow(sut, with: id, action: action)
         guard case let .taxAndStateServices(taxAndStateServices) = flow else {
             
             return XCTFail("Expected flow taxAndStateServices case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
@@ -420,13 +285,13 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectTransport<T>(
         _ sut: SUT? = nil,
-        with category: SUT.ServiceCategory,
+        with id: Flow.ID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let flow = try? flow(sut, with: category, action: action)
+        let flow = try? flow(sut, with: id, action: action)
         guard case let .transport(transport) = flow else {
             
             return XCTFail("Expected flow transport case, but got \(String(describing: flow?.id)) instead.", file: file, line: line)
