@@ -5,14 +5,14 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Provider> {
+struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, Provider> {
     
     let initiatePayment: InitiatePayment
 }
 
 extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     
-    typealias InitiatePaymentResult = Result<Void, ServiceFailure>
+    typealias InitiatePaymentResult = Result<Payment, ServiceFailure>
     typealias InitiatePaymentCompletion = (InitiatePaymentResult) -> Void
     typealias InitiatePayment = (InitiatePaymentPayload<Latest>, @escaping InitiatePaymentCompletion) -> Void
 }
@@ -24,7 +24,7 @@ enum InitiatePaymentPayload<Latest> {
 
 extension InitiatePaymentPayload: Equatable where Latest: Equatable {}
 
-final class PaymentProviderPickerFlowEffectHandler<Latest, Provider> {
+final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, Provider> {
     
     private let microServices: MicroServices
     
@@ -34,7 +34,7 @@ final class PaymentProviderPickerFlowEffectHandler<Latest, Provider> {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Provider>
+    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, Provider>
 }
 
 extension PaymentProviderPickerFlowEffectHandler {
@@ -52,8 +52,8 @@ extension PaymentProviderPickerFlowEffectHandler {
                     case let .failure(serviceFailure):
                         dispatch(.initiatePaymentFailure(serviceFailure))
                         
-                    case let .success(success):
-                        break
+                    case let .success(payment):
+                        dispatch(.paymentInitiated(payment))
                     }
                 }
             case .payByInstructions:
@@ -69,7 +69,7 @@ extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Provider>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -110,9 +110,20 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         }
     }
     
+    func test_select_latest_shouldDeliverPaymentOnSuccess() {
+        
+        let payment = makePayment()
+        let (sut, initiatePayment) = makeSUT()
+        
+        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .paymentInitiated(payment)) {
+            
+            initiatePayment.complete(with: .success(payment))
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Provider>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, Provider>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest>, SUT.MicroServices.InitiatePaymentResult>
     
     private func makeSUT(
