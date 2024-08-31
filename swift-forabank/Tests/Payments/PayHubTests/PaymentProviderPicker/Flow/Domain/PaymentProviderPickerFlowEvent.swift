@@ -9,12 +9,12 @@ import ForaTools
 
 enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service> {
     
-    case failure(ServiceFailure)
     case initiatePaymentFailure(ServiceFailure)
     case payByInstructions(PayByInstructions)
     case paymentInitiated(Payment)
     case select(Select)
     case services(Services)
+    case servicesFailure
 }
 
 extension PaymentProviderPickerFlowEvent {

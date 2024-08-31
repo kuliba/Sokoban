@@ -11,7 +11,6 @@ struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayB
     
     let initiatePayment: InitiatePayment
     let makePayByInstructions: MakePayByInstructions
-    #warning("improve API")
     let processProvider: ProcessProvider
 }
 
@@ -19,23 +18,18 @@ extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     
     typealias InitiatePaymentResult = Result<Payment, ServiceFailure>
     typealias InitiatePaymentCompletion = (InitiatePaymentResult) -> Void
-    typealias InitiatePayment = (InitiatePaymentPayload<Latest>, @escaping InitiatePaymentCompletion) -> Void
+    typealias InitiatePayment = (Latest, @escaping InitiatePaymentCompletion) -> Void
     
     typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
     
     typealias ProcessProvider = (Provider, @escaping (ProcessProviderResult<Payment, Service>) -> Void) -> Void
 }
 
-enum InitiatePaymentPayload<Latest> {
-    
-    case latest(Latest)
-}
-
 enum ProcessProviderResult<Payment, Service> {
     
-    case failure(ServiceFailure)
+    case initiatePaymentResult(Result<Payment, ServiceFailure>)
     case services(Services)
-    case success(Payment)
+    case servicesFailure
 }
 
 extension ProcessProviderResult {
@@ -44,8 +38,6 @@ extension ProcessProviderResult {
 }
 
 extension ProcessProviderResult: Equatable where Payment: Equatable, Service: Equatable {}
-
-extension InitiatePaymentPayload: Equatable where Latest: Equatable {}
 
 final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service> {
     
@@ -70,7 +62,7 @@ extension PaymentProviderPickerFlowEffectHandler {
         case let .select(select):
             switch select {
             case let .latest(latest):
-                microServices.initiatePayment(.latest(latest)) {
+                microServices.initiatePayment(latest) {
                     switch $0 {
                     case let .failure(serviceFailure):
                         dispatch(.initiatePaymentFailure(serviceFailure))
@@ -86,14 +78,20 @@ extension PaymentProviderPickerFlowEffectHandler {
                 microServices.processProvider(provider) {
                     
                     switch $0 {
-                    case let .failure(serviceFailure):
-                        dispatch(.failure(serviceFailure))
+                    case let .initiatePaymentResult(result):
+                        switch result {
+                        case let .failure(serviceFailure):
+                            dispatch(.initiatePaymentFailure(serviceFailure))
+                            
+                        case let .success(payment):
+                            dispatch(.paymentInitiated(payment))
+                        }
                         
                     case let .services(services):
                         dispatch(.services(services))
                         
-                    case let .success(payment):
-                        dispatch(.paymentInitiated(payment))
+                    case .servicesFailure:
+                        dispatch(.servicesFailure)
                     }
                 }
             }
@@ -134,7 +132,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         
         sut.handleEffect(.select(.latest(latest))) { _ in }
         
-        XCTAssertNoDiff(initiatePayment.payloads, [.latest(latest)])
+        XCTAssertNoDiff(initiatePayment.payloads, [latest])
     }
     
     func test_select_latest_shouldDeliverServiceFailureOnServiceFailure() {
@@ -191,14 +189,14 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         }
     }
     
-    func test_select_provider_shouldDeliverServiceFailureOnServiceFailure() {
+    func test_select_provider_shouldDeliverInitiatePaymentFailureOnInitiatePaymentFailure() {
         
         let failure = makeServiceFailure()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .failure(failure)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentFailure(failure)) {
             
-            providerProcess.complete(with: .failure(failure))
+            providerProcess.complete(with: .initiatePaymentResult(.failure(failure)))
         }
     }
     
@@ -209,14 +207,24 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         
         expect(sut, with: .select(.provider(makeProvider())), toDeliver: .paymentInitiated(payment)) {
             
-            providerProcess.complete(with: .success(payment))
+            providerProcess.complete(with: .initiatePaymentResult(.success(payment)))
+        }
+    }
+    
+    func test_select_provider_shouldDeliverServicesFailureOnPrividerServicesFailure() {
+        
+        let (sut, _,_, providerProcess) = makeSUT()
+        
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .servicesFailure) {
+            
+            providerProcess.complete(with: .servicesFailure)
         }
     }
     
     // MARK: - Helpers
     
     private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service>
-    private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest>, SUT.MicroServices.InitiatePaymentResult>
+    private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
     private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service>>
     
