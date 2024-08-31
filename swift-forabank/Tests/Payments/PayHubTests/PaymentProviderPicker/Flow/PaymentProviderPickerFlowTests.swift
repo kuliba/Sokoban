@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
+import ForaTools
 import XCTest
 
 class PaymentProviderPickerFlowTests: XCTestCase {
@@ -63,5 +64,25 @@ class PaymentProviderPickerFlowTests: XCTestCase {
     ) -> ServiceFailure {
         
         return .init(message: message, source: source)
+    }
+    
+    struct Service: Equatable {
+        
+        let value: String
+    }
+    
+    func makeService(
+        _ value: String = anyMessage()
+    ) -> Service {
+        
+        return .init(value: value)
+    }
+    
+    func makeServices(
+        _ head: Service? = nil,
+        tail: Service...
+    ) -> MultiElementArray<Service> {
+        
+        return .init(head ?? makeService(), tail)
     }
 }

@@ -5,12 +5,15 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider> {
+import ForaTools
+
+enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service> {
     
     case initiatePaymentFailure(ServiceFailure)
     case payByInstructions(PayByInstructions)
     case paymentInitiated(Payment)
     case select(Select)
+    case services(Services)
 }
 
 extension PaymentProviderPickerFlowEvent {
@@ -24,7 +27,9 @@ extension PaymentProviderPickerFlowEvent {
         case provider(Provider)
         case qr
     }
+    
+    typealias Services = MultiElementArray<Service>
 }
 
-extension PaymentProviderPickerFlowEvent: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable {}
-extension PaymentProviderPickerFlowEvent.Select: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable {}
+extension PaymentProviderPickerFlowEvent: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable, Service: Equatable {}
+extension PaymentProviderPickerFlowEvent.Select: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable, Service: Equatable {}

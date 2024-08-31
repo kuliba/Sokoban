@@ -46,6 +46,13 @@ public struct MultiElementArray<Element> {
     ) {
         self._elements = [head] + tail
     }
+    
+    public init(
+        _ head: Element,
+        _ tail: [Element]
+    ) {
+        self._elements = [head] + tail
+    }
 }
 
 extension MultiElementArray {
