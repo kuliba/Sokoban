@@ -21,13 +21,10 @@ extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .initiatePaymentFailure(serviceFailure):
+        case let .initiatePaymentResult(result):
             #warning("FIXME")
             
         case let .payByInstructions(payByInstructions):
-            #warning("FIXME")
-
-        case let .paymentInitiated(payment):
             #warning("FIXME")
             
         case let .select(select):

@@ -1,6 +1,6 @@
 //
 //  PaymentProviderPickerFlowEffectHandler.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 31.08.2024.
 //
@@ -29,29 +29,22 @@ extension PaymentProviderPickerFlowEffectHandler {
             switch select {
             case let .latest(latest):
                 microServices.initiatePayment(latest) {
-                    switch $0 {
-                    case let .failure(serviceFailure):
-                        dispatch(.initiatePaymentFailure(serviceFailure))
-                        
-                    case let .success(payment):
-                        dispatch(.paymentInitiated(payment))
-                    }
+                    
+                    dispatch(.initiatePaymentResult($0))
                 }
+                
             case .payByInstructions:
-                microServices.makePayByInstructions { dispatch(.payByInstructions($0))}
+                microServices.makePayByInstructions {
+                    
+                    dispatch(.payByInstructions($0))
+                }
                 
             case let .provider(provider):
                 microServices.processProvider(provider) {
                     
                     switch $0 {
                     case let .initiatePaymentResult(result):
-                        switch result {
-                        case let .failure(serviceFailure):
-                            dispatch(.initiatePaymentFailure(serviceFailure))
-                            
-                        case let .success(payment):
-                            dispatch(.paymentInitiated(payment))
-                        }
+                        dispatch(.initiatePaymentResult(result))
                         
                     case let .services(services):
                         dispatch(.services(services))

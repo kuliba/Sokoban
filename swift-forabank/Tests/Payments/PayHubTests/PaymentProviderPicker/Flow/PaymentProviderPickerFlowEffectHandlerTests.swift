@@ -38,7 +38,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let failure = makeServiceFailure()
         let (sut, initiatePayment, _,_) = makeSUT()
         
-        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentFailure(failure)) {
+        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentResult(.failure(failure))) {
             
             initiatePayment.complete(with: .failure(failure))
         }
@@ -49,7 +49,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let payment = makePayment()
         let (sut, initiatePayment, _,_) = makeSUT()
         
-        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .paymentInitiated(payment)) {
+        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentResult(.success(payment))) {
             
             initiatePayment.complete(with: .success(payment))
         }
@@ -92,7 +92,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let failure = makeServiceFailure()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentFailure(failure)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentResult(.failure(failure))) {
             
             providerProcess.complete(with: .initiatePaymentResult(.failure(failure)))
         }
@@ -103,7 +103,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let payment = makePayment()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .paymentInitiated(payment)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentResult(.success(payment))) {
             
             providerProcess.complete(with: .initiatePaymentResult(.success(payment)))
         }
