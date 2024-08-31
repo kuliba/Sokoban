@@ -33,6 +33,18 @@ class PaymentProviderPickerFlowTests: XCTestCase {
         return .init(value: value)
     }
     
+    struct PayByInstructions: Equatable {
+        
+        let value: String
+    }
+    
+    func makePayByInstructions(
+        _ value: String = anyMessage()
+    ) -> PayByInstructions {
+        
+        return .init(value: value)
+    }
+    
     struct Provider: Equatable {
         
         let value: String

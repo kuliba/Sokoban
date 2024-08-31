@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-final class PaymentProviderPickerFlowReducer<Latest, Payment, Provider> {
+final class PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider> {
     
     init() {}
 }
@@ -24,6 +24,9 @@ extension PaymentProviderPickerFlowReducer {
         case let .initiatePaymentFailure(serviceFailure):
             #warning("FIXME")
             
+        case let .payByInstructions(payByInstructions):
+            #warning("FIXME")
+
         case let .paymentInitiated(payment):
             #warning("FIXME")
             
@@ -38,7 +41,7 @@ extension PaymentProviderPickerFlowReducer {
 extension PaymentProviderPickerFlowReducer {
     
     typealias State = PaymentProviderPickerFlowState
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, Provider>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 

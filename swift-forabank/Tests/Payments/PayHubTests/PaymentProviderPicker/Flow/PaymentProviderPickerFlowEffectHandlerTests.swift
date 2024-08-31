@@ -5,9 +5,10 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, Provider> {
+struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider> {
     
     let initiatePayment: InitiatePayment
+    let makePayByInstructions: MakePayByInstructions
 }
 
 extension PaymentProviderPickerFlowEffectHandlerMicroServices {
@@ -15,6 +16,8 @@ extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     typealias InitiatePaymentResult = Result<Payment, ServiceFailure>
     typealias InitiatePaymentCompletion = (InitiatePaymentResult) -> Void
     typealias InitiatePayment = (InitiatePaymentPayload<Latest>, @escaping InitiatePaymentCompletion) -> Void
+    
+    typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
 }
 
 enum InitiatePaymentPayload<Latest> {
@@ -24,7 +27,7 @@ enum InitiatePaymentPayload<Latest> {
 
 extension InitiatePaymentPayload: Equatable where Latest: Equatable {}
 
-final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, Provider> {
+final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider> {
     
     private let microServices: MicroServices
     
@@ -34,7 +37,7 @@ final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, Provider> {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, Provider>
+    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider>
 }
 
 extension PaymentProviderPickerFlowEffectHandler {
@@ -57,7 +60,8 @@ extension PaymentProviderPickerFlowEffectHandler {
                     }
                 }
             case .payByInstructions:
-                break
+                microServices.makePayByInstructions { dispatch(.payByInstructions($0))}
+                
             case let .provider(provider):
                 break
             }
@@ -69,7 +73,7 @@ extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, Provider>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -81,9 +85,10 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, initiatePayment) = makeSUT()
+        let (sut, initiatePayment, payByInstructions) = makeSUT()
         
         XCTAssertEqual(initiatePayment.callCount, 0)
+        XCTAssertEqual(payByInstructions.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -92,7 +97,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     func test_select_latest_shouldCallInitiatePaymentWithPayload() {
         
         let latest = makeLatest()
-        let (sut, initiatePayment) = makeSUT()
+        let (sut, initiatePayment, _) = makeSUT()
         
         sut.handleEffect(.select(.latest(latest))) { _ in }
         
@@ -102,7 +107,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     func test_select_latest_shouldDeliverServiceFailureOnServiceFailure() {
         
         let failure = makeServiceFailure()
-        let (sut, initiatePayment) = makeSUT()
+        let (sut, initiatePayment, _) = makeSUT()
         
         expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentFailure(failure)) {
             
@@ -113,7 +118,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     func test_select_latest_shouldDeliverPaymentOnSuccess() {
         
         let payment = makePayment()
-        let (sut, initiatePayment) = makeSUT()
+        let (sut, initiatePayment, _) = makeSUT()
         
         expect(sut, with: .select(.latest(makeLatest())), toDeliver: .paymentInitiated(payment)) {
             
@@ -121,27 +126,43 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         }
     }
     
+    func test_select_payByInstructions_shouldDeliverPayByInstructions() {
+        
+        let payByInstructions = makePayByInstructions()
+        let (sut, _, payByInstructionsSpy) = makeSUT()
+        
+        expect(sut, with: .select(.payByInstructions), toDeliver: .payByInstructions(payByInstructions)) {
+            
+            payByInstructionsSpy.complete(with: payByInstructions)
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, Provider>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest>, SUT.MicroServices.InitiatePaymentResult>
+    private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        initiatePayment: InitiatePaymentSpy
+        initiatePayment: InitiatePaymentSpy,
+        payByInstructions: PayByInstructionsSpy
     ) {
         let initiatePayment = InitiatePaymentSpy()
+        let payByInstructions = PayByInstructionsSpy()
         let sut = SUT(microServices: .init(
-            initiatePayment: initiatePayment.process(_:completion:)
+            initiatePayment: initiatePayment.process(_:completion:),
+            makePayByInstructions: payByInstructions.process(completion:)
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(initiatePayment, file: file, line: line)
+        trackForMemoryLeaks(payByInstructions, file: file, line: line)
         
-        return (sut, initiatePayment)
+        return (sut, initiatePayment, payByInstructions)
     }
     
     private func expect(
