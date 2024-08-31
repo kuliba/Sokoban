@@ -47,10 +47,10 @@ extension PaymentProviderPickerFlowEffectHandler {
                         dispatch(.initiatePaymentResult(result))
                         
                     case let .services(services):
-                        dispatch(.services(services))
+                        dispatch(.loadServices(services))
                         
                     case .servicesFailure:
-                        dispatch(.servicesFailure)
+                        dispatch(.loadServices(nil))
                     }
                 }
             }

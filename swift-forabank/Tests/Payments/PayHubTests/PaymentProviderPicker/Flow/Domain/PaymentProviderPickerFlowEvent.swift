@@ -12,8 +12,7 @@ enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider
     case initiatePaymentResult(InitiatePaymentResult)
     case payByInstructions(PayByInstructions)
     case select(Select)
-    case services(Services)
-    case servicesFailure
+    case loadServices(Services?)
 }
 
 extension PaymentProviderPickerFlowEvent {

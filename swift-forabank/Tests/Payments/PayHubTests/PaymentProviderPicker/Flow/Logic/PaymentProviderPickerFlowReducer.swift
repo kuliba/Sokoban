@@ -30,10 +30,7 @@ extension PaymentProviderPickerFlowReducer {
         case let .select(select):
             self.select(&state, &effect, with: select)
             
-        case let .services(services):
-            #warning("FIXME")
-            
-        case .servicesFailure:
+        case let .loadServices(services):
             #warning("FIXME")
         }
         

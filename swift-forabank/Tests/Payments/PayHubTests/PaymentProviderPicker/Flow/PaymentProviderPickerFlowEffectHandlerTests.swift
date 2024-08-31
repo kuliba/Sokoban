@@ -81,7 +81,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let services = makeServices()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .services(services)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(services)) {
             
             providerProcess.complete(with: .services(services))
         }
@@ -113,7 +113,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .servicesFailure) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(nil)) {
             
             providerProcess.complete(with: .servicesFailure)
         }
