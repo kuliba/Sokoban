@@ -35,6 +35,9 @@ extension PaymentProviderPickerFlowReducer {
             
         case let .services(services):
             #warning("FIXME")
+            
+        case .servicesFailure:
+            #warning("FIXME")
         }
         
         return (state, effect)
