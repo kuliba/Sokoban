@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
+public struct PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure> {
     
     public let initiatePayment: InitiatePayment
     public let makePayByInstructions: MakePayByInstructions
@@ -30,6 +30,6 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     
     typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
     
-    typealias ProcessResult = ProcessProviderResult<Payment, Service, ServicesFailure>
+    typealias ProcessResult = ProcessProviderResult<Payment, ServicePicker, ServicesFailure>
     typealias ProcessProvider = (Provider, @escaping (ProcessResult) -> Void) -> Void
 }

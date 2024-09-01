@@ -100,19 +100,19 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     // MARK: - loadServices
     
-    func test_loadServices_shouldSetDestinationOnServices() {
+    func test_loadServices_shouldSetDestinationOnServicePicker() {
         
-        let services = makeServices()
+        let picker = makeServicePicker()
         
-        assert(makeState(), event: .loadServices(.services(services))) {
+        assert(makeState(), event: .loadServices(.servicePicker(picker))) {
             
-            $0.navigation = .destination(.services(services))
+            $0.navigation = .destination(.servicePicker(picker))
         }
     }
     
-    func test_loadServices_shouldNotDeliverEffectOnServices() {
+    func test_loadServices_shouldNotDeliverEffectOnServicePicker() {
         
-        assert(makeState(), event: .loadServices(.services(makeServices())), delivers: nil)
+        assert(makeState(), event: .loadServices(.servicePicker(makeServicePicker())), delivers: nil)
     }
     
     func test_loadServices_shouldSetServicesFailureDestinationOnServicesFailure() {
@@ -230,7 +230,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
+    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
     
     private func makeSUT(
         file: StaticString = #file,

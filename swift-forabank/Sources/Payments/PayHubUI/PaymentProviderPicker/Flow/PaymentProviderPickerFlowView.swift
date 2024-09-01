@@ -94,7 +94,7 @@ extension PaymentProviderPickerFlowDestination: Identifiable {
             
         case .payByInstructions: return .payByInstructions
         case .payment:           return .payment
-        case .services:          return .services
+        case .servicePicker:     return .servicePicker
         case .servicesFailure:   return .servicesFailure
         }
     }
@@ -103,7 +103,7 @@ extension PaymentProviderPickerFlowDestination: Identifiable {
         
         case payByInstructions
         case payment
-        case services
+        case servicePicker
         case servicesFailure
     }
 }
@@ -126,7 +126,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
             .previewDisplayName("payByInstructions")
         flowView(.init(navigation: .destination(.payment(.init()))))
             .previewDisplayName("payment")
-        flowView(.init(navigation: .destination(.services(.init(.init(), .init())))))
+        flowView(.init(navigation: .destination(.servicePicker(.init()))))
             .previewDisplayName("services list")
         flowView(.init(navigation: .destination(.servicesFailure(.init()))))
             .previewDisplayName("servicesFailure")
@@ -135,7 +135,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
             .previewDisplayName("outside(.chat)")
     }
     
-    typealias State = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewService, PreviewServicesFailure>
+    typealias State = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
     
     private static func flowView(
         _ state: State
@@ -143,7 +143,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
         
         NavigationView {
             
-            PaymentProviderPickerFlowView<Color, Text, PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicesFailure>(
+            PaymentProviderPickerFlowView<Color, Text, PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>(
                 state: state,
                 event: { print($0) },
                 contentView: { Color.green.opacity(0.2) },
@@ -165,7 +165,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         let id = UUID()
         let model: Model
         
-        typealias Model = PaymentProviderPickerFlow<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicesFailure>
+        typealias Model = PaymentProviderPickerFlow<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>
     }
     
     enum ServicesResponse: String, CaseIterable {
@@ -229,8 +229,8 @@ struct PaymentProviderPickerFlowDemoView: View {
     
     private func makeDestination() {
         
-        let reducer = PaymentProviderPickerFlowReducer<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicesFailure>()
-        let effectHandler = PaymentProviderPickerFlowEffectHandler<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicesFailure>(microServices: .init(
+        let reducer = PaymentProviderPickerFlowReducer<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>()
+        let effectHandler = PaymentProviderPickerFlowEffectHandler<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>(microServices: .init(
             initiatePayment: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
@@ -251,7 +251,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                         completion(initiatePayment ? .initiatePaymentResult(.success(.init())) : .initiatePaymentResult(.failure(.server("Error initiating payment"))))
                         
                     case .list:
-                        completion(.servicesResult(.services(.init(.init(), .init()))))
+                        completion(.servicesResult(.servicePicker(.init())))
                     }
                 }
             }
@@ -264,8 +264,8 @@ struct PaymentProviderPickerFlowDemoView: View {
         ))
     }
     
-    private typealias FlowState = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewService, PreviewServicesFailure>
-    private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicesFailure>
+    private typealias FlowState = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
+    private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>
     
     private func contentView(
         state: FlowState,
@@ -313,7 +313,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("multi") {
                     
-                    event(.loadServices(.services(.init(.init(), .init()))))
+                    event(.loadServices(.servicePicker(.init())))
                 }
             } header: {
                 Text("Load Services")
@@ -371,6 +371,7 @@ struct PreviewPayByInstructions {}
 struct PreviewPayment {}
 struct PreviewPaymentProvider {}
 struct PreviewService {}
+struct PreviewServicePicker {}
 struct PreviewServicesFailure {}
 
 #Preview {

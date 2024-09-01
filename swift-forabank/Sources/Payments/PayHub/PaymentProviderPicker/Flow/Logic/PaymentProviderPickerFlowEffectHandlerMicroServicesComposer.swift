@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
+public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicesPicker, ServicesFailure> {
     
     private let nanoServices: NanoServices
     
@@ -17,7 +17,7 @@ public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<L
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
+    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesPicker, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
@@ -31,7 +31,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         )
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
+    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, ServicesPicker, ServicesFailure>
 }
 
 // MARK: - initiatePayment
@@ -80,7 +80,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
             nanoServices.makeServicesFailure { completion(.servicesResult(.servicesFailure($0))) }
             
         case let (_, .some(services)):
-            completion(.servicesResult(.services(services)))
+            nanoServices.makeServicePicker(services) { completion(.servicesResult(.servicePicker($0))) }
             
         case let (.some(service), _):
             initiatePayment(with: service, completion)

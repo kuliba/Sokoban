@@ -77,14 +77,14 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         XCTAssertNoDiff(providerProcess.payloads, [provider])
     }
     
-    func test_select_provider_shouldDeliverServicesOnServices() {
+    func test_select_provider_shouldDeliverServicePickerOnServicePicker() {
         
-        let services = makeServices()
+        let picker = makeServicePicker()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.services(services))) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicePicker(picker))) {
             
-            providerProcess.complete(with: .servicesResult(.services(services)))
+            providerProcess.complete(with: .servicesResult(.servicePicker(picker)))
         }
     }
     
@@ -123,10 +123,10 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
     private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service, ServicesFailure>>
+    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, ServicePicker, ServicesFailure>>
     
     private func makeSUT(
         file: StaticString = #file,

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 01.09.2024.
 //
 
+import ForaTools
 import PayHub
 import XCTest
 
@@ -15,7 +16,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_initiatePayment_shouldCallInitiatePaymentWithPayload() {
         
         let latest = makeLatest()
-        let (sut, initiatePayment, _,_,_) = makeSUT()
+        let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
         sut.initiatePayment(latest) { _ in }
         
@@ -25,7 +26,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_initiatePayment_shouldDeliverFailureOnFailure() {
         
         let failure = makeServiceFailure()
-        let (sut, initiatePayment, _,_,_) = makeSUT()
+        let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
         expect(sut.initiatePayment, with: makeLatest(), toDeliver: .failure(failure)) {
             
@@ -36,7 +37,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_initiatePayment_shouldDeliverSuccessOnSuccess() {
         
         let payment = makePayment()
-        let (sut, initiatePayment, _,_,_) = makeSUT()
+        let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
         expect(sut.initiatePayment, with: makeLatest(), toDeliver: .success(payment)) {
             
@@ -48,7 +49,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     func test_makePayByInstructions_shouldCallMakePayByInstructionsWithPayload() {
         
-        let (sut, _, makePayByInstructions, _,_) = makeSUT()
+        let (sut, _, makePayByInstructions, _,_,_) = makeSUT()
         
         sut.makePayByInstructions { _ in }
         
@@ -58,7 +59,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_makePayByInstructions_shouldDeliverPayByInstructions() {
         
         let payByInstructions = makePayByInstructions()
-        let (sut, _, payByInstructionsSpy, _,_) = makeSUT()
+        let (sut, _, payByInstructionsSpy, _,_,_) = makeSUT()
         
         expect(sut.makePayByInstructions, toDeliver: payByInstructions) {
             
@@ -71,18 +72,42 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_processProvider_shouldCallGetServiceCategoryListWithPayload() {
         
         let provider = makeProvider()
-        let (sut, _,_, getServiceCategoryList, _) = makeSUT()
+        let (sut, _,_, getServiceCategoryList, _,_) = makeSUT()
         
         sut.processProvider(provider) { _ in }
         
         XCTAssertNoDiff(getServiceCategoryList.payloads, [provider])
     }
     
+    func test_processProvider_shouldCallMakeServicePickerWithPayload() {
+        
+        let services = makeServices()
+        let (sut, _,_, getServiceCategoryList, makeServicePicker, _) = makeSUT()
+        
+        sut.processProvider(makeProvider()) { _ in }
+        getServiceCategoryList.complete(with: .success(services.elements))
+        
+        XCTAssertNoDiff(makeServicePicker.payloads, [services])
+    }
+    
+    func test_processProvider_shouldDeliverServicePickerOnMultipleServices() {
+        
+        let services = makeServices()
+        let picker = makeServicePicker()
+        let (sut, _,_, getServiceCategoryList, makeServicePicker, _) = makeSUT()
+        
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicePicker(picker))) {
+            
+            getServiceCategoryList.complete(with: .success(services.elements))
+            makeServicePicker.complete(with: picker)
+        }
+    }
+    
     func test_processProvider_shouldDeliverServicesFailureOnServicesFailure() {
         
         let failure = makeServicesFailure()
         
-        let (sut, _,_, getServiceCategoryList, makeServicesFailure) = makeSUT()
+        let (sut, _,_, getServiceCategoryList, _, makeServicesFailure) = makeSUT()
         
         expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicesFailure(failure))) {
             
@@ -94,7 +119,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_processProvider_shouldDeliverServicesFailureOnEmptyServices() {
         
         let failure = makeServicesFailure()
-        let (sut, _,_, getServiceCategoryList, makeServicesFailure) = makeSUT()
+        let (sut, _,_, getServiceCategoryList, _, makeServicesFailure) = makeSUT()
         
         expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicesFailure(failure))) {
             
@@ -103,21 +128,10 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         }
     }
     
-    func test_processProvider_shouldDeliverServicesOnMultipleServices() {
-        
-        let services = makeServices()
-        let (sut, _,_, getServiceCategoryList, _) = makeSUT()
-        
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.services(services))) {
-            
-            getServiceCategoryList.complete(with: .success(services.elements))
-        }
-    }
-    
     func test_processProvider_shouldCallInitiatePaymentWithPayload() {
         
         let service = makeService()
-        let (sut, initiatePayment, _, getServiceCategoryList, _) = makeSUT()
+        let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
         sut.processProvider(makeProvider()) { _ in }
         getServiceCategoryList.complete(with: .success([service]))
@@ -128,7 +142,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_processProvider_shouldDeliverFailureOnOneServiceAndInitiatePaymentFailure() {
         
         let failure = makeServiceFailure()
-        let (sut, initiatePayment, _, getServiceCategoryList, _) = makeSUT()
+        let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
         expect(sut.processProvider, with: makeProvider(), toDeliver: .initiatePaymentResult(.failure(failure))) {
             
@@ -140,7 +154,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     func test_processProvider_shouldDeliverPaymentOnOneServiceAndInitiatePaymentSuccess() {
         
         let payment = makePayment()
-        let (sut, initiatePayment, _, getServiceCategoryList, _) = makeSUT()
+        let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
         expect(sut.processProvider, with: makeProvider(), toDeliver: .initiatePaymentResult(.success(payment))) {
             
@@ -153,7 +167,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         
         var sut: SUT?
         let getServiceCategoryList: GetServiceCategoryListSpy
-        (sut, _,_, getServiceCategoryList, _) = makeSUT()
+        (sut, _,_, getServiceCategoryList, _,_) = makeSUT()
         let exp = expectation(description: "completion should not be called")
         exp.isInverted = true
         
@@ -166,12 +180,14 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     // MARK: - Helpers
     
-    private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
+    private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure>
     private typealias SUT = Composer.MicroServices
     private typealias GetServiceCategoryListSpy = Spy<Provider, Result<[Service], Error>>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest, Service>, SUT.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
     private typealias MakeServicesFailureSpy = Spy<Void, ServicesFailure>
+    private typealias Services = MultiElementArray<Service>
+    private typealias MakeServicePickerSpy = Spy<Services, ServicePicker>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -181,16 +197,19 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         initiatePayment: InitiatePaymentSpy,
         payByInstructions: PayByInstructionsSpy,
         getServiceCategoryList: GetServiceCategoryListSpy,
+        makeServicePicker: MakeServicePickerSpy,
         makeServicesFailure: MakeServicesFailureSpy
     ) {
         let getServiceCategoryList = GetServiceCategoryListSpy()
         let initiatePayment = InitiatePaymentSpy()
         let payByInstructions = PayByInstructionsSpy()
+        let makeServicePicker = MakeServicePickerSpy()
         let makeServicesFailure = MakeServicesFailureSpy()
         let composer = Composer(nanoServices: .init(
             getServiceCategoryList: getServiceCategoryList.process(_:completion:),
             initiatePayment: initiatePayment.process(_:completion:),
             makePayByInstructions: payByInstructions.process(completion:),
+            makeServicePicker: makeServicePicker.process(_:completion:),
             makeServicesFailure: makeServicesFailure.process(completion:)
         ))
         let sut = composer.compose()
@@ -200,8 +219,9 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         trackForMemoryLeaks(payByInstructions, file: file, line: line)
         trackForMemoryLeaks(getServiceCategoryList, file: file, line: line)
         trackForMemoryLeaks(makeServicesFailure, file: file, line: line)
+        trackForMemoryLeaks(makeServicePicker, file: file, line: line)
         
-        return (sut, initiatePayment, payByInstructions, getServiceCategoryList, makeServicesFailure)
+        return (sut, initiatePayment, payByInstructions, getServiceCategoryList, makeServicePicker, makeServicesFailure)
     }
     
     private func expect<Response>(
