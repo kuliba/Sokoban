@@ -25,7 +25,7 @@ extension PaymentProviderPickerFlowReducer {
             self.initiatePaymentResult(&state, &effect, with: result)
             
         case let .loadServices(services):
-#warning("FIXME")
+            self.loadServices(&state, &effect, with: services)
             
         case let .payByInstructions(payByInstructions):
 #warning("FIXME")
@@ -40,7 +40,7 @@ extension PaymentProviderPickerFlowReducer {
 
 extension PaymentProviderPickerFlowReducer {
     
-    typealias State = PaymentProviderPickerFlowState<Payment>
+    typealias State = PaymentProviderPickerFlowState<Payment, Service>
     typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
@@ -58,6 +58,20 @@ private extension PaymentProviderPickerFlowReducer {
             
         case let .success(payment):
             state.navigation = .destination(.payment(payment))
+        }
+    }
+    
+    func loadServices(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with services: Event.Services?
+    ) {
+        switch services {
+        case .none:
+            state.navigation = .destination(.servicesFailure)
+            
+        case let .some(services):
+            state.navigation = .destination(.services(services))
         }
     }
     

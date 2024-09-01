@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-struct PaymentProviderPickerFlowState<Payment> {
+import ForaTools
+
+struct PaymentProviderPickerFlowState<Payment, Service> {
     
     var isLoading: Bool
     var navigation: Navigation?
@@ -26,6 +28,8 @@ extension PaymentProviderPickerFlowState.Navigation {
     enum Destination {
         
         case payment(Payment)
+        case services(Services)
+        case servicesFailure
     }
     
     enum Outside: Equatable {
@@ -33,6 +37,12 @@ extension PaymentProviderPickerFlowState.Navigation {
         case back, chat, qr
     }
 }
-extension PaymentProviderPickerFlowState: Equatable where Payment: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation: Equatable where Payment: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation.Destination: Equatable where Payment: Equatable {}
+
+extension PaymentProviderPickerFlowState.Navigation.Destination {
+ 
+    typealias Services = MultiElementArray<Service>
+}
+
+extension PaymentProviderPickerFlowState: Equatable where Payment: Equatable, Service: Equatable {}
+extension PaymentProviderPickerFlowState.Navigation: Equatable where Payment: Equatable, Service: Equatable {}
+extension PaymentProviderPickerFlowState.Navigation.Destination: Equatable where Payment: Equatable, Service: Equatable {}

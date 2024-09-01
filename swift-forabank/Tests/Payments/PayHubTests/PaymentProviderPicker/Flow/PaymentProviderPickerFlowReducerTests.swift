@@ -41,6 +41,36 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         assert(makeState(), event: .initiatePaymentResult(.success(makePayment())), delivers: nil)
     }
     
+    // MARK: - loadServices
+    
+    func test_loadServices_shouldSetDestinationOnNil() {
+        
+        assert(makeState(), event: .loadServices(nil)) {
+            
+            $0.navigation = .destination(.servicesFailure)
+        }
+    }
+    
+    func test_loadServices_shouldNotDeliverEffectOnNil() {
+        
+        assert(makeState(), event: .loadServices(nil), delivers: nil)
+    }
+    
+    func test_loadServices_shouldSetDestinationOnServices() {
+        
+        let services = makeServices()
+        
+        assert(makeState(), event: .loadServices(services)) {
+            
+            $0.navigation = .destination(.services(services))
+        }
+    }
+    
+    func test_loadServices_shouldNotDeliverEffectOnServices() {
+        
+        assert(makeState(), event: .loadServices(makeServices()), delivers: nil)
+    }
+    
     // MARK: - select
     
     func test_select_latest_shouldSetStateToLoading() {
