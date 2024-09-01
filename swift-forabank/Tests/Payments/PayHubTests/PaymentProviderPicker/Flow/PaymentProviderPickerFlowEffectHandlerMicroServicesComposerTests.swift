@@ -39,7 +39,7 @@ extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         
         return .init(
             initiatePayment: nanoServices.initiatePayment,
-            makePayByInstructions: { _ in fatalError() },
+            makePayByInstructions: nanoServices.makePayByInstructions,
             processProvider: { _,_ in fatalError() }
         )
     }
@@ -54,7 +54,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     // MARK: - initiatePayment
     
-    func test_initiatePayment_shouldCallInitiatePaymentWithPayload() { 
+    func test_initiatePayment_shouldCallInitiatePaymentWithPayload() {
         
         let latest = makeLatest()
         let (sut, initiatePayment, _) = makeSUT()
@@ -86,13 +86,35 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         }
     }
     
+    // MARK: - makePayByInstructions
+    
+    func test_makePayByInstructions_shouldCallMakePayByInstructionsWithPayload() {
+        
+        let (sut, _, makePayByInstructions) = makeSUT()
+        
+        sut.makePayByInstructions { _ in }
+        
+        XCTAssertEqual(makePayByInstructions.callCount, 1)
+    }
+    
+    func test_makePayByInstructions_shouldDeliverPayByInstructions() {
+        
+        let payByInstructions = makePayByInstructions()
+        let (sut, _, payByInstructionsSpy) = makeSUT()
+        
+        expect(sut.makePayByInstructions, toDeliver: payByInstructions) {
+            
+            payByInstructionsSpy.complete(with: payByInstructions)
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, Payment, PayByInstructions, Provider, Service>
     private typealias SUT = Composer.MicroServices
     private typealias InitiatePaymentSpy = Spy<Latest, SUT.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -116,6 +138,31 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         return (sut, initiatePayment, payByInstructions)
     }
     
+    private func expect<Response>(
+        _ sut: @escaping (@escaping (Response) -> Void) -> Void,
+        toDeliver expectedResponses: Response...,
+        on action: @escaping () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) where Response: Equatable {
+        
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = expectedResponses.count
+        var receivedResponses = [Response]()
+        
+        sut {
+            
+            receivedResponses.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        XCTAssertNoDiff(receivedResponses, expectedResponses, "Expected \(expectedResponses), but got \(receivedResponses) instead.", file: file, line: line)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     private func expect<Payload, Response>(
         _ sut: @escaping (Payload, @escaping (Response) -> Void) -> Void,
         with payload: Payload,
@@ -123,7 +170,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         on action: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
-    ) where Payload: Equatable, Response: Equatable {
+    ) where Response: Equatable {
         
         let exp = expectation(description: "wait for completion")
         exp.expectedFulfillmentCount = expectedResponses.count
