@@ -71,6 +71,23 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         assert(makeState(), event: .loadServices(makeServices()), delivers: nil)
     }
     
+    // MARK: - payByInstructions
+    
+    func test_payByInstructions_shouldSetDestination() {
+        
+        let payByInstructions = makePayByInstructions()
+        
+        assert(makeState(), event: .payByInstructions(payByInstructions)) {
+            
+            $0.navigation = .destination(.payByInstructions(payByInstructions))
+        }
+    }
+    
+    func test_payByInstructions_shouldDeliverSelectLatestEffect() {
+        
+        assert(makeState(), event: .payByInstructions(makePayByInstructions()), delivers: nil)
+    }
+    
     // MARK: - select
     
     func test_select_latest_shouldSetStateToLoading() {
