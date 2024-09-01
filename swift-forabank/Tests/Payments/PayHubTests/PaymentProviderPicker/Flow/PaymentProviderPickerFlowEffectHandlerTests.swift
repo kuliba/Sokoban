@@ -82,9 +82,9 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         let services = makeServices()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(services)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.services(services))) {
             
-            providerProcess.complete(with: .services(services))
+            providerProcess.complete(with: .servicesResult(.services(services)))
         }
     }
     
@@ -112,20 +112,21 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     func test_select_provider_shouldDeliverServicesFailureOnPrividerServicesFailure() {
         
+        let failure = makeServicesFailure()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(nil)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicesFailure(failure))) {
             
-            providerProcess.complete(with: .servicesFailure)
+            providerProcess.complete(with: .servicesResult(.servicesFailure(failure)))
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
     private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service>>
+    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service, ServicesFailure>>
     
     private func makeSUT(
         file: StaticString = #file,

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, Service> {
+public final class PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
     
     public init() {}
 }
@@ -46,8 +46,8 @@ public extension PaymentProviderPickerFlowReducer {
 
 public extension PaymentProviderPickerFlowReducer {
     
-    typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service>
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service>
+    typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service, ServicesFailure>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -70,13 +70,13 @@ private extension PaymentProviderPickerFlowReducer {
     func loadServices(
         _ state: inout State,
         _ effect: inout Effect?,
-        with services: Event.Services?
+        with services: ServicesResult<Service, ServicesFailure>
     ) {
         switch services {
-        case .none:
-            state.navigation = .destination(.servicesFailure)
+        case let .servicesFailure(servicesFailure):
+            state.navigation = .destination(.servicesFailure(servicesFailure))
             
-        case let .some(services):
+        case let .services(services):
             state.navigation = .destination(.services(services))
         }
     }

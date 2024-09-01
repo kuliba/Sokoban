@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service> {
+public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructi
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service>
+    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowEffectHandler {
@@ -35,7 +35,7 @@ public extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -65,11 +65,8 @@ private extension PaymentProviderPickerFlowEffectHandler {
                 case let .initiatePaymentResult(result):
                     dispatch(.initiatePaymentResult(result))
                     
-                case let .services(services):
-                    dispatch(.loadServices(services))
-                    
-                case .servicesFailure:
-                    dispatch(.loadServices(nil))
+                case let .servicesResult(servicesResult):
+                    dispatch(.loadServices(servicesResult))
                 }
             }
         }

@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service> {
+public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
     
     private let nanoServices: NanoServices
     
@@ -17,7 +17,7 @@ public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<L
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service>
+    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
@@ -31,7 +31,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         )
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service>
+    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>
 }
 
 // MARK: - initiatePayment
@@ -52,7 +52,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     func processProvider(
         provider: Provider,
-        completion: @escaping (ProcessProviderResult<Payment, Service>) -> Void
+        completion: @escaping (MicroServices.ProcessResult) -> Void
     ) {
         nanoServices.getServiceCategoryList(provider) { [weak self] in
             
@@ -60,7 +60,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
             
             switch $0 {
             case .failure:
-                completion(.servicesFailure)
+                nanoServices.makeServicesFailure { completion(.servicesResult(.servicesFailure($0))) }
                 
             case let .success(services):
                 processServices(services, completion)
@@ -70,17 +70,17 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     private func processServices(
         _ services: [Service],
-        _ completion: @escaping (ProcessProviderResult<Payment, Service>) -> Void
+        _ completion: @escaping (MicroServices.ProcessResult) -> Void
     ) {
         let service = services.first
         let services = MultiElementArray(services)
         
         switch (service, services) {
         case (nil, _):
-            completion(.servicesFailure)
+            nanoServices.makeServicesFailure { completion(.servicesResult(.servicesFailure($0))) }
             
         case let (_, .some(services)):
-            completion(.services(services))
+            completion(.servicesResult(.services(services)))
             
         case let (.some(service), _):
             initiatePayment(with: service, completion)
@@ -89,7 +89,7 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     private func initiatePayment(
         with service: Service,
-        _ completion: @escaping (ProcessProviderResult<Payment, Service>) -> Void
+        _ completion: @escaping (MicroServices.ProcessResult) -> Void
     ) {
         nanoServices.initiatePayment(.service(service)) {
             

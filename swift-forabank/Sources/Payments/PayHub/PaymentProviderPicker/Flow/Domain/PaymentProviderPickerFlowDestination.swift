@@ -7,14 +7,14 @@
 
 import ForaTools
 
-public enum PaymentProviderPickerFlowDestination<PayByInstructions, Payment, Service> {
+public enum PaymentProviderPickerFlowDestination<PayByInstructions, Payment, Service, ServicesFailure> {
     
     case payByInstructions(PayByInstructions)
     case payment(Payment)
     case services(Services)
-    case servicesFailure
+    case servicesFailure(ServicesFailure)
     
     public typealias Services = MultiElementArray<Service>
 }
 
-extension PaymentProviderPickerFlowDestination: Equatable where PayByInstructions: Equatable, Payment: Equatable, Service: Equatable {}
+extension PaymentProviderPickerFlowDestination: Equatable where PayByInstructions: Equatable, Payment: Equatable, Service: Equatable, ServicesFailure: Equatable {}

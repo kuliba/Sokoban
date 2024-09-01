@@ -7,20 +7,23 @@
 
 import ForaTools
 
-public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service> {
+public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure> {
     
     public let getServiceCategoryList: GetServiceCategoryList
     public let initiatePayment: InitiatePayment
     public let makePayByInstructions: MakePayByInstructions
+    public let makeServicesFailure: MakeServicesFailure
     
     public init(
         getServiceCategoryList: @escaping GetServiceCategoryList,
         initiatePayment: @escaping InitiatePayment,
-        makePayByInstructions: @escaping MakePayByInstructions
+        makePayByInstructions: @escaping MakePayByInstructions,
+        makeServicesFailure: @escaping MakeServicesFailure
     ) {
         self.getServiceCategoryList = getServiceCategoryList
         self.initiatePayment = initiatePayment
         self.makePayByInstructions = makePayByInstructions
+        self.makeServicesFailure = makeServicesFailure
     }
 }
 
@@ -33,4 +36,6 @@ public extension PaymentProviderPickerFlowEffectHandlerNanoServices {
     typealias InitiatePayment = (InitiatePaymentPayload<Latest, Service>, @escaping InitiatePaymentCompletion) -> Void
     
     typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
+    
+    typealias MakeServicesFailure = (@escaping (ServicesFailure) -> Void) -> Void
 }
