@@ -158,90 +158,12 @@ struct PaymentProviderPickerFlowDemoView: View {
                             PaymentProviderPickerFlowView(
                                 state: $0,
                                 event: $1,
-                                contentView: {
+                                contentView: { contentView(event: model.event) },
+                                destinationView: {
                                     
-                                    List {
-                                        
-                                        Section {
-                                            
-                                            Button("failure") {
-                                                
-                                                model.event(.initiatePaymentResult(.failure(.server("Error initiating payment failure"))))
-                                            }
-                                            .foregroundColor(.red)
-                                            
-                                            Button("success") {
-                                                
-                                                model.event(.initiatePaymentResult(.success(.init())))
-                                            }
-                                            .foregroundColor(.green)
-                                        } header: {
-                                            Text("Initiate Payment")
-                                        }
-                                        
-                                        Section {
-                                            
-                                            Button("failure") {
-                                                
-                                                model.event(.loadServices(nil))
-                                            }
-                                            .foregroundColor(.red)
-                                            
-                                            Button("multi") {
-                                                
-                                                model.event(.loadServices(.init(.init(), .init())))
-                                            }
-                                        } header: {
-                                            Text("Load Services")
-                                        }
-                                        
-                                        Section {
-                                            
-                                            Button("Pay by Instructions") {
-                                                
-                                                model.event(.payByInstructions(.init()))
-                                            }
-                                        } header: {
-                                            Text("Pay by Instructions")
-                                        }
-                                        
-                                        Section {
-                                            
-                                            Button("back") {
-                                                
-                                                model.event(.select(.back))
-                                            }
-                                            
-                                            Button("chat") {
-                                                
-                                                model.event(.select(.chat))
-                                            }
-                                            
-                                            Button("latest") {
-                                                
-                                                model.event(.select(.latest(.preview())))
-                                            }
-                                            
-                                            Button("payByInstructions") {
-                                                
-                                                model.event(.select(.payByInstructions))
-                                            }
-                                            
-                                            Button("provider") {
-                                                
-                                                model.event(.select(.provider(.init())))
-                                            }
-                                            
-                                            Button("qr") {
-                                                
-                                                model.event(.select(.qr))
-                                            }
-                                        } header: {
-                                            Text("Select")
-                                        }
-                                    }
-                                },
-                                destinationView: { Text("TBD: destination view for \($0)") }
+                                    Text("TBD: destination view for \($0)")
+                                        .padding()
+                                }
                             )
                         }
                     )
@@ -258,7 +180,7 @@ struct PaymentProviderPickerFlowDemoView: View {
             initiatePayment: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-
+                    
                     completion(initiatePayment ? .success(.init()) : .failure(.server("Error initiating payment")))
                 }
             },
@@ -286,6 +208,93 @@ struct PaymentProviderPickerFlowDemoView: View {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         ))
+    }
+    
+    private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayment, PreviewPayByInstructions, PreviewPaymentProvider, PreviewService>
+    
+    private func contentView(
+        event: @escaping (Event) -> Void
+    ) -> some View {
+        
+        List {
+            
+            Section {
+                
+                Button("failure") {
+                    
+                    event(.initiatePaymentResult(.failure(.server("Error initiating payment failure"))))
+                }
+                .foregroundColor(.red)
+                
+                Button("success") {
+                    
+                    event(.initiatePaymentResult(.success(.init())))
+                }
+            } header: {
+                Text("Initiate Payment")
+            }
+            
+            Section {
+                
+                Button("failure") {
+                    
+                    event(.loadServices(nil))
+                }
+                .foregroundColor(.red)
+                
+                Button("multi") {
+                    
+                    event(.loadServices(.init(.init(), .init())))
+                }
+            } header: {
+                Text("Load Services")
+            }
+            
+            Section {
+                
+                Button("Pay by Instructions") {
+                    
+                    event(.payByInstructions(.init()))
+                }
+            } header: {
+                Text("Pay by Instructions")
+            }
+            
+            Section {
+                
+                Button("back") {
+                    
+                    event(.select(.back))
+                }
+                
+                Button("chat") {
+                    
+                    event(.select(.chat))
+                }
+                
+                Button("latest") {
+                    
+                    event(.select(.latest(.preview())))
+                }
+                
+                Button("payByInstructions") {
+                    
+                    event(.select(.payByInstructions))
+                }
+                
+                Button("provider") {
+                    
+                    event(.select(.provider(.init())))
+                }
+                
+                Button("qr") {
+                    
+                    event(.select(.qr))
+                }
+            } header: {
+                Text("Select")
+            }
+        }
     }
 }
 
