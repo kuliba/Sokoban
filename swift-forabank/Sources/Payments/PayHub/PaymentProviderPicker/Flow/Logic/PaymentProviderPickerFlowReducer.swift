@@ -21,6 +21,9 @@ public extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .dismiss:
+            state.navigation = nil
+            
         case let .initiatePaymentResult(result):
             self.initiatePaymentResult(&state, &effect, with: result)
             

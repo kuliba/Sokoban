@@ -10,6 +10,47 @@ import XCTest
 
 final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTests {
     
+    // MARK: - dismiss
+    
+    func test_dismiss_shouldResetNavigationFromAlert() {
+                
+        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss) {
+            
+            $0.navigation = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnAlert() {
+        
+        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss, delivers: nil)
+    }
+    
+    func test_dismiss_shouldResetNavigationFromDestination() {
+                
+        assert(makeState(navigation: .destination(.payment(makePayment()))), event: .dismiss) {
+            
+            $0.navigation = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnDestination() {
+        
+        assert(makeState(navigation: .destination(.payment(makePayment()))), event: .dismiss, delivers: nil)
+    }
+    
+    func test_dismiss_shouldResetNavigationFromOutside() {
+                
+        assert(makeState(navigation: .outside(.back)), event: .dismiss) {
+            
+            $0.navigation = nil
+        }
+    }
+    
+    func test_dismiss_shouldNotDeliverEffectOnOutside() {
+        
+        assert(makeState(navigation: .outside(.back)), event: .dismiss, delivers: nil)
+    }
+    
     // MARK: - initiatePaymentResult
     
     func test_initiatePaymentResult_shouldSetAlertOnFailure() {
