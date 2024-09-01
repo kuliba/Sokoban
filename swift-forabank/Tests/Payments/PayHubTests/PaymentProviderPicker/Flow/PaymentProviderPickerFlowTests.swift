@@ -80,10 +80,11 @@ class PaymentProviderPickerFlowTests: XCTestCase {
     }
     
     func makeServices(
-        _ head: Service? = nil,
+        _ first: Service? = nil,
+        _ second: Service? = nil,
         tail: Service...
     ) -> MultiElementArray<Service> {
         
-        return .init(head ?? makeService(), tail)
+        return .init(first ?? makeService(), second ?? makeService(), tail)
     }
 }
