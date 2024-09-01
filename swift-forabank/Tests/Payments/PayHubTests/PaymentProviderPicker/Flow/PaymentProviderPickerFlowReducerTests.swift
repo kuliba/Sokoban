@@ -51,6 +51,21 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         assert(makeState(navigation: .outside(.back)), event: .dismiss, delivers: nil)
     }
     
+    // MARK: - goToPayments
+    
+    func test_goToPayments_shouldSetNavigationToOutsidePayments() {
+                
+        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments) {
+            
+            $0.navigation = .outside(.payments)
+        }
+    }
+    
+    func test_goToPayments_shouldNotDeliverEffect() {
+        
+        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments, delivers: nil)
+    }
+    
     // MARK: - initiatePaymentResult
     
     func test_initiatePaymentResult_shouldSetAlertOnFailure() {

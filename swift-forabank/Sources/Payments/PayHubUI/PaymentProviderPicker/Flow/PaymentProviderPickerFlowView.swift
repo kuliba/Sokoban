@@ -59,7 +59,7 @@ private extension PaymentProviderPickerFlowView {
         serviceFailure: ServiceFailure
     ) -> Alert {
         
-        return serviceFailure.alert { event(.dismiss) }
+        return serviceFailure.alert { event(.goToPayments) }
     }
 }
 
@@ -117,6 +117,22 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
     static var previews: some View {
         
         flowView(.init())
+            .previewDisplayName("")
+        flowView(.init(navigation: .alert(.connectivity("Error connecting to server"))))
+            .previewDisplayName("connectivity")
+        flowView(.init(navigation: .alert(.server("Error connecting to server"))))
+            .previewDisplayName("server")
+        flowView(.init(navigation: .destination(.payByInstructions(.init()))))
+            .previewDisplayName("payByInstructions")
+        flowView(.init(navigation: .destination(.payment(.init()))))
+            .previewDisplayName("payment")
+        flowView(.init(navigation: .destination(.services(.init(.init(), .init())))))
+            .previewDisplayName("services list")
+        flowView(.init(navigation: .destination(.servicesFailure)))
+            .previewDisplayName("servicesFailure")
+        
+        flowView(.init(navigation: .outside(.chat))) // can't render
+            .previewDisplayName("outside(.chat)")
     }
     
     typealias State = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewService>
@@ -186,16 +202,17 @@ struct PaymentProviderPickerFlowDemoView: View {
                 dismiss: { destination = nil },
                 content: {
                     
-                    let model = $0.model
-                    
                     RxWrapperView(
-                        model: model,
-                        makeContentView: {
+                        model: $0.model,
+                        makeContentView: { state, event in
                             
                             PaymentProviderPickerFlowView(
-                                state: $0,
-                                event: $1,
-                                contentView: { contentView(event: model.event) },
+                                state: state,
+                                event: event,
+                                contentView: {
+                                    
+                                    contentView(state: state, event: event)
+                                },
                                 destinationView: {
                                     
                                     Text("TBD: destination view for \($0)")
@@ -247,13 +264,28 @@ struct PaymentProviderPickerFlowDemoView: View {
         ))
     }
     
+    private typealias FlowState = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewService>
     private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayment, PreviewPayByInstructions, PreviewPaymentProvider, PreviewService>
     
     private func contentView(
+        state: FlowState,
         event: @escaping (Event) -> Void
     ) -> some View {
         
         List {
+            
+            switch state.navigation {
+            case let .outside(outside):
+                Section {
+                    Text(String(describing: outside))
+                        .font(.title3.bold())
+                        .foregroundColor(.pink)
+                } header: {
+                    Text("State - Outside")
+                }
+            default:
+                EmptyView()
+            }
             
             Section {
                 

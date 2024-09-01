@@ -10,6 +10,7 @@ import ForaTools
 public enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service> {
     
     case dismiss
+    case goToPayments
     case initiatePaymentResult(InitiatePaymentResult)
     case loadServices(Services?)
     case payByInstructions(PayByInstructions)
