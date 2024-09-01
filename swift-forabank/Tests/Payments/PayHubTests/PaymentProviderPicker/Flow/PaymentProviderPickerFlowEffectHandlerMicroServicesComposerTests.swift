@@ -146,27 +146,25 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         line: UInt = #line
     ) where Response: Equatable {
         
-        let exp = expectation(description: "wait for completion")
-        exp.expectedFulfillmentCount = expectedResponses.count
-        var receivedResponses = [Response]()
-        
-        sut {
-            
-            receivedResponses.append($0)
-            exp.fulfill()
-        }
-        
-        action()
-        
-        XCTAssertNoDiff(receivedResponses, expectedResponses, "Expected \(expectedResponses), but got \(receivedResponses) instead.", file: file, line: line)
-        
-        wait(for: [exp], timeout: 1)
+        expect({ _, completion in sut(completion) }, with: (), toDeliver: expectedResponses, on: action, file: file, line: line)
     }
     
     private func expect<Payload, Response>(
         _ sut: @escaping (Payload, @escaping (Response) -> Void) -> Void,
         with payload: Payload,
         toDeliver expectedResponses: Response...,
+        on action: @escaping () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) where Response: Equatable {
+        
+        expect(sut, with: payload, toDeliver: expectedResponses, on: action, file: file, line: line)
+    }
+    
+    private func expect<Payload, Response>(
+        _ sut: @escaping (Payload, @escaping (Response) -> Void) -> Void,
+        with payload: Payload,
+        toDeliver expectedResponses: [Response],
         on action: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
