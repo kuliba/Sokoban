@@ -19,9 +19,8 @@ where ContentView: View,
     
     var body: some View {
         
-#warning("fix alert!")
         contentView()
-        //.alert(item: <#T##Identifiable?#>, content: <#T##(Identifiable) -> Alert#>)
+            .alert(item: serviceFailure, content: alert)
             .navigationDestination(
                 destination: destination,
                 dismiss: { event(.dismiss) },
@@ -40,12 +39,50 @@ extension PaymentProviderPickerFlowView {
 
 private extension PaymentProviderPickerFlowView {
     
+    var serviceFailure: ServiceFailure? {
+        
+        guard case let .alert(serviceFailure) = state.navigation
+        else { return nil }
+        
+        return serviceFailure
+    }
+    
     var destination: Destination? {
         
         guard case let .destination(destination) = state.navigation
         else { return nil }
         
         return destination
+    }
+    
+    func alert(
+        serviceFailure: ServiceFailure
+    ) -> Alert {
+        
+        return serviceFailure.alert { event(.dismiss) }
+    }
+}
+
+extension ServiceFailure: Identifiable {
+    
+    public var id: String { message + String(describing: source) }
+}
+
+extension ServiceFailure {
+    
+    func alert(
+        action: @escaping () -> Void
+    ) -> SwiftUI.Alert {
+        
+        return .init(title: Text(title), message: Text(message), dismissButton: .default(Text("OK"), action: action))
+    }
+    
+    private var title: String {
+        
+        switch source {
+        case .connectivity: return ""
+        case .server:       return "Ошибка"
+        }
     }
 }
 
