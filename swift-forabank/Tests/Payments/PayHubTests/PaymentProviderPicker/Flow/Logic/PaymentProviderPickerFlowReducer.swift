@@ -22,16 +22,16 @@ extension PaymentProviderPickerFlowReducer {
         
         switch event {
         case let .initiatePaymentResult(result):
-            #warning("FIXME")
+#warning("FIXME")
             
         case let .payByInstructions(payByInstructions):
-            #warning("FIXME")
+#warning("FIXME")
             
         case let .select(select):
             self.select(&state, &effect, with: select)
             
         case let .loadServices(services):
-            #warning("FIXME")
+#warning("FIXME")
         }
         
         return (state, effect)
@@ -54,10 +54,10 @@ private extension PaymentProviderPickerFlowReducer {
     ) {
         switch select {
         case .back:
-            state.navigation = .back
+            state.navigation = .outside(.back)
             
         case .chat:
-            state.navigation = .chat
+            state.navigation = .outside(.chat)
             
         case let .latest(latest):
             state.isLoading = true
@@ -71,7 +71,7 @@ private extension PaymentProviderPickerFlowReducer {
             effect = .select(.provider(provider))
             
         case .qr:
-            state.navigation = .qr
+            state.navigation = .outside(.qr)
         }
     }
 }

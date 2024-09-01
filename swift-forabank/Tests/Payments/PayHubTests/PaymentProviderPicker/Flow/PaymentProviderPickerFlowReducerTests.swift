@@ -45,7 +45,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         
         assert(makeState(), event: .select(.chat)) {
             
-            $0.navigation = .chat
+            $0.navigation = .outside(.chat)
         }
     }
     
@@ -68,7 +68,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         
         assert(makeState(), event: .select(.qr)) {
             
-            $0.navigation = .qr
+            $0.navigation = .outside(.qr)
         }
     }
     
@@ -81,7 +81,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         
         assert(makeState(), event: .select(.back)) {
             
-            $0.navigation = .back
+            $0.navigation = .outside(.back)
         }
     }
     
