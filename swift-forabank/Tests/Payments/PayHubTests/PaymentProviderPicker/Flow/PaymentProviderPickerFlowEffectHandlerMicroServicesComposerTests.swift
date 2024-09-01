@@ -60,6 +60,8 @@ extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider, Service>
 }
 
+// MARK: - initiatePayment
+
 private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     func initiatePayment(
@@ -68,6 +70,11 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     ) {
         nanoServices.initiatePayment(.latest(latest), completion)
     }
+}
+
+// MARK: - processProvider
+
+private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
     func processProvider(
         provider: Provider,
@@ -82,28 +89,42 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
                 completion(.servicesFailure)
                 
             case let .success(services):
-                let service = services.first
-                let services = MultiElementArray(services)
+                processServices(services, completion)
+            }
+        }
+    }
+    
+    private func processServices(
+        _ services: [Service],
+        _ completion: @escaping (ProcessProviderResult<Payment, Service>) -> Void
+    ) {
+        let service = services.first
+        let services = MultiElementArray(services)
+        
+        switch (service, services) {
+        case (nil, _):
+            completion(.servicesFailure)
+            
+        case let (_, .some(services)):
+            completion(.services(services))
+            
+        case let (.some(service), _):
+            initiatePayment(with: service, completion)
+        }
+    }
+    
+    private func initiatePayment(
+        with service: Service,
+        _ completion: @escaping (ProcessProviderResult<Payment, Service>) -> Void
+    ) {
+        nanoServices.initiatePayment(.service(service)) {
+            
+            switch $0 {
+            case let .failure(serviceFailure):
+                completion(.initiatePaymentResult(.failure(serviceFailure)))
                 
-                switch (service, services) {
-                case (nil, _):
-                    completion(.servicesFailure)
-                    
-                case let (_, .some(services)):
-                    completion(.services(services))
-                    
-                case let (.some(service), _):
-                    nanoServices.initiatePayment(.service(service)) {
-                        
-                        switch $0 {
-                        case let .failure(serviceFailure):
-                            completion(.initiatePaymentResult(.failure(serviceFailure)))
-                            
-                        case let .success(payment):
-                            completion(.initiatePaymentResult(.success(payment)))
-                        }
-                    }
-                }
+            case let .success(payment):
+                completion(.initiatePaymentResult(.success(payment)))
             }
         }
     }
