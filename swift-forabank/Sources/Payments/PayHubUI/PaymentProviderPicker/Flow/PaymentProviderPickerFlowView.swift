@@ -33,7 +33,7 @@ extension PaymentProviderPickerFlowView {
     
     typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service>
 #warning("could be improved and use less generics if scope just flow events, for example Latest is not used; and Provider too(?)")
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service>
     typealias Destination = PaymentProviderPickerFlowDestination<PayByInstructions, Payment, Service>
 }
 
@@ -229,8 +229,8 @@ struct PaymentProviderPickerFlowDemoView: View {
     
     private func makeDestination() {
         
-        let reducer = PaymentProviderPickerFlowReducer<PreviewLatest, PreviewPayment, PreviewPayByInstructions, PreviewPaymentProvider, PreviewService>()
-        let effectHandler = PaymentProviderPickerFlowEffectHandler<PreviewLatest, PreviewPayment, PreviewPayByInstructions, PreviewPaymentProvider, PreviewService>(microServices: .init(
+        let reducer = PaymentProviderPickerFlowReducer<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService>()
+        let effectHandler = PaymentProviderPickerFlowEffectHandler<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService>(microServices: .init(
             initiatePayment: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
@@ -265,7 +265,7 @@ struct PaymentProviderPickerFlowDemoView: View {
     }
     
     private typealias FlowState = PaymentProviderPickerFlowState<PreviewPayByInstructions, PreviewPayment, PreviewService>
-    private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayment, PreviewPayByInstructions, PreviewPaymentProvider, PreviewService>
+    private typealias Event = PaymentProviderPickerFlowEvent<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService>
     
     private func contentView(
         state: FlowState,

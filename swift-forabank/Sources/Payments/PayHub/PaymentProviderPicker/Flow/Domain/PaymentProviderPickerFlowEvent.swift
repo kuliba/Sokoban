@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public enum PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service> {
+public enum PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service> {
     
     case dismiss
     case goToPayments

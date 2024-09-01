@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service> {
     
     private let nanoServices: NanoServices
     
@@ -17,7 +17,7 @@ public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<L
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, Payment, PayByInstructions, Provider, Service>
+    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service>
 }
 
 public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
@@ -31,7 +31,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         )
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider, Service>
+    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service>
 }
 
 // MARK: - initiatePayment

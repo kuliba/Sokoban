@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service> {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayBy
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider, Service>
+    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, Service>
 }
 
 public extension PaymentProviderPickerFlowEffectHandler {
@@ -35,7 +35,7 @@ public extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 

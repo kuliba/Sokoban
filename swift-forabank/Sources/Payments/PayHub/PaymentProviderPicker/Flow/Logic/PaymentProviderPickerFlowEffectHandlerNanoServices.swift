@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, Payment, PayByInstructions, Provider, Service> {
+public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service> {
     
     public let getServiceCategoryList: GetServiceCategoryList
     public let initiatePayment: InitiatePayment

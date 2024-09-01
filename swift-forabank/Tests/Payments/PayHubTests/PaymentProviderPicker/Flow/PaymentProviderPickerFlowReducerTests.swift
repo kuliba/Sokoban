@@ -228,7 +228,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider, Service>
+    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, Service>
     
     private func makeSUT(
         file: StaticString = #file,

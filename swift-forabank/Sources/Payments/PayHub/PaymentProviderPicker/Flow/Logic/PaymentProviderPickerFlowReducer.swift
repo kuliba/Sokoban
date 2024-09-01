@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, Service> {
     
     public init() {}
 }
@@ -47,7 +47,7 @@ public extension PaymentProviderPickerFlowReducer {
 public extension PaymentProviderPickerFlowReducer {
     
     typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service>
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, Service>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 

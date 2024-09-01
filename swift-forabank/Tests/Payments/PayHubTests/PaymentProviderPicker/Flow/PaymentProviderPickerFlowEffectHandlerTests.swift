@@ -122,7 +122,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, Service>
     private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
     private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service>>
