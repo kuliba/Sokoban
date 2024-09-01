@@ -9,6 +9,38 @@ import XCTest
 
 final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTests {
     
+    // MARK: - initiatePaymentResult
+    
+    func test_initiatePaymentResult_shouldSetAlertOnFailure() {
+        
+        let failure = makeServiceFailure()
+        
+        assert(makeState(), event: .initiatePaymentResult(.failure(failure))) {
+            
+            $0.navigation = .alert(failure)
+        }
+    }
+    
+    func test_initiatePaymentResult_shouldNotDeliverEffectOnFailure() {
+        
+        assert(makeState(), event: .initiatePaymentResult(.failure(makeServiceFailure())), delivers: nil)
+    }
+    
+    func test_initiatePaymentResult_shouldSetPaymentDestinationOnSuccess() {
+        
+        let payment = makePayment()
+        
+        assert(makeState(), event: .initiatePaymentResult(.success(payment))) {
+            
+            $0.navigation = .destination(.payment(payment))
+        }
+    }
+    
+    func test_initiatePaymentResult_shouldNotDeliverEffectOnSuccess() {
+        
+        assert(makeState(), event: .initiatePaymentResult(.success(makePayment())), delivers: nil)
+    }
+    
     // MARK: - select
     
     func test_select_latest_shouldSetStateToLoading() {
