@@ -6,6 +6,7 @@
 //
 
 import ForaTools
+import PayHub
 import XCTest
 
 class PaymentProviderPickerFlowTests: XCTestCase {

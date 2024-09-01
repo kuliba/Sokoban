@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-final class PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider, Service> {
     
-    init() {}
+    public init() {}
 }
 
-extension PaymentProviderPickerFlowReducer {
+public extension PaymentProviderPickerFlowReducer {
     
     func reduce(
         _ state: State,
@@ -38,7 +38,7 @@ extension PaymentProviderPickerFlowReducer {
     }
 }
 
-extension PaymentProviderPickerFlowReducer {
+public extension PaymentProviderPickerFlowReducer {
     
     typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service>
     typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>

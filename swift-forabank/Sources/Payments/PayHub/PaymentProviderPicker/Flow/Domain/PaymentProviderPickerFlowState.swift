@@ -7,13 +7,21 @@
 
 import ForaTools
 
-struct PaymentProviderPickerFlowState<PayByInstructions, Payment, Service> {
+public struct PaymentProviderPickerFlowState<PayByInstructions, Payment, Service> {
     
-    var isLoading: Bool
-    var navigation: Navigation?
+    public var isLoading: Bool
+    public var navigation: Navigation?
+    
+    public init(
+        isLoading: Bool = false,
+        navigation: Navigation? = nil
+    ) {
+        self.isLoading = isLoading
+        self.navigation = navigation
+    }
 }
 
-extension PaymentProviderPickerFlowState {
+public extension PaymentProviderPickerFlowState {
     
     enum Navigation {
         
@@ -23,7 +31,7 @@ extension PaymentProviderPickerFlowState {
     }
 }
 
-extension PaymentProviderPickerFlowState.Navigation {
+public extension PaymentProviderPickerFlowState.Navigation {
     
     enum Destination {
         
@@ -39,7 +47,7 @@ extension PaymentProviderPickerFlowState.Navigation {
     }
 }
 
-extension PaymentProviderPickerFlowState.Navigation.Destination {
+public extension PaymentProviderPickerFlowState.Navigation.Destination {
  
     typealias Services = MultiElementArray<Service>
 }

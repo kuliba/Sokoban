@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-enum PaymentProviderPickerFlowEffect<Latest, Provider> {
+public enum PaymentProviderPickerFlowEffect<Latest, Provider> {
     
     case select(Select)
 }
 
-extension PaymentProviderPickerFlowEffect {
+public extension PaymentProviderPickerFlowEffect {
     
     enum Select {
         

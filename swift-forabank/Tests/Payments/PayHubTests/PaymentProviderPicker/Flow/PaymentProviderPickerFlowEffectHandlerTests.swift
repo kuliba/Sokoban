@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
+import PayHub
 import XCTest
 
 final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFlowTests {

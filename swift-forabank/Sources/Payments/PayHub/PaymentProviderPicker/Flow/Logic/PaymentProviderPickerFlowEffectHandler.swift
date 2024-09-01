@@ -5,20 +5,20 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service> {
     
     private let microServices: MicroServices
     
-    init(
+    public init(
         microServices: MicroServices
     ) {
         self.microServices = microServices
     }
     
-    typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider, Service>
+    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, Payment, PayByInstructions, Provider, Service>
 }
 
-extension PaymentProviderPickerFlowEffectHandler {
+public extension PaymentProviderPickerFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -31,7 +31,7 @@ extension PaymentProviderPickerFlowEffectHandler {
     }
 }
 
-extension PaymentProviderPickerFlowEffectHandler {
+public extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
