@@ -485,6 +485,13 @@
         "identifier" : "PayHubUITests",
         "name" : "PayHubUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV6ServiceTests",
+        "name" : "GetProductListByTypeV6ServiceTests"
+      }
     }
   ],
   "version" : 1

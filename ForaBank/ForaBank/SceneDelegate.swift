@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         historyFilterFlag: featureFlags.historyFilterFlag,
         changeSVCardLimitsFlag: .init(.active),
-        getProductListByTypeV6Flag: featureFlags.getProductListByTypeV6Flag,
+        getProductListByTypeV6Flag: .init(.active),
         paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
         updateInfoStatusFlag: .init(.active)
     )
