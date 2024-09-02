@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure> {
+public final class PaymentProviderPickerFlowEffectHandler<Destination, Latest, Provider> {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructi
         self.microServices = microServices
     }
     
-    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
+    public typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, Latest, Provider>
 }
 
 public extension PaymentProviderPickerFlowEffectHandler {
@@ -35,7 +35,7 @@ public extension PaymentProviderPickerFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
+    typealias Event = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -49,25 +49,19 @@ private extension PaymentProviderPickerFlowEffectHandler {
         case let .latest(latest):
             microServices.initiatePayment(latest) {
                 
-                dispatch(.initiatePaymentResult($0))
+                dispatch(.destination($0))
             }
             
         case .payByInstructions:
             microServices.makePayByInstructions {
                 
-                dispatch(.payByInstructions($0))
+                dispatch(.destination($0))
             }
             
         case let .provider(provider):
             microServices.processProvider(provider) {
                 
-                switch $0 {
-                case let .initiatePaymentResult(result):
-                    dispatch(.initiatePaymentResult(result))
-                    
-                case let .servicesResult(servicesResult):
-                    dispatch(.loadServices(servicesResult))
-                }
+                dispatch(.destination($0))
             }
         }
     }

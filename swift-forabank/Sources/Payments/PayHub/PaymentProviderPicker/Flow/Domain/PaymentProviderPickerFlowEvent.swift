@@ -5,20 +5,17 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public enum PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure> {
+public enum PaymentProviderPickerFlowEvent<Destination, Latest, Provider> {
     
+    case alert(BackendFailure)
     case dismiss
     case goToPayments
-    case initiatePaymentResult(InitiatePaymentResult)
-    case loadServices(ServicesResult<ServicePicker, ServicesFailure>)
-    case payByInstructions(PayByInstructions)
+    case destination(Destination)
     case select(Select)
 }
 
 public extension PaymentProviderPickerFlowEvent {
     
-    typealias InitiatePaymentResult = Result<Payment, ServiceFailure>
-
     enum Select {
         
         case back
@@ -30,5 +27,5 @@ public extension PaymentProviderPickerFlowEvent {
     }
 }
 
-extension PaymentProviderPickerFlowEvent: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
-extension PaymentProviderPickerFlowEvent.Select: Equatable where Latest: Equatable, Payment: Equatable, PayByInstructions: Equatable, Provider: Equatable, ServicePicker: Equatable {}
+extension PaymentProviderPickerFlowEvent: Equatable where Destination: Equatable, Latest: Equatable, Provider: Equatable {}
+extension PaymentProviderPickerFlowEvent.Select: Equatable where Destination: Equatable, Latest: Equatable, Provider: Equatable {}

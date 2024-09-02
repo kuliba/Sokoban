@@ -55,7 +55,7 @@ private extension PaymentsTransfersContentComposer {
         let plainPickerComposer = PlainPickerBinderComposer<ServiceCategory, UUIDIdentified<Void>>(
             microServices: .init(
                 makeNavigation: { _, completion in
-                
+                    
                     completion(.init(()))
                 }
             ),
@@ -72,7 +72,16 @@ private extension PaymentsTransfersContentComposer {
             },
             microServices: .init(
                 showAll: { $1(plainPickerComposer.compose(elements: $0)) },
-                showCategory: { $1(CategoryModelStub(category: $0)) }
+                showCategory: { category, completion in
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        
+                        if category.name.contains("Fail") {
+                            completion(CategoryPickerDestination.failure("Failure"))
+                        } else {
+                            completion(.ok(CategoryModelStub(category: category))) }
+                    }
+                }
             ),
             placeholderCount: 6,
             scheduler: scheduler

@@ -10,11 +10,28 @@ import XCTest
 
 final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTests {
     
+    // MARK: - alert
+    
+    func test_alert_shouldNavigationToAlert() {
+        
+        let failure = makeBackendFailure()
+        
+        assert(makeState(), event: .alert(failure)) {
+            
+            $0.navigation = .alert(failure)
+        }
+    }
+    
+    func test_alert_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .alert(makeBackendFailure()), delivers: nil)
+    }
+    
     // MARK: - dismiss
     
     func test_dismiss_shouldResetNavigationFromAlert() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .dismiss) {
             
             $0.navigation = nil
         }
@@ -22,12 +39,12 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_dismiss_shouldNotDeliverEffectOnAlert() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss, delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .dismiss, delivers: nil)
     }
     
     func test_dismiss_shouldResetNavigationFromDestination() {
         
-        assert(makeState(navigation: .destination(.payment(makePayment()))), event: .dismiss) {
+        assert(makeState(navigation: .destination(makeDestination())), event: .dismiss) {
             
             $0.navigation = nil
         }
@@ -35,7 +52,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_dismiss_shouldNotDeliverEffectOnDestination() {
         
-        assert(makeState(navigation: .destination(.payment(makePayment()))), event: .dismiss, delivers: nil)
+        assert(makeState(navigation: .destination(makeDestination())), event: .dismiss, delivers: nil)
     }
     
     func test_dismiss_shouldResetNavigationFromOutside() {
@@ -55,7 +72,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldSetNavigationToOutsidePayments() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments) {
             
             $0.navigation = .outside(.payments)
         }
@@ -63,88 +80,24 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldNotDeliverEffect() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments, delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments, delivers: nil)
     }
     
-    // MARK: - initiatePaymentResult
+    // MARK: - destination
     
-    func test_initiatePaymentResult_shouldSetAlertOnFailure() {
+    func test_destination_shouldSetDestination() {
         
-        let failure = makeServiceFailure()
+        let destination = makeDestination()
         
-        assert(makeState(), event: .initiatePaymentResult(.failure(failure))) {
+        assert(makeState(), event: .destination(destination)) {
             
-            $0.navigation = .alert(failure)
+            $0.navigation = .destination(destination)
         }
     }
     
-    func test_initiatePaymentResult_shouldNotDeliverEffectOnFailure() {
+    func test_destination_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .initiatePaymentResult(.failure(makeServiceFailure())), delivers: nil)
-    }
-    
-    func test_initiatePaymentResult_shouldSetPaymentDestinationOnSuccess() {
-        
-        let payment = makePayment()
-        
-        assert(makeState(), event: .initiatePaymentResult(.success(payment))) {
-            
-            $0.navigation = .destination(.payment(payment))
-        }
-    }
-    
-    func test_initiatePaymentResult_shouldNotDeliverEffectOnSuccess() {
-        
-        assert(makeState(), event: .initiatePaymentResult(.success(makePayment())), delivers: nil)
-    }
-    
-    // MARK: - loadServices
-    
-    func test_loadServices_shouldSetDestinationOnServicePicker() {
-        
-        let picker = makeServicePicker()
-        
-        assert(makeState(), event: .loadServices(.servicePicker(picker))) {
-            
-            $0.navigation = .destination(.servicePicker(picker))
-        }
-    }
-    
-    func test_loadServices_shouldNotDeliverEffectOnServicePicker() {
-        
-        assert(makeState(), event: .loadServices(.servicePicker(makeServicePicker())), delivers: nil)
-    }
-    
-    func test_loadServices_shouldSetServicesFailureDestinationOnServicesFailure() {
-        
-        let failure = makeServicesFailure()
-        
-        assert(makeState(), event: .loadServices(.servicesFailure(failure))) {
-            
-            $0.navigation = .destination(.servicesFailure(failure))
-        }
-    }
-    
-    func test_loadServices_shouldNotDeliverEffectOnServicesFailure() {
-        
-        assert(makeState(), event: .loadServices(.servicesFailure(makeServicesFailure())), delivers: nil)
-    }
-    
-    // MARK: - payByInstructions
-    
-    func test_payByInstructions_shouldSetDestination() {
-        
-        let payByInstructions = makePayByInstructions()
-        
-        assert(makeState(), event: .payByInstructions(payByInstructions)) {
-            
-            $0.navigation = .destination(.payByInstructions(payByInstructions))
-        }
-    }
-    
-    func test_payByInstructions_shouldDeliverSelectLatestEffect() {
-        
-        assert(makeState(), event: .payByInstructions(makePayByInstructions()), delivers: nil)
+        assert(makeState(), event: .destination(makeDestination()), delivers: nil)
     }
     
     // MARK: - select
@@ -230,7 +183,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
+    private typealias SUT = PaymentProviderPickerFlowReducer<Destination, Latest, Provider>
     
     private func makeSUT(
         file: StaticString = #file,

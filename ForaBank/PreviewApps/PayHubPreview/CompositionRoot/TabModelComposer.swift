@@ -118,6 +118,7 @@ extension Array where Element == ServiceCategory {
         .make("Category B"),
         .make("Category C"),
         .make("Category D"),
+        .make("Category Fail"),
     ]
 }
 

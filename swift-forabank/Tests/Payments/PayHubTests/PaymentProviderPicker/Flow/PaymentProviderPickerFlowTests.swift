@@ -11,6 +11,18 @@ import XCTest
 
 class PaymentProviderPickerFlowTests: XCTestCase {
     
+    struct Destination: Equatable {
+        
+        let value: String
+    }
+    
+    func makeDestination(
+        _ value: String = anyMessage()
+    ) -> Destination {
+        
+        return .init(value: value)
+    }
+    
     struct Latest: Equatable {
         
         let value: String
@@ -59,10 +71,10 @@ class PaymentProviderPickerFlowTests: XCTestCase {
         return .init(value: value)
     }
     
-    func makeServiceFailure(
+    func makeBackendFailure(
         message: String = anyMessage(),
-        source: ServiceFailure.Source = .connectivity
-    ) -> ServiceFailure {
+        source: BackendFailure.Source = .connectivity
+    ) -> BackendFailure {
         
         return .init(message: message, source: source)
     }

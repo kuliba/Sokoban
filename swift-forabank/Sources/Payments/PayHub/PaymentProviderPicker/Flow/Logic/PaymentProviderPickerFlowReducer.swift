@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure> {
+public final class PaymentProviderPickerFlowReducer<Destination, Latest, Provider> {
     
     public init() {}
 }
@@ -21,20 +21,17 @@ public extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
+        case let .alert(serviceFailure):
+            state.navigation = .alert(serviceFailure)
+            
         case .dismiss:
             state.navigation = nil
             
         case .goToPayments:
             state.navigation = .outside(.payments)
             
-        case let .initiatePaymentResult(result):
-            self.initiatePaymentResult(&state, &effect, with: result)
-            
-        case let .loadServices(services):
-            self.loadServices(&state, &effect, with: services)
-            
-        case let .payByInstructions(payByInstructions):
-            state.navigation = .destination(.payByInstructions(payByInstructions))
+        case let .destination(destination):
+            state.navigation = .destination(destination)
             
         case let .select(select):
             self.select(&state, &effect, with: select)
@@ -46,40 +43,12 @@ public extension PaymentProviderPickerFlowReducer {
 
 public extension PaymentProviderPickerFlowReducer {
     
-    typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, ServicePicker, ServicesFailure>
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
+    typealias State = PaymentProviderPickerFlowState<Destination>
+    typealias Event = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
 private extension PaymentProviderPickerFlowReducer {
-    
-    func initiatePaymentResult(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with result: Event.InitiatePaymentResult
-    ) {
-        switch result {
-        case let .failure(serviceFailure):
-            state.navigation = .alert(serviceFailure)
-            
-        case let .success(payment):
-            state.navigation = .destination(.payment(payment))
-        }
-    }
-    
-    func loadServices(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with services: ServicesResult<ServicePicker, ServicesFailure>
-    ) {
-        switch services {
-        case let .servicePicker(services):
-            state.navigation = .destination(.servicePicker(services))
-            
-        case let .servicesFailure(servicesFailure):
-            state.navigation = .destination(.servicesFailure(servicesFailure))
-        }
-    }
     
     func select(
         _ state: inout State,
