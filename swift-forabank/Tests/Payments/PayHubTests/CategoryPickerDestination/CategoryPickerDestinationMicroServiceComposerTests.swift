@@ -16,21 +16,28 @@ extension CategoryPickerDestinationMicroService {
     typealias MakeDestination = (Category, @escaping MakeDestinationCompletion) -> Void
 }
 
-struct CategoryPickerDestinationNanoServices<Operator, Failure> {
+struct CategoryPickerDestinationNanoServices<Latest, Operator, Success, Failure> {
     
+    let loadLatest: LoadLatest
     let loadOperators: LoadOperators
     let makeFailure: MakeFailure
+    let makeSuccess: MakeSuccess
 }
 
 extension CategoryPickerDestinationNanoServices {
+    
+    typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadLatest = (@escaping LoadLatestCompletion) -> Void
     
     typealias LoadOperatorsCompletion = (Result<[Operator], Error>) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
     
     typealias MakeFailure = (@escaping (Failure) -> Void) -> Void
+    
+    typealias MakeSuccess = ([Operator], @escaping (Success) -> Void) -> Void
 }
 
-final class CategoryPickerDestinationMicroServiceComposer<Category, Operator, Success, Failure: Error> {
+final class CategoryPickerDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure: Error> {
     
     private let nanoServices: NanoServices
     
@@ -40,7 +47,7 @@ final class CategoryPickerDestinationMicroServiceComposer<Category, Operator, Su
         self.nanoServices = nanoServices
     }
     
-    typealias NanoServices = CategoryPickerDestinationNanoServices<Operator, Failure>
+    typealias NanoServices = CategoryPickerDestinationNanoServices<Latest, Operator, Success, Failure>
 }
 
 extension CategoryPickerDestinationMicroServiceComposer {
@@ -68,7 +75,23 @@ private extension CategoryPickerDestinationMicroServiceComposer {
         _ result: Result<[Operator], Error>,
         _ completion: @escaping MicroService.MakeDestinationCompletion
     ) {
-        nanoServices.makeFailure { completion(.failure($0)) }
+        switch result {
+        case .failure:
+            nanoServices.makeFailure { completion(.failure($0)) }
+
+        case let .success(operators):
+            if operators.isEmpty {
+                nanoServices.makeFailure { completion(.failure($0)) }
+            } else {
+                nanoServices.loadLatest { [weak self] _ in
+                
+                    self?.nanoServices.makeSuccess(operators) {
+                        
+                        completion(.success($0))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -76,10 +99,10 @@ import XCTest
 
 final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
     
-    func test_makeDestination_shouldFailOnLoadOperatorsFailure() {
+    func test_makeDestination_shouldDeliverFailureOnLoadOperatorsFailure() {
         
         let failure = makeFailure()
-        let (sut, loadOperatorsSpy, _, makeFailureSpy) = makeSUT()
+        let (sut, _, loadOperatorsSpy,makeFailureSpy, _) = makeSUT()
         
         expect(sut, toDeliver: .failure(failure)) {
             
@@ -88,10 +111,10 @@ final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
         }
     }
     
-    func test_makeDestination_shouldFailOnEmptyLoadedOperators() {
+    func test_makeDestination_shouldDeliverFailureOnEmptyLoadedOperators() {
         
         let failure = makeFailure()
-        let (sut, loadOperatorsSpy, _, makeFailureSpy) = makeSUT()
+        let (sut, _, loadOperatorsSpy, makeFailureSpy, _) = makeSUT()
         
         expect(sut, toDeliver: .failure(failure)) {
             
@@ -104,7 +127,7 @@ final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
         
         var sut: SUT?
         let loadOperatorsSpy: LoadOperatorsSpy
-        (sut, loadOperatorsSpy, _, _) = makeSUT()
+        (sut, _, loadOperatorsSpy, _,_) = makeSUT()
         var receivedResult: Result<Success, Failure>?
         
         sut?.makeDestination(makeCategory()) { receivedResult = $0 }
@@ -116,7 +139,7 @@ final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
     
     func test_makeDestination_shouldNotCallLoadLatestOnLoadOperatorsFailure() {
         
-        let (sut, loadOperatorsSpy, loadLatestSpy, _) = makeSUT()
+        let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
         
         sut.makeDestination(makeCategory()) { _ in }
         loadOperatorsSpy.complete(with: .failure(anyError()))
@@ -124,13 +147,84 @@ final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
         XCTAssertEqual(loadLatestSpy.callCount, 0)
     }
     
+    func test_makeDestination_shouldCallLoadLatestOnOneLoadedOperator() {
+        
+        let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
+        
+        sut.makeDestination(makeCategory()) { _ in }
+        loadOperatorsSpy.complete(with: .success([makeOperator()]))
+        
+        XCTAssertEqual(loadLatestSpy.callCount, 1)
+    }
+    
+    func test_makeDestination_shouldCallLoadLatestOnTwoLoadedOperators() {
+        
+        let (sut, loadLatestSpy, loadOperatorsSpy, _,_) = makeSUT()
+        
+        sut.makeDestination(makeCategory()) { _ in }
+        loadOperatorsSpy.complete(with: .success([makeOperator(), makeOperator()]))
+        
+        XCTAssertEqual(loadLatestSpy.callCount, 1)
+    }
+    
+    func test_makeDestination_shouldCallMakeSuccessWithOneLoadedOperator_latestFailure() {
+        
+        let `operator` = makeOperator()
+        let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
+        
+        sut.makeDestination(makeCategory()) { _ in }
+        loadOperatorsSpy.complete(with: .success([`operator`]))
+        loadLatestSpy.complete(with: .failure(anyError()))
+        
+        XCTAssertEqual(makeSuccessSpy.payloads, [[`operator`]])
+    }
+    
+    func test_makeDestination_shouldCallMakeSuccessWithTwoLoadedOperators_latestFailure() {
+        
+        let (operator1, operator2) = (makeOperator(), makeOperator())
+        let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
+        
+        sut.makeDestination(makeCategory()) { _ in }
+        loadOperatorsSpy.complete(with: .success([operator1, operator2]))
+        loadLatestSpy.complete(with: .failure(anyError()))
+        
+        XCTAssertEqual(makeSuccessSpy.payloads, [[operator1, operator2]])
+    }
+    
+    func test_makeDestination_shouldDeliverSuccessOnOneLoadedOperator_latestFailure() {
+        
+        let success = makeSuccess()
+        let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(success)) {
+            
+            loadOperatorsSpy.complete(with: .success([makeOperator()]))
+            loadLatestSpy.complete(with: .failure(anyError()))
+            makeSuccessSpy.complete(with: success)
+        }
+    }
+    
+    func test_makeDestination_shouldCDeliverSuccessOnTwoLoadedOperators_latestFailure() {
+        
+        let success = makeSuccess()
+        let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(success)) {
+            
+            loadOperatorsSpy.complete(with: .success([makeOperator(), makeOperator()]))
+            loadLatestSpy.complete(with: .failure(anyError()))
+            makeSuccessSpy.complete(with: success)
+        }
+    }
+    
     // MARK: - Helpers
     
-    private typealias Composer = CategoryPickerDestinationMicroServiceComposer<Category, Operator, Success, Failure>
+    private typealias Composer = CategoryPickerDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure>
     private typealias SUT = Composer.MicroService
     private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
     private typealias MakeFailureSpy = Spy<Void, Failure>
+    private typealias MakeSuccessSpy = Spy<[Operator], Success>
     
     private func makeSUT(
         with category: Category? = nil,
@@ -138,24 +232,30 @@ final class CategoryPickerDestinationMicroServiceComposerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadOperatorsSpy: LoadOperatorsSpy,
         loadLatestSpy: LoadLatestSpy,
-        makeFailureSpy: MakeFailureSpy
+        loadOperatorsSpy: LoadOperatorsSpy,
+        makeFailureSpy: MakeFailureSpy,
+        makeSuccessSpy: MakeSuccessSpy
     ) {
         let loadOperatorsSpy = LoadOperatorsSpy()
         let loadLatestSpy = LoadLatestSpy()
         let makeFailureSpy = MakeFailureSpy()
+        let makeSuccessSpy = MakeSuccessSpy()
         let composer = Composer(nanoServices: .init(
+            loadLatest: loadLatestSpy.process(completion:),
             loadOperators: loadOperatorsSpy.process(completion:),
-            makeFailure: makeFailureSpy.process(completion:)
+            makeFailure: makeFailureSpy.process(completion:),
+            makeSuccess: makeSuccessSpy.process(_:completion:)
         ))
         let sut = composer.compose(with: category ?? makeCategory())
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
+        trackForMemoryLeaks(loadLatestSpy, file: file, line: line)
         trackForMemoryLeaks(makeFailureSpy, file: file, line: line)
+        trackForMemoryLeaks(makeSuccessSpy, file: file, line: line)
         
-        return (sut, loadOperatorsSpy, loadLatestSpy, makeFailureSpy)
+        return (sut, loadLatestSpy, loadOperatorsSpy, makeFailureSpy, makeSuccessSpy)
     }
     
     private struct Category: Equatable {
