@@ -7,4 +7,4 @@
 
 import PayHubUI
 
-typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, CategoryModelStub, CategoryListModelStub>
+typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, CategoryModelStub, PlainCategoryPickerBinder>
