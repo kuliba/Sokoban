@@ -45,25 +45,25 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         }
     }
     
-    // MARK: - makePayByInstructions
+    // MARK: - makeDetailPayment
     
-    func test_makePayByInstructions_shouldCallMakePayByInstructionsWithPayload() {
+    func test_makeDetailPayment_shouldCallMakeDetailPaymentWithPayload() {
         
-        let (sut, _, makePayByInstructions, _,_,_) = makeSUT()
+        let (sut, _, makeDetailPayment, _,_,_) = makeSUT()
         
-        sut.makePayByInstructions { _ in }
+        sut.makeDetailPayment { _ in }
         
-        XCTAssertEqual(makePayByInstructions.callCount, 1)
+        XCTAssertEqual(makeDetailPayment.callCount, 1)
     }
     
-    func test_makePayByInstructions_shouldDeliverPayByInstructions() {
+    func test_makeDetailPayment_shouldDeliverDetailPayment() {
         
-        let payByInstructions = makePayByInstructions()
-        let (sut, _, payByInstructionsSpy, _,_,_) = makeSUT()
+        let detailPayment = makeDetailPayment()
+        let (sut, _, detailPaymentSpy, _,_,_) = makeSUT()
         
-        expect(sut.makePayByInstructions, toDeliver: .payByInstructions(payByInstructions)) {
+        expect(sut.makeDetailPayment, toDeliver: .detailPayment(detailPayment)) {
             
-            payByInstructionsSpy.complete(with: payByInstructions)
+            detailPaymentSpy.complete(with: detailPayment)
         }
     }
     
@@ -180,12 +180,12 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     // MARK: - Helpers
     
-    private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure>
+    private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
     private typealias SUT = Composer.MicroServices
     private typealias NanoServices = Composer.NanoServices
     private typealias GetServiceCategoryListSpy = Spy<Provider, Result<[Service], Error>>
     private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest, Service>, NanoServices.InitiatePaymentResult>
-    private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
+    private typealias DetailPaymentSpy = Spy<Void, DetailPayment>
     private typealias MakeServicesFailureSpy = Spy<Void, ServicesFailure>
     private typealias Services = MultiElementArray<Service>
     private typealias MakeServicePickerSpy = Spy<Services, ServicePicker>
@@ -196,20 +196,20 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     ) -> (
         sut: SUT,
         initiatePayment: InitiatePaymentSpy,
-        payByInstructions: PayByInstructionsSpy,
+        detailPayment: DetailPaymentSpy,
         getServiceCategoryList: GetServiceCategoryListSpy,
         makeServicePicker: MakeServicePickerSpy,
         makeServicesFailure: MakeServicesFailureSpy
     ) {
         let getServiceCategoryList = GetServiceCategoryListSpy()
         let initiatePayment = InitiatePaymentSpy()
-        let payByInstructions = PayByInstructionsSpy()
+        let detailPayment = DetailPaymentSpy()
         let makeServicePicker = MakeServicePickerSpy()
         let makeServicesFailure = MakeServicesFailureSpy()
         let composer = Composer(nanoServices: .init(
             getServiceCategoryList: getServiceCategoryList.process(_:completion:),
             initiatePayment: initiatePayment.process(_:completion:),
-            makePayByInstructions: payByInstructions.process(completion:),
+            makeDetailPayment: detailPayment.process(completion:),
             makeServicePicker: makeServicePicker.process(_:completion:),
             makeServicesFailure: makeServicesFailure.process(completion:)
         ))
@@ -217,12 +217,12 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(initiatePayment, file: file, line: line)
-        trackForMemoryLeaks(payByInstructions, file: file, line: line)
+        trackForMemoryLeaks(detailPayment, file: file, line: line)
         trackForMemoryLeaks(getServiceCategoryList, file: file, line: line)
         trackForMemoryLeaks(makeServicesFailure, file: file, line: line)
         trackForMemoryLeaks(makeServicePicker, file: file, line: line)
         
-        return (sut, initiatePayment, payByInstructions, getServiceCategoryList, makeServicePicker, makeServicesFailure)
+        return (sut, initiatePayment, detailPayment, getServiceCategoryList, makeServicePicker, makeServicesFailure)
     }
     
     private func expect<Response>(

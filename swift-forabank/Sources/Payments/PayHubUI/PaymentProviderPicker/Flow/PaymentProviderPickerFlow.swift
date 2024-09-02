@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-typealias PaymentProviderPickerFlow<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure> = RxViewModel<PaymentProviderPickerFlowState<PaymentProviderPickerDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure>>, PaymentProviderPickerFlowEvent<PaymentProviderPickerDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure>, Latest, Provider>, PaymentProviderPickerFlowEffect<Latest, Provider>>
+typealias PaymentProviderPickerFlow<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure> = RxViewModel<PaymentProviderPickerFlowState<PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>>, PaymentProviderPickerFlowEvent<PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>, Latest, Provider>, PaymentProviderPickerFlowEffect<Latest, Provider>>

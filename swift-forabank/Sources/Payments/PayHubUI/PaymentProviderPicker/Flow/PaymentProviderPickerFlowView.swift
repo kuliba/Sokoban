@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-struct PaymentProviderPickerFlowView<ContentView, DestinationView, Latest, PayByInstructions, Payment, Provider, Service, ServicesFailure>: View
+struct PaymentProviderPickerFlowView<ContentView, DestinationView, DetailPayment, Latest, Payment, Provider, Service, ServicesFailure>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -34,7 +34,7 @@ extension PaymentProviderPickerFlowView {
     typealias State = PaymentProviderPickerFlowState<Destination>
 #warning("could be improved and use less generics if scope just flow events, for example Latest is not used; and Provider too(?)")
     typealias Event = PaymentProviderPickerFlowEvent<Destination, Latest, Provider>
-    typealias Destination = PaymentProviderPickerDestination<PayByInstructions, Payment, Service, ServicesFailure>
+    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, Service, ServicesFailure>
 }
 
 private extension PaymentProviderPickerFlowView {
@@ -92,18 +92,18 @@ extension PaymentProviderPickerDestination: Identifiable {
         
         switch self {
             
-        case .backendFailure:    return .backendFailure
-        case .payByInstructions: return .payByInstructions
-        case .payment:           return .payment
-        case .servicePicker:     return .servicePicker
-        case .servicesFailure:   return .servicesFailure
+        case .backendFailure:  return .backendFailure
+        case .detailPayment:   return .detailPayment
+        case .payment:         return .payment
+        case .servicePicker:   return .servicePicker
+        case .servicesFailure: return .servicesFailure
         }
     }
     
     public enum ID: Hashable {
         
         case backendFailure
-        case payByInstructions
+        case detailPayment
         case payment
         case servicePicker
         case servicesFailure
@@ -124,8 +124,8 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
             .previewDisplayName("connectivity")
         flowView(.init(navigation: .alert(.server("Error connecting to server"))))
             .previewDisplayName("server")
-        flowView(.init(navigation: .destination(.payByInstructions(.init()))))
-            .previewDisplayName("payByInstructions")
+        flowView(.init(navigation: .destination(.detailPayment(.init()))))
+            .previewDisplayName("detailPayment")
         flowView(.init(navigation: .destination(.payment(.init()))))
             .previewDisplayName("payment")
         flowView(.init(navigation: .destination(.servicePicker(.init()))))
@@ -137,7 +137,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
             .previewDisplayName("outside(.chat)")
     }
     
-    typealias State = PaymentProviderPickerFlowState<PaymentProviderPickerDestination<PreviewPayByInstructions, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>>
+    typealias State = PaymentProviderPickerFlowState<PaymentProviderPickerDestination<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>>
     
     private static func flowView(
         _ state: State
@@ -145,7 +145,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
         
         NavigationView {
             
-            PaymentProviderPickerFlowView<Color, Text, PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>(
+            PaymentProviderPickerFlowView<Color, Text, PreviewDetailPayment, PreviewLatest, PreviewPayment, PreviewPaymentProvider, PreviewServicePicker, PreviewServicesFailure>(
                 state: state,
                 event: { print($0) },
                 contentView: { Color.green.opacity(0.2) },
@@ -167,7 +167,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         let id = UUID()
         let model: Model
         
-        typealias Model = PaymentProviderPickerFlow<PreviewLatest, PreviewPayByInstructions, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicePicker, PreviewServicesFailure>
+        typealias Model = PaymentProviderPickerFlow<PreviewDetailPayment, PreviewLatest, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicePicker, PreviewServicesFailure>
     }
     
     enum ServicesResponse: String, CaseIterable {
@@ -240,7 +240,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                     completion(initiatePayment ? .payment(.init()) : .backendFailure(.server("Error initiating payment")))
                 }
             },
-            makePayByInstructions: { $0(.payByInstructions(.init())) },
+            makeDetailPayment: { $0(.detailPayment(.init())) },
             processProvider: { _, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
@@ -266,7 +266,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         ))
     }
     
-    private typealias PreviewDestination = PaymentProviderPickerDestination<PreviewPayByInstructions, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
+    private typealias PreviewDestination = PaymentProviderPickerDestination<PreviewDetailPayment, PreviewPayment, PreviewServicePicker, PreviewServicesFailure>
     private typealias FlowState = PaymentProviderPickerFlowState<PreviewDestination>
     private typealias Event = PaymentProviderPickerFlowEvent<PreviewDestination, PreviewLatest, PreviewPaymentProvider>
     
@@ -326,7 +326,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                 
                 Button("Pay by Instructions") {
                     
-                    event(.destination(.payByInstructions(.init())))
+                    event(.destination(.detailPayment(.init())))
                 }
             } header: {
                 Text("Pay by Instructions")
@@ -349,9 +349,9 @@ struct PaymentProviderPickerFlowDemoView: View {
                     event(.select(.latest(.preview())))
                 }
                 
-                Button("payByInstructions") {
+                Button("detailPayment") {
                     
-                    event(.select(.payByInstructions))
+                    event(.select(.detailPayment))
                 }
                 
                 Button("provider") {
@@ -370,7 +370,7 @@ struct PaymentProviderPickerFlowDemoView: View {
     }
 }
 
-struct PreviewPayByInstructions {}
+struct PreviewDetailPayment {}
 struct PreviewPayment {}
 struct PreviewPaymentProvider {}
 struct PreviewService {}

@@ -7,13 +7,13 @@
 
 import ForaTools
 
-public enum PaymentProviderPickerDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure> {
+public enum PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure> {
     
     case backendFailure(BackendFailure)
-    case payByInstructions(PayByInstructions)
+    case detailPayment(DetailPayment)
     case payment(Payment)
     case servicePicker(ServicePicker)
     case servicesFailure(ServicesFailure)
 }
 
-extension PaymentProviderPickerDestination: Equatable where PayByInstructions: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
+extension PaymentProviderPickerDestination: Equatable where DetailPayment: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}

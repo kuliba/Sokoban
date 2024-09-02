@@ -14,8 +14,8 @@ public extension PaymentProviderPickerFlowEffect {
     
     enum Select {
         
+        case detailPayment
         case latest(Latest)
-        case payByInstructions
         case provider(Provider)
     }
 }

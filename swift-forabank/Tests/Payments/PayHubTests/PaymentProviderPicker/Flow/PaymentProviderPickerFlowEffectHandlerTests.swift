@@ -14,10 +14,10 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, initiatePayment, payByInstructions, providerProcess) = makeSUT()
+        let (sut, initiatePayment, detailPayment, providerProcess) = makeSUT()
         
         XCTAssertEqual(initiatePayment.callCount, 0)
-        XCTAssertEqual(payByInstructions.callCount, 0)
+        XCTAssertEqual(detailPayment.callCount, 0)
         XCTAssertEqual(providerProcess.callCount, 0)
         XCTAssertNotNil(sut)
     }
@@ -45,14 +45,14 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         }
     }
     
-    func test_select_payByInstructions_shouldDeliverDestination() {
+    func test_select_detailPayment_shouldDeliverDestination() {
         
         let destination = makeDestination()
-        let (sut, _, payByInstructionsSpy,_) = makeSUT()
+        let (sut, _, detailPaymentSpy,_) = makeSUT()
         
-        expect(sut, with: .select(.payByInstructions), toDeliver: .destination(destination)) {
+        expect(sut, with: .select(.detailPayment), toDeliver: .destination(destination)) {
             
-            payByInstructionsSpy.complete(with: destination)
+            detailPaymentSpy.complete(with: destination)
         }
     }
     
@@ -92,7 +92,7 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     private typealias SUT = PaymentProviderPickerFlowEffectHandler<Destination, Latest, Provider>
     private typealias InitiatePaymentSpy = Spy<Latest, Destination>
-    private typealias PayByInstructionsSpy = Spy<Void, Destination>
+    private typealias DetailPaymentSpy = Spy<Void, Destination>
     private typealias ProviderSpy = Spy<Provider, Destination>
     
     private func makeSUT(
@@ -101,24 +101,24 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     ) -> (
         sut: SUT,
         initiatePayment: InitiatePaymentSpy,
-        payByInstructions: PayByInstructionsSpy,
+        detailPayment: DetailPaymentSpy,
         providerSpy: ProviderSpy
     ) {
         let initiatePayment = InitiatePaymentSpy()
-        let payByInstructions = PayByInstructionsSpy()
+        let detailPayment = DetailPaymentSpy()
         let providerSpy = ProviderSpy()
         let sut = SUT(microServices: .init(
             initiatePayment: initiatePayment.process(_:completion:),
-            makePayByInstructions: payByInstructions.process(completion:),
+            makeDetailPayment: detailPayment.process(completion:),
             processProvider: providerSpy.process(_:completion:)
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(initiatePayment, file: file, line: line)
-        trackForMemoryLeaks(payByInstructions, file: file, line: line)
+        trackForMemoryLeaks(detailPayment, file: file, line: line)
         trackForMemoryLeaks(providerSpy, file: file, line: line)
         
-        return (sut, initiatePayment, payByInstructions, providerSpy)
+        return (sut, initiatePayment, detailPayment, providerSpy)
     }
     
     private func expect(

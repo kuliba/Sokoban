@@ -8,16 +8,16 @@
 public struct PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, Latest, Provider> {
     
     public let initiatePayment: InitiatePayment
-    public let makePayByInstructions: MakePayByInstructions
+    public let makeDetailPayment: MakeDetailPayment
     public let processProvider: ProcessProvider
     
     public init(
         initiatePayment: @escaping InitiatePayment,
-        makePayByInstructions: @escaping MakePayByInstructions,
+        makeDetailPayment: @escaping MakeDetailPayment,
         processProvider: @escaping ProcessProvider
     ) {
         self.initiatePayment = initiatePayment
-        self.makePayByInstructions = makePayByInstructions
+        self.makeDetailPayment = makeDetailPayment
         self.processProvider = processProvider
     }
 }
@@ -27,7 +27,7 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServices {
     typealias InitiatePaymentCompletion = (Destination) -> Void
     typealias InitiatePayment = (Latest, @escaping InitiatePaymentCompletion) -> Void
     
-    typealias MakePayByInstructions = (@escaping (Destination) -> Void) -> Void
+    typealias MakeDetailPayment = (@escaping (Destination) -> Void) -> Void
     
     typealias ProcessProvider = (Provider, @escaping (Destination) -> Void) -> Void
 }

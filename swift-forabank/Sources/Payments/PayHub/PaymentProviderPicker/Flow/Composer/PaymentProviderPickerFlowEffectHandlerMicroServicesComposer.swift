@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure> {
+public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure> {
     
     private let nanoServices: NanoServices
     
@@ -17,7 +17,7 @@ public final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<L
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure>
+    public typealias NanoServices = PaymentProviderPickerFlowEffectHandlerNanoServices<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
@@ -26,12 +26,12 @@ public extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         
         return .init(
             initiatePayment: initiatePayment,
-            makePayByInstructions: makePayByInstructions,
+            makeDetailPayment: makeDetailPayment,
             processProvider: processProvider
         )
     }
     
-    typealias Destination = PaymentProviderPickerDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure>
+    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
     typealias MicroServices = PaymentProviderPickerFlowEffectHandlerMicroServices<Destination, Latest, Provider>
 }
 
@@ -56,16 +56,16 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     }
 }
 
-// MARK: - makePayByInstructions
+// MARK: - makeDetailPayment
 
 private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
     
-    func makePayByInstructions(
+    func makeDetailPayment(
         completion: @escaping (Destination) -> Void
     ) {
-        nanoServices.makePayByInstructions {
+        nanoServices.makeDetailPayment {
             
-            completion(.payByInstructions($0))
+            completion(.detailPayment($0))
         }
     }
 }
