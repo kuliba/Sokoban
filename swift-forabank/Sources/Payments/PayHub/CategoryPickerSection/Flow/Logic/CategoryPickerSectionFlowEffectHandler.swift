@@ -25,8 +25,8 @@ public extension CategoryPickerSectionFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .showAll:
-            microServices.showAll { dispatch(.receive(.list($0))) }
+        case let .showAll(categories):
+            microServices.showAll(categories) { dispatch(.receive(.list($0))) }
             
         case let .showCategory(category):
             microServices.showCategory(category) { dispatch(.receive(.category($0))) }

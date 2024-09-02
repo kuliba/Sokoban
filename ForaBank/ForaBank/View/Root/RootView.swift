@@ -82,8 +82,8 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(binder):
-                paymentsTransfersFlowView(binder)
+            case let .v1(switcher):
+                paymentsTransfersSwitcherView(switcher)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -135,12 +135,34 @@ struct RootView: View {
 
 private extension RootView {
     
-    func paymentsTransfersFlowView(
-        _ binder: PaymentsTransfersBinder
+    func paymentsTransfersSwitcherView(
+        _ switcher: PaymentsTransfersSwitcher
     ) -> some View {
         
-        ComposedPaymentsTransfersFlowView(
-            binder: binder,
+        ComposedProfileSwitcherView(
+            model: switcher,
+            corporateView: paymentsTransfersCorporateView,
+            personalView: paymentsTransfersPersonalView,
+            undefinedView: {
+                
+                SpinnerView(viewModel: .init())
+            }
+        )
+    }
+    
+    func paymentsTransfersCorporateView(
+    _ corporate: PaymentsTransfersCorporate
+    ) -> some View {
+    
+        Text("TBD: restricted PaymentsTransfers view for corporate")
+    }
+    
+    func paymentsTransfersPersonalView(
+        _ personal: PaymentsTransfersPersonal
+    ) -> some View {
+        
+        ComposedPaymentsTransfersPersonalFlowView(
+            personal: personal,
             factory: .init(
                 makeCategoryPickerView: {
                     

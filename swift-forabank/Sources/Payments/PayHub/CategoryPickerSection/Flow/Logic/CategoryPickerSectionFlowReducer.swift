@@ -40,8 +40,8 @@ public extension CategoryPickerSectionFlowReducer {
             case let .category(category):
                 effect = .showCategory(category)
                 
-            case .list:
-                effect = .showAll
+            case let .list(categories):
+                effect = .showAll(categories)
             }
         }
         

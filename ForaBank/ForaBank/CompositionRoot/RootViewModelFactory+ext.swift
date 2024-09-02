@@ -333,7 +333,7 @@ extension RootViewModelFactory {
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         
-        let paymentsTransfersBinder = makePaymentsTransfersBinder(
+        let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             loadCategories: loadServiceCategories,
@@ -344,8 +344,17 @@ extension RootViewModelFactory {
         
         loadServiceCategories { 
             
-            paymentsTransfersBinder.content.categoryPicker.content.event(.loaded($0))
+            paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
         }
+        
+        let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
+        
+        let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
+            hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
+            corporate: .init(),
+            personal: paymentsTransfersPersonal,
+            scheduler: mainScheduler
+        )
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -364,7 +373,7 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            paymentsTransfersBinder: paymentsTransfersBinder
+            paymentsTransfersSwitcher: paymentsTransfersSwitcher
         )
     }
     
@@ -674,7 +683,7 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        paymentsTransfersBinder: PaymentsTransfersBinder
+        paymentsTransfersSwitcher: PaymentsTransfersSwitcher
     ) -> RootViewModel {
             
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -720,7 +729,7 @@ private extension RootViewModelFactory {
             
             switch paymentsTransfersFlag.rawValue {
             case .active:
-                return .v1(paymentsTransfersBinder)
+                return .v1(paymentsTransfersSwitcher)
                 
             case .inactive:
                 return .legacy(paymentsTransfersViewModel)

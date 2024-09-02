@@ -9,4 +9,3 @@ import PayHub
 import RxViewModel
 
 public typealias PaymentsTransfersToolbarContent = RxViewModel<PaymentsTransfersToolbarState, PaymentsTransfersToolbarEvent, PaymentsTransfersToolbarEffect>
-

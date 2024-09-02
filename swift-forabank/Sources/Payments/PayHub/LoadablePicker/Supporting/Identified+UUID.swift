@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias UUIDIdentified<Element> = Identified<UUID, Element>
+
 public extension Identified where ID == UUID {
     
     init(_ element: Element) {
