@@ -54,9 +54,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Турбо",
                 conditions: ["Выгода 5% на топливо в приложении «Турбо»"],
-                imageLink: "imageLink",
-                orderLink: "orderLink",
-                conditionLink: "conditionLink",
+                links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
                 action: nil)
         ]))
     }
@@ -69,9 +67,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Переводы МИГ",
                 conditions: ["Мгновенные переводы в Армению. Комиссия 1%"],
-                imageLink: "imageLink",
-                orderLink: "orderLink",
-                conditionLink: "conditionLink",
+                links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
                 action: .init(type: .migTransfer("AM")))
         ]))
     }
@@ -84,9 +80,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Выгодные вклады",
                 conditions: ["Выгодные вклады 1%"],
-                imageLink: "imageLink",
-                orderLink: "orderLink",
-                conditionLink: "conditionLink",
+                links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
                 action: .init(type: .depositsList))
         ]))
     }
@@ -99,9 +93,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Переводы за границу",
                 conditions: ["Переводы за границу"],
-                imageLink: "imageLink",
-                orderLink: "orderLink",
-                conditionLink: "conditionLink",
+                links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
                 action: .init(type: .contact("KG")))
         ]))
     }
@@ -114,9 +106,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Выгодные вклады2",
                 conditions: ["Выгодные вклады2"],
-                imageLink: "imageLink",
-                orderLink: "orderLink",
-                conditionLink: "conditionLink",
+                links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
                 action: .init(type: .openDeposit(10000003792)))
         ]))
     }
@@ -129,9 +119,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
             .init(
                 productName: "Маркетплейс",
                 conditions: ["Выгодно"],
-                imageLink: "imageLink",
-                orderLink: "",
-                conditionLink: "",
+                links: .init(image: "imageLink", order: "", condition: ""),
                 action: .init(type: .landing("market_showcase")))
         ]))
     }

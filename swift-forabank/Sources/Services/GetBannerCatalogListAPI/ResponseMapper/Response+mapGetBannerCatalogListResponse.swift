@@ -50,9 +50,10 @@ private extension ResponseMapper._DTO._Item {
         return .init(
             productName: productName,
             conditions: conditions,
-            imageLink: imageLink,
-            orderLink: orderLink ?? "",
-            conditionLink: conditionLink ?? "",
+            links: .init(
+                image: imageLink,
+                order: orderLink ?? "",
+                condition: conditionLink ?? ""),
             action: action?.data)
     }
 }

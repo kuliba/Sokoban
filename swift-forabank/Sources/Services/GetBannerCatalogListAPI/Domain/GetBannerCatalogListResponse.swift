@@ -24,26 +24,34 @@ public struct GetBannerCatalogListResponse: Equatable {
         
         let productName: String
         let conditions: [String]
-        let imageLink: String
-        let orderLink: String
-        let conditionLink: String
+        let links: Links
         let action: BannerAction?
 
         public init(
             productName: String,
             conditions: [String],
-            imageLink: String,
-            orderLink: String,
-            conditionLink: String,
+            links: Links,
             action: BannerAction?
         ) {
             self.productName = productName
             self.conditions = conditions
-            self.imageLink = imageLink
-            self.orderLink = orderLink
-            self.conditionLink = conditionLink
+            self.links = links
             self.action = action
         }
+    }
+    
+    public struct Links: Equatable {
+        
+        let image: String
+        let order: String
+        let condition: String
+        
+        public init(image: String, order: String, condition: String) {
+            self.image = image
+            self.order = order
+            self.condition = condition
+        }
+
     }
     
     public struct BannerAction: Equatable {
