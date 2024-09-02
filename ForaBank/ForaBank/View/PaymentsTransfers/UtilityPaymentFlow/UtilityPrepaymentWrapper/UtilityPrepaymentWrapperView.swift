@@ -131,17 +131,6 @@ private extension UtilityPrepaymentWrapperView {
 
 // MARK: - Helpers
 
-private extension UtilityPrepaymentState {
-    
-    var searchText: String? {
-        
-        guard case let .success(success) = self
-        else { return nil }
-        
-        return success.searchText
-    }
-}
-
 private extension UtilityPaymentOperator {
     
     var inn: String? {
