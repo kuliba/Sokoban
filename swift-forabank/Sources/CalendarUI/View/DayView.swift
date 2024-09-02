@@ -12,8 +12,9 @@ struct DefaultDayView: DayView {
     
     let date: Date
     let isCurrentMonth: Bool
-    let selectedDate: Binding<Date?>?
-    let selectedRange: Binding<MDateRange?>?
+    let selectedDate: Date?
+    let selectedRange: MDateRange?
+    let selectDate: (Date) -> Void
 }
 
 struct DefaultMonthLabel: MonthLabel {
@@ -30,8 +31,9 @@ public protocol DayView: View {
     // MARK: Attributes
     var date: Date { get }
     var isCurrentMonth: Bool { get }
-    var selectedDate: Binding<Date?>? { get }
-    var selectedRange: Binding<MDateRange?>? { get }
+    var selectedDate: Date? { get }
+    var selectedRange: MDateRange? { get }
+    var selectDate: (Date) -> Void { get }
 
     // MARK: View Customisation
     func content() -> AnyView
@@ -158,7 +160,7 @@ public extension DayView {
         
         if !isFuture() {
             
-            selectedRange?.wrappedValue?.addToRange(date)
+            selectedRange?.addToRange(date)
         }
     }
 }
@@ -193,7 +195,7 @@ public extension DayView {
 // MARK: Day Selection Helpers
 public extension DayView {
     func isSelected() -> Bool {
-        date.isSame(.day, as: selectedDate?.wrappedValue) || isBeginningOfRange() || isEndOfRange()
+        date.isSame(.day, as: selectedDate) || isBeginningOfRange() || isEndOfRange()
     }
 }
 
@@ -201,17 +203,17 @@ public extension DayView {
 public extension DayView {
     
     func isBeginningOfRange() -> Bool {
-        date.isSame(.day, as: selectedRange?.wrappedValue?.getRange()?.lowerBound)
+        date.isSame(.day, as: selectedRange?.getRange()?.lowerBound)
         
     }
     
     func isEndOfRange() -> Bool {
-        date.isSame(.day, as: selectedRange?.wrappedValue?.getRange()?.upperBound)
+        date.isSame(.day, as: selectedRange?.getRange()?.upperBound)
     }
     
     func isWithinRange() -> Bool {
         
-        selectedRange?.wrappedValue?.isRangeCompleted() == true && selectedRange?.wrappedValue?.contains(date) == true
+        selectedRange?.isRangeCompleted() == true && selectedRange?.contains(date) == true
     }
 }
 
