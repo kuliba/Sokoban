@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentProviderPickerFlowReducer<Latest, Payment, PayByInstructions, Provider, Service> {
+public final class PaymentProviderPickerFlowReducer<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure> {
     
     public init() {}
 }
@@ -21,6 +21,12 @@ public extension PaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .dismiss:
+            state.navigation = nil
+            
+        case .goToPayments:
+            state.navigation = .outside(.payments)
+            
         case let .initiatePaymentResult(result):
             self.initiatePaymentResult(&state, &effect, with: result)
             
@@ -40,8 +46,8 @@ public extension PaymentProviderPickerFlowReducer {
 
 public extension PaymentProviderPickerFlowReducer {
     
-    typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, Service>
-    typealias Event = PaymentProviderPickerFlowEvent<Latest, Payment, PayByInstructions, Provider, Service>
+    typealias State = PaymentProviderPickerFlowState<PayByInstructions, Payment, ServicePicker, ServicesFailure>
+    typealias Event = PaymentProviderPickerFlowEvent<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
     typealias Effect = PaymentProviderPickerFlowEffect<Latest, Provider>
 }
 
@@ -64,14 +70,14 @@ private extension PaymentProviderPickerFlowReducer {
     func loadServices(
         _ state: inout State,
         _ effect: inout Effect?,
-        with services: Event.Services?
+        with services: ServicesResult<ServicePicker, ServicesFailure>
     ) {
         switch services {
-        case .none:
-            state.navigation = .destination(.servicesFailure)
+        case let .servicePicker(services):
+            state.navigation = .destination(.servicePicker(services))
             
-        case let .some(services):
-            state.navigation = .destination(.services(services))
+        case let .servicesFailure(servicesFailure):
+            state.navigation = .destination(.servicesFailure(servicesFailure))
         }
     }
     

@@ -77,14 +77,14 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         XCTAssertNoDiff(providerProcess.payloads, [provider])
     }
     
-    func test_select_provider_shouldDeliverServicesOnServices() {
+    func test_select_provider_shouldDeliverServicePickerOnServicePicker() {
         
-        let services = makeServices()
+        let picker = makeServicePicker()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(services)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicePicker(picker))) {
             
-            providerProcess.complete(with: .services(services))
+            providerProcess.complete(with: .servicesResult(.servicePicker(picker)))
         }
     }
     
@@ -112,20 +112,21 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     func test_select_provider_shouldDeliverServicesFailureOnPrividerServicesFailure() {
         
+        let failure = makeServicesFailure()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(nil)) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicesFailure(failure))) {
             
-            providerProcess.complete(with: .servicesFailure)
+            providerProcess.complete(with: .servicesResult(.servicesFailure(failure)))
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, Payment, PayByInstructions, Provider, Service>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
     private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, Service>>
+    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, ServicePicker, ServicesFailure>>
     
     private func makeSUT(
         file: StaticString = #file,

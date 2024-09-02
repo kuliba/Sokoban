@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-import ForaTools
-
-public struct PaymentProviderPickerFlowState<PayByInstructions, Payment, Service> {
+public struct PaymentProviderPickerFlowState<PayByInstructions, Payment, ServicePicker, ServicesFailure> {
     
     public var isLoading: Bool
     public var navigation: Navigation?
@@ -29,29 +27,17 @@ public extension PaymentProviderPickerFlowState {
         case destination(Destination)
         case outside(Outside)
     }
+    
+    typealias Destination = PaymentProviderPickerFlowDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowState.Navigation {
     
-    enum Destination {
-        
-        case payByInstructions(PayByInstructions)
-        case payment(Payment)
-        case services(Services)
-        case servicesFailure
-    }
-    
     enum Outside: Equatable {
         
-        case back, chat, qr
+        case back, chat, payments, qr
     }
 }
 
-public extension PaymentProviderPickerFlowState.Navigation.Destination {
- 
-    typealias Services = MultiElementArray<Service>
-}
-
-extension PaymentProviderPickerFlowState: Equatable where PayByInstructions: Equatable, Payment: Equatable, Service: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation: Equatable where PayByInstructions: Equatable, Payment: Equatable, Service: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation.Destination: Equatable where PayByInstructions: Equatable, Payment: Equatable, Service: Equatable {}
+extension PaymentProviderPickerFlowState: Equatable where PayByInstructions: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
+extension PaymentProviderPickerFlowState.Navigation: Equatable where PayByInstructions: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
