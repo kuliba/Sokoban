@@ -9,12 +9,14 @@ import SwiftUI
 
 struct MonthView: View {
     
-    @Binding var selectedDate: Date?
-    @Binding var selectedRange: MDateRange?
+    var selectedDate: Date?
+    var selectedRange: MDateRange?
     
     let data: Month
     let config: CalendarConfig
 
+    let selectDate: (Date) -> Void
+    
     var body: some View {
         
         LazyVStack(spacing: config.daysSpacing.vertical) {
@@ -45,8 +47,9 @@ private extension MonthView {
         config.dayView(
             date,
             isCurrentMonth(date),
-            $selectedDate,
-            $selectedRange
+            selectedDate,
+            selectedRange,
+            { selectedRange?.addToRange($0) }
         ).erased()
     }
 }
