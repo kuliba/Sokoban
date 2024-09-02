@@ -23,7 +23,7 @@ public extension PaymentProviderPickerFlowState {
     
     enum Navigation {
         
-        case alert(ServiceFailure)
+        case alert(BackendFailure)
         case destination(Destination)
         case outside(Outside)
     }

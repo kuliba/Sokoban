@@ -14,7 +14,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_alert_shouldNavigationToAlert() {
         
-        let failure = makeServiceFailure()
+        let failure = makeBackendFailure()
         
         assert(makeState(), event: .alert(failure)) {
             
@@ -24,14 +24,14 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_alert_shouldNotDeliverEffect() {
         
-        assert(makeState(), event: .alert(makeServiceFailure()), delivers: nil)
+        assert(makeState(), event: .alert(makeBackendFailure()), delivers: nil)
     }
     
     // MARK: - dismiss
     
     func test_dismiss_shouldResetNavigationFromAlert() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .dismiss) {
             
             $0.navigation = nil
         }
@@ -39,7 +39,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_dismiss_shouldNotDeliverEffectOnAlert() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .dismiss, delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .dismiss, delivers: nil)
     }
     
     func test_dismiss_shouldResetNavigationFromDestination() {
@@ -72,7 +72,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldSetNavigationToOutsidePayments() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments) {
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments) {
             
             $0.navigation = .outside(.payments)
         }
@@ -80,7 +80,7 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
     
     func test_goToPayments_shouldNotDeliverEffect() {
         
-        assert(makeState(navigation: .alert(makeServiceFailure())), event: .goToPayments, delivers: nil)
+        assert(makeState(navigation: .alert(makeBackendFailure())), event: .goToPayments, delivers: nil)
     }
     
     // MARK: - destination

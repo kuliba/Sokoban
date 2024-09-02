@@ -34,7 +34,7 @@ public extension PaymentProviderPickerFlowEffectHandlerNanoServices {
     
     typealias GetServiceCategoryList = (Provider, @escaping (Result<[Service], Error>) -> Void) -> Void
     
-    typealias InitiatePaymentResult = Result<Payment, ServiceFailure>
+    typealias InitiatePaymentResult = Result<Payment, BackendFailure>
     typealias InitiatePaymentCompletion = (InitiatePaymentResult) -> Void
     typealias InitiatePayment = (InitiatePaymentPayload<Latest, Service>, @escaping InitiatePaymentCompletion) -> Void
     

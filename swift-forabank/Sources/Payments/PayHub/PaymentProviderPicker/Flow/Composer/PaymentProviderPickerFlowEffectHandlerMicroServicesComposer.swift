@@ -46,8 +46,8 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         nanoServices.initiatePayment(.latest(latest)) {
             
             switch $0 {
-            case let .failure(serviceFailure):
-                completion(.serviceFailure(serviceFailure))
+            case let .failure(backendFailure):
+                completion(.backendFailure(backendFailure))
                 
             case let .success(payment):
                 completion(.payment(payment))
@@ -127,8 +127,8 @@ private extension PaymentProviderPickerFlowEffectHandlerMicroServicesComposer {
         nanoServices.initiatePayment(.service(service)) {
             
             switch $0 {
-            case let .failure(serviceFailure):
-                completion(.serviceFailure(serviceFailure))
+            case let .failure(backendFailure):
+                completion(.backendFailure(backendFailure))
                 
             case let .success(payment):
                 completion(.payment(payment))

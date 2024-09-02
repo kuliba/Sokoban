@@ -7,7 +7,7 @@
 
 public enum PaymentProviderPickerFlowEvent<Destination, Latest, Provider> {
     
-    case alert(ServiceFailure)
+    case alert(BackendFailure)
     case dismiss
     case goToPayments
     case destination(Destination)

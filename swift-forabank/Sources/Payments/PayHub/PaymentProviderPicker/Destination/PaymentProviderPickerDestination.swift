@@ -9,10 +9,10 @@ import ForaTools
 
 public enum PaymentProviderPickerDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure> {
     
+    case backendFailure(BackendFailure)
     case payByInstructions(PayByInstructions)
     case payment(Payment)
     case servicePicker(ServicePicker)
-    case serviceFailure(ServiceFailure)
     case servicesFailure(ServicesFailure)
 }
 

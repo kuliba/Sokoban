@@ -1,11 +1,11 @@
 //
-//  ServiceFailure.swift
+//  BackendFailure.swift
 //
 //
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public struct ServiceFailure: Error, Equatable {
+public struct BackendFailure: Error, Equatable {
     
     public let message: String
     public let source: Source
@@ -19,7 +19,7 @@ public struct ServiceFailure: Error, Equatable {
     }
 }
 
-public extension ServiceFailure {
+public extension BackendFailure {
     
     enum Source: Equatable {
         
@@ -27,7 +27,7 @@ public extension ServiceFailure {
     }
 }
 
-public extension ServiceFailure {
+public extension BackendFailure {
     
     static func connectivity(
         _ message: String

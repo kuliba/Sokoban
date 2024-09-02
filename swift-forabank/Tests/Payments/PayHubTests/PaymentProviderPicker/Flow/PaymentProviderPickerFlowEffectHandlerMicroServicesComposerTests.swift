@@ -25,10 +25,10 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     func test_initiatePayment_shouldDeliverFailureOnFailure() {
         
-        let failure = makeServiceFailure()
+        let failure = makeBackendFailure()
         let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
-        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .serviceFailure(failure)) {
+        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .backendFailure(failure)) {
             
             initiatePayment.complete(with: .failure(failure))
         }
@@ -141,10 +141,10 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     func test_processProvider_shouldDeliverFailureOnOneServiceAndInitiatePaymentFailure() {
         
-        let failure = makeServiceFailure()
+        let failure = makeBackendFailure()
         let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .serviceFailure(failure)) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .backendFailure(failure)) {
             
             getServiceCategoryList.complete(with: .success([self.makeService()]))
             initiatePayment.complete(with: .failure(failure))
