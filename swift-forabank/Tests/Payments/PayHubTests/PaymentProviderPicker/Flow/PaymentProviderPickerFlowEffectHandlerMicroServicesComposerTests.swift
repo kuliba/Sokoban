@@ -28,7 +28,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let failure = makeServiceFailure()
         let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
-        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .failure(failure)) {
+        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .serviceFailure(failure)) {
             
             initiatePayment.complete(with: .failure(failure))
         }
@@ -39,7 +39,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let payment = makePayment()
         let (sut, initiatePayment, _,_,_,_) = makeSUT()
         
-        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .success(payment)) {
+        expect(sut.initiatePayment, with: makeLatest(), toDeliver: .payment(payment)) {
             
             initiatePayment.complete(with: .success(payment))
         }
@@ -61,7 +61,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let payByInstructions = makePayByInstructions()
         let (sut, _, payByInstructionsSpy, _,_,_) = makeSUT()
         
-        expect(sut.makePayByInstructions, toDeliver: payByInstructions) {
+        expect(sut.makePayByInstructions, toDeliver: .payByInstructions(payByInstructions)) {
             
             payByInstructionsSpy.complete(with: payByInstructions)
         }
@@ -96,7 +96,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let picker = makeServicePicker()
         let (sut, _,_, getServiceCategoryList, makeServicePicker, _) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicePicker(picker))) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicePicker(picker)) {
             
             getServiceCategoryList.complete(with: .success(services.elements))
             makeServicePicker.complete(with: picker)
@@ -109,7 +109,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         
         let (sut, _,_, getServiceCategoryList, _, makeServicesFailure) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicesFailure(failure))) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesFailure(failure)) {
             
             getServiceCategoryList.complete(with: .failure(anyError()))
             makeServicesFailure.complete(with: failure)
@@ -121,7 +121,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let failure = makeServicesFailure()
         let (sut, _,_, getServiceCategoryList, _, makeServicesFailure) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesResult(.servicesFailure(failure))) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .servicesFailure(failure)) {
             
             getServiceCategoryList.complete(with: .success([]))
             makeServicesFailure.complete(with: failure)
@@ -144,7 +144,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let failure = makeServiceFailure()
         let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .initiatePaymentResult(.failure(failure))) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .serviceFailure(failure)) {
             
             getServiceCategoryList.complete(with: .success([self.makeService()]))
             initiatePayment.complete(with: .failure(failure))
@@ -156,7 +156,7 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
         let payment = makePayment()
         let (sut, initiatePayment, _, getServiceCategoryList, _,_) = makeSUT()
         
-        expect(sut.processProvider, with: makeProvider(), toDeliver: .initiatePaymentResult(.success(payment))) {
+        expect(sut.processProvider, with: makeProvider(), toDeliver: .payment(payment)) {
             
             getServiceCategoryList.complete(with: .success([self.makeService()]))
             initiatePayment.complete(with: .success(payment))
@@ -182,8 +182,9 @@ final class PaymentProviderPickerFlowEffectHandlerMicroServicesComposerTests: Pa
     
     private typealias Composer = PaymentProviderPickerFlowEffectHandlerMicroServicesComposer<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure>
     private typealias SUT = Composer.MicroServices
+    private typealias NanoServices = Composer.NanoServices
     private typealias GetServiceCategoryListSpy = Spy<Provider, Result<[Service], Error>>
-    private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest, Service>, SUT.InitiatePaymentResult>
+    private typealias InitiatePaymentSpy = Spy<InitiatePaymentPayload<Latest, Service>, NanoServices.InitiatePaymentResult>
     private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
     private typealias MakeServicesFailureSpy = Spy<Void, ServicesFailure>
     private typealias Services = MultiElementArray<Service>

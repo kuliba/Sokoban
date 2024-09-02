@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public struct PaymentProviderPickerFlowState<PayByInstructions, Payment, ServicePicker, ServicesFailure> {
+public struct PaymentProviderPickerFlowState<Destination> {
     
     public var isLoading: Bool
     public var navigation: Navigation?
@@ -27,8 +27,6 @@ public extension PaymentProviderPickerFlowState {
         case destination(Destination)
         case outside(Outside)
     }
-    
-    typealias Destination = PaymentProviderPickerFlowDestination<PayByInstructions, Payment, ServicePicker, ServicesFailure>
 }
 
 public extension PaymentProviderPickerFlowState.Navigation {
@@ -39,5 +37,5 @@ public extension PaymentProviderPickerFlowState.Navigation {
     }
 }
 
-extension PaymentProviderPickerFlowState: Equatable where PayByInstructions: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
-extension PaymentProviderPickerFlowState.Navigation: Equatable where PayByInstructions: Equatable, Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
+extension PaymentProviderPickerFlowState: Equatable where Destination: Equatable {}
+extension PaymentProviderPickerFlowState.Navigation: Equatable where Destination: Equatable {}

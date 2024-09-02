@@ -7,7 +7,7 @@
 
 import ForaTools
 
-public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicesPicker, ServicesFailure> {
+public struct PaymentProviderPickerFlowEffectHandlerNanoServices<Latest, PayByInstructions, Payment, Provider, Service, ServicePicker, ServicesFailure> {
     
     public let getServiceCategoryList: GetServiceCategoryList
     public let initiatePayment: InitiatePayment
@@ -40,7 +40,7 @@ public extension PaymentProviderPickerFlowEffectHandlerNanoServices {
     
     typealias MakePayByInstructions = (@escaping (PayByInstructions) -> Void) -> Void
 
-    typealias MakeServicePicker = (MultiElementArray<Service>, @escaping (ServicesPicker) -> Void) -> Void
+    typealias MakeServicePicker = (MultiElementArray<Service>, @escaping (ServicePicker) -> Void) -> Void
     
     typealias MakeServicesFailure = (@escaping (ServicesFailure) -> Void) -> Void
 }

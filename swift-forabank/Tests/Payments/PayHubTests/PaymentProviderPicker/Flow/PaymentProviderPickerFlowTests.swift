@@ -11,6 +11,18 @@ import XCTest
 
 class PaymentProviderPickerFlowTests: XCTestCase {
     
+    struct Destination: Equatable {
+        
+        let value: String
+    }
+    
+    func makeDestination(
+        _ value: String = anyMessage()
+    ) -> Destination {
+        
+        return .init(value: value)
+    }
+    
     struct Latest: Equatable {
         
         let value: String

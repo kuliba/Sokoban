@@ -34,36 +34,25 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
         XCTAssertNoDiff(initiatePayment.payloads, [latest])
     }
     
-    func test_select_latest_shouldDeliverServiceFailureOnServiceFailure() {
+    func test_select_latest_shouldDeliverDestination() {
         
-        let failure = makeServiceFailure()
+        let destination = makeDestination()
         let (sut, initiatePayment, _,_) = makeSUT()
         
-        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentResult(.failure(failure))) {
+        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .destination(destination)) {
             
-            initiatePayment.complete(with: .failure(failure))
+            initiatePayment.complete(with: destination)
         }
     }
     
-    func test_select_latest_shouldDeliverPaymentOnSuccess() {
+    func test_select_payByInstructions_shouldDeliverDestination() {
         
-        let payment = makePayment()
-        let (sut, initiatePayment, _,_) = makeSUT()
-        
-        expect(sut, with: .select(.latest(makeLatest())), toDeliver: .initiatePaymentResult(.success(payment))) {
-            
-            initiatePayment.complete(with: .success(payment))
-        }
-    }
-    
-    func test_select_payByInstructions_shouldDeliverPayByInstructions() {
-        
-        let payByInstructions = makePayByInstructions()
+        let destination = makeDestination()
         let (sut, _, payByInstructionsSpy,_) = makeSUT()
         
-        expect(sut, with: .select(.payByInstructions), toDeliver: .payByInstructions(payByInstructions)) {
+        expect(sut, with: .select(.payByInstructions), toDeliver: .destination(destination)) {
             
-            payByInstructionsSpy.complete(with: payByInstructions)
+            payByInstructionsSpy.complete(with: destination)
         }
     }
     
@@ -79,54 +68,32 @@ final class PaymentProviderPickerFlowEffectHandlerTests: PaymentProviderPickerFl
     
     func test_select_provider_shouldDeliverServicePickerOnServicePicker() {
         
-        let picker = makeServicePicker()
+        let destination = makeDestination()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicePicker(picker))) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .destination(destination)) {
             
-            providerProcess.complete(with: .servicesResult(.servicePicker(picker)))
+            providerProcess.complete(with: destination)
         }
     }
     
     func test_select_provider_shouldDeliverInitiatePaymentFailureOnInitiatePaymentFailure() {
         
-        let failure = makeServiceFailure()
+        let destination = makeDestination()
         let (sut, _,_, providerProcess) = makeSUT()
         
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentResult(.failure(failure))) {
+        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .destination(destination)) {
             
-            providerProcess.complete(with: .initiatePaymentResult(.failure(failure)))
-        }
-    }
-    
-    func test_select_provider_shouldDeliverPaymentOnPayment() {
-        
-        let payment = makePayment()
-        let (sut, _,_, providerProcess) = makeSUT()
-        
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .initiatePaymentResult(.success(payment))) {
-            
-            providerProcess.complete(with: .initiatePaymentResult(.success(payment)))
-        }
-    }
-    
-    func test_select_provider_shouldDeliverServicesFailureOnPrividerServicesFailure() {
-        
-        let failure = makeServicesFailure()
-        let (sut, _,_, providerProcess) = makeSUT()
-        
-        expect(sut, with: .select(.provider(makeProvider())), toDeliver: .loadServices(.servicesFailure(failure))) {
-            
-            providerProcess.complete(with: .servicesResult(.servicesFailure(failure)))
+            providerProcess.complete(with: destination)
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Latest, PayByInstructions, Payment, Provider, ServicePicker, ServicesFailure>
-    private typealias InitiatePaymentSpy = Spy<Latest, SUT.MicroServices.InitiatePaymentResult>
-    private typealias PayByInstructionsSpy = Spy<Void, PayByInstructions>
-    private typealias ProviderSpy = Spy<Provider, ProcessProviderResult<Payment, ServicePicker, ServicesFailure>>
+    private typealias SUT = PaymentProviderPickerFlowEffectHandler<Destination, Latest, Provider>
+    private typealias InitiatePaymentSpy = Spy<Latest, Destination>
+    private typealias PayByInstructionsSpy = Spy<Void, Destination>
+    private typealias ProviderSpy = Spy<Provider, Destination>
     
     private func makeSUT(
         file: StaticString = #file,
