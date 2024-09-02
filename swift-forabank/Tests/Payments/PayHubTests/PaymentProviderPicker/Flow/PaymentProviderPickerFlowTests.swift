@@ -79,6 +79,30 @@ class PaymentProviderPickerFlowTests: XCTestCase {
         return .init(value: value)
     }
     
+    struct ServicePicker: Equatable {
+        
+        let value: String
+    }
+    
+    func makeServicePicker(
+        _ value: String = anyMessage()
+    ) -> ServicePicker {
+        
+        return .init(value: value)
+    }
+    
+    struct ServicesFailure: Equatable {
+        
+        let value: String
+    }
+    
+    func makeServicesFailure(
+        _ value: String = anyMessage()
+    ) -> ServicesFailure {
+        
+        return .init(value: value)
+    }
+    
     func makeServices(
         _ first: Service? = nil,
         _ second: Service? = nil,

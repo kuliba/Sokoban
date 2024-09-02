@@ -7,16 +7,10 @@
 
 import ForaTools
 
-public enum ProcessProviderResult<Payment, Service> {
+public enum ProcessProviderResult<Payment, ServicePicker, ServicesFailure> {
     
     case initiatePaymentResult(Result<Payment, ServiceFailure>)
-    case services(Services)
-    case servicesFailure
+    case servicesResult(ServicesResult<ServicePicker, ServicesFailure>)
 }
 
-public extension ProcessProviderResult {
-    
-    typealias Services = MultiElementArray<Service>
-}
-
-extension ProcessProviderResult: Equatable where Payment: Equatable, Service: Equatable {}
+extension ProcessProviderResult: Equatable where Payment: Equatable, ServicePicker: Equatable, ServicesFailure: Equatable {}
