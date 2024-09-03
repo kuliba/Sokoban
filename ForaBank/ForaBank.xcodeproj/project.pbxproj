@@ -1493,6 +1493,8 @@
 		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
 		2AD8242F2C86E0F00007B8DF /* SelectedCategoryDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8242D2C86E0DB0007B8DF /* SelectedCategoryDestination.swift */; };
 		2AD824322C86E83A0007B8DF /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD824302C86E82D0007B8DF /* Operator.swift */; };
+		2AD824342C8702C00007B8DF /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD824332C8702C00007B8DF /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */; };
+		2AD824362C8702E90007B8DF /* StandardSelectedCategoryDestinationNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD824352C8702E90007B8DF /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */; };
 		2AD87D8C2BD77859004D06C0 /* NavStackPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD87D8B2BD77859004D06C0 /* NavStackPreviewApp.swift */; };
 		2AD87D8E2BD77859004D06C0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD87D8D2BD77859004D06C0 /* ContentView.swift */; };
 		2AD87D902BD7785B004D06C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD87D8F2BD7785B004D06C0 /* Assets.xcassets */; };
@@ -4870,6 +4872,8 @@
 		2AD7EBDC2B0CB233009FDCAB /* RootViewModelFactory+makeDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeDetailButton.swift"; sourceTree = "<group>"; };
 		2AD8242D2C86E0DB0007B8DF /* SelectedCategoryDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryDestination.swift; sourceTree = "<group>"; };
 		2AD824302C86E82D0007B8DF /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
+		2AD824332C8702C00007B8DF /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMicroServiceComposerNanoServicesComposer.swift; sourceTree = "<group>"; };
+		2AD824352C8702E90007B8DF /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardSelectedCategoryDestinationNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2AD87D892BD77859004D06C0 /* NavStackPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavStackPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD87D8B2BD77859004D06C0 /* NavStackPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavStackPreviewApp.swift; sourceTree = "<group>"; };
 		2AD87D8D2BD77859004D06C0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -8610,6 +8614,7 @@
 			children = (
 				2A273E682C75996B009935E6 /* PaymentsTransfersContent.swift */,
 				2A77724E2C6F181F009B1676 /* PaymentsTransfersContentComposer.swift */,
+				2AD824372C8703AD0007B8DF /* NanoServicesComposers */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -11818,6 +11823,15 @@
 				2AD8242D2C86E0DB0007B8DF /* SelectedCategoryDestination.swift */,
 			);
 			path = SelectedCategoryDestination;
+			sourceTree = "<group>";
+		};
+		2AD824372C8703AD0007B8DF /* NanoServicesComposers */ = {
+			isa = PBXGroup;
+			children = (
+				2AD824332C8702C00007B8DF /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */,
+				2AD824352C8702E90007B8DF /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */,
+			);
+			path = NanoServicesComposers;
 			sourceTree = "<group>";
 		};
 		2AD87D8A2BD77859004D06C0 /* NavStackPreview */ = {
@@ -19182,7 +19196,9 @@
 				2A7772372C6F0F59009B1676 /* TabState.swift in Sources */,
 				2A7772292C6F0C33009B1676 /* OperationPickerContent+stub.swift in Sources */,
 				2A77722E2C6F0CBC009B1676 /* Exchange.swift in Sources */,
+				2AD824362C8702E90007B8DF /* StandardSelectedCategoryDestinationNanoServicesComposer.swift in Sources */,
 				2A7772272C6F0C15009B1676 /* OperationPickerFlow+stub.swift in Sources */,
+				2AD824342C8702C00007B8DF /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift in Sources */,
 				2A273E692C75996B009935E6 /* PaymentsTransfersContent.swift in Sources */,
 				2A273E5A2C759644009935E6 /* OperationPickerFlow.swift in Sources */,
 				2AD8242F2C86E0F00007B8DF /* SelectedCategoryDestination.swift in Sources */,
