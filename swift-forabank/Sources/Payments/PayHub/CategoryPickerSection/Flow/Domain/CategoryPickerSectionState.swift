@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public struct CategoryPickerSectionFlowState<CategoryModel, CategoryList> {
+public struct CategoryPickerSectionFlowState<SelectedCategory, CategoryList> {
     
     public var destination: Destination?
     
@@ -18,7 +18,7 @@ public struct CategoryPickerSectionFlowState<CategoryModel, CategoryList> {
 
 public extension CategoryPickerSectionFlowState {
     
-    typealias Destination = CategoryPickerSectionDestination<CategoryModel, CategoryList>
+    typealias Destination = CategoryPickerSectionDestination<SelectedCategory, CategoryList>
 }
 
-extension CategoryPickerSectionFlowState: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionFlowState: Equatable where SelectedCategory: Equatable, CategoryList: Equatable {}
