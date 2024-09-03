@@ -176,7 +176,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func flow(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -201,8 +201,8 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectFlow(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
-        hasID expectedID: Flow.ID,
+        with id: PaymentFlowID,
+        hasID expectedID: PaymentFlowID,
         action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -217,7 +217,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectMobile<T>(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
@@ -234,7 +234,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectQR<T>(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
@@ -251,7 +251,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectStandard<T>(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
@@ -268,7 +268,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectTax<T>(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,
@@ -285,7 +285,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     
     private func expectTransport<T>(
         _ sut: SUT? = nil,
-        with id: Flow.ID,
+        with id: PaymentFlowID,
         is expectedType: T.Type,
         action: @escaping () -> Void,
         file: StaticString = #file,

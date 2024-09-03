@@ -32,7 +32,7 @@ private extension PaymentFlowMicroServiceComposer {
     typealias Flow = MicroService.Flow
     
     func makePaymentFlow(
-        type: Flow.ID,
+        type: PaymentFlowID,
         completion: @escaping (MicroService.Flow) -> Void
     ) {
         switch type {

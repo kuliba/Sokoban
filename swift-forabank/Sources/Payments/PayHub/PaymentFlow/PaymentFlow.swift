@@ -18,7 +18,7 @@ extension PaymentFlow: Equatable where Mobile: Equatable, QR: Equatable, Standar
 
 extension PaymentFlow {
     
-    public var id: ID {
+    public var id: PaymentFlowID {
         
         switch self {
         case .mobile:              return .mobile
@@ -27,14 +27,5 @@ extension PaymentFlow {
         case .taxAndStateServices: return .taxAndStateServices
         case .transport:           return .transport
         }
-    }
-    
-    public enum ID: Hashable {
-        
-        case mobile
-        case qr
-        case standard
-        case taxAndStateServices
-        case transport
     }
 }
