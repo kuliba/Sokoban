@@ -1635,20 +1635,18 @@ extension Model {
     //BannerCatalogListData
     func handleDictionaryBannerCatalogList(_ serial: String?) {
         
-        guard let token
-        else {
+        guard let token else {
             handledUnauthorizedCommandAttempt()
             return
         }
-        
-        let command = ServerCommandsGetBannerCatalogList(token: token, serial: serial)
 
         let typeDict: DictionaryType = .bannerCatalogList
-        guard !dictionariesUpdating.value.contains(typeDict) 
-        else {
-            return
-        }
+        
+        guard !dictionariesUpdating.value.contains(typeDict) else { return }
+        
         dictionariesUpdating.value.insert(typeDict)
+
+        let command = ServerCommandsGetBannerCatalogList(token: token, serial: serial)
 
         if let getBannerCatalogListV2 {
             getBannerCatalogList(getBannerCatalogListV2, command, serial, typeDict)
@@ -1678,24 +1676,30 @@ extension Model {
         getBannerCatalogListCommand(serial) { [weak self] result in
             
             self?.dictionariesUpdating.value.remove(typeDict)
-
-            switch result {
-                
-            case .none:
-                self?.handleServerCommandEmptyData(command: command)
-
-            case let .some(response):
-                guard !response.bannerCatalogList.isEmpty
-                else {
-                    return
-                }
-                
-                self?.catalogBanners.value = response.bannerCatalogList
-                self?.catalogBannersCacheStore(command, response)
-            }
+            self?.handleGetBannerCatalogListV2Response(command, result)
         }
     }
     
+    func handleGetBannerCatalogListV2Response (
+        _ command: ServerCommandsGetBannerCatalogList,
+        _ result: Services.GetBannerCatalogListV1Response?
+    ) {
+        switch result {
+            
+        case .none:
+            handleServerCommandEmptyData(command: command)
+
+        case let .some(response):
+            guard !response.bannerCatalogList.isEmpty
+            else {
+                return
+            }
+            
+            catalogBanners.value = response.bannerCatalogList
+            catalogBannersCacheStore(command, response)
+        }
+    }
+
     func handleGetBannerCatalogListV1Response (
         _ command: ServerCommandsGetBannerCatalogList,
         _ result: Result<ServerCommandsGetBannerCatalogList.Response, ServerAgentError>
