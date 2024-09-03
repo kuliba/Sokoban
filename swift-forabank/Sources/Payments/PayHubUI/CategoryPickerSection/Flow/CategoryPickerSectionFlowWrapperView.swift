@@ -9,4 +9,4 @@ import PayHub
 import RxViewModel
 import SwiftUI
 
-public typealias CategoryPickerSectionFlowWrapperView<ContentView, Category, CategoryModel, CategoryList> = RxWrapperView<ContentView, CategoryPickerSectionFlowState<CategoryModel, CategoryList>, CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>, CategoryPickerSectionFlowEffect<Category>> where ContentView: View
+public typealias CategoryPickerSectionFlowWrapperView<ContentView, Category, SelectedCategory, CategoryList> = RxWrapperView<ContentView, CategoryPickerSectionFlowState<SelectedCategory, CategoryList>, CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>, CategoryPickerSectionFlowEffect<Category>> where ContentView: View

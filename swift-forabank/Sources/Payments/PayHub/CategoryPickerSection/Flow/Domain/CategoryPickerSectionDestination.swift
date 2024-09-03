@@ -5,10 +5,10 @@
 //  Created by Igor Malyarov on 26.08.2024.
 //
 
-public enum CategoryPickerSectionDestination<CategoryModel, CategoryList> {
+public enum CategoryPickerSectionDestination<SelectedCategory, CategoryList> {
     
-    case category(CategoryModel)
+    case category(SelectedCategory)
     case list(CategoryList)
 }
 
-extension CategoryPickerSectionDestination: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionDestination: Equatable where SelectedCategory: Equatable, CategoryList: Equatable {}

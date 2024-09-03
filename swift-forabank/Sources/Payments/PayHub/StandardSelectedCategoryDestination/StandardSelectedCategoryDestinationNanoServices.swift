@@ -1,11 +1,11 @@
 //
-//  CategoryPickerDestinationNanoServices.swift
+//  StandardSelectedCategoryDestinationNanoServices.swift
 //
 //
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public struct CategoryPickerDestinationNanoServices<Latest, Operator, Success, Failure> {
+public struct StandardSelectedCategoryDestinationNanoServices<Latest, Operator, Success, Failure> {
     
     public let loadLatest: LoadLatest
     public let loadOperators: LoadOperators
@@ -25,7 +25,7 @@ public struct CategoryPickerDestinationNanoServices<Latest, Operator, Success, F
     }
 }
 
-public extension CategoryPickerDestinationNanoServices {
+public extension StandardSelectedCategoryDestinationNanoServices {
     
     typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
     typealias LoadLatest = (@escaping LoadLatestCompletion) -> Void
@@ -52,4 +52,4 @@ public extension CategoryPickerDestinationNanoServices {
     typealias MakeSuccess = (MakeSuccessPayload, @escaping (Success) -> Void) -> Void
 }
 
-extension CategoryPickerDestinationNanoServices.MakeSuccessPayload: Equatable where Latest: Equatable, Operator: Equatable {}
+extension StandardSelectedCategoryDestinationNanoServices.MakeSuccessPayload: Equatable where Latest: Equatable, Operator: Equatable {}

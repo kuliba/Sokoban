@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public final class CategoryPickerSectionFlowEffectHandler<Category, CategoryModel, CategoryList> {
+public final class CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList> {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class CategoryPickerSectionFlowEffectHandler<Category, CategoryMode
         self.microServices = microServices
     }
     
-    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, CategoryModel, CategoryList>
+    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList>
 }
 
 public extension CategoryPickerSectionFlowEffectHandler {
@@ -38,6 +38,6 @@ public extension CategoryPickerSectionFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>
+    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>
     typealias Effect = CategoryPickerSectionFlowEffect<Category>
 }

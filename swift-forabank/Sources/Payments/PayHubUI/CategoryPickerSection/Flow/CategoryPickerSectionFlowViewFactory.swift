@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, CategoryModel, CategoryList> {
+public struct CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, SelectedCategory, CategoryList> {
     
     let makeContentView: MakeContentView
     let makeDestinationView: MakeDestinationView
@@ -26,6 +26,6 @@ public extension CategoryPickerSectionFlowViewFactory {
     
     typealias MakeContentView = () -> ContentView
     
-    typealias Destination = CategoryPickerSectionFlowState<CategoryModel, CategoryList>.Destination
+    typealias Destination = CategoryPickerSectionFlowState<SelectedCategory, CategoryList>.Destination
     typealias MakeDestinationView = (Destination) -> DestinationView
 }

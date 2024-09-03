@@ -11,7 +11,7 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public final class CategoryPickerSectionBinderComposer<Category, CategoryModel, CategoryList> {
+public final class CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList> {
     
     private let load: Load
     private let microServices: MicroServices
@@ -32,7 +32,7 @@ public final class CategoryPickerSectionBinderComposer<Category, CategoryModel, 
     public typealias Item = CategoryPickerSectionItem<Category>
     public typealias CategoryPickerItem = LoadablePickerState<UUID, Item>.Item
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
-    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, CategoryModel, CategoryList>
+    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList>
 }
 
 public extension CategoryPickerSectionBinderComposer {
@@ -48,9 +48,9 @@ public extension CategoryPickerSectionBinderComposer {
         return .init(content: content, flow: flow, bind: bind)
     }
     
-    typealias Binder = CategoryPickerSectionBinder<Category, CategoryModel, CategoryList>
+    typealias Binder = CategoryPickerSectionBinder<Category, SelectedCategory, CategoryList>
     typealias Content = CategoryPickerSectionContent<Category>
-    typealias Flow = CategoryPickerSectionFlow<Category, CategoryModel, CategoryList>
+    typealias Flow = CategoryPickerSectionFlow<Category, SelectedCategory, CategoryList>
 }
 
 // MARK: - Content
@@ -81,8 +81,8 @@ private extension CategoryPickerSectionBinderComposer {
     
     func makeFlow() -> Flow {
         
-        let reducer = CategoryPickerSectionFlowReducer<Category, CategoryModel, CategoryList>()
-        let effectHandler = CategoryPickerSectionFlowEffectHandler<Category, CategoryModel, CategoryList>(
+        let reducer = CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList>()
+        let effectHandler = CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList>(
             microServices: microServices
         )
         

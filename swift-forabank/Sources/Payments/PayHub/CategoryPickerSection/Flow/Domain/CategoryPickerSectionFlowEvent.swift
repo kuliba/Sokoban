@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public enum CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList> {
+public enum CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList> {
     
     case dismiss
     case receive(Receive)
@@ -16,7 +16,7 @@ public extension CategoryPickerSectionFlowEvent {
     
     enum Receive {
         
-        case category(CategoryModel)
+        case category(SelectedCategory)
         case list(CategoryList)
     }
     
@@ -27,6 +27,6 @@ public extension CategoryPickerSectionFlowEvent {
     }
 }
 
-extension CategoryPickerSectionFlowEvent: Equatable where Category: Equatable, CategoryModel: Equatable, CategoryList: Equatable {}
-extension CategoryPickerSectionFlowEvent.Receive: Equatable where CategoryModel: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionFlowEvent: Equatable where Category: Equatable, SelectedCategory: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionFlowEvent.Receive: Equatable where SelectedCategory: Equatable, CategoryList: Equatable {}
 extension CategoryPickerSectionFlowEvent.Select: Equatable where Category: Equatable, CategoryList: Equatable {}
