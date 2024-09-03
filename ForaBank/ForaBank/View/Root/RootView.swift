@@ -62,7 +62,7 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
-                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory, 
+                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
             )
@@ -143,17 +143,14 @@ private extension RootView {
             model: switcher,
             corporateView: paymentsTransfersCorporateView,
             personalView: paymentsTransfersPersonalView,
-            undefinedView: {
-                
-                SpinnerView(viewModel: .init())
-            }
+            undefinedView: { SpinnerView(viewModel: .init()) }
         )
     }
     
     func paymentsTransfersCorporateView(
-    _ corporate: PaymentsTransfersCorporate
+        _ corporate: PaymentsTransfersCorporate
     ) -> some View {
-    
+        
         Text("TBD: restricted PaymentsTransfers view for corporate")
     }
     
