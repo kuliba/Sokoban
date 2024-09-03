@@ -65,10 +65,10 @@ private extension ResponseMapper._DTO._Item._BannerAction {
         switch type {
             
         case .openDeposit:
-            guard let depositProductId, let intValue = Int(depositProductId) else {
+            guard let depositProductId else {
                 return nil
             }
-            return .init(type:.openDeposit(intValue))
+            return .init(type:.openDeposit(depositProductId))
         case .depositsList:
             return .init(type: .depositsList)
         case .migTransfer:
