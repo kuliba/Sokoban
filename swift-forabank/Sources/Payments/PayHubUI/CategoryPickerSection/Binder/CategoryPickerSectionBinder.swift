@@ -7,4 +7,4 @@
 
 import PayHub
 
-public typealias CategoryPickerSectionBinder<Category, CategoryModel, CategoryList> = Binder<CategoryPickerSectionContent<Category>, CategoryPickerSectionFlow<Category, CategoryModel, CategoryList>>
+public typealias CategoryPickerSectionBinder<Category, SelectedCategory, CategoryList> = Binder<CategoryPickerSectionContent<Category>, CategoryPickerSectionFlow<Category, SelectedCategory, CategoryList>>

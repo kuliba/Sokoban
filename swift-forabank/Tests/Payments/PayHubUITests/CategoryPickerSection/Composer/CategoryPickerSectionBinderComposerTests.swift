@@ -199,7 +199,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     func test_shouldChangeFlowNavigationOnContentSelectEvent_category() {
         
         let category = makeCategory()
-        let model = makeCategoryModel()
+        let model = makeSelectedCategory()
         let (sut, _,_, showCategory, scheduler) = makeSUT()
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
         let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
@@ -244,13 +244,13 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = CategoryPickerSectionBinderComposer<Category, CategoryModel, CategoryList>
+    private typealias Composer = CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList>
     private typealias Content = Composer.Content
     private typealias Flow = Composer.Flow
     private typealias SUT = Binder<Content, Flow>
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
     private typealias ShowAllSpy = Spy<[Category], CategoryList>
-    private typealias ShowCategorySpy = Spy<Category, CategoryModel>
+    private typealias ShowCategorySpy = Spy<Category, SelectedCategory>
     
     private func makeSUT(
         placeholderCount: Int = 6,
@@ -301,14 +301,14 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         return .init(value: value)
     }
     
-    struct CategoryModel: Equatable {
+    struct SelectedCategory: Equatable {
         
         let value: String
     }
     
-    func makeCategoryModel(
+    func makeSelectedCategory(
         _ value: String = anyMessage()
-    ) -> CategoryModel {
+    ) -> SelectedCategory {
         
         return .init(value: value)
     }

@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct CategoryPickerSectionFlowView<ContentView, DestinationView, Category, CategoryModel, CategoryList>: View
+public struct CategoryPickerSectionFlowView<ContentView, DestinationView, Category, SelectedCategory, CategoryList>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -39,9 +39,9 @@ where ContentView: View,
 
 public extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSectionFlowState<CategoryModel, CategoryList>
-    typealias Event = CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>
-    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, CategoryModel, CategoryList>
+    typealias State = CategoryPickerSectionFlowState<SelectedCategory, CategoryList>
+    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>
+    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, SelectedCategory, CategoryList>
 }
 
 extension CategoryPickerSectionDestination: Identifiable {

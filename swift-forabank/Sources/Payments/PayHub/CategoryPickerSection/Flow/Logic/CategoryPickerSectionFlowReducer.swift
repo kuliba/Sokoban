@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public final class CategoryPickerSectionFlowReducer<Category, CategoryModel, CategoryList> {
+public final class CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList> {
     
     public init() {}
 }
@@ -51,7 +51,7 @@ public extension CategoryPickerSectionFlowReducer {
 
 public extension CategoryPickerSectionFlowReducer {
     
-    typealias State = CategoryPickerSectionFlowState<CategoryModel, CategoryList>
-    typealias Event = CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>
+    typealias State = CategoryPickerSectionFlowState<SelectedCategory, CategoryList>
+    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>
     typealias Effect = CategoryPickerSectionFlowEffect<Category>
 }

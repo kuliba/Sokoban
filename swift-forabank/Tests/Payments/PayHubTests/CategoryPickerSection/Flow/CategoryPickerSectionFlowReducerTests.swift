@@ -14,7 +14,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_dismiss_shouldResetDestination() {
         
-        assert(makeState(destination: .category(makeCategoryModel())), event: .dismiss) {
+        assert(makeState(destination: .category(makeSelectedCategory())), event: .dismiss) {
             
             $0.destination = nil
         }
@@ -23,7 +23,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     func test_dismiss_shouldNotNotDeliverEffect() {
         
         assert(
-            makeState(destination: .category(makeCategoryModel())),
+            makeState(destination: .category(makeSelectedCategory())),
             event: .dismiss,
             delivers: nil
         )
@@ -33,7 +33,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_receive_category_shouldSetDestinationToCategory() {
         
-        let category = makeCategoryModel()
+        let category = makeSelectedCategory()
         
         assert(makeState(destination: nil), event: .receive(.category(category))) {
             
@@ -45,7 +45,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         assert(
             makeState(destination: nil),
-            event: .receive(.category(makeCategoryModel())),
+            event: .receive(.category(makeSelectedCategory())),
             delivers: nil
         )
     }
@@ -76,7 +76,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         let category = makeCategory()
         
         assert(
-            makeState(destination: .category(makeCategoryModel())),
+            makeState(destination: .category(makeSelectedCategory())),
             event: .select(.category(category))
         ) {
             $0.destination = nil
@@ -97,7 +97,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     func test_select_list_shouldResetDestination_empty() {
         
         assert(
-            makeState(destination: .category(makeCategoryModel())),
+            makeState(destination: .category(makeSelectedCategory())),
             event: .select(.list([]))
         ) {
             $0.destination = nil
@@ -116,7 +116,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     func test_select_list_shouldResetDestination_nonEmpty() {
         
         assert(
-            makeState(destination: .category(makeCategoryModel())),
+            makeState(destination: .category(makeSelectedCategory())),
             event: .select(.list([makeCategory()]))
         ) {
             $0.destination = nil
@@ -147,7 +147,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowReducer<Category, CategoryModel, CategoryList>
+    private typealias SUT = CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList>
     
     private func makeSUT(
         file: StaticString = #file,
