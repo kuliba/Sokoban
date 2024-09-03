@@ -42,9 +42,12 @@ final class PlainPickerFlowReducerTests: PlainPickerFlowTests {
         assert(makeState(), event: .navigation(makeNavigation()), delivers: nil)
     }
     
-    func test_select_shouldNotChangeState() {
+    func test_select_shouldSetIsLoadingToTrue() {
         
-        assert(makeState(), event: .select(makeElement()))
+        assert(makeState(), event: .select(makeElement())) {
+            
+            $0.isLoading = true
+        }
     }
     
     func test_select_shouldDeliverEffect() {

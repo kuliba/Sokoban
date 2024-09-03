@@ -19,6 +19,8 @@ public extension PlainPickerFlowReducer {
         
         var state = state
         var effect: Effect?
+
+        state.isLoading = false
         
         switch event {
         case .dismiss:
@@ -28,6 +30,7 @@ public extension PlainPickerFlowReducer {
             state.navigation = navigation
             
         case let .select(element):
+            state.isLoading = true
             effect = .select(element)
         }
         
