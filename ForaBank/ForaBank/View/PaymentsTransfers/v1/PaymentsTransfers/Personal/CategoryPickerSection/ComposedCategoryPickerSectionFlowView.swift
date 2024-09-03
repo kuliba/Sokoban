@@ -9,13 +9,15 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel>: View
-where CategoryPickerItemLabel: View {
+struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel, DestinationView>: View
+where CategoryPickerItemLabel: View,
+      DestinationView: View {
     
     let binder: CategoryPickerSectionBinder
     let config: Config
     let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
-    
+    let makeDestinationView: MakeDestinationView
+
     var body: some View {
         
         CategoryPickerSectionFlowWrapperView(
@@ -37,6 +39,7 @@ where CategoryPickerItemLabel: View {
 
 extension ComposedCategoryPickerSectionFlowView {
 
+    typealias MakeDestinationView = (CategoryPickerSectionDestination) -> DestinationView
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
@@ -56,12 +59,5 @@ private extension ComposedCategoryPickerSectionFlowView {
                 )
             }
         )
-    }
-    
-    private func makeDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")
     }
 }
