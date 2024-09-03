@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public final class StandardSelectedCategoryDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure: Error> {
+public final class StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure: Error> {
     
     private let nanoServices: NanoServices
     

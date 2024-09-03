@@ -334,7 +334,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     // MARK: - Helpers
     
-    private typealias Composer = StandardSelectedCategoryDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure>
+    private typealias Composer = StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure>
     private typealias SUT = Composer.MicroService
     private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
