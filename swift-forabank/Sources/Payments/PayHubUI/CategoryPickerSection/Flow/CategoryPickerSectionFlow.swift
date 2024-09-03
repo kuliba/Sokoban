@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-public typealias CategoryPickerSectionFlow<Category, CategoryModel, CategoryList> = RxViewModel<CategoryPickerSectionFlowState<CategoryModel, CategoryList>, CategoryPickerSectionFlowEvent<Category, CategoryModel, CategoryList>, CategoryPickerSectionFlowEffect<Category>>
+public typealias CategoryPickerSectionFlow<Category, SelectedCategory, CategoryList> = RxViewModel<CategoryPickerSectionFlowState<SelectedCategory, CategoryList>, CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>, CategoryPickerSectionFlowEffect<Category>>

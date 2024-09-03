@@ -45,12 +45,19 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
         
         sut.content.event(.select(makeElement()))
         scheduler.advance()
-        XCTAssertNoDiff(flowSpy.values, [.init(), .init()])
+        XCTAssertNoDiff(flowSpy.values, [
+            .init(isLoading: false),
+            .init(isLoading: true),
+        ])
         
         spy.complete(with: navigation)
         scheduler.advance()
         
-        XCTAssertNoDiff(flowSpy.values, [.init(), .init(), .init(navigation: navigation)])
+        XCTAssertNoDiff(flowSpy.values, [
+            .init(isLoading: false),
+            .init(isLoading: true),
+            .init(isLoading: false, navigation: navigation)
+        ])
         XCTAssertNotNil(sut)
     }
     

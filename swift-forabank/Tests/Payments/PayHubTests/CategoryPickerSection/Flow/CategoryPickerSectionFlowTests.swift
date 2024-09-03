@@ -21,14 +21,14 @@ class CategoryPickerSectionFlowTests: XCTestCase {
         return .init(value: value)
     }
     
-    struct CategoryModel: Equatable {
+    struct SelectedCategory: Equatable {
         
         let value: String
     }
     
-    func makeCategoryModel(
+    func makeSelectedCategory(
         _ value: String = anyMessage()
-    ) -> CategoryModel {
+    ) -> SelectedCategory {
         
         return .init(value: value)
     }

@@ -7,11 +7,14 @@
 
 public struct PlainPickerFlowState<Navigation> {
     
+    public var isLoading: Bool
     public var navigation: Navigation?
     
     public init(
+        isLoading: Bool = false,
         navigation: Navigation? = nil
     ) {
+        self.isLoading = isLoading
         self.navigation = navigation
     }
 }

@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionEffectHandlerTests.swift
+//  CategoryPickerSectionFlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTests {
+final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFlowTests {
     
     // MARK: - init
     
@@ -77,7 +77,7 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTe
     
     func test_showCategory_shouldDeliverCategoryList() {
         
-        let model = makeCategoryModel()
+        let model = makeSelectedCategory()
         let (sut, _, showCategory) = makeSUT()
         
         expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(model))) {
@@ -88,9 +88,9 @@ final class CategoryPickerSectionEffectHandlerTests: CategoryPickerSectionFlowTe
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, CategoryModel, CategoryList>
+    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList>
     private typealias ShowAllSpy = Spy<[Category], CategoryList>
-    private typealias ShowCategorySpy = Spy<Category, CategoryModel>
+    private typealias ShowCategorySpy = Spy<Category, SelectedCategory>
     
     private func makeSUT(
         file: StaticString = #file,
