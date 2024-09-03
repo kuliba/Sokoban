@@ -2753,6 +2753,7 @@
 		83C8F4452A444777008203E3 /* ItemsViewOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4442A444777008203E3 /* ItemsViewOld.swift */; };
 		83C8F4472A445497008203E3 /* ItemsViewNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4462A445497008203E3 /* ItemsViewNew.swift */; };
 		83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 83C918162C86D74C00037C11 /* GetBannerCatalogListAPI */; };
+		83C918192C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C918182C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift */; };
 		83C990E52B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C990E42B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift */; };
 		83C990E72B052A84003EC486 /* Templates+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C990E62B052A84003EC486 /* Templates+Helpers.swift */; };
 		83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 83CA1C922A600DFC00672AA5 /* PinCodeUI */; };
@@ -6098,6 +6099,7 @@
 		83C8F4422A443A10008203E3 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		83C8F4442A444777008203E3 /* ItemsViewOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewOld.swift; sourceTree = "<group>"; };
 		83C8F4462A445497008203E3 /* ItemsViewNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewNew.swift; sourceTree = "<group>"; };
+		83C918182C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetBannerCatalogListV2Tests.swift"; sourceTree = "<group>"; };
 		83C990E42B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TemplatesListViewModel+GetPhoneNumberTests.swift"; sourceTree = "<group>"; };
 		83C990E62B052A84003EC486 /* Templates+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Templates+Helpers.swift"; sourceTree = "<group>"; };
 		83CA1C942A6013A300672AA5 /* PinCodeChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCodeChangeView.swift; sourceTree = "<group>"; };
@@ -9706,6 +9708,7 @@
 				8353CD512B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift */,
 				8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */,
 				839914802C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift */,
+				83C918182C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -22134,6 +22137,7 @@
 				83B614802B036C9D002EE299 /* Model+AntifraudDataTests.swift in Sources */,
 				2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */,
 				2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */,
+				83C918192C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift in Sources */,
 				2AB197AC2B24A98E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequestTests.swift in Sources */,
 				2A2E3FC12BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift in Sources */,
 				2A72920C2C2028F00077B139 /* RequestFactory+createGetVerificationCodeRequestTests.swift in Sources */,
