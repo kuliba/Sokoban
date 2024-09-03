@@ -304,8 +304,6 @@ class BannerActionDepositTransfer: BannerAction {
     }
 }
 
-// TODO: need refactoring!!!
-
 class BannerActionLanding: BannerAction {
     
     let target: String
