@@ -7,4 +7,4 @@
 
 import PayHub
 
-typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
+typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<SelectedCategoryStub, CategoryListModelStub>
