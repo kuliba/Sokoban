@@ -29,9 +29,13 @@ where CategoryPickerView: View,
         
         VStack(spacing: 32) {
             
-            Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
+            Button("Reload | to be replaced with \"swipe to refresh\")".uppercased(), action: model.reload)
+                .foregroundColor(.blue)
+                .font(.caption.bold())
             
             factory.makeOperationPickerView(model.operationPicker)
+            
+            transfersView()
             
             factory.makeCategoryPickerView(model.categoryPicker)
         }
@@ -45,6 +49,26 @@ public extension PaymentsTransfersView {
     
     typealias Model = PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>
     typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
+}
+
+private extension PaymentsTransfersView {
+    
+    func transfersView() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            ZStack {
+                
+                Color.black.opacity(0.75)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Text("TBD: Transfers")
+                    .foregroundColor(.white)
+                    .font(.headline.bold())
+            }
+            .frame(height: 124)
+        }
+    }
 }
 
 // MARK: - Previews
