@@ -19,7 +19,7 @@ public final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Tr
 
 public extension PaymentFlowMicroServiceComposer {
     
-    func compose() -> PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
+    func compose() -> MicroService {
         
         return .init(makePaymentFlow: makePaymentFlow)
     }
