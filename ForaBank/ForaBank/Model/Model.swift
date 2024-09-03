@@ -76,6 +76,8 @@ class Model {
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     
+    var getBannerCatalogListV2: Services.GetBannerCatalogList?
+    
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
     var depositsCloseNotified: Set<DepositCloseNotification>
@@ -244,6 +246,7 @@ class Model {
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
         self.getProductsV6 = nil
+        self.getBannerCatalogListV2 = nil
 
         self.updateInfo = .init(.init())
         

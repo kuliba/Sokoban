@@ -1635,52 +1635,103 @@ extension Model {
     //BannerCatalogListData
     func handleDictionaryBannerCatalogList(_ serial: String?) {
         
-        guard let token = token else {
+        guard let token
+        else {
             handledUnauthorizedCommandAttempt()
             return
         }
         
+        let command = ServerCommandsGetBannerCatalogList(token: token, serial: serial)
+
         let typeDict: DictionaryType = .bannerCatalogList
-        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
-        self.dictionariesUpdating.value.insert(typeDict)
+        guard !dictionariesUpdating.value.contains(typeDict) 
+        else {
+            return
+        }
+        dictionariesUpdating.value.insert(typeDict)
+
+        if let getBannerCatalogListV2 {
+            getBannerCatalogList(getBannerCatalogListV2, command, serial, typeDict)
+        } else {
+            getBannerCatalogListV1(command, serial, typeDict)
+        }
+    }
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogList(token: token, serial: serial)
+    func getBannerCatalogListV1(
+        _ command: ServerCommandsGetBannerCatalogList,
+        _ serial: String?,
+        _ typeDict: DictionaryType
+    ) {
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             self.dictionariesUpdating.value.remove(typeDict)
+            self.handleGetBannerCatalogListV1Response(command, result)
+        }
+    }
+    
+    func getBannerCatalogList(
+        _ getBannerCatalogListCommand: Services.GetBannerCatalogList,
+        _ command: ServerCommandsGetBannerCatalogList,
+        _ serial: String?,
+        _ typeDict: DictionaryType
+    ) {
+        getBannerCatalogListCommand(serial) { [weak self] result in
             
+            self?.dictionariesUpdating.value.remove(typeDict)
+
             switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    guard let data = response.data else {
-                        return
-                    }
-                    
-                    // check if we have updated data
-                    guard data.bannerCatalogList.count > 0 else {
-                        return
-                    }
-                    
-                    self.catalogBanners.value = data.bannerCatalogList
-                    
-                    do {
-                        
-                        try self.localAgent.store(data.bannerCatalogList, serial: data.serial)
-                        
-                    } catch {
-                        
-                        handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                
+            case .none:
+                self?.handleServerCommandEmptyData(command: command)
+
+            case let .some(response):
+                guard !response.bannerCatalogList.isEmpty
+                else {
+                    return
                 }
                 
-            case .failure(let error):
-                handleServerCommandError(error: error, command: command)
-                
+                self?.catalogBanners.value = response.bannerCatalogList
+                self?.catalogBannersCacheStore(command, response)
             }
+        }
+    }
+    
+    func handleGetBannerCatalogListV1Response (
+        _ command: ServerCommandsGetBannerCatalogList,
+        _ result: Result<ServerCommandsGetBannerCatalogList.Response, ServerAgentError>
+    ) {
+        switch result {
+        case let .success(response):
+            switch response.statusCode {
+            case .ok:
+                guard let data = response.data,
+                      !data.bannerCatalogList.isEmpty
+                else {
+                    return
+                }
+                
+                catalogBanners.value = data.bannerCatalogList
+                catalogBannersCacheStore(command, data)
+                
+            default:
+                handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+            }
+            
+        case let .failure(error):
+            handleServerCommandError(error: error, command: command)
+        }
+    }
+    
+    func catalogBannersCacheStore(
+        _ command: ServerCommandsGetBannerCatalogList,
+        _ data: ServerCommandsGetBannerCatalogList.Response.BannerCatalogData) {
+        do {
+            
+            try localAgent.store(data.bannerCatalogList, serial: data.serial)
+            
+        } catch {
+            
+            handleServerCommandCachingError(error: error, command: command)
         }
     }
     
@@ -2233,4 +2284,11 @@ enum ModelDictionaryError: Swift.Error {
     case emptyData(message: String?)
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: Error)
+}
+
+// MARK: - typealias
+
+extension Model {
+    
+    typealias ServerCommandsGetBannerCatalogList = ServerCommands.DictionaryController.GetBannerCatalogList
 }
