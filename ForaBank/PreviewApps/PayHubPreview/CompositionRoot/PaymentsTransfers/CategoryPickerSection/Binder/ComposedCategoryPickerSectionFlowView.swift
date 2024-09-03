@@ -28,21 +28,7 @@ where CategoryPickerItemLabel: View,
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContentView: {
-                            
-                            CategoryPickerSectionContentWrapperView(
-                                model: binder.content,
-                                makeContentView: { state, event in
-                                    
-                                    CategoryPickerSectionContentView(
-                                        state: state,
-                                        event: event,
-                                        config: config,
-                                        itemLabel: itemLabel
-                                    )
-                                }
-                            )
-                        },
+                        makeContentView: makeContentView,
                         makeDestinationView: makeDestinationView
                     )
                 )
@@ -55,4 +41,23 @@ extension ComposedCategoryPickerSectionFlowView {
     
     typealias MakeDestinationView = (CategoryPickerSectionDestination) -> DestinationView
     typealias Config = CategoryPickerSectionContentViewConfig
+}
+
+extension ComposedCategoryPickerSectionFlowView {
+    
+    func makeContentView() -> some View {
+        
+        CategoryPickerSectionContentWrapperView(
+            model: binder.content,
+            makeContentView: { state, event in
+                
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event,
+                    config: config,
+                    itemLabel: itemLabel
+                )
+            }
+        )
+    }
 }
