@@ -20,9 +20,7 @@ public final class StandardSelectedCategoryDestinationMicroServiceComposer<Lates
 
 public extension StandardSelectedCategoryDestinationMicroServiceComposer {
     
-    func compose(
-        with category: Category
-    ) -> MicroService {
+    func compose() -> MicroService {
         
         return .init(makeDestination: makeDestination)
     }

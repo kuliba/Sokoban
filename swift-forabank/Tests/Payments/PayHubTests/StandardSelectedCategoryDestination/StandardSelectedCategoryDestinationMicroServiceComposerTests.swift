@@ -326,7 +326,6 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     private typealias MakeSuccessSpy = Spy<Composer.NanoServices.MakeSuccessPayload, Success>
     
     private func makeSUT(
-        with category: Category? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -346,7 +345,7 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
             makeFailure: makeFailureSpy.process(completion:),
             makeSuccess: makeSuccessSpy.process(_:completion:)
         ))
-        let sut = composer.compose(with: category ?? makeCategory())
+        let sut = composer.compose()
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
