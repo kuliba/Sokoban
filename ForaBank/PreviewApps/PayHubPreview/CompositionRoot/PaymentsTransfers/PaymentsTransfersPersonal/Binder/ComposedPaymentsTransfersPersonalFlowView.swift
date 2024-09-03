@@ -31,7 +31,8 @@ where CategoryPickerView: View,
                             
                             PaymentsTransfersView(
                                 model: personal.content,
-                                factory: factory
+                                factory: factory,
+                                config: .preview
                             )
                         }
                     )

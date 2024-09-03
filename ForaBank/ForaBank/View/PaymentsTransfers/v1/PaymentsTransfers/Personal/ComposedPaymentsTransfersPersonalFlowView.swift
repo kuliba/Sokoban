@@ -31,7 +31,8 @@ where CategoryPickerView: View,
                             
                             PayHubUI.PaymentsTransfersView(
                                 model: personal.content,
-                                factory: factory
+                                factory: factory,
+                                config: .iFora
                             )
                         }
                     )
