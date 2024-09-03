@@ -55,7 +55,7 @@ public extension PaymentsTransfersView {
         factory: .init(
             makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in
                 
-                Text("Category Pickeer")
+                Text("Category Picker")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.orange.opacity(0.1))

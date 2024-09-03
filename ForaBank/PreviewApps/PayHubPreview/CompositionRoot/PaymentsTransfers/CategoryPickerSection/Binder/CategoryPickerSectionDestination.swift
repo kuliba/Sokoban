@@ -7,11 +7,4 @@
 
 import PayHub
 
-typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<CategoryPickerDestination, PlainCategoryPickerBinder>
-
-
-enum CategoryPickerDestination {
-    
-    case ok(CategoryModelStub)
-    case failure(String)
-}
+typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<SelectedCategoryDestination, PlainCategoryPickerBinder>
