@@ -15,7 +15,7 @@ public final class StandardSelectedCategoryDestinationMicroServiceComposer<Lates
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Latest, Operator, Success, Failure>
+    public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Category, Latest, Operator, Success, Failure>
 }
 
 public extension StandardSelectedCategoryDestinationMicroServiceComposer {
@@ -34,11 +34,15 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
         category: Category,
         completion: @escaping MicroService.MakeDestinationCompletion
     ) {
-        nanoServices.loadOperators { [weak self] in self?.handle($0, completion) }
+        nanoServices.loadOperators { [weak self] in
+            
+            self?.handle($0, category, completion)
+        }
     }
     
     func handle(
         _ result: Result<[Operator], Error>,
+        _ category: Category,
         _ completion: @escaping MicroService.MakeDestinationCompletion
     ) {
         switch result {
@@ -52,6 +56,7 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
                 nanoServices.loadLatest { [weak self] in
                 
                     self?.nanoServices.makeSuccess(.init(
+                        category: category,
                         latest: (try? $0.get()) ?? [],
                         operators: operators
                     )) {

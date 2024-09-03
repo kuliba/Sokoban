@@ -90,14 +90,16 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithOneLoadedOperatorEmptyLatestOnLoadLatestFailure() {
         
+        let category = makeCategory()
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [],
             operators: [`operator`]
         )])
@@ -105,14 +107,16 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithOneLoadedOperatorEmptyLoadedLatest() {
         
+        let category = makeCategory()
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [],
             operators: [`operator`]
         )])
@@ -120,15 +124,17 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithOneLoadedOperatorOneLoadedLatest() {
         
+        let category = makeCategory()
         let latest = makeLatest()
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([latest]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [latest],
             operators: [`operator`]
         )])
@@ -136,15 +142,17 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithOneLoadedOperatorTwoLoadedLatest() {
         
+        let category = makeCategory()
         let (latest1, latest2) = (makeLatest(), makeLatest())
         let `operator` = makeOperator()
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([`operator`]))
         loadLatestSpy.complete(with: .success([latest1, latest2]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [latest1, latest2],
             operators: [`operator`]
         )])
@@ -152,14 +160,16 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithTwoLoadedOperatorsEmptyLatestOnLoadLatestFailure() {
         
+        let category = makeCategory()
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [],
             operators: [operator1, operator2]
         )])
@@ -167,14 +177,16 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithTwoLoadedOperatorsEmptyLoadedLatest() {
         
+        let category = makeCategory()
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [],
             operators: [operator1, operator2]
         )])
@@ -182,15 +194,17 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithTwoLoadedOperatorsOneLoadedLatest() {
         
+        let category = makeCategory()
         let latest = makeLatest()
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([latest]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [latest],
             operators: [operator1, operator2]
         )])
@@ -198,15 +212,17 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     
     func test_makeDestination_shouldCallMakeSuccessWithTwoLoadedOperatorsTwoLoadedLatest() {
         
+        let category = makeCategory()
         let (latest1, latest2) = (makeLatest(), makeLatest())
         let (operator1, operator2) = (makeOperator(), makeOperator())
         let (sut, loadLatestSpy, loadOperatorsSpy, _, makeSuccessSpy) = makeSUT()
         
-        sut.makeDestination(makeCategory()) { _ in }
+        sut.makeDestination(category) { _ in }
         loadOperatorsSpy.complete(with: .success([operator1, operator2]))
         loadLatestSpy.complete(with: .success([latest1, latest2]))
         
         XCTAssertEqual(makeSuccessSpy.payloads, [.init(
+            category: category,
             latest: [latest1, latest2],
             operators: [operator1, operator2]
         )])

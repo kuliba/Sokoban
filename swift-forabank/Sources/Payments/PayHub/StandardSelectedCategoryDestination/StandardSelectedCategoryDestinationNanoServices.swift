@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public struct StandardSelectedCategoryDestinationNanoServices<Latest, Operator, Success, Failure> {
+public struct StandardSelectedCategoryDestinationNanoServices<Category, Latest, Operator, Success, Failure> {
     
     public let loadLatest: LoadLatest
     public let loadOperators: LoadOperators
@@ -37,13 +37,16 @@ public extension StandardSelectedCategoryDestinationNanoServices {
     
     struct MakeSuccessPayload {
         
-        let latest: [Latest]
-        let operators: [Operator]
+        public let category: Category
+        public let latest: [Latest]
+        public let operators: [Operator]
         
         public init(
+            category: Category,
             latest: [Latest],
             operators: [Operator]
         ) {
+            self.category = category
             self.latest = latest
             self.operators = operators
         }
@@ -52,4 +55,4 @@ public extension StandardSelectedCategoryDestinationNanoServices {
     typealias MakeSuccess = (MakeSuccessPayload, @escaping (Success) -> Void) -> Void
 }
 
-extension StandardSelectedCategoryDestinationNanoServices.MakeSuccessPayload: Equatable where Latest: Equatable, Operator: Equatable {}
+extension StandardSelectedCategoryDestinationNanoServices.MakeSuccessPayload: Equatable where Category: Equatable, Latest: Equatable, Operator: Equatable {}
