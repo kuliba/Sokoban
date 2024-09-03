@@ -194,14 +194,28 @@ private extension RootView {
     ) -> some View {
         
         switch destination {
-        case let .category(categoryModelStub):
-            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        case let .category(selected):
+            selectedCategoryView(selected)
             
         case let .list(categoryListModelStub):
-            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
+            categoryListView(categoryListModelStub)
         }
     }
     
+    func selectedCategoryView(
+        _ categoryModelStub: CategoryModelStub
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+    }
+    
+    func categoryListView(
+        _ categoryListModelStub: CategoryListModelStub
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
+    }
+
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {

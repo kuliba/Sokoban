@@ -142,30 +142,44 @@ private extension ContentView {
     ) -> some View {
         
         switch destination {
-        case let .category(categoryModelStub):
-            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        case let .category(selected):
+            selectedCategoryView(selected)
             
         case let .list(plainCategoryPickerBinder):
-            ComposedPlainPickerView(
-                binder: plainCategoryPickerBinder,
-                makeContentView: { state, event in
-                
-                    List {
-                        
-                        ForEach(state.elements) { category in
-                            
-                            Button(category.name) { event(.select(category)) }
-                        }
-                    }
-                    .listStyle(.plain)
-                },
-                makeDestinationView: {
-                
-                    Text("TBD: destination view for \(String(describing: $0))")
-                        .padding()
-                }
-            )
+            categoryListView(plainCategoryPickerBinder)
         }
+    }
+    
+    func selectedCategoryView(
+        _ categoryModelStub: SelectedCategoryDestination
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+    }
+    
+    func categoryListView(
+        _ plainCategoryPickerBinder: PlainCategoryPickerBinder
+    ) -> some View {
+        
+        ComposedPlainPickerView(
+            binder: plainCategoryPickerBinder,
+            makeContentView: { state, event in
+            
+                List {
+                    
+                    ForEach(state.elements) { category in
+                        
+                        Button(category.name) { event(.select(category)) }
+                    }
+                }
+                .listStyle(.plain)
+            },
+            makeDestinationView: {
+            
+                Text("TBD: destination view for \(String(describing: $0))")
+                    .padding()
+            }
+        )
     }
 
     func makeOperationPickerView(
