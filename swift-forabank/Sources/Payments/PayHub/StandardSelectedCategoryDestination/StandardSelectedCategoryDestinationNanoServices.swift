@@ -35,24 +35,6 @@ public extension StandardSelectedCategoryDestinationNanoServices {
     
     typealias MakeFailure = (@escaping (Failure) -> Void) -> Void
     
-    struct MakeSuccessPayload {
-        
-        public let category: Category
-        public let latest: [Latest]
-        public let operators: [Operator]
-        
-        public init(
-            category: Category,
-            latest: [Latest],
-            operators: [Operator]
-        ) {
-            self.category = category
-            self.latest = latest
-            self.operators = operators
-        }
-    }
-    
+    typealias MakeSuccessPayload = MakeSelectedCategorySuccessPayload<Category, Latest, Operator>
     typealias MakeSuccess = (MakeSuccessPayload, @escaping (Success) -> Void) -> Void
 }
-
-extension StandardSelectedCategoryDestinationNanoServices.MakeSuccessPayload: Equatable where Category: Equatable, Latest: Equatable, Operator: Equatable {}

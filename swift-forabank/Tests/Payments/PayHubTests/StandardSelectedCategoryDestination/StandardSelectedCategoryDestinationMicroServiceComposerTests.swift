@@ -339,7 +339,8 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
     private typealias LoadOperatorsSpy = Spy<Void, Result<[Operator], Error>>
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>>
     private typealias MakeFailureSpy = Spy<Void, Failure>
-    private typealias MakeSuccessSpy = Spy<Composer.NanoServices.MakeSuccessPayload, Success>
+    private typealias MakeSuccessPayload = MakeSelectedCategorySuccessPayload<Category, Latest, Operator>
+    private typealias MakeSuccessSpy = Spy<MakeSuccessPayload, Success>
     
     private func makeSUT(
         file: StaticString = #file,
