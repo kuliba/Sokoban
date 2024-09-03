@@ -19,7 +19,7 @@ public final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Tr
 
 public extension PaymentFlowMicroServiceComposer {
     
-    func compose() -> PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
+    func compose() -> MicroService {
         
         return .init(makePaymentFlow: makePaymentFlow)
     }
@@ -32,7 +32,7 @@ private extension PaymentFlowMicroServiceComposer {
     typealias Flow = MicroService.Flow
     
     func makePaymentFlow(
-        type: Flow.ID,
+        type: PaymentFlowID,
         completion: @escaping (MicroService.Flow) -> Void
     ) {
         switch type {

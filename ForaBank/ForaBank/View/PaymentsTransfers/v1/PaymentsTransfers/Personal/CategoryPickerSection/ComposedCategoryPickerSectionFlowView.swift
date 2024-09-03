@@ -9,13 +9,15 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel>: View
-where CategoryPickerItemLabel: View {
+struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel, DestinationView>: View
+where CategoryPickerItemLabel: View,
+      DestinationView: View {
     
     let binder: CategoryPickerSectionBinder
     let config: Config
     let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
-    
+    let makeDestinationView: MakeDestinationView
+
     var body: some View {
         
         CategoryPickerSectionFlowWrapperView(
@@ -26,13 +28,8 @@ where CategoryPickerItemLabel: View {
                     state: $0,
                     event: $1,
                     factory: .init(
-                        makeContentView: {
-                            
-                            makeCategoryPickerSectionContentView(
-                                content: binder.content
-                            )
-                        },
-                        makeDestinationView: makeCategoryPickerSectionDestinationView
+                        makeContentView: makeContentView,
+                        makeDestinationView: makeDestinationView
                     )
                 )
             }
@@ -42,17 +39,16 @@ where CategoryPickerItemLabel: View {
 
 extension ComposedCategoryPickerSectionFlowView {
 
+    typealias MakeDestinationView = (CategoryPickerSectionDestination) -> DestinationView
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
 private extension ComposedCategoryPickerSectionFlowView {
     
-    func makeCategoryPickerSectionContentView(
-        content: CategoryPickerSectionContent
-    ) -> some View {
+    func makeContentView() -> some View {
         
         CategoryPickerSectionContentWrapperView(
-            model: content,
+            model: binder.content,
             makeContentView: { state, event in
                 
                 CategoryPickerSectionContentView(
@@ -63,12 +59,5 @@ private extension ComposedCategoryPickerSectionFlowView {
                 )
             }
         )
-    }
-    
-    private func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination<CategoryModelStub, CategoryListModelStub>
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: destination))")
     }
 }

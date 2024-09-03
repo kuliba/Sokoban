@@ -114,11 +114,12 @@ private extension Array where Element == OperationPickerItem<Latest> {
 extension Array where Element == ServiceCategory {
     
     static let preview: Self = [
-        .make("Category A"),
-        .make("Category B"),
-        .make("Category C"),
-        .make("Category D"),
-        .make("Category Fail"),
+        .make("Failure"),
+        .make("Mobile"),
+        .make("QR"),
+        .make("Tax"),
+        .make("Transport"),
+        .make("Utility"),
     ]
 }
 

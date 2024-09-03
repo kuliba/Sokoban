@@ -33,7 +33,7 @@ extension RootViewModelFactory {
             load: loadCategories,
             microServices: .init(
                 showAll: { $1(CategoryListModelStub(categories: $0)) },
-                showCategory: { $1(CategoryModelStub(category: $0)) }
+                showCategory: { $1(SelectedCategoryStub(category: $0)) }
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler

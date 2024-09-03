@@ -30,9 +30,11 @@ public struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, 
 
 public extension PaymentFlowMicroServiceComposerNanoServices {
     
-    typealias MakeMobile = (@escaping (Mobile) -> Void) -> Void
-    typealias MakeQR = (@escaping (QR) -> Void) -> Void
-    typealias MakeStandard = (@escaping (Standard) -> Void) -> Void
-    typealias MakeTax = (@escaping (Tax) -> Void) -> Void
-    typealias MakeTransport = (@escaping (Transport) -> Void) -> Void
+    typealias Make<T> = (@escaping (T) -> Void) -> Void
+    
+    typealias MakeMobile = Make<Mobile>
+    typealias MakeQR = Make<QR>
+    typealias MakeStandard = Make<Standard>
+    typealias MakeTax = Make<Tax>
+    typealias MakeTransport = Make<Transport>
 }

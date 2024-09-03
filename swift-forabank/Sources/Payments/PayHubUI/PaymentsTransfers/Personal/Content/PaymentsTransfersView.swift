@@ -16,22 +16,34 @@ where CategoryPickerView: View,
     @ObservedObject private var model: Model
     
     private let factory: Factory
+    private let config: Config
     
     public init(
         model: Model,
-        factory: Factory
+        factory: Factory,
+        config: Config
     ) {
         self.model = model
         self.factory = factory
+        self.config = config
     }
     
     public var body: some View {
         
-        VStack(spacing: 32) {
+        VStack(spacing: config.spacing) {
             
-            Button("Reload | to be replaced with \"swipe to refresh\")", action: model.reload)
+            Button("Reload | to be replaced with \"swipe to refresh\")".uppercased(), action: model.reload)
+                .foregroundColor(.blue)
+                .font(.caption.bold())
             
-            factory.makeOperationPickerView(model.operationPicker)
+            VStack(alignment: .leading, spacing: config.titleSpacing) {
+                
+                config.title.render()
+                
+                factory.makeOperationPickerView(model.operationPicker)
+            }
+            
+            transfersView()
             
             factory.makeCategoryPickerView(model.categoryPicker)
         }
@@ -45,6 +57,27 @@ public extension PaymentsTransfersView {
     
     typealias Model = PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>
     typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
+    typealias Config = PaymentsTransfersViewConfig
+}
+
+private extension PaymentsTransfersView {
+    
+    func transfersView() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            ZStack {
+                
+                Color.black.opacity(0.75)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Text("TBD: Transfers")
+                    .foregroundColor(.white)
+                    .font(.headline.bold())
+            }
+            .frame(height: 124)
+        }
+    }
 }
 
 // MARK: - Previews
@@ -55,7 +88,7 @@ public extension PaymentsTransfersView {
         factory: .init(
             makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in
                 
-                Text("Category Pickeer")
+                Text("Category Picker")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.orange.opacity(0.1))
@@ -71,7 +104,8 @@ public extension PaymentsTransfersView {
                 
                 Text("Toolbar \(String(describing: $0))")
             }
-        )
+        ),
+        config: .preview
     )
 }
 

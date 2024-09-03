@@ -80,8 +80,8 @@ private extension ContentView {
             
             ComposedProfileSwitcherView(
                 model: switcher,
-                corporateView: corporateView,
-                personalView: personalView,
+                corporateView: paymentsTransfersCorporateView,
+                personalView: paymentsTransfersPersonalView,
                 undefinedView: undefinedView
             )
             
@@ -95,11 +95,11 @@ private extension ContentView {
         }
     }
     
-    func corporateView(
+    func paymentsTransfersCorporateView(
         corporate: PaymentsTransfersCorporate
     ) -> some View {
         
-        Text(String(describing: corporate))
+        Text("TBD " + String(describing: corporate))
             .frame(maxHeight: .infinity)
             .toolbar {
                 
@@ -110,72 +110,29 @@ private extension ContentView {
             }
     }
     
-    func personalView(
+    func paymentsTransfersPersonalView(
         personal: PaymentsTransfersPersonal
     ) -> some View {
         
         ComposedPaymentsTransfersPersonalFlowView(
             personal: personal,
             factory: .init(
-                makeCategoryPickerView: {
-                    
-                    ComposedCategoryPickerSectionFlowView(
-                        binder: $0,
-                        config: .preview,
-                        itemLabel: itemLabel,
-                        makeDestinationView: makeCategoryPickerSectionDestinationView
-                    )
-                },
-                makeOperationPickerView: {
-                    
-                    ComposedOperationPickerFlowView(
-                        binder: $0,
-                        factory: .init(
-                            makeDestinationView: {
-                                
-                                Text("TBD: destination " + String(describing: $0))
-                            },
-                            makeItemLabel: itemLabel
-                        )
-                    )
-                },
-                makeToolbarView: {
-                    
-                    ComposedPaymentsTransfersToolbarView(
-                        binder: $0,
-                        factory: .init(
-                            makeDestinationView: {
-                                
-                                switch $0 {
-                                case let .profile(profileModel):
-                                    Text(String(describing: profileModel))
-                                }
-                            },
-                            makeFullScreenView: {
-                                
-                                switch $0 {
-                                case let .qr(qrModel):
-                                    VStack(spacing: 32) {
-                                        
-                                        Text(String(describing: qrModel))
-                                    }
-                                }
-                            },
-                            makeProfileLabel: {
-                                
-                                HStack {
-                                    Image(systemName: "person.circle")
-                                    Text("Profile")
-                                }
-                            },
-                            makeQRLabel: {
-                                
-                                Image(systemName: "qrcode")
-                            }
-                        )
-                    )
-                }
+                makeCategoryPickerView: makeCategoryPickerSectionView,
+                makeOperationPickerView: makeOperationPickerView,
+                makeToolbarView: makePaymentsTransfersToolbarView
             )
+        )
+    }
+    
+    func makeCategoryPickerSectionView(
+        binder: CategoryPickerSectionBinder
+    ) -> some View {
+        
+        ComposedCategoryPickerSectionFlowView(
+            binder: binder,
+            config: .preview,
+            itemLabel: itemLabel,
+            makeDestinationView: makeCategoryPickerSectionDestinationView
         )
     }
     
@@ -185,32 +142,100 @@ private extension ContentView {
     ) -> some View {
         
         switch destination {
-        case let .category(categoryModelStub):
-            Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        case let .category(selected):
+            selectedCategoryView(selected)
             
         case let .list(plainCategoryPickerBinder):
-            ComposedPlainPickerView(
-                binder: plainCategoryPickerBinder,
-                makeContentView: { state, event in
-                
-                    List {
-                        
-                        ForEach(state.elements) { category in
-                            
-                            Button(category.name) { event(.select(category)) }
-                        }
-                    }
-                    .listStyle(.plain)
-                },
-                makeDestinationView: {
-                
-                    Text("TBD: destination view for \(String(describing: $0))")
-                        .padding()
-                }
-            )
+            categoryListView(plainCategoryPickerBinder)
         }
     }
+    
+    func selectedCategoryView(
+        _ categoryModelStub: SelectedCategoryDestination
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+    }
+    
+    func categoryListView(
+        _ plainCategoryPickerBinder: PlainCategoryPickerBinder
+    ) -> some View {
+        
+        ComposedPlainPickerView(
+            binder: plainCategoryPickerBinder,
+            makeContentView: { state, event in
+            
+                List {
+                    
+                    ForEach(state.elements) { category in
+                        
+                        Button(category.name) { event(.select(category)) }
+                    }
+                }
+                .listStyle(.plain)
+            },
+            makeDestinationView: {
+            
+                Text("TBD: destination view for \(String(describing: $0))")
+                    .padding()
+            }
+        )
+    }
 
+    func makeOperationPickerView(
+        binder: OperationPickerBinder
+    ) -> some View {
+        
+        ComposedOperationPickerFlowView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
+                    
+                    Text("TBD: destination " + String(describing: $0))
+                },
+                makeItemLabel: itemLabel
+            )
+        )
+    }
+    
+    func makePaymentsTransfersToolbarView(
+        binder: PaymentsTransfersToolbarBinder
+    ) -> some View {
+        
+        ComposedPaymentsTransfersToolbarView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
+                    
+                    switch $0 {
+                    case let .profile(profileModel):
+                        Text(String(describing: profileModel))
+                    }
+                },
+                makeFullScreenView: {
+                    
+                    switch $0 {
+                    case let .qr(qrModel):
+                        VStack(spacing: 32) {
+                            
+                            Text(String(describing: qrModel))
+                        }
+                    }
+                },
+                makeProfileLabel: {
+                    
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("Profile")
+                    }
+                },
+                makeQRLabel: {
+                    
+                    Image(systemName: "qrcode")
+                }
+            )
+        )
+    }
     
     private func itemLabel(
         item: CategoryPickerSectionState.Item

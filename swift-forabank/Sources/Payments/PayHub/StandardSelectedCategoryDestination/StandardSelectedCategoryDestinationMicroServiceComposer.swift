@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public final class StandardSelectedCategoryDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure: Error> {
+public final class StandardSelectedCategoryDestinationMicroServiceComposer<Category, Latest, Operator, Success, Failure: Error> {
     
     private let nanoServices: NanoServices
     
@@ -15,14 +15,12 @@ public final class StandardSelectedCategoryDestinationMicroServiceComposer<Lates
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Latest, Operator, Success, Failure>
+    public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Category, Latest, Operator, Success, Failure>
 }
 
 public extension StandardSelectedCategoryDestinationMicroServiceComposer {
     
-    func compose(
-        with category: Category
-    ) -> MicroService {
+    func compose() -> MicroService {
         
         return .init(makeDestination: makeDestination)
     }
@@ -36,11 +34,15 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
         category: Category,
         completion: @escaping MicroService.MakeDestinationCompletion
     ) {
-        nanoServices.loadOperators { [weak self] in self?.handle($0, completion) }
+        nanoServices.loadOperators { [weak self] in
+            
+            self?.handle($0, category, completion)
+        }
     }
     
     func handle(
         _ result: Result<[Operator], Error>,
+        _ category: Category,
         _ completion: @escaping MicroService.MakeDestinationCompletion
     ) {
         switch result {
@@ -54,6 +56,7 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
                 nanoServices.loadLatest { [weak self] in
                 
                     self?.nanoServices.makeSuccess(.init(
+                        category: category,
                         latest: (try? $0.get()) ?? [],
                         operators: operators
                     )) {

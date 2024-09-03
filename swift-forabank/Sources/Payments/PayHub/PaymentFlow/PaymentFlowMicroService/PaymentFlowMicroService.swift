@@ -19,5 +19,5 @@ public struct PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
 public extension PaymentFlowMicroService {
     
     typealias Flow = PaymentFlow<Mobile, QR, Standard, Tax, Transport>
-    typealias MakePaymentFlow = (Flow.ID, @escaping (Flow) -> Void) -> Void
+    typealias MakePaymentFlow = (PaymentFlowID, @escaping (Flow) -> Void) -> Void
 }

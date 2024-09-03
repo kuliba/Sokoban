@@ -76,10 +76,7 @@ private extension PaymentsTransfersContentComposer {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         
-                        if category.name.contains("Fail") {
-                            completion(CategoryPickerDestination.failure("Failure"))
-                        } else {
-                            completion(.ok(CategoryModelStub(category: category))) }
+                        self.selectCategory(category: category, completion: completion)
                     }
                 }
             ),
@@ -88,6 +85,39 @@ private extension PaymentsTransfersContentComposer {
         )
         
         return composer.compose(prefix: [], suffix: [])
+    }
+}
+
+// MARK: - SelectedCategory
+
+private extension PaymentsTransfersContentComposer {
+    
+    func selectCategory(
+        category: ServiceCategory,
+        completion: @escaping (SelectedCategoryDestination) -> Void
+    ) {
+        let composer = PaymentFlowMicroServiceComposerNanoServicesComposer()
+        let nanoServices = composer.compose(category: category)
+        let paymentFlowComposer = PaymentFlowMicroServiceComposer(
+            nanoServices: nanoServices
+        )
+        let microService = paymentFlowComposer.compose()
+        
+        microService.makePaymentFlow(category.paymentFlowID, completion)
+    }
+}
+
+extension ServiceCategory {
+    
+    var paymentFlowID: PaymentFlowID {
+        
+        switch name {
+        case "Mobile":    return .mobile
+        case "QR":        return .qr
+        case "Tax":       return .taxAndStateServices
+        case "Transport": return .transport
+        default:          return .standard
+        }
     }
 }
 

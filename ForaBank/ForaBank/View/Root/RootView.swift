@@ -62,7 +62,7 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
-                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory, 
+                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
             )
@@ -143,18 +143,23 @@ private extension RootView {
             model: switcher,
             corporateView: paymentsTransfersCorporateView,
             personalView: paymentsTransfersPersonalView,
-            undefinedView: {
-                
-                SpinnerView(viewModel: .init())
-            }
+            undefinedView: { SpinnerView(viewModel: .init()) }
         )
     }
     
     func paymentsTransfersCorporateView(
-    _ corporate: PaymentsTransfersCorporate
+        _ corporate: PaymentsTransfersCorporate
     ) -> some View {
-    
-        Text("TBD: restricted PaymentsTransfers view for corporate")
+        
+        Text("TBD " + String(describing: corporate))
+            .frame(maxHeight: .infinity)
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Text("TBD: Profile without QR")
+                }
+            }
     }
     
     func paymentsTransfersPersonalView(
@@ -164,62 +169,103 @@ private extension RootView {
         ComposedPaymentsTransfersPersonalFlowView(
             personal: personal,
             factory: .init(
-                makeCategoryPickerView: {
+                makeCategoryPickerView: makeCategoryPickerSectionView,
+                makeOperationPickerView: makeOperationPickerView,
+                makeToolbarView: makePaymentsTransfersToolbarView
+            )
+        )
+    }
+    
+    func makeCategoryPickerSectionView(
+        binder: CategoryPickerSectionBinder
+    ) -> some View {
+        
+        ComposedCategoryPickerSectionFlowView(
+            binder: binder,
+            config: .iFora,
+            itemLabel: itemLabel,
+            makeDestinationView: makeCategoryPickerSectionDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionDestinationView(
+        destination: CategoryPickerSectionDestination
+    ) -> some View {
+        
+        switch destination {
+        case let .category(selected):
+            selectedCategoryView(selected)
+            
+        case let .list(categoryListModelStub):
+            categoryListView(categoryListModelStub)
+        }
+    }
+    
+    func selectedCategoryView(
+        _ categoryModelStub: SelectedCategoryStub
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+    }
+    
+    func categoryListView(
+        _ categoryListModelStub: CategoryListModelStub
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
+    }
+
+    func makeOperationPickerView(
+        binder: OperationPickerBinder
+    ) -> some View {
+        
+        ComposedOperationPickerFlowView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
                     
-                    ComposedCategoryPickerSectionFlowView(
-                        binder: $0,
-                        config: .iFora,
-                        itemLabel: itemLabel
-                    )
+                    Text("TBD: destination " + String(describing: $0))
                 },
-                makeOperationPickerView: {
+                makeItemLabel: itemLabel
+            )
+        )
+    }
+    
+    func makePaymentsTransfersToolbarView(
+        binder: PaymentsTransfersToolbarBinder
+    ) -> some View {
+
+        ComposedPaymentsTransfersToolbarView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
                     
-                    ComposedOperationPickerFlowView(
-                        binder: $0,
-                        factory: .init(
-                            makeDestinationView: {
-                                
-                                Text("TBD: destination " + String(describing: $0))
-                            },
-                            makeItemLabel: itemLabel
-                        )
-                    )
+                    switch $0 {
+                    case let .profile(profileModel):
+                        Text(String(describing: profileModel))
+                    }
                 },
-                makeToolbarView: {
+                makeFullScreenView: {
                     
-                    ComposedPaymentsTransfersToolbarView(
-                        binder: $0,
-                        factory: .init(
-                            makeDestinationView: {
-                                
-                                switch $0 {
-                                case let .profile(profileModel):
-                                    Text(String(describing: profileModel))
-                                }
-                            },
-                            makeFullScreenView: {
-                                
-                                switch $0 {
-                                case let .qr(qrModel):
-                                    VStack(spacing: 32) {
-                                        
-                                        Text(String(describing: qrModel))
-                                    }
-                                }
-                            },
-                            makeProfileLabel: {
-                                
-                                HStack {
-                                    Image(systemName: "person.circle")
-                                    Text("Profile")
-                                }
-                            },
-                            makeQRLabel: {
-                                
-                                Image(systemName: "qrcode")
-                            }
-                        )
-                    )
+                    switch $0 {
+                    case let .qr(qrModel):
+                        VStack(spacing: 32) {
+                            
+                            Text(String(describing: qrModel))
+                        }
+                    }
+                },
+                makeProfileLabel: {
+                    
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("Profile")
+                    }
+                },
+                makeQRLabel: {
+                    
+                    Image(systemName: "qrcode")
                 }
             )
         )
