@@ -1,11 +1,11 @@
 //
-//  CategoryPickerDestinationMicroServiceComposer.swift
+//  StandardSelectedCategoryDestinationMicroServiceComposer.swift
 //  
 //
 //  Created by Igor Malyarov on 02.09.2024.
 //
 
-public final class CategoryPickerDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure: Error> {
+public final class StandardSelectedCategoryDestinationMicroServiceComposer<Latest, Category, Operator, Success, Failure: Error> {
     
     private let nanoServices: NanoServices
     
@@ -15,10 +15,10 @@ public final class CategoryPickerDestinationMicroServiceComposer<Latest, Categor
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = CategoryPickerDestinationNanoServices<Latest, Operator, Success, Failure>
+    public typealias NanoServices = StandardSelectedCategoryDestinationNanoServices<Latest, Operator, Success, Failure>
 }
 
-public extension CategoryPickerDestinationMicroServiceComposer {
+public extension StandardSelectedCategoryDestinationMicroServiceComposer {
     
     func compose(
         with category: Category
@@ -27,10 +27,10 @@ public extension CategoryPickerDestinationMicroServiceComposer {
         return .init(makeDestination: makeDestination)
     }
     
-    typealias MicroService = CategoryPickerDestinationMicroService<Category, Success, Failure>
+    typealias MicroService = StandardSelectedCategoryDestinationMicroService<Category, Success, Failure>
 }
 
-private extension CategoryPickerDestinationMicroServiceComposer {
+private extension StandardSelectedCategoryDestinationMicroServiceComposer {
     
     func makeDestination(
         category: Category,
