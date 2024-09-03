@@ -20,6 +20,8 @@ public extension CategoryPickerSectionFlowReducer {
         var state = state
         var effect: Effect?
         
+        state.isLoading = false
+        
         switch event {
         case .dismiss:
             state.destination = nil
@@ -34,6 +36,7 @@ public extension CategoryPickerSectionFlowReducer {
             }
             
         case let .select(select):
+            state.isLoading = true
             state.destination = nil
 
             switch select {                

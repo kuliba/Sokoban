@@ -31,12 +31,13 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - receive
     
-    func test_receive_category_shouldSetDestinationToCategory() {
+    func test_receive_category_shouldSetIsLoadingToFalseSetDestinationToCategory() {
         
         let category = makeSelectedCategory()
         
-        assert(makeState(destination: nil), event: .receive(.category(category))) {
+        assert(makeState(isLoading: true, destination: nil), event: .receive(.category(category))) {
             
+            $0.isLoading = false
             $0.destination = .category(category)
         }
     }
@@ -50,12 +51,13 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         )
     }
     
-    func test_receive_list_shouldSetDestinationToCategory() {
+    func test_receive_list_shouldSetIsLoadingToFalseSetDestinationToCategory() {
         
         let list = makeCategoryList()
         
-        assert(makeState(destination: nil), event: .receive(.list(list))) {
+        assert(makeState(isLoading: true, destination: nil), event: .receive(.list(list))) {
             
+            $0.isLoading = false
             $0.destination = .list(list)
         }
     }
@@ -71,14 +73,15 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - select
     
-    func test_select_category_shouldResetDestination() {
+    func test_select_category_shouldSetIsLoadingToTrueResetDestination() {
         
         let category = makeCategory()
         
         assert(
-            makeState(destination: .category(makeSelectedCategory())),
+            makeState(isLoading: true, destination: .category(makeSelectedCategory())),
             event: .select(.category(category))
         ) {
+            $0.isLoading = true
             $0.destination = nil
         }
     }
@@ -94,12 +97,13 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         )
     }
     
-    func test_select_list_shouldResetDestination_empty() {
+    func test_select_list_shouldSetIsLoadingToTrueResetDestination_empty() {
         
         assert(
-            makeState(destination: .category(makeSelectedCategory())),
+            makeState(isLoading: true, destination: .category(makeSelectedCategory())),
             event: .select(.list([]))
         ) {
+            $0.isLoading = true
             $0.destination = nil
         }
     }
@@ -113,12 +117,13 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         )
     }
     
-    func test_select_list_shouldResetDestination_nonEmpty() {
+    func test_select_list_shouldSetIsLoadingToTrueResetDestination_nonEmpty() {
         
         assert(
             makeState(destination: .category(makeSelectedCategory())),
             event: .select(.list([makeCategory()]))
         ) {
+            $0.isLoading = true
             $0.destination = nil
         }
     }
@@ -162,10 +167,14 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     }
     
     private func makeState(
+        isLoading: Bool = false,
         destination: SUT.State.Destination? = nil
     ) -> SUT.State {
         
-        return .init(destination: destination)
+        return .init(
+            isLoading: isLoading,
+            destination: destination
+        )
     }
     
     @discardableResult

@@ -7,11 +7,14 @@
 
 public struct CategoryPickerSectionFlowState<SelectedCategory, CategoryList> {
     
+    public var isLoading: Bool
     public var destination: Destination?
     
     public init(
+        isLoading: Bool = false,
         destination: Destination? = nil
     ) {
+        self.isLoading = false
         self.destination = destination
     }
 }
