@@ -145,14 +145,14 @@ final class PaymentProviderPickerFlowReducerTests: PaymentProviderPickerFlowTest
         assert(makeState(), event: .select(.chat), delivers: nil)
     }
     
-    func test_select_payByInstructions_shouldNotChangeState() {
+    func test_select_detailPayment_shouldNotChangeState() {
         
-        assert(makeState(), event: .select(.payByInstructions))
+        assert(makeState(), event: .select(.detailPayment))
     }
     
-    func test_select_payByInstructions_shouldDeliverEffect() {
+    func test_select_detailPayment_shouldDeliverEffect() {
         
-        assert(makeState(), event: .select(.payByInstructions), delivers: .select(.payByInstructions))
+        assert(makeState(), event: .select(.detailPayment), delivers: .select(.detailPayment))
     }
     
     func test_select_qr_shouldSetStateChat() {

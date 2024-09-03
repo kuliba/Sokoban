@@ -24,14 +24,14 @@ public extension PaymentProviderPickerFlowReducer {
         case let .alert(serviceFailure):
             state.navigation = .alert(serviceFailure)
             
+        case let .destination(destination):
+            state.navigation = .destination(destination)
+            
         case .dismiss:
             state.navigation = nil
             
         case .goToPayments:
             state.navigation = .outside(.payments)
-            
-        case let .destination(destination):
-            state.navigation = .destination(destination)
             
         case let .select(select):
             self.select(&state, &effect, with: select)
@@ -62,12 +62,12 @@ private extension PaymentProviderPickerFlowReducer {
         case .chat:
             state.navigation = .outside(.chat)
             
+        case .detailPayment:
+            effect = .select(.detailPayment)
+            
         case let .latest(latest):
             state.isLoading = true
             effect = .select(.latest(latest))
-            
-        case .payByInstructions:
-            effect = .select(.payByInstructions)
             
         case let .provider(provider):
             state.isLoading = true
