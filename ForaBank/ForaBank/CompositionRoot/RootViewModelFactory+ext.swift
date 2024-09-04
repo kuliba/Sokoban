@@ -320,10 +320,13 @@ extension RootViewModelFactory {
         )
         let loadServiceCategories: LoadServiceCategories = { completion in
             
-            decorated.load {
+            backgroundScheduler.schedule {
                 
-                let categories = (try? $0.get()) ?? []
-                completion(categories.map { .category($0)})
+                decorated.load {
+                    
+                    let categories = (try? $0.get()) ?? []
+                    completion(categories.map { .category($0)})
+                }
             }
         }
         
@@ -336,13 +339,18 @@ extension RootViewModelFactory {
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
-            loadCategories: loadServiceCategories,
-            loadLatestOperations: loadLatestOperations,
+            nanoServices: .init(
+                loadCategories: loadServiceCategories,
+                loadAllLatest: loadLatestOperations,
+                loadLatestForCategory: NanoServices.getLatestPayments,
+                loadOperators: { _, completion in completion(.success([])) }
+            ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
         
-        loadServiceCategories { 
+        // call and notify categoryPicker
+        loadServiceCategories {
             
             paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
         }

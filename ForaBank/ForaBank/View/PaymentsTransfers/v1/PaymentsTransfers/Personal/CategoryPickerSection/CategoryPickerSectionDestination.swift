@@ -7,4 +7,14 @@
 
 import PayHub
 
-typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<SelectedCategoryStub, CategoryListModelStub>
+typealias CategoryPickerSectionDestination = PayHub.CategoryPickerSectionDestination<SelectedCategoryDestination, CategoryListModelStub>
+
+typealias SelectedCategoryDestination = PayHub.PaymentFlow<MobileBinderStub, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
+
+final class MobileBinderStub {}
+final class QRBinderStub {}
+
+typealias StandardSelectedCategoryDestination = Result<SelectedCategoryStub, Error>
+
+final class TaxBinderStub {}
+final class TransportBinderStub {}

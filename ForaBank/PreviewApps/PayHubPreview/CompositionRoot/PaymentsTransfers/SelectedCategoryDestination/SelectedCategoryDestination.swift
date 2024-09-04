@@ -10,9 +10,9 @@ import PayHub
 typealias SelectedCategoryDestination = PayHub.PaymentFlow<MobileBinderStub, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
 
 final class MobileBinderStub {}
+final class QRBinderStub {}
 
 typealias StandardSelectedCategoryDestination = Result<SelectedCategoryStub, Error>
 
-final class QRBinderStub {}
 final class TaxBinderStub {}
 final class TransportBinderStub {}

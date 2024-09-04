@@ -151,10 +151,10 @@ private extension ContentView {
     }
     
     func selectedCategoryView(
-        _ categoryModelStub: SelectedCategoryDestination
+        _ selected: SelectedCategoryDestination
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
     }
     
     func categoryListView(

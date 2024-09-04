@@ -203,10 +203,10 @@ private extension RootView {
     }
     
     func selectedCategoryView(
-        _ categoryModelStub: SelectedCategoryStub
+        _ selected: SelectedCategoryDestination
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
     }
     
     func categoryListView(
