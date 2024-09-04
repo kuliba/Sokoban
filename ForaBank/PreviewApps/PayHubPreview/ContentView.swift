@@ -105,6 +105,15 @@ private extension ContentView {
                 
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
+                    factory: .init(
+                        makeRestrictionNoticeView: {
+                            
+                            Label("App functionality is restricted", systemImage: "info.bubble")
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .clipShape(Capsule())
+                        }
+                    ),
                     config: .preview
                 )
             }

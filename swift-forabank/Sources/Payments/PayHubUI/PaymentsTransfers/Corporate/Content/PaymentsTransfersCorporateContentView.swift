@@ -7,42 +7,78 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView: View {
+public struct PaymentsTransfersCorporateContentView<RestrictionNoticeView>: View
+where RestrictionNoticeView: View {
     
     let content: Content
+    let factory: Factory
     let config: Config
     
     public init(
         content: Content,
+        factory: Factory,
         config: Config
     ) {
         self.content = content
+        self.factory = factory
         self.config = config
     }
-
+    
     public var body: some View {
         
-        Text("TBD " + String(describing: content))
-            .frame(maxHeight: .infinity)
-            .toolbar {
+        ScrollView(showsIndicators: false) {
+            
+            VStack {
                 
-                ToolbarItem(placement: .topBarLeading) {
-                    
-                    Text("TBD: Profile without QR")
-                }
+                factory.makeRestrictionNoticeView()
+                
+                Text("TBD " + String(describing: content))
             }
+        }
+        .toolbar(content: toolbar)
     }
 }
 
 public extension PaymentsTransfersCorporateContentView {
     
     typealias Content = PaymentsTransfersCorporateContent
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<RestrictionNoticeView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
 }
 
+private extension PaymentsTransfersCorporateContentView {
+    
+    func toolbar() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            
+            HStack {
+                
+                Image(systemName: "person")
+                Text("TBD: Profile without QR")
+            }
+        }
+    }
+}
+
+// MARK: - Previews
+
 #Preview {
-    PaymentsTransfersCorporateContentView(
-        content: .init(),
-        config: .preview
-    )
+    NavigationView {
+        
+        PaymentsTransfersCorporateContentView(
+            content: .init(),
+            factory: .init(
+                makeRestrictionNoticeView: {
+                    
+                    Text("App functionality is restricted")
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Capsule())
+                }
+            ),
+            config: .preview
+        )
+    }
+    .navigationViewStyle(.stack)
 }

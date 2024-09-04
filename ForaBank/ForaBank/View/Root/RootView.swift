@@ -157,6 +157,12 @@ private extension RootView {
                 
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
+                    factory: .init(
+                        makeRestrictionNoticeView: {
+                            
+                            DisableCorCardsView(text: "Все возможности приложения будут доступны после того, как Вы откроете продукт как физическое лицо")
+                        }
+                    ),
                     config: .iFora
                 )
             }
