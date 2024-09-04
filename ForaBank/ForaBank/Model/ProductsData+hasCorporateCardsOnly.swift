@@ -13,7 +13,8 @@ extension ProductsData {
         
         guard productsTypes == [.card] ||
                 (productsTypes.onlyCardsWithDeposits &&
-                 !hasDemandDepositWithAllowDebit)
+                 !hasDemandDepositWithAllowDebit) ||
+                (productsTypes.onlyCardsWithAccounts && !hasRubAccounts)
         else { return false }
         
         guard Set(cardsTypes).contains(where: { $0.isCorporateCard })
@@ -36,6 +37,21 @@ extension ProductsData {
             }
         
         return demandDepositsWithAllowDebit.count > 0
+    }
+    
+    var hasRubAccounts: Bool {
+        
+        let rubAccounts = products(.account)
+            .filter {
+                
+                guard let account = $0.asAccount,
+                      account.currency == "RUB"
+                else { return false }
+                
+                return true
+            }
+        
+        return rubAccounts.count > 0
     }
     
     var cardsTypes: [ProductCardData.CardType] {

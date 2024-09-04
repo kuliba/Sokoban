@@ -1638,4 +1638,8 @@ extension Array where Element == ProductType {
     var onlyCardsWithDeposits: Bool {
         sorted(by: \.rawValue) == [.card, .deposit]
     }
+    
+    var onlyCardsWithAccounts: Bool {
+        sorted(by: \.rawValue) == [.account, .card]
+    }
 }
