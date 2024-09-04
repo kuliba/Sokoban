@@ -49,7 +49,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonal
-    private typealias LoadLatestSpy = Spy<Void, [Latest], Never>
+    private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem<ServiceCategory>], Never>
 
     private func makeSUT(
@@ -67,8 +67,12 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let sut = RootViewModelFactory.makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
-            loadCategories: loadCategoriesSpy.process(completion:),
-            loadLatestOperations: loadLatestSpy.process(completion:),
+            nanoServices: .init(
+                loadCategories: loadCategoriesSpy.process(completion:),
+                loadAllLatest: loadLatestSpy.process(completion:),
+                loadLatestForCategory: { _,_ in },
+                loadOperators: { _,_ in }
+            ),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate
         )

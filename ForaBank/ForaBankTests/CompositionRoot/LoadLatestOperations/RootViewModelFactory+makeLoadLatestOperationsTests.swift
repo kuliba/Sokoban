@@ -123,7 +123,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsTests: XCTestCase {
     
     private typealias SUT = (CategorySet) -> RootViewModelFactory.LoadLatestOperations
     private typealias GetAllLoadedCategoriesSpy = Spy<Void, [ServiceCategory], Never>
-    private typealias GetLatestPaymentsSpy = Spy<[ServiceCategory], [Latest], Never>
+    private typealias GetLatestPaymentsSpy = Spy<[ServiceCategory], Result<[Latest], Error>, Never>
     
     private func makeSUT(
         file: StaticString = #file,
