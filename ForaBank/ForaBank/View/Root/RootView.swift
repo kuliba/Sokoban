@@ -151,15 +151,7 @@ private extension RootView {
         _ corporate: PaymentsTransfersCorporate
     ) -> some View {
         
-        Text("TBD " + String(describing: corporate))
-            .frame(maxHeight: .infinity)
-            .toolbar {
-                
-                ToolbarItem(placement: .topBarLeading) {
-                    
-                    Text("TBD: Profile without QR")
-                }
-            }
+        ComposedPaymentsTransfersCorporateView(corporate: corporate)
     }
     
     func paymentsTransfersPersonalView(
