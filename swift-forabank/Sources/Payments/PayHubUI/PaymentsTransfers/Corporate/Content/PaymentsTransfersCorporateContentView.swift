@@ -29,9 +29,15 @@ where RestrictionNoticeView: View,
         
         ScrollView(showsIndicators: false) {
             
-            VStack {
-                
+            VStack(alignment: .leading, spacing: config.spacing) {
+
                 factory.makeRestrictionNoticeView()
+                
+                config.header.render()
+                    .padding(.top, config.headerTopPadding)                
+
+                config.title.render()
+                    .padding(.top, config.titleTopPadding)
                 
                 Text("TBD " + String(describing: content))
             }
