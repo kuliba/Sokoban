@@ -341,13 +341,18 @@ extension RootViewModelFactory {
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
-            loadCategories: loadServiceCategories,
-            loadLatestOperations: loadLatestOperations,
+            nanoServices: .init(
+                loadCategories: loadServiceCategories,
+                loadAllLatest: loadLatestOperations,
+                loadLatestForCategory: NanoServices.getLatestPayments,
+                loadOperators: { _, completion in completion(.success([])) }
+            ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
         
-        loadServiceCategories { 
+        // call and notify categoryPicker
+        loadServiceCategories {
             
             paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
         }

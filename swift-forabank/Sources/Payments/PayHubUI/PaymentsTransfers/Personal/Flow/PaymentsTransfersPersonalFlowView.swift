@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowView.swift
+//  PaymentsTransfersPersonalFlowView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersFlowView<Content>: View
+public struct PaymentsTransfersPersonalFlowView<Content>: View
 where Content: View {
     
     private let state: State
@@ -31,9 +31,9 @@ where Content: View {
     }
 }
 
-public extension PaymentsTransfersFlowView {
+public extension PaymentsTransfersPersonalFlowView {
     
     typealias State = PaymentsTransfersPersonalFlowState
     typealias Event = PaymentsTransfersPersonalFlowEvent
-    typealias Factory = PaymentsTransfersFlowViewFactory<Content>
+    typealias Factory = PaymentsTransfersPersonalFlowViewFactory<Content>
 }

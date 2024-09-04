@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersViewConfig+preview.swift
+//  PaymentsTransfersPersonalViewConfig+preview.swift
 //
 //
 //  Created by Igor Malyarov on 03.09.2024.
@@ -7,7 +7,7 @@
 
 import PayHubUI
 
-extension PaymentsTransfersViewConfig {
+extension PaymentsTransfersPersonalViewConfig {
     
     static let preview: Self = .init(
         titleSpacing: 16,

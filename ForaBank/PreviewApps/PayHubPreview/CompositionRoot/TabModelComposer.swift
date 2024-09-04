@@ -24,7 +24,7 @@ final class TabModelComposer {
     }
     
     typealias HasCorporateCardsOnly = AnyPublisher<Bool, Never>
-    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersContent
+    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersPersonalContent
 }
 
 extension TabModelComposer {

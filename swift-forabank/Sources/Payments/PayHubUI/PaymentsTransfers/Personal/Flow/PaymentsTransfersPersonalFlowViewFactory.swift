@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowViewFactory.swift
+//  PaymentsTransfersPersonalFlowViewFactory.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 17.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersFlowViewFactory<ContentView>
+public struct PaymentsTransfersPersonalFlowViewFactory<ContentView>
 where ContentView: View {
     
     public let makeContentView: MakeContentView
@@ -20,7 +20,7 @@ where ContentView: View {
     }
 }
 
-public extension PaymentsTransfersFlowViewFactory {
+public extension PaymentsTransfersPersonalFlowViewFactory {
     
     typealias MakeContentView = () -> ContentView
 }

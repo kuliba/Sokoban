@@ -8,7 +8,7 @@
 import SharedConfigs
 import SwiftUI
 
-public struct PaymentsTransfersViewConfig: Equatable {
+public struct PaymentsTransfersPersonalViewConfig: Equatable {
     
     public let titleSpacing: CGFloat
     public let spacing: CGFloat

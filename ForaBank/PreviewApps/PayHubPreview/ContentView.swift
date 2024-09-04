@@ -99,27 +99,37 @@ private extension ContentView {
         corporate: PaymentsTransfersCorporate
     ) -> some View {
         
-        Text("TBD " + String(describing: corporate))
-            .frame(maxHeight: .infinity)
-            .toolbar {
+        ComposedPaymentsTransfersCorporateView(
+            corporate: corporate,
+            makeContentView: {
                 
-                ToolbarItem(placement: .topBarLeading) {
-                    
-                    Text("TBD: Profile without QR")
-                }
+                PaymentsTransfersCorporateContentView(
+                    content: corporate,
+                    config: .preview
+                )
             }
+        )
     }
     
     func paymentsTransfersPersonalView(
         personal: PaymentsTransfersPersonal
     ) -> some View {
         
-        ComposedPaymentsTransfersPersonalFlowView(
+        ComposedPaymentsTransfersPersonalView(
             personal: personal,
             factory: .init(
-                makeCategoryPickerView: makeCategoryPickerSectionView,
-                makeOperationPickerView: makeOperationPickerView,
-                makeToolbarView: makePaymentsTransfersToolbarView
+                makeContentView: {
+                    
+                    PaymentsTransfersPersonalContentView(
+                        content: personal.content,
+                        factory: .init(
+                            makeCategoryPickerView: makeCategoryPickerSectionView,
+                            makeOperationPickerView: makeOperationPickerView,
+                            makeToolbarView: makePaymentsTransfersToolbarView
+                        ),
+                        config: .preview
+                    )
+                }
             )
         )
     }
@@ -151,10 +161,10 @@ private extension ContentView {
     }
     
     func selectedCategoryView(
-        _ categoryModelStub: SelectedCategoryDestination
+        _ selected: SelectedCategoryDestination
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryModelStub))")
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
     }
     
     func categoryListView(

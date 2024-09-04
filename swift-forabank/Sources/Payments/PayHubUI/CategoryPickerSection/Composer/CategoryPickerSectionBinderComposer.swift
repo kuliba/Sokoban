@@ -137,4 +137,3 @@ private extension CategoryPickerSectionBinderComposer {
         return [dismiss, select]
     }
 }
- 

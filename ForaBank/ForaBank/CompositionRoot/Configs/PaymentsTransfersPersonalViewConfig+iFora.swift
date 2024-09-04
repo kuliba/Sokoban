@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersViewConfig.swift
+//  PaymentsTransfersPersonalViewConfig+iFora.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 03.09.2024.
@@ -7,7 +7,7 @@
 
 import PayHubUI
 
-extension PaymentsTransfersViewConfig {
+extension PaymentsTransfersPersonalViewConfig {
     
     static let iFora: Self = .init(
         titleSpacing: 16,

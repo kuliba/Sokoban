@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersModel.swift
+//  PaymentsTransfersPersonalContent.swift
 //  
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>: ObservableObject {
+public final class PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar>: ObservableObject {
     
     public let categoryPicker: CategoryPicker
     public let operationPicker: OperationPicker
@@ -27,7 +27,7 @@ public final class PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolb
     }
 }
 
-public extension PaymentsTransfersModel {
+public extension PaymentsTransfersPersonalContent {
     
     func reload() {
         
