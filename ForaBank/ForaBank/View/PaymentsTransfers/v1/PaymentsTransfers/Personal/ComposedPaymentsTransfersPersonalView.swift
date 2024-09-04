@@ -19,17 +19,17 @@ where CategoryPickerView: View,
     
     var body: some View {
         
-        PaymentsTransfersFlowWrapperView(
+        PaymentsTransfersPersonalFlowWrapperView(
             model: personal.flow,
             makeContentView: {
                 
-                PaymentsTransfersFlowView(
+                PaymentsTransfersPersonalFlowView(
                     state: $0,
                     event: $1,
                     factory: .init(
                         makeContentView: {
                             
-                            PayHubUI.PaymentsTransfersView(
+                            PaymentsTransfersPersonalView(
                                 model: personal.content,
                                 factory: factory,
                                 config: .iFora
@@ -44,5 +44,5 @@ where CategoryPickerView: View,
 
 extension ComposedPaymentsTransfersPersonalView {
     
-    typealias Factory = PayHubUI.PaymentsTransfersViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
 }

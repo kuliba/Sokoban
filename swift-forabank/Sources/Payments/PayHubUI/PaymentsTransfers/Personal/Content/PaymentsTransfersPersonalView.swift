@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersView.swift
+//  PaymentsTransfersPersonalView.swift
 //
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
+public struct PaymentsTransfersPersonalView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View {
@@ -53,14 +53,14 @@ where CategoryPickerView: View,
     }
 }
 
-public extension PaymentsTransfersView {
+public extension PaymentsTransfersPersonalView {
     
     typealias Model = PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>
-    typealias Factory = PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
-    typealias Config = PaymentsTransfersViewConfig
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
+    typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
-private extension PaymentsTransfersView {
+private extension PaymentsTransfersPersonalView {
     
     func transfersView() -> some View {
         
@@ -83,7 +83,7 @@ private extension PaymentsTransfersView {
 // MARK: - Previews
 
 #Preview {
-    PaymentsTransfersView(
+    PaymentsTransfersPersonalView(
         model: .preview,
         factory: .init(
             makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in

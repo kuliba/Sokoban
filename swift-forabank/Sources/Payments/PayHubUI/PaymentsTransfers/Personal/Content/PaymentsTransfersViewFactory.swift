@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersViewFactory.swift
+//  PaymentsTransfersPersonalViewFactory.swift
 //  PayHubPreview
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView> {
+public struct PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView> {
     
     public let makeCategoryPickerView: MakeCategoryPickerView
     public let makeOperationPickerView: MakeOperationPickerView
@@ -24,7 +24,7 @@ public struct PaymentsTransfersViewFactory<CategoryPicker, CategoryPickerView, O
     }
 }
 
-public extension PaymentsTransfersViewFactory {
+public extension PaymentsTransfersPersonalViewFactory {
     
     typealias MakeCategoryPickerView = (CategoryPicker) -> CategoryPickerView
     typealias MakeOperationPickerView = (OperationPicker) -> OperationPickerView
