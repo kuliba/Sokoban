@@ -6,10 +6,22 @@
 //
 
 struct PTCCTransfersSectionFlowState: Equatable {}
-enum PTCCTransfersSectionFlowEvent: Equatable {}
-enum PTCCTransfersSectionFlowEffect: Equatable {}
 
-final class PTCCTransfersSectionFlowReducer {
+enum PTCCTransfersSectionFlowEvent<Select> {
+    
+    case select(Select)
+}
+
+extension PTCCTransfersSectionFlowEvent: Equatable where Select: Equatable {}
+
+enum PTCCTransfersSectionFlowEffect<Select> {
+    
+    case select(Select)
+}
+
+extension PTCCTransfersSectionFlowEffect: Equatable where Select: Equatable {}
+
+final class PTCCTransfersSectionFlowReducer<Select> {
     
     init() {}
 }
@@ -25,7 +37,8 @@ extension PTCCTransfersSectionFlowReducer {
         var effect: Effect?
         
         switch event {
-            
+        case let .select(select):
+            effect = .select(select)
         }
         
         return (state, effect)
@@ -35,17 +48,31 @@ extension PTCCTransfersSectionFlowReducer {
 extension PTCCTransfersSectionFlowReducer {
     
     typealias State = PTCCTransfersSectionFlowState
-    typealias Event = PTCCTransfersSectionFlowEvent
-    typealias Effect = PTCCTransfersSectionFlowEffect
+    typealias Event = PTCCTransfersSectionFlowEvent<Select>
+    typealias Effect = PTCCTransfersSectionFlowEffect<Select>
 }
 
 import XCTest
 
 final class PTCCTransfersSectionFlowReducerTests: PTCCTransfersSectionFlowTests {
     
+    // MARK: - select
+    
+    func test_select_shouldNotChangeState() {
+        
+        assert(makeState(), event: .select(makeSelect()))
+    }
+    
+    func test_select_shouldDeliverSelectEffectWithSelection() {
+        
+        let selection = makeSelect()
+        
+        assert(makeState(), event: .select(selection), delivers: .select(selection))
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = PTCCTransfersSectionFlowReducer
+    private typealias SUT = PTCCTransfersSectionFlowReducer<Select>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -57,6 +84,11 @@ final class PTCCTransfersSectionFlowReducerTests: PTCCTransfersSectionFlowTests 
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState() -> SUT.State {
+        
+        return .init()
     }
     
     @discardableResult
