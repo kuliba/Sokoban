@@ -106,6 +106,7 @@ private extension ContentView {
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
                     factory: .init(
+                        makeBannerSectionView: makeBannerSectionView,
                         makeRestrictionNoticeView: makeRestrictionNoticeView,
                         makeToolbarView: makePaymentsTransfersCorporateToolbarView
                     ),
@@ -115,9 +116,22 @@ private extension ContentView {
         )
     }
     
+    func makeBannerSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.orange.opacity(0.5)
+            
+            Text("Banners")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
+    }
+    
     func makeRestrictionNoticeView() -> some View {
         
         Label("App functionality is restricted", systemImage: "info.bubble")
+            .frame(maxWidth: .infinity)
             .padding()
             .background(Color.gray.opacity(0.2))
             .clipShape(Capsule())

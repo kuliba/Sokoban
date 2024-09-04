@@ -158,6 +158,7 @@ private extension RootView {
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
                     factory: .init(
+                        makeBannerSectionView: makeBannerSectionView,
                         makeRestrictionNoticeView: makeRestrictionNoticeView,
                         makeToolbarView: makePaymentsTransfersCorporateToolbarView
                     ),
@@ -165,6 +166,18 @@ private extension RootView {
                 )
             }
         )
+    }
+    
+    func makeBannerSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.orange.opacity(0.5)
+            
+            Text("Banners")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
     }
     
     func makeRestrictionNoticeView() -> some View {

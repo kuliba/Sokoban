@@ -10,6 +10,7 @@ import PayHubUI
 extension PaymentsTransfersCorporateContentViewConfig {
     
     static let iFora: Self = .init(
+        bannerSectionHeight: 178,
         header: .init(
             text: "Платежи",
             config: .init(
@@ -19,6 +20,7 @@ extension PaymentsTransfersCorporateContentViewConfig {
         ),
         headerTopPadding: 8,
         spacing: 16,
+        stack: .init(top: 20, leading: 16, bottom: 0, trailing: 15),
         title: .init(
             text: "Перевести",
             config: .init(

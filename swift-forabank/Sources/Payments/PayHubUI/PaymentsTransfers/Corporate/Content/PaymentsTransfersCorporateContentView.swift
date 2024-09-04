@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView<RestrictionNoticeView, ToolbarView>: View
-where RestrictionNoticeView: View,
+public struct PaymentsTransfersCorporateContentView<BannerSectionView, RestrictionNoticeView, ToolbarView>: View
+where BannerSectionView: View,
+      RestrictionNoticeView: View,
       ToolbarView: ToolbarContent {
     
     let content: Content
@@ -30,17 +31,21 @@ where RestrictionNoticeView: View,
         ScrollView(showsIndicators: false) {
             
             VStack(alignment: .leading, spacing: config.spacing) {
-
+                
                 factory.makeRestrictionNoticeView()
                 
                 config.header.render()
-                    .padding(.top, config.headerTopPadding)                
-
+                    .padding(.top, config.headerTopPadding)
+                
+                factory.makeBannerSectionView()
+                    .frame(height: config.bannerSectionHeight)
+                
                 config.title.render()
                     .padding(.top, config.titleTopPadding)
                 
                 Text("TBD " + String(describing: content))
             }
+            .padding(config.stack)
         }
         .toolbar(content: factory.makeToolbarView)
     }
@@ -49,7 +54,7 @@ where RestrictionNoticeView: View,
 public extension PaymentsTransfersCorporateContentView {
     
     typealias Content = PaymentsTransfersCorporateContent
-    typealias Factory = PaymentsTransfersCorporateContentViewFactory<RestrictionNoticeView, ToolbarView>
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
 }
 
@@ -61,9 +66,21 @@ public extension PaymentsTransfersCorporateContentView {
         PaymentsTransfersCorporateContentView(
             content: .init(),
             factory: .init(
+                makeBannerSectionView: {
+                    
+                    ZStack {
+                        
+                        Color.orange.opacity(0.5)
+                        
+                        Text("Banners")
+                            .foregroundColor(.white)
+                            .font(.title3.bold())
+                    }
+                },
                 makeRestrictionNoticeView: {
                     
                     Text("App functionality is restricted")
+                        .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.gray.opacity(0.2))
                         .clipShape(Capsule())
