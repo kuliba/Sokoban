@@ -166,7 +166,7 @@ private extension RootView {
         _ personal: PaymentsTransfersPersonal
     ) -> some View {
         
-        ComposedPaymentsTransfersPersonalFlowView(
+        ComposedPaymentsTransfersPersonalView(
             personal: personal,
             factory: .init(
                 makeCategoryPickerView: makeCategoryPickerSectionView,
