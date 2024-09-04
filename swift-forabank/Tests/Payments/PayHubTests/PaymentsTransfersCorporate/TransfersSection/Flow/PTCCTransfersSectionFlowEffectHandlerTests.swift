@@ -5,50 +5,7 @@
 //  Created by Igor Malyarov on 04.09.2024.
 //
 
-struct PTCCTransfersSectionFlowEffectHandlerMicroServices<Navigation, Select> {
-    
-    let makeNavigation: MakeNavigation
-}
-
-extension PTCCTransfersSectionFlowEffectHandlerMicroServices {
-    
-    typealias MakeNavigation = (Select, @escaping (Navigation) -> Void) -> Void
-}
-
-final class PTCCTransfersSectionFlowEffectHandler<Navigation, Select> {
-    
-    private let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = PTCCTransfersSectionFlowEffectHandlerMicroServices<Navigation, Select>
-}
-
-extension PTCCTransfersSectionFlowEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .select(select):
-            microServices.makeNavigation(select) { dispatch(.navigation($0)) }
-        }
-    }
-}
-
-extension PTCCTransfersSectionFlowEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = PTCCTransfersSectionFlowEvent<Navigation, Select>
-    typealias Effect = PTCCTransfersSectionFlowEffect<Select>
-}
-
+import PayHub
 import XCTest
 
 final class PTCCTransfersSectionFlowEffectHandlerTests: PTCCTransfersSectionFlowTests {

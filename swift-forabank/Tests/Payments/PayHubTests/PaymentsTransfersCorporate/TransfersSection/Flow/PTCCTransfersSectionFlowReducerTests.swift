@@ -5,60 +5,27 @@
 //  Created by Igor Malyarov on 04.09.2024.
 //
 
-struct PTCCTransfersSectionFlowState: Equatable {}
-
-enum PTCCTransfersSectionFlowEvent<Navigation, Select> {
-    
-    case navigation(Navigation)
-    case select(Select)
-}
-
-extension PTCCTransfersSectionFlowEvent: Equatable where Navigation: Equatable, Select: Equatable {}
-
-enum PTCCTransfersSectionFlowEffect<Select> {
-    
-    case select(Select)
-}
-
-extension PTCCTransfersSectionFlowEffect: Equatable where Select: Equatable {}
-
-final class PTCCTransfersSectionFlowReducer<Navigation, Select> {
-    
-    init() {}
-}
-
-extension PTCCTransfersSectionFlowReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case let .navigation(navigation):
-            break
-            
-        case let .select(select):
-            effect = .select(select)
-        }
-        
-        return (state, effect)
-    }
-}
-
-extension PTCCTransfersSectionFlowReducer {
-    
-    typealias State = PTCCTransfersSectionFlowState
-    typealias Event = PTCCTransfersSectionFlowEvent<Navigation, Select>
-    typealias Effect = PTCCTransfersSectionFlowEffect<Select>
-}
-
+import PayHub
 import XCTest
 
 final class PTCCTransfersSectionFlowReducerTests: PTCCTransfersSectionFlowTests {
+    
+    // MARK: - navigation
+    
+    func test_navigation_shouldSetNavigation() {
+        
+        let navigation = makeNavigation()
+        
+        assert(makeState(), event: .navigation(navigation)) {
+            
+            $0.navigation = navigation
+        }
+    }
+    
+    func test_navigation_shouldNotDeliverEffect() {
+        
+        assert(makeState(), event: .navigation(makeNavigation()), delivers: nil)
+    }
     
     // MARK: - select
     
