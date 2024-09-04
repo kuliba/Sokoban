@@ -26,6 +26,7 @@ extension PaymentsTransfersCorporateContentViewConfig {
                 textColor: .orange
             )
         ),
-        titleTopPadding: 16
+        titleTopPadding: 16,
+        transfersSectionHeight: 124
     )
 }

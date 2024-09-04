@@ -17,6 +17,7 @@ public struct PaymentsTransfersCorporateContentViewConfig: Equatable {
     public let stack: EdgeInsets
     public let title: TitleConfig
     public let titleTopPadding: CGFloat
+    public let transfersSectionHeight: CGFloat
     
     public init(
         bannerSectionHeight: CGFloat,
@@ -25,7 +26,8 @@ public struct PaymentsTransfersCorporateContentViewConfig: Equatable {
         spacing: CGFloat,
         stack: EdgeInsets,
         title: TitleConfig,
-        titleTopPadding: CGFloat
+        titleTopPadding: CGFloat,
+        transfersSectionHeight: CGFloat
     ) {
         self.bannerSectionHeight = bannerSectionHeight
         self.header = header
@@ -34,5 +36,6 @@ public struct PaymentsTransfersCorporateContentViewConfig: Equatable {
         self.stack = stack
         self.title = title
         self.titleTopPadding = titleTopPadding
+        self.transfersSectionHeight = transfersSectionHeight
     }
 }

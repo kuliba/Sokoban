@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView<BannerSectionView, RestrictionNoticeView, ToolbarView>: View
+public struct PaymentsTransfersCorporateContentView<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>: View
 where BannerSectionView: View,
       RestrictionNoticeView: View,
-      ToolbarView: ToolbarContent {
+      ToolbarView: ToolbarContent,
+      TransfersSectionView: View {
     
     let content: Content
     let factory: Factory
@@ -43,7 +44,8 @@ where BannerSectionView: View,
                 config.title.render()
                     .padding(.top, config.titleTopPadding)
                 
-                Text("TBD " + String(describing: content))
+                factory.makeTransfersSectionView()
+                    .frame(height: config.transfersSectionHeight)
             }
             .padding(config.stack)
         }
@@ -54,7 +56,7 @@ where BannerSectionView: View,
 public extension PaymentsTransfersCorporateContentView {
     
     typealias Content = PaymentsTransfersCorporateContent
-    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView>
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
 }
 
@@ -94,6 +96,17 @@ public extension PaymentsTransfersCorporateContentView {
                             Image(systemName: "person")
                             Text("TBD: Profile without QR")
                         }
+                    }
+                },
+                makeTransfersSectionView: {
+                    
+                    ZStack {
+                        
+                        Color.green.opacity(0.5)
+                        
+                        Text("Transfers")
+                            .foregroundColor(.white)
+                            .font(.title3.bold())
                     }
                 }
             ),

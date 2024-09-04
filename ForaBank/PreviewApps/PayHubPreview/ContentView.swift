@@ -108,7 +108,8 @@ private extension ContentView {
                     factory: .init(
                         makeBannerSectionView: makeBannerSectionView,
                         makeRestrictionNoticeView: makeRestrictionNoticeView,
-                        makeToolbarView: makePaymentsTransfersCorporateToolbarView
+                        makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                        makeTransfersSectionView: makeTransfersSectionView
                     ),
                     config: .preview
                 )
@@ -146,6 +147,18 @@ private extension ContentView {
                 Image(systemName: "person")
                 Text("TBD: Profile without QR")
             }
+        }
+    }
+    
+    func makeTransfersSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.green.opacity(0.5)
+            
+            Text("Transfers")
+                .foregroundColor(.white)
+                .font(.title3.bold())
         }
     }
     
