@@ -120,7 +120,8 @@ private extension ContentView {
                 makeCategoryPickerView: makeCategoryPickerSectionView,
                 makeOperationPickerView: makeOperationPickerView,
                 makeToolbarView: makePaymentsTransfersToolbarView
-            )
+            ),
+            config: .preview
         )
     }
     

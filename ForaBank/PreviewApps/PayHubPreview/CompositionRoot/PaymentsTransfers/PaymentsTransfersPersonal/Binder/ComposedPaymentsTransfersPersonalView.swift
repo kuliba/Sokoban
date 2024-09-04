@@ -16,6 +16,7 @@ where CategoryPickerView: View,
     
     let personal: PaymentsTransfersPersonal
     let factory: Factory
+    let config: Config
     
     var body: some View {
         
@@ -32,7 +33,7 @@ where CategoryPickerView: View,
                             PaymentsTransfersPersonalContentView(
                                 content: personal.content,
                                 factory: factory,
-                                config: .preview
+                                config: config
                             )
                         }
                     )
@@ -44,5 +45,7 @@ where CategoryPickerView: View,
 
 extension ComposedPaymentsTransfersPersonalView {
     
+    typealias Personal = PaymentsTransfersPersonal
     typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
+    typealias Config = PaymentsTransfersPersonalViewConfig
 }

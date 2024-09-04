@@ -7,15 +7,42 @@
 
 import SwiftUI
 
-struct PaymentsTransfersCorporateContentView: View {
+public struct PaymentsTransfersCorporateContentView: View {
     
-    let corporate: PaymentsTransfersCorporateContent
+    let content: Content
+    let config: Config
+    
+    public init(
+        content: Content,
+        config: Config
+    ) {
+        self.content = content
+        self.config = config
+    }
 
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    public var body: some View {
+        
+        Text("TBD " + String(describing: content))
+            .frame(maxHeight: .infinity)
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Text("TBD: Profile without QR")
+                }
+            }
     }
 }
 
+public extension PaymentsTransfersCorporateContentView {
+    
+    typealias Content = PaymentsTransfersCorporateContent
+    typealias Config = PaymentsTransfersCorporateContentViewConfig
+}
+
 #Preview {
-    PaymentsTransfersCorporateContentView(corporate: .init())
+    PaymentsTransfersCorporateContentView(
+        content: .init(),
+        config: .preview
+    )
 }

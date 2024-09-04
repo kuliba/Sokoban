@@ -15,15 +15,7 @@ struct ComposedPaymentsTransfersCorporateView: View {
     
     var body: some View {
         
-        Text("TBD " + String(describing: corporate))
-            .frame(maxHeight: .infinity)
-            .toolbar {
-                
-                ToolbarItem(placement: .topBarLeading) {
-                    
-                    Text("TBD: Profile without QR")
-                }
-            }
+        PaymentsTransfersCorporateContentView(content: corporate)
     }
 }
 
