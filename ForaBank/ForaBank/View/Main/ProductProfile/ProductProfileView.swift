@@ -263,9 +263,9 @@ struct ProductProfileView: View {
         case let .payment(paymentViewModel):
             PaymentsView(viewModel: paymentViewModel)
             
-        case let .paymentsTransfers(viewModel):
+        case let .paymentsTransfers(node):
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: node.model,
                 viewFactory: viewFactory, 
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
