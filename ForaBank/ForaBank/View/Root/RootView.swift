@@ -151,7 +151,16 @@ private extension RootView {
         _ corporate: PaymentsTransfersCorporate
     ) -> some View {
         
-        ComposedPaymentsTransfersCorporateView(corporate: corporate)
+        ComposedPaymentsTransfersCorporateView(
+            corporate: corporate,
+            makeContentView: {
+                
+                PaymentsTransfersCorporateContentView(
+                    content: corporate,
+                    config: .iFora
+                )
+            }
+        )
     }
     
     func paymentsTransfersPersonalView(

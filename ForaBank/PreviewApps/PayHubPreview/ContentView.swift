@@ -99,15 +99,16 @@ private extension ContentView {
         corporate: PaymentsTransfersCorporate
     ) -> some View {
         
-        Text("TBD " + String(describing: corporate))
-            .frame(maxHeight: .infinity)
-            .toolbar {
+        ComposedPaymentsTransfersCorporateView(
+            corporate: corporate,
+            makeContentView: {
                 
-                ToolbarItem(placement: .topBarLeading) {
-                    
-                    Text("TBD: Profile without QR")
-                }
+                PaymentsTransfersCorporateContentView(
+                    content: corporate,
+                    config: .preview
+                )
             }
+        )
     }
     
     func paymentsTransfersPersonalView(
