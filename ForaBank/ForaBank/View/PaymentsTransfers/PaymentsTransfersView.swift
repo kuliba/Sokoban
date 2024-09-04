@@ -192,8 +192,8 @@ extension PaymentsTransfersView {
                 .navigationBarBackButtonHidden(true)
                 .edgesIgnoringSafeArea(.all)
             
-        case let .payments(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+        case let .payments(node):
+            PaymentsView(viewModel: node.model)
                 .navigationBarHidden(true)
             
         case let .phone(phoneData):

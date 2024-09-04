@@ -213,8 +213,11 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makePayByInstructionsViewModel(
         closeAction: @escaping () -> Void
-    ) -> PaymentsViewModel {
+    ) -> Node<PaymentsViewModel> {
         
-        return .init(model, service: .requisites, closeAction: closeAction)
+        return .init(
+            model: .init(model, service: .requisites, closeAction: closeAction),
+            cancellables: []
+        )
     }
 }
