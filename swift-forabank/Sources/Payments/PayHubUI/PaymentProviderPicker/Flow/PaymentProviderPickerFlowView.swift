@@ -149,7 +149,7 @@ struct PaymentProviderPickerFlowView_Previews: PreviewProvider {
                 state: state,
                 event: { print($0) },
                 contentView: { Color.green.opacity(0.2) },
-                destinationView: { Text("TBD: destination view for \($0)") }
+                destinationView: { Text("TBD: destination view for \((String(describing: $0)))") }
             )
         }
         .navigationViewStyle(.stack)
@@ -217,7 +217,7 @@ struct PaymentProviderPickerFlowDemoView: View {
                                 },
                                 destinationView: {
                                     
-                                    Text("TBD: destination view for \($0)")
+                                    Text("TBD: destination view for \(String(describing: $0))")
                                         .padding()
                                 }
                             )

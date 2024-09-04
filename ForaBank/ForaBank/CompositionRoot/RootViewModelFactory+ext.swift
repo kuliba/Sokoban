@@ -29,6 +29,7 @@ extension RootViewModelFactory {
         historyFilterFlag: HistoryFilterFlag,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
+        marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
@@ -41,6 +42,10 @@ extension RootViewModelFactory {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
         } else {
             model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
+        }
+        
+        if marketplaceFlag.isActive {
+            model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         }
         
         let rsaKeyPairStore = makeLoggingStore(

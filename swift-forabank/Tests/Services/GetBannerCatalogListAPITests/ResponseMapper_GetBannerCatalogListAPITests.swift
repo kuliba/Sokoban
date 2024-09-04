@@ -107,7 +107,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
                 productName: "Выгодные вклады2",
                 conditions: ["Выгодные вклады2"],
                 links: .init(image: "imageLink", order: "orderLink", condition: "conditionLink"),
-                action: .init(type: .openDeposit(10000003792)))
+                action: .init(type: .openDeposit("10000003792")))
         ]))
     }
 

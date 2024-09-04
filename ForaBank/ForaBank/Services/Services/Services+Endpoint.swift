@@ -78,6 +78,7 @@ extension Services {
             case getAllLatestPayments
             case getInfoForRepeatPayment
             case getBankDefault
+            case getBannerCatalogList
             case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
@@ -246,6 +247,12 @@ extension Services.Endpoint {
         serviceName: .getBankDefault
     )
     
+    static let getBannerCatalogListV2: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getBannerCatalogList
+    )
+
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v1,
