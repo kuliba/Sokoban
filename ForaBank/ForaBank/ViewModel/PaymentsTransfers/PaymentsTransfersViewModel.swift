@@ -445,8 +445,8 @@ extension PaymentsTransfersViewModel {
             case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
-            case fastPayment(ContactsViewModel)
-            case country(ContactsViewModel)
+            case fastPayment(Node<ContactsViewModel>)
+            case country(Node<ContactsViewModel>)
         }
     }
     
@@ -860,9 +860,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .fastPayment(contactsViewModel)))
+                route.modal = .sheet(.init(type: .fastPayment(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -872,9 +875,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .country(contactsViewModel)))
+                route.modal = .sheet(.init(type: .country(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -1406,7 +1412,7 @@ private extension PaymentsTransfersViewModel {
         self.rootActions?.switchTab(.payments)
     }
     
-    private func bind(_ viewModel: ContactsViewModel) {
+    private func bind(_ viewModel: ContactsViewModel) -> AnyCancellable {
         
         viewModel.action
             .receive(on: scheduler)
@@ -1423,7 +1429,6 @@ private extension PaymentsTransfersViewModel {
                     break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func requestContactsPayment(
