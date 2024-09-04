@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersPersonalView.swift
+//  PaymentsTransfersPersonalContentView.swift
 //
 //
 //  Created by Igor Malyarov on 16.08.2024.
@@ -8,22 +8,22 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View {
     
-    @ObservedObject private var model: Content
+    @ObservedObject private var content: Content
     
     private let factory: Factory
     private let config: Config
     
     public init(
-        model: Content,
+        content: Content,
         factory: Factory,
         config: Config
     ) {
-        self.model = model
+        self.content = content
         self.factory = factory
         self.config = config
     }
@@ -32,7 +32,7 @@ where CategoryPickerView: View,
         
         VStack(spacing: config.spacing) {
             
-            Button("Reload | to be replaced with \"swipe to refresh\")".uppercased(), action: model.reload)
+            Button("Reload | to be replaced with \"swipe to refresh\")".uppercased(), action: content.reload)
                 .foregroundColor(.blue)
                 .font(.caption.bold())
             
@@ -40,27 +40,27 @@ where CategoryPickerView: View,
                 
                 config.title.render()
                 
-                factory.makeOperationPickerView(model.operationPicker)
+                factory.makeOperationPickerView(content.operationPicker)
             }
             
             transfersView()
             
-            factory.makeCategoryPickerView(model.categoryPicker)
+            factory.makeCategoryPickerView(content.categoryPicker)
         }
         .padding(.top)
         .padding(.horizontal)
-        .background(factory.makeToolbarView(model.toolbar))
+        .background(factory.makeToolbarView(content.toolbar))
     }
 }
 
-public extension PaymentsTransfersPersonalView {
+public extension PaymentsTransfersPersonalContentView {
     
     typealias Content = PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar>
     typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
 
-private extension PaymentsTransfersPersonalView {
+private extension PaymentsTransfersPersonalContentView {
     
     func transfersView() -> some View {
         
@@ -83,8 +83,8 @@ private extension PaymentsTransfersPersonalView {
 // MARK: - Previews
 
 #Preview {
-    PaymentsTransfersPersonalView(
-        model: .preview,
+    PaymentsTransfersPersonalContentView(
+        content: .preview,
         factory: .init(
             makeCategoryPickerView: { (categoryPicker: PreviewCategoryPicker) in
                 

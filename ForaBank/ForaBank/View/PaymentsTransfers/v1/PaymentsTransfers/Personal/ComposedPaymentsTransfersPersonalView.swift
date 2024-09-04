@@ -29,8 +29,8 @@ where CategoryPickerView: View,
                     factory: .init(
                         makeContentView: {
                             
-                            PaymentsTransfersPersonalView(
-                                model: personal.content,
+                            PaymentsTransfersPersonalContentView(
+                                content: personal.content,
                                 factory: factory,
                                 config: .iFora
                             )
