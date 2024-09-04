@@ -2385,7 +2385,6 @@ extension ProductProfileViewModel {
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
-        case payment(PaymentsViewModel)
         case paymentsTransfers(Node<PaymentsTransfersViewModel>)
         case controlPanel(ControlPanelViewModel)
     }

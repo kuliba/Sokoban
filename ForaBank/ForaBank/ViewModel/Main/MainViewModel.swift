@@ -398,7 +398,10 @@ private extension MainViewModel {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .byPhone(.init(model: contactsViewModel, cancellable: cancellable))))
+                route.modal = .sheet(.init(type: .byPhone(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
                 
             }).store(in: &bindings)
         
@@ -410,7 +413,10 @@ private extension MainViewModel {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .byPhone(.init(model: contactsViewModel, cancellable: cancellable))))
+                route.modal = .sheet(.init(type: .byPhone(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
                 
             }).store(in: &bindings)
         
@@ -837,7 +843,6 @@ private extension MainViewModel {
                             return nil
                         }
                         return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
-                        
                         
                     default:
                         return payloadSource

@@ -355,7 +355,7 @@ private extension PaymentsTransfersViewModel {
             let cancellable = bind(paymentsViewModel)
             
             self.action.send(DelayWrappedAction(
-                delayMS: 300,
+                delayMS: 50,
                 action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
                     model: paymentsViewModel,
                     cancellable: cancellable
@@ -463,7 +463,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum Link: Identifiable {
+    enum Link {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
@@ -556,7 +556,7 @@ extension PaymentsTransfersViewModel.Modal {
     }
 }
 
-extension PaymentsTransfersViewModel.Link {
+extension PaymentsTransfersViewModel.Link: Identifiable {
     
     var id: Case {
         
@@ -569,8 +569,8 @@ extension PaymentsTransfersViewModel.Link {
             return .mobile
         case .phone:
             return .phone
-        case .payments:
-            return .payments
+        case let .payments(node):
+            return .payments(ObjectIdentifier(node.model))
         case .serviceOperators:
             return .serviceOperators
         case .internetOperators:
@@ -620,12 +620,12 @@ extension PaymentsTransfersViewModel.Link {
         }
     }
     
-    enum Case {
+    enum Case: Hashable {
         case exampleDetail
         case userAccount
         case mobile
         case phone
-        case payments
+        case payments(ObjectIdentifier)
         case serviceOperators
         case internetOperators
         case transportOperators
