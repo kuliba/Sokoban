@@ -41,7 +41,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         XCTAssertNoDiff(initialState.isLoading, true)
     }
     
-    func test_shouldNotChangeCategoryPickerStateOnNoHTTPCompletion() throws {
+    func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
         let (sut, _, backgroundScheduler) = makeSUT()
         let initialState = try sut.categoryPickerContent().state
@@ -86,7 +86,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             utilitiesPaymentsFlag: .init(.active(.live)),
             historyFilterFlag: .init(true),
             changeSVCardLimitsFlag: .init(.active),
-            getProductListByTypeV6Flag: .init(.active), 
+            getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
             updateInfoStatusFlag: .init(.active),

@@ -325,13 +325,10 @@ extension RootViewModelFactory {
         )
         let loadServiceCategories: LoadServiceCategories = { completion in
             
-            backgroundScheduler.schedule {
+            decorated.load {
                 
-                decorated.load {
-                    
-                    let categories = (try? $0.get()) ?? []
-                    completion(categories.map { .category($0)})
-                }
+                let categories = (try? $0.get()) ?? []
+                completion(categories.map { .category($0)})
             }
         }
         
