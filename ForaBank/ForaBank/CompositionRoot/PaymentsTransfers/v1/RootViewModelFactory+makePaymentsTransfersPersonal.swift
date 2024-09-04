@@ -117,7 +117,7 @@ extension RootViewModelFactory {
         
         // MARK: - PaymentsTransfers
         
-        let content = PaymentsTransfersContent(
+        let content = PaymentsTransfersPersonalContent(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
             toolbar: toolbar,

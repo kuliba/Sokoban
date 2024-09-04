@@ -13,13 +13,13 @@ where CategoryPickerView: View,
       OperationPickerView: View,
       ToolbarView: View {
     
-    @ObservedObject private var model: Model
+    @ObservedObject private var model: Content
     
     private let factory: Factory
     private let config: Config
     
     public init(
-        model: Model,
+        model: Content,
         factory: Factory,
         config: Config
     ) {
@@ -55,7 +55,7 @@ where CategoryPickerView: View,
 
 public extension PaymentsTransfersPersonalView {
     
-    typealias Model = PaymentsTransfersModel<CategoryPicker, OperationPicker, Toolbar>
+    typealias Content = PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar>
     typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
     typealias Config = PaymentsTransfersPersonalViewConfig
 }
@@ -109,12 +109,12 @@ private extension PaymentsTransfersPersonalView {
     )
 }
 
-private extension PaymentsTransfersModel
+private extension PaymentsTransfersPersonalContent
 where CategoryPicker == PreviewCategoryPicker,
       OperationPicker == PreviewPayHub,
       Toolbar == PreviewToolbar {
     
-    static var preview: PaymentsTransfersModel {
+    static var preview: PaymentsTransfersPersonalContent {
         
         return .init(
             categoryPicker: .init(),
