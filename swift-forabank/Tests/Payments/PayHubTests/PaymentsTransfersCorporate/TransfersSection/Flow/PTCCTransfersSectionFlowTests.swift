@@ -9,6 +9,17 @@ import XCTest
 
 class PTCCTransfersSectionFlowTests: XCTestCase {
     
+    struct Navigation: Equatable {
+        
+        let value: String
+    }
+    
+    func makeNavigation(
+        _ value: String = anyMessage()
+    ) -> Navigation {
+        
+        return .init(value: value)
+    }
     struct Select: Equatable {
         
         let value: String

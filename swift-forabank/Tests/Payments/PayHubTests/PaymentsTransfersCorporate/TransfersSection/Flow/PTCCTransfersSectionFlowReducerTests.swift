@@ -7,12 +7,13 @@
 
 struct PTCCTransfersSectionFlowState: Equatable {}
 
-enum PTCCTransfersSectionFlowEvent<Select> {
+enum PTCCTransfersSectionFlowEvent<Navigation, Select> {
     
+    case navigation(Navigation)
     case select(Select)
 }
 
-extension PTCCTransfersSectionFlowEvent: Equatable where Select: Equatable {}
+extension PTCCTransfersSectionFlowEvent: Equatable where Navigation: Equatable, Select: Equatable {}
 
 enum PTCCTransfersSectionFlowEffect<Select> {
     
@@ -21,7 +22,7 @@ enum PTCCTransfersSectionFlowEffect<Select> {
 
 extension PTCCTransfersSectionFlowEffect: Equatable where Select: Equatable {}
 
-final class PTCCTransfersSectionFlowReducer<Select> {
+final class PTCCTransfersSectionFlowReducer<Navigation, Select> {
     
     init() {}
 }
@@ -37,6 +38,9 @@ extension PTCCTransfersSectionFlowReducer {
         var effect: Effect?
         
         switch event {
+        case let .navigation(navigation):
+            break
+            
         case let .select(select):
             effect = .select(select)
         }
@@ -48,7 +52,7 @@ extension PTCCTransfersSectionFlowReducer {
 extension PTCCTransfersSectionFlowReducer {
     
     typealias State = PTCCTransfersSectionFlowState
-    typealias Event = PTCCTransfersSectionFlowEvent<Select>
+    typealias Event = PTCCTransfersSectionFlowEvent<Navigation, Select>
     typealias Effect = PTCCTransfersSectionFlowEffect<Select>
 }
 
@@ -72,7 +76,7 @@ final class PTCCTransfersSectionFlowReducerTests: PTCCTransfersSectionFlowTests 
     
     // MARK: - Helpers
     
-    private typealias SUT = PTCCTransfersSectionFlowReducer<Select>
+    private typealias SUT = PTCCTransfersSectionFlowReducer<Navigation, Select>
     
     private func makeSUT(
         file: StaticString = #file,
