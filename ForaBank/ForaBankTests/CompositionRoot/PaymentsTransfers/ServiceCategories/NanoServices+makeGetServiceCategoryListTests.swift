@@ -148,7 +148,10 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
         httpClient: HTTPClientSpy
     ) {
         let httpClient = HTTPClientSpy()
-        let sut = NanoServices.makeGetServiceCategoryList(httpClient, { _,_,_ in })
+        let sut = NanoServices.makeGetServiceCategoryList(
+            httpClient: httpClient, 
+            log: { _,_,_ in }
+        )
         
         return (sut, httpClient)
     }

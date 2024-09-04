@@ -69,7 +69,7 @@ final class QRModelWrapperTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias QRResult = String
-    private typealias SUT = QRModelWrapper<QRResult>
+    private typealias SUT = QRModelWrapper<QRResult, QRViewModel>
     private typealias MapScanResultSpy = Spy<QRViewModel.ScanResult, QRResult, Never>
     
     private func makeSUT(

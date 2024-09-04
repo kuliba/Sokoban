@@ -132,6 +132,62 @@ final class Services_getLandingServiceTests: XCTestCase {
             [.init(url: .init(string: correctURLString)!)]
         )
     }
+    
+    func test_perform_additionalCorporateCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .control(.additionalCorporate)
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_CORPORATE_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
+    func test_perform_corporateCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .control(.corporate)
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_CORPORATE_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
+    func test_perform_individualBusinessmanCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .control(.individualBusinessman)
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
+    func test_perform_individualBusinessmanMainCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .control(.individualBusinessmanMain)
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_INDIVIDUAL_BUSINESSMAN_MAIN_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
 
     // MARK: - Helpers
     private func makeSUT(

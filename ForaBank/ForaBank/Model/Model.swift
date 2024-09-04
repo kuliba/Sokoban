@@ -14,9 +14,9 @@ import ServerAgent
 import SymmetricEncryption
 import UserModel
 import GetProductListByTypeService
+import GetProductListByTypeV6Service
 
 class Model {
-    
     let action: PassthroughSubject<Action, Never>
     
     //MARK: Auth
@@ -30,6 +30,8 @@ class Model {
     //MARK: Pre-Auth
     let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    var isAuthInProgress: Bool = false
+    var maxAttempts: Int = 5
     
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
@@ -74,6 +76,8 @@ class Model {
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
+    
+    var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -129,10 +133,12 @@ class Model {
     
     typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
     typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
-
+    
     let updateInfo: CurrentValueSubject<UpdateInfo, Never>
 
     var getProducts: GetProductListByType
+    
+    var getProductsV6: Services.GetProductListByTypeV6?
 
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -240,6 +246,9 @@ class Model {
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
+        self.getProductsV6 = nil
+        self.getBannerCatalogListV2 = nil
+
         self.updateInfo = .init(.init())
         
         self.sessionAgent = sessionAgent
@@ -1529,6 +1538,26 @@ private extension LocalAgentProtocol {
                 return load(type: LocalAgentDomain.AdditionalOtherCard.self)
                     .map(\.landing)
                     .map(UILanding.init)
+                
+            case .additionalCorporate:
+                return load(type: LocalAgentDomain.AdditionalCorporateCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+
+            case .corporate:
+                return load(type: LocalAgentDomain.CorporateCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+
+            case .individualBusinessman:
+                return load(type: LocalAgentDomain.IndividualBusinessmanCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+
+            case .individualBusinessmanMain:
+                return load(type: LocalAgentDomain.IndividualBusinessmanMainCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
             }
             
         case let .limit(cardType):
@@ -1555,6 +1584,26 @@ private extension LocalAgentProtocol {
 
             case .additionalOther:
                 return load(type: LocalAgentDomain.LimitAdditionalOtherCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalCorporate:
+                return load(type: LocalAgentDomain.LimitAdditionalCorporateCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .corporate:
+                return load(type: LocalAgentDomain.LimitCorporateCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .individualBusinessman:
+                return load(type: LocalAgentDomain.LimitIndividualBusinessmanCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .individualBusinessmanMain:
+                return load(type: LocalAgentDomain.LimitIndividualBusinessmanMainCard.self)
                     .map(\.landing)
                     .map(UILanding.init)
             }
@@ -1614,6 +1663,26 @@ extension LocalAgentDomain {
         let landing: Landing
     }
     
+    struct AdditionalCorporateCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct CorporateCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct IndividualBusinessmanCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct IndividualBusinessmanMainCard: Codable {
+        
+        let landing: Landing
+    }
+    
     struct LimitMainCard: Codable {
         
         let landing: Landing
@@ -1635,6 +1704,26 @@ extension LocalAgentDomain {
     }
 
     struct LimitAdditionalOtherCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitAdditionalCorporateCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitCorporateCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitIndividualBusinessmanCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitIndividualBusinessmanMainCard: Codable {
         
         let landing: Landing
     }

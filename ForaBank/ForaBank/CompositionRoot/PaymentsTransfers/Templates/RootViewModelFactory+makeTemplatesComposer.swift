@@ -11,6 +11,7 @@ import Foundation
 extension RootViewModelFactory {
     
     static func makeTemplatesComposer(
+        paymentsTransfersFlag: PaymentsTransfersFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         model: Model,
         httpClient: HTTPClient,
@@ -19,14 +20,14 @@ extension RootViewModelFactory {
     ) -> TemplatesListFlowModelComposer {
         
         let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
-            flag: utilitiesPaymentsFlag,
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
             log: log,
             scheduler: scheduler
         )
         let anywayFlowComposer = AnywayFlowComposer(
-            composer: anywayTransactionViewModelComposer,
+            makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
             model: model,
             scheduler: scheduler
         )
@@ -64,19 +65,44 @@ extension RootViewModelFactory {
             initiatePaymentMicroService.initiatePayment(.template(template), completion)
         }
         
+        let microServicesComposer = TemplatesListFlowEffectHandlerMicroServicesComposer<PaymentsViewModel, AnywayFlowModel>(
+            initiatePayment: { template, completion in
+                
+                initiatePaymentFromTemplate(template) {
+                    
+                    switch $0 {
+                    case let .failure(serviceFailure):
+                        completion(.failure(serviceFailure))
+                        
+                    case let .success(transaction):
+                        completion(.success(anywayFlowComposer.compose(transaction: transaction)))
+                    }
+                }
+            },
+            makeLegacyPayment: { payload in
+                
+                let (template, close) = payload
+                
+                return PaymentsViewModel(
+                    source: .template(template.id),
+                    model: model,
+                    closeAction: close
+                )
+            },
+            paymentsTransfersFlag: paymentsTransfersFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+        )
+        
         return .init(
-            composer: anywayFlowComposer,
+            makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
-            nanoServices: .init(
-                initiatePayment: initiatePaymentFromTemplate
-            ),
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            microServices: microServicesComposer.compose(),
             scheduler: scheduler
         )
     }
 }
 
-extension PaymentTemplateData {
+private extension PaymentTemplateData {
     
     var puref: String? {
         

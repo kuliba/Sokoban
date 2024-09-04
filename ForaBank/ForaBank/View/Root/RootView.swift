@@ -7,9 +7,10 @@
 
 import ActivateSlider
 import InfoComponent
+import PaymentSticker
+import PayHubUI
 import SberQR
 import SwiftUI
-import PaymentSticker
 
 struct RootView: View {
     
@@ -61,7 +62,7 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
-                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory, 
+                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
             )
@@ -81,8 +82,8 @@ struct RootView: View {
             case let .legacy(paymentsViewModel):
                 rootViewFactory.makePaymentsTransfersView(paymentsViewModel)
                 
-            case let .v1(paymentsTransfersModel):
-                Text("TBD: v1 for \("paymentsTransfersModel")")
+            case let .v1(switcher):
+                paymentsTransfersSwitcherView(switcher)
             }
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
@@ -129,6 +130,243 @@ struct RootView: View {
         }
     }
 }
+
+// MARK: - PaymentsTransfers v1
+
+private extension RootView {
+    
+    func paymentsTransfersSwitcherView(
+        _ switcher: PaymentsTransfersSwitcher
+    ) -> some View {
+        
+        ComposedProfileSwitcherView(
+            model: switcher,
+            corporateView: paymentsTransfersCorporateView,
+            personalView: paymentsTransfersPersonalView,
+            undefinedView: { SpinnerView(viewModel: .init()) }
+        )
+    }
+    
+    func paymentsTransfersCorporateView(
+        _ corporate: PaymentsTransfersCorporate
+    ) -> some View {
+        
+        ComposedPaymentsTransfersCorporateView(
+            corporate: corporate,
+            makeContentView: {
+                
+                PaymentsTransfersCorporateContentView(
+                    content: corporate,
+                    factory: .init(
+                        makeBannerSectionView: makeBannerSectionView,
+                        makeRestrictionNoticeView: makeRestrictionNoticeView,
+                        makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                        makeTransfersSectionView: makeTransfersSectionView
+                    ),
+                    config: .iFora
+                )
+            }
+        )
+    }
+    
+    func makeBannerSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.orange.opacity(0.5)
+            
+            Text("Banners")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
+    }
+    
+    func makeRestrictionNoticeView() -> some View {
+        
+        DisableCorCardsView(text: "Все возможности приложения будут доступны после того, как Вы откроете продукт как физическое лицо")
+    }
+    
+    func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            
+            HStack {
+                
+                Image(systemName: "person")
+                Text("TBD: Profile without QR")
+            }
+        }
+    }
+    
+    func makeTransfersSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.green.opacity(0.5)
+            
+            Text("Transfers")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
+    }
+
+    func paymentsTransfersPersonalView(
+        _ personal: PaymentsTransfersPersonal
+    ) -> some View {
+        
+        ComposedPaymentsTransfersPersonalView(
+            personal: personal,
+            factory: .init(
+                makeContentView: {
+                    
+                    PaymentsTransfersPersonalContentView(
+                        content: personal.content,
+                        factory: .init(
+                            makeCategoryPickerView: makeCategoryPickerSectionView,
+                            makeOperationPickerView: makeOperationPickerView,
+                            makeToolbarView: makePaymentsTransfersToolbarView
+                        ),
+                        config: .iFora
+                    )
+                }
+            )
+        )
+    }
+    
+    func makeCategoryPickerSectionView(
+        binder: CategoryPickerSectionBinder
+    ) -> some View {
+        
+        ComposedCategoryPickerSectionFlowView(
+            binder: binder,
+            config: .iFora,
+            itemLabel: itemLabel,
+            makeDestinationView: makeCategoryPickerSectionDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionDestinationView(
+        destination: CategoryPickerSectionDestination
+    ) -> some View {
+        
+        switch destination {
+        case let .category(selected):
+            selectedCategoryView(selected)
+            
+        case let .list(categoryListModelStub):
+            categoryListView(categoryListModelStub)
+        }
+    }
+    
+    func selectedCategoryView(
+        _ selected: SelectedCategoryDestination
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
+    }
+    
+    func categoryListView(
+        _ categoryListModelStub: CategoryListModelStub
+    ) -> some View {
+        
+        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
+    }
+
+    func makeOperationPickerView(
+        binder: OperationPickerBinder
+    ) -> some View {
+        
+        ComposedOperationPickerFlowView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
+                    
+                    Text("TBD: destination " + String(describing: $0))
+                },
+                makeItemLabel: itemLabel
+            )
+        )
+    }
+    
+    func makePaymentsTransfersToolbarView(
+        binder: PaymentsTransfersToolbarBinder
+    ) -> some View {
+
+        ComposedPaymentsTransfersToolbarView(
+            binder: binder,
+            factory: .init(
+                makeDestinationView: {
+                    
+                    switch $0 {
+                    case let .profile(profileModel):
+                        Text(String(describing: profileModel))
+                    }
+                },
+                makeFullScreenView: {
+                    
+                    switch $0 {
+                    case let .qr(qrModel):
+                        VStack(spacing: 32) {
+                            
+                            Text(String(describing: qrModel))
+                        }
+                    }
+                },
+                makeProfileLabel: {
+                    
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("Profile")
+                    }
+                },
+                makeQRLabel: {
+                    
+                    Image(systemName: "qrcode")
+                }
+            )
+        )
+    }
+    
+    private func itemLabel(
+        item: CategoryPickerSectionState.Item
+    ) -> some View {
+        
+        CategoryPickerSectionStateItemLabel(
+            item: item,
+            config: .iFora,
+            categoryIcon: categoryIcon,
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private func itemLabel(
+        item: OperationPickerState<Latest>.Item
+    ) -> some View {
+        
+        OperationPickerStateItemLabel(
+            item: item,
+            config: .iFora,
+            placeholderView:  {
+                
+                LatestPlaceholder(
+                    opacity: 1,
+                    config: OperationPickerStateItemLabelConfig.iFora.latestPlaceholder
+                )
+            }
+        )
+    }
+    
+    private func categoryIcon(
+        category: ServiceCategory
+    ) -> some View {
+        
+        Color.blue.opacity(0.1)
+    }
+}
+
+extension Latest: Named {}
+extension ServiceCategory: Named {}
 
 extension View {
     
@@ -239,7 +477,7 @@ private extension RootViewFactory {
                         makeIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeUpdateInfoView: UpdateInfoView.init(text:),
+                        makeInfoViews: .default,
                         makeUserAccountView: UserAccountView.init(viewModel:)
                     ),
                     productProfileViewFactory: .init(
@@ -252,7 +490,7 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }

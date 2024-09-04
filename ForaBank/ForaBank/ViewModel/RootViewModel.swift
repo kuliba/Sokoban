@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PayHub
 import SwiftUI
 
 class RootViewModel: ObservableObject, Resetable {
@@ -429,6 +430,7 @@ class RootViewModel: ObservableObject, Resetable {
             .combineLatest(paymentsViewModelHasDestination)
             .map { $0 || $1 }
             .removeDuplicates()
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
     }
@@ -537,7 +539,7 @@ extension RootViewModel {
     enum PaymentsModel {
         
         case legacy(PaymentsTransfersViewModel)
-        case v1(PaymentsTransfersModel)
+        case v1(PaymentsTransfersSwitcher)
     }
 }
 
@@ -549,7 +551,7 @@ extension RootViewModel.PaymentsModel: Resetable {
         case let .legacy(paymentsTransfersViewModel):
             paymentsTransfersViewModel.reset()
             
-        case let .v1(paymentsTransfersModel):
+        case let .v1(paymentsTransfersSwitcher):
 #warning("unimplemented")
             break
         }
@@ -563,11 +565,92 @@ extension RootViewModel.PaymentsModel: Resetable {
                 .map { $0.destination != nil }
                 .eraseToAnyPublisher()
             
-        case let .v1(paymentsTransfersModel):
-#warning("unimplemented")
-            return Just(false).eraseToAnyPublisher()
+        case let .v1(switcher):
+            return switcher.hasDestination
         }
     }
+}
+
+extension PaymentsTransfersSwitcher {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        switch state {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .corporate(corporate):
+            return corporate.hasDestination
+            
+        case let .personal(personal):
+            return personal.hasDestination
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+#warning("unimplemented")
+        return Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersPersonal {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        let categoryPicker = content.categoryPicker.hasDestination
+        let operationPicker = content.operationPicker.hasDestination
+        let toolbar = content.toolbar.hasDestination
+        let flowHasDestination = Just(false)
+        
+        return Publishers.CombineLatest4(
+            categoryPicker,
+            operationPicker,
+            toolbar,
+            flowHasDestination
+        )
+        .map { $0 || $1 || $2 || $3 }
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionFlowState {
+    
+    var hasDestination: Bool { destination != nil }
+}
+
+private extension OperationPickerBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+       // flow.$state.map(\.hasDestination)
+        Just(false)
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersToolbarBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersToolbarFlowState {
+    
+    var hasDestination: Bool { navigation != nil }
 }
 
 extension RootViewModel.RootActions {

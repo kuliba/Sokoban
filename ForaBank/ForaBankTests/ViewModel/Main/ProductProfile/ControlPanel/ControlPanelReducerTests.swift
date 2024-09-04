@@ -390,7 +390,7 @@ final class ControlPanelReducerTests: XCTestCase {
     func test_reduce_openDepositList_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
-        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {})
+        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {}, makeAlertViewModel: makeAlertViewModel)
         
         assertState(
             .bannerEvent(.openDepositsList(openDepositListViewModel)),
@@ -403,7 +403,7 @@ final class ControlPanelReducerTests: XCTestCase {
     func test_reduce_openDepositList_shouldDeliverNoEffect() {
         
         let card = makeCardProduct(statusCard: .active)
-        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {})
+        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {}, makeAlertViewModel: makeAlertViewModel)
         
         assert(
             .bannerEvent(.openDepositsList(openDepositListViewModel)),
@@ -562,6 +562,8 @@ final class ControlPanelReducerTests: XCTestCase {
     private typealias MakeActions = ControlPanelReducer.MakeActions
     private typealias MakeViewModels = ControlPanelReducer.MakeViewModels
     
+    let makeAlertViewModel: PaymentsTransfersFactory.MakeAlertViewModel = {_ in nil }
+
     let makeIconView: LandingView.MakeIconView = { _ in .init(
         image: .cardPlaceholder,
         publisher: Just(.cardPlaceholder).eraseToAnyPublisher()

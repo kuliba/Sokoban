@@ -84,6 +84,54 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    // MARK: - GetProductListByTypeV6Flag
+    
+    func test_load_shouldDeliverActiveGetProductListByTypeV6FlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .getProductListByTypeV6Flag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            getProductListByTypeV6Flag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveGetProductListByTypeV6FlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            getProductListByTypeV6Flag: .init(.inactive)
+        ))
+    }
+    
+    // MARK: - MarketplaceFlag
+    
+    func test_load_shouldDeliverActiveMarketplaceFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .marketplaceFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            marketplaceFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveMarketplaceFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            marketplaceFlag: .init(.inactive)
+        ))
+    }
+    
     // MARK: - HistoryFilterFlag
     
     func test_load_shouldDeliverActiveHistoryFilterFlagForInactiveRetrieveResult() {
@@ -178,12 +226,16 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     private func makeFeatureFlags(
         historyFilterFlag: HistoryFilterFlag? = nil,
         changeSVCardLimitsFlag: ChangeSVCardLimitsFlag? = nil,
+        getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
+        marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
             changeSVCardLimitsFlag: changeSVCardLimitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
+            getProductListByTypeV6Flag: getProductListByTypeV6Flag.map { .init($0.rawValue) } ?? .init(.inactive),
+            marketplaceFlag: marketplaceFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)

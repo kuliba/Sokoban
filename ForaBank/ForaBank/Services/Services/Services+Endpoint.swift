@@ -58,6 +58,7 @@ extension Services {
             case v2
             case v4
             case v5
+            case v6
         }
         
         enum ServiceName: String {
@@ -77,6 +78,7 @@ extension Services {
             case getAllLatestPayments
             case getInfoForRepeatPayment
             case getBankDefault
+            case getBannerCatalogList
             case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
@@ -245,6 +247,12 @@ extension Services.Endpoint {
         serviceName: .getBankDefault
     )
     
+    static let getBannerCatalogListV2: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getBannerCatalogList
+    )
+
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v1,
@@ -308,6 +316,12 @@ extension Services.Endpoint {
     static let getProductListByType: Self = .init(
         pathPrefix: .rest,
         version: .v5,
+        serviceName: .getProductListByType
+    )
+    
+    static let getProductListByTypeV6: Self = .init(
+        pathPrefix: .rest,
+        version: .v6,
         serviceName: .getProductListByType
     )
 
