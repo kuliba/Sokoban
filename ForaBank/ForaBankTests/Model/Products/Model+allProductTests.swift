@@ -244,6 +244,36 @@ final class Model_allProductTests: XCTestCase {
         XCTAssertFalse(sut.onlyCorporateCards)
     }
 
+    func test_onlyCorporateCards_productsCorporateCardsWithRubAccount_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 2, currency: "RUB")
+            ],
+            .card: [                
+                makeCardProduct(cardType: .additionalCorporate, status: .active)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsCorporateCardsWithOnlyCurrencyAccount_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .additionalCorporate, status: .active)
+            ],
+            .account: [
+                makeAccountProduct(id: 2, currency: "USD")
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+
     // MARK: - Helpers
     
     func makeSUT(
@@ -317,7 +347,8 @@ final class Model_allProductTests: XCTestCase {
 extension XCTestCase {
 
     func makeAccountProduct(
-        id: Int
+        id: Int,
+        currency: String = "RUB"
     ) -> ProductAccountData {
         
         .init(
@@ -328,7 +359,7 @@ extension XCTestCase {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "RUB",
+            currency: currency,
             mainField: "Account",
             additionalField: nil,
             customName: nil,
