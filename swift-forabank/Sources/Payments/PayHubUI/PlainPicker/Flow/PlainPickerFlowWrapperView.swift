@@ -9,4 +9,4 @@ import PayHub
 import RxViewModel
 import SwiftUI
 
-public typealias PlainPickerFlowWrapperView<ContentView, Element, Navigation> = RxWrapperView<ContentView, PlainPickerFlowState<Navigation>, PlainPickerFlowEvent<Element, Navigation>, PlainPickerFlowEffect<Element>> where ContentView: View
+public typealias PlainPickerFlowWrapperView<ContentView, Element, Navigation> = RxWrapperView<ContentView, PickerFlowState<Navigation>, PickerFlowEvent<Element, Navigation>, PickerFlowEffect<Element>> where ContentView: View

@@ -64,17 +64,11 @@ private extension PlainPickerBinderComposer {
     
     func makeFlow() -> Flow {
         
-        let reducer = PlainPickerFlowReducer<Element, Navigation>()
-        let effectHandler = PlainPickerFlowEffectHandler<Element, Navigation>(
-            microServices: microServices
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+        let composer = PickerFlowComposer(
+            makeNavigation: microServices.makeNavigation,
             scheduler: scheduler
         )
+        return composer.compose()
     }
     
     func bind(

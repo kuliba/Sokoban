@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-public typealias PlainPickerFlow<Element, Navigation> = RxViewModel<PlainPickerFlowState<Navigation>, PlainPickerFlowEvent<Element, Navigation>, PlainPickerFlowEffect<Element>>
+public typealias PlainPickerFlow<Element, Navigation> = PickerFlow<Element, Navigation>
