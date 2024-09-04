@@ -183,7 +183,7 @@ private extension RootView {
     
     func makeRestrictionNoticeView() -> some View {
         
-        DisableCorCardsView(text: "Все возможности приложения будут доступны после того, как Вы откроете продукт как физическое лицо")
+        DisableCorCardsView(text: .disableForCorCards)
     }
     
     func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
