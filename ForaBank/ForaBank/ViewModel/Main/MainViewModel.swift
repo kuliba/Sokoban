@@ -988,9 +988,12 @@ extension MainViewModel {
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
-            action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            action.send(MainViewModelAction.Show.Payments(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         }
     }
     
@@ -1012,11 +1015,14 @@ extension MainViewModel {
                     action: MainViewModelAction.Show.Countries())
                 )
             }
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             action.send(DelayWrappedAction(
                 delayMS: 300,
-                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                action: MainViewModelAction.Show.Payments(node: .init(
+                    model: paymentsViewModel,
+                    cancellable: cancellable
+                )))
             )
         }
     }
