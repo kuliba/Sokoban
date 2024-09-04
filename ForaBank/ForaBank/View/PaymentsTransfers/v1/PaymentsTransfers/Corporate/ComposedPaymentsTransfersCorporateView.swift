@@ -15,7 +15,7 @@ struct ComposedPaymentsTransfersCorporateView: View {
     
     var body: some View {
         
-        PaymentsTransfersCorporateContentView(content: corporate)
+        PaymentsTransfersCorporateContentView(content: corporate, config: .init())
     }
 }
 

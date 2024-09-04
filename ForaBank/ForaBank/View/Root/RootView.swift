@@ -161,9 +161,18 @@ private extension RootView {
         ComposedPaymentsTransfersPersonalView(
             personal: personal,
             factory: .init(
-                makeCategoryPickerView: makeCategoryPickerSectionView,
-                makeOperationPickerView: makeOperationPickerView,
-                makeToolbarView: makePaymentsTransfersToolbarView
+                makeContentView: {
+                    
+                    PaymentsTransfersPersonalContentView(
+                        content: personal.content,
+                        factory: .init(
+                            makeCategoryPickerView: makeCategoryPickerSectionView,
+                            makeOperationPickerView: makeOperationPickerView,
+                            makeToolbarView: makePaymentsTransfersToolbarView
+                        ),
+                        config: .iFora
+                    )
+                }
             )
         )
     }

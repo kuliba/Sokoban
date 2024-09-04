@@ -1,6 +1,6 @@
 //
 //  ComposedPaymentsTransfersPersonalView.swift
-//  ForaBank
+//  PayHubPreview
 //
 //  Created by Igor Malyarov on 26.08.2024.
 //
@@ -9,12 +9,10 @@ import PayHub
 import PayHubUI
 import SwiftUI
 
-struct ComposedPaymentsTransfersPersonalView<CategoryPickerView, OperationPickerView, ToolbarView>: View
-where CategoryPickerView: View,
-      OperationPickerView: View,
-      ToolbarView: View {
+struct ComposedPaymentsTransfersPersonalView<ContentView>: View
+where ContentView: View {
     
-    let personal: PaymentsTransfersPersonal
+    let personal: Personal
     let factory: Factory
     
     var body: some View {
@@ -26,16 +24,7 @@ where CategoryPickerView: View,
                 PaymentsTransfersPersonalFlowView(
                     state: $0,
                     event: $1,
-                    factory: .init(
-                        makeContentView: {
-                            
-                            PaymentsTransfersPersonalContentView(
-                                content: personal.content,
-                                factory: factory,
-                                config: .iFora
-                            )
-                        }
-                    )
+                    factory: factory
                 )
             }
         )
@@ -44,5 +33,6 @@ where CategoryPickerView: View,
 
 extension ComposedPaymentsTransfersPersonalView {
     
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPickerSectionBinder, CategoryPickerView, OperationPickerBinder, OperationPickerView, PaymentsTransfersToolbarBinder, ToolbarView>
+    typealias Personal = PaymentsTransfersPersonal
+    typealias Factory = PaymentsTransfersPersonalFlowViewFactory<ContentView>
 }
