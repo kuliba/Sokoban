@@ -155,6 +155,7 @@ extension PaymentsTransfersView {
         switch section {
         case let disableInfoViewModel as DisableForCorCardsPTViewModel:
             viewFactory.makeInfoViews.makeDisableCorCardsInfoView(.disableForCorCards)
+                .padding(.horizontal, 16)
             
         case let updateInfo as UpdateInfoPTViewModel:
             viewFactory.makeInfoViews.makeUpdateInfoView(.updateInfoText)

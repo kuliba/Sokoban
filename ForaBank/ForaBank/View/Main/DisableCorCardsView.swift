@@ -42,7 +42,6 @@ struct DisableCorCardsView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 70)
-        .padding(.horizontal, 16)
         .padding(.top, 8)
         .padding(.bottom, 0)
     }
