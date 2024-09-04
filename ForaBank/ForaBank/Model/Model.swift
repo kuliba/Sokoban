@@ -17,7 +17,6 @@ import GetProductListByTypeService
 import GetProductListByTypeV6Service
 
 class Model {
-    
     let action: PassthroughSubject<Action, Never>
     
     //MARK: Auth
@@ -31,6 +30,8 @@ class Model {
     //MARK: Pre-Auth
     let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    var isAuthInProgress: Bool = false
+    var maxAttempts: Int = 5
     
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>

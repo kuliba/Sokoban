@@ -383,6 +383,8 @@ internal extension Model {
             do {
                 
                 let credentials = try await authSessionCredentials()
+                self.fcmToken.value = credentials.token
+                
                 try await authPushRegister(token: credentials.token)
                 let encryptedNumber = try credentials.csrfAgent.encrypt(payload.number)
                 let cryptoVersion = "1.0"
@@ -979,11 +981,11 @@ internal extension Model {
 extension Model {
     
     func authCSRF() async throws -> SessionCredentials {
-        
-        LoggerAgent.shared.log(category: .model, message: "authCSRF")
+        LoggerAgent.shared.log(category: .model, message: "authCSRF initiated")
         
         let command = ServerCommands.UtilityController.Csrf()
         LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+        
         return try await withCheckedThrowingContinuation({ continuation in
             
             serverAgent.executeCommand(command: command) { result in
@@ -993,7 +995,6 @@ extension Model {
                     if let data = response.data {
                         
                         do {
-                            
 #if MOCK
                             let csrfAgent = try MockCSRFAgent<MockEncryptionAgent>(MockKeysProvider(), data.cert, data.pk)
 #else
@@ -1003,6 +1004,7 @@ extension Model {
                             
                             let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))
                             LoggerAgent.shared.log(category: .model, message: "execute command: \(keyExchangeCommand)")
+                            
                             self.serverAgent.executeCommand(command: keyExchangeCommand) { result in
                                 
                                 switch result {
@@ -1064,26 +1066,43 @@ extension Model {
     }
     
     @discardableResult
-    private func authStartSession() async throws -> SessionCredentials {
-                
-        sessionAgent.sessionState.value = .activating
+    func authStartSession() async throws -> SessionCredentials {
         
-        do {
-            
-            let credentials = try await authCSRF()
-            
-            LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Response, success, credentials ")
-            self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
-            
-            return credentials
-            
-        } catch {
-            
-            LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Start.Response, failure, error: \(error.localizedDescription)")
-            self.action.send(ModelAction.Auth.Session.Start.Response(result: .failure(error)))
-            
-            throw error
+        guard !isAuthInProgress else {
+            throw ModelAuthError.sessionAlreadyInProgress
         }
+        
+        isAuthInProgress = true
+        defer { isAuthInProgress = false }
+        
+        sessionAgent.sessionState.value = .activating
+        var attemptCount = 0
+        
+        repeat {
+            attemptCount += 1
+            do {
+                
+                let credentials = try await authCSRF()
+                LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Start.Response, success, credentials")
+                self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
+                
+                return credentials
+                
+            } catch {
+                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "sent ModelAction.Auth.Session.Start.Response, failure, error: \(error.localizedDescription)")
+                self.action.send(ModelAction.Auth.Session.Start.Response(result: .failure(error)))
+                
+                if attemptCount >= maxAttempts {
+                    throw error
+                    
+                } else {
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                }
+            }
+        } while attemptCount < maxAttempts
+        
+        throw ModelAuthError.checkClientFailed(status: .userNotAuthorized, message: "Какой-то провал Карл")
     }
 
     func authPushRegister(token: String) async throws {
@@ -1202,6 +1221,7 @@ enum ModelAuthError: LocalizedError {
     case checkClientFailed(status: ServerStatusCode, message: String?)
     case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
     case sessionActivating
+    case sessionAlreadyInProgress
     
     var errorDescription: String? {
         
@@ -1232,6 +1252,9 @@ enum ModelAuthError: LocalizedError {
             
         case .sessionActivating:
             return "ModelAuthError: session is activating"
+            
+        case .sessionAlreadyInProgress:
+            return "ModelAuthError: session is already In Progress"
         }
     }
 }

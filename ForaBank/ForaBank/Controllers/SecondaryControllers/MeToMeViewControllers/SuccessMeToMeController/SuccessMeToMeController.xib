@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -11,7 +11,7 @@
     </dependencies>
     <customFonts key="customFonts">
         <array key="Inter-VariableFont_slnt,wght.ttf">
-            <string>Inter-Regular_Bold</string>
+            <string>Inter-Regular_SemiBold</string>
         </array>
     </customFonts>
     <objects>
@@ -31,23 +31,23 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ix-VG-Eig">
-                    <rect key="frame" x="171" y="184" width="72" height="72"/>
+                    <rect key="frame" x="163" y="188" width="88" height="88"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock" translatesAutoresizingMaskIntoConstraints="NO" id="2Qr-aB-BWH">
-                            <rect key="frame" x="12" y="12" width="48" height="48"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="waiting" translatesAutoresizingMaskIntoConstraints="NO" id="2Qr-aB-BWH">
+                            <rect key="frame" x="0.0" y="0.0" width="88" height="88"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="48" id="aP6-d6-Oc7"/>
-                                <constraint firstAttribute="width" constant="48" id="aVC-Xb-3ET"/>
+                                <constraint firstAttribute="height" constant="88" id="aP6-d6-Oc7"/>
+                                <constraint firstAttribute="width" constant="88" id="aVC-Xb-3ET"/>
                             </constraints>
+                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="88"/>
                         </imageView>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemYellowColor"/>
                     <constraints>
                         <constraint firstItem="2Qr-aB-BWH" firstAttribute="centerY" secondItem="6ix-VG-Eig" secondAttribute="centerY" id="ARA-zz-Jws"/>
-                        <constraint firstAttribute="height" constant="72" id="OA8-Ib-sms"/>
-                        <constraint firstAttribute="width" constant="72" id="aUl-2j-EKq"/>
+                        <constraint firstAttribute="height" constant="88" id="OA8-Ib-sms"/>
+                        <constraint firstAttribute="width" constant="88" id="aUl-2j-EKq"/>
                         <constraint firstItem="2Qr-aB-BWH" firstAttribute="centerX" secondItem="6ix-VG-Eig" secondAttribute="centerX" id="hEu-ye-sLZ"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
@@ -62,8 +62,8 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="ZOg-4V-Rzk"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                    <state key="normal" title="На главную">
+                    <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="18"/>
+                    <state key="normal" title="На главный">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <userDefinedRuntimeAttributes>
@@ -76,34 +76,33 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Owy-4f-UUG">
-                    <rect key="frame" x="20" y="280" width="374" height="65.5"/>
+                    <rect key="frame" x="20" y="300" width="374" height="44"/>
                     <string key="text">Запрос на пополнение
-со своего счета принят 
-в обработку</string>
-                    <fontDescription key="fontDescription" name="Inter-Regular_Bold" family="Inter" pointSize="18"/>
+со своего счета принят</string>
+                    <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="18"/>
                     <color key="textColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Из банка:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5t-EC-4B9">
-                    <rect key="frame" x="20" y="369.5" width="374" height="21"/>
+                    <rect key="frame" x="20" y="368" width="374" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" name="textColorFora"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сбербанк" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYp-Gz-KzV">
-                    <rect key="frame" x="20" y="398.5" width="374" height="29"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <rect key="frame" x="20" y="397" width="374" height="22"/>
+                    <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="18"/>
                     <color key="textColor" name="textColorFora"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="500 ₽" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OzM-Gr-Lxj">
-                    <rect key="frame" x="20" y="451.5" width="374" height="29.5"/>
-                    <fontDescription key="fontDescription" name="Inter-Regular_Bold" family="Inter" pointSize="24"/>
+                    <rect key="frame" x="20" y="443" width="374" height="29.5"/>
+                    <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="24"/>
                     <color key="textColor" name="textColorFora"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-spb" translatesAutoresizingMaskIntoConstraints="NO" id="FkF-RO-KAu">
-                    <rect key="frame" x="179" y="505" width="56" height="32"/>
+                    <rect key="frame" x="179" y="496.5" width="56" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="56" id="h5e-e6-d6z"/>
                         <constraint firstAttribute="height" constant="32" id="yXE-gL-4bn"/>
@@ -137,8 +136,8 @@
         </view>
     </objects>
     <resources>
-        <image name="clock" width="48" height="48"/>
         <image name="logo-spb" width="56" height="32"/>
+        <image name="waiting" width="88" height="88"/>
         <namedColor name="redColorFora">
             <color red="1" green="0.21199999749660492" blue="0.21199999749660492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -147,9 +146,6 @@
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
