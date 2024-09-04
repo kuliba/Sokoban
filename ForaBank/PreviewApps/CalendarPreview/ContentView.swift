@@ -83,7 +83,7 @@ private extension CalendarViewWrapper {
     }
     
     func createCalendarView() -> some View {
-        CalendarView(nil, $selectedRange, configureCalendar)
+        CalendarView.init(nil, selectedRange)
     }
     
     func createBottomView() -> some View {
@@ -185,12 +185,9 @@ extension DV {
         
         let date: Date
         let isCurrentMonth: Bool
-        let selectedDate: Binding<Date?>?
-        var selectedRange: Binding<MDateRange?>? {
-            didSet {
-                print("print")
-            }
-        }
+        let selectedDate: Date?
+        var selectedRange: MDateRange?
+        var selectDate: (Date) -> Void
     }
 }
 
@@ -211,7 +208,7 @@ extension DV.RangeSelector {
     func onSelection() {
         if !isFuture() {
             
-            selectedRange?.wrappedValue?.addToRange(date)
+            selectedRange?.addToRange(date)
         }
     }
 }
