@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView<RestrictionNoticeView>: View
-where RestrictionNoticeView: View {
+public struct PaymentsTransfersCorporateContentView<RestrictionNoticeView, ToolbarView>: View
+where RestrictionNoticeView: View,
+      ToolbarView: ToolbarContent {
     
     let content: Content
     let factory: Factory
@@ -35,30 +36,15 @@ where RestrictionNoticeView: View {
                 Text("TBD " + String(describing: content))
             }
         }
-        .toolbar(content: toolbar)
+        .toolbar(content: factory.makeToolbarView)
     }
 }
 
 public extension PaymentsTransfersCorporateContentView {
     
     typealias Content = PaymentsTransfersCorporateContent
-    typealias Factory = PaymentsTransfersCorporateContentViewFactory<RestrictionNoticeView>
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<RestrictionNoticeView, ToolbarView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
-}
-
-private extension PaymentsTransfersCorporateContentView {
-    
-    func toolbar() -> some ToolbarContent {
-        
-        ToolbarItem(placement: .topBarLeading) {
-            
-            HStack {
-                
-                Image(systemName: "person")
-                Text("TBD: Profile without QR")
-            }
-        }
-    }
 }
 
 // MARK: - Previews
@@ -75,6 +61,17 @@ private extension PaymentsTransfersCorporateContentView {
                         .padding()
                         .background(Color.gray.opacity(0.2))
                         .clipShape(Capsule())
+                },
+                makeToolbarView: {
+                    
+                    ToolbarItem(placement: .topBarLeading) {
+                        
+                        HStack {
+                            
+                            Image(systemName: "person")
+                            Text("TBD: Profile without QR")
+                        }
+                    }
                 }
             ),
             config: .preview

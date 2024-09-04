@@ -158,10 +158,8 @@ private extension RootView {
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
                     factory: .init(
-                        makeRestrictionNoticeView: {
-                            
-                            DisableCorCardsView(text: "Все возможности приложения будут доступны после того, как Вы откроете продукт как физическое лицо")
-                        }
+                        makeRestrictionNoticeView: makeRestrictionNoticeView,
+                        makeToolbarView: makePaymentsTransfersCorporateToolbarView
                     ),
                     config: .iFora
                 )
@@ -169,6 +167,23 @@ private extension RootView {
         )
     }
     
+    func makeRestrictionNoticeView() -> some View {
+        
+        DisableCorCardsView(text: "Все возможности приложения будут доступны после того, как Вы откроете продукт как физическое лицо")
+    }
+    
+    func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            
+            HStack {
+                
+                Image(systemName: "person")
+                Text("TBD: Profile without QR")
+            }
+        }
+    }
+
     func paymentsTransfersPersonalView(
         _ personal: PaymentsTransfersPersonal
     ) -> some View {
