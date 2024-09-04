@@ -105,10 +105,61 @@ private extension ContentView {
                 
                 PaymentsTransfersCorporateContentView(
                     content: corporate,
+                    factory: .init(
+                        makeBannerSectionView: makeBannerSectionView,
+                        makeRestrictionNoticeView: makeRestrictionNoticeView,
+                        makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                        makeTransfersSectionView: makeTransfersSectionView
+                    ),
                     config: .preview
                 )
             }
         )
+    }
+    
+    func makeBannerSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.orange.opacity(0.5)
+            
+            Text("Banners")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
+    }
+    
+    func makeRestrictionNoticeView() -> some View {
+        
+        Label("App functionality is restricted", systemImage: "info.bubble")
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.gray.opacity(0.2))
+            .clipShape(Capsule())
+    }
+    
+    func makePaymentsTransfersCorporateToolbarView() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            
+            HStack {
+                
+                Image(systemName: "person")
+                Text("TBD: Profile without QR")
+            }
+        }
+    }
+    
+    func makeTransfersSectionView() -> some View {
+        
+        ZStack {
+            
+            Color.green.opacity(0.5)
+            
+            Text("Transfers")
+                .foregroundColor(.white)
+                .font(.title3.bold())
+        }
     }
     
     func paymentsTransfersPersonalView(
@@ -125,7 +176,7 @@ private extension ContentView {
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
                             makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView
+                            makeToolbarView: makePaymentsTransfersPersonalToolbarView
                         ),
                         config: .preview
                     )
@@ -208,7 +259,7 @@ private extension ContentView {
         )
     }
     
-    func makePaymentsTransfersToolbarView(
+    func makePaymentsTransfersPersonalToolbarView(
         binder: PaymentsTransfersToolbarBinder
     ) -> some View {
         
