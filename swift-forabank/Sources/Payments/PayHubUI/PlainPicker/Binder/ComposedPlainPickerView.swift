@@ -53,8 +53,8 @@ where ContentView: View,
 public extension ComposedPlainPickerView {
     
     typealias Binder = PlainPickerBinder<Element, Destination>
-    typealias State = PlainPickerContentState<Element>
-    typealias Event = PlainPickerContentEvent<Element>
+    typealias State = PickerContentState<Element>
+    typealias Event = PickerContentEvent<Element>
     typealias MakeContentView = (State, @escaping (Event) -> Void) -> ContentView
     typealias MakeDestinationView = (Destination) -> DestinationView
 }

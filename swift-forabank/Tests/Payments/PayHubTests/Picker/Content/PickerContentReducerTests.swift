@@ -1,5 +1,5 @@
 //
-//  PlainPickerContentReducerTests.swift
+//  PickerContentReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class PlainPickerContentReducerTests: PlainPickerContentTests {
+final class PickerContentReducerTests: PickerContentTests {
     
     func test_select_shouldSetSelection() {
         
@@ -43,7 +43,7 @@ final class PlainPickerContentReducerTests: PlainPickerContentTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = PlainPickerContentReducer<Element>
+    private typealias SUT = PickerContentReducer<Element>
     
     private func makeSUT(
         file: StaticString = #file,

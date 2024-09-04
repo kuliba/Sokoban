@@ -51,8 +51,8 @@ private extension PlainPickerBinderComposer {
         elements: [Element]
     ) -> Content {
         
-        let reducer = PlainPickerContentReducer<Element>()
-        let effectHandler = PlainPickerContentEffectHandler<Element>()
+        let reducer = PickerContentReducer<Element>()
+        let effectHandler = PickerContentEffectHandler<Element>()
         
         return .init(
             initialState: .init(elements: elements),

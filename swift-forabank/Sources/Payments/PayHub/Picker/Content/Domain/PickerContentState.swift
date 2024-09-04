@@ -1,11 +1,11 @@
 //
-//  PlainPickerContentState.swift
+//  PickerContentState.swift
 //
 //
 //  Created by Igor Malyarov on 30.08.2024.
 //
 
-public struct PlainPickerContentState<Element> {
+public struct PickerContentState<Element> {
     
     public let elements: [Element]
     public var selection: Element?
@@ -19,4 +19,4 @@ public struct PlainPickerContentState<Element> {
     }
 }
 
-extension PlainPickerContentState: Equatable where Element: Equatable {}
+extension PickerContentState: Equatable where Element: Equatable {}
