@@ -352,11 +352,14 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
             }
             
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                delayMS: 50,
+                action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                    model: paymentsViewModel,
+                    cancellable: cancellable
+                )))
             )
             
         default: //error matching
@@ -445,8 +448,8 @@ extension PaymentsTransfersViewModel {
             case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
-            case fastPayment(ContactsViewModel)
-            case country(ContactsViewModel)
+            case fastPayment(Node<ContactsViewModel>)
+            case country(Node<ContactsViewModel>)
         }
     }
     
@@ -460,13 +463,13 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum Link: Identifiable {
+    enum Link {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
         case phone(PaymentByPhoneViewModel)
-        case payments(PaymentsViewModel)
+        case payments(Node<PaymentsViewModel>)
         case serviceOperators(OperatorsViewModel)
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)
@@ -553,7 +556,7 @@ extension PaymentsTransfersViewModel.Modal {
     }
 }
 
-extension PaymentsTransfersViewModel.Link {
+extension PaymentsTransfersViewModel.Link: Identifiable {
     
     var id: Case {
         
@@ -566,8 +569,8 @@ extension PaymentsTransfersViewModel.Link {
             return .mobile
         case .phone:
             return .phone
-        case .payments:
-            return .payments
+        case let .payments(node):
+            return .payments(ObjectIdentifier(node.model))
         case .serviceOperators:
             return .serviceOperators
         case .internetOperators:
@@ -617,12 +620,12 @@ extension PaymentsTransfersViewModel.Link {
         }
     }
     
-    enum Case {
+    enum Case: Hashable {
         case exampleDetail
         case userAccount
         case mobile
         case phone
-        case payments
+        case payments(ObjectIdentifier)
         case serviceOperators
         case internetOperators
         case transportOperators
@@ -688,7 +691,7 @@ enum PaymentsTransfersViewModelAction {
         
         struct Payment: Action {
             
-            let viewModel: PaymentsViewModel
+            let node: Node<PaymentsViewModel>
         }
         
         struct Requisites: Action {
@@ -846,7 +849,7 @@ private extension PaymentsTransfersViewModel {
         
         action
             .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Payment }
-            .map(\.viewModel)
+            .map(\.node)
             .receive(on: scheduler)
             .sink { [unowned self] in
                 
@@ -860,9 +863,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .fastPayment(contactsViewModel)))
+                route.modal = .sheet(.init(type: .fastPayment(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -872,9 +878,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .country(contactsViewModel)))
+                route.modal = .sheet(.init(type: .country(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -985,11 +994,14 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            ))))
     }
     
     func disableForCorporateCard(_ action: any Action) -> Bool {
@@ -1109,9 +1121,12 @@ private extension PaymentsTransfersViewModel {
             service: .toAnotherCard,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        )))
     }
     
     private func handleBetweenSelfTransferButtonTapped() {
@@ -1149,7 +1164,10 @@ private extension PaymentsTransfersViewModel {
                 
                 self?.event(.dismiss(.destination))
             }
-            route.destination = .payments(paymentsViewModel)
+            route.destination = .payments(.init(
+                model: paymentsViewModel,
+                cancellables: []
+            ))
             
         case .socialAndGame:
             route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue))) //TODO:
@@ -1170,27 +1188,30 @@ private extension PaymentsTransfersViewModel {
             service: .mobileConnection,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        )))
     }
     
-    private func makeByInstructionsPaymentsViewModel() -> PaymentsViewModel {
+    private func makeByInstructionsPaymentsViewModel() -> Node<PaymentsViewModel> {
         
         let paymentsViewModel = PaymentsViewModel(
             model,
             service: .requisites,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        return paymentsViewModel
+        return .init(model: paymentsViewModel, cancellable: cancellable)
     }
     
     private func payByRequisites() {
         
         action.send(PaymentsTransfersViewModelAction.Show.Payment(
-            viewModel: makeByInstructionsPaymentsViewModel()
+            node: makeByInstructionsPaymentsViewModel()
         ))
     }
     
@@ -1317,7 +1338,7 @@ private extension PaymentsTransfersViewModel {
             .store(in: &bindings)
     }
     
-    private func bind(_ paymentsViewModel: PaymentsViewModel) {
+    private func bind(_ paymentsViewModel: PaymentsViewModel) -> AnyCancellable {
         
         paymentsViewModel.action
             .receive(on: scheduler)
@@ -1336,7 +1357,6 @@ private extension PaymentsTransfersViewModel {
                 default: break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func handleContactAbroad(
@@ -1352,7 +1372,10 @@ private extension PaymentsTransfersViewModel {
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellables: []
+            )))
         )
     }
     
@@ -1434,7 +1457,7 @@ private extension PaymentsTransfersViewModel {
         self.rootActions?.switchTab(.payments)
     }
     
-    private func bind(_ viewModel: ContactsViewModel) {
+    private func bind(_ viewModel: ContactsViewModel) -> AnyCancellable {
         
         viewModel.action
             .receive(on: scheduler)
@@ -1451,7 +1474,6 @@ private extension PaymentsTransfersViewModel {
                     break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func requestContactsPayment(
@@ -1493,11 +1515,15 @@ private extension PaymentsTransfersViewModel {
                 }
             }
             
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                delayMS: 50,
+                action: PaymentsTransfersViewModelAction.Show.Payment(
+                    node: .init(
+                        model: paymentsViewModel,
+                        cancellable: cancellable
+                    )))
             )
         }
     }
@@ -1531,10 +1557,13 @@ private extension PaymentsTransfersViewModel {
             }
         }
         
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         self.action.send(DelayWrappedAction(
             delayMS: 300,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1566,11 +1595,11 @@ private extension PaymentsTransfersViewModel {
         event(.dismiss(.destination))
         event(.dismiss(.modal))
         
-        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
+        let node = makeByInstructionsPaymentsViewModel()
         
         action.send(DelayWrappedAction(
             delayMS: 800,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: node))
         )
     }
     
@@ -1692,9 +1721,12 @@ extension PaymentsTransfersViewModel {
                 self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        route.destination = .payments(paymentsViewModel)
+        route.destination = .payments(.init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        ))
     }
     
     private func searchOperators(
@@ -1765,11 +1797,14 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1780,11 +1815,14 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     

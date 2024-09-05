@@ -373,23 +373,30 @@ private extension MainViewModel {
             .sink(receiveValue: { [unowned self] qrCode in
                 
                 action.send(MainViewModelAction.Close.FullScreenSheet())
-                let paymentsViewModel = PaymentsViewModel(source: .requisites(qrCode: qrCode), model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link() )})
-                bind(paymentsViewModel)
+                let paymentsViewModel = PaymentsViewModel(
+                    source: .requisites(qrCode: qrCode),
+                    model: model,
+                    closeAction: { [weak self] in
+                        self?.action.send(MainViewModelAction.Close.Link())
+                    }
+                )
+                
+                let cancellable = bind(paymentsViewModel)
                 
                 action.send(DelayWrappedAction(
-                    delayMS: 700,
-                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                    delayMS: 50,
+                    action: MainViewModelAction.Show.Payments(node: .init(model: paymentsViewModel, cancellable: cancellable)))
                 )
                 
             }).store(in: &bindings)
         
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Payments })
-            .map(\.paymentsViewModel)
+            .map(\.node)
             .receive(on: scheduler)
-            .sink(receiveValue: { [unowned self] paymentsViewModel in
+            .sink(receiveValue: { [unowned self] in
                 
-                route.destination = .payments(paymentsViewModel)
+                route.destination = .payments($0)
                 
             }).store(in: &bindings)
         
@@ -399,9 +406,12 @@ private extension MainViewModel {
             .sink(receiveValue: { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .byPhone(contactsViewModel)))
+                route.modal = .sheet(.init(type: .byPhone(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
                 
             }).store(in: &bindings)
         
@@ -411,9 +421,12 @@ private extension MainViewModel {
             .sink(receiveValue: { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .byPhone(contactsViewModel)))
+                route.modal = .sheet(.init(type: .byPhone(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
                 
             }).store(in: &bindings)
         
@@ -685,7 +698,7 @@ private extension MainViewModel {
             }
     }
     
-    private func bind(_ paymentsViewModel: PaymentsViewModel) {
+    private func bind(_ paymentsViewModel: PaymentsViewModel) -> AnyCancellable {
         
         paymentsViewModel.action
             .receive(on: scheduler)
@@ -699,7 +712,6 @@ private extension MainViewModel {
                 default: break
                 }
             }
-            .store(in: &bindings)
     }
     
     func bind(_ productProfile: ProductProfileViewModel) {
@@ -781,7 +793,7 @@ private extension MainViewModel {
         }
     }
     
-    func bind(_ viewModel: ContactsViewModel) {
+    func bind(_ viewModel: ContactsViewModel) -> AnyCancellable {
         
         viewModel.action
             .compactMap({ $0 as? ContactsViewModelAction.PaymentRequested })
@@ -801,7 +813,6 @@ private extension MainViewModel {
                         }
                         return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
                         
-                        
                     default:
                         return payloadSource
                     }
@@ -820,14 +831,16 @@ private extension MainViewModel {
                         action: MainViewModelAction.Show.Contacts())
                     )
                 }
-                bind(paymentsViewModel)
+                let cancellable = bind(paymentsViewModel)
                 
                 self.action.send(DelayWrappedAction(
-                    delayMS: 300,
-                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                    delayMS: 50,
+                    action: MainViewModelAction.Show.Payments(node: .init(
+                        model: paymentsViewModel,
+                        cancellable: cancellable
+                    )))
                 )
             }
-            .store(in: &bindings)
     }
     
     func handleFastPaymentsAction(_ payload: MainSectionViewModelAction.FastPayment.ButtonTapped) {
@@ -975,9 +988,12 @@ extension MainViewModel {
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
-            action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            action.send(MainViewModelAction.Show.Payments(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         }
     }
     
@@ -999,11 +1015,14 @@ extension MainViewModel {
                     action: MainViewModelAction.Show.Countries())
                 )
             }
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             action.send(DelayWrappedAction(
                 delayMS: 300,
-                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                action: MainViewModelAction.Show.Payments(node: .init(
+                    model: paymentsViewModel,
+                    cancellable: cancellable
+                )))
             )
         }
     }
@@ -1085,9 +1104,12 @@ extension MainViewModel {
                 self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        route.destination = .payments(paymentsViewModel)
+        route.destination = .payments(.init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        ))
     }
     
     private func searchOperators(
@@ -1144,11 +1166,14 @@ extension MainViewModel {
                 
                 let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
                     self?.action.send(MainViewModelAction.Close.Link())})
-                bind(operationViewModel)
+                let cancellable = bind(operationViewModel)
                 
                 await MainActor.run {
                     
-                    self.route.destination = .payments(operationViewModel)
+                    self.route.destination = .payments(.init(
+                        model: operationViewModel,
+                        cancellable: cancellable
+                    ))
                 }
                 
             } catch {
@@ -1174,11 +1199,14 @@ extension MainViewModel {
                 self?.action.send(MainViewModelAction.Close.Link())
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
-            delayMS: 700,
-            action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            delayMS: 50,
+            action: MainViewModelAction.Show.Payments(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1308,11 +1336,14 @@ extension MainViewModel {
                 self?.action.send(MainViewModelAction.Close.Link())
             }
         )
-        self.bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
-            delayMS: 700,
-            action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+            delayMS: 50,
+            action: MainViewModelAction.Show.Payments(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1570,7 +1601,7 @@ extension MainViewModel {
         enum Kind {
             
             case places(PlacesViewModel)
-            case byPhone(ContactsViewModel)
+            case byPhone(Node<ContactsViewModel>)
             case productProfile(ProductProfileViewModel)
             case messages(MessagesHistoryViewModel)
 
@@ -1592,7 +1623,7 @@ extension MainViewModel {
         case failedView(QRFailedViewModel)
         case searchOperators(QRSearchOperatorViewModel)
         case openCard(AuthProductsViewModel)
-        case payments(PaymentsViewModel)
+        case payments(Node<PaymentsViewModel>)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
@@ -1824,7 +1855,7 @@ enum MainViewModelAction {
         
         struct Payments: Action {
             
-            let paymentsViewModel: PaymentsViewModel
+            let node: Node<PaymentsViewModel>
         }
         
         struct Contacts: Action {}

@@ -1171,11 +1171,9 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .myProducts(viewModel):
             return viewModel
-        case let .paymentsTransfers(viewModel):
-            return viewModel
+        case let .paymentsTransfers(node):
+            return node.model
         case let .controlPanel(viewModel):
-            return viewModel
-        case let .payment(viewModel):
             return viewModel
         }
     }
