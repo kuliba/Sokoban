@@ -42,6 +42,7 @@ extension RootViewModelFactory {
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     static func makePaymentsTransfersPersonal(
+        model: Model,
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
@@ -90,6 +91,7 @@ extension RootViewModelFactory {
             placeholderCount: operationPickerPlaceholderCount
         )
         let operationPickerFlowComposer = OperationPickerFlowComposer(
+            model: model,
             scheduler: mainScheduler
         )
         let operationPickerFlow = operationPickerFlowComposer.compose()
