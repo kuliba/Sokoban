@@ -101,9 +101,9 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category.LatestP
 
 private extension ResponseMapper.GetServiceCategoryListResponse.Category.PaymentFlow {
     
-    init(_ paymentFlow: ResponseMapper._Data._Category.PaymentFlow) {
+    init(_ flow: ResponseMapper._Data._Category._PaymentFlow) {
         
-        switch paymentFlow {
+        switch flow {
         case .mobile:              self = .mobile
         case .qr:                  self = .qr
         case .standard:            self = .standard
@@ -126,7 +126,7 @@ private extension ResponseMapper {
             let name: String
             let ord: Int
             let md5hash: String
-            let paymentFlow: PaymentFlow
+            let paymentFlow: _PaymentFlow
             let latestPaymentsCategory: LatestPaymentsCategory?
             let search: Bool
             
@@ -163,7 +163,7 @@ private extension ResponseMapper {
                 case isTransportPayments
             }
             
-            enum PaymentFlow: String, Decodable {
+            enum _PaymentFlow: String, Decodable {
                 
                 case mobile              = "MOBILE"
                 case qr                  = "QR"

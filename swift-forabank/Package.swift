@@ -1296,6 +1296,7 @@ private extension Target {
         resources: [
             .copy("Resources/v3_getPaymentTemplateList.json"),
             .copy("Resources/v3_getPaymentTemplateList_housing.json"),
+            .copy("Resources/v3_getPaymentTemplateList_newFields.json"),
             .copy("Resources/v3_getPaymentTemplateList_one.json"),
         ]
     )

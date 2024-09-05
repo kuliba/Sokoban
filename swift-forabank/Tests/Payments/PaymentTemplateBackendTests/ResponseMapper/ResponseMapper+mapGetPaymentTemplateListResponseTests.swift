@@ -108,9 +108,10 @@ final class ResponseMapper_mapGetPaymentTemplateListResponseTests: XCTestCase {
         try assert(data(from: "v3_getPaymentTemplateList_housing"), .init(
             serial: "19975e6eb7a590251afdd00e6fdbc7fa",
             templates: [
-                .init(
+                makeTemplate(
                     id: 5920,
                     group: "Услуги ЖКХ",
+                    inn: "7606052264",
                     name: "ПАО ТНС энерго Ярославль",
                     parameters: [
                         makeParameter(
@@ -120,8 +121,36 @@ final class ResponseMapper_mapGetPaymentTemplateListResponseTests: XCTestCase {
                             )
                         )
                     ],
+                    paymentFlow: .standard,
                     sort: 23,
                     type: .housingAndCommunalService
+                )
+            ]
+        ))
+    }
+    
+    func test_fileData_newFields() throws {
+        
+        try assert(data(from: "v3_getPaymentTemplateList_newFields"), .init(
+            serial: "19975e6eb7a590251afdd00e6fdbc7fa",
+            templates: [
+                makeTemplate(
+                    id: 6199,
+                    group: "Транспорт",
+                    inn: "7710965662",
+                    md5Hash: "425e86123a5415c2ada1770b9e4abf1b",
+                    name: "Автодор Платные дороги (по договору)",
+                    parameters: [
+                        makeParameter(
+                            amount: 10,
+                            payer: makePayer(
+                                cardID: 10000220675
+                            )
+                        )
+                    ],
+                    paymentFlow: .transport,
+                    sort: 48,
+                    type: .transport
                 )
             ]
         ))
@@ -132,9 +161,10 @@ final class ResponseMapper_mapGetPaymentTemplateListResponseTests: XCTestCase {
         try assert(data(from: "v3_getPaymentTemplateList_one"), .init(
             serial: "19975e6eb7a590251afdd00e6fdbc7fa",
             templates: [
-                .init(
+                makeTemplate(
                     id: 3760,
                     group: "Перевод МИГ",
+                    md5Hash: "2dab5e994b3925a213dd63bffcc948ab",
                     name: "Э. Финстрим Финстримович",
                     parameters: [
                         makeParameter(
@@ -194,6 +224,31 @@ final class ResponseMapper_mapGetPaymentTemplateListResponseTests: XCTestCase {
         let filename = Bundle.module.url(forResource: filename, withExtension: "json")
         let url = try XCTUnwrap(filename, file: file, line: line)
         return try Data(contentsOf: url)
+    }
+    
+    private func makeTemplate(
+        id: Int,
+        group: String,
+        inn: String? = nil,
+        md5Hash: String? = nil,
+        name: String,
+        parameters: [ResponseMapper.GetPaymentTemplateListResponse.Template.Parameter],
+        paymentFlow: ResponseMapper.GetPaymentTemplateListResponse.Template.PaymentFlow? = nil,
+        sort: Int,
+        type: ResponseMapper.GetPaymentTemplateListResponse.Template.TemplateType
+    ) -> ResponseMapper.GetPaymentTemplateListResponse.Template {
+        
+        return .init(
+            id: id,
+            group: group,
+            inn: inn,
+            md5Hash: md5Hash,
+            name: name,
+            parameters: parameters,
+            paymentFlow: paymentFlow,
+            sort: sort,
+            type: type
+        )
     }
     
     private func makeParameter(

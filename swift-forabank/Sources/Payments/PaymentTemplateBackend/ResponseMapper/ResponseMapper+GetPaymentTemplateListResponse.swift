@@ -31,23 +31,31 @@ extension ResponseMapper.GetPaymentTemplateListResponse {
         
         public let id: Int
         public let group: String
+        public let inn: String?
+        public let md5Hash: String?
         public let name: String
         public let parameters: [Parameter]
+        public let paymentFlow: PaymentFlow?
         public let sort: Int
         public let type: TemplateType
         
         public init(
-            id: Int,
-            group: String,
+            id: Int, group: String, 
+            inn: String?,
+            md5Hash: String?,
             name: String,
             parameters: [Parameter],
+            paymentFlow: PaymentFlow?,
             sort: Int,
             type: TemplateType
         ) {
             self.id = id
             self.group = group
+            self.inn = inn
+            self.md5Hash = md5Hash
             self.name = name
             self.parameters = parameters
+            self.paymentFlow = paymentFlow
             self.sort = sort
             self.type = type
         }
@@ -100,6 +108,15 @@ extension ResponseMapper.GetPaymentTemplateListResponse.Template {
             self.payer = payer
             self.comment = comment
         }
+    }
+    
+    public enum PaymentFlow: Equatable {
+        
+        case mobile
+        case qr
+        case standard
+        case taxAndStateServices
+        case transport
     }
 }
 

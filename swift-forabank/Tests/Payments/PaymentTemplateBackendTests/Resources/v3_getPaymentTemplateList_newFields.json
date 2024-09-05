@@ -1,0 +1,45 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "19975e6eb7a590251afdd00e6fdbc7fa",
+        "templateList": [
+            {
+                "paymentTemplateId": 6199,
+                "name": "Автодор Платные дороги (по договору)",
+                "groupName": "Транспорт",
+                "type": "TRANSPORT",
+                "sort": 48,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 10.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||AVDD",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 1,
+                                "fieldvalue": "161807"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7710965662",
+                "md5hash": "425e86123a5415c2ada1770b9e4abf1b",
+                "paymentFlow": "TRANSPORT"
+            }
+        ]
+    }
+}

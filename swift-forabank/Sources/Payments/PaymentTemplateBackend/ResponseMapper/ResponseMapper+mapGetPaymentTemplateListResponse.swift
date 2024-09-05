@@ -47,11 +47,28 @@ private extension ResponseMapper.GetPaymentTemplateListResponse.Template {
         self.init(
             id: template.paymentTemplateId,
             group: template.groupName,
+            inn: template.inn,
+            md5Hash: template.md5hash,
             name: template.name,
             parameters: template.parameterList.map(Parameter.init),
+            paymentFlow: template.paymentFlow.map { .init($0) },
             sort: template.sort,
             type: .init(template.type)
         )
+    }
+}
+
+private extension ResponseMapper.GetPaymentTemplateListResponse.Template.PaymentFlow {
+    
+    init(_ flow: ResponseMapper._Data._Template._PaymentFlow) {
+        
+        switch flow {
+        case .mobile:              self = .mobile
+        case .qr:                  self = .qr
+        case .standard:            self = .standard
+        case .taxAndStateServices: self = .taxAndStateServices
+        case .transport:           self = .transport
+        }
     }
 }
 
@@ -131,10 +148,22 @@ private extension ResponseMapper._Data {
         let type: _TemplateType
         let sort: Int
         let parameterList: [_Parameter]
+        let inn: String?
+        let md5hash: String?
+        let paymentFlow: _PaymentFlow?
     }
 }
 
 private extension ResponseMapper._Data._Template {
+    
+    enum _PaymentFlow: String, Decodable {
+        
+        case mobile              = "MOBILE"
+        case qr                  = "QR"
+        case standard            = "STANDARD_FLOW"
+        case taxAndStateServices = "TAX_AND_STATE_SERVICE"
+        case transport           = "TRANSPORT"
+    }
     
     enum _TemplateType: String, Decodable {
         
