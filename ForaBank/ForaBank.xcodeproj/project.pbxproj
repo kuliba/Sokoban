@@ -1128,6 +1128,7 @@
 		2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */; };
 		2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77FECD2BB4A40500884D87 /* AnywayPayment */; };
 		2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */; };
+		2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */; };
 		2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */; };
 		2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A852B5A87CE0035CEAB /* ContentView.swift */; };
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
@@ -4534,6 +4535,7 @@
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposerTests.swift; sourceTree = "<group>"; };
+		2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposer.swift; sourceTree = "<group>"; };
 		2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPInputComponentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputComponentPreviewApp.swift; sourceTree = "<group>"; };
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -12303,6 +12305,7 @@
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
 				2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */,
+				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
@@ -21112,6 +21115,7 @@
 				2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */,
+				2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */,
 				2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */,
 				774CA5DE287962BA00544C17 /* NotificationStatus.swift in Sources */,
 				77333DA1283E9CEA00C3036F /* Model+Rates.swift in Sources */,
