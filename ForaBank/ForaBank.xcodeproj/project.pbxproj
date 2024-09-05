@@ -882,6 +882,8 @@
 		2A6097392B9D77FA00AA6C75 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6097382B9D77FA00AA6C75 /* Operator.swift */; };
 		2A60973B2B9D7C1800AA6C75 /* FlowSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A60973A2B9D7C1800AA6C75 /* FlowSettingsView.swift */; };
 		2A60973E2B9DA0EA00AA6C75 /* LoadServicesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A60973D2B9DA0EA00AA6C75 /* LoadServicesResponse.swift */; };
+		2A617E6B2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A617E6A2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */; };
+		2A617E6D2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A617E6C2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */; };
 		2A61D0632BECB59E00802C95 /* UtilityPaymentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */; };
 		2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */; };
 		2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */; };
@@ -1127,6 +1129,8 @@
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
 		2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */; };
 		2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77FECD2BB4A40500884D87 /* AnywayPayment */; };
+		2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */; };
+		2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */; };
 		2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */; };
 		2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A852B5A87CE0035CEAB /* ContentView.swift */; };
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
@@ -4286,6 +4290,8 @@
 		2A6097382B9D77FA00AA6C75 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		2A60973A2B9D7C1800AA6C75 /* FlowSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowSettingsView.swift; sourceTree = "<group>"; };
 		2A60973D2B9DA0EA00AA6C75 /* LoadServicesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadServicesResponse.swift; sourceTree = "<group>"; };
+		2A617E6A2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowMakeNavigationComposer.swift; sourceTree = "<group>"; };
+		2A617E6C2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowMakeNavigationComposer.swift; sourceTree = "<group>"; };
 		2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityPaymentTypes.swift; sourceTree = "<group>"; };
 		2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentViewModel.swift; sourceTree = "<group>"; };
 		2A61D0782BECBCCA00802C95 /* UtilityPrepaymentCompletionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentCompletionEvent.swift; sourceTree = "<group>"; };
@@ -4525,6 +4531,8 @@
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
+		2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposerTests.swift; sourceTree = "<group>"; };
+		2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposer.swift; sourceTree = "<group>"; };
 		2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPInputComponentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputComponentPreviewApp.swift; sourceTree = "<group>"; };
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -8210,6 +8218,7 @@
 			children = (
 				2A7772282C6F0C33009B1676 /* OperationPickerContent+stub.swift */,
 				2A7772262C6F0C15009B1676 /* OperationPickerFlow+stub.swift */,
+				2A617E6A2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */,
 				2A273E5B2C75969E009935E6 /* Binder */,
 				2A7772612C6F4999009B1676 /* Content */,
 				2A7772602C6F4991009B1676 /* Flow */,
@@ -10505,6 +10514,7 @@
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
+				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -12040,7 +12050,6 @@
 			isa = PBXGroup;
 			children = (
 				2AE350D12C770F4700A766EE /* Binder */,
-				2AE350D02C770F3A00A766EE /* Content */,
 				2AE350CF2C770F3100A766EE /* Flow */,
 			);
 			path = CategoryPickerSection;
@@ -12052,13 +12061,6 @@
 				2AE350D82C770FC400A766EE /* CategoryPickerSectionFlow.swift */,
 			);
 			path = Flow;
-			sourceTree = "<group>";
-		};
-		2AE350D02C770F3A00A766EE /* Content */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Content;
 			sourceTree = "<group>";
 		};
 		2AE350D12C770F4700A766EE /* Binder */ = {
@@ -12075,6 +12077,7 @@
 				2AE350E62C77590C00A766EE /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */,
 				2AE350DF2C77229400A766EE /* CategoryPickerSectionFlowComposer.swift */,
 				2AE350DC2C77220100A766EE /* OperationPickerFlowComposer.swift */,
+				2A617E6C2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift */,
 			);
 			path = v1;
 			sourceTree = "<group>";
@@ -12294,6 +12297,7 @@
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
 				2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */,
+				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
@@ -19215,6 +19219,7 @@
 				2A273E692C75996B009935E6 /* PaymentsTransfersPersonalContent.swift in Sources */,
 				2A273E5A2C759644009935E6 /* OperationPickerFlow.swift in Sources */,
 				2AD8242F2C86E0F00007B8DF /* SelectedCategoryDestination.swift in Sources */,
+				2A617E6B2C89AE48009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */,
 				2A7385BB2C7382B900861881 /* PaymentsTransfersPersonal.swift in Sources */,
 				2A7772252C6F0BF2009B1676 /* OperationPickerBinder.swift in Sources */,
 				2A302AD92C7781730088F6C7 /* CategoryPickerSectionBinder.swift in Sources */,
@@ -19830,6 +19835,7 @@
 				2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */,
 				EDDFE3AB2756D39F00F57C71 /* DepositCalculatorViewController.swift in Sources */,
 				C1F799A729D3EDB00048346B /* Model+PaymentsChange.swift in Sources */,
+				2A617E6D2C89B200009E7AED /* OperationPickerFlowMakeNavigationComposer.swift in Sources */,
 				EDB02AEA2816F2E0005F64B5 /* AccountCellInfoViewComponent.swift in Sources */,
 				77F1581B28108BB500CA5E4E /* SessionAgentProtocol.swift in Sources */,
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
@@ -21076,6 +21082,7 @@
 				2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */,
+				2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */,
 				2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */,
 				774CA5DE287962BA00544C17 /* NotificationStatus.swift in Sources */,
 				77333DA1283E9CEA00C3036F /* Model+Rates.swift in Sources */,
@@ -21807,6 +21814,7 @@
 				C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */,
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
+				2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */,
 				2A2D4D332B6E7FA1006912EE /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift in Sources */,
 				2A0439CF2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift in Sources */,
 				2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */,

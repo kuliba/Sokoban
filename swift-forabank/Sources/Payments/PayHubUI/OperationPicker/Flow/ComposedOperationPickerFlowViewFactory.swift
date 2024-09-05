@@ -7,7 +7,7 @@
 
 import PayHub
 
-public struct ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Templates> {
+public struct ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates> {
     
     public let makeDestinationView: MakeDestinationView
     public let makeItemLabel: MakeItemLabel
@@ -23,7 +23,7 @@ public struct ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel,
 
 public extension ComposedOperationPickerFlowViewFactory {
     
-    typealias MakeDestinationView = (OperationPickerFlowItem<Exchange, LatestFlow, Templates>) -> DestinationView
+    typealias MakeDestinationView = (OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>) -> DestinationView
     typealias Item = OperationPickerState<Latest>.Item
     typealias MakeItemLabel = (Item) -> ItemLabel
 }

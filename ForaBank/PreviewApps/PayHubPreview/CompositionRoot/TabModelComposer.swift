@@ -24,7 +24,7 @@ final class TabModelComposer {
     }
     
     typealias HasCorporateCardsOnly = AnyPublisher<Bool, Never>
-    typealias MakeModel = ([OperationPickerItem<Latest>]) -> PaymentsTransfersPersonalContent
+    typealias MakeModel = ([OperationPickerElement]) -> PaymentsTransfersPersonalContent
 }
 
 extension TabModelComposer {
@@ -91,7 +91,7 @@ private extension TabState.Selected {
         }
     }
     
-    var loadResult: [OperationPickerItem<Latest>] {
+    var loadResult: [OperationPickerElement] {
         
         switch self {
         case .noLatest:     return []
@@ -102,7 +102,7 @@ private extension TabState.Selected {
     }
 }
 
-private extension Array where Element == OperationPickerItem<Latest> {
+private extension Array where Element == OperationPickerElement {
     
     static let preview: Self = [
         .latest(.preview()),

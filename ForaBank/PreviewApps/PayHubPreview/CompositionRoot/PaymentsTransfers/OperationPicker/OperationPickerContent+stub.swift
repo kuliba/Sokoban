@@ -18,7 +18,7 @@ extension OperationPickerContent {
             .element(.init(.exchange))
         ],
         suffix: [OperationPickerState.Item] = [],
-        loadResult: [OperationPickerItem<Latest>],
+        loadResult: [OperationPickerElement],
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> OperationPickerContent {
         

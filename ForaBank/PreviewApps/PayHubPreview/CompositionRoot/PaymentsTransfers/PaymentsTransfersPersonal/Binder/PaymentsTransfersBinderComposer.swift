@@ -26,7 +26,7 @@ extension PaymentsTransfersBinderComposer {
     
     func compose(
         loadedCategories: [ServiceCategory],
-        loadedItems: [OperationPickerItem<Latest>]
+        loadedItems: [OperationPickerElement]
     ) -> Binder {
         
         let contentComposer = PaymentsTransfersPersonalContentComposer(

@@ -7,7 +7,7 @@
 
 import PayHub
 
-public struct OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Templates> {
+public struct OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Status, Templates> {
     
     public let makeContent: MakeContent
     public let makeDestination: MakeDestination
@@ -25,6 +25,6 @@ public extension OperationPickerFlowViewFactory {
     
     typealias MakeContent = () -> ContentView
     
-    typealias Destination = OperationPickerFlowItem<Exchange, LatestFlow, Templates>
+    typealias Destination = OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>
     typealias MakeDestination = (Destination) -> DestinationView
 }
