@@ -554,15 +554,23 @@ extension Model {
         }
     }
     
-    func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
+    func updateProduct(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        productType: ProductType,
+        isCalledOnAuth: Bool
+    ) {
         if let getProductsV6 {
             getProducts_V6(getProductsV6, command, productType)
         } else {
-            getProductsV5(command, productType)
+            getProductsV5(command, productType, isCalledOnAuth)
         }
     }
     
-    func getProductsV5(_ command: ServerCommands.ProductController.GetProductListByType, _ productType: ProductType) {
+    func getProductsV5(
+        _ command: ServerCommands.ProductController.GetProductListByType,
+        _ productType: ProductType,
+        _ isCalledOnAuth: Bool
+    ) {
         
         getProducts(productType) { response in
             
