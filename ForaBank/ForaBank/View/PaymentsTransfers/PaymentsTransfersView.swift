@@ -196,8 +196,8 @@ extension PaymentsTransfersView {
                 .navigationBarBackButtonHidden(true)
                 .edgesIgnoringSafeArea(.all)
             
-        case let .payments(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+        case let .payments(node):
+            PaymentsView(viewModel: node.model)
                 .navigationBarHidden(true)
             
         case let .phone(phoneData):
@@ -407,11 +407,11 @@ extension PaymentsTransfersView {
             AnotherCardView(viewModel: anotherCardViewModel)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case .fastPayment(let viewModel):
-            ContactsView(viewModel: viewModel)
+        case let .fastPayment(node):
+            ContactsView(viewModel: node.model)
             
-        case .country(let viewModel):
-            ContactsView(viewModel: viewModel)
+        case let .country(node):
+            ContactsView(viewModel: node.model)
         }
     }
     
