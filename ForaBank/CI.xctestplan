@@ -499,6 +499,13 @@
         "identifier" : "GetProductListByTypeV6ServiceTests",
         "name" : "GetProductListByTypeV6ServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentTemplateBackendTests",
+        "name" : "PaymentTemplateBackendTests"
+      }
     }
   ],
   "version" : 1
