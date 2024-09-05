@@ -106,7 +106,7 @@ extension RootViewModelFactory {
         
         // MARK: - Toolbar
         
-        let toolbarComposer = PaymentsTransfersToolbarBinderComposer(
+        let toolbarComposer = PaymentsTransfersPersonalToolbarBinderComposer(
             microServices: .init(
                 makeProfile: { $0(ProfileModelStub()) },
                 makeQR: { $0(QRModelStub()) }

@@ -29,7 +29,7 @@ extension PaymentsTransfersBinderComposer {
         loadedItems: [OperationPickerItem<Latest>]
     ) -> Binder {
         
-        let contentComposer = PaymentsTransfersContentComposer(
+        let contentComposer = PaymentsTransfersPersonalContentComposer(
             scheduler: scheduler
         )
         let flowComposer = PaymentsTransfersFlowModelComposer(

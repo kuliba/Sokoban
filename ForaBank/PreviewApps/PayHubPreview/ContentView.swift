@@ -260,10 +260,10 @@ private extension ContentView {
     }
     
     func makePaymentsTransfersPersonalToolbarView(
-        binder: PaymentsTransfersToolbarBinder
+        binder: PaymentsTransfersPersonalToolbarBinder
     ) -> some View {
         
-        ComposedPaymentsTransfersToolbarView(
+        ComposedPaymentsTransfersPersonalToolbarView(
             binder: binder,
             factory: .init(
                 makeDestinationView: {
