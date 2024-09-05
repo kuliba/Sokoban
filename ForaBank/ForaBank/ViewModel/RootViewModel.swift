@@ -640,7 +640,7 @@ private extension OperationPickerBinder {
     }
 }
 
-private extension PaymentsTransfersToolbarBinder {
+private extension PaymentsTransfersPersonalToolbarBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
