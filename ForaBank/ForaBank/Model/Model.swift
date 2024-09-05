@@ -62,7 +62,6 @@ class Model {
     //MARK: Dictionaries
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
-    let authCatalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let productListBannersWithSticker: CurrentValueSubject<[StickerBannersMyProductList], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
@@ -206,7 +205,6 @@ class Model {
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
-        self.authCatalogBanners = .init([])
         self.catalogBanners = .init([])
         self.productListBannersWithSticker = .init([])
         self.currencyList = .init([])
