@@ -1127,6 +1127,7 @@
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
 		2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */; };
 		2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77FECD2BB4A40500884D87 /* AnywayPayment */; };
+		2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */; };
 		2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */; };
 		2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A852B5A87CE0035CEAB /* ContentView.swift */; };
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
@@ -4532,6 +4533,7 @@
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
+		2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposerTests.swift; sourceTree = "<group>"; };
 		2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPInputComponentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputComponentPreviewApp.swift; sourceTree = "<group>"; };
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -10519,6 +10521,7 @@
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
+				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -12054,7 +12057,6 @@
 			isa = PBXGroup;
 			children = (
 				2AE350D12C770F4700A766EE /* Binder */,
-				2AE350D02C770F3A00A766EE /* Content */,
 				2AE350CF2C770F3100A766EE /* Flow */,
 			);
 			path = CategoryPickerSection;
@@ -12066,13 +12068,6 @@
 				2AE350D82C770FC400A766EE /* CategoryPickerSectionFlow.swift */,
 			);
 			path = Flow;
-			sourceTree = "<group>";
-		};
-		2AE350D02C770F3A00A766EE /* Content */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Content;
 			sourceTree = "<group>";
 		};
 		2AE350D12C770F4700A766EE /* Binder */ = {
@@ -21851,6 +21846,7 @@
 				C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */,
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
 				2A1F08512A7904F100C5B11B /* Services+EndpointGetProcessingSessionCodeTests.swift in Sources */,
+				2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */,
 				2A2D4D332B6E7FA1006912EE /* RequestFactory+createPrepareSetBankDefaultRequestTests.swift in Sources */,
 				2A0439CF2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift in Sources */,
 				2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */,
