@@ -30,8 +30,8 @@ where ContentView: View,
         
         factory.makeContent()
             .navigationDestination(
-                destination: state.selected,
-                dismiss: { event(.select(nil)) },
+                destination: state.navigation,
+                dismiss: { event(.dismiss) },
                 content: factory.makeDestination
             )
     }
@@ -41,21 +41,22 @@ public extension OperationPickerFlowView {
     
     typealias State = OperationPickerFlowState<Exchange, LatestFlow, Status, Templates>
     typealias Event = OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
-    typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Templates>
+    typealias Factory = OperationPickerFlowViewFactory<ContentView, DestinationView, Exchange, LatestFlow, Status, Templates>
 }
 
-extension OperationPickerFlowItem: Identifiable {
+extension OperationPickerNavigation: Identifiable {
     
     public var id: ID {
         switch self {
         case .exchange:  return .exchange
         case .latest:    return .latest
+        case .status:    return .status
         case .templates: return .templates
         }
     }
     
     public enum ID: Hashable {
         
-        case exchange, latest, templates
+        case exchange, latest, status, templates
     }
 }
