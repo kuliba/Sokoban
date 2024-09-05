@@ -8,4 +8,4 @@
 import PayHub
 import RxViewModel
 
-public typealias PlainPickerContent<Element> = RxViewModel<PlainPickerContentState<Element>, PlainPickerContentEvent<Element>, PlainPickerContentEffect>
+public typealias PlainPickerContent<Element> = RxViewModel<PickerContentState<Element>, PickerContentEvent<Element>, PickerContentEffect>

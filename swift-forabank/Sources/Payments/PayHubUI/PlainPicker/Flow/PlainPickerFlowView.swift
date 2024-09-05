@@ -43,6 +43,6 @@ where ContentView: View,
 
 public extension PlainPickerFlowView {
     
-    typealias State = PlainPickerFlowState<Destination>
-    typealias Event = PlainPickerFlowEvent<Element, Destination>
+    typealias State = PickerFlowState<Destination>
+    typealias Event = PickerFlowEvent<Element, Destination>
 }
