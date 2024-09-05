@@ -560,7 +560,8 @@ extension Model {
         isCalledOnAuth: Bool
     ) {
         if let getProductsV6 {
-            getProducts_V6(getProductsV6, command, productType)
+            getProducts_V6(getProductsV6, command, productType, isCalledOnAuth)
+            
         } else {
             getProductsV5(command, productType, isCalledOnAuth)
         }
@@ -639,17 +640,19 @@ extension Model {
     func getProducts_V6(
         _ getProductsV6: Services.GetProductListByTypeV6,
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ productType: ProductType
+        _ productType: ProductType,
+        _ isCalledOnAuth: Bool
     ) {
         getProductsV6(productType) { response in
-            self.handleGetProductListByTypeResponse(productType, command, response)
+            self.handleGetProductListByTypeResponse(productType, command, response, isCalledOnAuth)
         }
     }
     
     func handleGetProductListByTypeResponse(
         _ productType: ProductType,
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ response: Services.GetProductsResponse?
+        _ response: Services.GetProductsResponse?,
+        _ isCalledOnAuth: Bool
     ) {
         switch response {
         case .none:
@@ -666,7 +669,10 @@ extension Model {
             
             loadImages(result.productList)
             productsCacheStore(command, updatedProducts)
-            additionalUpdateIfNeed(productType: productType)
+            
+            if !isCalledOnAuth {
+                additionalUpdateIfNeed(productType: productType)
+            }
         }
     }
 
@@ -683,6 +689,7 @@ extension Model {
         let updatedProducts = Self.reduce(products: productsData, with: productsList, for: productType)
         products.value = updatedProducts
         updateInfo(true, productType)
+        
         return updatedProducts
     }
     
