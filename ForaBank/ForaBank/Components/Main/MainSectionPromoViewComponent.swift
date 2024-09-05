@@ -27,7 +27,6 @@ extension MainSectionPromoView {
             
             switch promoType {
             case .general: return model.catalogBanners
-            case .auth: return model.authCatalogBanners
             }
         }
         
@@ -49,7 +48,6 @@ extension MainSectionPromoView {
         enum PromoType {
             
             case general
-            case auth
         }
 
         private func bind() {
@@ -103,9 +101,6 @@ extension MainSectionPromoView {
                     
                     banners = updated
                 }
-                
-            case .auth:
-                banners = updated
             }
         }
     }
