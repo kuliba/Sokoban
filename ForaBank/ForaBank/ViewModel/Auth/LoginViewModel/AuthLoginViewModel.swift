@@ -379,6 +379,7 @@ private extension AuthLoginViewModel {
     ) -> CardViewModel.NextButtonViewModel? {
         
         switch (cardState, sessionState, fcmToken) {
+            
         case (.ready(let cardNumber), .active, .some), (.ready(let cardNumber), .active, .none),
              (.ready(let cardNumber), .activating, .some), (.ready(let cardNumber), .activating, .none),
              (.ready(let cardNumber), .expired, .some), (.ready(let cardNumber), .expired, .none),

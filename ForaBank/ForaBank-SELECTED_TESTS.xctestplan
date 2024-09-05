@@ -121,6 +121,7 @@
         "Model_PaymentsTransportMosParkingTests",
         "Model_PaymentsTransportTests",
         "Model_Payments_PaymentsProcessSourceReducer_LatestPaymentTests",
+        "Model_ProductsTests",
         "Model_QRHelpersTests",
         "Model_RequisitesTests",
         "Model_SberQRProductIntegrationTests",

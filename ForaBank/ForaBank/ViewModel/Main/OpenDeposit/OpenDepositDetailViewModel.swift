@@ -19,6 +19,7 @@ class OpenDepositDetailViewModel: ObservableObject {
     let documents: DocumentsViewModel
     let condition: ConditionViewModel
     let percents: PercentsViewModel?
+    let makeAlertViewModel: PaymentsTransfersFactory.MakeAlertViewModel
     
     @Published private(set) var route: Route
     
@@ -33,7 +34,8 @@ class OpenDepositDetailViewModel: ObservableObject {
         condition: ConditionViewModel,
         percents: PercentsViewModel?,
         model: Model = .emptyMock,
-        route: Route = .empty
+        route: Route = .empty,
+        makeAlertViewModel: @escaping PaymentsTransfersFactory.MakeAlertViewModel
     ) {
         self.id = id
         self.productDetail = productDetail
@@ -44,12 +46,14 @@ class OpenDepositDetailViewModel: ObservableObject {
         self.percents = percents
         self.model = model
         self.route = route
+        self.makeAlertViewModel = makeAlertViewModel
     }
     
     convenience init?(
         depositId: DepositProductData.ID, 
         model: Model,
-        route: Route = .empty
+        route: Route = .empty,
+        makeAlertViewModel: @escaping PaymentsTransfersFactory.MakeAlertViewModel
     ) {
         guard let deposit = model.deposits.value.first(where: { $0.depositProductID == depositId }) else {
             
@@ -63,13 +67,14 @@ class OpenDepositDetailViewModel: ObservableObject {
         let condition = ConditionViewModel(conditions: deposit.txtСondition)
         let percents = PercentsViewModel(with: deposit)
         
-        self.init(id: depositId, productDetail: productDetail, calculator: calculator, details: details, documents: documents, condition: condition, percents: percents, model: model, route: route)
+        self.init(id: depositId, productDetail: productDetail, calculator: calculator, details: details, documents: documents, condition: condition, percents: percents, model: model, route: route, makeAlertViewModel: makeAlertViewModel)
     }
     
     struct Route {
         
         var destination: Link?
-        
+        var modal: Modal?
+
         static let empty: Self = .init(destination: nil)
         
         enum Link: Identifiable {
@@ -92,14 +97,36 @@ class OpenDepositDetailViewModel: ObservableObject {
         }
     }
     
+    enum Modal {
+        
+        case alert(Alert.ViewModel)
+        
+        var alert: Alert.ViewModel? {
+            
+            guard case let .alert(alert) = self else { return nil }
+            return alert
+        }
+    }
+    
     func resetDestination() {
         
         route.destination = nil
     }
     
+    func resetModal() {
+        
+        route.modal = nil
+    }
+
     func confirmButtonTapped() {
         
-        route.destination = .confirm(self)
+        if model.onlyCorporateCards, let alertViewModel = makeAlertViewModel({}) {
+            
+            route.modal = .alert(alertViewModel)
+        }
+        else {
+            route.destination = .confirm(self)
+        }
     }
 }
 

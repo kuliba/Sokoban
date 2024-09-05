@@ -262,7 +262,7 @@ class MyProductsViewModel: ObservableObject {
                                 catalogType: .deposit,
                                 dismissAction: {[weak self] in
                                     
-                                    self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                                    self?.action.send(MyProductsViewModelAction.Close.Link()) }, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
                             
                             self.link = .openDeposit(openDepositViewModel)
                         }
@@ -270,17 +270,9 @@ class MyProductsViewModel: ObservableObject {
                     case .card:
                         bottomSheet = nil
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        DispatchQueue.main.delay(for: .milliseconds(300)) {
                             
-                            let authProductsViewModel = AuthProductsViewModel(
-                                self.model,
-                                products: self.model.catalogProducts.value,
-                                dismissAction: { [weak self] in
-                                    
-                                    self?.action.send(MyProductsViewModelAction.Close.Link()) }
-                            )
-                            
-                            self.link = .openCard(authProductsViewModel)
+                            self.openCard()
                         }
                         
                     default: 
@@ -293,6 +285,25 @@ class MyProductsViewModel: ObservableObject {
                 }
             }
             .store(in: &bindings)
+    }
+    
+    func openCard() {
+        
+        if model.onlyCorporateCards {
+            
+            MainViewModel.openLinkURL(model.productsOpenAccountURL)
+            
+        } else {
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                dismissAction: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Close.Link()) }
+            )
+            
+            self.link = .openCard(authProductsViewModel)
+        }
     }
     
     static func updateViewModel(

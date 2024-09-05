@@ -314,7 +314,7 @@ extension UILanding.TextsWithIconHorizontal.Config {
             vertical: 8
         ),
         backgroundColor: .mainColorsGrayLightest,
-        cornerRadius: 20,
+        cornerRadius: 90,
         circleSize: 32,
         icon: .init(
             width: 24,
@@ -325,12 +325,13 @@ extension UILanding.TextsWithIconHorizontal.Config {
                 leading: 12
             )
         ),
-        height: 40,
+        height: 58,
         spacing: 12,
         text: .init(
             color: .textSecondary,
             font: .textBodyMR14200()
-        )
+        ), 
+        images: ["472c6bf19f04641f277d838797288bfa" : .ic24SmsColor]
     )
 }
 

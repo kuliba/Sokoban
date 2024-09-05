@@ -86,7 +86,7 @@ private extension UtilityPrepaymentWrapperView {
             label: {
 
                 LastPaymentLabel(
-                    amount: "\(latestPayment.amount)",
+                    amount: "\(latestPayment.amount) ₽",
                     title: latestPayment.name,
                     config: .iFora,
                     iconView: makeIconView(latestPayment.md5Hash)
@@ -130,17 +130,6 @@ private extension UtilityPrepaymentWrapperView {
 }
 
 // MARK: - Helpers
-
-private extension UtilityPrepaymentState {
-    
-    var searchText: String? {
-        
-        guard case let .success(success) = self
-        else { return nil }
-        
-        return success.searchText
-    }
-}
 
 private extension UtilityPaymentOperator {
     

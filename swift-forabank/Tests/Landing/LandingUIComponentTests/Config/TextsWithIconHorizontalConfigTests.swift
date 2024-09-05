@@ -84,6 +84,7 @@ final class TextsWithIconHorizontalConfigTests: XCTestCase {
             height: 3, spacing: 4,
             text: .init(
                 color: .gray,
-                font: .body))
+                font: .body), 
+            images: [:])
     }
 }

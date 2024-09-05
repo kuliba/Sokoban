@@ -106,8 +106,8 @@ final class OperatorProviderLoadResultTests: XCTestCase {
     private typealias SUT = OperatorProviderLoadResult<Operator, Provider>
     
     private func makeResult(
-        _ operators: [Operator],
-        _ providers: [Provider]
+        _ operators: [Operator]?,
+        _ providers: [Provider]?
     ) -> SUT {
         
         return .init(operators: operators, providers: providers)

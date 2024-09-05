@@ -16,7 +16,7 @@ where PaymentFlow: FlowEventPublishing {
         self.microServices = microServices
     }
     
-    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentFlow>
+    typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<PaymentsViewModel, PaymentFlow>
 }
 
 extension TemplatesListFlowEffectHandler {

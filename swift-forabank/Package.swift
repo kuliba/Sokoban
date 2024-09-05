@@ -29,11 +29,16 @@ let package = Package(
         // Payments
         .anywayPayment,
         .latestPayments,
+        .serviceCategories,
+        .serviceCategoriesBackend,
+        .payHub,
+        .payHubUI,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
+        .getBannerCatalogListAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -47,6 +52,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         .getProductListByTypeService,
+        .getProductListByTypeV6Service,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -129,6 +135,14 @@ let package = Package(
         .anywayPaymentUITests,
         .latestPayments,
         .latestPaymentsTests,
+        .serviceCategories,
+        .serviceCategoriesTests,
+        .serviceCategoriesBackend,
+        .serviceCategoriesBackendTests,
+        .payHub,
+        .payHubTests,
+        .payHubUI,
+        .payHubUITests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -140,6 +154,8 @@ let package = Package(
         .cardStatementAPITests,
         .svCardLimitAPI,
         .svCardLimitAPITests,
+        .getBannerCatalogListAPI,
+        .getBannerCatalogListAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -166,6 +182,8 @@ let package = Package(
         .urlRequestFactoryTests,
         .getProductListByTypeService,
         .getProductListByTypeServiceTests,
+        .getProductListByTypeV6Service,
+        .getProductListByTypeV6ServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -603,6 +621,34 @@ private extension Product {
         ]
     )
 
+    static let serviceCategories = library(
+        name: .serviceCategories,
+        targets: [
+            .serviceCategories,
+        ]
+    )
+
+    static let serviceCategoriesBackend = library(
+        name: .serviceCategoriesBackend,
+        targets: [
+            .serviceCategoriesBackend,
+        ]
+    )
+
+    static let payHub = library(
+        name: .payHub,
+        targets: [
+            .payHub,
+        ]
+    )
+
+    static let payHubUI = library(
+        name: .payHubUI,
+        targets: [
+            .payHubUI,
+        ]
+    )
+
     static let utilityPayment = library(
         name: .utilityPayment,
         targets: [
@@ -632,6 +678,13 @@ private extension Product {
         name: .svCardLimitAPI,
         targets: [
             .svCardLimitAPI,
+        ]
+    )
+    
+    static let getBannerCatalogListAPI = library(
+        name: .getBannerCatalogListAPI,
+        targets: [
+            .getBannerCatalogListAPI,
         ]
     )
 
@@ -724,6 +777,13 @@ private extension Product {
         name: .getProductListByTypeService,
         targets: [
             .getProductListByTypeService
+        ]
+    )
+    
+    static let getProductListByTypeV6Service = library(
+        name: .getProductListByTypeV6Service,
+        targets: [
+            .getProductListByTypeV6Service
         ]
     )
     
@@ -1168,6 +1228,86 @@ private extension Target {
         path: "Tests/Payments/\(String.latestPaymentsTests)"
     )
     
+    static let serviceCategories = target(
+        name: .serviceCategories,
+        dependencies: [
+        ],
+        path: "Sources/Payments/\(String.serviceCategories)"
+    )
+    static let serviceCategoriesTests = testTarget(
+        name: .serviceCategoriesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .serviceCategories,
+        ],
+        path: "Tests/Payments/\(String.serviceCategoriesTests)"
+    )
+    
+    static let serviceCategoriesBackend = target(
+        name: .serviceCategoriesBackend,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/\(String.serviceCategoriesBackend)"
+    )
+    static let serviceCategoriesBackendTests = testTarget(
+        name: .serviceCategoriesBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .serviceCategoriesBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
+    )
+    
+    static let payHub = target(
+        name: .payHub,
+        dependencies: [
+            // internal modules
+            .rxViewModel,
+        ],
+        path: "Sources/Payments/\(String.payHub)"
+    )
+    static let payHubTests = testTarget(
+        name: .payHubTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+        ],
+        path: "Tests/Payments/\(String.payHubTests)"
+    )
+    
+    static let payHubUI = target(
+        name: .payHubUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .payHub,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/Payments/\(String.payHubUI)"
+    )
+    static let payHubUITests = testTarget(
+        name: .payHubUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .payHub,
+            .payHubUI,
+        ],
+        path: "Tests/Payments/\(String.payHubUITests)"
+    )
+    
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
@@ -1285,6 +1425,26 @@ private extension Target {
         //TODO: add resources
     )
 
+    static let getBannerCatalogListAPI = target(
+        name: .getBannerCatalogListAPI,
+        dependencies: [
+            .remoteServices,
+        ],
+        path: "Sources/Services/\(String.getBannerCatalogListAPI)"
+    )
+    static let getBannerCatalogListAPITests = testTarget(
+        name: .getBannerCatalogListAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .getBannerCatalogListAPI,
+        ],
+        path: "Tests/Services/\(String.getBannerCatalogListAPITests)"
+        //TODO: add resources
+    )
+    
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -1513,6 +1673,32 @@ private extension Target {
             .getProductListByTypeService
         ],
         path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+    
+    static let getProductListByTypeV6Service = target(
+        name: .getProductListByTypeV6Service,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeV6Service)"
+    )
+    
+    static let getProductListByTypeV6ServiceTests = testTarget(
+        name: .getProductListByTypeV6ServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeV6Service
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeV6ServiceTests)",
         resources: [
             .copy("Responses/GetProductListByType_Account_Response.json"),
             .copy("Responses/GetProductListByType_Card_Response.json"),
@@ -2571,6 +2757,22 @@ private extension Target.Dependency {
         name: .latestPayments
     )
 
+    static let serviceCategories = byName(
+        name: .serviceCategories
+    )
+
+    static let serviceCategoriesBackend = byName(
+        name: .serviceCategoriesBackend
+    )
+
+    static let payHub = byName(
+        name: .payHub
+    )
+
+    static let payHubUI = byName(
+        name: .payHubUI
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2593,6 +2795,10 @@ private extension Target.Dependency {
         name: .svCardLimitAPI
     )
 
+    static let getBannerCatalogListAPI = byName(
+        name: .getBannerCatalogListAPI
+    )
+    
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -2639,6 +2845,10 @@ private extension Target.Dependency {
     
     static let getProductListByTypeService = byName(
         name: .getProductListByTypeService
+    )
+    
+    static let getProductListByTypeV6Service = byName(
+        name: .getProductListByTypeV6Service
     )
     
     // MARK: - Tools
@@ -2835,6 +3045,18 @@ private extension String {
     static let latestPayments = "LatestPayments"
     static let latestPaymentsTests = "LatestPaymentsTests"
 
+    static let serviceCategories = "ServiceCategories"
+    static let serviceCategoriesTests = "ServiceCategoriesTests"
+
+    static let serviceCategoriesBackend = "ServiceCategoriesBackend"
+    static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
+
+    static let payHub = "PayHub"
+    static let payHubTests = "PayHubTests"
+    
+    static let payHubUI = "PayHubUI"
+    static let payHubUITests = "PayHubUITests"
+
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
 
@@ -2851,6 +3073,9 @@ private extension String {
 
     static let svCardLimitAPI = "SVCardLimitAPI"
     static let svCardLimitAPITests = "SVCardLimitAPITests"
+
+    static let getBannerCatalogListAPI = "GetBannerCatalogListAPI"
+    static let getBannerCatalogListAPITests = "GetBannerCatalogListAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
@@ -2890,6 +3115,9 @@ private extension String {
 
     static let getProductListByTypeService = "GetProductListByTypeService"
     static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
+    
+    static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
+    static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
 
     // MARK: - Tools
     

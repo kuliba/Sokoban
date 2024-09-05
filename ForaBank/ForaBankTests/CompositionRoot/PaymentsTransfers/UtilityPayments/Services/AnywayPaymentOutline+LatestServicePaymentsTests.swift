@@ -14,13 +14,13 @@ import XCTest
 
 final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
     
-    func test_init_shouldSetAmount() throws {
+    func test_init_shouldNotSetAmount() throws {
         
         let latest = try makeLatestPayment()
         
         let outline = makeOutline(latest)
         
-        XCTAssertNoDiff(outline.amount, 777)
+        XCTAssertNil(outline.amount)
     }
     
     func test_init_shouldSetFields() throws {

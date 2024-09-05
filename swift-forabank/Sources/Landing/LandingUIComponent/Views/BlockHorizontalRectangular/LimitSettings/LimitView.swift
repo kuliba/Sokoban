@@ -39,7 +39,7 @@ where InfoView: View {
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
-        self.getDecimal = formatter.getDecimal
+        self.getDecimal = formatter.getDecimalForLimit
         self.state = state
         self.event = event
         self.config = config
@@ -75,6 +75,7 @@ where InfoView: View {
         
         let textFieldPublisher = textFieldModel.$state
             .map(getDecimal)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .removeDuplicates(by: decimalEqual)
         
         TextFieldView(
@@ -159,7 +160,7 @@ private extension View {
     }
 }
 
-private extension Decimal {
+extension Decimal {
     
  func rounded(toDecimalPlace digit: Int = 2) -> Decimal {
     var initialDecimal = self
@@ -167,4 +168,28 @@ private extension Decimal {
     NSDecimalRound(&roundedDecimal, &initialDecimal, digit, .plain)
     return roundedDecimal
   }
+}
+
+private extension DecimalFormatter {
+    
+    func getDecimalForLimit(
+        _ textFieldState: TextFieldState
+    ) -> Decimal {
+        
+        switch textFieldState {
+        case .placeholder:
+            return 0
+
+        case let .noFocus(text):
+            return valueFromText(text)
+            
+        case let .editing(textState):
+            return valueFromText(textState.text)
+        }
+    }
+    
+    func valueFromText(_ text: String) -> Decimal {
+        
+        text == .noLimits ? .maxLimit : number(from: text)
+    }
 }

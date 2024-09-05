@@ -24,7 +24,7 @@ where Request: Hashable {
     private var inflightRequests: Completions
     
     /// The time when the first request was received.
-    private var startTime: Date?
+    private var startTime: DispatchQueue.SchedulerTimeType?
     
     /// The period over which requests are collected before processing.
     private let collectionPeriod: DispatchTimeInterval
@@ -50,7 +50,7 @@ where Request: Hashable {
     public init(
         pendingRequests: Completions = .init(),
         inflightRequests: Completions = .init(),
-        startTime: Date? = nil,
+        startTime: DispatchQueue.SchedulerTimeType? = nil,
         collectionPeriod: DispatchTimeInterval,
         performRequests: @escaping PerformRequests,
         scheduler: AnySchedulerOf<DispatchQueue>
@@ -99,7 +99,7 @@ public extension RequestCollector {
         
         if startTime == nil {
             
-            startTime = Date()
+            startTime = scheduler.now
             scheduleCollaboratorInvocation()
         }
     }

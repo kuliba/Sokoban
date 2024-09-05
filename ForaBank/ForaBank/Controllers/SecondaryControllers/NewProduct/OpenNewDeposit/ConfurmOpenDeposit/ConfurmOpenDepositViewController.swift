@@ -325,8 +325,11 @@
                 var filterProduct: [UserAllCardsModel] = []
                 let cards = ReturnAllCardList.cards()
                 cards.forEach { product in
-                    if (product.productType == "CARD"
-                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    if (product.productType == "CARD" ||
+                        product.productType == "ACCOUNT") &&
+                        product.currency == "RUB" &&
+                        !(product.cardType?.isCorporate ?? false) {
+                        
                         filterProduct.append(product)
                     }
                 }

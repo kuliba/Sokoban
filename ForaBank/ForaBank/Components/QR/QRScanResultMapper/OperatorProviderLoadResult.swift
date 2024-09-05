@@ -9,6 +9,7 @@ import ForaTools
 
 enum OperatorProviderLoadResult<Operator, Provider> {
     
+    case missingINN
     case mixed(Mixed)
     case multiple(MultipleOperators)
     case none
@@ -22,6 +23,19 @@ enum OperatorProviderLoadResult<Operator, Provider> {
 extension OperatorProviderLoadResult: Equatable where Operator: Equatable, Provider: Equatable {}
 
 extension OperatorProviderLoadResult {
+    
+    init(
+        operators: [Operator]?,
+        providers: [Provider]?
+    ) {
+        switch (operators, providers) {
+        case (.none, .none):
+            self = .missingINN
+            
+        default:
+            self.init(operators: operators ?? [], providers: providers ?? [])
+        }
+    }
     
     init(
         operators: [Operator],
@@ -54,9 +68,9 @@ extension OperatorProviderLoadResult {
             
             // 1, 2
         case let (.none, .some(`operator`), .some(providers), _):
-            let operators = MultiElementArray(Either.operator(`operator`))
-            let providers = providers.map(Either.provider)
-            self = .mixed(operators + providers)
+            var providers = providers.map(Either.provider)
+            providers.insert(.operator(`operator`))
+            self = .mixed(providers)
             
             // 2, 0
         case let (.some(operators), _,_, .none):
@@ -64,9 +78,9 @@ extension OperatorProviderLoadResult {
             
             // 2, 1
         case let (.some(operators), _, .none, .some(provider)):
-            let operators = operators.map(Either.operator)
-            let providers = MultiElementArray(Either.provider(provider))
-            self = .mixed(operators + providers)
+            var operators = operators.map(Either.operator)
+            operators.append(.provider(provider))
+            self = .mixed(operators)
             
             // 2, 2
         case let (.some(operators), _, .some(providers), _):

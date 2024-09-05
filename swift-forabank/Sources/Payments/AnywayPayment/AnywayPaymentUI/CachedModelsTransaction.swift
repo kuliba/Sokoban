@@ -102,11 +102,15 @@ extension Transaction where Context == AnywayPaymentContext {
         using map: @escaping (AnywayElement) -> Model
     ) -> Models<Model> {
         
-        let existingIDs = Set(models.keys)
+        // remove models for keys that are no longer in elements
+        let keepers = models.filter { Set(context.payment.elements.map(\.id)).contains($0.key) }
+        
+        let existingIDs = Set(keepers.keys)
         let newModels = context.payment.elements
             .filter { !existingIDs.contains($0.id) }
             .map { ($0.id, map($0)) }
-        let models = models.merging(newModels) { _, last in last }
+        
+        let models = keepers.merging(newModels) { _, last in last }
         
         return models
     }

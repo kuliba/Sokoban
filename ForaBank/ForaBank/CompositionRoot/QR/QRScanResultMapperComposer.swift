@@ -61,16 +61,3 @@ private extension QRScanResultMapperComposer {
         }
     }
 }
-
-private extension OperatorProviderLoadResult {
-    
-    init(
-        operators: [Operator]?,
-        providers: [Provider]?
-    ) {
-        self.init(
-            operators: operators ?? [],
-            providers: providers ?? []
-        )
-    }
-}

@@ -66,7 +66,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     )
                 
                 if state.editEnableFor(limitType) {
-                    Button(action: { event(.saveLimits(viewModel.newLimitsValue)) }) {
+                    Button(action: {
+                        UIApplication.shared.endEditing()
+                        event(.saveLimits(viewModel.newLimitsValue))
+                    }) {
                         ZStack {
                             if state.saveButtonEnable {
                                 Color(red: 255/255, green: 54/255, blue: 54/255)
@@ -156,7 +159,7 @@ extension Spent {
         let balance = limit.value - limit.currentValue
         
         switch balance {
-        case 0:
+        case _ where balance <= 0:
             return .spentEverything
             
         case limit.value:
@@ -266,7 +269,7 @@ extension ListHorizontalRectangleLimitsView {
                     
                     switch limit.value {
                     case .maxLimit...:
-                        Text("Без ограничений")
+                        Text(String.noLimits)
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
@@ -376,7 +379,8 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? value.formattedValue : "0"
+            let valueRounded = value.rounded(toDecimalPlace: 0)
+            return valueRounded > 0 ? valueRounded.formattedValue : "0"
         }
     }
 }

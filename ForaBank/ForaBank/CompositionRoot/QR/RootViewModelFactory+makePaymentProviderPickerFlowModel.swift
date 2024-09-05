@@ -18,7 +18,7 @@ extension RootViewModelFactory {
         log: @escaping Log,
         model: Model,
         pageSize: Int = 50,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        flag: StubbedFeatureFlag.Option,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel {
         
@@ -26,7 +26,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: log,
             model: model,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            flag: flag,
             scheduler: scheduler
         )
         

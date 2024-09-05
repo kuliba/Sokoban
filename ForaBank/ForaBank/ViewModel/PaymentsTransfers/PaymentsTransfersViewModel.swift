@@ -910,6 +910,14 @@ private extension PaymentsTransfersViewModel {
     }
     
     func updateSections(_ updateInfo: UpdateInfo) {
+       
+        if model.onlyCorporateCards {
+            let containDisableCorporateSection: Bool = sections.first(where: { $0.type == .disableForCorCards }) is DisableForCorCardsPTViewModel
+            if !containDisableCorporateSection {
+                sections.insert(DisableForCorCardsPTViewModel.init(), at: 0)
+            }
+        }
+        
         let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateFailureInfo }) is UpdateInfoPTViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
@@ -945,7 +953,8 @@ private extension PaymentsTransfersViewModel {
             dismissAction: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
-            }
+            }, 
+            makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard
         )
         route.destination = .openDepositsList(openDepositViewModel)
     }
@@ -983,40 +992,59 @@ private extension PaymentsTransfersViewModel {
             action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
     }
     
+    func disableForCorporateCard(_ action: any Action) -> Bool {
+
+        guard model.onlyCorporateCards else { return false }
+        
+        guard case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer = action,
+              payload.type == .betweenSelf else { return true }
+        
+        return model.containsLessThenTwoIndividualBusinessmanMainCard
+    }
+    
     func handlePaymentButtonTapped(_ action: any Action) {
         
-        if !model.updateInfo.value.areCardsOrAccountsUpdated, let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+        if !model.updateInfo.value.areCardsOrAccountsUpdated, 
+            let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.dataUpdateFailure({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
             event(.setModal(to: .alert(alertViewModel)))
         } else {
             
-            switch action {
-                //LatestPayments Section Buttons
-            case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                switch payload.latestPayment.type {
-                case .service:
-                    event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+            if disableForCorporateCard(action),
+               let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
                 
+                event(.setModal(to: .alert(alertViewModel)))
+            }
+            else {
+                
+                switch action {
+                    //LatestPayments Section Buttons
+                case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                    switch payload.latestPayment.type {
+                    case .service:
+                        event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+                        
+                    default:
+                        handle(latestPayment: payload.latestPayment)
+                    }
+                    
+                    //LatestPayment Section TemplateButton
+                case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
+                    openTemplates()
+                    
+                case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
+                    handleCurrencyWalletButtonTapped()
+                    
+                    //Transfers Section
+                case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
+                    handleTransferButtonTapped(for: payload.type)
+                    
+                    //Payments Section
+                case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
+                    handlePaymentButtonTapped(for: payload.type)
+                    
                 default:
-                    handle(latestPayment: payload.latestPayment)
+                    break
                 }
-                
-                //LatestPayment Section TemplateButton
-            case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                openTemplates()
-                
-            case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
-                handleCurrencyWalletButtonTapped()
-                
-                //Transfers Section
-            case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                handleTransferButtonTapped(for: payload.type)
-                
-                //Payments Section
-            case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
-                handlePaymentButtonTapped(for: payload.type)
-                
-            default:
-                break
             }
         }
     }
@@ -1566,7 +1594,19 @@ private extension PaymentsTransfersViewModel {
     private func createNavButtonsRight(
     ) -> [NavigationBarButtonViewModel] {
         
-        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+        [.barcodeScanner(action: { [weak self] in  self?.barcodeScannerAction() })]
+    }
+    
+    private func barcodeScannerAction() {
+        
+        if disableForCorporateCard(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .qrPayment)),
+           let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+            
+            event(.setModal(to: .alert(alertViewModel)))
+        }
+        else {
+            openScanner()
+        }
     }
 }
 
@@ -1612,6 +1652,9 @@ extension PaymentsTransfersViewModel {
         _ mapped: QRModelResult.Mapped
     ) {
         switch mapped {
+        case .missingINN:
+            handleUnknownQR()
+
         case let .mixed(mixed, qrCode, qrMapping):
             makePaymentProviderPicker(mixed, qrCode, qrMapping)
 

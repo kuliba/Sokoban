@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import Foundation
 import InputComponent
 import TextFieldComponent
 import TextFieldModel
@@ -47,6 +48,7 @@ extension AnywayElementModelMapper {
         )
         let cancellable = model.$state
             .compactMap(\.textField.text)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink { event(.setValue($0, for: parameter.uiComponent.id)) }
         

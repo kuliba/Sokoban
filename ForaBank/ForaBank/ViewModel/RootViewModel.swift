@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import PayHub
 import SwiftUI
 
 class RootViewModel: ObservableObject, Resetable {
@@ -21,7 +22,7 @@ class RootViewModel: ObservableObject, Resetable {
     @Published private(set) var link: Link?
     
     let mainViewModel: MainViewModel
-    let paymentsViewModel: PaymentsTransfersViewModel
+    let paymentsModel: PaymentsModel
     let chatViewModel: ChatViewModel
     let informerViewModel: InformerView.ViewModel
     
@@ -42,7 +43,7 @@ class RootViewModel: ObservableObject, Resetable {
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
         mainViewModel: MainViewModel,
-        paymentsViewModel: PaymentsTransfersViewModel,
+        paymentsModel: PaymentsModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
@@ -54,7 +55,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
         self.mainViewModel = mainViewModel
-        self.paymentsViewModel = paymentsViewModel
+        self.paymentsModel = paymentsModel
         self.chatViewModel = chatViewModel
         self.informerViewModel = informerViewModel
         self.model = model
@@ -62,7 +63,9 @@ class RootViewModel: ObservableObject, Resetable {
         self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions
-        paymentsViewModel.rootActions = rootActions
+        if case let .legacy(paymentsViewModel) = paymentsModel {
+            paymentsViewModel.rootActions = rootActions
+        }
         
         bind()
         bindAuth()
@@ -72,7 +75,7 @@ class RootViewModel: ObservableObject, Resetable {
     func reset() {
         
         mainViewModel.reset()
-        paymentsViewModel.reset()
+        paymentsModel.reset()
         chatViewModel.reset()
     }
     
@@ -421,13 +424,13 @@ class RootViewModel: ObservableObject, Resetable {
         let mainViewModelHasDestination = mainViewModel.$route
             .map { $0.destination != nil }
         
-        let paymentsViewModelHasDestination = paymentsViewModel.$route
-            .map { $0.destination != nil }
+        let paymentsViewModelHasDestination = paymentsModel.hasDestination
         
         mainViewModelHasDestination
             .combineLatest(paymentsViewModelHasDestination)
             .map { $0 || $1 }
             .removeDuplicates()
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
     }
@@ -532,6 +535,122 @@ extension RootViewModel {
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
     }
+    
+    enum PaymentsModel {
+        
+        case legacy(PaymentsTransfersViewModel)
+        case v1(PaymentsTransfersSwitcher)
+    }
+}
+
+extension RootViewModel.PaymentsModel: Resetable {
+    
+    func reset() {
+        
+        switch self {
+        case let .legacy(paymentsTransfersViewModel):
+            paymentsTransfersViewModel.reset()
+            
+        case let .v1(paymentsTransfersSwitcher):
+#warning("unimplemented")
+            break
+        }
+    }
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        switch self {
+        case let .legacy(paymentsTransfersViewModel):
+            return paymentsTransfersViewModel.$route
+                .map { $0.destination != nil }
+                .eraseToAnyPublisher()
+            
+        case let .v1(switcher):
+            return switcher.hasDestination
+        }
+    }
+}
+
+extension PaymentsTransfersSwitcher {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        switch state {
+        case .none:
+            return Empty().eraseToAnyPublisher()
+            
+        case let .corporate(corporate):
+            return corporate.hasDestination
+            
+        case let .personal(personal):
+            return personal.hasDestination
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+#warning("unimplemented")
+        return Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersPersonal {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        let categoryPicker = content.categoryPicker.hasDestination
+        let operationPicker = content.operationPicker.hasDestination
+        let toolbar = content.toolbar.hasDestination
+        let flowHasDestination = Just(false)
+        
+        return Publishers.CombineLatest4(
+            categoryPicker,
+            operationPicker,
+            toolbar,
+            flowHasDestination
+        )
+        .map { $0 || $1 || $2 || $3 }
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension CategoryPickerSectionFlowState {
+    
+    var hasDestination: Bool { destination != nil }
+}
+
+private extension OperationPickerBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+       // flow.$state.map(\.hasDestination)
+        Just(false)
+        .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersPersonalToolbarBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsTransfersToolbarFlowState {
+    
+    var hasDestination: Bool { navigation != nil }
 }
 
 extension RootViewModel.RootActions {

@@ -68,7 +68,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         XCTAssertNoDiff(result, "+1 800-469-9269")
     }
-
+    
     //MARK: - test format ru - number starts at 7
     
     func test_format_ru_numberStartsWith7982_10Digits() {
@@ -173,13 +173,92 @@ final class PhoneNumberWrapperTests: XCTestCase {
         XCTAssertNoDiff(result, "+98 200 000 000")
     }
     
+    // MARK: - Test 952/982
+    
+    func test_format_incompleteRussianNumber() {
+        
+        let result = format(.custom("7952111"))
+        XCTAssertNoDiff(result, "+7 952 111")
+    }
+    
+    func test_format_completeRussianNumber() {
+        
+        let result = format(.custom("79521111111"))
+        XCTAssertNoDiff(result, "+7 952 111-11-11")
+    }
+    
+    func test_format_numberWithIncorrectCountryCode() {
+        
+        let result = format(.custom("81234567890"))
+        XCTAssertNoDiff(result, "+81 23-4567-890")
+    }
+    
+    func test_format_USNumber() {
+        
+        let result = format(.custom("12025550179"))
+        XCTAssertNoDiff(result, "+1 202-555-0179")
+    }
+    
+    func test_format_invalidNumber() {
+        
+        let result = format(.custom("123"))
+        XCTAssertNoDiff(result, "+1 23")
+    }
+    
+    func test_format_numberWithNonDigitCharacters() {
+        
+        let result = format(.custom("+7 (952) 111-11-11"))
+        XCTAssertNoDiff(result, "+7 952 111-11-11")
+    }
+    
+    func test_format_numberStartingWith8() {
+        
+        let result = format(.custom("89521111111"))
+        XCTAssertNoDiff(result, "+7 952 111-11-11")
+    }
+    
+    func test_format_numberWith952Code() {
+        
+        let result = format(.custom("79521111111"))
+        XCTAssertNoDiff(result, "+7 952 111-11-11")
+    }
+    
+    func test_format_numberWith953Code() {
+        
+        let result = format(.custom("79531111111"))
+        XCTAssertNoDiff(result, "+7 953 111-11-11")
+    }
+    
+    func test_format_emptyString() {
+        
+        let result = format(.custom(""))
+        XCTAssertNoDiff(result, "")
+    }
+    
+    func test_format_onlyNonDigitCharacters() {
+        
+        let result = format(.custom("abc"))
+        XCTAssertNoDiff(result, "")
+    }
+    
+    func test_format_veryLongNumber() {
+        
+        let result = format(.custom("7952111111111111111"))
+        XCTAssertNoDiff(result, "+7 952 111-11-11")
+    }
+    
+    func test_format_unknownCountryCode() {
+        
+        let result = format(.custom("999123456789"))
+        XCTAssertNoDiff(result, "+9 991 234-56-78")
+    }
+    
     //MARK: - test format us
 
-    func test_format_us_startsWithZeroNotValid() {
+    func test_format_us_startsWithExtraZerosNotValid_returnsValidNumber() {
         
         let result = format(.us(.startsWithZeroNotValid))
-        
-        XCTAssertNoDiff(result, "+800 4699 2692")
+        XCTAssertNoDiff(result, "+1 800-469-9269")
     }
 
     func test_format_us_startsWithZeroValid() {

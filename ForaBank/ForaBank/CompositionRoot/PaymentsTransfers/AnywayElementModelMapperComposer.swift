@@ -21,14 +21,14 @@ final class AnywayElementModelMapperComposer {
 extension AnywayElementModelMapperComposer {
     
     func compose(
-        flag: UtilitiesPaymentsFlag
+        flag: StubbedFeatureFlag.Option
     ) -> AnywayElementModelMapper {
         
         return .init(
             currencyOfProduct: currencyOfProduct,
             format: format,
             getProducts: model.productSelectProducts,
-            flag: flag.optionOrStub
+            flag: flag
         )
     }
 }

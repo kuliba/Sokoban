@@ -69,6 +69,9 @@ private extension QRScanResultMapper {
             guard self != nil else { return }
             
             switch loadResult {
+            case .missingINN:
+                completion(.missingINN)
+                
             case let .mixed(mixed):
                 completion(.mixed(mixed, qrCode, qrMapping))
                 

@@ -58,3 +58,22 @@ extension Spy where Failure == Never {
         complete(with: .success(success), at: index)
     }
 }
+
+extension Spy where Payload == Void, Failure == Never {
+    
+    func process(
+        completion: @escaping (Success) -> Void
+    ) {
+        process(()) {
+            switch $0 {
+            case let .success(success):
+                completion(success)
+            }
+        }
+    }
+    
+    func complete(with success: Success, at index: Int = 0) {
+        
+        complete(with: .success(success), at: index)
+    }
+}

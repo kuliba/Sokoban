@@ -250,9 +250,20 @@ private extension TimedOTPInputViewModel {
         }
         
         let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        let decoratedOTPFieldReduce: OTPInputReducer.OTPFieldReduce = { state, event in
+            
+            switch event {
+            case let .edit(text):
+                let text = text.digits.prefix(otpLength)
+                return otpFieldReducer.reduce(state, .edit(.init(text)))
+                
+            default:
+                return otpFieldReducer.reduce(state, event)
+            }
+        }
         let otpInputReducer = OTPComponentInputReducer(
             countdownReduce: decorated,
-            otpFieldReduce : otpFieldReducer.reduce(_:_:)
+            otpFieldReduce : decoratedOTPFieldReduce
         )
         
         let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })

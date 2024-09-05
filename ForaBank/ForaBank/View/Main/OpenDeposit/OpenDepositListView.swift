@@ -69,8 +69,9 @@ struct OpenDepositView_Previews: PreviewProvider {
             viewModel: .init(
                 navigationBar: .init(title: "Вклады"),
                 products: [.depositSample, .depositSample],
-                catalogType: .deposit
-            ), 
+                catalogType: .deposit, 
+                makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0) }
+            ),
             getUImage: { _ in nil }
         )
     }

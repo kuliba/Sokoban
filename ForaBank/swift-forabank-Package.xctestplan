@@ -434,16 +434,58 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "InputComponentTests",
         "name" : "InputComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "OptionalSelectorComponentTests",
         "name" : "OptionalSelectorComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServiceCategoriesTests",
+        "name" : "ServiceCategoriesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServiceCategoriesBackendTests",
+        "name" : "ServiceCategoriesBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV6ServiceTests",
+        "name" : "GetProductListByTypeV6ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetBannerCatalogListAPITests",
+        "name" : "GetBannerCatalogListAPITests"
       }
     }
   ],

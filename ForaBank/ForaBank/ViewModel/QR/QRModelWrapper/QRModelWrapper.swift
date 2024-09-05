@@ -9,11 +9,16 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-final class QRModelWrapper<QRResult>: ObservableObject {
+protocol QRScanner {
+    
+    var scanResultPublisher: AnyPublisher<QRViewModel.ScanResult, Never> { get }
+}
+
+final class QRModelWrapper<QRResult, QRModel: QRScanner>: ObservableObject {
     
     @Published private(set) var state: State?
     
-    let qrModel: QRViewModel
+    let qrModel: QRModel
     
     private let mapScanResult: MapScanResult
     
@@ -29,9 +34,7 @@ final class QRModelWrapper<QRResult>: ObservableObject {
         let subject = PassthroughSubject<Void, Never>()
         self.qrModel = makeQRModel { [subject] in subject.send(()) }
         
-        qrModel.action
-            .compactMap { $0 as? QRViewModelAction.Result }
-            .map(\.result)
+        qrModel.scanResultPublisher
             .receive(on: scheduler)
             .sink { [weak self] in self?.event(.scanResult($0)) }
             .store(in: &cancellables)
@@ -50,7 +53,7 @@ final class QRModelWrapper<QRResult>: ObservableObject {
 extension QRModelWrapper {
     
     typealias State = QRModelWrapperState<QRResult>
-    typealias MakeQRModel = (@escaping () -> Void) -> QRViewModel
+    typealias MakeQRModel = (@escaping () -> Void) -> QRModel
     typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRResult) -> Void) -> Void
 }
 
