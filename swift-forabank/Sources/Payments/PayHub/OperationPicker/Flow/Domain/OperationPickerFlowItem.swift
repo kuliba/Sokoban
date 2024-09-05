@@ -7,9 +7,9 @@
 
 public enum OperationPickerFlowItem<Exchange, Latest, Templates> {
     
-    case exchange(Node<Exchange>)
-    case latest(Node<Latest>)
-    case templates(Node<Templates>)
+    case exchange(Exchange)
+    case latest(Latest)
+    case templates(Templates)
 }
 
 extension OperationPickerFlowItem: Equatable where Exchange: Equatable, Latest: Equatable, Templates: Equatable {}
