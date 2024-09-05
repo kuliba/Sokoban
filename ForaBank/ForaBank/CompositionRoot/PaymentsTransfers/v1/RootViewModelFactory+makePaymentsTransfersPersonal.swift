@@ -71,7 +71,7 @@ extension RootViewModelFactory {
         
         // MARK: - OperationPicker
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerItem<Latest>>(
+        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
             load: { completion in
                 
                 nanoServices.loadAllLatest {
@@ -99,7 +99,7 @@ extension RootViewModelFactory {
             bind: { content, flow in
                 
                 content.$state
-                    .map(\.selected)
+                    .compactMap(\.selected)
                     .sink { flow.event(.select($0)) }
             }
         )

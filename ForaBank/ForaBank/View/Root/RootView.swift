@@ -341,7 +341,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: OperationPickerState<Latest>.Item
+        item: OperationPickerState.Item
     ) -> some View {
         
         OperationPickerStateItemLabel(
