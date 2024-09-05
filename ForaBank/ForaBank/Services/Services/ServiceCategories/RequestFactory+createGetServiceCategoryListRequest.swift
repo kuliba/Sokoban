@@ -21,4 +21,3 @@ extension ForaBank.RequestFactory {
         return try RemoteServices.RequestFactory.createGetServiceCategoryListRequest(url: endpointURL)
     }
 }
-

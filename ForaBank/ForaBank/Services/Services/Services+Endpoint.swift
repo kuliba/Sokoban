@@ -56,6 +56,7 @@ extension Services {
             
             case v1
             case v2
+            case v3
             case v4
             case v5
             case v6
@@ -86,6 +87,7 @@ extension Services {
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
+            case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
             case getProductDetails
@@ -355,6 +357,12 @@ extension Services.Endpoint {
         serviceName: .getSVCardLimits
     )
 
+    static let getPaymentTemplateListV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getPaymentTemplateList
+    )
+    
     static let getVerificationCode: Self = .init(
         pathPrefix: .transfer,
         version: .v2,
