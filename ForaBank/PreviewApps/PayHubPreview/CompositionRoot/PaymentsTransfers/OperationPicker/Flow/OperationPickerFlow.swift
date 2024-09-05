@@ -13,7 +13,10 @@ typealias OperationPickerFlowState = PayHub.OperationPickerFlowState<Exchange, L
 typealias OperationPickerFlowEvent = PayHub.OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates>
 typealias OperationPickerFlowEffect = PayHub.OperationPickerFlowEffect<Latest>
 
-typealias OperationPickerFlowReducer = PayHub.OperationPickerFlowReducer<Exchange, Latest, LatestFlow, Status, Templates>
-typealias OperationPickerFlowEffectHandler = PayHub.OperationPickerFlowEffectHandler<Exchange, Latest, LatestFlow, Templates>
+typealias OperationPickerElement = PayHub.OperationPickerElement<Latest>
+typealias OperationPickerNavigation = PayHub.OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>
+
+typealias OperationPickerFlowReducer = PayHub.PickerFlowReducer<OperationPickerElement, OperationPickerNavigation>
+typealias OperationPickerFlowEffectHandler = PayHub.PickerFlowEffectHandler<OperationPickerElement, OperationPickerNavigation>
 
 typealias OperationPickerFlow = PayHubUI.OperationPickerFlow<Exchange, Latest, LatestFlow, Status, Templates>

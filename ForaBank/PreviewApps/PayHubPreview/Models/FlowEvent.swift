@@ -7,8 +7,6 @@
 
 import PayHub
 
-typealias FlowEvent = PayHub.FlowEvent<Status>
-
 enum Status: Equatable {
     
     case main
