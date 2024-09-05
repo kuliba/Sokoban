@@ -1292,7 +1292,12 @@ private extension Target {
             .paymentTemplateBackend,
             .remoteServices,
         ],
-        path: "Tests/Payments/\(String.paymentTemplateBackendTests)"
+        path: "Tests/Payments/\(String.paymentTemplateBackendTests)",
+        resources: [
+            .copy("Resources/v3_getPaymentTemplateList.json"),
+            .copy("Resources/v3_getPaymentTemplateList_housing.json"),
+            .copy("Resources/v3_getPaymentTemplateList_one.json"),
+        ]
     )
     
     static let payHub = target(

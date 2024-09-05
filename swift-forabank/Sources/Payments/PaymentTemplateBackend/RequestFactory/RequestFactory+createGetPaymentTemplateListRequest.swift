@@ -1,8 +1,8 @@
 //
-//  RequestFactory+createGetServiceCategoryListRequest.swift
+//  RequestFactory+createGetPaymentTemplateListRequest.swift
 //
 //
-//  Created by Igor Malyarov on 13.08.2024.
+//  Created by Igor Malyarov on 05.09.2024.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension RequestFactory {
     
-    static func createGetServiceCategoryListRequest(
+    static func createGetPaymentTemplateListRequest(
         url: URL
     ) throws -> URLRequest {
         
