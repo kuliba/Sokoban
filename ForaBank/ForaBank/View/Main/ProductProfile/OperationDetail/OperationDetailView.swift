@@ -64,7 +64,8 @@ struct OperationDetailView: View {
                 LoadingPlaceholder()
             }
             
-            if viewModel.operationId != nil {
+            if viewModel.operationId != nil,
+               viewModel.repeatButtonAvailable {
                 
                 makeRepeatButtonView(payment)
                     .frame(height: 56, alignment: .center)
@@ -276,7 +277,7 @@ struct OperationDetailView_Previews: PreviewProvider {
             OperationDetailView(
                 viewModel: .sampleComplete,
                 makeRepeatButtonView: { _ in .init(action: { }) },
-                payment: {}
+                payment: { }
             )
         }
     }

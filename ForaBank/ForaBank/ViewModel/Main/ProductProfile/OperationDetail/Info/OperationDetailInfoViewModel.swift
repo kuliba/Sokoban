@@ -380,7 +380,8 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(
                 title: "Получатель",
                 iconType: IconType.user.icon,
-                value: statement.merchant))
+                value: operation?.payeeFullName ?? statement.merchant
+            ))
             
             if let memberId = operation?.memberId,
                let bank = bankList.first(where: { $0.memberId == memberId }) {
@@ -659,7 +660,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(
                     title: "Наименование получателя",
                     icon: image,
-                    name: statement.merchant))
+                    name: operation?.payeeFullName ?? statement.merchant
+                ))
             }
             
             if let payeeINN = operation?.payeeINN  {
