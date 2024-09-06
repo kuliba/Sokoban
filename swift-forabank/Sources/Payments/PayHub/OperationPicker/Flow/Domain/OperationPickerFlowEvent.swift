@@ -2,14 +2,7 @@
 //  OperationPickerFlowEvent.swift
 //
 //
-//  Created by Igor Malyarov on 15.08.2024.
+//  Created by Igor Malyarov on 05.09.2024.
 //
 
-public enum OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates> {
-    
-    case flowEvent(FlowEvent<Status>)
-    case select(OperationPickerItem<Latest>?)
-    case selected(OperationPickerFlowItem<Exchange, LatestFlow, Templates>?)
-}
-
-extension OperationPickerFlowEvent: Equatable where Exchange: Equatable, Latest: Equatable, LatestFlow: Equatable, Status: Equatable, Templates: Equatable {}
+public typealias OperationPickerFlowEvent<Exchange, Latest, LatestFlow, Status, Templates> = PickerFlowEvent<OperationPickerElement<Latest>, OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>>

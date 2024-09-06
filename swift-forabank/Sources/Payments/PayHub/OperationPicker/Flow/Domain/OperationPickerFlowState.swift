@@ -2,26 +2,7 @@
 //  OperationPickerFlowState.swift
 //
 //
-//  Created by Igor Malyarov on 15.08.2024.
+//  Created by Igor Malyarov on 05.09.2024.
 //
 
-public struct OperationPickerFlowState<Exchange, LatestFlow, Status, Templates> {
-    
-    public var isLoading = false
-    public var selected: Selected?
-    public var status: Status?
-    
-    public init(
-        isLoading: Bool = false,
-        selected: Selected? = nil,
-        status: Status? = nil
-    ) {
-        self.isLoading = isLoading
-        self.selected = selected
-        self.status = status
-    }
-    
-    public typealias Selected = OperationPickerFlowItem<Exchange, LatestFlow, Templates>
-}
-
-extension OperationPickerFlowState: Equatable where Exchange: Equatable, LatestFlow: Equatable, Status: Equatable, Templates: Equatable {}
+public typealias OperationPickerFlowState<Exchange, LatestFlow, Status, Templates> = PickerFlowState<OperationPickerNavigation<Exchange, LatestFlow, Status, Templates>>

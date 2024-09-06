@@ -8,12 +8,4 @@
 import Combine
 import PayHub
 
-final class Exchange: FlowEventEmitter {
-    
-    private let subject = PassthroughSubject<FlowEvent, Never>()
-    
-    var eventPublisher: AnyPublisher<FlowEvent, Never> {
-        
-        subject.eraseToAnyPublisher()
-    }
-}
+final class Exchange {}

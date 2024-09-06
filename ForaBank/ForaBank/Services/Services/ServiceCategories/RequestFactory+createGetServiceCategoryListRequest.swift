@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.08.2024.
 //
 
-import ServiceCategoriesBackend
+import ServiceCategoriesBackendV0
 import Foundation
 import RemoteServices
 
@@ -21,4 +21,3 @@ extension ForaBank.RequestFactory {
         return try RemoteServices.RequestFactory.createGetServiceCategoryListRequest(url: endpointURL)
     }
 }
-

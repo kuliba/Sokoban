@@ -107,6 +107,13 @@ extension ProductStatementData {
         case c2b = "C2B_PAYMENT"
         case insideDeposit = "INSIDE_DEPOSIT"
         case sberQRPayment = "SBER_QR_PAYMENT"
+        case networkMarketing = "NETWORK_MARKETING_SERVICE"
+        case digitalWallet = "DIGITAL_WALLETS_SERVICE"
+        case charity = "CHARITY_SERVICE"
+        case socialAndGame = "SOCIAL_AND_GAMES_SERVICE"
+        case education = "EDUCATION_SERVICE"
+        case security = "SECURITY_SERVICE"
+        case repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
         case unknown
     }
 }

@@ -48,7 +48,7 @@ where DestinationView: View,
 public extension ComposedOperationPickerFlowView {
     
     typealias Binder = OperationPickerBinder<Exchange, Latest, LatestFlow, Status, Templates>
-    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Templates>
+    typealias Factory = ComposedOperationPickerFlowViewFactory<DestinationView, ItemLabel, Exchange, Latest, LatestFlow, Status, Templates>
 }
 
 private extension ComposedOperationPickerFlowView {

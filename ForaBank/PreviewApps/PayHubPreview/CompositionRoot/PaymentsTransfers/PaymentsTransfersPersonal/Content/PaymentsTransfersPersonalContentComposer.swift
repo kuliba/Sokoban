@@ -25,7 +25,7 @@ extension PaymentsTransfersPersonalContentComposer {
     
     func compose(
         loadedCategories: [ServiceCategory],
-        loadedItems: [OperationPickerItem<Latest>]
+        loadedItems: [OperationPickerElement]
     ) -> PaymentsTransfersPersonalContent {
         
         let categoryPicker = makeCategoryPickerBinder(loadedCategories: loadedCategories)
@@ -121,7 +121,7 @@ extension ServiceCategory {
 private extension PaymentsTransfersPersonalContentComposer {
     
     func makeOperationBinder(
-        loadedItems: [OperationPickerItem<Latest>]
+        loadedItems: [OperationPickerElement]
     ) -> OperationPickerBinder {
         
         let content = OperationPickerContent.stub(loadResult: loadedItems)
@@ -133,7 +133,7 @@ private extension PaymentsTransfersPersonalContentComposer {
             bind: { content, flow in
                 
                 content.$state
-                    .map(\.selected)
+                    .compactMap(\.selected)
                     .sink { flow.event(.select($0)) }
             }
         )
