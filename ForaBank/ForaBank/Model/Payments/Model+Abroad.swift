@@ -331,7 +331,9 @@ extension Model {
                 return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
             }
             
-            let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
+            let updatedAmountParameter = amountParameter
+                .update(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                .updated(value: operation.source?.abroadAmountValue())
             
             return updatedAmountParameter
             
@@ -1267,6 +1269,18 @@ extension Model {
                 ])
         } else {
                 
+            return nil
+        }
+    }
+}
+
+private extension Payments.Operation.Source {
+
+    func abroadAmountValue() -> String? {
+        switch self {
+        case let .direct(phone: _, countryId: _, serviceData: serviceData):
+            return serviceData?.amount.description
+        default:
             return nil
         }
     }

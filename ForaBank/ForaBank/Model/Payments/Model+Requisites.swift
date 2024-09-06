@@ -44,7 +44,15 @@ extension Model {
             let banks = self.dictionaryFullBankInfoPrefferedFirstList()
             let options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: .init(with: $0.svgImage), isFavorite: false, searchValue: $0.bic)})
 
-            let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .number)
+            let bicBankParameter = Payments.ParameterSelectBank(
+                .init(id: bicBankId, value: operation.source?.requisitesBankIdValue()),
+                icon: defaultInputIcon,
+                title: "БИК банка получателя",
+                options: options,
+                placeholder: "Начните ввод для поиска",
+                selectAll: .init(type: .banksFullInfo),
+                keyboardType: .number
+            )
             
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
@@ -60,7 +68,14 @@ extension Model {
                 return .init(rules: rules)
             }()
             
-            let accountNumberParameter = Payments.ParameterInput(.init(id: accountNumberId, value: nil), icon: defaultInputIcon, title: "Номер счета получателя", validator: accountNumberValidator, limitator: .init(limit: 20), inputType: .number)
+            let accountNumberParameter = Payments.ParameterInput(
+                .init(id: accountNumberId, value: operation.source?.requisitesAccountNumberValue()),
+                icon: defaultInputIcon,
+                title: "Номер счета получателя",
+                validator: accountNumberValidator,
+                limitator: .init(limit: 20),
+                inputType: .number
+            )
             
             return .init(parameters: [operatorParameter, headerParameter, bicBankParameter, accountNumberParameter], front: .init(visible: [headerParameter.id, bicBankId, accountNumberId], isCompleted: false), back: .init(stage: .local, required: [bicBankParameter.id, accountNumberParameter.id], processed: nil))
             
@@ -95,7 +110,14 @@ extension Model {
                 return .init(rules: rules)
             }()
             
-            let innParameter = Payments.ParameterInput(.init(id: innNumberId, value: nil), icon: defaultInputIcon, title: "ИНН получателя", validator: validator, limitator: .init(limit: 12), inputType: .number)
+            let innParameter = Payments.ParameterInput(
+                .init(id: innNumberId, value: operation.source?.requisitesInnValue()),
+                icon: defaultInputIcon,
+                title: "ИНН получателя",
+                validator: validator,
+                limitator: .init(limit: 12),
+                inputType: .number
+            )
             
             switch result.checkResult {
                 
@@ -128,7 +150,7 @@ extension Model {
                     messageValue = "Перевод денежных средств. НДС не облагается"
                 }
                 
-                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: messageValue), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: operation.source?.requisitesCommentValue() ?? messageValue), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
                 
                 //MARK: Product Parameter
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
@@ -139,11 +161,18 @@ extension Model {
                 }
                 
                 let productId = productWithSource(source: operation.source, productId: String(product.id))
-                let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+                let productParameter = Payments.ParameterProduct(value: operation.source?.requisitesProductIdValue() ?? productId, filter: filter, isEditable: true)
                 
                 //MARK: Amount Parameter
                 let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.01, maxAmount: product.balance), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+                let amountParameter = Payments.ParameterAmount(
+                    value: operation.source?.requisitesAmountValue(),
+                    title: "Сумма перевода",
+                    currencySymbol: currencySymbol,
+                    transferButtonTitle: "Продолжить",
+                    validator: .init(minAmount: 0.01, maxAmount: product.balance),
+                    info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo)
+                )
                 
                 return .init(parameters: [nameParameter, messageParameter, productParameter, amountParameter, requisitesTypeParameter], front: .init(visible: [nameParameterId, messageParameterId, productParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [nameParameter.id, messageParameter.id, productParameter.id, amountParameter.id], processed: nil))
                 
@@ -195,7 +224,11 @@ extension Model {
                     if innValue.count == 10 {
                         
                         //MARK: Kpp Parameter
-                        let kppParameter = createKppParameterInput(id: kppParameterId, value: suggestedCompanies[0].kpp, validator: kppParameterValidator)
+                        let kppParameter = createKppParameterInput(
+                            id: kppParameterId,
+                            value: operation.source?.requisitesKppValue() ?? suggestedCompanies[0].kpp,
+                            validator: kppParameterValidator
+                        )
                         parameters.append(kppParameter)
                     }
                     
@@ -215,7 +248,7 @@ extension Model {
                     if shouldShowKppParameter(operation.service, innValue.count) {
 
                         let kppParameterSelect = Payments.ParameterSelect(
-                            .init(id: kppParameterId, value: options.first?.id),
+                            .init(id: kppParameterId, value: operation.source?.requisitesKppValue() ?? options.first?.id),
                             icon: nil,
                             title: Payments.ParameterSelect.kppTitle,
                             placeholder: "Начните ввод для поиска",
@@ -274,7 +307,11 @@ extension Model {
                 if innValue.count == 10 {
                     
                     //MARK: Kpp Parameter
-                    let kppParameter = createKppParameterInput(id: kppParameterId, validator: kppParameterValidator)
+                    let kppParameter = createKppParameterInput(
+                        id: kppParameterId,
+                        value: operation.source?.requisitesKppValue(),
+                        validator: kppParameterValidator
+                    )
                     parameters.append(kppParameter)
                 }
                 
@@ -307,7 +344,7 @@ extension Model {
                 return .init(rules: rules)
             }()
             
-            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: operation.source?.requisitesCommentValue()), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
             parameters.append(messageParameter)
             
             //MARK: Product Parameter
@@ -331,33 +368,64 @@ extension Model {
                     do {
                         
                         let amount: Double = try qrData.value(type: .general(.amount), mapping: qrMapping)
-                        let amountParameter = createAmountParameter(value: String(amount), currencySymbol: currencySymbol, productBalance: product.balance)
+                        let amountParameter = createAmountParameter(
+                            value: String(amount),
+                            currencySymbol: currencySymbol,
+                            productBalance: product.balance
+                        )
                         parameters.append(amountParameter)
                         
                         return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
                         
                     } catch {
                         
-                        let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
+                        let amountParameter = createAmountParameter(
+                            value: operation.source?.requisitesAmountValue(),
+                            currencySymbol: currencySymbol,
+                            productBalance: product.balance
+                        )
                         parameters.append(amountParameter)
                         
-                       return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
+                       return createOperationStep(
+                        parameters: parameters,
+                        isCompleted: false,
+                        innValueCount: innValue.count,
+                        kppParameterId: kppParameterId
+                       )
                     }
                     
                 } else {
                     
-                    let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
+                    let amountParameter = createAmountParameter(
+                        value: operation.source?.requisitesAmountValue(),
+                        currencySymbol: currencySymbol,
+                        productBalance: product.balance
+                    )
                     parameters.append(amountParameter)
                     
-                   return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
+                    return createOperationStep(
+                        parameters: parameters,
+                        isCompleted: false,
+                        innValueCount: innValue.count,
+                        kppParameterId: kppParameterId
+                    )
                 }
                 
             } else {
                 
-                let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
+                let amountParameter = createAmountParameter(
+                    value: operation.source?.requisitesAmountValue(),
+                    currencySymbol: currencySymbol,
+                    productBalance: product.balance
+                )
                 parameters.append(amountParameter)
                 
-                return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
+                return createOperationStep(
+                    parameters: parameters,
+                    isCompleted: false,
+                    innValueCount: innValue.count,
+                    kppParameterId: kppParameterId
+                )
             }
             
         default:
@@ -366,7 +434,11 @@ extension Model {
     }
     // MARK: Amount Parameter
     
-    private func createAmountParameter(value: String? = nil, currencySymbol: String, productBalance: Double?) -> Payments.ParameterAmount {
+    private func createAmountParameter(
+        value: String? = nil,
+        currencySymbol: String,
+        productBalance: Double?
+    ) -> Payments.ParameterAmount {
         
         let info = Payments.ParameterAmount.Info.action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo)
         
@@ -846,3 +918,68 @@ extension Payments.ParameterAmount {
     }
 }
 
+private extension Payments.Operation.Source {
+
+    func requisitesAccountNumberValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: accountNumber, bankId: _, inn: _, kpp: _, amount: _, productId: _, comment: _):
+            return accountNumber
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesBankIdValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: bankId, inn: _, kpp: _, amount: _, productId: _, comment: _):
+            return bankId
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesInnValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: _, inn: inn, kpp: _, amount: _, productId: _, comment: _):
+            return inn
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesAmountValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: _, inn: _, kpp: _, amount: amount, productId: _, comment: _):
+            return amount
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesProductIdValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: _, inn: _, kpp: _, amount: _, productId: productId, comment: _):
+            return productId?.description
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesCommentValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: _, inn: _, kpp: _, amount: _, productId: _, comment: comment):
+            return comment
+        default:
+            return nil
+        }
+    }
+    
+    func requisitesKppValue() -> String? {
+        switch self {
+        case let .repeatPaymentRequisites(accountNumber: _, bankId: _, inn: _, kpp: kpp, amount: _, productId: _, comment: _):
+            return kpp
+        default:
+            return nil
+        }
+    }
+}

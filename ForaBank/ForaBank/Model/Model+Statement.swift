@@ -146,7 +146,13 @@ extension Model {
         }
     }
     
-    func statementsFetch(token: String, product: ProductData, period: Period) async throws -> [ProductStatementData] {
+    func statementsFetch(
+        token: String,
+        product: ProductData,
+        period: Period,
+        operationType: [Services.CardStatementForPeriodPayload.OperationType]?,
+        operationGroup: [Services.CardStatementForPeriodPayload.OperationGroup]?
+    ) async throws -> [ProductStatementData] {
         
         switch product.productType {
         case .card:

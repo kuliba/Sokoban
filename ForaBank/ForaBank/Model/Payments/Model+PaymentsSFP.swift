@@ -48,7 +48,7 @@ extension Model {
                         token: token
                     )
                 }
-            case let .sfp(phone: phone, bankId: _):
+            case let .sfp(phone: phone, bankId: _, amount: _, productId: _):
                 if let token {
                  
                     latestPaymentBankIds = await getLatestPhonePayments(
@@ -77,7 +77,7 @@ extension Model {
             }
             
             let productId = productWithSource(source: operation.source, productId: String(product.id))
-            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+            let productParameter = Payments.ParameterProduct(value: operation.source?.sfpProductValue() ?? productId, filter: filter, isEditable: true)
             
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
@@ -89,12 +89,32 @@ extension Model {
                 validator: .anyValue
             )
             
-            // amount
-            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
-            
-            return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
-            
+            if case let .sfp(phone: _, bankId: _, amount: amount, productId: _) = operation.source {
+                
+                // amount
+                let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+                let amountParameter = Payments.ParameterAmount(
+                    value: amount,
+                    title: "Сумма перевода",
+                    currencySymbol: currencySymbol,
+                    validator: .init(minAmount: 0.01, maxAmount: product.balance)
+                )
+                
+                return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
+                
+                
+            } else {
+                // amount
+                let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
+                let amountParameter = Payments.ParameterAmount(
+                    value: nil,
+                    title: "Сумма перевода",
+                    currencySymbol: currencySymbol,
+                    validator: .init(minAmount: 0.01, maxAmount: product.balance)
+                )
+                
+                return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
+            }
         default:
             throw Payments.Error.unsupported
         }
@@ -104,6 +124,7 @@ extension Model {
     func paymentsProcessSourceReducerSFP(
         phone: String,
         bankId: BankData.ID,
+        amount: String?,
         parameterId: Payments.Parameter.ID
     ) -> Payments.Parameter.Value? {
 
@@ -115,6 +136,8 @@ extension Model {
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
             
+        case Payments.Parameter.Identifier.sfpAmount.rawValue:
+            return amount
         default:
             return nil
         }
@@ -458,7 +481,7 @@ extension Model {
     ) async -> [String]? {
         
         switch operation.source {
-        case let .sfp(phone: phone, bankId: _):
+        case let .sfp(phone: phone, bankId: _, amount: _, productId: _):
             let banksList = await paymentsByPhoneBankList(phone)
             return banksList
             
@@ -504,7 +527,7 @@ extension Model {
         case let .template(templateId):
             return createBankParameterForTemplate(templateId, operationPhone, banksIds, latestPaymentBankIds)
             
-        case let .sfp(phone: phone, bankId: bankId):
+        case let .sfp(phone: phone, bankId: bankId, amount: _, productId: _):
             return filterByPhone(operationPhone ?? phone, bankId: bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
             
         case let .mock(mock):
@@ -710,6 +733,20 @@ extension Model {
             
         } else {
             return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+        }
+    }
+}
+
+private extension Payments.Operation.Source {
+
+    func sfpProductValue() -> String? {
+        
+        switch self {
+        case let .sfp(phone: _, bankId: _, amount: _, productId: productId):
+            return productId?.description
+            
+        default:
+            return nil
         }
     }
 }
