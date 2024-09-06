@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 05.09.2024.
 //
 
-import PaymentTemplateBackend
+import PaymentTemplateBackendV3
 import Foundation
 import RemoteServices
 

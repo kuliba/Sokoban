@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.03.2024.
 //
 
-import LatestPayments
+import LatestPaymentsBackendV2
 import RemoteServices
 import XCTest
 

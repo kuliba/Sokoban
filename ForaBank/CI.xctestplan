@@ -495,14 +495,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "LatestPaymentsBackendV2Tests",
         "name" : "LatestPaymentsBackendV2Tests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "PaymentTemplateBackendV3Tests",
         "name" : "PaymentTemplateBackendV3Tests"
       }
