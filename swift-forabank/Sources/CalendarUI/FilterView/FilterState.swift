@@ -9,18 +9,20 @@ import Foundation
 
 public struct FilterState {
     
-    let title: String
+    public let title: String
     
+    public var selectDates: (lowerDate: Date?, upperDate: Date?)?
     public var selectedPeriod: Period
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
     
-    let periods: [Period]
-    let transactionType: [TransactionType]
+    public let periods: [Period]
+    public let transactionType: [TransactionType]
     public var services: [String]
     
     public init(
         title: String,
+        selectDates: (lowerDate: Date?, upperDate: Date?)?,
         selectedPeriod: Period = .month,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
@@ -29,6 +31,7 @@ public struct FilterState {
         services: [String]
     ) {
         self.title = title
+        self.selectDates = selectDates
         self.selectedPeriod = selectedPeriod
         self.selectedTransaction = selectedTransaction
         self.selectedServices = selectedServices
