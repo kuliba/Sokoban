@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MonthView: View {
+public struct MonthView: View {
     
     var selectedDate: Date?
     var selectedRange: MDateRange?
@@ -17,7 +17,7 @@ struct MonthView: View {
 
     let selectDate: (Date) -> Void
     
-    var body: some View {
+    public var body: some View {
         
         LazyVStack(spacing: config.daysSpacing.vertical) {
             
@@ -40,7 +40,7 @@ private extension MonthView {
     }
 }
 
-private extension MonthView {
+extension MonthView {
     
     func dayView(_ date: Date) -> some View {
         
@@ -54,30 +54,25 @@ private extension MonthView {
     }
 }
 
-private extension MonthView {
+extension MonthView {
     
     func isCurrentMonth(_ date: Date) -> Bool { data.month.isSame(.month, as: date) }
 }
 
 // MARK: - Others
-private extension MonthView {
+extension MonthView {
     
     var animation: Animation { .spring(response: 0.32, dampingFraction: 1, blendDuration: 0) }
 }
 
-public protocol MonthLabel: View {
-    // MARK: Required Attributes
-    var month: Date { get }
-
-    // MARK: View Customisation
-    func content() -> AnyView
-}
-
 // MARK: - Default View Implementation
 public extension MonthLabel {
-    func content() -> AnyView { defaultContent().erased() }
+    
+    func content() -> AnyView {
+        defaultContent().erased()
+    }
 }
-private extension MonthLabel {
+public extension MonthLabel {
     func defaultContent() -> some View {
         
         Text(getString(format: "MMMM y"))
@@ -90,28 +85,33 @@ private extension MonthLabel {
 // MARK: - Helpers
 public extension MonthLabel {
     /// Returns a string of the selected format for the month.
-    func getString(format: String) -> String { MDateFormatter.getString(from: month, format: format) }
+    func getString(format: String) -> String {
+        MDateFormatter.getString(from: month, format: format)
+    }
 }
 
 // MARK: - Others
-public extension MonthLabel {
-    var body: some View { content() }
-}
-
-public protocol WeekdayLabel: View {
-    // MARK: Required Attributes
-    var weekday: WeekDay { get }
-
-    // MARK: View Customisation
-    func content() -> AnyView
+public struct MonthLabel: View {
+    
+    var month: Date
+    
+    public init(month: Date) {
+        self.month = month
+    }
+    
+    public var body: some View {
+        content()
+    }
 }
 
 // MARK: - Default View Implementation
 public extension WeekdayLabel {
-    func content() -> AnyView { defaultContent().erased() }
+    func content() -> AnyView {
+        defaultContent().erased()
+    }
 }
 
-private extension WeekdayLabel {
+public extension WeekdayLabel {
     func defaultContent() -> some View {
         Text(getString(with: .veryShort))
             .foregroundColor(.onBackgroundSecondary)
@@ -125,27 +125,34 @@ public extension WeekdayLabel {
     func getString(with format: WeekdaySymbolFormat) -> String { MDateFormatter.getString(for: weekday, format: format) }
 
     /// Returns a type-erased object.
-    func erased() -> AnyWeekdayLabel { .init(self) }
+//    func erased() -> AnyWeekdayLabel { .init(self) }
 }
 
 // MARK: - Others
-public extension WeekdayLabel {
-    var body: some View { content() }
-}
-
-public protocol WeekdaysView: View {
-    // MARK: View Customisation
-    func content() -> AnyView
-    func weekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel
+public struct WeekdayLabel: View {
+    
+    var weekday: WeekDay
+    
+    public var body: some View {
+        content()
+    }
 }
 
 // MARK: - Default View Implementation
 public extension WeekdaysView {
-    func content() -> AnyView { weekdaysView().erased() }
-    func weekdayLabel(_ weekday: WeekDay) -> AnyWeekdayLabel { defaultWeekDayLabel(weekday).erased() }
+    
+    func content() -> AnyView {
+        weekdaysView().erased()
+    }
+    
+    func weekdayLabel(_ weekday: WeekDay) -> WeekdayLabel {
+        defaultWeekDayLabel(weekday)
+    }
 }
-private extension WeekdaysView {
-    func defaultWeekDayLabel(_ weekday: WeekDay) -> DefaultWeekdayLabel { DefaultWeekdayLabel(weekday: weekday) }
+public extension WeekdaysView {
+    func defaultWeekDayLabel(_ weekday: WeekDay) -> WeekdayLabel {
+        WeekdayLabel(weekday: weekday)
+    }
 }
 
 // MARK: - Helpers
@@ -158,6 +165,11 @@ private extension WeekdaysView {
 }
 
 // MARK: - Others
-public extension WeekdaysView {
-    var body: some View { content() }
+public struct WeekdaysView: View {
+    
+    public init() {}
+    
+    public var body: some View {
+        content()
+    }
 }
