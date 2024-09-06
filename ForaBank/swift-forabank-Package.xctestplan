@@ -421,13 +421,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LatestPaymentsTests",
-        "name" : "LatestPaymentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "UIPrimitivesTests",
         "name" : "UIPrimitivesTests"
       }
@@ -491,8 +484,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PaymentTemplateBackendTests",
-        "name" : "PaymentTemplateBackendTests"
+        "identifier" : "LatestPaymentsBackendV2Tests",
+        "name" : "LatestPaymentsBackendV2Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentTemplateBackendV3Tests",
+        "name" : "PaymentTemplateBackendV3Tests"
       }
     }
   ],

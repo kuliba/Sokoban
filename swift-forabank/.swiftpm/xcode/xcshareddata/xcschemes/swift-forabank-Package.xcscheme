@@ -742,20 +742,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ChangeSVCardLimitAPI"
-               BuildableName = "ChangeSVCardLimitAPI"
-               BlueprintName = "ChangeSVCardLimitAPI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "SelectorComponent"
                BuildableName = "SelectorComponent"
                BlueprintName = "SelectorComponent"
@@ -773,20 +759,6 @@
                BlueprintIdentifier = "SVCardLimitAPI"
                BuildableName = "SVCardLimitAPI"
                BlueprintName = "SVCardLimitAPI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "LatestPayments"
-               BuildableName = "LatestPayments"
-               BlueprintName = "LatestPayments"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -913,20 +885,6 @@
                BlueprintIdentifier = "GetBannerCatalogListAPI"
                BuildableName = "GetBannerCatalogListAPI"
                BlueprintName = "GetBannerCatalogListAPI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PaymentTemplateBackend"
-               BuildableName = "PaymentTemplateBackend"
-               BlueprintName = "PaymentTemplateBackend"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
