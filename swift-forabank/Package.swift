@@ -31,7 +31,7 @@ let package = Package(
         .latestPaymentsBackendV2,
         .serviceCategories,
         .serviceCategoriesBackend,
-        .paymentTemplateBackend,
+        .paymentTemplateBackendV3,
         .payHub,
         .payHubUI,
         .utilityPayment,
@@ -140,8 +140,8 @@ let package = Package(
         .serviceCategoriesTests,
         .serviceCategoriesBackend,
         .serviceCategoriesBackendTests,
-        .paymentTemplateBackend,
-        .paymentTemplateBackendTests,
+        .paymentTemplateBackendV3,
+        .paymentTemplateBackendV3Tests,
         .payHub,
         .payHubTests,
         .payHubUI,
@@ -638,10 +638,10 @@ private extension Product {
         ]
     )
 
-    static let paymentTemplateBackend = library(
-        name: .paymentTemplateBackend,
+    static let paymentTemplateBackendV3 = library(
+        name: .paymentTemplateBackendV3,
         targets: [
-            .paymentTemplateBackend,
+            .paymentTemplateBackendV3,
         ]
     )
 
@@ -1275,24 +1275,24 @@ private extension Target {
         path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
     )
     
-    static let paymentTemplateBackend = target(
-        name: .paymentTemplateBackend,
+    static let paymentTemplateBackendV3 = target(
+        name: .paymentTemplateBackendV3,
         dependencies: [
             // internal modules
             .remoteServices,
         ],
-        path: "Sources/Payments/\(String.paymentTemplateBackend)"
+        path: "Sources/Payments/PaymentTemplate/Backend/V3"
     )
-    static let paymentTemplateBackendTests = testTarget(
-        name: .paymentTemplateBackendTests,
+    static let paymentTemplateBackendV3Tests = testTarget(
+        name: .paymentTemplateBackendV3Tests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .paymentTemplateBackend,
+            .paymentTemplateBackendV3,
             .remoteServices,
         ],
-        path: "Tests/Payments/\(String.paymentTemplateBackendTests)",
+        path: "Tests/Payments/PaymentTemplate/Backend/V3",
         resources: [
             .copy("Resources/v3_getPaymentTemplateList.json"),
             .copy("Resources/v3_getPaymentTemplateList_housing.json"),
@@ -2801,8 +2801,8 @@ private extension Target.Dependency {
         name: .serviceCategoriesBackend
     )
 
-    static let paymentTemplateBackend = byName(
-        name: .paymentTemplateBackend
+    static let paymentTemplateBackendV3 = byName(
+        name: .paymentTemplateBackendV3
     )
 
     static let payHub = byName(
@@ -3091,8 +3091,8 @@ private extension String {
     static let serviceCategoriesBackend = "ServiceCategoriesBackend"
     static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
 
-    static let paymentTemplateBackend = "PaymentTemplateBackend"
-    static let paymentTemplateBackendTests = "PaymentTemplateBackendTests"
+    static let paymentTemplateBackendV3 = "PaymentTemplateBackendV3"
+    static let paymentTemplateBackendV3Tests = "PaymentTemplateBackendV3Tests"
 
     static let payHub = "PayHub"
     static let payHubTests = "PayHubTests"
