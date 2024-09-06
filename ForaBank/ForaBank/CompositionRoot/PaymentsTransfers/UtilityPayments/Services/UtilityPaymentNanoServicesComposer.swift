@@ -9,7 +9,7 @@ import AnywayPaymentAdapters
 import AnywayPaymentDomain
 import Fetcher
 import Foundation
-import LatestPayments
+import LatestPaymentsBackendV2
 import OperatorsListComponents
 import RemoteServices
 

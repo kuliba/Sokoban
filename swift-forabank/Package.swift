@@ -28,7 +28,7 @@ let package = Package(
         .keyChainStore,
         // Payments
         .anywayPayment,
-        .latestPayments,
+        .latestPaymentsBackendV2,
         .serviceCategories,
         .serviceCategoriesBackend,
         .paymentTemplateBackend,
@@ -134,8 +134,8 @@ let package = Package(
         .anywayPaymentDomain,
         .anywayPaymentUI,
         .anywayPaymentUITests,
-        .latestPayments,
-        .latestPaymentsTests,
+        .latestPaymentsBackendV2,
+        .latestPaymentsBackendV2Tests,
         .serviceCategories,
         .serviceCategoriesTests,
         .serviceCategoriesBackend,
@@ -617,10 +617,10 @@ private extension Product {
         ]
     )
 
-    static let latestPayments = library(
-        name: .latestPayments,
+    static let latestPaymentsBackendV2 = library(
+        name: .latestPaymentsBackendV2,
         targets: [
-            .latestPayments,
+            .latestPaymentsBackendV2,
         ]
     )
 
@@ -1218,24 +1218,24 @@ private extension Target {
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
     )
     
-    static let latestPayments = target(
-        name: .latestPayments,
+    static let latestPaymentsBackendV2 = target(
+        name: .latestPaymentsBackendV2,
         dependencies: [
             // internal modules
             .remoteServices,
         ],
-        path: "Sources/Payments/\(String.latestPayments)"
+        path: "Sources/Payments/LatestPayments/Backend/V2"
     )
-    static let latestPaymentsTests = testTarget(
-        name: .latestPaymentsTests,
+    static let latestPaymentsBackendV2Tests = testTarget(
+        name: .latestPaymentsBackendV2Tests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .latestPayments,
+            .latestPaymentsBackendV2,
             .remoteServices,
         ],
-        path: "Tests/Payments/\(String.latestPaymentsTests)"
+        path: "Tests/Payments/LatestPayments/Backend/V2"
     )
     
     static let serviceCategories = target(
@@ -2789,8 +2789,8 @@ private extension Target.Dependency {
         name: .anywayPaymentUI
     )
 
-    static let latestPayments = byName(
-        name: .latestPayments
+    static let latestPaymentsBackendV2 = byName(
+        name: .latestPaymentsBackendV2
     )
 
     static let serviceCategories = byName(
@@ -3082,8 +3082,8 @@ private extension String {
     static let anywayPaymentUI = "AnywayPaymentUI"
     static let anywayPaymentUITests = "AnywayPaymentUITests"
 
-    static let latestPayments = "LatestPayments"
-    static let latestPaymentsTests = "LatestPaymentsTests"
+    static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
+    static let latestPaymentsBackendV2Tests = "LatestPaymentsBackendV2Tests"
 
     static let serviceCategories = "ServiceCategories"
     static let serviceCategoriesTests = "ServiceCategoriesTests"
