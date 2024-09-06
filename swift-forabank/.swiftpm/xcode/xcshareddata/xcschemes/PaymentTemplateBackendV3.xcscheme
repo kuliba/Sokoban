@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ServiceCategories"
-               BuildableName = "ServiceCategories"
-               BlueprintName = "ServiceCategories"
+               BlueprintIdentifier = "PaymentTemplateBackendV3"
+               BuildableName = "PaymentTemplateBackendV3"
+               BlueprintName = "PaymentTemplateBackendV3"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,21 +27,16 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:../ForaBank/TestPlans/ServiceCategories.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-      </TestPlans>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ServiceCategoriesTests"
-               BuildableName = "ServiceCategoriesTests"
-               BlueprintName = "ServiceCategoriesTests"
+               BlueprintIdentifier = "PaymentTemplateBackendV3Tests"
+               BuildableName = "PaymentTemplateBackendV3Tests"
+               BlueprintName = "PaymentTemplateBackendV3Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -67,9 +62,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ServiceCategories"
-            BuildableName = "ServiceCategories"
-            BlueprintName = "ServiceCategories"
+            BlueprintIdentifier = "PaymentTemplateBackendV3"
+            BuildableName = "PaymentTemplateBackendV3"
+            BlueprintName = "PaymentTemplateBackendV3"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

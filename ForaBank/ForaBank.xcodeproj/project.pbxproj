@@ -753,6 +753,8 @@
 		2A3E03C02B74C6B000A4494D /* makeSetBankDefaultG2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039B2B74C6AF00A4494D /* makeSetBankDefaultG2.json */; };
 		2A3E03C12B74C6B000A4494D /* changeClientConsentMe2MePullH2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039C2B74C6AF00A4494D /* changeClientConsentMe2MePullH2.json */; };
 		2A3E03C22B74C6B000A4494D /* getBankDefaultC5.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A3E039D2B74C6AF00A4494D /* getBankDefaultC5.json */; };
+		2A3E48712C8AB878002D035F /* LatestPaymentsBackendV2 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3E48702C8AB878002D035F /* LatestPaymentsBackendV2 */; };
+		2A3E48732C8ABCF3002D035F /* PaymentTemplateBackendV3 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */; };
 		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B152A47763000D8FE55 /* MosParkingView.swift */; };
@@ -987,7 +989,6 @@
 		2A6724122ADB30D000FAD522 /* KeyChainStore+Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */; };
 		2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */; };
 		2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */; };
-		2A6889BA2C30290F001FF1F2 /* LatestPayments in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6889B92C30290F001FF1F2 /* LatestPayments */; };
 		2A6889BD2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6930302BE8C95800C9B6D2 /* PaymentsTransfersFlowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersFlowReducer.swift */; };
@@ -1070,6 +1071,8 @@
 		2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */; };
 		2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */; };
 		2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */; };
+		2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */; };
+		2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */; };
@@ -1142,7 +1145,6 @@
 		2A7915F42AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */; };
 		2A79A5262C8A02B600224469 /* RequestFactory+createGetPaymentTemplateListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79A5252C8A02B600224469 /* RequestFactory+createGetPaymentTemplateListRequest.swift */; };
 		2A79A5292C8A03DB00224469 /* RequestFactory+createGetPaymentTemplateListRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79A5282C8A03DB00224469 /* RequestFactory+createGetPaymentTemplateListRequestTests.swift */; };
-		2A79A52B2C8A073400224469 /* PaymentTemplateBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 2A79A52A2C8A073400224469 /* PaymentTemplateBackend */; };
 		2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
 		2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7AB1922AA1065400D37BD6 /* LinkableText */; };
@@ -1602,7 +1604,6 @@
 		2AE5973429F918C30083F138 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973329F918C30083F138 /* Preview Assets.xcassets */; };
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
 		2AE838E52C6B3A6B009E1E39 /* RequestFactory+createGetServiceCategoryListRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838E42C6B3A6B009E1E39 /* RequestFactory+createGetServiceCategoryListRequestTests.swift */; };
-		2AE838E72C6B3BDB009E1E39 /* ServiceCategoriesBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */; };
 		2AE838EA2C6B3F61009E1E39 /* RequestFactory+createGetServiceCategoryListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838E92C6B3F61009E1E39 /* RequestFactory+createGetServiceCategoryListRequest.swift */; };
 		2AE838ED2C6B4069009E1E39 /* NanoServices+makeGetServiceCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838EC2C6B4069009E1E39 /* NanoServices+makeGetServiceCategoryList.swift */; };
 		2AE838F22C6B415E009E1E39 /* NanoServices+makeGetServiceCategoryListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838F12C6B415E009E1E39 /* NanoServices+makeGetServiceCategoryListTests.swift */; };
@@ -6948,7 +6949,6 @@
 				8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */,
-				2AE838E72C6B3BDB009E1E39 /* ServiceCategoriesBackend in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
 				2AB9E0B92B371E0C00D36D07 /* PaymentComponents in Frameworks */,
@@ -6963,6 +6963,7 @@
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
 				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
+				2A3E48732C8ABCF3002D035F /* PaymentTemplateBackendV3 in Frameworks */,
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
@@ -6975,17 +6976,18 @@
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */,
 				835D0DF72BEA667A00FFE90B /* ProductProfile in Frameworks */,
-				2A6889BA2C30290F001FF1F2 /* LatestPayments in Frameworks */,
 				C14F85532AF537B000749534 /* PaymentSticker in Frameworks */,
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
 				2A3599B02ADA816800820369 /* KeyChainStore in Frameworks */,
+				2A3E48712C8AB878002D035F /* LatestPaymentsBackendV2 in Frameworks */,
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
 				2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */,
 				2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */,
 				D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
+				2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */,
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
@@ -7007,12 +7009,12 @@
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
-				2A79A52B2C8A073400224469 /* PaymentTemplateBackend in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
 				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
+				2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 				2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */,
@@ -18308,14 +18310,15 @@
 				835D0DF62BEA667A00FFE90B /* ProductProfile */,
 				2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */,
 				832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */,
-				2A6889B92C30290F001FF1F2 /* LatestPayments */,
 				2A07B2092C6524B40021B594 /* SelectorComponents */,
-				2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */,
 				8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */,
 				2AF720222C74841D00919CAF /* PayHub */,
 				2AF720242C74841D00919CAF /* PayHubUI */,
 				83C918162C86D74C00037C11 /* GetBannerCatalogListAPI */,
-				2A79A52A2C8A073400224469 /* PaymentTemplateBackend */,
+				2A3E48702C8AB878002D035F /* LatestPaymentsBackendV2 */,
+				2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */,
+				2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */,
+				2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -26870,6 +26873,14 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PaymentComponents;
 		};
+		2A3E48702C8AB878002D035F /* LatestPaymentsBackendV2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LatestPaymentsBackendV2;
+		};
+		2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentTemplateBackendV3;
+		};
 		2A3F1B172A47768A00D8FE55 /* LoadableResourceComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LoadableResourceComponent;
@@ -26947,10 +26958,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = CVVPIN_Services;
 		};
-		2A6889B92C30290F001FF1F2 /* LatestPayments */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LatestPayments;
-		};
 		2A69C1BE2BE4E74600FE91B0 /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
@@ -26967,6 +26974,14 @@
 		2A69C21E2BE57A7B00FE91B0 /* ForaTools */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaTools;
+		};
+		2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceCategoriesBackendV0;
+		};
+		2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LatestPaymentsBackendV3;
 		};
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -26996,10 +27011,6 @@
 		2A783A912B5A87EE0035CEAB /* OTPInputComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OTPInputComponent;
-		};
-		2A79A52A2C8A073400224469 /* PaymentTemplateBackend */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PaymentTemplateBackend;
 		};
 		2A7AB1922AA1065400D37BD6 /* LinkableText */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -27120,10 +27131,6 @@
 		2ADC2E5B2C6EFBF500915F58 /* PayHub */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PayHub;
-		};
-		2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ServiceCategoriesBackend;
 		};
 		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -435,7 +435,7 @@ extension Services.Endpoint {
         serviceName: .getOperatorsListByParam
     )
     
-    static let getAllLatestPayments: Self = .init(
+    static let getAllLatestPaymentsV2: Self = .init(
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getAllLatestPayments

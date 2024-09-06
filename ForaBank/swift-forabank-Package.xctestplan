@@ -421,13 +421,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LatestPaymentsTests",
-        "name" : "LatestPaymentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "UIPrimitivesTests",
         "name" : "UIPrimitivesTests"
       }
@@ -444,20 +437,6 @@
         "containerPath" : "container:",
         "identifier" : "OptionalSelectorComponentTests",
         "name" : "OptionalSelectorComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ServiceCategoriesTests",
-        "name" : "ServiceCategoriesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ServiceCategoriesBackendTests",
-        "name" : "ServiceCategoriesBackendTests"
       }
     },
     {
@@ -491,8 +470,29 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PaymentTemplateBackendTests",
-        "name" : "PaymentTemplateBackendTests"
+        "identifier" : "LatestPaymentsBackendV2Tests",
+        "name" : "LatestPaymentsBackendV2Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentTemplateBackendV3Tests",
+        "name" : "PaymentTemplateBackendV3Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServiceCategoriesBackendV0Tests",
+        "name" : "ServiceCategoriesBackendV0Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsBackendV3Tests",
+        "name" : "LatestPaymentsBackendV3Tests"
       }
     }
   ],

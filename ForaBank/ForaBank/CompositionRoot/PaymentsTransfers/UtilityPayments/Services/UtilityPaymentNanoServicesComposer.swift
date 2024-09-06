@@ -9,7 +9,7 @@ import AnywayPaymentAdapters
 import AnywayPaymentDomain
 import Fetcher
 import Foundation
-import LatestPayments
+import LatestPaymentsBackendV2
 import OperatorsListComponents
 import RemoteServices
 
@@ -97,7 +97,7 @@ private extension UtilityPaymentNanoServicesComposer {
         struct MappingError: Error {}
 
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
-            createRequest: RequestFactory.createGetAllLatestPaymentsRequest(_:),
+            createRequest: RequestFactory.createGetAllLatestPaymentsV2Request(_:),
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestServicePaymentsResponse(_:_:),
             mapOutput: { $0 },

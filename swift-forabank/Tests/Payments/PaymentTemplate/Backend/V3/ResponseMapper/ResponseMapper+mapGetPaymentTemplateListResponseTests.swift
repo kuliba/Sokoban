@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.08.2024.
 //
 
-import PaymentTemplateBackend
+import PaymentTemplateBackendV3
 import RemoteServices
 import XCTest
 

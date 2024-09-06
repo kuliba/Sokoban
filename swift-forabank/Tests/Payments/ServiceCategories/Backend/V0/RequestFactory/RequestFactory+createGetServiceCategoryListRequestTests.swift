@@ -1,15 +1,15 @@
 //
-//  RequestFactory+createGetPaymentTemplateListRequestTests.swift
+//  RequestFactory+createGetServiceCategoryListRequestTests.swift
 //
 //
 //  Created by Igor Malyarov on 13.08.2024.
 //
 
-import PaymentTemplateBackend
+import ServiceCategoriesBackendV0
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createGetPaymentTemplateListRequestTests: XCTestCase {
+final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetURL() throws {
         
@@ -44,6 +44,6 @@ final class RequestFactory_createGetPaymentTemplateListRequestTests: XCTestCase 
         url: URL = anyURL()
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetPaymentTemplateListRequest(url: url)
+        try RequestFactory.createGetServiceCategoryListRequest(url: url)
     }
 }
