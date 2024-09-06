@@ -14,6 +14,10 @@ struct CalendarWrapperView: View {
     
     @ObservedObject var selectedRange: MDateRange
     let closeAction: () -> Void
+    let applyAction: (MDateRange) -> Void
+    let endDateCalendar: Date?
+    
+    let config: CalendarConfig
     
     var body: some View {
         
@@ -42,7 +46,7 @@ struct CalendarWrapperView: View {
                 
                 ZStack {
                     
-                    calendarView()
+                    calendarView(endDate: endDateCalendar)
                         .padding(10)
                     
                     VStack {
@@ -72,9 +76,11 @@ struct CalendarWrapperView: View {
                                     ),
                                     background: .buttonPrimary
                                 ),
-                                action: closeAction
+                                action: {
+                                    applyAction(selectedRange)
+                                }
                             )
-                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
+//                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
                             
                         }
                         .padding(.horizontal, 16)
@@ -89,17 +95,14 @@ struct CalendarWrapperView: View {
 
 private extension CalendarWrapperView {
     
-    func calendarView() -> some View {
+    func calendarView(endDate: Date?) -> some View {
         
         CalendarView(
             nil,
             selectedRange,
             [],
-            {
-                $0
-                    .dayView(RangeSelector.init)
-                    .scrollTo(date: Date())
-            }
+            endDate,
+            config
         )
     }
     
@@ -130,7 +133,7 @@ extension CalendarWrapperView {
     }
 }
 
-struct RangeSelector: DayView {
+struct RangeSelector {
     
     let date: Date
     let isCurrentMonth: Bool
@@ -146,9 +149,60 @@ struct RangeSelector: DayView {
             .opacity(isFuture() ? 0.2 : 1)
             .erased()
     }
+}
+
+extension RangeSelector {
     
     func onSelection() {
         
-        selectDate(date)
+        if !isFuture() {
+            
+            if let lowerDate = selectedRange?.lowerDate,
+               lowerDate.isBetweenStartDate(date.addingTimeInterval(2629800), endDateInclusive: date.addingTimeInterval(-2629800))
+            {
+                
+                selectDate(date)
+            } else if selectedRange?.lowerDate == nil{
+                selectDate(date)
+            } else if selectedRange?.upperDate != nil {
+                selectDate(date)
+            }
+        }
     }
+    
+    func isFuture() -> Bool {
+        date.isLater(.day, than: Date())
+    }
+    
+    func getStringFromDay(format: String) -> String {
+    
+        MDateFormatter.getString(from: date, format: format)
+    }
+    
+    func isSelected() -> Bool {
+        date.isSame(.day, as: selectedDate) || isBeginningOfRange() || isEndOfRange()
+    }
+    
+    func isBeginningOfRange() -> Bool {
+        date.isSame(.day, as: selectedRange?.getRange()?.lowerBound)
+        
+    }
+    
+    func isEndOfRange() -> Bool {
+        date.isSame(.day, as: selectedRange?.getRange()?.upperBound)
+    }
+    
+    func isWithinRange() -> Bool {
+        
+        selectedRange?.isRangeCompleted() == true && selectedRange?.contains(date) == true
+    }
+    
+    func isRangeCompleted() -> Bool { 
+        selectedRange?.upperDate != nil
+    }
+    
+    func contains(_ date: Date) -> Bool { 
+        selectedRange?.getRange()?.contains(date) == true
+    }
+
 }
