@@ -13,5 +13,6 @@ public enum FilterEvent {
     case selectedPeriod(FilterState.Period)
     case selectedTransaction(FilterState.TransactionType)
     case selectedCategory(String)
+    case selectedDates(lowerDate: Date?, upperDate: Date?)
     case clearOptions
 }
