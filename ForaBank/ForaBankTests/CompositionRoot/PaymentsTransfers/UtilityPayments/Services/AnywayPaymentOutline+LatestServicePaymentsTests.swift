@@ -7,7 +7,7 @@
 
 @testable import ForaBank
 import AnywayPaymentDomain
-import LatestPayments
+import LatestPaymentsBackendV2
 import RemoteServices
 
 import XCTest

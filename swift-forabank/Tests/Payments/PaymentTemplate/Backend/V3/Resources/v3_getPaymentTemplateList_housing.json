@@ -1,0 +1,64 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "19975e6eb7a590251afdd00e6fdbc7fa",
+        "templateList": [
+            {
+                "paymentTemplateId": 5920,
+                "name": "ПАО ТНС энерго Ярославль",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 23,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.7,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TNS",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 1,
+                                "fieldvalue": "766440148001"
+                            },
+                            {
+                                "fieldname": "counter",
+                                "fieldid": 2,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterDay",
+                                "fieldid": 3,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterNight",
+                                "fieldid": 4,
+                                "fieldvalue": "12"
+                            },
+                            {
+                                "fieldname": "fine",
+                                "fieldid": 5,
+                                "fieldvalue": "42"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7606052264",
+                "paymentFlow": "STANDARD_FLOW"
+            }
+        ]
+    }
+}
