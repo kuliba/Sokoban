@@ -8,44 +8,6 @@
 import SwiftUI
 import SharedConfigs
 
-struct DefaultDayView: DayView {
-    
-    let date: Date
-    let isCurrentMonth: Bool
-    let selectedDate: Date?
-    let selectedRange: MDateRange?
-    let selectDate: (Date) -> Void
-}
-
-struct DefaultMonthLabel: MonthLabel {
-    let month: Date
-}
-
-struct DefaultWeekdayLabel: WeekdayLabel {
-    let weekday: WeekDay
-}
-
-struct DefaultWeekdaysView: WeekdaysView {}
-
-public protocol DayView: View {
-    // MARK: Attributes
-    var date: Date { get }
-    var isCurrentMonth: Bool { get }
-    var selectedDate: Date? { get }
-    var selectedRange: MDateRange? { get }
-    var selectDate: (Date) -> Void { get }
-
-    // MARK: View Customisation
-    func content() -> AnyView
-    func dayLabel() -> AnyView
-    func selectionView() -> AnyView
-    func rangeSelectionView() -> AnyView
-
-    // MARK: Logic
-    func onAppear()
-    func onSelection()
-}
-
 // MARK: - Default View Implementation
 public extension DayView {
     
@@ -218,12 +180,41 @@ public extension DayView {
 }
 
 // MARK: - Others
-public extension DayView {
-    var body: some View { Group {
-        if isCurrentMonth { bodyForCurrentMonth() }
-        else { bodyForOtherMonth() }
-    }}
+public struct DayView: View {
+    
+    var date: Date
+    var isCurrentMonth: Bool
+    var selectedDate: Date?
+    var selectedRange: MDateRange?
+    var selectDate: (Date) -> Void
+    
+    public init(
+        date: Date,
+        isCurrentMonth: Bool,
+        selectedDate: Date? = nil,
+        selectedRange: MDateRange? = nil,
+        selectDate: @escaping (Date) -> Void
+    ) {
+        self.date = date
+        self.isCurrentMonth = isCurrentMonth
+        self.selectedDate = selectedDate
+        self.selectedRange = selectedRange
+        self.selectDate = selectDate
+    }
+    
+    public var body: some View {
+        
+        Group {
+            
+            if isCurrentMonth {
+                bodyForCurrentMonth()
+            } else {
+                bodyForOtherMonth()
+            }
+        }
+    }
 }
+
 private extension DayView {
     
     func bodyForCurrentMonth() -> some View {
