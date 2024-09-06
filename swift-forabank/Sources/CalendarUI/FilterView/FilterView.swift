@@ -19,17 +19,19 @@ public struct FilterView: View {
     let filterEvent: (Event) -> Void
     let config: Config
     
-    let makeButtonsContainer: () -> ButtonsContainer
+    let makeButtonsContainer: (State) -> ButtonsContainer
     let clearOptionsAction: () -> Void
     let dismissAction: () -> Void
+    let calendarViewAction: () -> Void
     
     public init(
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
-        makeButtonsContainer: @escaping () -> ButtonsContainer,
+        makeButtonsContainer: @escaping (State) -> ButtonsContainer,
         clearOptionsAction: @escaping () -> Void,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        calendarViewAction: @escaping () -> Void
     ) {
         self.state = state
         self.filterEvent = event
@@ -37,6 +39,7 @@ public struct FilterView: View {
         self.makeButtonsContainer = makeButtonsContainer
         self.clearOptionsAction = clearOptionsAction
         self.dismissAction = dismissAction
+        self.calendarViewAction = calendarViewAction
     }
     
     public var body: some View {
@@ -52,11 +55,13 @@ public struct FilterView: View {
             
             PeriodContainer(
                 periods: state.periods,
+                selectedDates: (state.selectDates?.lowerDate, state.selectDates?.upperDate),
                 selectedPeriod: state.selectedPeriod,
                 event: { event in
                     
                     filterEvent(event)
-                }
+                },
+                selectDateAction: calendarViewAction
             )
             
             if !state.services.isEmpty {
@@ -94,7 +99,7 @@ public struct FilterView: View {
             
             Spacer()
             
-            makeButtonsContainer()
+            makeButtonsContainer(state)
         }
         .padding()
     }
@@ -105,8 +110,10 @@ extension FilterView {
     struct PeriodContainer: View {
         
         let periods: [FilterState.Period]
+        let selectedDates: (lowerDate: Date?, upperDate: Date?)?
         var selectedPeriod: FilterState.Period = .month
         let event: (Event) -> Void
+        let selectDateAction: () -> Void
         
         var body: some View {
             
@@ -114,17 +121,44 @@ extension FilterView {
                 
                 ForEach(periods, id: \.self) { period in
                     
-                    Button(action: {
+                    if period == .dates {
                         
-                        event(.selectedPeriod(period))
-                    }) {
+                        Button(action: selectDateAction) {
+                            
+                            if let lowerDate = selectedDates?.lowerDate,
+                               let upperDate = selectedDates?.upperDate {
+                                
+                                Text("\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))")
+                                    .padding()
+                                    .background(Color.gray.opacity(0.2))
+                                    .foregroundColor(Color.black)
+                                    .frame(height: 32)
+                                    .cornerRadius(90)
+                                
+                            } else {
+                                
+                                Text(period.id)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.2))
+                                    .foregroundColor(Color.black)
+                                    .frame(height: 32)
+                                    .cornerRadius(90)
+                            }
+                        }
                         
-                        Text(period.id)
-                            .padding()
-                            .background(selectedPeriod == period ? Color.black : .gray.opacity(0.2))
-                            .foregroundColor(selectedPeriod == period ? Color.white : Color.black)
-                            .frame(height: 32)
-                            .cornerRadius(90)
+                    } else {
+                        Button(action: {
+                            
+                            event(.selectedPeriod(period))
+                        }) {
+                            
+                            Text(period.id)
+                                .padding()
+                                .background(selectedPeriod == period ? Color.black : .gray.opacity(0.2))
+                                .foregroundColor(selectedPeriod == period ? Color.white : Color.black)
+                                .frame(height: 32)
+                                .cornerRadius(90)
+                        }
                     }
                 }
             }
@@ -163,17 +197,17 @@ extension FilterView {
 
 public struct ButtonsContainer: View {
     
-    let dismissAction: () -> Void
+    let applyAction: () -> Void
     let clearOptionsAction: () -> Void
     
     let config: Config
     
     public init(
-        dismissAction: @escaping () -> Void,
+        applyAction: @escaping () -> Void,
         clearOptionsAction: @escaping () -> Void,
         config: Config
     ) {
-        self.dismissAction = dismissAction
+        self.applyAction = applyAction
         self.clearOptionsAction = clearOptionsAction
         self.config = config
     }
@@ -192,7 +226,7 @@ public struct ButtonsContainer: View {
             
             BottomButton(
                 title: config.applyButtonTitle,
-                action: dismissAction,
+                action: applyAction,
                 config: .init(
                     background: .red,
                     foreground: .white
@@ -388,6 +422,7 @@ struct FilterView_Previews: PreviewProvider {
             FilterView(
                 state: .init(
                     title: "Фильтры",
+                    selectDates: nil,
                     selectedServices: [],
                     periods: FilterState.Period.allCases,
                     transactionType: FilterState.TransactionType.allCases,
@@ -438,9 +473,9 @@ struct FilterView_Previews: PreviewProvider {
                         titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
                     )
                 ),
-                makeButtonsContainer: {
+                makeButtonsContainer: { _ in 
                     .init(
-                        dismissAction: {},
+                        applyAction: {},
                         clearOptionsAction: {},
                         config: .init(
                             clearButtonTitle: "Очистить",
@@ -449,7 +484,8 @@ struct FilterView_Previews: PreviewProvider {
                     )
                 },
                 clearOptionsAction: {},
-                dismissAction: {}
+                dismissAction: {},
+                calendarViewAction: {}
             )
         }
     }
