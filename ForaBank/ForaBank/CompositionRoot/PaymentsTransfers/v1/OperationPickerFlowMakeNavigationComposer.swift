@@ -7,7 +7,15 @@
 
 import PayHub
 
-final class OperationPickerFlowMakeNavigationComposer {}
+final class OperationPickerFlowMakeNavigationComposer {
+    
+    private let model: Model
+    
+    init(model: Model) {
+        
+        self.model = model
+    }
+}
 
 extension OperationPickerFlowMakeNavigationComposer {
     
@@ -17,8 +25,15 @@ extension OperationPickerFlowMakeNavigationComposer {
             
             switch element {
             case .exchange:
-                completion(.exchange(.init()))
-            
+                let composer = CurrencyWalletViewModelComposer(model: self.model)
+                let exchange = composer.compose(dismiss: { dispatch(.dismiss) })
+                
+                if let exchange {
+                    completion(.exchange(exchange))
+                } else {
+                    completion(.status(.exchangeFailure))
+                }
+                
             case let .latest(latest):
                 completion(.latest(.init(latest: latest)))
                 

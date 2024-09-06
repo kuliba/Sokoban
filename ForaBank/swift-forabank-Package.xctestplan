@@ -487,6 +487,13 @@
         "identifier" : "GetBannerCatalogListAPITests",
         "name" : "GetBannerCatalogListAPITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentTemplateBackendTests",
+        "name" : "PaymentTemplateBackendTests"
+      }
     }
   ],
   "version" : 1

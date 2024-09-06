@@ -13,10 +13,14 @@ import PayHubUI
 
 final class OperationPickerFlowComposer {
     
+    private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    init(scheduler: AnySchedulerOf<DispatchQueue>) {
-     
+    init(
+        model: Model,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.model = model
         self.scheduler = scheduler
     }
 }
@@ -25,7 +29,7 @@ extension OperationPickerFlowComposer {
     
     func compose() -> OperationPickerFlow {
         
-        let composer = OperationPickerFlowMakeNavigationComposer()
+        let composer = OperationPickerFlowMakeNavigationComposer(model: model)
         
         let reducer = OperationPickerFlowReducer()
         let effectHandler = OperationPickerFlowEffectHandler(

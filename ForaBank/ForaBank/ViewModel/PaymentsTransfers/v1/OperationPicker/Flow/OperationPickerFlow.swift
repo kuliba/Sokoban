@@ -8,19 +8,17 @@
 import PayHub
 import PayHubUI
 
-typealias OperationPickerFlowState = PayHub.OperationPickerFlowState<ExchangeStub, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
-typealias OperationPickerFlowEvent = PayHub.OperationPickerFlowEvent<ExchangeStub, Latest, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
+typealias OperationPickerFlowState = PayHub.OperationPickerFlowState<CurrencyWalletViewModel, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
+typealias OperationPickerFlowEvent = PayHub.OperationPickerFlowEvent<CurrencyWalletViewModel, Latest, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
 typealias OperationPickerFlowEffect = PayHub.OperationPickerFlowEffect<Latest>
 
 typealias OperationPickerElement = PayHub.OperationPickerElement<Latest>
-typealias OperationPickerNavigation = PayHub.OperationPickerNavigation<ExchangeStub, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
+typealias OperationPickerNavigation = PayHub.OperationPickerNavigation<CurrencyWalletViewModel, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
 
 typealias OperationPickerFlowReducer = PayHub.PickerFlowReducer<OperationPickerElement, OperationPickerNavigation>
 typealias OperationPickerFlowEffectHandler = PayHub.PickerFlowEffectHandler<OperationPickerElement, OperationPickerNavigation>
 
-typealias OperationPickerFlow = PayHubUI.OperationPickerFlow<ExchangeStub, Latest, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
-
-final class ExchangeStub {}
+typealias OperationPickerFlow = PayHubUI.OperationPickerFlow<CurrencyWalletViewModel, Latest, LatestFlowStub, OperationPickerFlowStatus, TemplatesStub>
 
 final class LatestFlowStub {
     
@@ -37,4 +35,5 @@ final class TemplatesStub {}
 enum OperationPickerFlowStatus: Equatable {
     
     case main
+    case exchangeFailure
 }

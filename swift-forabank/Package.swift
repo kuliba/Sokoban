@@ -31,6 +31,7 @@ let package = Package(
         .latestPayments,
         .serviceCategories,
         .serviceCategoriesBackend,
+        .paymentTemplateBackend,
         .payHub,
         .payHubUI,
         .utilityPayment,
@@ -139,6 +140,8 @@ let package = Package(
         .serviceCategoriesTests,
         .serviceCategoriesBackend,
         .serviceCategoriesBackendTests,
+        .paymentTemplateBackend,
+        .paymentTemplateBackendTests,
         .payHub,
         .payHubTests,
         .payHubUI,
@@ -632,6 +635,13 @@ private extension Product {
         name: .serviceCategoriesBackend,
         targets: [
             .serviceCategoriesBackend,
+        ]
+    )
+
+    static let paymentTemplateBackend = library(
+        name: .paymentTemplateBackend,
+        targets: [
+            .paymentTemplateBackend,
         ]
     )
 
@@ -1263,6 +1273,26 @@ private extension Target {
             .remoteServices,
         ],
         path: "Tests/Payments/\(String.serviceCategoriesBackendTests)"
+    )
+    
+    static let paymentTemplateBackend = target(
+        name: .paymentTemplateBackend,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/\(String.paymentTemplateBackend)"
+    )
+    static let paymentTemplateBackendTests = testTarget(
+        name: .paymentTemplateBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .paymentTemplateBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/\(String.paymentTemplateBackendTests)"
     )
     
     static let payHub = target(
@@ -2765,6 +2795,10 @@ private extension Target.Dependency {
         name: .serviceCategoriesBackend
     )
 
+    static let paymentTemplateBackend = byName(
+        name: .paymentTemplateBackend
+    )
+
     static let payHub = byName(
         name: .payHub
     )
@@ -3050,6 +3084,9 @@ private extension String {
 
     static let serviceCategoriesBackend = "ServiceCategoriesBackend"
     static let serviceCategoriesBackendTests = "ServiceCategoriesBackendTests"
+
+    static let paymentTemplateBackend = "PaymentTemplateBackend"
+    static let paymentTemplateBackendTests = "PaymentTemplateBackendTests"
 
     static let payHub = "PayHub"
     static let payHubTests = "PayHubTests"

@@ -339,6 +339,7 @@ extension RootViewModelFactory {
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
+            model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(

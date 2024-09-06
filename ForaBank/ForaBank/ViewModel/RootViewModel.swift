@@ -613,6 +613,7 @@ extension PaymentsTransfersPersonal {
             flowHasDestination
         )
         .map { $0 || $1 || $2 || $3 }
+        .handleEvents(receiveOutput: { print("=== has destination", $0)})
         .eraseToAnyPublisher()
     }
 }
@@ -634,10 +635,13 @@ private extension OperationPickerBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
-       // flow.$state.map(\.hasDestination)
-        Just(false)
-        .eraseToAnyPublisher()
+        flow.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
+}
+
+private extension PickerFlowState {
+    
+    var hasDestination: Bool { navigation != nil }
 }
 
 private extension PaymentsTransfersPersonalToolbarBinder {
