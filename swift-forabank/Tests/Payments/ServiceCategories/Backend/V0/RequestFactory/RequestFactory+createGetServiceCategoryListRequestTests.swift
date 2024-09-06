@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.08.2024.
 //
 
-import ServiceCategoriesBackend
+import ServiceCategoriesBackendV0
 import RemoteServices
 import XCTest
 

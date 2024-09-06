@@ -442,20 +442,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ServiceCategoriesTests",
-        "name" : "ServiceCategoriesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ServiceCategoriesBackendTests",
-        "name" : "ServiceCategoriesBackendTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "GetProductListByTypeV6ServiceTests",
         "name" : "GetProductListByTypeV6ServiceTests"
       }
@@ -493,6 +479,13 @@
         "containerPath" : "container:",
         "identifier" : "PaymentTemplateBackendV3Tests",
         "name" : "PaymentTemplateBackendV3Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServiceCategoriesBackendV0Tests",
+        "name" : "ServiceCategoriesBackendV0Tests"
       }
     }
   ],

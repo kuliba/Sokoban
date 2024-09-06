@@ -1071,6 +1071,7 @@
 		2A6EAAA22B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA12B506EEB0093EE83 /* FastPaymentsSettingsReducer+preview.swift */; };
 		2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */; };
 		2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */; };
+		2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */; };
@@ -1602,7 +1603,6 @@
 		2AE5973429F918C30083F138 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973329F918C30083F138 /* Preview Assets.xcassets */; };
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
 		2AE838E52C6B3A6B009E1E39 /* RequestFactory+createGetServiceCategoryListRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838E42C6B3A6B009E1E39 /* RequestFactory+createGetServiceCategoryListRequestTests.swift */; };
-		2AE838E72C6B3BDB009E1E39 /* ServiceCategoriesBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */; };
 		2AE838EA2C6B3F61009E1E39 /* RequestFactory+createGetServiceCategoryListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838E92C6B3F61009E1E39 /* RequestFactory+createGetServiceCategoryListRequest.swift */; };
 		2AE838ED2C6B4069009E1E39 /* NanoServices+makeGetServiceCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838EC2C6B4069009E1E39 /* NanoServices+makeGetServiceCategoryList.swift */; };
 		2AE838F22C6B415E009E1E39 /* NanoServices+makeGetServiceCategoryListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE838F12C6B415E009E1E39 /* NanoServices+makeGetServiceCategoryListTests.swift */; };
@@ -6948,7 +6948,6 @@
 				8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */,
-				2AE838E72C6B3BDB009E1E39 /* ServiceCategoriesBackend in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
 				2AB9E0B92B371E0C00D36D07 /* PaymentComponents in Frameworks */,
@@ -6987,6 +6986,7 @@
 				2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */,
 				D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
+				2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */,
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
@@ -18309,13 +18309,13 @@
 				2A9CB0802BEFC2CB00DA5EF3 /* UtilityServicePrepayment */,
 				832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */,
 				2A07B2092C6524B40021B594 /* SelectorComponents */,
-				2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */,
 				8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */,
 				2AF720222C74841D00919CAF /* PayHub */,
 				2AF720242C74841D00919CAF /* PayHubUI */,
 				83C918162C86D74C00037C11 /* GetBannerCatalogListAPI */,
 				2A3E48702C8AB878002D035F /* LatestPaymentsBackendV2 */,
 				2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */,
+				2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -26972,6 +26972,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaTools;
 		};
+		2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceCategoriesBackendV0;
+		};
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TransferPublicKey;
@@ -27120,10 +27124,6 @@
 		2ADC2E5B2C6EFBF500915F58 /* PayHub */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PayHub;
-		};
-		2AE838E62C6B3BDB009E1E39 /* ServiceCategoriesBackend */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ServiceCategoriesBackend;
 		};
 		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
 			isa = XCSwiftPackageProductDependency;
