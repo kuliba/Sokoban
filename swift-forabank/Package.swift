@@ -29,6 +29,7 @@ let package = Package(
         // Payments
         .anywayPayment,
         .latestPaymentsBackendV2,
+        .latestPaymentsBackendV3,
         .serviceCategoriesBackendV0,
         .paymentTemplateBackendV3,
         .payHub,
@@ -135,6 +136,8 @@ let package = Package(
         .anywayPaymentUITests,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV2Tests,
+        .latestPaymentsBackendV3,
+        .latestPaymentsBackendV3Tests,
         .serviceCategoriesBackendV0,
         .serviceCategoriesBackendV0Tests,
         .paymentTemplateBackendV3,
@@ -618,6 +621,13 @@ private extension Product {
         name: .latestPaymentsBackendV2,
         targets: [
             .latestPaymentsBackendV2,
+        ]
+    )
+    
+    static let latestPaymentsBackendV3 = library(
+        name: .latestPaymentsBackendV3,
+        targets: [
+            .latestPaymentsBackendV3,
         ]
     )
     
@@ -1226,6 +1236,26 @@ private extension Target {
             .remoteServices,
         ],
         path: "Tests/Payments/LatestPayments/Backend/V2"
+    )
+    
+    static let latestPaymentsBackendV3 = target(
+        name: .latestPaymentsBackendV3,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/LatestPayments/Backend/V3"
+    )
+    static let latestPaymentsBackendV3Tests = testTarget(
+        name: .latestPaymentsBackendV3Tests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .latestPaymentsBackendV3,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/LatestPayments/Backend/V3"
     )
     
     static let serviceCategoriesBackendV0 = target(
@@ -2766,6 +2796,10 @@ private extension Target.Dependency {
         name: .latestPaymentsBackendV2
     )
     
+    static let latestPaymentsBackendV3 = byName(
+        name: .latestPaymentsBackendV3
+    )
+    
     static let serviceCategoriesBackendV0 = byName(
         name: .serviceCategoriesBackendV0
     )
@@ -3053,6 +3087,9 @@ private extension String {
     
     static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
     static let latestPaymentsBackendV2Tests = "LatestPaymentsBackendV2Tests"
+    
+    static let latestPaymentsBackendV3 = "LatestPaymentsBackendV3"
+    static let latestPaymentsBackendV3Tests = "LatestPaymentsBackendV3Tests"
     
     static let serviceCategoriesBackendV0 = "ServiceCategoriesBackendV0"
     static let serviceCategoriesBackendV0Tests = "ServiceCategoriesBackendV0Tests"

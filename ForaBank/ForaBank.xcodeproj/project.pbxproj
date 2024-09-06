@@ -1072,6 +1072,7 @@
 		2A6EAAA42B50759A0093EE83 /* UserPaymentSettings+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA32B50759A0093EE83 /* UserPaymentSettings+ext.swift */; };
 		2A6EAAAA2B5106670093EE83 /* FPSPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAAA92B5106670093EE83 /* FPSPrototypeView.swift */; };
 		2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */; };
+		2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */ = {isa = PBXBuildFile; productRef = 2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A70901A2B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7090192B6D3EEB00224359 /* NanoServices+makeDecoratedGetBankDefault.swift */; };
@@ -7013,6 +7014,7 @@
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
 				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
+				2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
 				2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */,
@@ -18316,6 +18318,7 @@
 				2A3E48702C8AB878002D035F /* LatestPaymentsBackendV2 */,
 				2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */,
 				2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */,
+				2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -26975,6 +26978,10 @@
 		2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceCategoriesBackendV0;
+		};
+		2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LatestPaymentsBackendV3;
 		};
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;

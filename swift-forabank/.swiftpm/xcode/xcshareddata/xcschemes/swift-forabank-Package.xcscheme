@@ -812,34 +812,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ServiceCategories"
-               BuildableName = "ServiceCategories"
-               BlueprintName = "ServiceCategories"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ServiceCategoriesBackend"
-               BuildableName = "ServiceCategoriesBackend"
-               BlueprintName = "ServiceCategoriesBackend"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "GetProductListByTypeV6Service"
                BuildableName = "GetProductListByTypeV6Service"
                BlueprintName = "GetProductListByTypeV6Service"

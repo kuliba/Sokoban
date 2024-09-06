@@ -499,6 +499,13 @@
         "identifier" : "ServiceCategoriesBackendV0Tests",
         "name" : "ServiceCategoriesBackendV0Tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsBackendV3Tests",
+        "name" : "LatestPaymentsBackendV3Tests"
+      }
     }
   ],
   "version" : 1
