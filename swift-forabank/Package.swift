@@ -1242,6 +1242,7 @@ private extension Target {
         name: .latestPaymentsBackendV3,
         dependencies: [
             // internal modules
+            .foraTools,
             .remoteServices,
         ],
         path: "Sources/Payments/LatestPayments/Backend/V3"
