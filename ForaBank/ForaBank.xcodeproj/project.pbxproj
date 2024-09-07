@@ -842,6 +842,7 @@
 		2A5871642A335E9E0059D4B6 /* AvtodorCrutchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */; };
 		2A58BC1D2C8C127200D688C1 /* RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58BC1C2C8C127200D688C1 /* RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift */; };
 		2A58BC202C8C151400D688C1 /* RequestFactory+createGetAllLatestPaymentsV3Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58BC1E2C8C131F00D688C1 /* RequestFactory+createGetAllLatestPaymentsV3Request.swift */; };
+		2A58BC222C8C21E100D688C1 /* RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58BC212C8C21E100D688C1 /* RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift */; };
 		2A58FA9F2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FA9E2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift */; };
 		2A58FAA12AD6FB4800BD1967 /* Services+EndpointShowCVVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAA02AD6FB4800BD1967 /* Services+EndpointShowCVVTests.swift */; };
 		2A58FAA32AD6FD4B00BD1967 /* Services_EndpointChangePINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAA22AD6FD4B00BD1967 /* Services_EndpointChangePINTests.swift */; };
@@ -4256,6 +4257,7 @@
 		2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvtodorCrutchView.swift; sourceTree = "<group>"; };
 		2A58BC1C2C8C127200D688C1 /* RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift"; sourceTree = "<group>"; };
 		2A58BC1E2C8C131F00D688C1 /* RequestFactory+createGetAllLatestPaymentsV3Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsV3Request.swift"; sourceTree = "<group>"; };
+		2A58BC212C8C21E100D688C1 /* RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift"; sourceTree = "<group>"; };
 		2A58FA9E2AD6F45100BD1967 /* Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+EndpointProcessPublicKeyAuthenticationRequestTests.swift"; sourceTree = "<group>"; };
 		2A58FAA02AD6FB4800BD1967 /* Services+EndpointShowCVVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+EndpointShowCVVTests.swift"; sourceTree = "<group>"; };
 		2A58FAA22AD6FD4B00BD1967 /* Services_EndpointChangePINTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services_EndpointChangePINTests.swift; sourceTree = "<group>"; };
@@ -12390,6 +12392,7 @@
 			isa = PBXGroup;
 			children = (
 				2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */,
+				2A58BC212C8C21E100D688C1 /* RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift */,
 			);
 			path = LoadLatestOperations;
 			sourceTree = "<group>";
@@ -21912,6 +21915,7 @@
 				C1C315E92C2DB8A0005C2BF8 /* HistoryReducerTests.swift in Sources */,
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
 				C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */,
+				2A58BC222C8C21E100D688C1 /* RootViewModelFactory+makeLoadLatestOperationsStringAPITests.swift in Sources */,
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
 				C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift in Sources */,
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,

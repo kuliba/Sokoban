@@ -334,7 +334,7 @@ extension RootViewModelFactory {
         
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,
-            getLatestPayments: NanoServices.getLatestPayments
+            getLatestPayments: NanoServices.getLatestPayments(categoryNames:completion:)
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         
