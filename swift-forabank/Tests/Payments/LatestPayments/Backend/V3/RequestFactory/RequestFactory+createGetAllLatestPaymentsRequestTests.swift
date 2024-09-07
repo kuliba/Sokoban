@@ -60,14 +60,16 @@ final class RequestFactory_createGetAllLatestPaymentsRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetNilHTTPBodyWithOneParameter() throws {
         
-        let request = try createRequest(parameters: [anyMessage()])
-        
+        let parameters = [anyMessage()]
+        let request = try createRequest(parameters: parameters)
+
         XCTAssertNil(request.httpBody)
     }
     
     func test_createRequest_shouldSetNilHTTPBodyWithTwoParameters() throws {
         
-        let request = try createRequest(parameters: [anyMessage(), anyMessage()])
+        let parameters = [anyMessage(), anyMessage()]
+        let request = try createRequest(parameters: parameters)
         
         XCTAssertNil(request.httpBody)
     }
