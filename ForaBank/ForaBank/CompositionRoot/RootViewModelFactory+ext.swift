@@ -332,9 +332,13 @@ extension RootViewModelFactory {
             }
         }
         
+        let getLatestPayments = NanoServices.makeGetAllLatestPaymentsV3Stringly(
+            httpClient: httpClient,
+            log: logger.log
+        )
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,
-            getLatestPayments: NanoServices.getLatestPayments(categoryNames:completion:)
+            getLatestPayments: getLatestPayments
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         

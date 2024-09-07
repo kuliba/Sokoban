@@ -45,20 +45,20 @@ extension RootViewModelFactory {
                 
                 switch categorySet {
                 case .all:
-                    getAllLoadedCategories { list in
+                    getAllLoadedCategories { categories in
 #warning("add hardcoded: В данный момент блок “Перевести” не динамичен, поэтому последние операции для него, пока вызываем с фронта по типам: isOutsidePayments (за рубеж) и isPhonePayments (По номеру телефона)")
-                        getLatestPayments(list.compactMap(\.latestPaymentsCategoryName) + hardcoded, completion)
+                        getLatestPayments(categories.compactMap(\.latestPaymentsCategoryName) + hardcoded, completion)
                     }
                     
-                case let .list(list):
-                    getLatestPayments(list.compactMap(\.latestPaymentsCategoryName), completion)
+                case let .list(categories):
+                    getLatestPayments(categories.compactMap(\.latestPaymentsCategoryName), completion)
                 }
             }
         }
     }
 }
 
-private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse.Category {
+extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse.Category {
     
     var latestPaymentsCategoryName: String? {
         

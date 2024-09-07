@@ -7,10 +7,12 @@
 
 import Foundation
 import PayHub
+import LatestPaymentsBackendV3
 import PayHubUI
+import RemoteServices
 import RxViewModel
 
-typealias Latest = UtilityPaymentLastPayment
+typealias Latest = RemoteServices.ResponseMapper.LatestPayment
 
 typealias OperationPickerState = PayHubUI.OperationPickerState<Latest>
 typealias OperationPickerEvent = PayHubUI.OperationPickerEvent<Latest>

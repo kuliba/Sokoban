@@ -382,7 +382,20 @@ private extension RootView {
     }
 }
 
-extension Latest: Named {}
+extension Latest: Named {
+    
+    public var name: String {
+        
+        switch self {
+        case let .service(service):
+            return service.name ?? String(describing: service)
+            
+        case let .withPhone(withPhone):
+            return withPhone.name ?? String(describing: withPhone)
+        }
+    }
+}
+
 extension ServiceCategory: Named {}
 
 extension View {
