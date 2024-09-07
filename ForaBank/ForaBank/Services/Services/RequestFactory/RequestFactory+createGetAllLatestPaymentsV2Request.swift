@@ -1,5 +1,5 @@
 //
-//  RequestFactory+getAllLatestPaymentsV2.swift
+//  RequestFactory+createGetAllLatestPaymentsV2Request.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 13.05.2024.
