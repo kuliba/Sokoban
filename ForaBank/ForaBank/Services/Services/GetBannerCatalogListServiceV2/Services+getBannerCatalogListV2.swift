@@ -8,7 +8,6 @@
 import Foundation
 import GenericRemoteService
 import GetBannerCatalogListAPI
-import AnywayPaymentBackend
 
 extension Services {
     
@@ -54,7 +53,7 @@ extension Services {
     }    
 }
 
-private extension BannerCatalogListData {
+extension BannerCatalogListData {
     
     init(_ data: GetBannerCatalogListResponse.Item) {
         
@@ -69,7 +68,7 @@ private extension BannerCatalogListData {
     }
 }
 
-private extension GetBannerCatalogListResponse.BannerAction {
+extension GetBannerCatalogListResponse.BannerAction {
     
     var bannerAction: BannerAction? {
         
@@ -91,44 +90,4 @@ private extension GetBannerCatalogListResponse.BannerAction {
             return BannerActionLanding(target: target)
         }
     }
-}
-
-extension NanoServices {
-    
-    typealias GetBannerCatalogListV1Response = ServerCommands.DictionaryController.GetBannerCatalogList.Response.BannerCatalogData
-
-    typealias GetBannersCategoryListResult = Result<GetBannerCatalogListV1Response, ServiceFailure>
-    typealias GetBannersCategoryListCompletion = (GetBannersCategoryListResult) -> Void
-    typealias GetBannersCategoryList = ((String?, TimeInterval), @escaping GetBannersCategoryListCompletion) -> Void
-
-    static func makeGetBannerCatalogListV2(
-        httpClient: HTTPClient,
-        log: @escaping (String, StaticString, UInt) -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> GetBannersCategoryList {
-        
-        adaptedLoggingFetch(
-            createRequest: RequestFactory.createGetBannerCatalogListV2Request,
-            httpClient: httpClient,
-            mapResponse: GetBannerCatalogListAPI.ResponseMapper.mapGetBannerCatalogListResponse,
-            mapOutput: mapGetBannerCatalogListResponse,
-            mapError: ServiceFailure.init,
-            log: log,
-            file: file,
-            line: line
-        )
-    }
-    
-    static func mapGetBannerCatalogListResponse(
-        _ response: GetBannerCatalogListResponse
-    ) -> GetBannerCatalogListV1Response {
-        
-        .init(
-            bannerCatalogList: response.bannerCatalogList.map {
-                .init($0)
-        },
-            serial: response.serial ?? "")
-    }
-
 }
