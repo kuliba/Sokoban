@@ -14,7 +14,6 @@ import SberQR
 import SwiftUI
 import PayHub
 import Fetcher
-import PayHubUI
 
 extension RootViewModelFactory {
     
@@ -331,12 +330,12 @@ extension RootViewModelFactory {
             }
         )
        
-        let loadBannersList: LoadBannersCategories = { completion in
+        let loadBannersList: LoadBanners = { completion in
             
             bannerListDecorated.load {
                 
                 let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
-                completion(banners.bannerCatalogList.map { .category($0)})
+                completion(banners.bannerCatalogList.map { .banner($0)})
             }
         }
         

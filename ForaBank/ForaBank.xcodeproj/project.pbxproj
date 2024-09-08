@@ -2725,6 +2725,7 @@
 		838C09232C8B59C400E894AC /* ItemsWithSerial+BannersData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C091F2C8B59C400E894AC /* ItemsWithSerial+BannersData.swift */; };
 		838C09242C8B59C400E894AC /* NanoServices+makeGetBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09202C8B59C400E894AC /* NanoServices+makeGetBannersList.swift */; };
 		838C09252C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */; };
+		838C09602C8DD9E700E894AC /* Banners in Frameworks */ = {isa = PBXBuildFile; productRef = 838C095F2C8DD9E700E894AC /* Banners */; };
 		839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */; };
 		839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */; };
 		8391092A2C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */; };
@@ -7023,6 +7024,7 @@
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
+				838C09602C8DD9E700E894AC /* Banners in Frameworks */,
 				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
 				2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
@@ -18351,6 +18353,7 @@
 				2A3E48722C8ABCF3002D035F /* PaymentTemplateBackendV3 */,
 				2A6ECBAB2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 */,
 				2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */,
+				838C095F2C8DD9E700E894AC /* Banners */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -27283,6 +27286,10 @@
 		837F82E42A3B271C003544BB /* PickerWithPreviewComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PickerWithPreviewComponent;
+		};
+		838C095F2C8DD9E700E894AC /* Banners */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Banners;
 		};
 		8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */ = {
 			isa = XCSwiftPackageProductDependency;

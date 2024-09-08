@@ -5,10 +5,10 @@
 //  Created by Andryusina Nataly on 05.09.2024.
 //
 
-import PayHubUI
+import Banners
 
-typealias LoadBannersCompletion = ([CategoryPickerSectionItem<BannerCatalogListData>]) -> Void
-typealias LoadBannersCategories = (@escaping LoadBannersCompletion) -> Void
+typealias LoadBannersCompletion = ([BannerPickerSectionItem<BannerCatalogListData>]) -> Void
+typealias LoadBanners = (@escaping LoadBannersCompletion) -> Void
 
 extension RootViewModelFactory {
     
