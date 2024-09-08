@@ -1,0 +1,567 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": [
+        {
+            "paymentDate": "06.09.2024 09:14:33",
+            "date": 1725603273000,
+            "paymentOperationDetailType": "INTERNET",
+            "type": "internet",
+            "currencyAmount": "RUB",
+            "puref": "iFora||CTV",
+            "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+            "name": "АКАДО Телеком",
+            "paymentFlow": "STANDARD_FLOW",
+            "amount": 25.50,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "P1",
+                    "fieldValue": "33694934",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "06.09.2024 08:50:28",
+            "date": 1725601828000,
+            "paymentOperationDetailType": "HOUSING_AND_COMMUNAL_SERVICE",
+            "type": "service",
+            "currencyAmount": "RUB",
+            "puref": "iFora||TNS",
+            "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+            "name": "ПАО ТНС энерго Ярославль",
+            "paymentFlow": "STANDARD_FLOW",
+            "amount": 12.70,
+            "lpName": null,
+            "inn": "7606052264",
+            "additionalList": [
+                {
+                    "fieldName": "account",
+                    "fieldValue": "766440148001",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "counter",
+                    "fieldValue": "97",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "counterDay",
+                    "fieldValue": "97",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "counterNight",
+                    "fieldValue": "12",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "fine",
+                    "fieldValue": "42",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "06.09.2024 08:47:28",
+            "date": 1725601648000,
+            "paymentOperationDetailType": "HOUSING_AND_COMMUNAL_SERVICE",
+            "type": "service",
+            "currencyAmount": "RUB",
+            "puref": "iFora||KSK",
+            "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
+            "name": "ПАО Калужская сбытовая компания",
+            "paymentFlow": "STANDARD_FLOW",
+            "amount": 12.50,
+            "lpName": null,
+            "inn": "4029030252",
+            "additionalList": [
+                {
+                    "fieldName": "account",
+                    "fieldValue": "110110580",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "03.09.2024 10:03:04",
+            "date": 1725346984000,
+            "paymentOperationDetailType": "TRANSPORT",
+            "type": "transport",
+            "currencyAmount": "RUB",
+            "puref": "iFora||AVDD",
+            "md5hash": "425e86123a5415c2ada1770b9e4abf1b",
+            "name": "Автодор Платные дороги (по договору)",
+            "paymentFlow": "TRANSPORT",
+            "amount": 11.50,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "P1",
+                    "fieldValue": "161807",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "30.08.2024 16:15:35",
+            "date": 1725023735000,
+            "paymentOperationDetailType": "TAX_AND_STATE_SERVICE",
+            "type": "taxAndStateService",
+            "currencyAmount": "RUB",
+            "puref": "iFora||6273",
+            "md5hash": "c2f4632ed9ee1b5cbd4fdaed5146e464",
+            "name": "ФНС",
+            "paymentFlow": "TAX_AND_STATE_SERVICE",
+            "amount": 56.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_divisionSelect_2_1",
+                    "fieldValue": "inn_oktmo",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_OKTMO_5_1",
+                    "fieldValue": "45390000",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_dutyCategory_1_1",
+                    "fieldValue": "3",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_categorySelect_3_1",
+                    "fieldValue": "44",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_INN_4_1",
+                    "fieldValue": "7723013452",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_address_2_2",
+                    "fieldValue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_fio_1_2",
+                    "fieldValue": "Пыркова Дарья Владимировна",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_docValue_4_2",
+                    "fieldValue": "183472137431",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_docType_3_2",
+                    "fieldValue": "2",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "30.08.2024 15:48:37",
+            "date": 1725022117000,
+            "paymentOperationDetailType": "TAX_AND_STATE_SERVICE",
+            "type": "taxAndStateService",
+            "currencyAmount": "RUB",
+            "puref": "iFora||7069",
+            "md5hash": "c2f4632ed9ee1b5cbd4fdaed5146e464",
+            "name": "ФНС по УИН",
+            "paymentFlow": "TAX_AND_STATE_SERVICE",
+            "amount": 5000.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_BillNumber_1_1",
+                    "fieldValue": "18201800230035226326",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_fio_4_1",
+                    "fieldValue": "Пыркова Дарья Владимировна",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_address_10_1",
+                    "fieldValue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "30.08.2024 15:44:08",
+            "date": 1725021848000,
+            "paymentOperationDetailType": "MOBILE",
+            "type": "mobile",
+            "currencyAmount": "RUB",
+            "puref": "iFora||6169",
+            "md5hash": "7e1147647a46c258f89e4ce92b1937c3",
+            "name": "Тинькофф Мобайл",
+            "paymentFlow": "MOBILE",
+            "amount": 63.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_PERSONAL_ACCOUNT_1_1",
+                    "fieldValue": "9955082827",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "30.08.2024 15:41:49",
+            "date": 1725021709000,
+            "paymentOperationDetailType": "MOBILE",
+            "type": "mobile",
+            "currencyAmount": "RUB",
+            "puref": "iFora||4285",
+            "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+            "name": "Билайн",
+            "paymentFlow": "MOBILE",
+            "amount": 54.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_NUMBER_1_2",
+                    "fieldValue": "9031115311",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "28.08.2024 15:06:12",
+            "date": 1724846772395,
+            "paymentOperationDetailType": "CHARITY_SERVICE",
+            "type": "charity",
+            "currencyAmount": "RUB",
+            "puref": "iFora||8084",
+            "name": "БФ «Подари Надежду»",
+            "paymentFlow": "STANDARD_FLOW",
+            "amount": 123.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_COMMENT_2_1",
+                    "fieldValue": "",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "a3_SUM_3_1",
+                    "fieldValue": "123",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "27.08.2024 16:25:18",
+            "date": 1724765118307,
+            "paymentOperationDetailType": "SOCIAL_AND_GAMES_SERVICE",
+            "type": "socialAndGames",
+            "currencyAmount": "RUB",
+            "puref": "iFora||7994",
+            "name": "Xbox",
+            "paymentFlow": "STANDARD_FLOW",
+            "amount": 10.00,
+            "lpName": null,
+            "additionalList": [
+                {
+                    "fieldName": "a3_PERSONAL_ACCOUNT_1_2",
+                    "fieldValue": "kvna0908@gmail.com",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "19.08.2024 11:08:49",
+            "date": 1724054929000,
+            "paymentOperationDetailType": "SFP",
+            "type": "phone",
+            "currencyAmount": "RUB",
+            "puref": "iFora||TransferC2CSTEP",
+            "phoneNumber": "0079191619658",
+            "bankName": "Пир Банк",
+            "bankId": "1crt88888881",
+            "amount": "16.8"
+        },
+        {
+            "paymentDate": "31.07.2024 11:27:05",
+            "date": 1722414425000,
+            "paymentOperationDetailType": "SFP",
+            "type": "phone",
+            "currencyAmount": "RUB",
+            "puref": "iFora||TransferC2CSTEP",
+            "phoneNumber": "0070115110217",
+            "bankName": "Пир Банк",
+            "bankId": "1crt88888881",
+            "amount": "21"
+        },
+        {
+            "paymentDate": "30.07.2024 17:43:12",
+            "date": 1722350592000,
+            "paymentOperationDetailType": "NEW_DIRECT",
+            "type": "outside",
+            "currencyAmount": "RUB",
+            "puref": "iFora||MIG",
+            "md5hash": "2dab5e994b3925a213dd63bffcc948ab",
+            "amount": 201.00,
+            "lpName": "37496127188",
+            "additionalList": [
+                {
+                    "fieldName": "trnPickupPoint",
+                    "fieldValue": "AM",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "DIRECT_BANKS",
+                    "fieldValue": "iFora||TransferEvocaClient12",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "RECP",
+                    "fieldValue": "37496127188",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "##CURR",
+                    "fieldValue": "RUB",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "30.07.2024 16:25:51",
+            "date": 1722345951000,
+            "paymentOperationDetailType": "CARD_2_PHONE",
+            "type": "phone",
+            "currencyAmount": "RUB",
+            "puref": null,
+            "phoneNumber": "9636124249",
+            "bankName": "Фора-Банк",
+            "bankId": "100000000217",
+            "amount": "100.00"
+        },
+        {
+            "paymentDate": "26.06.2024 16:24:23",
+            "date": 1719408263000,
+            "paymentOperationDetailType": "ACCOUNT_2_PHONE",
+            "type": "phone",
+            "currencyAmount": "RUB",
+            "puref": null,
+            "phoneNumber": "9191619658",
+            "bankName": "Фора-Банк",
+            "bankId": "100000000217",
+            "amount": "11.11"
+        },
+        {
+            "paymentDate": "18.06.2024 13:52:16",
+            "date": 1718707936000,
+            "paymentOperationDetailType": "CARD_2_PHONE",
+            "type": "phone",
+            "currencyAmount": "RUB",
+            "puref": null,
+            "phoneNumber": "9636188169",
+            "bankName": "Фора-Банк",
+            "bankId": "100000000217",
+            "amount": "10.00"
+        },
+        {
+            "paymentDate": "12.03.2024 17:36:27",
+            "date": 1710254187000,
+            "paymentOperationDetailType": "FOREIGN_CARD",
+            "type": "outside",
+            "currencyAmount": "RUB",
+            "puref": "iFora||PW0",
+            "md5hash": "b13bd87d1ed9cfa7aefff0c57e50ec30",
+            "amount": 50.00,
+            "lpName": "••• 3339",
+            "additionalList": [
+                {
+                    "fieldName": "trnPickupPoint",
+                    "fieldValue": "KZ",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "P1",
+                    "fieldValue": "4400430261723339",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "RECFIO",
+                    "fieldValue": "ffh",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "##CURR",
+                    "fieldValue": "RUB",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        },
+        {
+            "paymentDate": "04.03.2024 18:43:57",
+            "date": 1709567037000,
+            "paymentOperationDetailType": "ADDRESSLESS",
+            "type": "outside",
+            "currencyAmount": "RUB",
+            "puref": "iFora||Addressless",
+            "md5hash": "b45eaff714d0f06242e705c494269df8",
+            "amount": 103.02,
+            "lpName": "fvh tfjyg",
+            "additionalList": [
+                {
+                    "fieldName": "trnPickupPoint",
+                    "fieldValue": "AB",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "bSurName",
+                    "fieldValue": "",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "bName",
+                    "fieldValue": "fvh",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "bLastName",
+                    "fieldValue": "tfjyg",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "payee_fio",
+                    "fieldValue": "fvh tfjyg  ",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                },
+                {
+                    "fieldName": "CURR",
+                    "fieldValue": "RUB",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        }
+    ]
+}

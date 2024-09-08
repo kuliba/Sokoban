@@ -1268,7 +1268,10 @@ private extension Target {
             .latestPaymentsBackendV3,
             .remoteServices,
         ],
-        path: "Tests/Payments/LatestPayments/Backend/V3"
+        path: "Tests/Payments/LatestPayments/Backend/V3",
+        resources: [
+            .copy("Resources/v3_getAllLatestPayments.json")
+        ]
     )
     
     static let serviceCategoriesBackendV0 = target(
