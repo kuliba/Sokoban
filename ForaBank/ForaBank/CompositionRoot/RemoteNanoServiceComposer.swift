@@ -51,10 +51,12 @@ extension RemoteNanoServiceComposer {
     
     func compose<Payload, Response>(
         createRequest: @escaping (Payload) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Response, Error>
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Response, Error>,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> NanoService<Payload, Response, Error> {
         
-        compose(createRequest: createRequest, mapResponse: mapResponse, mapError: { $0 })
+        compose(createRequest: createRequest, mapResponse: mapResponse, mapError: { $0 }, file: file, line: line)
     }
 }
 
@@ -87,9 +89,11 @@ extension RemoteNanoServiceComposer {
     
     func compose<Response>(
         createRequest: @escaping () throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Response, Error>
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Response, Error>,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> VoidNanoService<Response, Error> {
         
-        compose(createRequest: createRequest, mapResponse: mapResponse, mapError: { $0 })
+        compose(createRequest: createRequest, mapResponse: mapResponse, mapError: { $0 }, file: file, line: line)
     }
 }
