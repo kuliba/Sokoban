@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposer.swift
+//  LoggingRemoteNanoServiceComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -10,7 +10,7 @@ import Foundation
 import GenericRemoteService
 import RemoteServices
 
-final class RemoteNanoServiceComposer {
+final class LoggingRemoteNanoServiceComposer {
     
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
@@ -24,7 +24,7 @@ final class RemoteNanoServiceComposer {
     }
 }
 
-extension RemoteNanoServiceComposer {
+extension LoggingRemoteNanoServiceComposer {
     
     typealias NanoService<Payload, Response, Failure: Error> = (Payload, @escaping (Result<Response, Failure>) -> Void) -> Void
     typealias CreateRequest<Payload> = (Payload) throws -> URLRequest
@@ -53,7 +53,7 @@ extension RemoteNanoServiceComposer {
     }
 }
 
-extension RemoteNanoServiceComposer {
+extension LoggingRemoteNanoServiceComposer {
 
     // TODO: replace with `RemoteNanoServiceFactory` conformance
     func compose<Payload, Response, MapResponseError: Error>(

@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposerTests.swift
+//  LoggingRemoteNanoServiceComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class RemoteNanoServiceComposerTests: XCTestCase {
+final class LoggingRemoteNanoServiceComposerTests: XCTestCase {
     
     func test_init_shouldDNotCallCollaborators() {
         
@@ -74,7 +74,7 @@ final class RemoteNanoServiceComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = RemoteNanoServiceComposer
+    private typealias SUT = LoggingRemoteNanoServiceComposer
     private typealias NanoService<Payload> = SUT.NanoService<Payload, Response, Failure>
     
     private func makeSUT(

@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposerAsFactoryTests.swift
+//  LoggingRemoteNanoServiceComposerAsFactoryTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -8,10 +8,10 @@
 @testable import ForaBank
 import XCTest
 
-class RemoteNanoServiceComposerAsFactoryTests: XCTestCase {
+class LoggingRemoteNanoServiceComposerAsFactoryTests: XCTestCase {
     
     typealias SUT = RemoteNanoServiceFactory
-    typealias Composer = RemoteNanoServiceComposer
+    typealias Composer = LoggingRemoteNanoServiceComposer
     
     func makeSUT(
         file: StaticString = #file,

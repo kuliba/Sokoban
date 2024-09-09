@@ -1,11 +1,11 @@
 //
-//  RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift
+//  LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 09.09.2024.
 //
 
-extension RemoteNanoServiceComposer: RemoteNanoServiceFactory {
+extension LoggingRemoteNanoServiceComposer: RemoteNanoServiceFactory {
 
     func compose<Payload, Response>(
         createRequest: @escaping CreateRequest<Payload>,

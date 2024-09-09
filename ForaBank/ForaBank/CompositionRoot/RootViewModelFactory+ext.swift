@@ -340,8 +340,8 @@ extension RootViewModelFactory {
             }
         }
         
-        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = RemoteNanoServiceComposer...
-        let nanoServiceComposer = RemoteNanoServiceComposer(
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
             logger: logger
         )
