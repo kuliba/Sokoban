@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetAllLatestPaymentsRequestTests.swift
+//  RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift
 //  ForaBankTests
 //
 //  Created by Дмитрий Савушкин on 13.05.2024.
@@ -9,7 +9,7 @@
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createGetAllLatestPaymentsRequestTests: XCTestCase {
+final class RequestFactory_createGetAllLatestPaymentsV2RequestTests: XCTestCase {
     
     func test_createRequest_shouldSetRequestURL() throws {
         

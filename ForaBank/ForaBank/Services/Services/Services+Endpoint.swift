@@ -441,6 +441,12 @@ extension Services.Endpoint {
         serviceName: .getAllLatestPayments
     )
     
+    static let getAllLatestPaymentsV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getAllLatestPayments
+    )
+    
     static let getInfoForRepeatPayment: Self = .init(
         pathPrefix: .rest,
         version: .v1,
