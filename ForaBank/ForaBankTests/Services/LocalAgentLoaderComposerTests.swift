@@ -53,18 +53,18 @@ extension LocalAgentLoaderComposer {
     typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, Value>
 }
 
-struct LocalAgentLoader<LoadPayload, LoadResponse, Model> {
+struct LocalAgentLoader<LoadPayload, LoadResponse, Value> {
     
     let load: (LoadPayload, @escaping (LoadResponse) -> Void) -> Void
-    let save: (SavePayload, @escaping (Result<Void, Error>) -> Void) -> Void
+    let save: (StoredData, @escaping (Result<Void, Error>) -> Void) -> Void
 }
 
 extension LocalAgentLoader {
     
-    typealias SavePayload = LocalAgentLoaderSavePayload<Model>
+    typealias StoredData = LocalAgentStoredData<Value>
 }
 
-struct LocalAgentLoaderSavePayload<Value> {
+struct LocalAgentStoredData<Value> {
     
     let value: Value
     let serial: Serial?
@@ -72,7 +72,7 @@ struct LocalAgentLoaderSavePayload<Value> {
     typealias Serial = String
 }
 
-extension LocalAgentLoaderSavePayload: Equatable where Value: Equatable {}
+extension LocalAgentStoredData: Equatable where Value: Equatable {}
 
 import CombineSchedulers
 import XCTest
