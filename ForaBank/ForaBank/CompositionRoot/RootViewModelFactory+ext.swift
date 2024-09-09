@@ -391,7 +391,7 @@ extension RootViewModelFactory {
             nanoServices: .init(
                 loadCategories: loadServiceCategories,
                 loadAllLatest: loadLatestOperations,
-                loadLatestForCategory: NanoServices.getLatestPayments,
+                loadLatestForCategory: { getLatestPayments([$0.name], $1) },
                 loadOperators: { _, completion in completion(.success([])) }
             ),
             mainScheduler: mainScheduler,
