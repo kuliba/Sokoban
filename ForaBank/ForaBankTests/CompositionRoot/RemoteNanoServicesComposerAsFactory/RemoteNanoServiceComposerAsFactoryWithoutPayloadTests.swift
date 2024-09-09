@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposerWithoutPayloadTests.swift
+//  RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceComposerTests {
+final class RemoteNanoServiceComposerAsFactoryWithoutPayloadTests: RemoteNanoServiceComposerAsFactoryTests {
     
     func test_init_shouldDNotCallCollaborators() {
         
@@ -24,9 +24,8 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
         let request = anyURLRequest()
         let (sut, httpClient, _) = makeSUT()
         let service: NanoService = sut.compose(
-            createRequest: { request },
-            mapResponse: { _,_ in unimplemented() },
-            mapError: { _ in unimplemented() }
+            _createRequest: { request },
+            mapResponse: { _,_ in unimplemented() }
         )
         
         service { _ in }
@@ -36,10 +35,9 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
     
     func test_composed_shouldDeliverMappedFailureOnHTTPClientFailure() {
         
-        let failure = makeFailure()
         let (sut, httpClient, _) = makeSUT()
         
-        expect(sut, mappedFailure: failure, delivers: .failure(failure)) {
+        expect(sut, delivers: .failure(anyError())) {
             
             httpClient.complete(with: .failure(anyError()))
         }
@@ -63,7 +61,7 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
         let request = anyURLRequest()
         let (sut, httpClient, _) = makeSUT()
         let service = sut.compose(
-            createRequest: { request },
+            _createRequest: { request },
             mapResponse: { (_,_) -> Result<Response, Error> in unimplemented() }
         )
         
@@ -77,7 +75,7 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
         let failure = anyError()
         let (sut, httpClient, _) = makeSUT()
         
-        expect2(sut, delivers: .failure(failure)) {
+        expect(sut, delivers: .failure(failure)) {
             
             httpClient.complete(with: .failure(failure))
         }
@@ -88,7 +86,7 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
         let response = makeResponse()
         let (sut, httpClient, _) = makeSUT()
         
-        expect2(sut, mapResponseResult: .success(response), delivers: .success(response)) {
+        expect(sut, mapResponseResult: .success(response), delivers: .success(response)) {
             
             httpClient.complete(with: .success((anyData(), anyHTTPURLResponse())))
         }
@@ -96,39 +94,9 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
     
     // MARK: - Helpers
     
-    private typealias NanoService = SUT.VoidNanoService<Response, Failure>
+    private typealias NanoService = Composer.NanoServiceVoid<Response>
     
     private func expect(
-        _ sut: SUT,
-        request: URLRequest = anyURLRequest(),
-        mapResponseResult: Result<Response, Error>? = nil,
-        mappedFailure: Failure? = nil,
-        delivers expectedResult: Result<Response, Failure>,
-        on action: () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        let nanoService: NanoService = sut.compose(
-            createRequest: { request },
-            mapResponse: { _,_ in mapResponseResult ?? .success(self.makeResponse()) },
-            mapError: { _ in mappedFailure ?? self.makeFailure() }
-        )
-        
-        nanoService { receivedResult in
-            
-            XCTAssertNoDiff(receivedResult, expectedResult, file: file, line: line)
-            
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 0.1)
-    }
-    
-    private func expect2(
         _ sut: SUT,
         request: URLRequest = anyURLRequest(),
         mapResponseResult: Result<Response, Error>? = nil,
@@ -139,9 +107,9 @@ final class RemoteNanoServiceComposerWithoutPayloadTests: RemoteNanoServiceCompo
     ) {
         let exp = expectation(description: "wait for completion")
         
-        let nanoService = sut.compose(
-            createRequest: { request },
-            mapResponse: { (_,_) -> Result<Response, Error> in mapResponseResult ?? .success(self.makeResponse()) }
+        let nanoService: NanoService = sut.compose(
+            _createRequest: { request },
+            mapResponse: { _,_ in mapResponseResult ?? .success(self.makeResponse()) }
         )
         
         nanoService { receivedResult in

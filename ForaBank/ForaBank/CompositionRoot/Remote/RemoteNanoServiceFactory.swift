@@ -64,12 +64,12 @@ extension RemoteNanoServiceFactory {
     ///   - mapResponse: A closure that maps the response data and HTTP response to a `Result<Response, Error>`.
     /// - Returns: A network service that provides a result containing either a response or a failure, without requiring a payload.
     func compose<Response>(
-        createRequest: @escaping CreateRequestVoid,
+        _createRequest: @escaping CreateRequestVoid,
         mapResponse: @escaping MapResponse<Response>
     ) -> NanoServiceVoid<Response> {
         
         let composed: NanoService<Void, Response> = compose(
-            createRequest: { _ in try createRequest() },
+            createRequest: { _ in try _createRequest() },
             mapResponse: mapResponse
         )
         

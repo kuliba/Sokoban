@@ -769,9 +769,6 @@
 		2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */; };
 		2A40AF2F2B591530003B7D8A /* FlowStubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */; };
 		2A4111F12B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */; };
-		2A42B4042C8D650A00A9B658 /* RemoteNanoServiceComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4032C8D650A00A9B658 /* RemoteNanoServiceComposerTests.swift */; };
-		2A42B4062C8D653700A9B658 /* RemoteNanoServiceComposerWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerWithPayloadTests.swift */; };
-		2A42B4082C8D659500A9B658 /* RemoteNanoServiceComposerWithoutPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4072C8D659500A9B658 /* RemoteNanoServiceComposerWithoutPayloadTests.swift */; };
 		2A42B40A2C8D65D500A9B658 /* RemoteNanoServiceComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */; };
 		2A42B40C2C8D66B700A9B658 /* RemoteService+httpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */; };
 		2A42B40F2C8DC55C00A9B658 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */; };
@@ -1226,6 +1223,11 @@
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
 		2A9499222B73E13000C67F05 /* UserAccountEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */; };
+		2A94AAEA2C8ECCA0003B4FB1 /* RemoteNanoServiceComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */; };
+		2A94AAEB2C8ED0A1003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */; };
+		2A94AAEC2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */; };
+		2A94AAED2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */; };
+		2A94AAEF2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -4168,12 +4170,13 @@
 		2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStub.swift; sourceTree = "<group>"; };
 		2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStubSettingsView.swift; sourceTree = "<group>"; };
 		2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldFactory+makeTextFieldTests.swift"; sourceTree = "<group>"; };
-		2A42B4032C8D650A00A9B658 /* RemoteNanoServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerTests.swift; sourceTree = "<group>"; };
-		2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerWithPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerWithPayloadTests.swift; sourceTree = "<group>"; };
-		2A42B4072C8D659500A9B658 /* RemoteNanoServiceComposerWithoutPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerWithoutPayloadTests.swift; sourceTree = "<group>"; };
+		2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerTests.swift; sourceTree = "<group>"; };
 		2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposer.swift; sourceTree = "<group>"; };
 		2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+httpClient.swift"; sourceTree = "<group>"; };
 		2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift; sourceTree = "<group>"; };
+		2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift; sourceTree = "<group>"; };
+		2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryTests.swift; sourceTree = "<group>"; };
 		2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentStateComposer.swift; sourceTree = "<group>"; };
 		2A43007B2C5217C2002FF8C7 /* ServicePaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowState.swift; sourceTree = "<group>"; };
 		2A43007D2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowEvent.swift; sourceTree = "<group>"; };
@@ -4639,6 +4642,7 @@
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
 		2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEffectHandler.swift; sourceTree = "<group>"; };
+		2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -9489,11 +9493,19 @@
 		2A42B4022C8D64EF00A9B658 /* RemoteNanoServicesComposer */ = {
 			isa = PBXGroup;
 			children = (
-				2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerWithPayloadTests.swift */,
-				2A42B4072C8D659500A9B658 /* RemoteNanoServiceComposerWithoutPayloadTests.swift */,
-				2A42B4032C8D650A00A9B658 /* RemoteNanoServiceComposerTests.swift */,
+				2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */,
 			);
 			path = RemoteNanoServicesComposer;
+			sourceTree = "<group>";
+		};
+		2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */,
+				2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */,
+				2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */,
+			);
+			path = RemoteNanoServicesComposerAsFactory;
 			sourceTree = "<group>";
 		};
 		2A43007A2C5217AA002FF8C7 /* ServicePaymentFlow */ = {
@@ -10556,6 +10568,7 @@
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
+				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
 				2A42B4022C8D64EF00A9B658 /* RemoteNanoServicesComposer */,
 			);
 			path = CompositionRoot;
@@ -10958,6 +10971,16 @@
 				2A3BD6062B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift */,
 			);
 			path = NanoServices;
+			sourceTree = "<group>";
+		};
+		2A94AAF02C8ED0E4003B4FB1 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */,
+				2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */,
+				2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
+			);
+			path = Remote;
 			sourceTree = "<group>";
 		};
 		2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */ = {
@@ -12332,8 +12355,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0A3F652C2A0AA400029854 /* HTTPClientFactory.swift */,
-				2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */,
-				2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */,
+				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
 				2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */,
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
@@ -21076,6 +21098,7 @@
 				2AB87C532C1346B40013EFFE /* ProductSelectWrapperView.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
 				C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */,
+				2A94AAEF2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */,
 				2A556B502C7CEB46002050C2 /* LatestPlaceholder.swift in Sources */,
 				2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */,
 				C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */,
@@ -21863,6 +21886,7 @@
 				832721402C122C4B00259785 /* MyProductsViewModelTests.swift in Sources */,
 				2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */,
 				2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */,
+				2A94AAEB2C8ED0A1003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift in Sources */,
 				C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */,
 				77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */,
 				C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */,
@@ -21909,6 +21933,7 @@
 				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
 				2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */,
+				2A94AAEA2C8ECCA0003B4FB1 /* RemoteNanoServiceComposerTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
@@ -21945,6 +21970,8 @@
 				2A58FAB62AD722BE00BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequestTests.swift in Sources */,
 				2A0776F82A02515600118373 /* XCTestCase+getJSON.swift in Sources */,
 				77D0386529882C6600FBE5AB /* ServerCommandsSPBTests.swift in Sources */,
+				2A94AAEC2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryTests.swift in Sources */,
+				2A94AAED2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */,
 				C1C315E92C2DB8A0005C2BF8 /* HistoryReducerTests.swift in Sources */,
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
 				C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */,
@@ -22021,7 +22048,6 @@
 				2A2D4D372B6E8092006912EE /* RequestFactory+createMakeSetBankDefaultRequest.swift in Sources */,
 				2A1F08492A79040B00C5B11B /* Model+signRequestTests.swift in Sources */,
 				83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */,
-				2A42B4082C8D659500A9B658 /* RemoteNanoServiceComposerWithoutPayloadTests.swift in Sources */,
 				C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */,
 				2AB6BFE62AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
@@ -22101,7 +22127,6 @@
 				2A248F552C68911400082814 /* AnywayPaymentSourceParserTests.swift in Sources */,
 				687F9B1127FED202007A38A5 /* ServerCommandsLoanTests.swift in Sources */,
 				2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */,
-				2A42B4042C8D650A00A9B658 /* RemoteNanoServiceComposerTests.swift in Sources */,
 				83B614832B0390E7002EE299 /* ContactsAgent+ContactsListTests.swift in Sources */,
 				2A92EA6F2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift in Sources */,
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
@@ -22178,7 +22203,6 @@
 				2AF5DF362BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift in Sources */,
 				C13825452AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift in Sources */,
 				2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */,
-				2A42B4062C8D653700A9B658 /* RemoteNanoServiceComposerWithPayloadTests.swift in Sources */,
 				2A0439CD2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposerTests.swift
+//  RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class RemoteNanoServiceComposerTests {
+final class RemoteNanoServiceComposerAsFactoryWithPayloadTests: RemoteNanoServiceComposerAsFactoryTests {
     
     func test_init_shouldDNotCallCollaborators() {
         
@@ -90,7 +90,7 @@ final class RemoteNanoServiceComposerTests {
         let failure = anyError()
         let (sut, httpClient, _) = makeSUT()
         
-        expect2(sut, with: makePayload(), delivers: .failure(failure)) {
+        expect(sut, with: makePayload(), delivers: .failure(failure)) {
             
             httpClient.complete(with: .failure(failure))
         }
@@ -101,7 +101,7 @@ final class RemoteNanoServiceComposerTests {
         let response = makeResponse()
         let (sut, httpClient, _) = makeSUT()
         
-        expect2(sut, with: makePayload(), mapResponseResult: .success(response), delivers: .success(response)) {
+        expect(sut, with: makePayload(), mapResponseResult: .success(response), delivers: .success(response)) {
             
             httpClient.complete(with: .success((anyData(), anyHTTPURLResponse())))
         }
@@ -146,65 +146,8 @@ final class RemoteNanoServiceComposerTests {
     
     // MARK: - Helpers
     
-    typealias NanoService<Payload> = Composer.NanoService<Payload, Response, Error>
+    private typealias NanoService<Payload> = Composer.NanoService<Payload, Response, Error>
     
-    private typealias SUT = RemoteNanoServiceComposer
-    
-    private func makeSUT(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> (
-        sut: SUT,
-        httpClient: HTTPClientSpy,
-        logger: LoggerSpy
-    ) {
-        let httpClient = HTTPClientSpy()
-        let logger = LoggerSpy()
-        let sut = SUT(httpClient: httpClient, logger: logger)
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(httpClient, file: file, line: line)
-        trackForMemoryLeaks(logger, file: file, line: line)
-        
-        return (sut, httpClient, logger)
-    }
-    
-    private struct Payload: Equatable {
-        
-        let value: String
-    }
-    
-    private func makePayload(
-        _ value: String = anyMessage()
-    ) -> Payload {
-        
-        return .init(value: value)
-    }
-    
-    private struct Response: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeResponse(
-        _ value: String = anyMessage()
-    ) -> Response {
-        
-        return .init(value: value)
-    }
-    
-    private struct Failure: Error, Equatable {
-        
-        let value: String
-    }
-    
-    private func makeFailure(
-        _ value: String = anyMessage()
-    ) -> Failure {
-        
-        return .init(value: value)
-    }
-
     private func expect<Payload>(
         _ sut: SUT,
         with payload: Payload,
@@ -220,45 +163,6 @@ final class RemoteNanoServiceComposerTests {
         let nanoService: NanoService<Payload> = sut.compose(
             createRequest: { _ in request },
             mapResponse: { _,_ in mapResponseResult ?? .success(self.makeResponse()) }
-        )
-        
-        nanoService(payload) { receivedResult in
-            
-            switch (receivedResult, expectedResult) {
-            case (.failure, .failure):
-                break
-                
-            case let (.success(receivedResponse), .success(expectedResponse)):
-                XCTAssertNoDiff(receivedResponse, expectedResponse, file: file, line: line)
-                
-            default:
-                
-                XCTFail("Expected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 0.1)
-    }
-    
-    private func expect2<Payload>(
-        _ sut: SUT,
-        with payload: Payload,
-        request: URLRequest = anyURLRequest(),
-        mapResponseResult: Result<Response, Error>? = nil,
-        delivers expectedResult: Result<Response, Error>,
-        on action: () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        let nanoService = sut.compose(
-            createRequest: { (_: Payload) in request },
-            mapResponse: { (_,_) -> Result<Response, Error> in mapResponseResult ?? .success(self.makeResponse()) }
         )
         
         nanoService(payload) { receivedResult in
