@@ -1228,6 +1228,7 @@
 		2A94AAEC2C8ED0AA003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4132C8ECA4700A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryTests.swift */; };
 		2A94AAED2C8ED0AA003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4122C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */; };
 		2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
+		2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -4647,6 +4648,7 @@
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
 		2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEffectHandler.swift; sourceTree = "<group>"; };
 		2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
+		2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -15013,6 +15015,7 @@
 				7792557A279AF6C900A85723 /* Encryption */,
 				77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */,
 				779CF7AC2A6E6CB500011812 /* EncryptionLocalAgentTests.swift */,
+				2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */,
 				0CBA6AEF284E525F00FDF10A /* ContactsAgentTests.swift */,
 				774A82CA27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift */,
 				774A82CE27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift */,
@@ -22112,6 +22115,7 @@
 				2A6CF73C2C66301E00F2B85A /* TemplatesListFlowModelIntegrationTests.swift in Sources */,
 				C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */,
 				2AA2A55F2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift in Sources */,
+				2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */,
 				2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */,
 				2A58FAA52AD701E500BD1967 /* Services_EndpointGetPINConfirmationCodeTests.swift in Sources */,
 				2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */,
