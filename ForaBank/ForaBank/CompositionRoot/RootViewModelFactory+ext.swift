@@ -10,6 +10,7 @@ import ForaTools
 import ManageSubscriptionsUI
 import OperatorsListComponents
 import PaymentSticker
+import RemoteServices
 import SberQR
 import SwiftUI
 import PayHub
@@ -339,6 +340,12 @@ extension RootViewModelFactory {
             }
         }
         
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = RemoteNanoServiceComposer...
+        let nanoServiceComposer = RemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
+        )
+        
         let localServiceCategoryLoader = ServiceCategoryLoader.default
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
             httpClient: httpClient,
@@ -367,9 +374,9 @@ extension RootViewModelFactory {
             }
         }
         
-        let getLatestPayments = NanoServices.makeGetAllLatestPaymentsV3Stringly(
-            httpClient: httpClient,
-            log: logger.log
+        let getLatestPayments = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
         )
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,

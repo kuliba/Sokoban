@@ -12,50 +12,7 @@ import RemoteServices
 extension NanoServices {
     
     typealias GetAllLatestPaymentsCompletion = (Result<[Latest], Error>) -> Void
-    typealias MakeGetAllLatestPaymentsV3 = ([ServiceCategory], @escaping GetAllLatestPaymentsCompletion) -> Void
-    typealias MakeGetAllLatestPaymentsV3Stringly = ([String], @escaping GetAllLatestPaymentsCompletion) -> Void
-    
-    static func makeGetAllLatestPaymentsV3(
-        httpClient: HTTPClient,
-        log: @escaping Log
-    ) -> MakeGetAllLatestPaymentsV3 {
         
-        let getLatest = makeGetAllLatestPaymentsV3Stringly(
-            httpClient: httpClient,
-            log: log
-        )
-        
-        return { categories, completion in
-            
-            let parameters = categories.compactMap(\.latestPaymentsCategoryName)
-            getLatest(parameters, completion)
-        }
-    }
-    
-    static func makeGetAllLatestPaymentsV3Stringly(
-        httpClient: HTTPClient,
-        log: @escaping Log
-    ) -> MakeGetAllLatestPaymentsV3Stringly {
-        
-        return { parameters, completion in
-            
-            let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
-                createRequest: { try RequestFactory.createGetAllLatestPaymentsV3Request(parameters: parameters) },
-                httpClient: httpClient,
-                mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse(_:_:),
-                mapOutput: { $0 },
-                mapError: { $0 },
-                log: { log(.info, .network, $0, $1, $2) }
-            )
-            
-            fetch { [fetch] in
-                
-                completion($0.mapError { $0 })
-                _ = fetch
-            }
-        }
-    }
-    
     static func getLatestPayments(
         categories: [ServiceCategory],
         completion: @escaping GetAllLatestPaymentsCompletion
