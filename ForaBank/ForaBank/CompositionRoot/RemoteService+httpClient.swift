@@ -10,13 +10,12 @@ import Foundation
 
 extension RemoteService
 where CreateRequestError == Error,
-      PerformRequestError == Error,
-      MapResponseError == Error {
+      PerformRequestError == Error {
     
     convenience init(
         createRequest: @escaping (Input) throws -> URLRequest,
         httpClient: HTTPClient,
-        mapResponse: @escaping ((Data, HTTPURLResponse)) -> Result<Output, Error>
+        mapResponse: @escaping ((Data, HTTPURLResponse)) -> Result<Output, MapResponseError>
     ) {
         self.init(
             createRequest: createRequest,
@@ -28,11 +27,11 @@ where CreateRequestError == Error,
     convenience init(
         createRequest: @escaping () throws -> URLRequest,
         httpClient: HTTPClient,
-        mapResponse: @escaping ((Data, HTTPURLResponse)) -> Result<Output, Error>
+        mapResponse: @escaping ((Data, HTTPURLResponse)) -> Result<Output, MapResponseError>
     ) {
         self.init(
-            createRequest: createRequest,
-            performRequest: httpClient.performRequest(_:completion:),
+            createRequest: { _ in try createRequest() },
+            httpClient: httpClient,
             mapResponse: mapResponse
         )
     }
