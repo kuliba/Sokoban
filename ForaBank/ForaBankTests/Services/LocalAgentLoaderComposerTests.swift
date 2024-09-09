@@ -7,7 +7,7 @@
 
 import CombineSchedulers
 
-final class LocalAgentLoaderComposer {
+final class LocalAgentLoaderComposer<LoadPayload, SavePayload> {
     
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     private let backgroundScheduler: AnySchedulerOf<DispatchQueue>
@@ -24,21 +24,23 @@ final class LocalAgentLoaderComposer {
 extension LocalAgentLoaderComposer {
     
     func compose(
-        load: @escaping () -> Void,
-        save: @escaping () -> Void
-    ) -> LocalAgentLoader {
+        load: @escaping (LoadPayload) -> Void,
+        save: @escaping (SavePayload) -> Void
+    ) -> Loader {
         
         return .init(
-            load: { self.interactiveScheduler.schedule(load) },
-            save: { self.backgroundScheduler.schedule(save) }
+            load: { payload in self.interactiveScheduler.schedule { load(payload) }},
+            save: { payload in self.backgroundScheduler.schedule { save(payload) }}
         )
     }
+    
+    typealias Loader = LocalAgentLoader<LoadPayload, SavePayload>
 }
 
-struct LocalAgentLoader {
+struct LocalAgentLoader<LoadPayload, SavePayload> {
     
-    let load: () -> Void
-    let save: () -> Void
+    let load: (LoadPayload) -> Void
+    let save: (SavePayload) -> Void
 }
 
 import CombineSchedulers
@@ -63,11 +65,22 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         
         let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
         
-        sut.load()
+        sut.load(makeLoadPayload())
         XCTAssertNoDiff(loadSpy.callCount, 0)
         
         interactiveScheduler.advance()
         XCTAssertNoDiff(loadSpy.callCount, 1)
+    }
+    
+    func test_load_shouldCallLoadWithPayload() {
+        
+        let loadPayload = makeLoadPayload()
+        let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
+        
+        sut.load(loadPayload)
+        interactiveScheduler.advance()
+
+        XCTAssertNoDiff(loadSpy.payloads, [loadPayload])
     }
     
     // MARK: - save
@@ -76,19 +89,30 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         
         let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
         
-        sut.save()
+        sut.save(makeSavePayload())
         XCTAssertNoDiff(saveSpy.callCount, 0)
         
         backgroundScheduler.advance()
         XCTAssertNoDiff(saveSpy.callCount, 1)
     }
     
+    func test_save_shouldCallLoadWithPayload() {
+        
+        let savePayload = makeSavePayload()
+        let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
+        
+        sut.save(savePayload)
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(saveSpy.payloads, [savePayload])
+    }
+    
     // MARK: - Helpers
     
-    private typealias Composer = LocalAgentLoaderComposer
-    private typealias SUT = LocalAgentLoader
-    private typealias LoadSpy = CallSpy<Void, Void>
-    private typealias SaveSpy = CallSpy<Void, Void>
+    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, SavePayload>
+    private typealias SUT = LocalAgentLoader<LoadPayload, SavePayload>
+    private typealias LoadSpy = CallSpy<LoadPayload, Void>
+    private typealias SaveSpy = CallSpy<SavePayload, Void>
     
     private func makeSUT(
         loadStubs: [Void] = [()],
@@ -117,5 +141,29 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         trackForMemoryLeaks(saveSpy, file: file, line: line)
         
         return (sut, loadSpy, saveSpy, interactiveScheduler, backgroundScheduler)
+    }
+    
+    private struct LoadPayload: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeLoadPayload(
+        _ value: String = anyMessage()
+    ) -> LoadPayload {
+        
+        return .init(value: value)
+    }
+    
+    private struct SavePayload: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeSavePayload(
+        _ value: String = anyMessage()
+    ) -> SavePayload {
+        
+        return .init(value: value)
     }
 }
