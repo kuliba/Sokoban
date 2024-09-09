@@ -7,15 +7,18 @@
 
 import CombineSchedulers
 
-final class LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model, SaveResponse> {
+final class LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model: Encodable, SaveResponse, Value> {
     
+    private let toModel: (Value) -> Model
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     private let backgroundScheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        toModel: @escaping (Value) -> Model,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>,
         backgroundScheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.toModel = toModel
         self.interactiveScheduler = interactiveScheduler
         self.backgroundScheduler = backgroundScheduler
     }
@@ -35,13 +38,16 @@ extension LocalAgentLoaderComposer {
             },
             save: { payload, completion
                 
-                in self.backgroundScheduler.schedule { completion(save(payload.model, payload.serial)) }
+                in self.backgroundScheduler.schedule {
+                    
+                    completion(save(self.toModel(payload.value), payload.serial))
+                }
             }
         )
     }
     
     typealias Serial = String
-    typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, Model, SaveResponse>
+    typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, Value, SaveResponse>
 }
 
 struct LocalAgentLoader<LoadPayload, LoadResponse, Model, SaveResponse> {
@@ -55,15 +61,15 @@ extension LocalAgentLoader {
     typealias SavePayload = LocalAgentLoaderSavePayload<Model>
 }
 
-struct LocalAgentLoaderSavePayload<Model> {
+struct LocalAgentLoaderSavePayload<Value> {
     
-    let model: Model
+    let value: Value
     let serial: Serial?
     
     typealias Serial = String
 }
 
-extension LocalAgentLoaderSavePayload: Equatable where Model: Equatable {}
+extension LocalAgentLoaderSavePayload: Equatable where Value: Equatable {}
 
 import CombineSchedulers
 import XCTest
@@ -74,8 +80,9 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, loadSpy, saveSpy, _,_) = makeSUT()
+        let (sut, toModelSpy, loadSpy, saveSpy, _,_) = makeSUT()
         
+        XCTAssertEqual(toModelSpy.callCount, 0)
         XCTAssertEqual(loadSpy.callCount, 0)
         XCTAssertEqual(saveSpy.callCount, 0)
         XCTAssertNotNil(sut)
@@ -85,7 +92,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     
     func test_load_shouldPerformOnInteractive() {
         
-        let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
+        let (sut, _, loadSpy, _, interactiveScheduler, _) = makeSUT()
         
         sut.load(makeLoadPayload()) { _ in }
         XCTAssertNoDiff(loadSpy.callCount, 0)
@@ -97,7 +104,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     func test_load_shouldCallLoadWithPayload() {
         
         let loadPayload = makeLoadPayload()
-        let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
+        let (sut, _, loadSpy, _, interactiveScheduler, _) = makeSUT()
         
         sut.load(loadPayload) { _ in }
         interactiveScheduler.advance()
@@ -105,10 +112,12 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         XCTAssertNoDiff(loadSpy.payloads, [loadPayload])
     }
     
+#warning("add fromModelSpy tests: payloads & delivered value & serial")
+    
     func test_load_shouldDeliverLoaded() {
         
         let loadResponse = makeLoadResponse()
-        let (sut, _,_, interactiveScheduler, _) = makeSUT(loadStubs: [loadResponse])
+        let (sut, _,_,_, interactiveScheduler, _) = makeSUT(loadStubs: [loadResponse])
         let exp = expectation(description: "wait for load completion")
         var receivedResponse = [LoadResponse]()
         
@@ -128,9 +137,9 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     
     func test_save_shouldPerformOnBackground_nilSerial() {
         
-        let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
+        let (sut, _,_, saveSpy, _, backgroundScheduler) = makeSUT()
         
-        sut.save(.init(model: makeModel(), serial: nil)) { _ in }
+        sut.save(.init(value: makeValue(), serial: nil)) { _ in }
         XCTAssertNoDiff(saveSpy.callCount, 0)
         
         backgroundScheduler.advance()
@@ -139,47 +148,69 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     
     func test_save_shouldPerformOnBackground_nonNilSerial() {
         
-        let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
+        let (sut, _,_, saveSpy, _, backgroundScheduler) = makeSUT()
         
-        sut.save(.init(model: makeModel(), serial: anyMessage())) { _ in }
+        sut.save(.init(value: makeValue(), serial: anyMessage())) { _ in }
         XCTAssertNoDiff(saveSpy.callCount, 0)
         
         backgroundScheduler.advance()
         XCTAssertNoDiff(saveSpy.callCount, 1)
     }
     
+    func test_save_shouldCallToModelWithValue_nilSerial() {
+        
+        let value = makeValue()
+        let (sut, toModelSpy,_, saveSpy, _, backgroundScheduler) = makeSUT()
+        
+        sut.save(.init(value: value, serial: nil)) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(toModelSpy.payloads, [value])
+    }
+    
+    func test_save_shouldCallToModelWithValue_nonNilSerial() {
+        
+        let value = makeValue()
+        let (sut, toModelSpy,_, saveSpy, _, backgroundScheduler) = makeSUT()
+        
+        sut.save(.init(value: value, serial: anyMessage())) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(toModelSpy.payloads, [value])
+    }
+    
     func test_save_shouldCallLoadWithPayload_nilSerial() {
         
-        let model = makeModel()
-        let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
+        let (value, model) = (makeValue(), makeModel())
+        let (sut, _,_, saveSpy, _, backgroundScheduler) = makeSUT(toModel: model)
         
-        sut.save(.init(model: model, serial: nil)) { _ in }
+        sut.save(.init(value: value, serial: nil)) { _ in }
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(saveSpy.payloads.map(\.0), [model])
         XCTAssertNoDiff(saveSpy.payloads.map(\.1), [nil])
     }
     
-    func test_save_shouldCallLoadWithPayload_nonNilSerial() {
+    func test_save_shouldCallSaveWithPayload_nonNilSerial() {
         
-        let (model, serial) = (makeModel(), anyMessage())
-        let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
+        let (value, serial, model) = (makeValue(), anyMessage(), makeModel())
+        let (sut, _,_, saveSpy, _, backgroundScheduler) = makeSUT(toModel: model)
         
-        sut.save(.init(model: model, serial: serial)) { _ in }
+        sut.save(.init(value: value, serial: serial)) { _ in }
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(saveSpy.payloads.map(\.0), [model])
         XCTAssertNoDiff(saveSpy.payloads.map(\.1), [serial])
     }
     
-    func test_save_shouldDeliverLoaded_nilSerial() {
+    func test_save_shouldDeliverSaved_nilSerial() {
         
         let saveResponse = makeSaveResponse()
-        let (sut, _,_,_, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
         let exp = expectation(description: "wait for save completion")
         var receivedResponse = [SaveResponse]()
         
-        sut.save(.init(model: makeModel(), serial: nil)) {
+        sut.save(.init(value: makeValue(), serial: nil)) {
             
             receivedResponse.append($0)
             exp.fulfill()
@@ -194,11 +225,11 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     func test_save_shouldDeliverLoaded_nonNilSerial() {
         
         let saveResponse = makeSaveResponse()
-        let (sut, _,_, _, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
         let exp = expectation(description: "wait for save completion")
         var receivedResponse = [SaveResponse]()
         
-        sut.save(.init(model: makeModel(), serial: anyMessage())) {
+        sut.save(.init(value: makeValue(), serial: anyMessage())) {
             
             receivedResponse.append($0)
             exp.fulfill()
@@ -212,26 +243,31 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model, SaveResponse>
-    private typealias SUT = LocalAgentLoader<LoadPayload, LoadResponse, Model, SaveResponse>
+    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model, SaveResponse, Value>
+    private typealias SUT = LocalAgentLoader<LoadPayload, LoadResponse, Value, SaveResponse>
+    private typealias ToModelSpy = CallSpy<Value, Model>
     private typealias LoadSpy = CallSpy<LoadPayload, LoadResponse>
     private typealias SaveSpy = CallSpy<(Model, String?), SaveResponse>
     
     private func makeSUT(
+        toModel: Model? = nil,
         loadStubs: [LoadResponse]? = nil,
         saveStubs: [SaveResponse]? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        toModelSpy: ToModelSpy,
         loadSpy: LoadSpy,
         saveSpy: SaveSpy,
         interactiveScheduler: TestSchedulerOf<DispatchQueue>,
         backgroundScheduler: TestSchedulerOf<DispatchQueue>
     ) {
+        let toModelSpy = ToModelSpy(stubs: [toModel ?? makeModel()])
         let interactiveScheduler = DispatchQueue.test
         let backgroundScheduler = DispatchQueue.test
         let composer = Composer(
+            toModel: toModelSpy.call,
             interactiveScheduler: interactiveScheduler.eraseToAnyScheduler(),
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         )
@@ -246,7 +282,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         trackForMemoryLeaks(loadSpy, file: file, line: line)
         trackForMemoryLeaks(saveSpy, file: file, line: line)
         
-        return (sut, loadSpy, saveSpy, interactiveScheduler, backgroundScheduler)
+        return (sut, toModelSpy, loadSpy, saveSpy, interactiveScheduler, backgroundScheduler)
     }
     
     private struct LoadPayload: Equatable {
@@ -273,7 +309,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private struct Model: Equatable {
+    private struct Model: Equatable, Encodable {
         
         let value: String
     }
@@ -293,6 +329,18 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     private func makeSaveResponse(
         _ value: String = anyMessage()
     ) -> SaveResponse {
+        
+        return .init(value: value)
+    }
+    
+    private struct Value: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeValue(
+        _ value: String = anyMessage()
+    ) -> Value {
         
         return .init(value: value)
     }
