@@ -1229,6 +1229,9 @@
 		2A94AAED2C8ED0AA003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4122C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */; };
 		2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
 		2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */; };
+		2A94AAF72C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */; };
+		2A94AAF92C8F7924003B4FB1 /* LocalAgentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */; };
+		2A94AAFB2C8F7938003B4FB1 /* LocalAgentStoredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAFA2C8F7938003B4FB1 /* LocalAgentStoredData.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -4649,6 +4652,9 @@
 		2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEffectHandler.swift; sourceTree = "<group>"; };
 		2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
 		2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposerTests.swift; sourceTree = "<group>"; };
+		2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposer.swift; sourceTree = "<group>"; };
+		2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoader.swift; sourceTree = "<group>"; };
+		2A94AAFA2C8F7938003B4FB1 /* LocalAgentStoredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentStoredData.swift; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -10579,6 +10585,7 @@
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
+				2A94AAFC2C8F79D6003B4FB1 /* Services */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
 				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
 				2A42B4022C8D64EF00A9B658 /* LoggingRemoteNanoServicesComposer */,
@@ -10993,6 +11000,24 @@
 				2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
 			);
 			path = Remote;
+			sourceTree = "<group>";
+		};
+		2A94AAF52C8F78E5003B4FB1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */,
+				2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */,
+				2A94AAFA2C8F7938003B4FB1 /* LocalAgentStoredData.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2A94AAFC2C8F79D6003B4FB1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */ = {
@@ -12379,6 +12404,7 @@
 				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
 				2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */,
 				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
+				2A94AAF52C8F78E5003B4FB1 /* Services */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
@@ -15015,7 +15041,6 @@
 				7792557A279AF6C900A85723 /* Encryption */,
 				77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */,
 				779CF7AC2A6E6CB500011812 /* EncryptionLocalAgentTests.swift */,
-				2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */,
 				0CBA6AEF284E525F00FDF10A /* ContactsAgentTests.swift */,
 				774A82CA27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift */,
 				774A82CE27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift */,
@@ -20535,6 +20560,7 @@
 				77517FEC27A99279005CFB77 /* ServerCommands+Rates.swift in Sources */,
 				6820929F27AC04BF003DCAFD /* SuggestCompanyData.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
+				2A94AAF72C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift in Sources */,
 				770B97B52A485B0300C62385 /* PaymentsSuccessViewModelAdapter.swift in Sources */,
 				2A3624BB2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift in Sources */,
 				774A8B162865FBAC00B81140 /* ProductStatementData.swift in Sources */,
@@ -20671,6 +20697,7 @@
 				2A36249B2C5F412000174C50 /* AnywayServicePickerFlowEffect.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
 				77448C05286DF60F009EEEA8 /* OperationDetailOperationViewComponent.swift in Sources */,
+				2A94AAF92C8F7924003B4FB1 /* LocalAgentLoader.swift in Sources */,
 				2ABB63182C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift in Sources */,
 				2A1F08412A79022A00C5B11B /* HTTPClient.swift in Sources */,
 				0B2A8D2926E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift in Sources */,
@@ -20771,6 +20798,7 @@
 				2A3624992C5F410E00174C50 /* AnywayServicePickerFlowEvent.swift in Sources */,
 				68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */,
 				2AECBC372BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift in Sources */,
+				2A94AAFB2C8F7938003B4FB1 /* LocalAgentStoredData.swift in Sources */,
 				6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */,
 				C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */,
 				509EE0E2285F855D002281BF /* KeyboardPublisher.swift in Sources */,
