@@ -1444,8 +1444,10 @@ private extension Target {
             .combineSchedulers,
             // internal modules
             .payHub,
+            .payHubUI,
             .rxViewModel,
             .uiPrimitives,
+            .sharedConfigs,
         ],
         path: "Sources/\(String.banners)"
     )
