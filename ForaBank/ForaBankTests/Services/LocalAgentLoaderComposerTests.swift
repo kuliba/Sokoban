@@ -7,7 +7,7 @@
 
 import CombineSchedulers
 
-final class LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model: Encodable, SaveResponse, Value> {
+final class LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model: Encodable, Value> {
     
     private let toModel: (Value) -> Model
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -28,7 +28,7 @@ extension LocalAgentLoaderComposer {
     
     func compose(
         load: @escaping (LoadPayload) -> LoadResponse,
-        save: @escaping (Model, Serial?) -> SaveResponse
+        save: @escaping (Model, Serial?) throws -> Void
     ) -> Loader {
         
         return .init(
@@ -36,24 +36,27 @@ extension LocalAgentLoaderComposer {
                 
                 self.interactiveScheduler.schedule { completion(load(payload)) }
             },
-            save: { payload, completion
+            save: { payload, completion in
                 
-                in self.backgroundScheduler.schedule {
+                self.backgroundScheduler.schedule {
                     
-                    completion(save(self.toModel(payload.value), payload.serial))
+                    completion(.init(catching: {
+                        
+                        try save(self.toModel(payload.value), payload.serial)
+                    }))
                 }
             }
         )
     }
     
     typealias Serial = String
-    typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, Value, SaveResponse>
+    typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, Value>
 }
 
-struct LocalAgentLoader<LoadPayload, LoadResponse, Model, SaveResponse> {
+struct LocalAgentLoader<LoadPayload, LoadResponse, Model> {
     
     let load: (LoadPayload, @escaping (LoadResponse) -> Void) -> Void
-    let save: (SavePayload, @escaping (SaveResponse) -> Void) -> Void
+    let save: (SavePayload, @escaping (Result<Void, Error>) -> Void) -> Void
 }
 
 extension LocalAgentLoader {
@@ -203,56 +206,102 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         XCTAssertNoDiff(saveSpy.payloads.map(\.1), [serial])
     }
     
-    func test_save_shouldDeliverSaved_nilSerial() {
+    func test_save_shouldDeliverFailureOnFailure_nilSerial() {
         
-        let saveResponse = makeSaveResponse()
-        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [.failure(anyError())])
         let exp = expectation(description: "wait for save completion")
-        var receivedResponse = [SaveResponse]()
         
         sut.save(.init(value: makeValue(), serial: nil)) {
             
-            receivedResponse.append($0)
+            switch $0 {
+            case .failure:
+                break
+                
+            default:
+                XCTFail("Expected failure, got \($0) instead.")
+            }
             exp.fulfill()
         }
         
         backgroundScheduler.advance()
         wait(for: [exp], timeout: 1)
-        
-        XCTAssertNoDiff(receivedResponse, [saveResponse])
     }
     
-    func test_save_shouldDeliverLoaded_nonNilSerial() {
+    func test_save_shouldDeliverFailureOnFailure_nonNilSerial() {
         
-        let saveResponse = makeSaveResponse()
-        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [.failure(anyError())])
         let exp = expectation(description: "wait for save completion")
-        var receivedResponse = [SaveResponse]()
         
         sut.save(.init(value: makeValue(), serial: anyMessage())) {
             
-            receivedResponse.append($0)
+            switch $0 {
+            case .failure:
+                break
+                
+            default:
+                XCTFail("Expected failure, got \($0) instead.")
+            }
             exp.fulfill()
         }
         
         backgroundScheduler.advance()
         wait(for: [exp], timeout: 1)
+    }
+    
+    func test_save_shouldDeliverVoidOnSuccess_nilSerial() {
         
-        XCTAssertNoDiff(receivedResponse, [saveResponse])
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [.success(())])
+        let exp = expectation(description: "wait for save completion")
+        
+        sut.save(.init(value: makeValue(), serial: nil)) {
+            
+            switch $0 {
+            case .failure:
+                XCTFail("Expected success, got \($0) instead.")
+                
+            case .success(()):
+                break
+            }
+            exp.fulfill()
+        }
+        
+        backgroundScheduler.advance()
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_save_shouldDeliverVoidOnSuccess_nonNilSerial() {
+        
+        let (sut, _,_,_,_, backgroundScheduler) = makeSUT(saveStubs: [.success(())])
+        let exp = expectation(description: "wait for save completion")
+        
+        sut.save(.init(value: makeValue(), serial: anyMessage())) {
+            
+            switch $0 {
+            case .failure:
+                XCTFail("Expected success, got \($0) instead.")
+                
+            case .success(()):
+                break
+            }
+            exp.fulfill()
+        }
+        
+        backgroundScheduler.advance()
+        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - Helpers
     
-    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model, SaveResponse, Value>
-    private typealias SUT = LocalAgentLoader<LoadPayload, LoadResponse, Value, SaveResponse>
+    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, LoadResponse, Model, Value>
+    private typealias SUT = LocalAgentLoader<LoadPayload, LoadResponse, Value>
     private typealias ToModelSpy = CallSpy<Value, Model>
     private typealias LoadSpy = CallSpy<LoadPayload, LoadResponse>
-    private typealias SaveSpy = CallSpy<(Model, String?), SaveResponse>
+    private typealias SaveSpy = CallSpy<(Model, String?), Result<Void, Error>>
     
     private func makeSUT(
         toModel: Model? = nil,
         loadStubs: [LoadResponse]? = nil,
-        saveStubs: [SaveResponse]? = nil,
+        saveStubs: [Result<Void, Error>] = [.success(())],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -272,7 +321,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         )
         let loadSpy = LoadSpy(stubs: loadStubs ?? [makeLoadResponse()])
-        let saveSpy = SaveSpy(stubs: saveStubs ?? [makeSaveResponse()])
+        let saveSpy = SaveSpy(stubs: saveStubs)
         let sut = composer.compose(
             load: loadSpy.call,
             save: saveSpy.call
@@ -317,18 +366,6 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     private func makeModel(
         _ value: String = anyMessage()
     ) -> Model {
-        
-        return .init(value: value)
-    }
-    
-    private struct SaveResponse: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeSaveResponse(
-        _ value: String = anyMessage()
-    ) -> SaveResponse {
         
         return .init(value: value)
     }
