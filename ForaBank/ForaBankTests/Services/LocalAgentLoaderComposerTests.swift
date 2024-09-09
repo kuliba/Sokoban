@@ -7,7 +7,7 @@
 
 import CombineSchedulers
 
-final class LocalAgentLoaderComposer<LoadPayload, SavePayload> {
+final class LocalAgentLoaderComposer<LoadPayload, LoadResponse, SavePayload, SaveResponse> {
     
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     private let backgroundScheduler: AnySchedulerOf<DispatchQueue>
@@ -24,23 +24,29 @@ final class LocalAgentLoaderComposer<LoadPayload, SavePayload> {
 extension LocalAgentLoaderComposer {
     
     func compose(
-        load: @escaping (LoadPayload) -> Void,
-        save: @escaping (SavePayload) -> Void
+        load: @escaping (LoadPayload) -> LoadResponse,
+        save: @escaping (SavePayload) -> SaveResponse
     ) -> Loader {
         
         return .init(
-            load: { payload in self.interactiveScheduler.schedule { load(payload) }},
-            save: { payload in self.backgroundScheduler.schedule { save(payload) }}
+            load: { payload, completion in
+                
+                self.interactiveScheduler.schedule { completion(load(payload)) }
+            },
+            save: { payload, completion
+                
+                in self.backgroundScheduler.schedule { completion(save(payload)) }
+            }
         )
     }
     
-    typealias Loader = LocalAgentLoader<LoadPayload, SavePayload>
+    typealias Loader = LocalAgentLoader<LoadPayload, LoadResponse, SavePayload, SaveResponse>
 }
 
-struct LocalAgentLoader<LoadPayload, SavePayload> {
+struct LocalAgentLoader<LoadPayload, LoadResponse, SavePayload, SaveResponse> {
     
-    let load: (LoadPayload) -> Void
-    let save: (SavePayload) -> Void
+    let load: (LoadPayload, @escaping (LoadResponse) -> Void) -> Void
+    let save: (SavePayload, @escaping (SaveResponse) -> Void) -> Void
 }
 
 import CombineSchedulers
@@ -65,7 +71,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         
         let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
         
-        sut.load(makeLoadPayload())
+        sut.load(makeLoadPayload()) { _ in }
         XCTAssertNoDiff(loadSpy.callCount, 0)
         
         interactiveScheduler.advance()
@@ -77,10 +83,29 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         let loadPayload = makeLoadPayload()
         let (sut, loadSpy, _, interactiveScheduler, _) = makeSUT()
         
-        sut.load(loadPayload)
+        sut.load(loadPayload) { _ in }
         interactiveScheduler.advance()
-
+        
         XCTAssertNoDiff(loadSpy.payloads, [loadPayload])
+    }
+    
+    func test_load_shouldDeliverLoaded() {
+        
+        let loadResponse = makeLoadResponse()
+        let (sut, _,_, interactiveScheduler, _) = makeSUT(loadStubs: [loadResponse])
+        let exp = expectation(description: "wait for load completion")
+        var receivedResponse = [LoadResponse]()
+        
+        sut.load(makeLoadPayload()) {
+            
+            receivedResponse.append($0)
+            exp.fulfill()
+        }
+        
+        interactiveScheduler.advance()
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(receivedResponse, [loadResponse])
     }
     
     // MARK: - save
@@ -89,7 +114,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         
         let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
         
-        sut.save(makeSavePayload())
+        sut.save(makeSavePayload()) { _ in }
         XCTAssertNoDiff(saveSpy.callCount, 0)
         
         backgroundScheduler.advance()
@@ -101,22 +126,41 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         let savePayload = makeSavePayload()
         let (sut, _, saveSpy, _, backgroundScheduler) = makeSUT()
         
-        sut.save(savePayload)
+        sut.save(savePayload) { _ in }
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(saveSpy.payloads, [savePayload])
     }
     
+    func test_save_shouldDeliverLoaded() {
+        
+        let saveResponse = makeSaveResponse()
+        let (sut, _,_, _, backgroundScheduler) = makeSUT(saveStubs: [saveResponse])
+        let exp = expectation(description: "wait for save completion")
+        var receivedResponse = [SaveResponse]()
+        
+        sut.save(makeSavePayload()) {
+            
+            receivedResponse.append($0)
+            exp.fulfill()
+        }
+        
+        backgroundScheduler.advance()
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(receivedResponse, [saveResponse])
+    }
+    
     // MARK: - Helpers
     
-    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, SavePayload>
-    private typealias SUT = LocalAgentLoader<LoadPayload, SavePayload>
-    private typealias LoadSpy = CallSpy<LoadPayload, Void>
-    private typealias SaveSpy = CallSpy<SavePayload, Void>
+    private typealias Composer = LocalAgentLoaderComposer<LoadPayload, LoadResponse, SavePayload, SaveResponse>
+    private typealias SUT = LocalAgentLoader<LoadPayload, LoadResponse, SavePayload, SaveResponse>
+    private typealias LoadSpy = CallSpy<LoadPayload, LoadResponse>
+    private typealias SaveSpy = CallSpy<SavePayload, SaveResponse>
     
     private func makeSUT(
-        loadStubs: [Void] = [()],
-        saveStubs: [Void] = [()],
+        loadStubs: [LoadResponse]? = nil,
+        saveStubs: [SaveResponse]? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -132,8 +176,8 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
             interactiveScheduler: interactiveScheduler.eraseToAnyScheduler(),
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         )
-        let loadSpy = LoadSpy(stubs: loadStubs)
-        let saveSpy = SaveSpy(stubs: saveStubs)
+        let loadSpy = LoadSpy(stubs: loadStubs ?? [makeLoadResponse()])
+        let saveSpy = SaveSpy(stubs: saveStubs ?? [makeSaveResponse()])
         let sut = composer.compose(load: loadSpy.call, save: saveSpy.call)
         
         trackForMemoryLeaks(composer, file: file, line: line)
@@ -155,6 +199,18 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         return .init(value: value)
     }
     
+    private struct LoadResponse: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeLoadResponse(
+        _ value: String = anyMessage()
+    ) -> LoadResponse {
+        
+        return .init(value: value)
+    }
+    
     private struct SavePayload: Equatable {
         
         let value: String
@@ -163,6 +219,18 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
     private func makeSavePayload(
         _ value: String = anyMessage()
     ) -> SavePayload {
+        
+        return .init(value: value)
+    }
+    
+    private struct SaveResponse: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeSaveResponse(
+        _ value: String = anyMessage()
+    ) -> SaveResponse {
         
         return .init(value: value)
     }
