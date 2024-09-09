@@ -36,6 +36,8 @@ let package = Package(
         .payHubUI,
         .utilityPayment,
         .utilityServicePrepayment,
+        // Banners
+        .banners,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -152,6 +154,8 @@ let package = Package(
         .utilityServicePrepaymentCoreTests,
         .utilityServicePrepaymentDomain,
         .utilityServicePrepaymentUI,
+        // Banners
+        .banners,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -672,6 +676,15 @@ private extension Product {
             .utilityServicePrepaymentCore,
             .utilityServicePrepaymentDomain,
             .utilityServicePrepaymentUI,
+        ]
+    )
+    
+    // MARK: - Banners
+    
+    static let banners = library(
+        name: .banners,
+        targets: [
+            .banners,
         ]
     )
     
@@ -1422,6 +1435,21 @@ private extension Target {
         path: "Tests/Payments/UtilityServicePrepayment/CoreTests"
     )
     
+    // MARK: - Banners
+    
+    static let banners = target(
+        name: .banners,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .payHub,
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.banners)"
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = target(
@@ -2832,6 +2860,12 @@ private extension Target.Dependency {
         name: .utilityServicePrepaymentDomain
     )
     
+    // MARK: - Banners
+    
+    static let banners = byName(
+        name: .banners
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -3116,6 +3150,10 @@ private extension String {
     static let utilityServicePrepaymentUI = "UtilityServicePrepaymentUI"
     static let utilityServicePrepaymentCoreTests = "UtilityServicePrepaymentCoreTests"
     
+    // MARK: - Banners
+    
+    static let banners = "Banners"
+
     // MARK: - Services
     
     static let cardStatementAPI = "CardStatementAPI"

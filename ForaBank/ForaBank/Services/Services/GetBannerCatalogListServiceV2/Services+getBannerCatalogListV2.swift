@@ -53,7 +53,7 @@ extension Services {
     }    
 }
 
-private extension BannerCatalogListData {
+extension BannerCatalogListData {
     
     init(_ data: GetBannerCatalogListResponse.Item) {
         
@@ -68,7 +68,7 @@ private extension BannerCatalogListData {
     }
 }
 
-private extension GetBannerCatalogListResponse.BannerAction {
+extension GetBannerCatalogListResponse.BannerAction {
     
     var bannerAction: BannerAction? {
         
