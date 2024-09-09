@@ -54,7 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         bind(rootViewModel: rootViewModel)
 
-        //FIXME: remove after refactor paymnets
+        //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,
                          selector:#selector(dismissAll),

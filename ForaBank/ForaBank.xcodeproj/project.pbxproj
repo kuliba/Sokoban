@@ -769,6 +769,9 @@
 		2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */; };
 		2A40AF2F2B591530003B7D8A /* FlowStubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */; };
 		2A4111F12B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */; };
+		2A42B40A2C8D65D500A9B658 /* RemoteNanoServiceComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */; };
+		2A42B40C2C8D66B700A9B658 /* RemoteService+httpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */; };
+		2A42B40F2C8DC55C00A9B658 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */; };
 		2A4300772C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */; };
 		2A43007C2C5217C2002FF8C7 /* ServicePaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43007B2C5217C2002FF8C7 /* ServicePaymentFlowState.swift */; };
 		2A43007E2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43007D2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift */; };
@@ -1220,6 +1223,11 @@
 		2A94991D2B7355A300C67F05 /* NanoServices+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */; };
 		2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */; };
 		2A9499222B73E13000C67F05 /* UserAccountEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */; };
+		2A94AAEA2C8ECCA0003B4FB1 /* RemoteNanoServiceComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */; };
+		2A94AAEB2C8ED0A1003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */; };
+		2A94AAEC2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */; };
+		2A94AAED2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */; };
+		2A94AAEF2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
 		2A95364A2B53BBAC00E874F5 /* Array+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9536492B53BBAC00E874F5 /* Array+ext.swift */; };
 		2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */; };
 		2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */; };
@@ -1664,6 +1672,7 @@
 		2AEF68672AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */; };
 		2AEF6BF22BF76DBE000249A1 /* SberOperatorFailureFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF6BF12BF76DBE000249A1 /* SberOperatorFailureFlowState.swift */; };
 		2AEF6BF62BF78017000249A1 /* UtilityServicePickerFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF6BF52BF78017000249A1 /* UtilityServicePickerFlowState.swift */; };
+		2AEFDF742C8C95F500401496 /* Logger+decorate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEFDF732C8C95F500401496 /* Logger+decorate.swift */; };
 		2AF0B0D92B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */; };
 		2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */; };
 		2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */; };
@@ -4166,6 +4175,13 @@
 		2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStub.swift; sourceTree = "<group>"; };
 		2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStubSettingsView.swift; sourceTree = "<group>"; };
 		2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldFactory+makeTextFieldTests.swift"; sourceTree = "<group>"; };
+		2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerTests.swift; sourceTree = "<group>"; };
+		2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposer.swift; sourceTree = "<group>"; };
+		2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+httpClient.swift"; sourceTree = "<group>"; };
+		2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift; sourceTree = "<group>"; };
+		2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift; sourceTree = "<group>"; };
+		2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceComposerAsFactoryTests.swift; sourceTree = "<group>"; };
 		2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentStateComposer.swift; sourceTree = "<group>"; };
 		2A43007B2C5217C2002FF8C7 /* ServicePaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowState.swift; sourceTree = "<group>"; };
 		2A43007D2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowEvent.swift; sourceTree = "<group>"; };
@@ -4631,6 +4647,7 @@
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
 		2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEffectHandler.swift; sourceTree = "<group>"; };
+		2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
 		2A9536492B53BBAC00E874F5 /* Array+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+ext.swift"; sourceTree = "<group>"; };
 		2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		2A95816A2AB9A063009698F5 /* Model+OperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+OperationTests.swift"; sourceTree = "<group>"; };
@@ -5061,6 +5078,7 @@
 		2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift"; sourceTree = "<group>"; };
 		2AEF6BF12BF76DBE000249A1 /* SberOperatorFailureFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberOperatorFailureFlowState.swift; sourceTree = "<group>"; };
 		2AEF6BF52BF78017000249A1 /* UtilityServicePickerFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePickerFlowState.swift; sourceTree = "<group>"; };
+		2AEFDF732C8C95F500401496 /* Logger+decorate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+decorate.swift"; sourceTree = "<group>"; };
 		2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountModelEffectHandler.swift; sourceTree = "<group>"; };
 		2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyExchangeCryptographer+live.swift"; sourceTree = "<group>"; };
@@ -9484,6 +9502,24 @@
 			path = TextFieldFactory;
 			sourceTree = "<group>";
 		};
+		2A42B4022C8D64EF00A9B658 /* RemoteNanoServicesComposer */ = {
+			isa = PBXGroup;
+			children = (
+				2A42B4052C8D653700A9B658 /* RemoteNanoServiceComposerTests.swift */,
+			);
+			path = RemoteNanoServicesComposer;
+			sourceTree = "<group>";
+		};
+		2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2A42B4122C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */,
+				2A42B4112C8ECA4600A9B658 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */,
+				2A42B4132C8ECA4700A9B658 /* RemoteNanoServiceComposerAsFactoryTests.swift */,
+			);
+			path = RemoteNanoServicesComposerAsFactory;
+			sourceTree = "<group>";
+		};
 		2A43007A2C5217AA002FF8C7 /* ServicePaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -10544,6 +10580,8 @@
 				2AC2ADC32B2252940049EE9B /* SberQR */,
 				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
+				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
+				2A42B4022C8D64EF00A9B658 /* RemoteNanoServicesComposer */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -10945,6 +10983,16 @@
 				2A3BD6062B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift */,
 			);
 			path = NanoServices;
+			sourceTree = "<group>";
+		};
+		2A94AAF02C8ED0E4003B4FB1 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */,
+				2A42B4092C8D65D500A9B658 /* RemoteNanoServiceComposer.swift */,
+				2A94AAEE2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
+			);
+			path = Remote;
 			sourceTree = "<group>";
 		};
 		2A95CBA12B2C80560041F5EC /* DecimalTextFieldPreview */ = {
@@ -12320,12 +12368,15 @@
 			children = (
 				838C09222C8B59C400E894AC /* LoadBannersList */,
 				2A0A3F652C2A0AA400029854 /* HTTPClientFactory.swift */,
+				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
+				2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */,
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
+				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
 				2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */,
 				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
 				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
@@ -20136,6 +20187,7 @@
 				0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */,
 				6876D10327F53EC0000240CC /* MoreButtonCollectionViewCell.swift in Sources */,
 				C1F15F392C58E69200D7DDE4 /* RequestFactory+getInfoForRepeatPayment.swift in Sources */,
+				2A42B40C2C8D66B700A9B658 /* RemoteService+httpClient.swift in Sources */,
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
 				2A2E3FD92BB3FCEE00730D37 /* NanoServices+makeCreateAnywayTransfer.swift in Sources */,
 				2ABB63122C640B6300541DE7 /* TextInputConfig+iFora.swift in Sources */,
@@ -20247,6 +20299,7 @@
 				2AA3A9342BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift in Sources */,
 				77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */,
 				6841930C279AC36100B4E184 /* StatementFormat.swift in Sources */,
+				2A42B40F2C8DC55C00A9B658 /* RemoteNanoServiceFactory.swift in Sources */,
 				ED2D89F1286C72950000B391 /* CameraAgentProtocol.swift in Sources */,
 				83CFA2A12C2D7D9D003B5E49 /* HorizontalPanelButton.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
@@ -20532,6 +20585,7 @@
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
 				2ACFD66B2C5D1F6A003F08AE /* Node.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
+				2AEFDF742C8C95F500401496 /* Logger+decorate.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
 				2A9E054B2B3B6E7B00463CE8 /* RootViewModelFactory+makeNavigationStateManager.swift in Sources */,
 				2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */,
@@ -20706,6 +20760,7 @@
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
 				2AECBC4A2BEBAD55000B0C0E /* UtilityPaymentFlowEffectHandler.swift in Sources */,
 				77E1804527AC39840006ACC9 /* FMSData.swift in Sources */,
+				2A42B40A2C8D65D500A9B658 /* RemoteNanoServiceComposer.swift in Sources */,
 				2A4300942C522A45002FF8C7 /* ServicePaymentFlowEffectHandler.swift in Sources */,
 				77F9F2662A45F80D00699433 /* PaymentsSuccessOptionsComponent.swift in Sources */,
 				0C58FB75290B1A94005B76B5 /* UInt64+Extentions.swift in Sources */,
@@ -21082,6 +21137,7 @@
 				2AB87C532C1346B40013EFFE /* ProductSelectWrapperView.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
 				C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */,
+				2A94AAEF2C8ED0DE003B4FB1 /* RemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */,
 				2A556B502C7CEB46002050C2 /* LatestPlaceholder.swift in Sources */,
 				2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */,
 				C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */,
@@ -21869,6 +21925,7 @@
 				832721402C122C4B00259785 /* MyProductsViewModelTests.swift in Sources */,
 				2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */,
 				2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */,
+				2A94AAEB2C8ED0A1003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift in Sources */,
 				C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */,
 				77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */,
 				C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */,
@@ -21915,6 +21972,7 @@
 				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
 				2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */,
+				2A94AAEA2C8ECCA0003B4FB1 /* RemoteNanoServiceComposerTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
@@ -21951,6 +22009,8 @@
 				2A58FAB62AD722BE00BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequestTests.swift in Sources */,
 				2A0776F82A02515600118373 /* XCTestCase+getJSON.swift in Sources */,
 				77D0386529882C6600FBE5AB /* ServerCommandsSPBTests.swift in Sources */,
+				2A94AAEC2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryTests.swift in Sources */,
+				2A94AAED2C8ED0AA003B4FB1 /* RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */,
 				C1C315E92C2DB8A0005C2BF8 /* HistoryReducerTests.swift in Sources */,
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
 				C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */,
