@@ -25,7 +25,7 @@ extension SerialStamped: Equatable where Value: Equatable {}
 
 public extension SerialStamped where Value == Void {
     
-    init(serial: Serial) {
+    init(serial: Serial?) {
         
         self.init(value: (), serial: serial)
     }
