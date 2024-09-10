@@ -46,23 +46,11 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     func test_load_shouldDeliverFailureOnLoadFailure() {
         
         let (sut, loadSpy, _) = makeSUT()
-        let exp = expectation(description: "wait for load completion")
-
-        sut.load(makeLoadPayload()) {
+        
+        expect(sut, with: makeLoadPayload(), toDeliver: .failure(anyError())) {
             
-            switch $0 {
-            case .failure:
-                break
-                
-            default:
-                XCTFail("Expected failure, got \($0) instead.")
-            }
-            exp.fulfill()
+            loadSpy.complete(with: .failure(anyError()))
         }
-        
-        loadSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 0.1)
     }
     
     func test_load_shouldNotDeliverFailureOnInstanceDeallocation() {
@@ -96,23 +84,11 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let response = makeLoadResponse(serial: serial)
         let (sut, loadSpy, _) = makeSUT()
-        let exp = expectation(description: "wait for load completion")
         
-        sut.load(makeLoadPayload(serial: serial)) {
+        expect(sut, with: makeLoadPayload(serial: serial), toDeliver: .success(response)) {
             
-            switch $0 {
-            case let .success(receivedResponse):
-                XCTAssertNoDiff(receivedResponse, response)
-                
-            default:
-                XCTFail("Expected success, got \($0) instead.")
-            }
-            exp.fulfill()
+            loadSpy.complete(with: .success(response))
         }
-        
-        loadSpy.complete(with: .success(response))
-        
-        wait(for: [exp], timeout: 0.1)
     }
     
     func test_load_shouldNotDeliverSuccessOnInstanceDeallocation() {
@@ -160,26 +136,12 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
-        let exp = expectation(description: "wait for load and cache completion")
         
-        sut.load(makeLoadPayload(serial: oldSerial)) {
+        expect(sut, with: makeLoadPayload(serial: oldSerial), toDeliver: .success(response)) {
             
-            switch $0 {
-            case let .success(receivedResponse):
-                XCTAssertNoDiff(receivedResponse, response)
-                
-            default:
-                XCTFail("Expected success, got \($0) instead.")
-            }
-            exp.fulfill()
+            loadSpy.complete(with: .success(response))
+            cacheSpy.complete(with: .failure(anyError()))
         }
-        
-        loadSpy.complete(with: .success(response))
-        cacheSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 0.1)
-
-        XCTAssertNotEqual(oldSerial, newSerial)
     }
     
     func test_load_shouldDeliverLoadedOnDifferentLoadedSerialCacheSuccess() {
@@ -187,26 +149,12 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
-        let exp = expectation(description: "wait for load and cache completion")
         
-        sut.load(makeLoadPayload(serial: oldSerial)) {
+        expect(sut, with: makeLoadPayload(serial: oldSerial), toDeliver: .success(response)) {
             
-            switch $0 {
-            case let .success(receivedResponse):
-                XCTAssertNoDiff(receivedResponse, response)
-                
-            default:
-                XCTFail("Expected success, got \($0) instead.")
-            }
-            exp.fulfill()
+            loadSpy.complete(with: .success(response))
+            cacheSpy.complete(with: .success(()))
         }
-        
-        loadSpy.complete(with: .success(response))
-        cacheSpy.complete(with: .success(()))
-        
-        wait(for: [exp], timeout: 0.1)
-
-        XCTAssertNotEqual(oldSerial, newSerial)
     }
     
     // MARK: - Helpers
@@ -275,5 +223,36 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     ) -> SerialStamped<Response> {
         
         return .init(value: value ?? makeResponse(), serial: serial)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with payload: SerialStamped<Payload>,
+        toDeliver expectedResult: Result<SerialStamped<Response>, Error>,
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for load completion")
+
+        sut.load(payload) {
+            
+            switch ($0, expectedResult) {
+            case (.failure, .failure):
+                break
+                
+            case let (.success(receivedResponse), .success(expectedResponse)):
+                XCTAssertNoDiff(receivedResponse, expectedResponse, file: file, line: line)
+                
+            default:
+                XCTFail("Expected \(expectedResult), got \($0) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 0.1)
     }
 }
