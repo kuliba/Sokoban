@@ -129,7 +129,7 @@ final class LocalAgentLoaderComposerTests: XCTestCase {
         XCTAssertNoDiff(toModelSpy.payloads, [value])
     }
     
-    func test_save_shouldCallLoadWithPayload() {
+    func test_save_shouldCallSaveWithPayload() {
         
         let (value, model) = (makeValue(), makeModel())
         let (sut, _,_,_, saveSpy, _, backgroundScheduler) = makeSUT(toModel: model)
