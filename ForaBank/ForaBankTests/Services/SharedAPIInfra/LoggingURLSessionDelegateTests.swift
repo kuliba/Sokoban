@@ -91,6 +91,7 @@ final class LoggerSpy: LoggerAgentProtocol {
     typealias Event = (level: LoggerAgentLevel, category: LoggerAgentCategory, message: String)
     
     private(set) var events = [Event]()
+    var callCount: Int { events.count }
     
     func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: StaticString, line: UInt) {
         
