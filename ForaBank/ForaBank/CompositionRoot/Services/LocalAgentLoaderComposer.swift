@@ -42,7 +42,7 @@ extension LocalAgentLoaderComposer {
                     
                     let loaded = load(payload).map {
                         
-                        return Loader.StoredData(
+                        return Loader.Stamped(
                             value: self.fromModel($0.0),
                             serial: $0.1
                         )

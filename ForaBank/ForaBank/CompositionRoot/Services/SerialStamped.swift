@@ -1,11 +1,11 @@
 //
-//  LocalAgentStoredData.swift
+//  SerialStamped.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 09.09.2024.
 //
 
-struct LocalAgentStoredData<Value> {
+struct SerialStamped<Value> {
     
     let value: Value
     let serial: Serial?
@@ -13,4 +13,4 @@ struct LocalAgentStoredData<Value> {
     typealias Serial = String
 }
 
-extension LocalAgentStoredData: Equatable where Value: Equatable {}
+extension SerialStamped: Equatable where Value: Equatable {}
