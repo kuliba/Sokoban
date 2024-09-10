@@ -1,5 +1,5 @@
 //
-//  RemoteNanoServiceComposerAsFactoryWithPayloadTests.swift
+//  LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 08.09.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class RemoteNanoServiceComposerAsFactoryWithPayloadTests: RemoteNanoServiceComposerAsFactoryTests {
+final class LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests: LoggingRemoteNanoServiceComposerAsFactoryTests {
     
     func test_init_shouldDNotCallCollaborators() {
         
