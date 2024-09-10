@@ -1231,7 +1231,6 @@
 		2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */; };
 		2A94AAF72C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */; };
 		2A94AAF92C8F7924003B4FB1 /* LocalAgentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */; };
-		2A94AAFB2C8F7938003B4FB1 /* SerialStamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAFA2C8F7938003B4FB1 /* SerialStamped.swift */; };
 		2A94AB022C8F81F6003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AB012C8F81F6003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocol.swift */; };
 		2A94AB042C8FFDAB003B4FB1 /* LocalAgentSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AB032C8FFDAB003B4FB1 /* LocalAgentSpy.swift */; };
 		2A94AB062C9006FB003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AB052C9006FB003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocolTests.swift */; };
@@ -4657,7 +4656,6 @@
 		2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposer.swift; sourceTree = "<group>"; };
 		2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoader.swift; sourceTree = "<group>"; };
-		2A94AAFA2C8F7938003B4FB1 /* SerialStamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialStamped.swift; sourceTree = "<group>"; };
 		2A94AB012C8F81F6003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAgentLoaderComposer+LocalAgentProtocol.swift"; sourceTree = "<group>"; };
 		2A94AB032C8FFDAB003B4FB1 /* LocalAgentSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentSpy.swift; sourceTree = "<group>"; };
 		2A94AB052C9006FB003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAgentLoaderComposer+LocalAgentProtocolTests.swift"; sourceTree = "<group>"; };
@@ -11013,7 +11011,6 @@
 			children = (
 				2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */,
 				2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */,
-				2A94AAFA2C8F7938003B4FB1 /* SerialStamped.swift */,
 				2A94AB012C8F81F6003B4FB1 /* LocalAgentLoaderComposer+LocalAgentProtocol.swift */,
 			);
 			path = Services;
@@ -20807,7 +20804,6 @@
 				2A3624992C5F410E00174C50 /* AnywayServicePickerFlowEvent.swift in Sources */,
 				68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */,
 				2AECBC372BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift in Sources */,
-				2A94AAFB2C8F7938003B4FB1 /* SerialStamped.swift in Sources */,
 				6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */,
 				C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */,
 				509EE0E2285F855D002281BF /* KeyboardPublisher.swift in Sources */,
