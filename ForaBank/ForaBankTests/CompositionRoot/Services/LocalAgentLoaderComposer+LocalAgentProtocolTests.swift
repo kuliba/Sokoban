@@ -231,12 +231,9 @@ final class LocalAgentLoaderComposer_LocalAgentProtocolTests: XCTestCase {
         let localAgentSpy = LocalAgentSpy<Model>(
             loadStub: loadStub, 
             storeStub: saveStubs,
-            serialStub: nil
+            serialStub: serial
         )
-        let sut = composer.compose(
-            agent: localAgentSpy, 
-            serial: { _ in serial }
-        )
+        let sut = composer.compose(agent: localAgentSpy)
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(localAgentSpy, file: file, line: line)
