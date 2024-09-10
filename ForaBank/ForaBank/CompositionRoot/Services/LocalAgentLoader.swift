@@ -7,11 +7,6 @@
 
 struct LocalAgentLoader<LoadPayload, Value> {
     
-    let load: (LoadPayload, @escaping (Stamped?) -> Void) -> Void
-    let save: (Stamped, @escaping (Result<Void, Error>) -> Void) -> Void
-}
-
-extension LocalAgentLoader {
-    
-    typealias Stamped = SerialStamped<Value>
+    let load: (LoadPayload, @escaping (Value?) -> Void) -> Void
+    let save: (Value, @escaping (Result<Void, Error>) -> Void) -> Void
 }

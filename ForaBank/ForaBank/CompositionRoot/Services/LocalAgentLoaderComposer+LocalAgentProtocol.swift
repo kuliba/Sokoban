@@ -9,8 +9,14 @@ extension LocalAgentLoaderComposer
 where Model: Codable,
       LoadPayload == Model.Type {
     
-    func compose(agent: LocalAgentProtocol) -> Loader {
+    func compose(
+        agent: LocalAgentProtocol,
+        serial: @escaping (Model) -> String?
+    ) -> Loader {
         
-        self.compose(load: agent.load, save: agent.store)
+        self.compose(
+            load: agent.load,
+            save: { model in try agent.store(model, serial: serial(model)) }
+        )
     }
 }

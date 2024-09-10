@@ -31,8 +31,8 @@ final class LocalAgentLoaderComposer<LoadPayload, Model, Value> {
 extension LocalAgentLoaderComposer {
     
     func compose(
-        load: @escaping (LoadPayload) -> (Model, Serial?)?,
-        save: @escaping (Model, Serial?) throws -> Void
+        load: @escaping (LoadPayload) -> Model?,
+        save: @escaping (Model) throws -> Void
     ) -> Loader {
         
         return .init(
@@ -40,29 +40,21 @@ extension LocalAgentLoaderComposer {
                 
                 self.interactiveScheduler.schedule {
                     
-                    let loaded = load(payload).map {
-                        
-                        return Loader.Stamped(
-                            value: self.fromModel($0.0),
-                            serial: $0.1
-                        )
-                    }
-                    completion(loaded)
+                    completion(load(payload).map(self.fromModel))
                 }
             },
-            save: { payload, completion in
+            save: { value, completion in
                 
                 self.backgroundScheduler.schedule {
                     
                     completion(.init(catching: {
                         
-                        try save(self.toModel(payload.value), payload.serial)
+                        try save(self.toModel(value))
                     }))
                 }
             }
         )
     }
     
-    typealias Serial = String
     typealias Loader = LocalAgentLoader<LoadPayload, Value>
 }
