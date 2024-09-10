@@ -485,7 +485,7 @@ private extension ProductProfileViewModel {
                     mode: .link
                 )
                 paymentsTransfersViewModel.rootActions = rootActions
-                link = .paymentsTransfers(paymentsTransfersViewModel)
+                link = .paymentsTransfers(.init(model: paymentsTransfersViewModel, cancellables: []))
                 
             }.store(in: &bindings)
         
@@ -2408,8 +2408,7 @@ extension ProductProfileViewModel {
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
-        case payment(PaymentsViewModel)
-        case paymentsTransfers(PaymentsTransfersViewModel)
+        case paymentsTransfers(Node<PaymentsTransfersViewModel>)
         case controlPanel(ControlPanelViewModel)
     }
     

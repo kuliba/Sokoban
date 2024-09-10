@@ -14,7 +14,7 @@ import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
-import LatestPayments
+import LatestPaymentsBackendV2
 import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore

@@ -8,20 +8,12 @@
 import Combine
 import PayHub
 
-final class LatestFlow: FlowEventEmitter {
+final class LatestFlow {
     
     let latest: Latest
     
-    private let subject = PassthroughSubject<FlowEvent, Never>()
-    
-    init(
-        latest: Latest
-    ) {
+    init(latest: Latest) {
+ 
         self.latest = latest
-    }
-    
-    var eventPublisher: AnyPublisher<FlowEvent, Never> {
-        
-        subject.eraseToAnyPublisher()
     }
 }

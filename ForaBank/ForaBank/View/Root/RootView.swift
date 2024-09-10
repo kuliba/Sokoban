@@ -280,13 +280,30 @@ private extension RootView {
         ComposedOperationPickerFlowView(
             binder: binder,
             factory: .init(
-                makeDestinationView: {
-                    
-                    Text("TBD: destination " + String(describing: $0))
-                },
+                makeDestinationView: makeOperationPickerDestinationView,
                 makeItemLabel: itemLabel
             )
         )
+    }
+    
+    @ViewBuilder
+    func makeOperationPickerDestinationView(
+        destination: OperationPickerNavigation
+    ) -> some View {
+        
+        switch destination {
+        case let .exchange(currencyWalletViewModel):
+            CurrencyWalletView(viewModel: currencyWalletViewModel)
+            
+        case let .latest(latest):
+            Text("TBD: destination " + String(describing: latest))
+            
+        case let .status(operationPickerFlowStatus):
+            EmptyView()
+            
+        case let .templates(templates):
+            Text("TBD: destination " + String(describing: templates))
+        }
     }
     
     func makePaymentsTransfersToolbarView(
@@ -341,7 +358,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: OperationPickerState<Latest>.Item
+        item: OperationPickerState.Item
     ) -> some View {
         
         OperationPickerStateItemLabel(
@@ -365,7 +382,20 @@ private extension RootView {
     }
 }
 
-extension Latest: Named {}
+extension Latest: Named {
+    
+    public var name: String {
+        
+        switch self {
+        case let .service(service):
+            return service.name ?? String(describing: service)
+            
+        case let .withPhone(withPhone):
+            return withPhone.name ?? String(describing: withPhone)
+        }
+    }
+}
+
 extension ServiceCategory: Named {}
 
 extension View {

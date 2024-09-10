@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
-import LatestPayments
+import LatestPaymentsBackendV2
 import Foundation
 import RemoteServices
 

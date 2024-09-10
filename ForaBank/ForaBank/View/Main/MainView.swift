@@ -219,8 +219,8 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .payments(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+        case let .payments(node):
+            PaymentsView(viewModel: node.model)
             
         case let .operatorView(internetDetailViewModel):
             InternetTVDetailsView(viewModel: internetDetailViewModel)
@@ -278,8 +278,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .places(placesViewModel):
             PlacesView(viewModel: placesViewModel)
             
-        case let .byPhone(viewModel):
-            ContactsView(viewModel: viewModel)
+        case let .byPhone(node):
+            ContactsView(viewModel: node.model)
         }
     }
     

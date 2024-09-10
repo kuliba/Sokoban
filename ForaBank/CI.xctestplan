@@ -433,13 +433,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "LatestPaymentsTests",
-        "name" : "LatestPaymentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UIPrimitivesTests",
         "name" : "UIPrimitivesTests"
       }
@@ -456,20 +449,6 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "OptionalSelectorComponentTests",
         "name" : "OptionalSelectorComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ServiceCategoriesTests",
-        "name" : "ServiceCategoriesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ServiceCategoriesBackendTests",
-        "name" : "ServiceCategoriesBackendTests"
       }
     },
     {
@@ -498,6 +477,34 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "GetProductListByTypeV6ServiceTests",
         "name" : "GetProductListByTypeV6ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsBackendV2Tests",
+        "name" : "LatestPaymentsBackendV2Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentTemplateBackendV3Tests",
+        "name" : "PaymentTemplateBackendV3Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServiceCategoriesBackendV0Tests",
+        "name" : "ServiceCategoriesBackendV0Tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsBackendV3Tests",
+        "name" : "LatestPaymentsBackendV3Tests"
       }
     }
   ],

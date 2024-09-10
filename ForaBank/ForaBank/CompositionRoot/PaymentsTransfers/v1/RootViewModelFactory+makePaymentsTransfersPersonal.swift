@@ -42,6 +42,7 @@ extension RootViewModelFactory {
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     static func makePaymentsTransfersPersonal(
+        model: Model,
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
@@ -71,7 +72,7 @@ extension RootViewModelFactory {
         
         // MARK: - OperationPicker
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerItem<Latest>>(
+        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
             load: { completion in
                 
                 nanoServices.loadAllLatest {
@@ -90,6 +91,7 @@ extension RootViewModelFactory {
             placeholderCount: operationPickerPlaceholderCount
         )
         let operationPickerFlowComposer = OperationPickerFlowComposer(
+            model: model,
             scheduler: mainScheduler
         )
         let operationPickerFlow = operationPickerFlowComposer.compose()
@@ -99,7 +101,7 @@ extension RootViewModelFactory {
             bind: { content, flow in
                 
                 content.$state
-                    .map(\.selected)
+                    .compactMap(\.selected)
                     .sink { flow.event(.select($0)) }
             }
         )

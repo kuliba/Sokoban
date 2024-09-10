@@ -9,11 +9,11 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public typealias OperationPickerState<Latest> = LoadablePickerState<UUID, OperationPickerItem<Latest>>
-public typealias OperationPickerEvent<Latest> = LoadablePickerEvent<OperationPickerItem<Latest>>
+public typealias OperationPickerState<Latest> = LoadablePickerState<UUID, OperationPickerElement<Latest>>
+public typealias OperationPickerEvent<Latest> = LoadablePickerEvent<OperationPickerElement<Latest>>
 public typealias OperationPickerEffect = LoadablePickerEffect
 
-public typealias OperationPickerReducer<Latest> = LoadablePickerReducer<UUID, OperationPickerItem<Latest>>
-public typealias OperationPickerEffectHandler<Latest> = LoadablePickerEffectHandler<OperationPickerItem<Latest>>
+public typealias OperationPickerReducer<Latest> = LoadablePickerReducer<UUID, OperationPickerElement<Latest>>
+public typealias OperationPickerEffectHandler<Latest> = LoadablePickerEffectHandler<OperationPickerElement<Latest>>
 
 public typealias OperationPickerContent<Latest> = RxViewModel<OperationPickerState<Latest>, OperationPickerEvent<Latest>, OperationPickerEffect>

@@ -7,15 +7,18 @@
 
 import Foundation
 import PayHub
+import LatestPaymentsBackendV3
+import PayHubUI
+import RemoteServices
 import RxViewModel
 
-typealias Latest = UtilityPaymentLastPayment
+typealias Latest = RemoteServices.ResponseMapper.LatestPayment
 
-typealias OperationPickerPickerState = LoadablePickerState<UUID, OperationPickerItem<Latest>>
-typealias OperationPickerEvent = LoadablePickerEvent<OperationPickerItem<Latest>>
-typealias OperationPickerEffect = LoadablePickerEffect
+typealias OperationPickerState = PayHubUI.OperationPickerState<Latest>
+typealias OperationPickerEvent = PayHubUI.OperationPickerEvent<Latest>
+typealias OperationPickerEffect = PayHubUI.OperationPickerEffect
 
-typealias OperationPickerReducer = LoadablePickerReducer<UUID, OperationPickerItem<Latest>>
-typealias OperationPickerEffectHandler = LoadablePickerEffectHandler<OperationPickerItem<Latest>>
+typealias OperationPickerReducer = PayHubUI.OperationPickerReducer<Latest>
+typealias OperationPickerEffectHandler = PayHubUI.OperationPickerEffectHandler<Latest>
 
-typealias OperationPickerContent = RxViewModel<OperationPickerPickerState, OperationPickerEvent, OperationPickerEffect>
+typealias OperationPickerContent = RxViewModel<OperationPickerState, OperationPickerEvent, OperationPickerEffect>

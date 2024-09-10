@@ -15,13 +15,11 @@ extension OperationPickerFlow {
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> OperationPickerFlow {
         
+        let composer = OperationPickerFlowMakeNavigationComposer()
+        
         let reducer = OperationPickerFlowReducer()
         let effectHandler = OperationPickerFlowEffectHandler(
-            microServices: .init(
-                makeExchange: Exchange.init,
-                makeLatestFlow: LatestFlow.init,
-                makeTemplates: Templates.init
-            )
+            makeNavigation: composer.compose()
         )
         
         return .init(

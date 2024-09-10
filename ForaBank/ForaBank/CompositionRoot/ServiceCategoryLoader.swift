@@ -23,11 +23,13 @@ extension ServiceCategoryLoader {
         self.load { completion((try? $0.get()) ?? []) }
     }
     
-    // ignore errors
+    // ignore errors and empty
     func save(
         _ categories: [ServiceCategory],
         _ completion: @escaping () -> Void
     ) {
+        guard !categories.isEmpty else { return }
+        
         self.save(categories, validUntil: .distantFuture) { _ in
             
             completion()

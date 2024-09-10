@@ -114,6 +114,20 @@ extension CardStatementAPI.ProductStatementData.Kind {
             return .insideDeposit
         case .sberQRPayment:
             return .sberQRPayment
+        case .networkMarketing:
+            return .networkMarketing
+        case .digitalWallet:
+            return .digitalWallet
+        case .charity:
+            return .charity
+        case .socialAndGame:
+            return .socialAndGame
+        case .education:
+            return .education
+        case .security:
+            return .security
+        case .repayment:
+            return .repayment
         }
     }
 }

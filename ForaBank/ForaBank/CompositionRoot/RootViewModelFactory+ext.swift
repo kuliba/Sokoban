@@ -304,6 +304,41 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
+        let localBannerListLoader = ServiceItemsLoader.default
+        let getBannerList = NanoServices.makeGetBannerCatalogListV2(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
+        let getBannerListLoader = AnyLoader { completion in
+            
+            backgroundScheduler.delay(for: .milliseconds(20)) {
+                
+                localBannerListLoader.serial {
+                    getBannerList(($0, 120)) {
+                        
+                        completion($0)
+                    }
+                }
+            }
+        }
+        
+        let bannerListDecorated = CacheDecorator(
+            decoratee: getBannerListLoader,
+            cache: { response, completion in
+                localBannerListLoader.save(.init(response), completion)
+            }
+        )
+       
+        let loadBannersList: LoadBanners = { completion in
+            
+            bannerListDecorated.load {
+                
+                let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
+                completion(banners.bannerCatalogList.map { .banner($0)})
+            }
+        }
+        
         let localServiceCategoryLoader = ServiceCategoryLoader.default
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
             httpClient: httpClient,
@@ -332,13 +367,18 @@ extension RootViewModelFactory {
             }
         }
         
+        let getLatestPayments = NanoServices.makeGetAllLatestPaymentsV3Stringly(
+            httpClient: httpClient,
+            log: logger.log
+        )
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,
-            getLatestPayments: NanoServices.getLatestPayments
+            getLatestPayments: getLatestPayments
         )
         let loadLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
+            model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
