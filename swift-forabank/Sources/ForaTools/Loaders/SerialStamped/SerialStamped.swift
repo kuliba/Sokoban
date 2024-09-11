@@ -8,11 +8,11 @@
 public struct SerialStamped<Value> {
     
     public let value: Value
-    public let serial: Serial?
+    public let serial: Serial
     
     public init(
         value: Value,
-        serial: Serial?
+        serial: Serial
     ) {
         self.value = value
         self.serial = serial
@@ -25,7 +25,7 @@ extension SerialStamped: Equatable where Value: Equatable {}
 
 public extension SerialStamped where Value == Void {
     
-    init(serial: Serial?) {
+    init(serial: Serial) {
         
         self.init(value: (), serial: serial)
     }

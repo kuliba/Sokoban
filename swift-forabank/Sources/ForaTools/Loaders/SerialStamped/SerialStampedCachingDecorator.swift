@@ -70,7 +70,7 @@ public extension SerialStampedCachingDecorator where Payload == Void {
     }
     
     func load(
-        serial: Serial?,
+        serial: Serial,
         completion: @escaping DecorateeCompletion
     ) {
         self.load(.init(serial: serial), completion: completion)

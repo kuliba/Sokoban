@@ -207,7 +207,7 @@ final class SerialStampedCachingDecoratorVoidTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        with serial: String?,
+        with serial: String,
         toDeliver expectedResult: Result<SerialStamped<Response>, Error>,
         on action: () -> Void,
         file: StaticString = #file,

@@ -39,6 +39,37 @@ public extension URL {
             throw URLError.invalidURL
         }
     }
+    
+    /// Returns a new URL with the given query parameters appended, excluding any parameters with empty keys or values.
+    /// Throws an error if the URL components cannot be resolved or if the URL cannot be created.
+    ///
+    /// - Parameter parameters: A dictionary of query parameters to append to the URL.
+    /// - Throws: `URLError.invalidURL` if the URL cannot be created.
+    /// - Returns: A URL with the appended query parameters, or the original URL if no valid parameters are provided.
+    func appendingQueryItems(
+        parameters: [String: String]
+    ) throws -> URL {
+        
+        let parameters = parameters.filter {
+            !$0.key.isEmpty && !$0.value.isEmpty
+        }
+        
+        guard !parameters.isEmpty else { return self }
+        
+        guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false)
+        else { throw URLError.invalidURL }
+        
+        let queryItems = parameters.map {
+            URLQueryItem(name: $0.key, value: $0.value)
+        }
+        urlComponents.queryItems = queryItems
+        
+        if let updatedURL = urlComponents.url {
+            return updatedURL
+        } else {
+            throw URLError.invalidURL
+        }
+    }
 }
 
 public enum URLError: Error {
