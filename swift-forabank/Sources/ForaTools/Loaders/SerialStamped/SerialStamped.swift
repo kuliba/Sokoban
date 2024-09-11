@@ -8,11 +8,11 @@
 public struct SerialStamped<Value> {
     
     public let value: Value
-    public let serial: Serial?
+    public let serial: Serial
     
     public init(
         value: Value,
-        serial: Serial?
+        serial: Serial
     ) {
         self.value = value
         self.serial = serial

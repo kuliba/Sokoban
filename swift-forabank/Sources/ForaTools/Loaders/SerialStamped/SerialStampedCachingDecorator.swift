@@ -51,3 +51,28 @@ public extension SerialStampedCachingDecorator {
         }
     }
 }
+
+public extension SerialStampedCachingDecorator where Payload == Void {
+    
+    typealias Serial = String
+    
+    convenience init(
+        decoratee: @escaping (Serial?, @escaping DecorateeCompletion) -> Void,
+        cache: @escaping Cache
+    ) {
+        self.init(
+            decoratee: { payload, completion in
+                
+                decoratee(payload.serial, completion)
+            },
+            cache: cache
+        )
+    }
+    
+    func load(
+        serial: Serial,
+        completion: @escaping DecorateeCompletion
+    ) {
+        self.load(.init(serial: serial), completion: completion)
+    }
+}
