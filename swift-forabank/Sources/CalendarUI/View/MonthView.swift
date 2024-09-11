@@ -44,12 +44,21 @@ extension MonthView {
     
     func dayView(_ date: Date) -> some View {
         
-        config.dayView(
-            date,
-            isCurrentMonth(date),
-            selectedDate,
-            { selectedRange?.addToRange($0) }
-        ).erased()
+        DayView(
+            date: date,
+            isCurrentMonth: isCurrentMonth(date),
+            config: config.dayConfig,
+            selectedDate: selectedDate,
+            selectedRange: viewModel.calendarState.range,
+            selectDate: selectDate
+        )
+        
+//        config.dayView(
+//            date,
+//            isCurrentMonth(date),
+//            selectedDate,
+//            { selectedRange?.addToRange($0) }
+//        ).erased()
     }
 }
 

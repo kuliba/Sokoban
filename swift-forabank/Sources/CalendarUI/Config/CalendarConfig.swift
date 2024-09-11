@@ -25,12 +25,11 @@ public struct CalendarConfig {
 
     var weekdaysView: () -> WeekdaysView
     var monthLabel: (Date) -> MonthLabel
-    var dayView: (Date, Bool, Date?, @escaping (Date) -> Void) -> DayView
 
     var scrollDate: Date? = nil
     var onMonthChange: (Date) -> () = {_ in}
     
-    let configurable: Configurable = .init()
+    let dayConfig: DayConfig
     
     public init(
         title: String,
@@ -41,7 +40,7 @@ public struct CalendarConfig {
         monthsViewBackground: Color = .clear,
         weekdaysView: @escaping () -> WeekdaysView,
         monthLabel: @escaping (Date) -> MonthLabel,
-        dayView: @escaping (Date, Bool, Date?, @escaping (Date) -> Void) -> DayView,
+        dayConfig: DayConfig,
         scrollDate: Date? = nil,
         onMonthChange: @escaping (Date) -> () = {_ in}
     ) {
@@ -53,7 +52,7 @@ public struct CalendarConfig {
         self.monthsViewBackground = monthsViewBackground
         self.weekdaysView = weekdaysView
         self.monthLabel = monthLabel
-        self.dayView = dayView
+        self.dayConfig = dayConfig
         self.scrollDate = scrollDate
         self.onMonthChange = onMonthChange
     }
