@@ -95,6 +95,9 @@ class LocalAgent: LocalAgentProtocol {
     func serial<T>(for type: T.Type) -> String? {
         
         let fileName = fileName(for: type)
+        let data = try? Data(contentsOf: fileURL(with: fileName))
+        
+        guard data != nil else { return nil }
         
         return serials[fileName]
     }
