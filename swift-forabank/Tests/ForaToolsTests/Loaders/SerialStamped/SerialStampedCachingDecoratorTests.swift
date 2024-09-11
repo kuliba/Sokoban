@@ -25,19 +25,19 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     
     func test_load_shouldCallDecorateeWithPayload() {
         
-        let payload = makeLoadPayload()
+        let serial = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        sut.load(payload) { _ in }
+        sut.load(serial) { _ in }
         
-        XCTAssertNoDiff(loadSpy.payloads, [payload])
+        XCTAssertNoDiff(loadSpy.payloads, [serial])
     }
     
     func test_load_shouldNotCallCacheOnLoadFailure() {
         
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.load(makeLoadPayload()) { _ in }
+        sut.load(anyMessage()) { _ in }
         loadSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -47,7 +47,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         
         let (sut, loadSpy, _) = makeSUT()
         
-        expect(sut, with: makeLoadPayload(), toDeliver: .failure(anyError())) {
+        expect(sut, with: anyMessage(), toDeliver: .failure(anyError())) {
             
             loadSpy.complete(with: .failure(anyError()))
         }
@@ -61,7 +61,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let exp = expectation(description: "wait for load completion")
         exp.isInverted = true
         
-        sut?.load(makeLoadPayload()) { _ in exp.fulfill() }
+        sut?.load(anyMessage()) { _ in exp.fulfill() }
         sut = nil
         loadSpy.complete(with: .failure(anyError()))
         
@@ -73,7 +73,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.load(makeLoadPayload(serial: serial)) { _ in }
+        sut.load(serial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: serial)))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -85,7 +85,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: serial)
         let (sut, loadSpy, _) = makeSUT()
         
-        expect(sut, with: makeLoadPayload(serial: serial), toDeliver: .success(response)) {
+        expect(sut, with: serial, toDeliver: .success(response)) {
             
             loadSpy.complete(with: .success(response))
         }
@@ -99,7 +99,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let exp = expectation(description: "wait for load completion")
         exp.isInverted = true
         
-        sut?.load(makeLoadPayload()) { _ in exp.fulfill() }
+        sut?.load(anyMessage()) { _ in exp.fulfill() }
         sut = nil
         loadSpy.complete(with: .success(makeLoadResponse()))
         
@@ -111,7 +111,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.load(makeLoadPayload(serial: oldSerial)) { _ in }
+        sut.load(oldSerial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: newSerial)))
         
         XCTAssertEqual(cacheSpy.callCount, 1)
@@ -124,7 +124,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.load(makeLoadPayload(serial: oldSerial)) { _ in }
+        sut.load(oldSerial) { _ in }
         loadSpy.complete(with: .success(response))
         
         XCTAssertEqual(cacheSpy.payloads, [response])
@@ -137,7 +137,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        expect(sut, with: makeLoadPayload(serial: oldSerial), toDeliver: .success(response)) {
+        expect(sut, with: oldSerial, toDeliver: .success(response)) {
             
             loadSpy.complete(with: .success(response))
             cacheSpy.complete(with: .failure(anyError()))
@@ -150,7 +150,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        expect(sut, with: makeLoadPayload(serial: oldSerial), toDeliver: .success(response)) {
+        expect(sut, with: oldSerial, toDeliver: .success(response)) {
             
             loadSpy.complete(with: .success(response))
             cacheSpy.complete(with: .success(()))
@@ -159,8 +159,8 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = SerialStampedCachingDecorator<Payload, Response>
-    private typealias LoadSpy = Spy<SerialStamped<Payload>, Result<SerialStamped<Response>, Error>>
+    private typealias SUT = SerialStampedCachingDecorator<Response>
+    private typealias LoadSpy = Spy<String?, Result<SerialStamped<Response>, Error>>
     private typealias CacheSpy = Spy<SerialStamped<Response>, Result<Void, Error>>
     
     private func makeSUT(
@@ -185,26 +185,6 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         return (sut, loadSpy, cacheSpy)
     }
     
-    private struct Payload: Equatable {
-        
-        let serial: String
-    }
-    
-    private func makePayload(
-        serial: String = anyMessage()
-    ) -> Payload {
-        
-        return .init(serial: serial)
-    }
-    
-    private func makeLoadPayload(
-        serial: String = anyMessage(),
-        value: Payload? = nil
-    ) -> SerialStamped<Payload> {
-        
-        return .init(value: value ?? makePayload(), serial: serial)
-    }
-    
     private struct Response: Equatable {
         
         let serial: String
@@ -227,7 +207,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        with payload: SerialStamped<Payload>,
+        with serial: String?,
         toDeliver expectedResult: Result<SerialStamped<Response>, Error>,
         on action: () -> Void,
         file: StaticString = #file,
@@ -235,7 +215,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for load completion")
 
-        sut.load(payload) {
+        sut.load(serial) {
             
             switch ($0, expectedResult) {
             case (.failure, .failure):
