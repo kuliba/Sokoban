@@ -30,7 +30,7 @@ public extension SerialStampedCachingDecorator {
 
 public extension SerialStampedCachingDecorator {
     
-    func load(
+    func decorated(
         _ serial: Serial?,
         completion: @escaping DecorateeCompletion
     ) {
