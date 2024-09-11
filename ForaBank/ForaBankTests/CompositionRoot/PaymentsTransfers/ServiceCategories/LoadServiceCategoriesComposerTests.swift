@@ -65,7 +65,7 @@ private extension LoadServiceCategoriesComposer {
     func load(
         _ completion: @escaping LoadServiceCategoriesCompletion
     ) {
-        getServiceCategoryList {
+        getServiceCategoryList(nil) {
             
             let categories = (try? $0.get())?.categoryGroupList ?? []
             completion(categories)

@@ -355,7 +355,7 @@ extension RootViewModelFactory {
             
             backgroundScheduler.delay(for: .seconds(2)) {
                 
-                getServiceCategoryList {
+                getServiceCategoryList(nil) {
                     
                     completion($0.map(\.categoryGroupList))
                 }
