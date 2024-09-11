@@ -357,7 +357,7 @@ extension RootViewModelFactory {
                 
                 getServiceCategoryList(nil) {
                     
-                    completion($0.map(\.categoryGroupList))
+                    completion($0.map(\.list))
                 }
             }
         }

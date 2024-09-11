@@ -188,7 +188,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
 private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     
     static let one: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: .mobile,
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
@@ -203,7 +203,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     )
     
     static let valid: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: nil,
                 md5Hash: "2d777a4bb3f53d495026b4884bbedde4",

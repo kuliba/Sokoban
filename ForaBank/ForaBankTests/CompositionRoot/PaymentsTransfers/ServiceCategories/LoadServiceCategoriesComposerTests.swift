@@ -67,7 +67,7 @@ private extension LoadServiceCategoriesComposer {
     ) {
         getServiceCategoryList(nil) {
             
-            let categories = (try? $0.get())?.categoryGroupList ?? []
+            let categories = (try? $0.get())?.list ?? []
             completion(categories)
         }
     }

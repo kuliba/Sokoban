@@ -9,24 +9,12 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public struct GetServiceCategoryListResponse: Equatable {
-        
-        public let categoryGroupList: [Category]
-        public let serial: String
-        
-        public init(
-            categoryGroupList: [Category],
-            serial: String
-        ) {
-            self.categoryGroupList = categoryGroupList
-            self.serial = serial
-        }
-    }
+    public typealias GetServiceCategoryListResponse = SerialStamped<ServiceCategory>
 }
 
-extension ResponseMapper.GetServiceCategoryListResponse {
+extension ResponseMapper {
     
-    public struct Category: Equatable {
+    public struct ServiceCategory: Equatable {
         
         public let latestPaymentsCategory: LatestPaymentsCategory?
         public let md5Hash: String
