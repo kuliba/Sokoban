@@ -48,10 +48,12 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { isFiltered, event in
+            makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
                 self.makeHistoryButtonView(
                     self.historyFeatureFlag,
                     isFiltered: isFiltered,
+                    isDateFiltered: isDateFiltered,
+                    clearAction: clearAction,
                     event: event
                 )
             },
@@ -89,8 +91,10 @@ private extension RootViewFactoryComposer {
                 makeHistoryButton: {
                     self.makeHistoryButtonView(
                         self.historyFeatureFlag,
-                        isFiltered: $0,
-                        event: $1
+                        isFiltered: $1,
+                        isDateFiltered: $2,
+                        clearAction: $3,
+                        event: $0
                     )
                 },
                 makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
@@ -212,13 +216,17 @@ private extension RootViewFactoryComposer {
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag,
         isFiltered: @escaping () -> Bool,
+        isDateFiltered: @escaping () -> Bool,
+        clearAction: @escaping () -> Void,
         event: @escaping (HistoryEvent) -> Void
     ) -> HistoryButtonView? {
         
         if historyFeatureFlag.rawValue {
             return HistoryButtonView(
                 event: event,
-                isFiltered: isFiltered
+                isFiltered: isFiltered,
+                isDateFiltered: isDateFiltered,
+                clearOptions: clearAction
             )
         } else {
            return nil

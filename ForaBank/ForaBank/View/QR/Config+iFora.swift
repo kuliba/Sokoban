@@ -135,7 +135,8 @@ public extension FilterConfig {
                 textFont: .textH4R16240(),
                 textColor: .textPlaceholder
             )
-        )
+        ), 
+        optionButtonCloseImage: .ic24Close
     )
 }
 

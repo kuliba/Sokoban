@@ -11,29 +11,28 @@ import SharedConfigs
 
 public struct FilterView: View {
     
-    public typealias State = FilterState
     public typealias Event = FilterEvent
     public typealias Config = FilterConfig
     
-    var state: State
+    @State var filterState: FilterState
     let filterEvent: (Event) -> Void
     let config: Config
     
-    let makeButtonsContainer: (State) -> ButtonsContainer
+    let makeButtonsContainer: (@escaping () -> Void, FilterState) -> ButtonsContainer
     let clearOptionsAction: () -> Void
     let dismissAction: () -> Void
     let calendarViewAction: () -> Void
     
     public init(
-        state: State,
+        filterState: FilterState,
         event: @escaping (Event) -> Void,
         config: Config,
-        makeButtonsContainer: @escaping (State) -> ButtonsContainer,
+        makeButtonsContainer: @escaping (@escaping () -> Void, FilterState) -> ButtonsContainer,
         clearOptionsAction: @escaping () -> Void,
         dismissAction: @escaping () -> Void,
         calendarViewAction: @escaping () -> Void
     ) {
-        self.state = state
+        self._filterState = .init(wrappedValue: filterState)
         self.filterEvent = event
         self.config = config
         self.makeButtonsContainer = makeButtonsContainer
@@ -46,7 +45,7 @@ public struct FilterView: View {
         
         VStack(alignment: .leading) {
             
-            Text(state.title)
+            Text(filterState.title)
                 .font(.system(size: 18))
                 .padding(.bottom, 10)
             
@@ -54,26 +53,32 @@ public struct FilterView: View {
                 .padding(.bottom, 5)
             
             PeriodContainer(
-                periods: state.periods,
-                selectedDates: (state.selectDates?.lowerDate, state.selectDates?.upperDate),
-                selectedPeriod: state.selectedPeriod,
+                state: filterState,
                 event: { event in
                     
-                    filterEvent(event)
+                    switch event {
+                    case .calendar:
+                        calendarViewAction()
+                    case .clearOptions:
+                        filterEvent(.clearOptions)
+                    case let .selectPeriod(period):
+                        filterState.selectedPeriod = period
+                    }
                 },
-                selectDateAction: calendarViewAction
+                config: .init(closeImage: config.optionButtonCloseImage)
             )
             
-            if !state.services.isEmpty {
+            if !filterState.services.isEmpty {
                 
                 config.transactionTitle.title.text(withConfig: config.transactionTitle.titleConfig)
                     .padding(.bottom, 5)
                 
                 TransactionContainer(
-                    transactions: state.transactionType,
-                    selectedTransaction: state.selectedTransaction,
-                    event: { event in
-                        filterEvent(event)
+                    transactions: filterState.transactionType,
+                    selectedTransaction: filterState.selectedTransaction,
+                    event: { transaction in
+                        
+                        self.filterState.selectedTransaction = transaction
                     },
                     config: config
                 )
@@ -82,11 +87,16 @@ public struct FilterView: View {
                     .padding(.bottom, 5)
                 
                 FlexibleContainerButtons(
-                    data: state.services.sorted(),
-                    selectedItems: state.selectedServices,
+                    data: filterState.services.sorted(),
+                    selectedItems: filterState.selectedServices,
                     serviceButtonTapped: { service in
                         
-                        filterEvent(.selectedCategory(service))
+                        if filterState.selectedServices.contains(service) {
+                            
+                            self.filterState.selectedServices.remove(service)
+                        } else {
+                            self.filterState.selectedServices.insert(service)
+                        }
                     },
                     config: .init(
                         title: "",
@@ -99,7 +109,11 @@ public struct FilterView: View {
             
             Spacer()
             
-            makeButtonsContainer(state)
+            makeButtonsContainer({
+                filterEvent(.selectedPeriod(filterState.selectedPeriod))
+                filterEvent(.selectedTransaction(filterState.selectedTransaction))
+                filterEvent(.selectedCategory(filterState.selectedServices))
+            },filterState)
         }
         .padding()
     }
@@ -107,55 +121,80 @@ public struct FilterView: View {
 
 extension FilterView {
     
-    struct PeriodContainer: View {
+    struct PeriodState {
         
         let periods: [FilterState.Period]
         let selectedDates: (lowerDate: Date?, upperDate: Date?)?
         var selectedPeriod: FilterState.Period = .month
-        let event: (Event) -> Void
-        let selectDateAction: () -> Void
+    }
+    
+    enum PeriodEvent {
         
+        case calendar
+        case clearOptions
+        case selectPeriod(FilterState.Period)
+    }
+    
+    struct PeriodContainer: View {
+        
+        typealias Config = PeriodConfig
+        typealias Event = PeriodEvent
+        
+        let state: FilterState
+        let event: (Event) -> Void
+        let config: Config
+                
         var body: some View {
             
             HStack {
                 
-                ForEach(periods, id: \.self) { period in
+                ForEach(state.periods, id: \.self) { period in
                     
                     if period == .dates {
                         
-                        Button(action: selectDateAction) {
+                        HStack {
                             
-                            if let lowerDate = selectedDates?.lowerDate,
-                               let upperDate = selectedDates?.upperDate {
+                            Button(action: { event(.calendar) }) {
                                 
-                                Text("\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))")
-                                    .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .foregroundColor(Color.black)
-                                    .frame(height: 32)
-                                    .cornerRadius(90)
-                                
-                            } else {
-                                
-                                Text(period.id)
-                                    .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .foregroundColor(Color.black)
-                                    .frame(height: 32)
-                                    .cornerRadius(90)
+                                if let lowerDate = state.selectDates?.lowerDate,
+                                   let upperDate = state.selectDates?.upperDate {
+                                    
+                                    Text("\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))")
+                                    
+                                } else {
+                                    
+                                    Text(period.id)
+                                }
                             }
+                            
+                            if let _ = state.selectDates?.lowerDate,
+                               let _ = state.selectDates?.upperDate {
+                                
+                                Button { event(.clearOptions) } label: {
+                                    
+                                    config.closeImage
+                                }
+                            }
+
                         }
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(Color.black)
+                        .frame(height: 32)
+                        .cornerRadius(90)
                         
                     } else {
+                        
                         Button(action: {
                             
-                            event(.selectedPeriod(period))
+                            event(.selectPeriod(period))
+                            
                         }) {
                             
                             Text(period.id)
                                 .padding()
-                                .background(selectedPeriod == period ? Color.black : .gray.opacity(0.2))
-                                .foregroundColor(selectedPeriod == period ? Color.white : Color.black)
+                                .background(state.selectedPeriod == period ? Color.black : .gray.opacity(0.2))
+                                .foregroundColor(state.selectedPeriod == period ? Color.white : Color.black)
                                 .frame(height: 32)
                                 .cornerRadius(90)
                         }
@@ -166,11 +205,16 @@ extension FilterView {
         }
     }
     
+    struct PeriodConfig {
+    
+        let closeImage: Image
+    }
+    
     struct TransactionContainer: View {
         
         let transactions: [FilterState.TransactionType]
         var selectedTransaction: FilterState.TransactionType?
-        let event: (Event) -> Void
+        let event: (FilterState.TransactionType) -> Void
         let config: Config
         
         var body: some View {
@@ -179,7 +223,7 @@ extension FilterView {
                 
                 ForEach(transactions, id: \.self) { transaction in
                     
-                    Button(action: { event(.selectedTransaction(transaction)) }) {
+                    Button(action: { event(transaction) }) {
                         
                         Text(transaction.id)
                             .padding()
@@ -420,7 +464,7 @@ struct FilterView_Previews: PreviewProvider {
         Group {
             
             FilterView(
-                state: .init(
+                filterState: .init(
                     title: "Фильтры",
                     selectDates: nil,
                     selectedServices: [],
@@ -471,9 +515,10 @@ struct FilterView_Previews: PreviewProvider {
                     errorConfig: .init(
                         title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
                         titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
-                    )
+                    ), 
+                    optionButtonCloseImage: .init(systemName: "")
                 ),
-                makeButtonsContainer: { _ in 
+                makeButtonsContainer: { _,_  in 
                     .init(
                         applyAction: {},
                         clearOptionsAction: {},

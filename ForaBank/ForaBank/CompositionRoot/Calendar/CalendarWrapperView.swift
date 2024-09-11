@@ -12,11 +12,11 @@ import SharedConfigs
 
 struct CalendarWrapperView: View {
     
-    @ObservedObject var selectedRange: MDateRange
-    let closeAction: () -> Void
-    let applyAction: (MDateRange) -> Void
-    let endDateCalendar: Date?
-    
+//    @ObservedObject var selectedRange: MDateRange
+    @State var state: CalendarState
+//    let closeAction: () -> Void
+//    let applyAction: (MDateRange) -> Void
+//    let endDateCalendar: Date?
     let config: CalendarConfig
     
     var body: some View {
@@ -27,8 +27,8 @@ struct CalendarWrapperView: View {
                 
                 HStack {
                     
-                    Button(action: closeAction, label: {
-                        Image.ic24ArrowLeft
+                    Button(action: {} /*closeAction*/, label: {
+                        Image.ic24ChevronLeft
                             .foregroundColor(.textSecondary)
                     })
                     
@@ -36,9 +36,7 @@ struct CalendarWrapperView: View {
                 }
                 .padding(.horizontal, 16)
                 
-                Text("Выберите даты или период")
-                    .foregroundColor(.textSecondary)
-                    .font(.textH3M18240())
+                config.title.text(withConfig: config.titleConfig)
                     .multilineTextAlignment(.center)
             }
             
@@ -46,7 +44,7 @@ struct CalendarWrapperView: View {
                 
                 ZStack {
                     
-                    calendarView(endDate: endDateCalendar)
+                    calendarView(endDate: Date()/*endDateCalendar*/)
                         .padding(10)
                     
                     VStack {
@@ -64,7 +62,7 @@ struct CalendarWrapperView: View {
                                     ),
                                     background: .buttonSecondary
                                 ),
-                                action: closeAction
+                                action: {}/*closeAction*/
                             )
                             
                             simpleButtonView(
@@ -77,7 +75,7 @@ struct CalendarWrapperView: View {
                                     background: .buttonPrimary
                                 ),
                                 action: {
-                                    applyAction(selectedRange)
+//                                    applyAction(state.range?.rangeSelected)
                                 }
                             )
 //                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
@@ -98,11 +96,9 @@ private extension CalendarWrapperView {
     func calendarView(endDate: Date?) -> some View {
         
         CalendarView(
-            nil,
-            selectedRange,
-            [],
-            endDate,
-            config
+            state: state,
+            event: { _ in },
+            config: config
         )
     }
     
@@ -160,7 +156,6 @@ extension RangeSelector {
             if let lowerDate = selectedRange?.lowerDate,
                lowerDate.isBetweenStartDate(date.addingTimeInterval(2629800), endDateInclusive: date.addingTimeInterval(-2629800))
             {
-                
                 selectDate(date)
             } else if selectedRange?.lowerDate == nil{
                 selectDate(date)

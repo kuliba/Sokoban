@@ -22,31 +22,40 @@ extension HistoryReducer {
         switch event {
         case let .button(event):
             switch event {
-            case .calendar:
+            case let .calendar(applyAction):
                 state = .init(
                     date: state?.date,
                     filters: state?.filters,
+                    selectedDates: (lowerDate: nil, upperDate: nil),
                     buttonAction: .calendar,
                     showSheet: true,
-                    categories: state?.categories ?? []
+                    categories: state?.categories ?? [],
+                    applyAction: applyAction
                 )
                 
-            case .filter:
+            case let .filter(lowerDate, upperDate):
                 state = .init(
                     date: state?.date,
                     filters: state?.filters,
+                    selectedDates: (lowerDate: lowerDate, upperDate: upperDate),
                     buttonAction: .filter,
                     showSheet: true,
-                    categories: state?.categories ?? []
+                    categories: state?.categories ?? [],
+                    applyAction: {lowerDate,upperDate in
+                    
+                        
+                    }
                 )
             }
         case let .filter(filter):
             state = .init(
                 date: state?.date,
                 filters: filter,
+                selectedDates: (lowerDate: nil, upperDate: nil),
                 buttonAction: .filter,
                 showSheet: false,
-                categories: state?.categories ?? []
+                categories: state?.categories ?? [],
+                applyAction: {lowerDate,upperDate in }
 
             )
             
@@ -54,19 +63,15 @@ extension HistoryReducer {
             state = .init(
                 date: date,
                 filters: state?.filters,
+                selectedDates: (lowerDate: nil, upperDate: nil),
                 buttonAction: .calendar,
                 showSheet: false,
-                categories: state?.categories ?? []
+                categories: state?.categories ?? [],
+                applyAction: {lowerDate,upperDate in }
             )
         
         case .clearOptions:
-            state = .init(
-                date: nil,
-                filters: nil,
-                buttonAction: .calendar,
-                showSheet: false,
-                categories: state?.categories ?? []
-            )
+            state = nil
             
         case .dismiss:
             state = nil

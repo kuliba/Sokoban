@@ -454,6 +454,20 @@ extension Model {
             default:
                 throw Payments.Error.unsupported
             }
+        case let .mobile(phone: _, amount: _, productId: _):
+            return .mobileConnection
+        case .repeatPaymentRequisites(
+            accountNumber: _,
+            bankId: _,
+            inn: _,
+            kpp: _,
+            amount: _,
+            productId: _,
+            comment: _
+        ):
+            return .requisites
+        case let .taxes(parameterData: parameterData):
+            return .fns
         default:
             throw Payments.Error.unsupported
         }
@@ -835,10 +849,11 @@ extension Model {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
-        case let .sfp(phone: phone, bankId: bankId):
+        case let .sfp(phone: phone, bankId: bankId, amount: amount, productId: productId):
             return paymentsProcessSourceReducerSFP(
                 phone: phone,
                 bankId: bankId,
+                amount: amount,
                 parameterId: parameterId
             )
             
@@ -1255,6 +1270,7 @@ extension Model {
                 return paymentsProcessSourceReducerSFP(
                     phone: phoneNumber,
                     bankId: bankId,
+                    amount: paymentData.amount,
                     parameterId: parameterId
                 )
                 

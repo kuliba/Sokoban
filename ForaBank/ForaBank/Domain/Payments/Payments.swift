@@ -231,7 +231,7 @@ extension Payments.Operation {
         
         case qr
         
-        case sfp(phone: String, bankId: BankData.ID)
+        case sfp(phone: String, bankId: BankData.ID, amount: String?, productId: ProductData.ID?)
         
         case direct(phone: String? = nil, countryId: CountryData.ID, serviceData: PaymentServiceData? = nil)
                 
@@ -250,6 +250,12 @@ extension Payments.Operation {
         
         case gibdd
 
+        case mobile(phone: String?, amount: String?, productId: ProductData.ID?)
+    
+        case repeatPaymentRequisites(accountNumber: String, bankId: String, inn: String, kpp: String?, amount: String, productId: ProductData.ID?, comment: String?)
+        
+        case taxes(parameterData: ParameterData?)
+        
         case mock(Payments.Mock)
         
         var debugDescription: String {
@@ -258,7 +264,7 @@ extension Payments.Operation {
             case let .template(templateId): return "template: \(templateId)"
             case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
-            case let .sfp(phone: phone, bankId: bankId): return "sfp: \(phone), bankId: \(bankId)"
+            case let .sfp(phone: phone, bankId: bankId, amount: amount, productId: productId): return "sfp: \(phone), bankId: \(bankId), amount: \(amount ?? "nil")"
             case let .direct(phone: phone, countryId: countryId, serviceData: serviceData): return "direct: \(phone ?? "nil"), countryId: \(countryId), lastPaymentName: \(String(describing: serviceData?.lastPaymentName))"
             case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount), productId: \(productId)"
             case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
@@ -269,6 +275,12 @@ extension Payments.Operation {
             case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
             case .avtodor: return "Fake/Combined Avtodor"
             case .gibdd: return "GIBDD Fines"
+            case let .mobile(phone: phone, amount: amount, productId: productId):
+                return "mobile: \(phone), \(amount)"
+            case let .repeatPaymentRequisites(accountNumber: accountNumber, bankId: bankId, inn: inn, kpp: kpp, amount: amount, productId: productId, comment: comment):
+                return "repeatPaymentRequisites"
+            case let .taxes(parameterData: parameterData):
+                return "Texes \(parameterData)"
             }
         }
     }

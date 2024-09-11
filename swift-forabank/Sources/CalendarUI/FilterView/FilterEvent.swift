@@ -11,8 +11,8 @@ public enum FilterEvent {
 
     case openSheet([String])
     case selectedPeriod(FilterState.Period)
-    case selectedTransaction(FilterState.TransactionType)
-    case selectedCategory(String)
+    case selectedTransaction(FilterState.TransactionType?)
+    case selectedCategory(Set<String>)
     case selectedDates(lowerDate: Date?, upperDate: Date?)
     case clearOptions
 }

@@ -6,7 +6,59 @@
 //
 
 import SwiftUI
+import Foundation
 import SharedConfigs
+
+public struct DayConfig {
+
+    let selectedColor: Color
+    
+    public init(selectedColor: Color) {
+        self.selectedColor = selectedColor
+    }
+}
+
+public struct DayView: View {
+    
+    public typealias Config = DayConfig
+    
+    var date: Date
+    var isCurrentMonth: Bool
+    var selectedDate: Date?
+    var selectedRange: MDateRange?
+    var selectDate: (Date) -> Void
+    let config: Config
+    
+    public init(
+        date: Date,
+        isCurrentMonth: Bool,
+        config: Config,
+        selectedDate: Date? = nil,
+        selectedRange: MDateRange? = nil,
+        selectDate: @escaping (Date) -> Void
+    ) {
+        self.date = date
+        self.isCurrentMonth = isCurrentMonth
+        self.config = config
+        self.selectedDate = selectedDate
+        self.selectedRange = selectedRange
+        self.selectDate = selectDate
+    }
+    
+    public var body: some View {
+        
+        Group {
+            
+            if isCurrentMonth {
+                
+                bodyForCurrentMonth()
+            } else {
+                bodyForOtherMonth()
+            }
+            
+        }
+    }
+}
 
 // MARK: - Default View Implementation
 public extension DayView {
@@ -19,7 +71,8 @@ public extension DayView {
     
     func dayLabel() -> AnyView {
         
-        defaultDayLabel().erased()
+        defaultDayLabel()
+            .erased()
     }
     
     func selectionView() -> AnyView {
@@ -73,7 +126,7 @@ private extension DayView {
     func defaultSelectionView() -> some View {
         
         Circle()
-            .fill(Color.onBackgroundPrimary)
+            .fill(config.selectedColor)
             .frame(width: 32, height: 32, alignment: .center)
             .transition(.asymmetric(insertion: .scale(scale: 0.52).combined(with: .opacity), removal: .opacity))
             .active(if: isSelected())
@@ -105,6 +158,19 @@ private extension DayView {
         if isBeginningOfRange() {
             return [.topLeft, .bottomLeft]
         }
+        
+        if date.getWeekday() == .monday {
+            return [.topLeft, .bottomLeft]
+        }
+        
+        if date.getWeekday() == .sunday {
+            return [.topRight, .bottomRight]
+        }
+        
+        if date == date.endOfMonth() {
+            return [.topRight, .bottomRight]
+        }
+        
         if isEndOfRange() {
             return [.topRight, .bottomRight]
         }
@@ -179,42 +245,6 @@ public extension DayView {
     }
 }
 
-// MARK: - Others
-public struct DayView: View {
-    
-    var date: Date
-    var isCurrentMonth: Bool
-    var selectedDate: Date?
-    var selectedRange: MDateRange?
-    var selectDate: (Date) -> Void
-    
-    public init(
-        date: Date,
-        isCurrentMonth: Bool,
-        selectedDate: Date? = nil,
-        selectedRange: MDateRange? = nil,
-        selectDate: @escaping (Date) -> Void
-    ) {
-        self.date = date
-        self.isCurrentMonth = isCurrentMonth
-        self.selectedDate = selectedDate
-        self.selectedRange = selectedRange
-        self.selectDate = selectDate
-    }
-    
-    public var body: some View {
-        
-        Group {
-            
-            if isCurrentMonth {
-                bodyForCurrentMonth()
-            } else {
-                bodyForOtherMonth()
-            }
-        }
-    }
-}
-
 private extension DayView {
     
     func bodyForCurrentMonth() -> some View {
@@ -224,9 +254,37 @@ private extension DayView {
             .aspectRatio(1.0, contentMode: .fit)
             .onAppear(perform: onAppear)
             .onTapGesture(perform: onSelection)
+            .opacity(isFuture() ? 0.2 : 1)
+            
     }
     
     func bodyForOtherMonth() -> some View {
         Rectangle().fill(Color.clear)
+    }
+    
+    func lastDayOfMonth(for date: Date) -> String {
+        let calendar = Calendar.current
+        guard let startOfNextMonth = calendar.date(byAdding: .month, value: 0, to: date) else {
+            fatalError("Unable to find the start of the next month.")
+        }
+        
+        var components = DateComponents()
+        components.second = -1  // Subtract 1 second to go back to the end of the current month
+        
+        guard let endOfMonth = calendar.date(byAdding: components, to: startOfNextMonth) else {
+            fatalError("Unable to calculate the end of the month.")
+        }
+        
+        return DateFormatter.shortDate.string(from: endOfMonth)
+    }
+}
+
+extension Date {
+    func startOfMonth() -> Date {
+        return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.startOfDay(for: self)))!
+    }
+    
+    func endOfMonth() -> Date {
+        return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth())!
     }
 }

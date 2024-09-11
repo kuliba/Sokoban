@@ -65,21 +65,43 @@ final class ProductProfileFlowReducer {
             switch filterEvent {
             case let .openSheet(services):
                 state.filter = .init(
-                    title: "Фильтры",
+                    title: "Фильтры", 
+                    selectDates: nil,
                     selectedServices: [],
                     periods: FilterState.Period.allCases,
                     transactionType: FilterState.TransactionType.allCases,
                     services: services
                 )
+            case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
+                state.filter = .init(
+                    title: "Фильтры",
+                    selectDates: (lowerDate, upperDate),
+                    selectedServices: [],
+                    periods: FilterState.Period.allCases,
+                    transactionType: FilterState.TransactionType.allCases,
+                    services: state.history?.categories ?? []
+                )
                 
             case let .selectedCategory(category):
-                state.filter?.selectedServices.insert(category)
-
+//                if state.filter?.selectedServices.contains(category) ?? false {
+//                    state.filter?.selectedServices.remove(category)
+//                } else {
+                    state.filter?.selectedServices = category
+//                }
+                
             case let .selectedPeriod(period):
-                state.filter?.selectedPeriod = period
+                if state.filter?.selectedPeriod == period {
+                    state.filter?.selectedPeriod = .month
+                } else {
+                    state.filter?.selectedPeriod = period
+                }
 
             case let .selectedTransaction(transaction):
-                state.filter?.selectedTransaction = transaction
+                if state.filter?.selectedTransaction == transaction {
+                    state.filter?.selectedTransaction = nil
+                } else {
+                    state.filter?.selectedTransaction = transaction
+                }
                 
             case .clearOptions:
                 state.filter?.selectedTransaction = nil
@@ -183,7 +205,7 @@ enum ProductProfileFlowEvent {
     case payment(PaymentsViewModel)
 }
 
-enum HistoryEvent: Equatable {
+enum HistoryEvent {
     
     case button(ButtonEvent)
     case filter([ProductProfileViewModel.HistoryState.Filter]?)
@@ -191,9 +213,9 @@ enum HistoryEvent: Equatable {
     case clearOptions
     case dismiss
     
-    enum ButtonEvent: Equatable {
+    enum ButtonEvent {
         
-        case calendar
-        case filter
+        case calendar((Date?, Date?) -> Void)
+        case filter(Date?, Date?)
     }
 }

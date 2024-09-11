@@ -51,7 +51,7 @@ public extension FilterState {
         case credit = "Пополнение"
     }
     
-    enum Period: String, Identifiable, CaseIterable {
+    public enum Period: String, Identifiable, CaseIterable {
         
         public var id: String { self.rawValue }
         

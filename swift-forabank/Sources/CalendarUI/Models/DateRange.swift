@@ -7,14 +7,15 @@
 
 import Foundation
 
-public class MDateRange {
+public class MDateRange: ObservableObject {
     
-    public var lowerDate: Date?
-    public var upperDate: Date?
+    @Published public var lowerDate: Date?
+    @Published public var upperDate: Date?
 
     init(_ lowerDate: Date?, _ upperDate: Date?) {
         
-        self.lowerDate = lowerDate; self.upperDate = upperDate
+        self.lowerDate = lowerDate
+        self.upperDate = upperDate
     }
 }
 
@@ -62,9 +63,11 @@ extension MDateRange {
 }
 
 // MARK: - Others
-extension MDateRange {
+public extension MDateRange {
     
-    func contains(_ date: Date) -> Bool { getRange()?.contains(date) == true }
+    func contains(_ date: Date) -> Bool {
+        getRange()?.contains(date) == true
+    }
     func isRangeCompleted() -> Bool { upperDate != nil }
 }
 
@@ -74,7 +77,9 @@ public extension MDateRange {
 
 // MARK: - Updating Range
 public extension MDateRange {
-    func addToRange(_ date: Date) { _addToRange(date) }
+    func addToRange(_ date: Date) {
+        _addToRange(date)
+    }
 }
 
 // MARK: - Getting Range

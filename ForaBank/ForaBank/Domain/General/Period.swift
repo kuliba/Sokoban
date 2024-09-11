@@ -50,12 +50,14 @@ extension Period {
         
         case latest
         case eldest
+        case custom(start: Date, end: Date)
         
         var debugDescription: String {
             
             switch self {
             case .latest: return "direction: latest"
             case .eldest: return "direction: eldest"
+            case let .custom(start: star, end: end): return "direction: eldest"
             }
         }
     }

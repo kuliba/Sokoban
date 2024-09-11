@@ -519,7 +519,7 @@ extension ContactsViewModel {
             #if DEBUG
             let source: Payments.Operation.Source = .mock(Model.paymentsMockSFP())
             #else
-            let source: Payments.Operation.Source = .sfp(phone: validatedPhone, bankId: bank.id)
+            let source: Payments.Operation.Source = .sfp(phone: validatedPhone, bankId: bank.id, amount: nil, productId: nil)
             #endif
             self.action.send(ContactsViewModelAction.PaymentRequested(source: source))
             

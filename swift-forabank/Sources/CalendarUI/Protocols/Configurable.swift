@@ -7,7 +7,8 @@
 
 import Foundation
 
-public protocol Configurable { init() }
+public struct Configurable {}
+
 extension Configurable {
     func changing<T>(path: WritableKeyPath<Self, T>, to value: T) -> Self {
         var clone = self

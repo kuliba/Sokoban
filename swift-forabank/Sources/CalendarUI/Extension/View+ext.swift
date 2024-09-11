@@ -9,6 +9,7 @@ import SwiftUI
 
 extension View {
     
+    //TODO: remove
     @ViewBuilder func active(if condition: Bool) -> some View {
         if condition { self }
     }

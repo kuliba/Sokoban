@@ -41,7 +41,8 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var historyState: HistoryState?
     @Published var filterState: FilterState?
-    
+//    @Published var calendarState: CalendarState
+
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -60,8 +61,8 @@ class ProductProfileViewModel: ObservableObject {
     var contactsAction: () -> Void = { }
     var navigationTitleForControlPanel: String { productData?.navigationTitleForControlPanel ?? ""}
     
-    private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
-    private let model: Model
+    var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
+    let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
@@ -134,6 +135,7 @@ class ProductProfileViewModel: ObservableObject {
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.cardAction = createCardAction(cvvPINServicesClient, model)
+      
         
         // TODO: add removeDuplicates
         self.bottomSheetSubject
@@ -538,7 +540,7 @@ private extension ProductProfileViewModel {
                     if let productType = productData?.productType {
                         model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
                     }
-                    model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
+                    model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest, category: nil))
                     switch product.productType {
                     case .deposit:
                         model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
@@ -944,6 +946,8 @@ private extension ProductProfileViewModel {
                     withAnimation {
                         history = historyViewModel
                     }
+                    self.event(.history(.clearOptions))
+                    self.event(.filter(.clearOptions))
                     
                 } else {
                     
@@ -2325,28 +2329,34 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    struct HistoryState: Identifiable, Equatable {
+    struct HistoryState: Identifiable {
         
         var id: Int { buttonAction.hashValue }
         
         var date: Date?
         var filters: [Filter]?
+        let selectedDates: (lowerDate: Date?, upperDate: Date?)
         var buttonAction: ButtonAction
         var showSheet: Bool
         var categories: [String]
+        var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
         
         public init(
             date: Date? = nil,
             filters: [Filter]? = nil,
+            selectedDates: (lowerDate: Date?, upperDate: Date?),
             buttonAction: ButtonAction,
             showSheet: Bool,
-            categories: [String] = []
+            categories: [String] = [],
+            applyAction: @escaping (_ lowerDate: Date?, _ upperDate: Date?) -> Void
         ) {
             self.date = date
             self.filters = filters
+            self.selectedDates = selectedDates
             self.buttonAction = buttonAction
             self.showSheet = showSheet
             self.categories = categories
+            self.applyAction = applyAction
         }
         
         enum Filter {
@@ -3086,6 +3096,18 @@ extension ProductProfileViewModel {
             case .success:
                 completion(.success)
             }
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func calendarDayStart() -> Date {
+        
+        if product.productType == .card {
+            return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+        } else {
+            return Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
  
-struct Month {
+public struct Month {
     
     let month: Date
     let items: [[Date]]
@@ -15,14 +15,21 @@ struct Month {
 
 // MARK: - Generating Array
 extension [Month] {
-    
-    static func generate() -> Self {
+    //TODO: extract generate and MCalendar
+    public static func generate(startDate: Date?) -> Self {
         
         do {
-            
-            return try createDatesRange()
-                .map(createMonthDate)
-                .map(createMonthViewData)
+            if let startDate {
+                MCalendar.startDate = startDate.start(of: .month)
+                
+                return try createDatesRange()
+                    .map(createMonthDate)
+                    .map(createMonthViewData)
+            } else {
+                return try createDatesRange()
+                    .map(createMonthDate)
+                    .map(createMonthViewData)
+            }
         } catch {
             
             return []
@@ -39,7 +46,7 @@ extension [Month] {
         }
 
         let numberOfMonthsBetweenDates = startDate.distance(to: endDate, in: .month)
-        return 0...Swift.min(numberOfMonthsBetweenDates, 10)
+        return 0...numberOfMonthsBetweenDates+2
     }
     
     static func createMonthDate(_ index: Int) -> Date {

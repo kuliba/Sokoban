@@ -48,7 +48,6 @@ extension MonthView {
             date,
             isCurrentMonth(date),
             selectedDate,
-            selectedRange,
             { selectedRange?.addToRange($0) }
         ).erased()
     }

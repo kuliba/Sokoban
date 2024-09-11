@@ -49,6 +49,7 @@ extension Date {
         to date: Date,
         in component: Calendar.Component
     ) -> Int {
+        //TODO: MCalendar remove, create component
         MCalendar.get().dateComponents([component], from: self, to: date).value(for: component) ?? 0
     }
 }
@@ -91,4 +92,43 @@ extension Date {
 // MARK: - Helpers
 extension Date {
     static var now: Date { .init() }
+}
+
+extension DateFormatter {
+    
+    static var shortDate: DateFormatter {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.dateStyle = DateFormatter.Style.long
+
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+
+        return dateFormatter
+    }
+}
+
+public extension Date {
+    static var startOfWeek: Date? {
+        let gregorian = Calendar(identifier: .gregorian)
+        guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
+        return gregorian.date(byAdding: .day, value: 1, to: sunday)
+    }
+    
+    static var endOfWeek: Date? {
+        let gregorian = Calendar(identifier: .gregorian)
+        guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
+        return gregorian.date(byAdding: .day, value: 7, to: sunday)
+    }
+    
+    static var startOfMonth: Date {
+
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month], from: Date())
+
+        return  calendar.date(from: components)!
+    }
+    
 }

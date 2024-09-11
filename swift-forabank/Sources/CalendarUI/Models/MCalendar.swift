@@ -10,7 +10,7 @@ import Foundation
 public struct MCalendar {
 
     static var startDate: Date = Calendar.current.date(from: .init(calendar: .current, year: 1992, month: 12, day: 1))!
-    static var endDate: Date = .distantFuture.end(of: .month)
+    static var endDate: Date = Date()
     static var firstWeekday: WeekDay = .monday
     static var locale: Locale = .autoupdatingCurrent
     private static var _calendar: Calendar = .init(identifier: .gregorian)

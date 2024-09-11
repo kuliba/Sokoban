@@ -101,6 +101,8 @@ extension ProductStatementsStorage {
         let period: Period
         let direction: Period.Direction
         let limitDate: Date
+        let operationType: [OperationType]?
+        let operationGroup: [ProductStatementMerchantGroup]?
         
         var debugDescription: String {
             

@@ -730,7 +730,7 @@ private extension MainViewModel {
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
                             return nil
                         }
-                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
+                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId, amount: latestPayment.amount, productId: nil)
                         
                         
                     default:

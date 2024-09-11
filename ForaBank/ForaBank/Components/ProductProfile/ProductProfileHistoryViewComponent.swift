@@ -76,12 +76,12 @@ extension ProductProfileHistoryView {
                     
                     switch action {
                     case _ as ProductProfileHistoryViewModelAction.DownloadLatest:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .latest))
+                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .latest, category: nil))
                         
                     case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest))
+                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest, category: nil))
                         
-                    case _ as ProductProfileHistoryViewModelAction.Filter:
+                    case let payload as ProductProfileHistoryViewModelAction.Filter:
                         guard let storage = model.statements.value[id] else {
                             return
                         }
@@ -108,13 +108,12 @@ extension ProductProfileHistoryView {
                                 }
                             }
 
-                            if filter?.selectedPeriod != nil {
+                            if payload.filterState?.selectedPeriod != nil {
                                 
-                                
-                                switch filter?.selectedPeriod {
+                                switch payload.filterState?.selectedPeriod {
                                 case .week:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .weekdayOrdinal))
+                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
                                     })
                                     
                                 case .month:
@@ -122,7 +121,9 @@ extension ProductProfileHistoryView {
                                         $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
                                     })
                                 case .dates:
-                                    break
+                                    storageData = storageData.filter({
+                                        $0.date.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
+                                    })
                                 case .none:
                                     break
                                 }
@@ -131,11 +132,13 @@ extension ProductProfileHistoryView {
                             if let services = filter?.selectedServices, services.count >= 1 {
                                 
                                 storageData = storageData.filter({ item in
-                                    print(item)
-                                    
                                     return item.groupName.contained(in: filter?.selectedServices.sorted() ?? [])
                                 })
+                                
                             }
+                            
+                            updateContent(with: .downloading(.custom(start: Date(), end: Date())), storage: storage)
+
                             
                             let update = await reduce(
                                 content: content,
@@ -348,6 +351,7 @@ extension ProductProfileHistoryView {
                         if storage.isHistoryComplete == false {
                             
                             listViewModel.eldestUpdate = .more(.init(title: "Смотреть еще", style: .gray, action: {[weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())}))
+
                         } else {
                             
                             listViewModel.eldestUpdate = nil
@@ -368,6 +372,10 @@ extension ProductProfileHistoryView {
                         case .eldest:
                             listViewModel.latestUpdate = nil
                             listViewModel.eldestUpdate = .updating
+                            
+                        case let .custom(start: startDate, end: endDate):
+                            listViewModel.latestUpdate = nil
+                            listViewModel.eldestUpdate = nil
                         }
        
                     default:
@@ -486,7 +494,11 @@ enum ProductProfileHistoryViewModelAction {
     
     struct DownloadLatest: Action {}
     
-    struct Filter: Action {}
+    struct Filter: Action {
+        
+        let filterState: FilterState?
+        let period: (lowerDate: Date?, upperDate: Date?)
+    }
 }
 
 //MARK: - Types
@@ -676,7 +688,7 @@ private extension ProductStatementData {
 struct ProductProfileHistoryView: View {
     
     @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel
-    let makeHistoryButton: () -> HistoryButtonView?
+    let makeHistoryButton: (Bool) -> HistoryButtonView?
     
     var body: some View {
         
@@ -684,7 +696,7 @@ struct ProductProfileHistoryView: View {
             
             HeaderView(
                 viewModel: viewModel.header,
-                makeHistoryButton: makeHistoryButton
+                makeHistoryButton: makeHistoryButton(viewModel.segmentBarViewModel != nil)
             )
             .padding(.bottom, 15)
             
@@ -719,7 +731,7 @@ extension ProductProfileHistoryView {
     struct HeaderView: View {
         
         let viewModel: ProductProfileHistoryView.ViewModel.HeaderViewModel
-        let makeHistoryButton: () -> HistoryButtonView?
+        let makeHistoryButton: HistoryButtonView?
 
         var body: some View {
             
@@ -730,7 +742,7 @@ extension ProductProfileHistoryView {
                                 
                 Spacer()
                 
-                makeHistoryButton()
+                makeHistoryButton
                 
                 // temporally off
                 /*
@@ -808,7 +820,9 @@ extension ProductProfileHistoryView {
                 ForEach(viewModel.groups) { groupViewModel in
                     
                     ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
-                        .padding(.bottom, 32)
+                        .background(Color.mainColorsGrayLightest)
+                        .cornerRadius(12)
+                        .padding(.bottom, 16)
                 }
                 
                 if let eldestUpdate = viewModel.eldestUpdate {
@@ -832,7 +846,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 12) {
                 
                 Text(viewModel.title)
                     .font(.textBodyMSb14200())
@@ -845,6 +859,10 @@ extension ProductProfileHistoryView {
                     ProductProfileHistoryView.OperationView(viewModel: operationViewModel)
                 }
             }
+            .padding(.top, 13)
+            .padding(.leading, 12)
+            .padding(.trailing, 16)
+            .padding(.bottom, 13)
         }
     }
     
@@ -1020,13 +1038,13 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         Group {
             ProductProfileHistoryView(
                 viewModel: .sample,
-                makeHistoryButton: { .init(event: { event in }, isFiltered: { true })}
+                makeHistoryButton: { _ in .init(event: { event in }, isFiltered: { true }, isDateFiltered: { true }, clearOptions: {})}
             )
             .previewLayout(.fixed(width: 375, height: 500))
             
             ProductProfileHistoryView(
                 viewModel: .sampleSecond,
-                makeHistoryButton: { .init(event: { event in }, isFiltered: { true })}
+                makeHistoryButton: { _ in .init(event: { event in }, isFiltered: { true }, isDateFiltered: { true }, clearOptions: {})}
             )
             .previewLayout(.fixed(width: 375, height: 400))
             
@@ -1071,4 +1089,14 @@ extension ProductProfileHistoryView.ViewModel {
     static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ), filter: { nil }, services: {})
     
     static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil }, services: {})
+}
+
+extension Date {
+    
+    static var startOfWeek: Date? {
+        let gregorian = Calendar(identifier: .gregorian)
+        guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
+        return gregorian.date(byAdding: .day, value: 1, to: sunday)
+    }
+    
 }
