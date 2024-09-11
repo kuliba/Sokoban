@@ -46,21 +46,19 @@ extension LocalLoaderComposer {
 
 extension LocalLoaderComposer {
     
-    typealias Save<T> = (SerialStamped<T>, @escaping (Result<Void, Error>) -> Void) -> Void
+    typealias Serial = String
+    typealias Save<T> = (T, Serial, @escaping (Result<Void, Error>) -> Void) -> Void
     
     func composeSave<T, Model: Encodable>(
         toModel: @escaping (T) -> Model
     ) -> Save<T> {
         
-        return { stamped, completion in
+        return { value, serial, completion in
             
             self.backgroundScheduler.schedule {
                 
                 do {
-                    try self.agent.store(
-                        toModel(stamped.value),
-                        serial: stamped.serial
-                    )
+                    try self.agent.store(toModel(value), serial: serial)
                     completion(.success(()))
                 } catch {
                     completion(.failure(error))

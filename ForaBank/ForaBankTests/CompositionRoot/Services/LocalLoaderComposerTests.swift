@@ -105,7 +105,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
         let save = sut.composeSave(toModel: toModel.call(payload:))
         
-        save(.init(value: makeValue(), serial: anyMessage())) { _ in }
+        save(makeValue(), anyMessage()) { _ in }
         XCTAssertNoDiff(agent.storeCallCount, 0)
         
         backgroundScheduler.advance()
@@ -119,7 +119,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
         let save = sut.composeSave(toModel: toModel.call(payload:))
         
-        save(.init(value: value, serial: serial)) { _ in }
+        save(value, serial) { _ in }
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(toModel.payloads, [value])
@@ -132,7 +132,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         let toModel = CallSpy<Value, Model>(stubs: [model])
         let save = sut.composeSave(toModel: toModel.call(payload:))
         
-        save(.init(value: value, serial: serial)) { _ in }
+        save(value, serial) { _ in }
         backgroundScheduler.advance()
         
         XCTAssertNoDiff(agent.storeMessages.map(\.0), [model])
@@ -147,7 +147,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         let save = sut.composeSave(toModel: toModel.call(payload:))
         let exp = expectation(description: "wait for save completion")
         
-        save(.init(value: value, serial: serial)) {
+        save(value, serial) {
             
             switch $0 {
             case .failure:
@@ -170,7 +170,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         let save = sut.composeSave(toModel: toModel.call(payload:))
         let exp = expectation(description: "wait for save completion")
         
-        save(.init(value: makeValue(), serial: anyMessage())) {
+        save(makeValue(), anyMessage()) {
             
             switch $0 {
             case .failure:
