@@ -1,5 +1,5 @@
 //
-//  URL+appendingQueryItemsTests.swift
+//  URL+appendingQueryItemsSingleValueTests.swift
 //
 //
 //  Created by Igor Malyarov on 07.09.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import XCTest
 
-final class URL_appendingQueryItemsTests: XCTestCase {
+final class URL_appendingQueryItemsSingleValueTests: XCTestCase {
     
     func test_appendingQueryItems_noParameters() throws {
         
