@@ -1158,6 +1158,8 @@
 		2A7B5EE62AB068E6002F2D00 /* ComposedLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */; };
 		2A7B5EEA2AB06EBE002F2D00 /* LandingButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */; };
 		2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */; };
+		2A7CA2162C91D9CE00B900E9 /* CodableServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */; };
+		2A7CA2182C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */; };
 		2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8050582C353DE50039557E /* AnywayInfoView.swift */; };
 		2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */; };
 		2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */; };
@@ -4595,6 +4597,8 @@
 		2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedLoginViewModel.swift; sourceTree = "<group>"; };
 		2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingButtonsView.swift; sourceTree = "<group>"; };
 		2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+preview.swift"; sourceTree = "<group>"; };
+		2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableServiceCategory.swift; sourceTree = "<group>"; };
+		2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialStampedCachingDecorator+ext.swift"; sourceTree = "<group>"; };
 		2A8050582C353DE50039557E /* AnywayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoView.swift; sourceTree = "<group>"; };
 		2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoViewConfig.swift; sourceTree = "<group>"; };
 		2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayInfoViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -10829,6 +10833,14 @@
 			path = LoginView;
 			sourceTree = "<group>";
 		};
+		2A7CA2142C91D9B300B900E9 /* CodableTypes */ = {
+			isa = PBXGroup;
+			children = (
+				2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */,
+			);
+			path = CodableTypes;
+			sourceTree = "<group>";
+		};
 		2A80B5672AF418EA0009504C /* JSONMaker */ = {
 			isa = PBXGroup;
 			children = (
@@ -12428,6 +12440,8 @@
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
+				2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */,
+				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
 				2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */,
 				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
@@ -20289,6 +20303,7 @@
 				C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */,
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				7798848A285C983A0023CA65 /* ProductProfileDetailCircleProgressViewComponent.swift in Sources */,
+				2A7CA2182C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift in Sources */,
 				2A2D4D312B6E7EDC006912EE /* RequestFactory+createPrepareSetBankDefaultRequest.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
 				50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */,
@@ -21018,6 +21033,7 @@
 				C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */,
 				835D0DF92BEAA63D00FFE90B /* SliderConfig+ext.swift in Sources */,
 				2A3624692C5E6B3300174C50 /* PaymentProviderPickerFlowView.swift in Sources */,
+				2A7CA2162C91D9CE00B900E9 /* CodableServiceCategory.swift in Sources */,
 				6820928327AB0E6F003DCAFD /* CurrencyData.swift in Sources */,
 				7705408D27BD1B4C00094006 /* BiometricAgentProtocol.swift in Sources */,
 				77A76A9827FC4BA400A271B3 /* PlacesDetailView.swift in Sources */,
