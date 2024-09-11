@@ -305,41 +305,14 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let localBannerListLoader = ServiceItemsLoader.default
-        let getBannerList = NanoServices.makeGetBannerCatalogListV2(
+        let banners = makeBannersBinder(
+            model: model,
             httpClient: httpClient,
-            log: infoNetworkLog
+            infoNetworkLog: infoNetworkLog,
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
         )
 
-        let getBannerListLoader = AnyLoader { completion in
-            
-            backgroundScheduler.delay(for: .milliseconds(20)) {
-                
-                localBannerListLoader.serial {
-                    getBannerList(($0, 120)) {
-                        
-                        completion($0)
-                    }
-                }
-            }
-        }
-        
-        let bannerListDecorated = CacheDecorator(
-            decoratee: getBannerListLoader,
-            cache: { response, completion in
-                localBannerListLoader.save(.init(response), completion)
-            }
-        )
-       
-        let loadBannersList: LoadBanners = { completion in
-            
-            bannerListDecorated.load {
-                
-                let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
-                completion(banners.bannerCatalogList.map { .banner($0)})
-            }
-        }
-        
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
