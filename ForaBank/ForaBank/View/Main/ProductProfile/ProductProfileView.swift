@@ -754,7 +754,6 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
-        calendarState: .init(date: nil, range: nil, monthsData: {[]}, periods: []),
         rootView: ""
     )
     
@@ -775,7 +774,6 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
-        calendarState: .init(date: nil, range: nil, monthsData: {[]}, periods: []),
         rootView: ""
     )
 }

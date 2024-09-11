@@ -101,6 +101,7 @@ public extension CalendarConfig {
         monthLabel: { date in
             MonthLabel(month: date)
         },
+        dayConfig: .init(selectedColor: .mainColorsBlackMedium),
         scrollDate: Date()
     )
 }

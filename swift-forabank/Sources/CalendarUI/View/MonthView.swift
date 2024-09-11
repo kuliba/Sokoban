@@ -49,7 +49,7 @@ extension MonthView {
             isCurrentMonth: isCurrentMonth(date),
             config: config.dayConfig,
             selectedDate: selectedDate,
-            selectedRange: viewModel.calendarState.range,
+            selectedRange: selectedRange,
             selectDate: selectDate
         )
         
