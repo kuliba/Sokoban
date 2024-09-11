@@ -198,80 +198,14 @@ struct ProductProfileView: View {
                 case .calendar:
                     
                     CalendarWrapperView(
-                        state: viewModel.calendarState,
-                        config: .init(
-                            title: "Выберите даты или период",
-                            titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
-                            option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
-                            month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
-                            weekdaysView: {
-                                WeekdaysView()
-                            },
-                            monthLabel: { date in
-                                MonthLabel(month: date)
-                            },
-                            dayView: { date, isCurrentMonth, selectedDate, selectDate in
-                                DayView(
-                                    date: date,
-                                    isCurrentMonth: isCurrentMonth,
-                                    config: .init(selectedColor: .mainColorsBlackMedium),
-                                    selectedDate: selectedDate,
-                                    selectedRange: viewModel.calendarState.range,
-                                    selectDate: selectDate
-                                )
-                            },
-                            scrollDate: Date()
-                        )
+                        state: .init(
+                            date: Date(),
+                            range: .init(),
+                            monthsData: .generate(startDate: viewModel.calendarDayStart()),
+                            periods: []
+                        ),
+                        config: .iFora
                     )
-//                    CalendarWrapperView(
-//                        selectedRange: .init(startDate: Calendar.current.date(byAdding: .day, value: -30, to: Date()), endDate: Date()),
-//                        closeAction: { self.viewModel.event(.history(.dismiss)) },
-//                        applyAction: { selectedRange in
-//                            
-////                            self.viewModel.event(.history(.dismiss))
-////                            self.viewModel.sheet = nil
-////                            self.viewModel.bottomSheet = nil
-//                            viewModel.event(.filter(.selectedDates(lowerDate: selectedRange.lowerDate, upperDate: selectedRange.upperDate)))
-////                            viewModel.event(.history(.button(.filter(selectedRange.lowerDate, selectedRange.upperDate))))
-////                            
-////                            
-////                            self.viewModel.filterState?.selectDates = (state.selectedDates.lowerDate, state.selectedDates.upperDate)
-////
-//                            DispatchQueue.main.async {
-////                                self.viewModel.event(.history(.dismiss))
-//                            }
-//                            self.viewModel.model.action.send(ModelAction.Statement.List.Request.init(productId: self.viewModel.product.activeProductId, direction: .custom(start: selectedRange.lowerDate?.addingTimeInterval(86400) ?? Date(), end: selectedRange.upperDate?.addingTimeInterval(86400) ?? Date()), category: []))
-//
-//                            DispatchQueue.main.async {
-//                                self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: selectedRange.lowerDate, upperDate: selectedRange.upperDate)))
-//                            }
-//                        },
-//                        endDateCalendar: 
-//                            viewModel.model.products.value.flatMap({ $0.value }).first(where: { $0.id == self.viewModel.product.activeProductId})?.openDate,
-//                        config: .init(
-//                            title: "Выберите даты или период",
-//                            titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
-//                            option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
-//                            month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
-//                            weekdaysView: {
-//                                WeekdaysView()
-//                            },
-//                            monthLabel: { date in
-//                                MonthLabel(month: date)
-//                            },
-//                            dayView: { date, isCurrentMonth, selectedDate, selectedRange, selectDate in
-//                                DayView(
-//                                    date: date,
-//                                    isCurrentMonth: isCurrentMonth,
-//                                    config: .init(selectedColor: .mainColorsBlackMedium),
-//                                    selectedDate: selectedDate,
-//                                    selectedRange: selectedRange,
-//                                    selectDate: selectDate
-//                                )
-//                            },
-//                            scrollDate: Date()
-//                        )
-//                    )
                     
                 case .filter:
                     if let filterState = self.viewModel.filterState {
@@ -304,14 +238,7 @@ struct ProductProfileView: View {
                                         self.viewModel.filterState?.selectedTransaction = state.selectedTransaction
                                         
                                         self.viewModel.event(.history(.dismiss))
-                                        
-//                                        self.viewModel.event(.filter(.selectedCategory(state.selectedServices.description)))
-//                                        self.viewModel.event(.filter(.selectedPeriod(state.selectedPeriod)))
-//                                        if let transactions = state.selectedTransaction {
-//
-//                                            self.viewModel.event(.filter(.selectedTransaction(transactions)))
-//                                        }
-//                                        
+                                                                            
                                         self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
                                             filterState: viewModel.filterState,
                                             period: (lowerDate: nil, upperDate: nil)
