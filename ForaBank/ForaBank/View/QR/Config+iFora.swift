@@ -88,6 +88,23 @@ extension ProductSelectComponent.ProductSelectConfig {
 
 import CalendarUI
 
+public extension CalendarConfig {
+    
+    static let iFora: Self = .init(
+        title: "Выберите даты или период",
+        titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
+        option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
+        month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
+        weekdaysView: {
+            WeekdaysView()
+        },
+        monthLabel: { date in
+            MonthLabel(month: date)
+        },
+        scrollDate: Date()
+    )
+}
+
 public extension FilterConfig {
 
     static let iFora: Self = .init(
