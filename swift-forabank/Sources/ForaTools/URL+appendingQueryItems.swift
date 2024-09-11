@@ -1,6 +1,6 @@
 //
 //  URL+appendingQueryItems.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 07.09.2024.
 //
@@ -69,6 +69,20 @@ public extension URL {
         } else {
             throw URLError.invalidURL
         }
+    }
+    
+    /// Appends a "serial" query parameter to the URL if the serial is not nil or empty.
+    ///
+    /// - Parameter serial: The serial string to append as a query parameter.
+    /// - Throws: An error if the URL cannot be updated.
+    /// - Returns: A new URL with the appended serial query parameter, or the original URL if the serial is nil or empty.
+    func appendingSerial(
+        _ serial: String?
+    ) throws -> URL {
+        
+        guard let serial else { return self }
+        
+        return try appendingQueryItems(parameters: ["serial": serial])
     }
 }
 
