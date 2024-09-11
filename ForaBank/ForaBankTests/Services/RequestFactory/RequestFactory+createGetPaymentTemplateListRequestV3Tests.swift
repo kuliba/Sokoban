@@ -1,21 +1,21 @@
 //
-//  RequestFactory+createGetServiceCategoryListRequestTests.swift
+//  RequestFactory+createGetPaymentTemplateListRequestV3Tests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 13.08.2024.
+//  Created by Igor Malyarov on 05.09.2024.
 //
 
 @testable import ForaBank
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase {
+final class RequestFactory_createGetPaymentTemplateListRequestV3Tests: XCTestCase {
     
     func test_createRequest_shouldSetRequestURLWithoutSerialOnNilSerial() throws {
         
         try XCTAssertNoDiff(
             createRequest(serial: nil).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
         )
     }
     
@@ -23,7 +23,7 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         
         try XCTAssertNoDiff(
             createRequest(serial: "").url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList"
         )
     }
     
@@ -33,7 +33,7 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         
         try XCTAssertNoDiff(
             createRequest(serial: serial).url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList?serial=\(serial)"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v3/getPaymentTemplateList?serial=\(serial)"
         )
     }
     
@@ -58,6 +58,6 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
         serial: String? = nil
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
+        try ForaBank.RequestFactory.createGetPaymentTemplateListRequestV3(serial: serial)
     }
 }

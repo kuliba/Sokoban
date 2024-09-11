@@ -16,7 +16,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
         let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for HTTPClient")
         
-        sut { _ in exp.fulfill() }
+        sut(nil) { _ in exp.fulfill() }
         httpClient.complete(with: .success((anyData(), anyHTTPURLResponse())))
         
         wait(for: [exp], timeout: 0.1)
@@ -27,7 +27,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
         let (sut, httpClient) = makeSUT()
         let request = try createRequest()
         
-        sut { _ in }
+        sut(nil) { _ in }
         
         XCTAssertNoDiff(httpClient.requests, [request])
     }
@@ -157,13 +157,15 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
     }
     
     private func createRequest(
+        serial: String? = nil
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetServiceCategoryListRequest()
+        try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
     private func expect(
         _ sut: SUT,
+        with serial: String? = nil,
         toDeliver expectedResult: NanoServices.GetServiceCategoryListResult,
         on action: () -> Void,
         file: StaticString = #file,
@@ -171,7 +173,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut {
+        sut(serial) {
             XCTAssertNoDiff($0, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
             
             exp.fulfill()
@@ -186,7 +188,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
 private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     
     static let one: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: .mobile,
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
@@ -201,7 +203,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     )
     
     static let valid: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: nil,
                 md5Hash: "2d777a4bb3f53d495026b4884bbedde4",
