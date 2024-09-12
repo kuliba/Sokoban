@@ -16,14 +16,14 @@ extension RootViewModelFactory {
         infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
-    ) -> BannersBinder{
-       
+    ) -> (binder: BannersBinder, loader: LoadBanners) {
+        
         let localBannerListLoader = ServiceItemsLoader.default
         let getBannerList = NanoServices.makeGetBannerCatalogListV2(
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
+        
         let getBannerListLoader = AnyLoader { completion in
             
             backgroundScheduler.delay(for: .seconds(2)) {
@@ -43,7 +43,7 @@ extension RootViewModelFactory {
                 localBannerListLoader.save(.init(response), completion)
             }
         )
-       
+        
         let loadBannersList: LoadBanners = { completion in
             
             bannerListDecorated.load {
@@ -68,6 +68,6 @@ extension RootViewModelFactory {
             banners.content.bannerPicker.content.event(.loaded($0))
         }
         
-        return banners
+        return (banners, loadBannersList)
     }
 }

@@ -305,7 +305,7 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let banners = makeBannersBinder(
+        let (banners, loadBannersList) = makeBannersBinder(
             model: model,
             httpClient: httpClient,
             infoNetworkLog: infoNetworkLog,

@@ -179,6 +179,10 @@ private extension RootView {
                 .foregroundColor(.white)
                 .font(.title3.bold())
         }
+
+       /*makeBannerPickerSectionView(
+        binder: BannerPickerSectionBinder
+       )*/
     }
     
     func makeRestrictionNoticeView() -> some View {
