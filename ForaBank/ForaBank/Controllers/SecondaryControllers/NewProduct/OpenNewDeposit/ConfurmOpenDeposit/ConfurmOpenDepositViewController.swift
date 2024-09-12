@@ -11,7 +11,6 @@
 
     class ConfurmOpenDepositViewController: PaymentViewController { 
         
-        private var wasDepositAlreadyInProgress = false
         var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
         var startAmount: Double = 5000.0
         var showSmsCode = false {
@@ -525,23 +524,21 @@
                     } else {
                        
                         if model.errorMessage?.contains("Открытие вклада уже выполняется") == true {
-                           
-                            self.wasDepositAlreadyInProgress = true
-                            self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                            
-                        } else if model.statusCode == 102 {
                             
                             self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
-                                
-                                if self.wasDepositAlreadyInProgress {
-                                    self.navigationController?.popToRootViewController(animated: true)
-                                }
+                                self.navigationController?.popToRootViewController(animated: true)
+                            }
+                            
+                        } else if model.statusCode == 102 &&
+                                  model.errorMessage?.contains("код 3100") == true {
+                            
+                            self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
+                                self.navigationController?.popToRootViewController(animated: true)
                             }
                             
                         } else {
                             self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                         }
-
                     }
                 }
             }
