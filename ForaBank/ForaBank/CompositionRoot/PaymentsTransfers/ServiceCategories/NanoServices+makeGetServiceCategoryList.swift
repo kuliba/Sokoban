@@ -11,9 +11,10 @@ import GenericRemoteService
 
 extension NanoServices {
     
+    typealias Serial = String
     typealias GetServiceCategoryListResult = Result<RemoteServices.ResponseMapper.GetServiceCategoryListResponse, ServiceFailure>
     typealias GetServiceCategoryListCompletion = (GetServiceCategoryListResult) -> Void
-    typealias GetServiceCategoryList = (@escaping GetServiceCategoryListCompletion) -> Void
+    typealias GetServiceCategoryList = (Serial?, @escaping GetServiceCategoryListCompletion) -> Void
     
     static func makeGetServiceCategoryList(
         httpClient: HTTPClient,

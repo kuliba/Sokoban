@@ -28,7 +28,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
         XCTAssertNoDiff(httpClient.requests, [
-            try ForaBank.RequestFactory.createGetServiceCategoryListRequest()
+            try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: nil)
         ])
     }
     

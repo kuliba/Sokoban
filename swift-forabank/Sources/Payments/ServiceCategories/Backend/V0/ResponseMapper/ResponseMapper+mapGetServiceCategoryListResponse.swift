@@ -34,16 +34,16 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
         }
         
         self.init(
-            categoryGroupList: data.categoryGroupList.map(Category.init),
+            list: data.categoryGroupList.map(ResponseMapper.ServiceCategory.init),
             serial: data.serial
         )
     }
 }
 
-private extension ResponseMapper.GetServiceCategoryListResponse.Category {
+private extension ResponseMapper.ServiceCategory {
     
     init(_ category: ResponseMapper._Data._Category) {
-
+        
         self.init(
             latestPaymentsCategory: category.latestPaymentsCategory.map { .init($0) },
             md5Hash: category.md5hash,
@@ -56,7 +56,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category {
     }
 }
 
-private extension ResponseMapper.GetServiceCategoryListResponse.Category.CategoryType {
+private extension ResponseMapper.ServiceCategory.CategoryType {
     
     init(_ paymentFlow: ResponseMapper._Data._Category.CategoryType) {
         
@@ -78,7 +78,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category.Categor
     }
 }
 
-private extension ResponseMapper.GetServiceCategoryListResponse.Category.LatestPaymentsCategory {
+private extension ResponseMapper.ServiceCategory.LatestPaymentsCategory {
     
     init(_ category: ResponseMapper._Data._Category.LatestPaymentsCategory) {
         
@@ -99,7 +99,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse.Category.LatestP
     }
 }
 
-private extension ResponseMapper.GetServiceCategoryListResponse.Category.PaymentFlow {
+private extension ResponseMapper.ServiceCategory.PaymentFlow {
     
     init(_ flow: ResponseMapper._Data._Category._PaymentFlow) {
         

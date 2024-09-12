@@ -7,7 +7,7 @@
 
 import RemoteServices
 
-typealias ServiceCategory = RemoteServices.ResponseMapper.GetServiceCategoryListResponse.Category
+typealias ServiceCategory = RemoteServices.ResponseMapper.ServiceCategory
 
 enum CategorySet {
     
