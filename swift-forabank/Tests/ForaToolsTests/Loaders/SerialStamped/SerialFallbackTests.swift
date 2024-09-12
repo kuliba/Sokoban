@@ -28,7 +28,7 @@ final class SerialFallbackTests: XCTestCase {
         let primaryFailure = makeFailure()
         let (sut, primary, _) = makeSUT(serial: nil)
         
-        expect(sut, toDeliver: .failure(primaryFailure)) {
+        expect(sut, toDeliver: .none) {
             
             primary.complete(with: .failure(primaryFailure))
         }
@@ -38,7 +38,7 @@ final class SerialFallbackTests: XCTestCase {
         
         let (sut, primary, _) = makeSUT(serial: nil)
         
-        expect(sut, toDeliver: .success([])) {
+        expect(sut, toDeliver: []) {
             
             primary.complete(with: makeSuccess([]))
         }
@@ -49,7 +49,7 @@ final class SerialFallbackTests: XCTestCase {
         let item = makeItem()
         let (sut, primary, _) = makeSUT(serial: nil)
         
-        expect(sut, toDeliver: .success([item])) {
+        expect(sut, toDeliver: [item]) {
             
             primary.complete(with: makeSuccess([item]))
         }
@@ -60,7 +60,7 @@ final class SerialFallbackTests: XCTestCase {
         let (item1, item2) = (makeItem(), makeItem())
         let (sut, primary, _) = makeSUT(serial: nil)
         
-        expect(sut, toDeliver: .success([item1, item2])) {
+        expect(sut, toDeliver: [item1, item2]) {
             
             primary.complete(with: makeSuccess([item1, item2]))
         }
@@ -73,10 +73,10 @@ final class SerialFallbackTests: XCTestCase {
         let (primaryFailure, secondaryFailure) = (makeFailure(), makeFailure())
         let (sut, primary, secondary) = makeSUT(serial: anyMessage())
         
-        expect(sut, toDeliver: .failure(secondaryFailure)) {
+        expect(sut, toDeliver: .none) {
             
             primary.complete(with: .failure(primaryFailure))
-            secondary.complete(with: .failure(secondaryFailure))
+            secondary.complete(with: .none)
         }
     }
     
@@ -85,10 +85,10 @@ final class SerialFallbackTests: XCTestCase {
         let primaryFailure = makeFailure()
         let (sut, primary, secondary) = makeSUT(serial: anyMessage())
         
-        expect(sut, toDeliver: .success([])) {
+        expect(sut, toDeliver: []) {
             
             primary.complete(with: .failure(primaryFailure))
-            secondary.complete(with: .success([]))
+            secondary.complete(with: [])
         }
     }
     
@@ -98,10 +98,10 @@ final class SerialFallbackTests: XCTestCase {
         let item = makeItem()
         let (sut, primary, secondary) = makeSUT(serial: anyMessage())
         
-        expect(sut, toDeliver: .success([item])) {
+        expect(sut, toDeliver: [item]) {
             
             primary.complete(with: .failure(primaryFailure))
-            secondary.complete(with: .success([item]))
+            secondary.complete(with: [item])
         }
     }
     
@@ -111,10 +111,10 @@ final class SerialFallbackTests: XCTestCase {
         let (item1, item2) = (makeItem(), makeItem())
         let (sut, primary, secondary) = makeSUT(serial: anyMessage())
         
-        expect(sut, toDeliver: .success([item1, item2])) {
+        expect(sut, toDeliver: [item1, item2]) {
             
             primary.complete(with: .failure(primaryFailure))
-            secondary.complete(with: .success([item1, item2]))
+            secondary.complete(with: [item1, item2])
         }
     }
     
@@ -125,7 +125,7 @@ final class SerialFallbackTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let (sut, primary, _) = makeSUT(serial: oldSerial)
         
-        expect(sut, toDeliver: .success([])) {
+        expect(sut, toDeliver: []) {
             
             primary.complete(with: makeSuccess([], newSerial))
         }
@@ -138,7 +138,7 @@ final class SerialFallbackTests: XCTestCase {
         let item = makeItem()
         let (sut, primary, _) = makeSUT(serial: oldSerial)
         
-        expect(sut, toDeliver: .success([item])) {
+        expect(sut, toDeliver: [item]) {
             
             primary.complete(with: makeSuccess([item], newSerial))
         }
@@ -151,7 +151,7 @@ final class SerialFallbackTests: XCTestCase {
         let (item1, item2) = (makeItem(), makeItem())
         let (sut, primary, _) = makeSUT(serial: oldSerial)
         
-        expect(sut, toDeliver: .success([item1, item2])) {
+        expect(sut, toDeliver: [item1, item2]) {
             
             primary.complete(with: makeSuccess([item1, item2], newSerial))
         }
@@ -166,10 +166,10 @@ final class SerialFallbackTests: XCTestCase {
         let failure = makeFailure()
         let (sut, primary, secondary) = makeSUT(serial: serial)
         
-        expect(sut, toDeliver: .failure(failure)) {
+        expect(sut, toDeliver: .none) {
             
             primary.complete(with: makeSuccess(makeItems(count: 100), serial))
-            secondary.complete(with: .failure(failure))
+            secondary.complete(with: .none)
         }
     }
     
@@ -178,10 +178,10 @@ final class SerialFallbackTests: XCTestCase {
         let serial = anyMessage()
         let (sut, primary, secondary) = makeSUT(serial: serial)
         
-        expect(sut, toDeliver: .success([])) {
+        expect(sut, toDeliver: []) {
             
             primary.complete(with: makeSuccess(makeItems(count: 100), serial))
-            secondary.complete(with: .success([]))
+            secondary.complete(with: [])
         }
     }
     
@@ -191,10 +191,10 @@ final class SerialFallbackTests: XCTestCase {
         let item = makeItem()
         let (sut, primary, secondary) = makeSUT(serial: serial)
         
-        expect(sut, toDeliver: .success([item])) {
+        expect(sut, toDeliver: [item]) {
             
             primary.complete(with: makeSuccess(makeItems(count: 100), serial))
-            secondary.complete(with: .success([item]))
+            secondary.complete(with: [item])
         }
     }
     
@@ -204,10 +204,10 @@ final class SerialFallbackTests: XCTestCase {
         let (item1, item2) = (makeItem(), makeItem())
         let (sut, primary, secondary) = makeSUT(serial: serial)
         
-        expect(sut, toDeliver: .success([item1, item2])) {
+        expect(sut, toDeliver: [item1, item2]) {
             
             primary.complete(with: makeSuccess(makeItems(count: 100), serial))
-            secondary.complete(with: .success([item1, item2]))
+            secondary.complete(with: [item1, item2])
         }
     }
     
@@ -231,7 +231,7 @@ final class SerialFallbackTests: XCTestCase {
     private typealias Serial = String
     private typealias SUT = SerialFallback<Serial, Item, Failure>
     private typealias Primary = Spy<Serial?, SUT.PrimaryResult>
-    private typealias Secondary = Spy<Void, SUT.SecondaryResult>
+    private typealias Secondary = Spy<Void, [Item]?>
     
     private func makeSUT(
         serial: Serial? = nil,
@@ -298,7 +298,7 @@ final class SerialFallbackTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        toDeliver expectedResult: Result<[Item], Failure>,
+        toDeliver expectedResult: [Item]?,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -306,7 +306,7 @@ final class SerialFallbackTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut {
-            XCTAssertNoDiff($0, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff($0, expectedResult, "Expected \(String(describing: expectedResult)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }
         

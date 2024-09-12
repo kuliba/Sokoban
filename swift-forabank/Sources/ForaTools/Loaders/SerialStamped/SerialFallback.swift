@@ -46,11 +46,9 @@ public extension SerialFallback {
     /// A typealias representing the primary operation, which takes an optional serial and a completion handler.
     typealias Primary = (Serial?, @escaping PrimaryCompletion) -> Void
     
-    /// A typealias representing the result of the secondary operation, which contains only a list of values.
-    typealias SecondaryResult = Result<[T], Failure>
-    
     /// A typealias for the completion handler for the secondary operation.
-    typealias SecondaryCompletion = (SecondaryResult) -> Void
+    /// The secondary operation may return an optional array of values (`[T]?`).
+    typealias SecondaryCompletion = ([T]?) -> Void
     
     /// A typealias representing the secondary operation, which takes a completion handler.
     typealias Secondary = (@escaping SecondaryCompletion) -> Void
@@ -70,7 +68,7 @@ public extension SerialFallback {
             guard let self else { return }
             
             if serial == nil {
-                completion($0.map(\.value))
+                completion(try? $0.map(\.value).get())
             } else {
                 switch $0 {
                 case .failure:
@@ -80,7 +78,7 @@ public extension SerialFallback {
                     if success.serial == serial {
                         self.secondary(completion)
                     } else {
-                        completion(.success(success.value))
+                        completion(success.value)
                     }
                 }
             }
