@@ -153,38 +153,23 @@ private extension RootView {
         
         ComposedPaymentsTransfersCorporateView(
             corporate: corporate,
-            makeContentView: {
-                
-                PaymentsTransfersCorporateContentView(
-                    content: corporate,
-                    factory: .init(
-                        makeBannerSectionView: makeBannerSectionView,
-                        makeRestrictionNoticeView: makeRestrictionNoticeView,
-                        makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                        makeTransfersSectionView: makeTransfersSectionView
-                    ),
-                    config: .iFora
-                )
-            }
+            factory: .init(
+                makeContentView: {
+                    PaymentsTransfersCorporateContentView(
+                        content: corporate.content,
+                        factory: .init(
+                            makeBannerSectionView: makeBannerSectionView,
+                            makeRestrictionNoticeView: makeRestrictionNoticeView,
+                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                            makeTransfersSectionView: makeTransfersSectionView
+                        ),
+                        config: .iFora
+                    )
+                }
+            )
         )
     }
-    
-    func makeBannerSectionView() -> some View {
         
-        ZStack {
-            
-            Color.orange.opacity(0.5)
-            
-            Text("Banners")
-                .foregroundColor(.white)
-                .font(.title3.bold())
-        }
-
-       /*makeBannerPickerSectionView(
-        binder: BannerPickerSectionBinder
-       )*/
-    }
-    
     func makeRestrictionNoticeView() -> some View {
         
         DisableCorCardsView(text: .disableForCorCards)

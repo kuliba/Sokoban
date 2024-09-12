@@ -305,14 +305,6 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let (banners, loadBannersList) = makeBannersBinder(
-            model: model,
-            httpClient: httpClient,
-            infoNetworkLog: infoNetworkLog,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
-
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
@@ -379,9 +371,32 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
+        let (banners, loadBannersList) = makeBannersBinder(
+            model: model,
+            httpClient: httpClient,
+            infoNetworkLog: infoNetworkLog,
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+
+        let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
+            bannerPickerPlaceholderCount: 6,
+            nanoServices: .init(
+                loadBanners: loadBannersList
+            ),
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        
+        // call and notify bannerPicker
+        loadBannersList {
+            banners.content.bannerPicker.content.event(.loaded($0))
+            paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+        }
+
         let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
-            corporate: .init(),
+            corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )

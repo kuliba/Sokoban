@@ -76,7 +76,7 @@ extension RootViewModelFactory {
         return .init(content: content, flow: flow, bind: { _,_ in [] })
     }
     
-    private static func selectBanner(
+    static func selectBanner(
         composer: StandardSelectedBannerDestinationNanoServicesComposer
     ) -> (
         BannerCatalogListData, @escaping (SelectedBannerDestination) -> Void

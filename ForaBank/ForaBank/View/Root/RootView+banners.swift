@@ -14,7 +14,7 @@ extension RootView {
     
     typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
 
-    func makeBannerPickerSectionView(
+    func makeBannerSectionView(
         binder: BannerPickerSectionBinder
     ) -> some View {
         
@@ -22,10 +22,11 @@ extension RootView {
             binder: binder,
             config: .init(spacing: 10),
             itemView: itemView,
-            makeDestinationView: {_ in return EmptyView()}
+            makeDestinationView: { Text(String(describing: $0)) }
         )
     }
 
+    @ViewBuilder
     private func itemView(
         item: BannerPickerSectionState.Item
     ) -> some View {
@@ -37,13 +38,17 @@ extension RootView {
                 
             case let .banner(banner):
                 rootViewFactory.makeIconView(.image(banner.imageEndpoint))
+                   /* .resizable()
+                    .aspectRatio(contentMode: .fit)*/
+                    .frame(width: 288, height: 124)
+                    .cornerRadius(12)
+
             }
 
         case .placeholder:
-            UIPrimitives.AsyncImage.init(
-                image: .cardPlaceholder,
-                publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
-)
+            PlaceholderView(opacity: 0.5)
+                .frame(.init(width: 288, height: 124))
+                ._shimmering()
         }
     }
 }

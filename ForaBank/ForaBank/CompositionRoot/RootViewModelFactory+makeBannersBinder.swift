@@ -62,12 +62,7 @@ extension RootViewModelFactory {
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
-        
-        // call and notify bannerPicker
-        loadBannersList {
-            banners.content.bannerPicker.content.event(.loaded($0))
-        }
-        
+                
         return (banners, loadBannersList)
     }
 }
