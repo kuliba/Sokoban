@@ -115,6 +115,7 @@ struct RootView: View {
         case .me2me(let requestMeToMeModel):
             //FIXME: looks like NavigationView required
             MeToMeRequestView(viewModel: requestMeToMeModel)
+                .ignoresSafeArea()
             //FIXME: looks like zIndex not needed
                 .zIndex(.greatestFiniteMagnitude)
             

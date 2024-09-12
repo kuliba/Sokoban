@@ -150,14 +150,16 @@ class MessagesHistoryViewModel: ObservableObject {
     
     func handleLink(_ url: URL) {
         
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-              let idItem = components.queryItems?.first(where: { $0.name == "id" }),
-              let bankId = idItem.value else {
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+           let idItem = components.queryItems?.first(where: { $0.name == "id" }),
+           let bankId = idItem.value {
             
-            return
+            model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+            
+        } else {
+            
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
-        
-        model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
     }
 }
 
