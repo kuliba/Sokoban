@@ -71,3 +71,22 @@ public extension FireAndForgetDecorator {
         }
     }
 }
+
+extension FireAndForgetDecorator where Payload == Void {
+    
+    convenience init(
+        decoratee: @escaping (@escaping DecorateeCompletion) -> Void,
+        decoration: @escaping Decoration
+    ) {
+        self.init(
+            decoratee: { _, completion in decoratee(completion) },
+            decoration: decoration
+        )
+    }
+    
+    func callAsFunction(
+        completion: @escaping DecorateeCompletion
+    ) {
+        self.callAsFunction((), completion: completion)
+    }
+}
