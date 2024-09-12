@@ -35,8 +35,8 @@ public extension SerialStampedCachingDecorator {
     typealias Serial = String
     
     /// The completion handler type for the decorated function.
-    /// - Result can either be a `SerialStamped<Response>` on success, or an error on failure.
-    typealias DecorateeCompletion = (Result<SerialStamped<Response>, Error>) -> Void
+    /// - Result can either be a `SerialStamped<String, Response>` on success, or an error on failure.
+    typealias DecorateeCompletion = (Result<SerialStamped<String, Response>, Error>) -> Void
     
     /// The original decoratee function that takes an optional `Serial` and a completion handler.
     /// It may perform some asynchronous work and then call the completion handler.
@@ -46,8 +46,8 @@ public extension SerialStampedCachingDecorator {
     /// - Result is `Void` on success, or an error on failure.
     typealias CacheCompletion = (Result<Void, Error>) -> Void
     
-    /// The cache function that stores a `SerialStamped<Response>` and calls a completion handler.
-    typealias Cache = (SerialStamped<Response>, @escaping CacheCompletion) -> Void
+    /// The cache function that stores a `SerialStamped<String, Response>` and calls a completion handler.
+    typealias Cache = (SerialStamped<String, Response>, @escaping CacheCompletion) -> Void
 }
 
 public extension SerialStampedCachingDecorator {
