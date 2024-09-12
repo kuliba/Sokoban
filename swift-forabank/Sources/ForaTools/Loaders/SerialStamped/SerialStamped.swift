@@ -5,27 +5,25 @@
 //  Created by Igor Malyarov on 09.09.2024.
 //
 
-public struct SerialStamped<Value> {
+public struct SerialStamped<Serial, Value> {
     
     public let value: Value
-    public let serial: Serial?
+    public let serial: Serial
     
     public init(
         value: Value,
-        serial: Serial?
+        serial: Serial
     ) {
         self.value = value
         self.serial = serial
     }
-    
-    public typealias Serial = String
 }
 
-extension SerialStamped: Equatable where Value: Equatable {}
+extension SerialStamped: Equatable where Serial: Equatable, Value: Equatable {}
 
 public extension SerialStamped where Value == Void {
     
-    init(serial: Serial?) {
+    init(serial: Serial) {
         
         self.init(value: (), serial: serial)
     }

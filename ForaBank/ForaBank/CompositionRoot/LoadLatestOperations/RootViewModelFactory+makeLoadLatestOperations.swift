@@ -58,7 +58,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse.Category {
+extension RemoteServices.ResponseMapper.ServiceCategory {
     
     var latestPaymentsCategoryName: String? {
         
