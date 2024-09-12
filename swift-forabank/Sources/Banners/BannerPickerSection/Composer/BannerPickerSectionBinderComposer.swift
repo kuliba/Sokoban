@@ -121,17 +121,6 @@ private extension BannerPickerSectionBinderComposer {
                     
                 case let .banner(banner):
                     flow.event(.select(.banner(banner)))
-                    
-                case .showAll:
-                    let banners: [Banner] = state.items.compactMap {
-                        
-                        guard case let .element(element) = $0,
-                              case let .banner(banner) = element.element
-                        else { return nil }
-                        
-                        return banner
-                    }
-                    flow.event(.select(.list(banners)))
                 }
             }
         

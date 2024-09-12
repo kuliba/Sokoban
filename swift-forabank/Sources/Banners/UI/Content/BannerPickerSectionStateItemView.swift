@@ -42,9 +42,6 @@ where BannerIcon: View,
             switch identified.element {
             case let .banner(banner):
                 bannerView(banner)
-                
-            case .showAll:
-                EmptyView()
             }
             
         case .placeholder:

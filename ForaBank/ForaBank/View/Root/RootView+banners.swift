@@ -37,12 +37,6 @@ extension RootView {
                 
             case let .banner(banner):
                 rootViewFactory.makeIconView(.image(banner.imageEndpoint))
-
-            case .showAll:
-                UIPrimitives.AsyncImage.init(
-                    image: .cardPlaceholder,
-                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
-    )
             }
 
         case .placeholder:
