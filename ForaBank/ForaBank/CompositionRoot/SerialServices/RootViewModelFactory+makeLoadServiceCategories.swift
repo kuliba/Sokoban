@@ -21,6 +21,9 @@ extension RootViewModelFactory {
         let localLoad = localComposer.composeLoad(
             fromModel: [ServiceCategory].init(codable:)
         )
+        let save = localComposer.composeSave(
+            toModel: [CodableServiceCategory].init(categories:)
+        )
         
         let serviceCategoriesRemoteLoad = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetServiceCategoryListRequest,
@@ -28,23 +31,14 @@ extension RootViewModelFactory {
         )
         let serviceCategoriesRemoteDecorator = SerialStampedCachingDecorator(
             decoratee: serviceCategoriesRemoteLoad,
-            save: localComposer.composeSave(
-                toModel: [CodableServiceCategory].init(categories:)
-            )
+            save: save
         )
-        let serviceCategoriesCachingRemoteLoad = { completion in
-            
-            serviceCategoriesRemoteDecorator.decorated(getSerial(), completion: completion)
-        }
+        let fallback = SerialFallback(
+            getSerial: getSerial,
+            primary: serviceCategoriesRemoteDecorator.decorated,
+            secondary: localLoad
+        )
         
-        let remoteLoad: _LoadServiceCategories = { completion in
-            
-            serviceCategoriesCachingRemoteLoad {
-                
-                completion(try? $0.map(\.value).get())
-            }
-        }
-        
-        return (localLoad, remoteLoad)
+        return (localLoad, fallback.callAsFunction(completion:))
     }
 }
