@@ -18,7 +18,7 @@ public extension Array where Element: Identifiable {
     /// Otherwise, elements in the original array that share the same `id` as those in the `update` are replaced, and new elements are appended.
     func updated(
         with update: Self
-    ) -> (Self, Bool) {
+    ) -> (updated: Self, didUpdate: Bool) {
         
         // Return early if the update array is empty
         guard !update.isEmpty else { return (self, false) }
@@ -40,4 +40,3 @@ public extension Array where Element: Identifiable {
         return (copy + update, true)
     }
 }
-

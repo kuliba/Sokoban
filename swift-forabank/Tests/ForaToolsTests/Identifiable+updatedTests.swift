@@ -1,6 +1,6 @@
 //
 //  Identifiable+updatedTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 12.09.2024.
 //
@@ -19,8 +19,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [])
-        XCTAssertNoDiff(updated.1, false)
+        XCTAssertNoDiff(updated.updated, [])
+        XCTAssertNoDiff(updated.didUpdate, false)
     }
     
     func test_shouldDeliverSourceOfOneWithFalseOnEmptyUpdate() {
@@ -30,8 +30,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source)
-        XCTAssertNoDiff(updated.1, false)
+        XCTAssertNoDiff(updated.updated, source)
+        XCTAssertNoDiff(updated.didUpdate, false)
     }
     
     func test_shouldDeliverSourceOfTwoWithFalseOnEmptyUpdate() {
@@ -41,8 +41,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source)
-        XCTAssertNoDiff(updated.1, false)
+        XCTAssertNoDiff(updated.updated, source)
+        XCTAssertNoDiff(updated.didUpdate, false)
     }
     
     func test_shouldDeliverUpdateOfOneWithTrueOnEmptySource() {
@@ -52,8 +52,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     func test_shouldDeliverUpdateOfTwoWithTrueOnEmptySource() {
@@ -63,8 +63,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     // MARK: - both of one
@@ -76,8 +76,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source + update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, source + update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     func test_shouldDeliverUpdateWithTrueOnBothOfOneSameID() {
@@ -87,8 +87,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source, update)
     }
     
@@ -101,8 +101,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source + update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, source + update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     func test_shouldDeliverUpdatedWithTrueOnSourceOfOneUpdateOfTwoSameFirstID() {
@@ -112,8 +112,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[0], update[0])
     }
     
@@ -124,8 +124,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[0], update[1])
     }
     
@@ -138,8 +138,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source + update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, source + update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     func test_shouldDeliverReplacedFirstWithTrueOnSourceOfTwoUpdateOfOneSameFirstID() {
@@ -149,8 +149,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[1], update[0]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[1], update[0]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[0], update[0])
     }
     
@@ -161,8 +161,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[0], update[0]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[0], update[0]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[1], update[0])
     }
     
@@ -175,8 +175,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source + update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, source + update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     func test_shouldDeliverReplacedFirstWithTrueOnSourceOfTwoUpdateOfTwoFirstIDSameFirst() {
@@ -186,8 +186,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[1], update[0], update[1]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[1], update[0], update[1]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[0], update[0])
     }
     
@@ -198,8 +198,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[1], update[0], update[1]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[1], update[0], update[1]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[0], update[1])
     }
     
@@ -210,8 +210,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[0], update[0], update[1]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[0], update[0], update[1]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[1], update[0])
     }
     
@@ -222,8 +222,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, [source[0], update[0], update[1]])
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, [source[0], update[0], update[1]])
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source[1], update[1])
     }
     
@@ -234,8 +234,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, update)
+        XCTAssertNoDiff(updated.didUpdate, true)
         XCTAssertNotEqual(source, update)
     }
     
@@ -248,8 +248,8 @@ final class Identifiable_updatedTests: XCTestCase {
         
         let updated = source.updated(with: update)
         
-        XCTAssertNoDiff(updated.0, source + update)
-        XCTAssertNoDiff(updated.1, true)
+        XCTAssertNoDiff(updated.updated, source + update)
+        XCTAssertNoDiff(updated.didUpdate, true)
     }
     
     // MARK: - Helpers
