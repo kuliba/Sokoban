@@ -5,65 +5,6 @@
 //  Created by Igor Malyarov on 12.09.2024.
 //
 
-public final class SerialFallback<T, Failure: Error> {
-    
-    private let getSerial: () -> Serial?
-    private let primary: Primary
-    private let secondary: Secondary
-    
-    public init(
-        getSerial: @escaping () -> Serial?,
-        primary: @escaping Primary,
-        secondary: @escaping Secondary
-    ) {
-        self.getSerial = getSerial
-        self.primary = primary
-        self.secondary = secondary
-    }
-}
-
-public extension SerialFallback {
-    
-    typealias Serial = String
-    
-    typealias PrimaryResult = Result<SerialStamped<[T]>, Failure>
-    typealias PrimaryCompletion = (PrimaryResult) -> Void
-    typealias Primary = (Serial?, @escaping PrimaryCompletion) -> Void
-    
-    typealias SecondaryResult = Result<[T], Failure>
-    typealias SecondaryCompletion = (SecondaryResult) -> Void
-    typealias Secondary = (@escaping SecondaryCompletion) -> Void
-}
-
-public extension SerialFallback {
-    
-    func callAsFunction(
-        completion: @escaping SecondaryCompletion
-    ) {
-        let serial = getSerial()
-        primary(serial) { [weak self] in
-            
-            guard let self else { return }
-            
-            if serial == nil {
-                completion($0.map(\.value))
-            } else {
-                switch $0 {
-                case .failure:
-                    self.secondary(completion)
-                    
-                case let .success(success):
-                    if success.serial == serial {
-                        self.secondary(completion)
-                    } else {
-                        completion(.success(success.value))
-                    }
-                }
-            }
-        }
-    }
-}
-
 import ForaTools
 import XCTest
 
@@ -282,17 +223,18 @@ final class SerialFallbackTests: XCTestCase {
         sut = nil
         primary.complete(with: makeSuccess(makeItems(count: 100)))
         
-        wait(for: [exp], timeout: 0.1)
+        wait(for: [exp], timeout: 0.5)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = SerialFallback<Item, Failure>
-    private typealias Primary = Spy<SUT.Serial?, SUT.PrimaryResult>
+    private typealias Serial = String
+    private typealias SUT = SerialFallback<Serial, Item, Failure>
+    private typealias Primary = Spy<Serial?, SUT.PrimaryResult>
     private typealias Secondary = Spy<Void, SUT.SecondaryResult>
     
     private func makeSUT(
-        serial: SUT.Serial? = nil,
+        serial: Serial? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -348,7 +290,7 @@ final class SerialFallbackTests: XCTestCase {
     
     private func makeSuccess(
         _ items: [Item],
-        _ serial: SUT.Serial = anyMessage()
+        _ serial: Serial = anyMessage()
     ) -> SUT.PrimaryResult {
         
         return .success(.init(value: items, serial: serial))

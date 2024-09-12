@@ -160,8 +160,8 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SerialStampedCachingDecorator<Response>
-    private typealias LoadSpy = Spy<String?, Result<SerialStamped<Response>, Error>>
-    private typealias CacheSpy = Spy<SerialStamped<Response>, Result<Void, Error>>
+    private typealias LoadSpy = Spy<String?, Result<SerialStamped<String, Response>, Error>>
+    private typealias CacheSpy = Spy<SerialStamped<String, Response>, Result<Void, Error>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -200,7 +200,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     private func makeLoadResponse(
         serial: String = anyMessage(),
         value: Response? = nil
-    ) -> SerialStamped<Response> {
+    ) -> SerialStamped<String, Response> {
         
         return .init(value: value ?? makeResponse(), serial: serial)
     }
@@ -208,7 +208,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     private func expect(
         _ sut: SUT,
         with serial: String?,
-        toDeliver expectedResult: Result<SerialStamped<Response>, Error>,
+        toDeliver expectedResult: Result<SerialStamped<String, Response>, Error>,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
