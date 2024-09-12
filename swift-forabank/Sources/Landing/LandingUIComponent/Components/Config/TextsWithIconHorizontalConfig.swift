@@ -19,6 +19,7 @@ public extension UILanding.TextsWithIconHorizontal {
         public let height: CGFloat
         public let spacing: CGFloat
         public let text: Text
+        public let images: [String: Image]
         
         public struct Paddings {
             
@@ -69,7 +70,16 @@ public extension UILanding.TextsWithIconHorizontal {
             }
         }
         
-        public init(paddings: Paddings, backgroundColor: Color, cornerRadius: CGFloat, circleSize: CGFloat, icon: Icon, height: CGFloat, spacing: CGFloat, text: Text) {
+        public init(
+            paddings: Paddings,
+            backgroundColor: Color,
+            cornerRadius: CGFloat,
+            circleSize: CGFloat,
+            icon: Icon, height: CGFloat,
+            spacing: CGFloat,
+            text: Text,
+            images: [String: Image]
+        ) {
             self.paddings = paddings
             self.backgroundColor = backgroundColor
             self.cornerRadius = cornerRadius
@@ -78,6 +88,7 @@ public extension UILanding.TextsWithIconHorizontal {
             self.height = height
             self.spacing = spacing
             self.text = text
+            self.images = images
         }
     }
 }

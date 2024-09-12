@@ -14,15 +14,18 @@ import UtilityServicePrepaymentDomain
 
 final class UtilityPrepaymentFlowMicroServicesComposer {
     
+    private let composer: AnywayTransactionComposer
     private let flag: Flag
     private let nanoServices: NanoServices
     private let makeLegacyPaymentsServicesViewModel: MakeLegacyPaymentsServicesViewModel
     
     init(
+        composer: AnywayTransactionComposer,
         flag: Flag,
         nanoServices: NanoServices,
         makeLegacyPaymentsServicesViewModel: @escaping MakeLegacyPaymentsServicesViewModel
     ) {
+        self.composer = composer
         self.flag = flag
         self.nanoServices = nanoServices
         self.makeLegacyPaymentsServicesViewModel = makeLegacyPaymentsServicesViewModel
@@ -63,15 +66,25 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ payload: LegacyPayload,
         _ completion: @escaping InitiateUtilityPaymentCompletion
     ) {
-        switch flag {
-        case .inactive:
+        switch payload.type {
+        case .internet:
             completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
             
-        case .active:
-            nanoServices.getOperatorsListByParam { [weak self] in
+        case .service:
+            switch flag {
+            case .inactive:
+                completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
                 
-                self?.getAllLatestPayments($0, completion)
+            case .active:
+                nanoServices.getOperatorsListByParam { [weak self] in
+                    
+                    self?.getAllLatestPayments($0, completion)
+                }
             }
+            
+        default:
+            // other payment types/categories are not supported
+            break
         }
     }
     
@@ -105,18 +118,24 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             nanoServices.startAnywayPayment(
                 .lastPayment(lastPayment)
             ) {
-                completion(self.makeStartPaymentResult($0, lastPayment))
+                completion(self.map($0, with: .lastPayment(lastPayment)))
             }
             
         case let .operator(`operator`):
             getServices(for: `operator`, completion)
             
-        case let .service(utilityService, `operator`):
+        case let .oneOf(utilityService, `operator`):
             nanoServices.startAnywayPayment(
                 .service(utilityService, for: `operator`)
             ) {
-                let result = self.makeStartPaymentResult(from: $0, utilityService, `operator`)
-                completion(result)
+                completion(self.map($0, with: .oneOf(utilityService, `operator`)))
+            }
+            
+        case let .singleService(utilityService, `operator`):
+            nanoServices.startAnywayPayment(
+                .service(utilityService, for: `operator`)
+            ) {
+                completion(self.map($0, with: .singleService(utilityService, `operator`)))
             }
         }
     }
@@ -158,8 +177,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             nanoServices.startAnywayPayment(
                 .service(utilityService, for: `operator`)
             ) {
-                let result = self.makeStartPaymentResult(from: $0, utilityService, `operator`)
-                completion(result)
+                completion(self.map($0, with: .singleService(utilityService, `operator`)))
             }
             
         default:
@@ -171,116 +189,68 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         }
     }
     
-    private func makeStartPaymentResult(
-        _ result: NanoServices.StartAnywayPaymentResult,
-        _ lastPayment: LastPayment
+    func map(
+        _ result:  UtilityPaymentNanoServices.StartAnywayPaymentResult,
+        with payload: MakeAnywayTransactionPayload
     ) -> ProcessSelectionResult {
-        
-        let outline = makeOutline(
-            lastPayment: lastPayment,
-            payload: .init(with: lastPayment)
-        )
-        
-        return makeStartPaymentResult(result, outline)
-    }
     
-    private func makeStartPaymentResult(
-        from result: NanoServices.StartAnywayPaymentResult,
-        _ service: UtilityService,
-        _ `operator`: Operator
-    ) -> ProcessSelectionResult {
-        
-        let result = result.map {
-            // https://shorturl.at/cQ3zr
-            $0.injectSelectedService(service, of: `operator`)
-        }
-        
-        let payload = AnywayPaymentOutline.Payload(
-            puref: service.puref,
-            operator: `operator`
-        )
-        let outline = makeOutline(
-            lastPayment: nil,
-            payload: payload
-        )
-        
-        return makeStartPaymentResult(result, outline)
-    }
-    
-    private func makeOutline(
-        lastPayment: LastPayment?,
-        payload: AnywayPaymentOutline.Payload
-    ) -> AnywayPaymentOutline {
-        
-        nanoServices.makeAnywayPaymentOutline(lastPayment, payload)
-    }
-    
-    private func makeStartPaymentResult(
-        _ result: NanoServices.StartAnywayPaymentResult,
-        _ outline: AnywayPaymentOutline
-    ) -> ProcessSelectionResult {
-        
         switch result {
-        case let .failure(failure):
-            return .failure(.init(failure))
+        case .failure(.operatorFailure):
+            return .failure(.serviceFailure(.connectivityError))
             
-        case let .success(success):
-            switch success {
-            case let .services(services, for: `operator`):
-                return .success(.services(services, for: `operator`))
-                
-            case let .startPayment(response):
-                let update = AnywayPaymentUpdate(response)
-                
-                switch update {
-                case .none:
-                    return .failure(.serviceFailure(.connectivityError))
-                    
-                case let .some(update):
-                    return .success(.startPayment(.init(from: update, with: outline)))
-                }
+        case .failure(.serviceFailure(.connectivityError)):
+            return .failure(.serviceFailure(.connectivityError))
+            
+        case let .failure(.serviceFailure(.serverError(message))):
+            return .failure(.serviceFailure(.serverError(message)))
+            
+        case let .success(.services(services, for: `operator`)):
+            return .success(.services(services, for: `operator`))
+            
+        case let .success(.startPayment(response)):
+            guard let transaction = composer.makeTransaction(from: response, with: payload)
+            else {
+                return .failure(.serviceFailure(.connectivityError))
             }
+            
+            return .success(.startPayment(transaction))
         }
-    }
-    
-    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
-    typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
-    
-    private func validatePayment(
-        _ context: AnywayPaymentContext
-    ) -> Bool {
-        
-        let validator = AnywayPaymentContextValidator()
-        
-        return validator.validate(context) == nil
     }
 }
 
 // MARK: - Helpers
 
-extension AnywayTransactionState.Transaction {
+private extension AnywayPaymentContext {
     
     init(
         from update: AnywayPaymentUpdate,
-        with outline: AnywayPaymentOutline
+        with outline: AnywayPaymentOutline,
+        service: UtilityService?
     ) {
-        let payment = AnywayPaymentDomain.AnywayPayment(
-            update: update,
-            outline: outline
+        let firstField = AnywayElement.Field(
+            service: service,
+            icon: outline.payload.icon
         )
-        
-        let context = AnywayPaymentContext(
-            initial: .init(
-                amount: outline.amount,
-                elements: [],
-                footer: .continue,
-                isFinalStep: false
-            ),
-            payment: payment,
+        let initialPayment = AnywayPaymentDomain.AnywayPayment(
+            amount: outline.amount,
+            elements: [firstField.map { .field($0) }].compactMap { $0 },
+            footer: .continue,
+            isFinalStep: false
+        )
+
+        self.init(
+            initial: initialPayment,
+            payment: initialPayment.update(with: update, and: outline),
             staged: .init(),
             outline: outline,
             shouldRestart: false
         )
+    }
+}
+
+extension AnywayTransactionState.Transaction {
+    
+    init(from context: AnywayPaymentContext) {
         
         let validator = AnywayPaymentContextValidator()
         
@@ -291,14 +261,12 @@ extension AnywayTransactionState.Transaction {
     }
 }
 
-
 // MARK: - Adapters
 
 private extension AnywayPaymentOutline.Payload {
     
-    init(
-        with lastPayment: UtilityPaymentLastPayment
-    ) {
+    init(with lastPayment: UtilityPaymentLastPayment) {
+        
         self.init(
             puref: lastPayment.puref,
             title: lastPayment.name,
@@ -317,22 +285,6 @@ private extension AnywayPaymentOutline.Payload {
             subtitle: `operator`.subtitle,
             icon: `operator`.icon
         )
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment {
-    
-    init(
-        update: AnywayPaymentUpdate,
-        outline: AnywayPaymentOutline
-    ) {
-        let empty: Self = .init(
-            amount: nil,
-            elements: [],
-            footer: .continue,
-            isFinalStep: false
-        )
-        self = empty.update(with: update, and: outline)
     }
 }
 
@@ -357,74 +309,4 @@ private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Opera
     }
     
     typealias NanoServices = UtilityPaymentNanoServices
-}
-
-// MARK: - Helpers
-
-private extension UtilityPaymentNanoServices.StartAnywayPaymentSuccess {
-    
-    func injectSelectedService(
-        _ service: UtilityService,
-        of `operator`: UtilityPaymentOperator
-    ) -> Self {
-        
-        switch self {
-        case .services:
-            return self
-            
-        case let .startPayment(startPayment):
-            let startPayment = startPayment.injectSelectedService(service, of: `operator`)
-            return .startPayment(startPayment)
-        }
-    }
-}
-
-private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
-    
-    func injectSelectedService(
-        _ service: UtilityService,
-        of `operator`: UtilityPaymentOperator
-    ) -> Self {
-        
-        let field = Additional(
-            fieldName: service.name,
-            fieldValue: service.name,
-            fieldTitle: "Услуга",
-            md5Hash: `operator`.icon,
-            recycle: false,
-            svgImage: nil,
-            typeIdParameterList: nil
-        )
-        
-        return updating(additional: [field] + additional)
-    }
-    
-    private func updating(
-        additional: [Additional]
-    ) -> Self {
-        
-        return .init(
-            additional: additional,
-            amount: amount,
-            creditAmount: creditAmount,
-            currencyAmount: currencyAmount,
-            currencyPayee: currencyPayee,
-            currencyPayer: currencyPayer,
-            currencyRate: currencyRate,
-            debitAmount: debitAmount,
-            documentStatus: documentStatus,
-            fee: fee,
-            finalStep: finalStep,
-            infoMessage: infoMessage,
-            needMake: needMake,
-            needOTP: needOTP,
-            needSum: needSum,
-            parametersForNextStep: parametersForNextStep,
-            paymentOperationDetailID: paymentOperationDetailID,
-            payeeName: payeeName,
-            printFormType: printFormType,
-            scenario: scenario,
-            options: options
-        )
-    }
 }

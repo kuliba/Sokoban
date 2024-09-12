@@ -56,8 +56,10 @@ extension Services {
             
             case v1
             case v2
+            case v3
             case v4
             case v5
+            case v6
         }
         
         enum ServiceName: String {
@@ -75,7 +77,9 @@ extension Services {
             case fastPaymentContractFindList
             case formSessionKey
             case getAllLatestPayments
+            case getInfoForRepeatPayment
             case getBankDefault
+            case getBannerCatalogList
             case getC2BSub
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
@@ -83,6 +87,7 @@ extension Services {
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
+            case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
             case getProductDetails
@@ -91,6 +96,7 @@ extension Services {
             case getProcessingSessionCode
             case getScenarioQRData
             case getSberQRData
+            case getServiceCategoryList
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
@@ -243,6 +249,12 @@ extension Services.Endpoint {
         serviceName: .getBankDefault
     )
     
+    static let getBannerCatalogListV2: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getBannerCatalogList
+    )
+
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v1,
@@ -308,6 +320,12 @@ extension Services.Endpoint {
         version: .v5,
         serviceName: .getProductListByType
     )
+    
+    static let getProductListByTypeV6: Self = .init(
+        pathPrefix: .rest,
+        version: .v6,
+        serviceName: .getProductListByType
+    )
 
     static let getSberQRData: Self = .init(
         pathPrefix: .binding,
@@ -327,12 +345,24 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let getServiceCategoryList: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getServiceCategoryList
+    )
+    
     static let getSVCardLimits: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .getSVCardLimits
     )
 
+    static let getPaymentTemplateListV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getPaymentTemplateList
+    )
+    
     static let getVerificationCode: Self = .init(
         pathPrefix: .transfer,
         version: .v2,
@@ -405,9 +435,21 @@ extension Services.Endpoint {
         serviceName: .getOperatorsListByParam
     )
     
-    static let getAllLatestPayments: Self = .init(
+    static let getAllLatestPaymentsV2: Self = .init(
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getAllLatestPayments
+    )
+    
+    static let getAllLatestPaymentsV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getAllLatestPayments
+    )
+    
+    static let getInfoForRepeatPayment: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getInfoForRepeatPayment
     )
 }

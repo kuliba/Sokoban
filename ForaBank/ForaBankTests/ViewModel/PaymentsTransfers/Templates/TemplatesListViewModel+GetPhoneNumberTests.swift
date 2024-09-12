@@ -103,8 +103,7 @@ final class TemplatesListViewModel_GetPhoneNumberTests: XCTestCase {
             items: [],
             deletePannel: nil,
             updateFastAll: {},
-            model: model,
-            flowManager: .preview
+            model: model
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

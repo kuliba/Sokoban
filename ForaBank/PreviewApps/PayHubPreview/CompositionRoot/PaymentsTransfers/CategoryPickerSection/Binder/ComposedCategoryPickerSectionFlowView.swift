@@ -1,0 +1,63 @@
+//
+//  ComposedCategoryPickerSectionFlowView.swift
+//  PayHubPreview
+//
+//  Created by Igor Malyarov on 26.08.2024.
+//
+
+import PayHub
+import PayHubUI
+import SwiftUI
+
+struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel, DestinationView>: View
+where CategoryPickerItemLabel: View,
+      DestinationView: View {
+    
+    let binder: CategoryPickerSectionBinder
+    let config: Config
+    let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
+    let makeDestinationView: MakeDestinationView
+    
+    var body: some View {
+        
+        CategoryPickerSectionFlowWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeContentView: makeContentView,
+                        makeDestinationView: makeDestinationView
+                    )
+                )
+            }
+        )
+    }
+}
+
+extension ComposedCategoryPickerSectionFlowView {
+    
+    typealias MakeDestinationView = (CategoryPickerSectionDestination) -> DestinationView
+    typealias Config = CategoryPickerSectionContentViewConfig
+}
+
+extension ComposedCategoryPickerSectionFlowView {
+    
+    func makeContentView() -> some View {
+        
+        CategoryPickerSectionContentWrapperView(
+            model: binder.content,
+            makeContentView: { state, event in
+                
+                CategoryPickerSectionContentView(
+                    state: state,
+                    event: event,
+                    config: config,
+                    itemLabel: itemLabel
+                )
+            }
+        )
+    }
+}

@@ -44,7 +44,8 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
             flag: .init(flag),
             model: model,
             httpClient: httpClient,
-            log: { _,_,_,_,_  in }
+            log: { _,_,_,_,_  in },
+            scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

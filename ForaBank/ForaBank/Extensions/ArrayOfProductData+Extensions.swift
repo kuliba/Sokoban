@@ -68,6 +68,41 @@ extension Array where Element == ProductData {
         return filter { $0.productType == .card && $0.parentID == nil }
     }
     
+    // use only main cards, otherwise return random active product
+    private func removingDuplicateByAccountNumber() -> [ProductCardData] {
+        
+        var unique = [ProductCardData]()
+        
+        for product in self {
+            
+            guard !unique.contains(where: { $0.accountNumber.hasValue && $0.accountNumber == product.accountNumber })
+            else { continue }
+            
+            if let activeCard = cardBy(accountNumber: product.accountNumber, status: .active) {
+                unique.append(activeCard)
+            } else {
+                product.asCard.map { unique.append($0) }
+            }
+        }
+        return unique
+    }
+
+    func cardBy(
+        accountNumber: String?,
+        status: ProductCardData.StatusCard
+    ) -> ProductCardData? {
+        
+        guard let accountNumber else { return nil }
+        
+        let first = first {
+            guard let card = $0.asCard else { return false }
+            
+            return card.accountNumber == accountNumber && card.statusCard == status
+        }
+        
+        return first?.asCard
+    }
+    
     func productsWithoutCards() -> [ProductData] {
         
         return filter { $0.productType != .card }
@@ -123,7 +158,7 @@ extension Array where Element == ProductData {
         
         let accountsAndDeposits = filter { $0.productType == .account || $0.productType == .deposit }
         
-        let cardsWithoutAdditional = cardsWithoutAdditional()
+        let cardsWithoutAdditional = cardsWithoutAdditional().removingDuplicateByAccountNumber()
         let cardsWithoutAdditionalIDs = cardsWithoutAdditional.map(\.id)
 
         var productsForBalance: [ProductData] = accountsAndDeposits + cardsWithoutAdditional
@@ -141,5 +176,12 @@ extension Array where Element == ProductData {
         }
         
         return productsForBalance.compactMap(\.balanceRub).reduce(0, +)
+    }
+}
+
+extension Optional where Wrapped == String {
+
+    var hasValue: Bool {
+        !isNilOrEmpty
     }
 }

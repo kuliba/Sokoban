@@ -21,4 +21,16 @@ extension RemoteService where CreateRequestError == Error {
             mapResponse: mapResponse
         )
     }
+    
+    convenience init(
+        createRequest: @escaping () throws -> URLRequest,
+        performRequest: @escaping PerformRequest,
+        mapResponse: @escaping MapResponse
+    ) {
+        self.init(
+            createRequest: { _ in .init { try createRequest() }},
+            performRequest: performRequest,
+            mapResponse: mapResponse
+        )
+    }
 }

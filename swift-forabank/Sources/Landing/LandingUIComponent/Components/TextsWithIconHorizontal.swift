@@ -45,7 +45,11 @@ extension TextsWithIconHorizontalView {
             self.images = images
         }
         
-        func image(byMd5Hash: String) -> Image? {
+        func image(byMd5Hash: String, imagesFromConfig: [String: Image]) -> Image? {
+            
+            if let image = imagesFromConfig[byMd5Hash] {
+                return image
+            }
             
             return images[byMd5Hash]
         }

@@ -107,3 +107,27 @@ extension Alert.ViewModel {
         )
     }
 }
+
+extension Alert.ViewModel {
+    
+    static func disableForCorporateCard(
+        message: String = .disableForCorporateCard,
+        primaryAction: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Информация",
+            message: message,
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: primaryAction
+            )
+        )
+    }
+}
+
+extension String {
+    
+    static let disableForCorporateCard: Self = "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения."
+}

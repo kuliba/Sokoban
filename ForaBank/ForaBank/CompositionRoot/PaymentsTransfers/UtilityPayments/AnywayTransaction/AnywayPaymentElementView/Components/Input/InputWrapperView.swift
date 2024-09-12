@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 07.06.2024.
 //
 
+import AnywayPaymentDomain
 import PaymentComponents
+import RxViewModel
 import SwiftUI
 
+@available(*, deprecated, message: "Use `TextInputWrapperView`")
 struct InputWrapperView<IconView: View>: View {
     
     @ObservedObject var viewModel: ViewModel
@@ -29,6 +32,6 @@ struct InputWrapperView<IconView: View>: View {
 
 extension InputWrapperView {
     
-    typealias ViewModel = ObservingInputViewModel
+    typealias ViewModel = RxObservingViewModel<InputState<AnywayElement.UIComponent.Icon?>, InputEvent, Never>
 }
 

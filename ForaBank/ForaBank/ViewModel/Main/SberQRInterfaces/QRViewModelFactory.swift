@@ -23,16 +23,44 @@ extension QRViewModelFactory {
     static func preview() -> Self {
         
         .init(
-            makeQRScannerModel: QRViewModel.preview,
+            makeQRScannerModel: QRModelWrapper.preview,
             makeSberQRConfirmPaymentViewModel: { _,_ in
                 
-                SberQRConfirmPaymentViewModel(
+                return .init(
                     initialState: .init(confirm: .editableAmount(.preview)),
                     reduce: { state, _ in state },
                     scheduler: .makeMain()
                 )
             },
             makePaymentsSuccessViewModel: { _ in .sampleC2BSub }
+        )
+    }
+}
+
+extension QRModelWrapper
+where QRResult == QRViewModel.ScanResult,
+      QRModel == QRViewModel {
+    
+    static func preview() -> QRModelWrapper {
+        
+        return .init(
+            mapScanResult: { _, completion in completion(.unknown) },
+            makeQRModel: QRViewModel.preview,
+            scheduler: .main
+        )
+    }
+}
+
+extension QRModelWrapper
+where QRResult == QRModelResult,
+      QRModel == QRViewModel {
+    
+    static func preview() -> QRModelWrapper {
+        
+        return .init(
+            mapScanResult: { _, completion in completion(.unknown) },
+            makeQRModel: QRViewModel.preview,
+            scheduler: .main
         )
     }
 }

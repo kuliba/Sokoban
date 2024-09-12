@@ -1,0 +1,48 @@
+//
+//  TextInputValidator.swift
+//
+//
+//  Created by Igor Malyarov on 07.08.2024.
+//
+
+import TextFieldDomain
+
+public final class TextInputValidator {
+    
+    private let hintText: String?
+    private let warningText: String?
+    private let validate: (String) -> Bool
+    
+    public init(
+        hintText: String?,
+        warningText: String?,
+        validate: @escaping (String) -> Bool
+    ) {
+        self.hintText = hintText
+        self.warningText = warningText
+        self.validate = validate
+    }
+}
+
+public extension TextInputValidator {
+    
+    func validate(
+        _ state: TextFieldState
+    ) -> TextInputState.Message? {
+        
+        switch state {
+        case .editing:
+            return hintText.map { .hint($0) }
+            
+        case let .noFocus(text):
+            if validate(text) {
+                return hintText.map { .hint($0) }
+            } else {
+                return warningText.map { .warning($0) }
+            }
+            
+        case .placeholder:
+            return hintText.map { .hint($0) }
+        }
+    }
+}

@@ -95,7 +95,9 @@ struct ProductProfileView: View {
                                     Text(filters)
                                 }
                                 
-                                ProductProfileHistoryView(viewModel: historyViewModel)
+                                ProductProfileHistoryView(
+                                    viewModel: historyViewModel
+                                )
                             }
                         }
                     }
@@ -258,9 +260,9 @@ struct ProductProfileView: View {
                 getUImage: getUImage
             )
             
-        case let .paymentsTransfers(viewModel):
+        case let .paymentsTransfers(node):
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: node.model,
                 viewFactory: viewFactory, 
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
@@ -275,7 +277,13 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(viewModel):
-            OperationDetailView(viewModel: viewModel)
+            OperationDetailView(
+                viewModel: viewModel,
+                makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView, 
+                payment: {
+                    //TODO: Payment reducer
+                }
+            )
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -497,7 +505,8 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:)
+                makeHistoryButton: HistoryButtonView.init(event:),
+                makeRepeatButtonView: { _ in .init(action: { }) }
             ),
             getUImage: { _ in nil }
         )
@@ -567,7 +576,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: QRViewModel.ScanResult.init
+            qrResolve: { _ in .unknown }
         )
     }
 }

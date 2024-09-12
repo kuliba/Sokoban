@@ -87,7 +87,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
         self.init(
             fieldName: additional.fieldName,
             fieldValue: additional.fieldValue,
-            fieldTitle: additional.fieldTitle,
+            fieldTitle: additional.fieldTitle ?? additional.fieldName,
             md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
             svgImage: additional.svgImage,
@@ -172,14 +172,14 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType
             self = ._backendReserved
             
         case let .some(string):
-            self.init(string)
+            self.init(string, value: parameter.content)
         }
     }
 }
 
 extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
         
-    init?(_ string: String) {
+    init?(_ string: String, value: String?) {
         
         switch string {
         case "%Number", "%Numeric":
@@ -189,14 +189,18 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
             self = .string
             
         default:
-            guard let pairs = try? string.splitDataType(),
-                  let first = pairs.first
+            guard let split = try? string.splitDataType(),
+                  !split.isEmpty
             else { return nil }
             
-            self = .pairs(
-                .init(key: first.key, value: first.value),
-                pairs.map { .init(key: $0.key, value: $0.value) }
-            )
+            let pairs = split.map { Pair(key: $0.key, value: $0.value) }
+            
+            if let key = value,
+               let pair = pairs.first(where: { $0.key == key }) {
+                self = .pairs(pair, pairs)
+            } else {
+                self = .pairs(nil, pairs)
+            }
         }
     }
 }
@@ -285,7 +289,7 @@ private extension ResponseMapper._Data {
         
         let fieldName: String
         let fieldValue: String
-        let fieldTitle: String
+        let fieldTitle: String?
         let md5hash: String?
         let recycle: Bool?
         let svgImage: String?

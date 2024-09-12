@@ -30,7 +30,7 @@ final class KeyChainStoreTests: XCTestCase {
         let firstKey = anyKey("first key")
         let firstExpiration = Date()
         try save((firstKey, firstExpiration))
-        let firstCachedKey = try load()
+        let firstCachedKey = try start()
         
         XCTAssertEqual(firstCachedKey.0, firstKey)
         XCTAssertEqual(firstCachedKey.validUntil, firstExpiration)
@@ -38,7 +38,7 @@ final class KeyChainStoreTests: XCTestCase {
         let lastKey = anyKey("last key")
         let lastExpiration = Date()
         try save((lastKey, lastExpiration))
-        let lastCachedKey = try load()
+        let lastCachedKey = try start()
         
         XCTAssertEqual(lastCachedKey.0, lastKey)
         XCTAssertEqual(lastCachedKey.validUntil, lastExpiration)
@@ -49,14 +49,14 @@ final class KeyChainStoreTests: XCTestCase {
         let key = anyKey("first key")
         let expiration = Date()
         try save((key, expiration))
-        let cachedKey = try load()
+        let cachedKey = try start()
         
         XCTAssertEqual(cachedKey.0, key)
         XCTAssertEqual(cachedKey.validUntil, expiration)
         
         clear()
         
-        XCTAssertThrowsError(try load())
+        XCTAssertThrowsError(try start())
     }
 #endif
     

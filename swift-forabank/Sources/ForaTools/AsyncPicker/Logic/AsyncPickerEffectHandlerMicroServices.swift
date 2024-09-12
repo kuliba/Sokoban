@@ -34,5 +34,5 @@ public extension AsyncPickerEffectHandlerMicroServices {
     typealias Load = (Payload, @escaping ([Item]) -> Void) -> Void
     
     /// A typealias representing the select function, which selects an item and returns a response via a callback.
-    typealias Select = (Item, @escaping (Response) -> Void) -> Void
+    typealias Select = (Item, Payload, @escaping (Response) -> Void) -> Void
 }

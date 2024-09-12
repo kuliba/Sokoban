@@ -135,7 +135,7 @@ extension Model {
             }
             
             var currencySymbol = amountParameter.currencySymbol
-            var maxAmount = amountParameter.validator.maxAmount
+            var maxAmount = amountParameter.validator.maxAmount?.precised(2)
             
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             if let productParameter = parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
@@ -144,7 +144,7 @@ extension Model {
                let productCurrencySymbol = dictionaryCurrencySymbol(for: product.currency) {
                 
                 currencySymbol = productCurrencySymbol
-                maxAmount = product.balance
+                maxAmount = product.balance?.precised(2)
             }
             
             var isForaBankValue: Bool? = nil

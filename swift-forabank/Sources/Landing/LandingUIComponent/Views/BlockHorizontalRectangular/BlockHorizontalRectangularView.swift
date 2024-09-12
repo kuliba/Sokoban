@@ -21,9 +21,6 @@ struct BlockHorizontalRectangularView: View {
         VStack(spacing: config.spacing) {
             ForEach(state.block.list, content: itemView)
         }
-        .onTapGesture {
-            UIApplication.shared.endEditing()
-        }
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
@@ -69,16 +66,19 @@ extension BlockHorizontalRectangularView {
                 config.colors.background
                     .ignoresSafeArea()
                     .cornerRadius(config.cornerRadius)
+                    .onTapGesture {
+                        UIApplication.shared.endEditing()
+                    }
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: config.spacing) {
                     
                     Text(item.title)
-                        .font(.headline)
-                        .foregroundColor(config.colors.title)
+                        .font(config.titleConfig.textFont)
+                        .foregroundColor(config.titleConfig.textColor)
                     Text(item.description)
-                        .font(.caption)
-                        .foregroundColor(config.colors.subtitle)
-                    
+                        .font(config.subtitleConfig.textFont)
+                        .foregroundColor(config.subtitleConfig.textColor)
+
                     ForEach(item.limits, id: \.id, content: limit)
                 }
                 .padding()
@@ -91,12 +91,12 @@ extension BlockHorizontalRectangularView {
                 return AnyView(VStack(alignment: .leading) {
                     
                     Text(limit.title)
-                        .font(.headline)
-                        .foregroundColor(config.colors.title)
+                        .font(config.limitTitleConfig.textFont)
+                        .foregroundColor(config.limitTitleConfig.textColor)
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        limitsSettingsView(limit)
+                        limitsSettingsView(limit, inputState.value, inputState.maxSum, event)
                                                 
                         if limit != item.limits.last {
                             
@@ -109,7 +109,12 @@ extension BlockHorizontalRectangularView {
             else { return AnyView(EmptyView()) }
         }
         
-        private func limitsSettingsView(_ limit: Item.Limit) -> some View {
+        private func limitsSettingsView(
+            _ limit: Item.Limit,
+            _ value: Decimal,
+            _ maxValue: Decimal,
+            _ mainEvent: @escaping (Event) -> Void
+        ) -> some View {
             
             return LimitSettingsWrapperView(
                 viewModel: .init(
@@ -117,7 +122,7 @@ extension BlockHorizontalRectangularView {
                         hiddenInfo: true,
                         limit: .init(
                             title: limit.text,
-                            value: limit.maxSum,
+                            value: value,
                             md5Hash: limit.md5hash
                         ), currencySymbol: "₽"),
                     reduce: {
@@ -125,13 +130,14 @@ extension BlockHorizontalRectangularView {
                         var state = state
                         switch event {
                         case let .edit(value):
-                            state.hiddenInfo = state.limit.value >= value
+                            state.hiddenInfo = maxValue >= value
                             state.newValue = value
+                            mainEvent(.edit(.init(id: limit.id, value: value)))
                         }
                         return (state, .none)
                     },
                     handleEffect: {_,_ in }),
-                config: .preview,
+                config: config.limitConfig,
                 infoView: {
                     Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
                         .fixedSize(horizontal: false, vertical: true)

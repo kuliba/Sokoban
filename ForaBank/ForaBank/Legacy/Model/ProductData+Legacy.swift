@@ -396,6 +396,14 @@ extension ProductCardData.CardType {
             return .additionalSelfAccOwn
         case .additionalOther:
             return .additionalOther
+        case .additionalCorporate:
+            return .additionalCorporate
+        case .corporate:
+            return .corporate
+        case .individualBusinessman:
+            return .individualBusinessman
+        case .individualBusinessmanMain:
+            return .individualBusinessmanMain
         }
     }
 }

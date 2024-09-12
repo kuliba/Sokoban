@@ -29,7 +29,7 @@ struct TextsWithIconHorizontalView: View {
                         .frame(width: config.circleSize, height: config.circleSize)
                         .accessibilityIdentifier("TextsWithIconHorizontalCircle")
                     
-                    switch model.image(byMd5Hash: model.data.md5hash) {
+                    switch model.image(byMd5Hash: model.data.md5hash, imagesFromConfig: config.images) {
                     case .none:
                         Color.grayLightest
                             .frame(width: config.icon.width, height: config.icon.width)

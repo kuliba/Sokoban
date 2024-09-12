@@ -28,9 +28,11 @@ public final class LandingWrapperViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
     let makeIconView: LandingView.MakeIconView
-    var cardLimitsInfo: CardLimitsInfo?
-
+    
     let config: UILanding.Component.Config
+    
+    var cardLimitsInfo: CardLimitsInfo?
+    var newLimitsValue: [BlockHorizontalRectangularEvent.Limit] = []
     
     public init(
         initialState: State = .success(nil),
@@ -191,12 +193,18 @@ public extension LandingWrapperViewModel {
 }
 
 public struct LandingWrapperView: View {
-        
-    @ObservedObject private var viewModel: LandingWrapperViewModel
+     
+    public typealias UpdateSaveButtonAction = () -> Void
     
-    public init(viewModel: LandingWrapperViewModel) {
-        
+    @ObservedObject private var viewModel: LandingWrapperViewModel
+    private let updateSaveButtonAction: UpdateSaveButtonAction?
+    
+    public init(
+        viewModel: LandingWrapperViewModel,
+        updateSaveButtonAction: UpdateSaveButtonAction? = nil
+    ) {
         self.viewModel = viewModel
+        self.updateSaveButtonAction = updateSaveButtonAction
     }
     
     @ViewBuilder
@@ -215,7 +223,14 @@ public struct LandingWrapperView: View {
                 landing,
                 viewModel.images,
                 viewModel.config,
-                viewModel.cardLimitsInfo
+                viewModel.cardLimitsInfo,
+                {
+                    viewModel.newLimitsValue.updateOrAddLimit($0)
+                    if let updateSaveButtonAction { updateSaveButtonAction() }
+                },
+                { 
+                    return viewModel.newLimitsValue
+                }
             )
         }
     }
@@ -224,7 +239,9 @@ public struct LandingWrapperView: View {
         _ landing: UILanding,
         _ images: [String: Image],
         _ config: UILanding.Component.Config,
-        _ cardLimitsInfo: CardLimitsInfo?
+        _ cardLimitsInfo: CardLimitsInfo?,
+        _ limitIsChanged: @escaping (BlockHorizontalRectangularEvent.Limit) -> Void,
+        _ newLimits: @escaping () -> [BlockHorizontalRectangularEvent.Limit]
     ) -> LandingView {
         .init(
             viewModel: .init(landing: landing, config: config),
@@ -232,7 +249,9 @@ public struct LandingWrapperView: View {
             action: viewModel.action,
             makeIconView: viewModel.makeIconView, 
             limitsViewModel: viewModel.limitsViewModel,
-            cardLimitsInfo: cardLimitsInfo
+            cardLimitsInfo: cardLimitsInfo, 
+            limitIsChanged: limitIsChanged,
+            newLimits: newLimits
         )
     }
 }
