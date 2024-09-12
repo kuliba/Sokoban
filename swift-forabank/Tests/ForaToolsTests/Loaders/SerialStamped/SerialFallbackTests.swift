@@ -8,13 +8,13 @@
 public final class SerialFallback<T, Failure: Error> {
     
     private let getSerial: () -> Serial?
-    private let primary: LoadWithSerial
-    private let secondary: Load
+    private let primary: Primary
+    private let secondary: Secondary
     
     public init(
         getSerial: @escaping () -> Serial?,
-        primary: @escaping LoadWithSerial,
-        secondary: @escaping Load
+        primary: @escaping Primary,
+        secondary: @escaping Secondary
     ) {
         self.getSerial = getSerial
         self.primary = primary
@@ -25,37 +25,41 @@ public final class SerialFallback<T, Failure: Error> {
 public extension SerialFallback {
     
     typealias Serial = String
-    typealias LoadResult = Result<[T], Failure>
-    typealias LoadCompletion = (LoadResult) -> Void
-    typealias LoadWithSerial = (Serial?, @escaping LoadCompletion) -> Void
-    typealias Load = (@escaping LoadCompletion) -> Void
+    
+    typealias PrimaryResult = Result<SerialStamped<[T]>, Failure>
+    typealias PrimaryCompletion = (PrimaryResult) -> Void
+    typealias Primary = (Serial?, @escaping PrimaryCompletion) -> Void
+    
+    typealias SecondaryResult = Result<[T], Failure>
+    typealias SecondaryCompletion = (SecondaryResult) -> Void
+    typealias Secondary = (@escaping SecondaryCompletion) -> Void
 }
 
 public extension SerialFallback {
     
     func callAsFunction(
-        completion: @escaping LoadCompletion
+        completion: @escaping SecondaryCompletion
     ) {
         let serial = getSerial()
         primary(serial) { [weak self] in
             
+            guard let self else { return }
+            
             if serial == nil {
-                completion($0)
+                completion($0.map(\.value))
             } else {
                 switch $0 {
                 case .failure:
-                    self?.secondary(completion)
+                    self.secondary(completion)
                     
                 case let .success(success):
-                    break
+                    if success.serial == serial {
+                        self.secondary(completion)
+                    } else {
+                        completion(.success(success.value))
+                    }
                 }
             }
-            
-//            if $0.serial == serial {
-//                self?.fallback(completion)
-//            } else {
-//                completion($0.value)
-//            }
         }
     }
 }
@@ -95,7 +99,7 @@ final class SerialFallbackTests: XCTestCase {
         
         expect(sut, toDeliver: .success([])) {
             
-            primary.complete(with: .success([]))
+            primary.complete(with: makeSuccess([]))
         }
     }
     
@@ -106,7 +110,7 @@ final class SerialFallbackTests: XCTestCase {
         
         expect(sut, toDeliver: .success([item])) {
             
-            primary.complete(with: .success([item]))
+            primary.complete(with: makeSuccess([item]))
         }
     }
     
@@ -117,12 +121,12 @@ final class SerialFallbackTests: XCTestCase {
         
         expect(sut, toDeliver: .success([item1, item2])) {
             
-            primary.complete(with: .success([item1, item2]))
+            primary.complete(with: makeSuccess([item1, item2]))
         }
     }
     
     // MARK: - non-nil serial, primary failure - deliver secondary result
-
+    
     func test_shouldDeliverSecondaryFailureOnPrimaryFailureSecondaryFailure() {
         
         let (primaryFailure, secondaryFailure) = (makeFailure(), makeFailure())
@@ -134,7 +138,7 @@ final class SerialFallbackTests: XCTestCase {
             secondary.complete(with: .failure(secondaryFailure))
         }
     }
-
+    
     func test_shouldDeliverEmptyOnPrimaryFailureSecondaryEmpty() {
         
         let primaryFailure = makeFailure()
@@ -146,7 +150,7 @@ final class SerialFallbackTests: XCTestCase {
             secondary.complete(with: .success([]))
         }
     }
-
+    
     func test_shouldDeliverOneOnPrimaryFailureSecondaryOne() {
         
         let primaryFailure = makeFailure()
@@ -159,7 +163,7 @@ final class SerialFallbackTests: XCTestCase {
             secondary.complete(with: .success([item]))
         }
     }
-
+    
     func test_shouldDeliverTwoOnPrimaryFailureSecondaryTwo() {
         
         let primaryFailure = makeFailure()
@@ -172,14 +176,120 @@ final class SerialFallbackTests: XCTestCase {
             secondary.complete(with: .success([item1, item2]))
         }
     }
-
-#warning("add tests for instance deallocation")
+    
+    // MARK: - different serial - deliver primary success without calling secondary
+    
+    func test_shouldDeliverEmptyOnPrimaryEmptyDifferentSerial() {
+        
+        let (oldSerial, newSerial) = (anyMessage(), anyMessage())
+        let (sut, primary, _) = makeSUT(serial: oldSerial)
+        
+        expect(sut, toDeliver: .success([])) {
+            
+            primary.complete(with: makeSuccess([], newSerial))
+        }
+        XCTAssertNotEqual(oldSerial, newSerial)
+    }
+    
+    func test_shouldDeliverOneOnPrimaryOneDifferentSerial() {
+        
+        let (oldSerial, newSerial) = (anyMessage(), anyMessage())
+        let item = makeItem()
+        let (sut, primary, _) = makeSUT(serial: oldSerial)
+        
+        expect(sut, toDeliver: .success([item])) {
+            
+            primary.complete(with: makeSuccess([item], newSerial))
+        }
+        XCTAssertNotEqual(oldSerial, newSerial)
+    }
+    
+    func test_shouldDeliverTwoOnPrimaryTwoDifferentSerial() {
+        
+        let (oldSerial, newSerial) = (anyMessage(), anyMessage())
+        let (item1, item2) = (makeItem(), makeItem())
+        let (sut, primary, _) = makeSUT(serial: oldSerial)
+        
+        expect(sut, toDeliver: .success([item1, item2])) {
+            
+            primary.complete(with: makeSuccess([item1, item2], newSerial))
+        }
+        XCTAssertNotEqual(oldSerial, newSerial)
+    }
+    
+    // MARK: - same serial: ignore primary result
+    
+    func test_shouldDeliverFailureOnSecondaryFailureSameSerial() {
+        
+        let serial = anyMessage()
+        let failure = makeFailure()
+        let (sut, primary, secondary) = makeSUT(serial: serial)
+        
+        expect(sut, toDeliver: .failure(failure)) {
+            
+            primary.complete(with: makeSuccess(makeItems(count: 100), serial))
+            secondary.complete(with: .failure(failure))
+        }
+    }
+    
+    func test_shouldDeliverEmptyOnSecondaryEmptySameSerial() {
+        
+        let serial = anyMessage()
+        let (sut, primary, secondary) = makeSUT(serial: serial)
+        
+        expect(sut, toDeliver: .success([])) {
+            
+            primary.complete(with: makeSuccess(makeItems(count: 100), serial))
+            secondary.complete(with: .success([]))
+        }
+    }
+    
+    func test_shouldDeliverOneOnSecondaryOneSameSerial() {
+        
+        let serial = anyMessage()
+        let item = makeItem()
+        let (sut, primary, secondary) = makeSUT(serial: serial)
+        
+        expect(sut, toDeliver: .success([item])) {
+            
+            primary.complete(with: makeSuccess(makeItems(count: 100), serial))
+            secondary.complete(with: .success([item]))
+        }
+    }
+    
+    func test_shouldDeliverTwoOnSecondaryTwoSameSerial() {
+        
+        let serial = anyMessage()
+        let (item1, item2) = (makeItem(), makeItem())
+        let (sut, primary, secondary) = makeSUT(serial: serial)
+        
+        expect(sut, toDeliver: .success([item1, item2])) {
+            
+            primary.complete(with: makeSuccess(makeItems(count: 100), serial))
+            secondary.complete(with: .success([item1, item2]))
+        }
+    }
+    
+    func test_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let primary: Primary
+        (sut, primary, _) = makeSUT()
+        let exp = expectation(description: "completion should not complete")
+        exp.isInverted = true
+        
+        sut? { _ in exp.fulfill() }
+        sut = nil
+        primary.complete(with: makeSuccess(makeItems(count: 100)))
+        
+        wait(for: [exp], timeout: 0.1)
+    }
     
     // MARK: - Helpers
     
     private typealias SUT = SerialFallback<Item, Failure>
-    private typealias Primary = Spy<SUT.Serial?, Result<[Item], Failure>>
-    private typealias Secondary = Spy<Void, Result<[Item], Failure>>
+    private typealias Primary = Spy<SUT.Serial?, SUT.PrimaryResult>
+    private typealias Secondary = Spy<Void, SUT.SecondaryResult>
     
     private func makeSUT(
         serial: SUT.Serial? = nil,
@@ -217,6 +327,13 @@ final class SerialFallbackTests: XCTestCase {
         return .init(value: value)
     }
     
+    private func makeItems(
+        count: Int
+    ) -> [Item] {
+        
+        (0..<count).map { _ in makeItem() }
+    }
+    
     private struct Failure: Error, Equatable {
         
         let value: String
@@ -227,6 +344,14 @@ final class SerialFallbackTests: XCTestCase {
     ) -> Failure {
         
         return .init(value: value)
+    }
+    
+    private func makeSuccess(
+        _ items: [Item],
+        _ serial: SUT.Serial = anyMessage()
+    ) -> SUT.PrimaryResult {
+        
+        return .success(.init(value: items, serial: serial))
     }
     
     private func expect(
