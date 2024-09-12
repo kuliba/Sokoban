@@ -57,8 +57,7 @@ extension SerialLoaderComposer {
     }
 }
 
-#warning("make private after `RootViewModelFactory+makeLoadServiceCategories` delete")
-/*private*/ extension SerialStampedCachingDecorator {
+private extension SerialStampedCachingDecorator {
     
     typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
     typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void

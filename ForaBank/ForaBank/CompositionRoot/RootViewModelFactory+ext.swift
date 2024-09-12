@@ -367,12 +367,6 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
         
-        makeLoadServiceCategories(
-            getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
-            localComposer: localComposer,
-            nanoServiceComposer: nanoServiceComposer
-        )
-        
         let localServiceCategoryLoader = ServiceCategoryLoader.default
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
             httpClient: httpClient,

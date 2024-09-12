@@ -1162,8 +1162,6 @@
 		2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */; };
 		2A7CA2162C91D9CE00B900E9 /* CodableServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */; };
 		2A7CA21B2C92149600B900E9 /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */; };
-		2A7CA21D2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */; };
-		2A7CA2202C92156100B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */; };
 		2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8050582C353DE50039557E /* AnywayInfoView.swift */; };
 		2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */; };
 		2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */; };
@@ -4605,8 +4603,6 @@
 		2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+preview.swift"; sourceTree = "<group>"; };
 		2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableServiceCategory.swift; sourceTree = "<group>"; };
 		2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
-		2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadServiceCategories.swift"; sourceTree = "<group>"; };
-		2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadServiceCategoriesTests.swift"; sourceTree = "<group>"; };
 		2A8050582C353DE50039557E /* AnywayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoView.swift; sourceTree = "<group>"; };
 		2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoViewConfig.swift; sourceTree = "<group>"; };
 		2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayInfoViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -10854,7 +10850,6 @@
 			isa = PBXGroup;
 			children = (
 				2A6CCF4E2C92D7D4008ADA74 /* SerialLoaderComposer.swift */,
-				2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */,
 				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 			);
 			path = SerialServices;
@@ -10863,7 +10858,6 @@
 		2A7CA21E2C92154F00B900E9 /* SerialServices */ = {
 			isa = PBXGroup;
 			children = (
-				2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */,
 				2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */,
 			);
 			path = SerialServices;
@@ -20709,7 +20703,6 @@
 				C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */,
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
-				2A7CA21D2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift in Sources */,
 				7798848C285CA1BB0023CA65 /* ProductProfileDetailFooterViewComponent.swift in Sources */,
 				0C5D7DA2298806BD00BC0CCF /* ClientInformData.swift in Sources */,
 				2A01F9402AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift in Sources */,
@@ -21991,7 +21984,6 @@
 				2A2E3FD22BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift in Sources */,
 				2A5190392A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift in Sources */,
 				2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */,
-				2A7CA2202C92156100B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift in Sources */,
 				2A51903E2A7E77B90014B0B7 /* Model+authorizedHTTPClientTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				2A0D9B7F2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift in Sources */,
