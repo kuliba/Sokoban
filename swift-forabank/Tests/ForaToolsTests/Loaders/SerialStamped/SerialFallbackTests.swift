@@ -37,11 +37,20 @@ public extension SerialFallback {
         completion: @escaping LoadCompletion
     ) {
         let serial = getSerial()
-        primary(serial) { // [weak self] in
+        primary(serial) { [weak self] in
             
             if serial == nil {
                 completion($0)
+            } else {
+                switch $0 {
+                case .failure:
+                    self?.secondary(completion)
+                    
+                case let .success(success):
+                    break
+                }
             }
+            
 //            if $0.serial == serial {
 //                self?.fallback(completion)
 //            } else {
@@ -67,14 +76,12 @@ final class SerialFallbackTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-#warning("add tests for instance deallocation")
-    
     // MARK: - nil serial - deliver primary result without calling secondary
     
     func test_shouldDeliverFailureOnPrimaryFailureNilSerial() {
         
         let primaryFailure = makeFailure()
-        let (sut, primary, secondary) = makeSUT(serial: nil)
+        let (sut, primary, _) = makeSUT(serial: nil)
         
         expect(sut, toDeliver: .failure(primaryFailure)) {
             
@@ -84,7 +91,7 @@ final class SerialFallbackTests: XCTestCase {
     
     func test_shouldDeliverEmptyOnPrimaryEmptyNilSerial() {
         
-        let (sut, primary, secondary) = makeSUT(serial: nil)
+        let (sut, primary, _) = makeSUT(serial: nil)
         
         expect(sut, toDeliver: .success([])) {
             
@@ -95,7 +102,7 @@ final class SerialFallbackTests: XCTestCase {
     func test_shouldDeliverOneOnPrimaryOneNilSerial() {
         
         let item = makeItem()
-        let (sut, primary, secondary) = makeSUT(serial: nil)
+        let (sut, primary, _) = makeSUT(serial: nil)
         
         expect(sut, toDeliver: .success([item])) {
             
@@ -106,13 +113,67 @@ final class SerialFallbackTests: XCTestCase {
     func test_shouldDeliverTwoOnPrimaryTwoNilSerial() {
         
         let (item1, item2) = (makeItem(), makeItem())
-        let (sut, primary, secondary) = makeSUT(serial: nil)
+        let (sut, primary, _) = makeSUT(serial: nil)
         
         expect(sut, toDeliver: .success([item1, item2])) {
             
             primary.complete(with: .success([item1, item2]))
         }
     }
+    
+    // MARK: - non-nil serial, primary failure - deliver secondary result
+
+    func test_shouldDeliverSecondaryFailureOnPrimaryFailureSecondaryFailure() {
+        
+        let (primaryFailure, secondaryFailure) = (makeFailure(), makeFailure())
+        let (sut, primary, secondary) = makeSUT(serial: anyMessage())
+        
+        expect(sut, toDeliver: .failure(secondaryFailure)) {
+            
+            primary.complete(with: .failure(primaryFailure))
+            secondary.complete(with: .failure(secondaryFailure))
+        }
+    }
+
+    func test_shouldDeliverEmptyOnPrimaryFailureSecondaryEmpty() {
+        
+        let primaryFailure = makeFailure()
+        let (sut, primary, secondary) = makeSUT(serial: anyMessage())
+        
+        expect(sut, toDeliver: .success([])) {
+            
+            primary.complete(with: .failure(primaryFailure))
+            secondary.complete(with: .success([]))
+        }
+    }
+
+    func test_shouldDeliverOneOnPrimaryFailureSecondaryOne() {
+        
+        let primaryFailure = makeFailure()
+        let item = makeItem()
+        let (sut, primary, secondary) = makeSUT(serial: anyMessage())
+        
+        expect(sut, toDeliver: .success([item])) {
+            
+            primary.complete(with: .failure(primaryFailure))
+            secondary.complete(with: .success([item]))
+        }
+    }
+
+    func test_shouldDeliverTwoOnPrimaryFailureSecondaryTwo() {
+        
+        let primaryFailure = makeFailure()
+        let (item1, item2) = (makeItem(), makeItem())
+        let (sut, primary, secondary) = makeSUT(serial: anyMessage())
+        
+        expect(sut, toDeliver: .success([item1, item2])) {
+            
+            primary.complete(with: .failure(primaryFailure))
+            secondary.complete(with: .success([item1, item2]))
+        }
+    }
+
+#warning("add tests for instance deallocation")
     
     // MARK: - Helpers
     
