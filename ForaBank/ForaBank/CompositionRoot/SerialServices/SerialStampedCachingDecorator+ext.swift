@@ -10,14 +10,14 @@ import RemoteServices
 
 extension SerialStampedCachingDecorator {
     
-    typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<T>, Error>) -> Void
-    typealias RemoteDecoratee<T> = (String?, @escaping RemoteDecorateeCompletion<T>) -> Void
+    typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
+    typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void
     typealias Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
     
     convenience init<T>(
         decoratee: @escaping RemoteDecoratee<T>,
         save: @escaping Save<T>
-    ) where Response == [T] {
+    ) where Value == [T] {
         
         self.init(
             decoratee: { serial, completion in
