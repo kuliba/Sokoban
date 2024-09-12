@@ -34,6 +34,7 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
+        interactiveScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInteractive),
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
@@ -306,9 +307,29 @@ extension RootViewModelFactory {
         )
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        // reusable factory
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
             logger: logger
+        )
+        // reusable factory
+        let localComposer = LocalLoaderComposer(
+            agent: model.localAgent,
+            interactiveScheduler: interactiveScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        // reusable factory
+        let serialLoaderComposer = SerialLoaderComposer(
+            localComposer: localComposer,
+            nanoServiceComposer: nanoServiceComposer
+        )
+        
+        let (serviceCategoriesLocalLoad, serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
+            getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
+            fromModel: [ServiceCategory].init(codable:),
+            toModel: [CodableServiceCategory].init(categories:),
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
         
         let localServiceCategoryLoader = ServiceCategoryLoader.default

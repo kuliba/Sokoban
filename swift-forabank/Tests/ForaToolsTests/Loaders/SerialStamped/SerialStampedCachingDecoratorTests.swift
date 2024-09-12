@@ -159,9 +159,10 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = SerialStampedCachingDecorator<Response>
-    private typealias LoadSpy = Spy<String?, Result<SerialStamped<String, Response>, Error>>
-    private typealias CacheSpy = Spy<SerialStamped<String, Response>, Result<Void, Error>>
+    private typealias Serial = String
+    private typealias SUT = SerialStampedCachingDecorator<Serial, Value>
+    private typealias LoadSpy = Spy<String?, Result<SerialStamped<String, Value>, Error>>
+    private typealias CacheSpy = Spy<SerialStamped<String, Value>, Result<Void, Error>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -185,30 +186,30 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         return (sut, loadSpy, cacheSpy)
     }
     
-    private struct Response: Equatable {
+    private struct Value: Equatable {
         
         let serial: String
     }
     
-    private func makeResponse(
+    private func makeValue(
         serial: String = anyMessage()
-    ) -> Response {
+    ) -> Value {
         
         return .init(serial: serial)
     }
     
     private func makeLoadResponse(
         serial: String = anyMessage(),
-        value: Response? = nil
-    ) -> SerialStamped<String, Response> {
+        value: Value? = nil
+    ) -> SerialStamped<String, Value> {
         
-        return .init(value: value ?? makeResponse(), serial: serial)
+        return .init(value: value ?? makeValue(), serial: serial)
     }
     
     private func expect(
         _ sut: SUT,
         with serial: String?,
-        toDeliver expectedResult: Result<SerialStamped<String, Response>, Error>,
+        toDeliver expectedResult: Result<SerialStamped<String, Value>, Error>,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line

@@ -1054,6 +1054,8 @@
 		2A6BF2A82B5AF841003E3765 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2A72B5AF841003E3765 /* ContentViewModel.swift */; };
 		2A6BF2AC2B5AFD89003E3765 /* PickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */; };
 		2A6C2B6B2B516E29004EF8B6 /* InformerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */; };
+		2A6CCF502C92D85E008ADA74 /* SerialLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CCF4E2C92D7D4008ADA74 /* SerialLoaderComposer.swift */; };
+		2A6CCF522C92E577008ADA74 /* SerialLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */; };
 		2A6CF7322C6629AC00F2B85A /* TemplatesListFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CF7312C6629AC00F2B85A /* TemplatesListFlowState.swift */; };
 		2A6CF7352C662BCB00F2B85A /* TemplatesListFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CF7342C662BCB00F2B85A /* TemplatesListFlowModel.swift */; };
 		2A6CF7372C662D0600F2B85A /* TemplatesListFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6CF7362C662D0600F2B85A /* TemplatesListFlowEvent.swift */; };
@@ -1159,10 +1161,7 @@
 		2A7B5EEA2AB06EBE002F2D00 /* LandingButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */; };
 		2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */; };
 		2A7CA2162C91D9CE00B900E9 /* CodableServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */; };
-		2A7CA2182C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */; };
 		2A7CA21B2C92149600B900E9 /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */; };
-		2A7CA21D2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */; };
-		2A7CA2202C92156100B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */; };
 		2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8050582C353DE50039557E /* AnywayInfoView.swift */; };
 		2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */; };
 		2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */; };
@@ -4508,6 +4507,8 @@
 		2A6BF2A72B5AF841003E3765 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		2A6BF2AB2B5AFD89003E3765 /* PickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSection.swift; sourceTree = "<group>"; };
 		2A6C2B6A2B516E29004EF8B6 /* InformerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformerView.swift; sourceTree = "<group>"; };
+		2A6CCF4E2C92D7D4008ADA74 /* SerialLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialLoaderComposer.swift; sourceTree = "<group>"; };
+		2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2A6CF7312C6629AC00F2B85A /* TemplatesListFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowState.swift; sourceTree = "<group>"; };
 		2A6CF7342C662BCB00F2B85A /* TemplatesListFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowModel.swift; sourceTree = "<group>"; };
 		2A6CF7362C662D0600F2B85A /* TemplatesListFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEvent.swift; sourceTree = "<group>"; };
@@ -4607,10 +4608,7 @@
 		2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingButtonsView.swift; sourceTree = "<group>"; };
 		2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+preview.swift"; sourceTree = "<group>"; };
 		2A7CA2152C91D9CE00B900E9 /* CodableServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableServiceCategory.swift; sourceTree = "<group>"; };
-		2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialStampedCachingDecorator+ext.swift"; sourceTree = "<group>"; };
 		2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
-		2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadServiceCategories.swift"; sourceTree = "<group>"; };
-		2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadServiceCategoriesTests.swift"; sourceTree = "<group>"; };
 		2A8050582C353DE50039557E /* AnywayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoView.swift; sourceTree = "<group>"; };
 		2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoViewConfig.swift; sourceTree = "<group>"; };
 		2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayInfoViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -10863,8 +10861,7 @@
 		2A7CA2192C92147500B900E9 /* SerialServices */ = {
 			isa = PBXGroup;
 			children = (
-				2A7CA21C2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift */,
-				2A7CA2172C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift */,
+				2A6CCF4E2C92D7D4008ADA74 /* SerialLoaderComposer.swift */,
 				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 			);
 			path = SerialServices;
@@ -10873,7 +10870,7 @@
 		2A7CA21E2C92154F00B900E9 /* SerialServices */ = {
 			isa = PBXGroup;
 			children = (
-				2A7CA21F2C92156000B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift */,
+				2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */,
 			);
 			path = SerialServices;
 			sourceTree = "<group>";
@@ -20348,7 +20345,6 @@
 				C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */,
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				7798848A285C983A0023CA65 /* ProductProfileDetailCircleProgressViewComponent.swift in Sources */,
-				2A7CA2182C91DA8900B900E9 /* SerialStampedCachingDecorator+ext.swift in Sources */,
 				2A2D4D312B6E7EDC006912EE /* RequestFactory+createPrepareSetBankDefaultRequest.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
 				50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */,
@@ -20727,7 +20723,6 @@
 				C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */,
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
-				2A7CA21D2C9214B200B900E9 /* RootViewModelFactory+makeLoadServiceCategories.swift in Sources */,
 				7798848C285CA1BB0023CA65 /* ProductProfileDetailFooterViewComponent.swift in Sources */,
 				0C5D7DA2298806BD00BC0CCF /* ClientInformData.swift in Sources */,
 				2A01F9402AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift in Sources */,
@@ -21251,6 +21246,7 @@
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				8399147B2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift in Sources */,
 				2A2E3FD52BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift in Sources */,
+				2A6CCF502C92D85E008ADA74 /* SerialLoaderComposer.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				2A7688D32AF3914C00045293 /* Store.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
@@ -22012,7 +22008,6 @@
 				2A2E3FD22BB3F9C100730D37 /* RequestFactory+createCreateAnywayTransferNewRequestTests.swift in Sources */,
 				2A5190392A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift in Sources */,
 				2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */,
-				2A7CA2202C92156100B900E9 /* RootViewModelFactory+makeLoadServiceCategoriesTests.swift in Sources */,
 				2A51903E2A7E77B90014B0B7 /* Model+authorizedHTTPClientTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				2A0D9B7F2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift in Sources */,
@@ -22396,6 +22391,7 @@
 				2AE8863B2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */,
+				2A6CCF522C92E577008ADA74 /* SerialLoaderComposerTests.swift in Sources */,
 				2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */,
 				83C990E52B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift in Sources */,
 				2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */,
