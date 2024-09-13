@@ -8,41 +8,38 @@
 import ForaTools
 import RemoteServices
 
-final class RemoteComposer {
+final class ServiceCategoryRemoteComposer {
     
-#warning("replace with RemoteNanoServiceFactory")
-    private let nanoServiceFactory: LoggingRemoteNanoServiceComposer
+    private let nanoServiceFactory: RemoteNanoServiceFactory
     
-#warning("replace with RemoteNanoServiceFactory")
     init(
-        nanoServiceFactory: LoggingRemoteNanoServiceComposer
+        nanoServiceFactory: RemoteNanoServiceFactory
     ) {
         self.nanoServiceFactory = nanoServiceFactory
     }
 }
 
-extension RemoteComposer {
+extension ServiceCategoryRemoteComposer {
     
     typealias Remote = ([ServiceCategory], @escaping (Result<Void, Error>) -> Void) -> Void
     
     func compose() -> Remote {
         
         let perform = self.nanoServiceFactory.compose(
-            createRequest: RequestFactory.getOperatorsListByParam(_:),
+            makeRequest: RequestFactory.getOperatorsListByParam(_:),
             mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
         )
         
-        let batcher =  Batcher(perform: perform)
+        let batcher = Batcher(perform: perform)
         
         return { categories, completion in
             
-            let standard = categories.filter(\.hasStandardFlow)
+            let withStandard = categories.filter(\.hasStandardFlow)
             
-            guard !standard.isEmpty
+            guard !withStandard.isEmpty
             else { return completion(.success(())) }
             
-            
-            batcher.call(standard.map(\.typeName)) { _ in
+            batcher.call(withStandard.map(\.typeName)) { _ in
                 
                 completion(.success(()))
             }
@@ -216,7 +213,7 @@ final class ComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = RemoteComposer
+    private typealias Composer = ServiceCategoryRemoteComposer
     private typealias SUT = Composer.Remote
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     

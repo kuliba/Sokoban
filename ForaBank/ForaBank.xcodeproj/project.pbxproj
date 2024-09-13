@@ -771,7 +771,7 @@
 		2A4111F12B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */; };
 		2A42B40A2C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4092C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift */; };
 		2A42B40C2C8D66B700A9B658 /* RemoteService+httpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */; };
-		2A42B40F2C8DC55C00A9B658 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */; };
+		2A42B40F2C8DC55C00A9B658 /* ErasedRemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B40D2C8DBD2F00A9B658 /* ErasedRemoteNanoServiceFactory.swift */; };
 		2A4300772C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */; };
 		2A43007C2C5217C2002FF8C7 /* ServicePaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43007B2C5217C2002FF8C7 /* ServicePaymentFlowState.swift */; };
 		2A43007E2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43007D2C5217DB002FF8C7 /* ServicePaymentFlowEvent.swift */; };
@@ -1231,7 +1231,7 @@
 		2A94AAEB2C8ED0A1003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4112C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */; };
 		2A94AAEC2C8ED0AA003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4132C8ECA4700A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryTests.swift */; };
 		2A94AAED2C8ED0AA003B4FB1 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42B4122C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */; };
-		2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
+		2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift */; };
 		2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */; };
 		2A94AAF72C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */; };
 		2A94AAF92C8F7924003B4FB1 /* LocalAgentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */; };
@@ -1696,6 +1696,8 @@
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
 		2AF59F3A2C93F8ED003556B1 /* ComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F392C93F8ED003556B1 /* ComposerTests.swift */; };
 		2AF59F3C2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */; };
+		2AF59F3E2C9436D0003556B1 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */; };
+		2AF59F402C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
 		2AF5AC322B66628D00845E7A /* UserAccountNavigationComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */; };
 		2AF5DF362BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5DF352BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
@@ -4198,7 +4200,7 @@
 		2A42B4052C8D653700A9B658 /* LoggingRemoteNanoServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteNanoServiceComposerTests.swift; sourceTree = "<group>"; };
 		2A42B4092C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteNanoServiceComposer.swift; sourceTree = "<group>"; };
 		2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+httpClient.swift"; sourceTree = "<group>"; };
-		2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		2A42B40D2C8DBD2F00A9B658 /* ErasedRemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErasedRemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
 		2A42B4112C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteNanoServiceComposerAsFactoryWithoutPayloadTests.swift; sourceTree = "<group>"; };
 		2A42B4122C8ECA4600A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests.swift; sourceTree = "<group>"; };
 		2A42B4132C8ECA4700A9B658 /* LoggingRemoteNanoServiceComposerAsFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteNanoServiceComposerAsFactoryTests.swift; sourceTree = "<group>"; };
@@ -4671,7 +4673,7 @@
 		2A94991C2B7355A300C67F05 /* NanoServices+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+Fetch.swift"; sourceTree = "<group>"; };
 		2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteServiceErrorOf.swift; sourceTree = "<group>"; };
 		2A9499212B73E13000C67F05 /* UserAccountEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEffectHandler.swift; sourceTree = "<group>"; };
-		2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
+		2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
 		2A94AAF32C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2A94AAF62C8F78F9003B4FB1 /* LocalAgentLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoaderComposer.swift; sourceTree = "<group>"; };
 		2A94AAF82C8F7924003B4FB1 /* LocalAgentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentLoader.swift; sourceTree = "<group>"; };
@@ -5122,6 +5124,8 @@
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
 		2AF59F392C93F8ED003556B1 /* ComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerTests.swift; sourceTree = "<group>"; };
 		2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientSpy+assertQueryItems.swift"; sourceTree = "<group>"; };
+		2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
+		2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
 		2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UserAccountNavigationComponent.xctestplan; sourceTree = "<group>"; };
 		2AF5DF352BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift"; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
@@ -11057,9 +11061,11 @@
 		2A94AAF02C8ED0E4003B4FB1 /* Remote */ = {
 			isa = PBXGroup;
 			children = (
-				2A42B40D2C8DBD2F00A9B658 /* RemoteNanoServiceFactory.swift */,
+				2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */,
 				2A42B4092C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift */,
-				2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
+				2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
+				2A42B40D2C8DBD2F00A9B658 /* ErasedRemoteNanoServiceFactory.swift */,
+				2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift */,
 			);
 			path = Remote;
 			sourceTree = "<group>";
@@ -20279,6 +20285,7 @@
 				68E803E327D9202600B75D41 /* ProductProfileView.swift in Sources */,
 				77D527D029A3E1F500270A73 /* PaymentsGroupView.swift in Sources */,
 				83247C302BC69F36000AF914 /* ProductProfileViewModelFactory.swift in Sources */,
+				2AF59F402C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */,
 				2AEF68602AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift in Sources */,
 				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
 				2A213D402C1C549A008800FD /* SelectConfig+iFora.swift in Sources */,
@@ -20450,7 +20457,7 @@
 				2AA3A9342BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift in Sources */,
 				77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */,
 				6841930C279AC36100B4E184 /* StatementFormat.swift in Sources */,
-				2A42B40F2C8DC55C00A9B658 /* RemoteNanoServiceFactory.swift in Sources */,
+				2A42B40F2C8DC55C00A9B658 /* ErasedRemoteNanoServiceFactory.swift in Sources */,
 				ED2D89F1286C72950000B391 /* CameraAgentProtocol.swift in Sources */,
 				83CFA2A12C2D7D9D003B5E49 /* HorizontalPanelButton.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
@@ -20605,6 +20612,7 @@
 				2A2ECBC42AE5270F00F3C946 /* ResponseMapper+ServerError.swift in Sources */,
 				77DC125F27709DAF00C917B0 /* PaymentTemplateData.swift in Sources */,
 				5047486C28565D250007128F /* TimerViewComponent.swift in Sources */,
+				2AF59F3E2C9436D0003556B1 /* RemoteNanoServiceFactory.swift in Sources */,
 				2AA3A95C2BFF8E1500AEBCC9 /* SimpleLabel.swift in Sources */,
 				2A3011E12A6AB2A500560B98 /* ServerCommands+CvvPin.swift in Sources */,
 				2A213D3C2C1C528B008800FD /* ObservingSelectorViewModel.swift in Sources */,
@@ -21293,7 +21301,7 @@
 				2AB87C532C1346B40013EFFE /* ProductSelectWrapperView.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
 				C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */,
-				2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */,
+				2A94AAEF2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift in Sources */,
 				2A556B502C7CEB46002050C2 /* LatestPlaceholder.swift in Sources */,
 				2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */,
 				C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */,
