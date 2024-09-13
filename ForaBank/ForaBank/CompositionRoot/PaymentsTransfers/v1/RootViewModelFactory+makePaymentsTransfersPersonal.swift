@@ -9,6 +9,7 @@ import CombineSchedulers
 import Foundation
 import PayHub
 import PayHubUI
+import Banners
 
 struct PaymentsTransfersPersonalNanoServices {
     
@@ -33,6 +34,11 @@ extension PaymentsTransfersPersonalNanoServices {
     typealias LoadOperators = (ServiceCategory, @escaping LoadOperatorsCompletion) -> Void
 }
 
+struct PaymentsTransfersCorporateNanoServices {
+    
+    let loadBanners: LoadBanners
+}
+
 extension RootViewModelFactory {
     
     typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
@@ -41,6 +47,53 @@ extension RootViewModelFactory {
     typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
+    static func makePaymentsTransfersCorporate(
+        bannerPickerPlaceholderCount: Int,
+        nanoServices: PaymentsTransfersCorporateNanoServices,
+        mainScheduler: AnySchedulerOf<DispatchQueue>,
+        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+    ) -> PaymentsTransfersCorporate {
+        
+        // MARK: - BannerPicker
+        
+        let standardNanoServicesComposer = StandardSelectedBannerDestinationNanoServicesComposer()
+        let bannerPickerComposer = BannerPickerSectionBinderComposer(
+            load: nanoServices.loadBanners,
+            microServices: .init(
+                showAll: { $1(BannerListModelStub(banners: $0)) },
+                showBanner: selectBanner(composer: standardNanoServicesComposer)
+            ),
+            placeholderCount: bannerPickerPlaceholderCount,
+            scheduler: mainScheduler
+        )
+        let bannerPicker = bannerPickerComposer.compose(
+            prefix: [],
+            suffix: (0..<6).map { _ in .placeholder(.init()) }
+        )
+                
+        // MARK: - PaymentsTransfers
+        
+        let content = PaymentsTransfersCorporateContent(
+            bannerPicker: bannerPicker,
+            reload: {
+                bannerPicker.content.event(.load)
+            }
+        )
+        
+        let reducer = PayHub.PaymentsTransfersCorporateFlowReducer()
+        let effectHandler = PayHub.PaymentsTransfersCorporateFlowEffectHandler(
+            microServices: .init()
+        )
+        let flow = PaymentsTransfersCorporateFlow(
+            initialState: .init(),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: mainScheduler
+        )
+        
+        return .init(content: content, flow: flow, bind: { _,_ in [] })
+    }
+
     static func makePaymentsTransfersPersonal(
         model: Model,
         categoryPickerPlaceholderCount: Int,
