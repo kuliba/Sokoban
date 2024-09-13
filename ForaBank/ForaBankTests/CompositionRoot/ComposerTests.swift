@@ -6,19 +6,19 @@
 //
 
 import ForaTools
+import RemoteServices
 
 final class RemoteComposer {
     
-    private let batcher: ServiceCategoryTypeBatcher
+#warning("replace with RemoteNanoServiceFactory")
+    private let nanoServiceFactory: LoggingRemoteNanoServiceComposer
     
+#warning("replace with RemoteNanoServiceFactory")
     init(
-        perform: @escaping Perform
+        nanoServiceFactory: LoggingRemoteNanoServiceComposer
     ) {
-        self.batcher = Batcher(perform: perform)
+        self.nanoServiceFactory = nanoServiceFactory
     }
-    
-    typealias ServiceCategoryTypeBatcher = Batcher<ServiceCategory.CategoryType>
-    typealias Perform = (ServiceCategory.CategoryType, @escaping (Result<Void, Error>) -> Void) -> Void
 }
 
 extension RemoteComposer {
@@ -26,14 +26,23 @@ extension RemoteComposer {
     typealias Remote = ([ServiceCategory], @escaping (Result<Void, Error>) -> Void) -> Void
     
     func compose() -> Remote {
-        let _: RemoteNanoServiceFactory
+        
+        let perform = self.nanoServiceFactory.compose(
+            createRequest: RequestFactory.getOperatorsListByParam(_:),
+            mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
+        )
+        
+        let batcher =  Batcher(perform: perform)
+        
         return { categories, completion in
             
-            let types = categories.filter(\.hasStandardFlow).map(\.type)
+            let standard = categories.filter(\.hasStandardFlow)
             
-            guard !types.isEmpty else { return completion(.success(())) }
+            guard !standard.isEmpty
+            else { return completion(.success(())) }
             
-            self.batcher.call(types) { _ in
+            
+            batcher.call(standard.map(\.typeName)) { _ in
                 
                 completion(.success(()))
             }
@@ -41,24 +50,46 @@ extension RemoteComposer {
     }
 }
 
+extension ServiceCategory {
+    
+    var typeName: String {
+        
+        switch type {
+        case .charity:                   return "charity"
+        case .digitalWallets:            return "digitalWallets"
+        case .education:                 return "education"
+        case .housingAndCommunalService: return "housingAndCommunalService"
+        case .internet:                  return "internet"
+        case .mobile:                    return "mobile"
+        case .networkMarketing:          return "networkMarketing"
+        case .qr:                        return "qr"
+        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
+        case .security:                  return "security"
+        case .socialAndGames:            return "socialAndGames"
+        case .taxAndStateService:        return "taxAndStateService"
+        case .transport:                 return "transport"
+        }
+    }
+}
+
 extension Batcher {
     
-    convenience init(
-        perform: @escaping (Parameter, @escaping (Result<Void, Error>) -> Void) -> Void
+    convenience init<T>(
+        perform: @escaping (Parameter, @escaping (Result<T, Error>) -> Void) -> Void
     ) {
-        self.init { type, completion in
+        self.init(perform: { parameter, completion in
             
-            perform(type) {
+            perform(parameter) {
                 
                 switch $0 {
                 case let .failure(failure):
                     completion(failure)
                     
-                case .success(()):
+                case .success:
                     completion(nil)
                 }
             }
-        }
+        })
     }
 }
 
@@ -76,38 +107,38 @@ final class ComposerTests: XCTestCase {
     
     func test_compose_shouldNotCallCollaborators() {
         
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         
-        XCTAssertEqual(perform.callCount, 0)
+        XCTAssertEqual(httpClient.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
     // MARK: - remote
     
-    func test_remote_shouldNotCallPerformOnEmptyCategories() {
+    func test_remote_shouldNotCallHTTPClientOnEmptyCategories() {
         
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut([]) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.callCount, 0)
+        XCTAssertEqual(httpClient.callCount, 0)
     }
     
-    func test_remote_shouldNotCallPerformOnNonStandardFlowCategory() {
+    func test_remote_shouldNotCallHTTPClientOnNonStandardFlowCategory() {
         
         let categories = [makeCategory(flow: .mobile)]
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(categories) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.callCount, 0)
+        XCTAssertEqual(httpClient.callCount, 0)
     }
     
-    func test_remote_shouldNotCallPerformOnNonStandardFlowCategories() {
+    func test_remote_shouldNotCallHTTPClientOnNonStandardFlowCategories() {
         
         let categories = [
             makeCategory(flow: .mobile),
@@ -115,48 +146,53 @@ final class ComposerTests: XCTestCase {
             makeCategory(flow: .taxAndStateServices),
             makeCategory(flow: .transport),
         ]
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(categories) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.callCount, 0)
+        XCTAssertEqual(httpClient.callCount, 0)
     }
     
-    func test_remote_shouldCallPerformOnStandardFlowCategory() {
+    func test_remote_shouldCallHTTPClientOnStandardFlowCategory() {
         
         let categories = [
             makeCategory(flow: .standard, type: .digitalWallets)
         ]
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(categories) { _ in exp.fulfill() }
-        perform.complete(with: .failure(anyError()))
+        httpClient.complete(with: .failure(anyError()))
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.payloads, [.digitalWallets])
+        httpClient.assert(queryItems: [
+            [query("operatorOnly", "true"), query("type", "digitalWallets")],
+        ])
     }
     
-    func test_remote_shouldCallPerformOnStandardFlowCategories() {
+    func test_remote_shouldCallHTTPClientOnStandardFlowCategories() {
         
         let categories = [
             makeCategory(flow: .standard, type: .education),
             makeCategory(flow: .standard, type: .digitalWallets),
         ]
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(categories) { _ in exp.fulfill() }
-        perform.complete(with: .failure(anyError()))
-        perform.complete(with: .failure(anyError()), at: 1)
+        httpClient.complete(with: .failure(anyError()))
+        httpClient.complete(with: .failure(anyError()), at: 1)
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.payloads, [.education, .digitalWallets])
+        httpClient.assert(queryItems: [
+            [query("operatorOnly", "true"), query("type", "education")],
+            [query("operatorOnly", "true"), query("type", "digitalWallets")],
+        ])
     }
     
-    func test_remote_shouldCallPerformOnStandardFlowCategories_mixed() {
+    func test_remote_shouldCallHTTPClientOnStandardFlowCategories_mixed() {
         
         let categories = [
             makeCategory(flow: .qr),
@@ -164,15 +200,18 @@ final class ComposerTests: XCTestCase {
             makeCategory(flow: .mobile),
             makeCategory(flow: .standard, type: .security),
         ]
-        let (sut, perform) = makeSUT()
+        let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut(categories) { _ in exp.fulfill() }
-        perform.complete(with: .failure(anyError()))
-        perform.complete(with: .failure(anyError()), at: 1)
+        httpClient.complete(with: .failure(anyError()))
+        httpClient.complete(with: .failure(anyError()), at: 1)
         
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(perform.payloads, [.charity, .security])
+        httpClient.assert(queryItems: [
+            [query("operatorOnly", "true"), query("type", "charity")],
+            [query("operatorOnly", "true"), query("type", "security")],
+        ])
     }
     
     // MARK: - Helpers
@@ -186,16 +225,21 @@ final class ComposerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        perform: Perform
+        httpClient: HTTPClientSpy
     ) {
-        let perform = Perform()
-        let composer = Composer(perform: perform.process(_:completion:))
+        let httpClient = HTTPClientSpy()
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: LoggerAgent()
+        )
+        let composer = Composer(nanoServiceFactory: nanoServiceComposer)
         let sut = composer.compose()
         
         trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(perform, file: file, line: line)
+        trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)
+        trackForMemoryLeaks(httpClient, file: file, line: line)
         
-        return (sut, perform)
+        return (sut, httpClient)
     }
     
     private func makeCategory(
@@ -217,5 +261,13 @@ final class ComposerTests: XCTestCase {
             search: search,
             type: type
         )
+    }
+    
+    private func query(
+        _ name: String,
+        _ value: String
+    ) -> URLQueryItem {
+        
+        return .init(name: name, value: value)
     }
 }
