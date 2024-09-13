@@ -10,10 +10,10 @@ import Foundation
 extension RequestFactory {
     
     static func getOperatorsListByParam(
-        category: ServiceCategory
+        categoryType: ServiceCategory.CategoryType
     ) throws -> URLRequest {
         
-        try getOperatorsListByParam(category.typeName)
+        try getOperatorsListByParam(categoryType.name)
     }
     
     static func getOperatorsListByParam(
@@ -66,11 +66,11 @@ extension RequestFactory {
     }
 }
 
-extension ServiceCategory {
+extension ServiceCategory.CategoryType {
     
-    var typeName: String {
+    var name: String {
         
-        switch type {
+        switch self {
         case .charity:                   return "charity"
         case .digitalWallets:            return "digitalWallets"
         case .education:                 return "education"

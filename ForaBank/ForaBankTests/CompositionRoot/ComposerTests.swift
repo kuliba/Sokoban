@@ -21,12 +21,13 @@ final class ServiceCategoryRemoteComposer {
 
 extension ServiceCategoryRemoteComposer {
     
-    typealias Remote = ([ServiceCategory], @escaping (Result<Void, Error>) -> Void) -> Void
+    typealias CategoryType = ServiceCategory.CategoryType
+    typealias Remote = ([ServiceCategory], @escaping ([CategoryType]) -> Void) -> Void
     
     func compose() -> Remote {
         
-        let perform = self.nanoServiceFactory.compose(
-            makeRequest: RequestFactory.getOperatorsListByParam(category:),
+        let perform = nanoServiceFactory.compose(
+            makeRequest: RequestFactory.getOperatorsListByParam(categoryType:),
             mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
         )
         
@@ -37,12 +38,9 @@ extension ServiceCategoryRemoteComposer {
             let withStandard = categories.filter(\.hasStandardFlow)
             
             guard !withStandard.isEmpty
-            else { return completion(.success(())) }
+            else { return completion([]) }
             
-            batcher.call(withStandard) { _ in
-                
-                completion(.success(()))
-            }
+            batcher.call(withStandard.map(\.type), completion: completion)
         }
     }
 }
@@ -189,6 +187,84 @@ final class ComposerTests: XCTestCase {
         ])
     }
     
+    func test_remote_shouldDeliverEmptyOnNonStandardFlowCategories() {
+        
+        let categories = [
+            makeCategory(flow: .mobile),
+            makeCategory(flow: .qr),
+            makeCategory(flow: .taxAndStateServices),
+            makeCategory(flow: .transport),
+        ]
+        let (sut, _) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut(categories) {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_remote_shouldDeliverCategoryOnHTTPFailureOneStandardCategory() {
+        
+        let categories = [
+            makeCategory(flow: .standard, type: .internet),
+        ]
+        let (sut, httpClient) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut(categories) {
+            
+            XCTAssertNoDiff($0, [.internet])
+            exp.fulfill()
+        }
+        
+        httpClient.complete(with: .failure(anyError()))
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_remote_shouldDeliverTwoCategoriesOnHTTPFailuresTwoStandardCategory() {
+        
+        let categories = [
+            makeCategory(flow: .standard, type: .internet),
+            makeCategory(flow: .standard, type: .security),
+        ]
+        let (sut, httpClient) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut(categories) {
+            
+            XCTAssertNoDiff($0, [.internet, .security])
+            exp.fulfill()
+        }
+        
+        httpClient.complete(with: .failure(anyError()))
+        httpClient.complete(with: .failure(anyError()), at: 1)
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_remote_shouldDeliverMixedOnMixedHTTPFailures() {
+        
+        let categories = [
+            makeCategory(flow: .standard, type: .internet),
+            makeCategory(flow: .standard, type: .security),
+        ]
+        let (sut, httpClient) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut(categories) {
+            
+            XCTAssertNoDiff($0, [.internet])
+            exp.fulfill()
+        }
+        
+        httpClient.complete(with: .failure(anyError()))
+        httpClient.complete(with: .success((.getOperatorsListByParam(), anyHTTPURLResponse())), at: 1)
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias Composer = ServiceCategoryRemoteComposer
@@ -245,4 +321,52 @@ final class ComposerTests: XCTestCase {
         
         return .init(name: name, value: value)
     }
+    
+    private func security() -> Data {
+        
+        return .getOperatorsListByParam(type: .security)
+    }
 }
+
+private extension Data {
+    
+    static func getOperatorsListByParam(
+        type: ServiceCategory.CategoryType = .charity
+    ) -> Self {
+        
+        return .init(String.getOperatorsListByParam(type: type).utf8)
+    }
+}
+
+private extension String {
+    
+    static func getOperatorsListByParam(
+        type: ServiceCategory.CategoryType
+    ) -> Self {
+        
+        return """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "39baea8dd3f9c1d152f69c01fcf3cddc",
+        "operatorList": [
+            {
+                "type": "\(type.name)",
+                "atributeList": [
+                    {
+                        "md5hash": "ef7a4271cdec35cc20c4ca0bb4d43f93",
+                        "juridicalName": "МУП РАСПОПИНСКОЕ КХ",
+                        "customerId": "18815",
+                        "serviceList": [],
+                        "inn": "3412302165"
+                    }
+                ]
+            }
+        ]
+    }
+}
+"""
+    }
+}
+
