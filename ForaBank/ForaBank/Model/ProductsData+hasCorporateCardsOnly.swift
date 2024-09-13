@@ -8,7 +8,7 @@
 extension ProductsData {
     
     var hasCorporateCardsOnly: Bool {
-        return true
+        
         let productsTypes: [ProductType] = keys.map { $0 }
         
         guard productsTypes == [.card] ||
