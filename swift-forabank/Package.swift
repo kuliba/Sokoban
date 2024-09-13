@@ -30,6 +30,7 @@ let package = Package(
         .anywayPayment,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV3,
+        .operatorsListBackendV0,
         .serviceCategoriesBackendV0,
         .paymentTemplateBackendV3,
         .payHub,
@@ -140,6 +141,8 @@ let package = Package(
         .latestPaymentsBackendV2Tests,
         .latestPaymentsBackendV3,
         .latestPaymentsBackendV3Tests,
+        .operatorsListBackendV0,
+        .operatorsListBackendV0Tests,
         .serviceCategoriesBackendV0,
         .serviceCategoriesBackendV0Tests,
         .paymentTemplateBackendV3,
@@ -632,6 +635,13 @@ private extension Product {
         name: .latestPaymentsBackendV3,
         targets: [
             .latestPaymentsBackendV3,
+        ]
+    )
+    
+    static let operatorsListBackendV0 = library(
+        name: .operatorsListBackendV0,
+        targets: [
+            .operatorsListBackendV0,
         ]
     )
     
@@ -1272,6 +1282,30 @@ private extension Target {
         path: "Tests/Payments/LatestPayments/Backend/V3",
         resources: [
             .copy("Resources/v3_getAllLatestPayments.json")
+        ]
+    )
+    
+    static let operatorsListBackendV0 = target(
+        name: .operatorsListBackendV0,
+        dependencies: [
+            // internal modules
+            .foraTools,
+            .remoteServices,
+        ],
+        path: "Sources/Payments/OperatorsList/Backend/V0"
+    )
+    static let operatorsListBackendV0Tests = testTarget(
+        name: .operatorsListBackendV0Tests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .operatorsListBackendV0,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/OperatorsList/Backend/V0",
+        resources: [
+            .copy("Resources/getOperatorsListByParam_prod.json")
         ]
     )
     
@@ -2524,18 +2558,9 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
-            .cvvPin,
+            .foraTools,
             .genericRemoteService,
-            .getProcessingSessionCodeService,
-            .getInfoRepeatPaymentService,
             .rxViewModel,
-            .transferPublicKey,
-            .textFieldDomain,
-            .textFieldModel,
-            .anywayPaymentBackend,
-            .anywayPaymentCore,
-            .anywayPaymentDomain,
-            .utilityPayment,
         ]
     )
     
@@ -2834,6 +2859,10 @@ private extension Target.Dependency {
         name: .latestPaymentsBackendV3
     )
     
+    static let operatorsListBackendV0 = byName(
+        name: .operatorsListBackendV0
+    )
+    
     static let serviceCategoriesBackendV0 = byName(
         name: .serviceCategoriesBackendV0
     )
@@ -3130,6 +3159,9 @@ private extension String {
     
     static let latestPaymentsBackendV3 = "LatestPaymentsBackendV3"
     static let latestPaymentsBackendV3Tests = "LatestPaymentsBackendV3Tests"
+    
+    static let operatorsListBackendV0 = "OperatorsListBackendV0"
+    static let operatorsListBackendV0Tests = "OperatorsListBackendV0Tests"
     
     static let serviceCategoriesBackendV0 = "ServiceCategoriesBackendV0"
     static let serviceCategoriesBackendV0Tests = "ServiceCategoriesBackendV0Tests"

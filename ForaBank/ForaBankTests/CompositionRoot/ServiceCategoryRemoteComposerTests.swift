@@ -1,5 +1,5 @@
 //
-//  ComposerTests.swift
+//  ServiceCategoryRemoteComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -74,7 +74,7 @@ extension ServiceCategory {
 @testable import ForaBank
 import XCTest
 
-final class ComposerTests: XCTestCase {
+final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     // MARK: - compose
     
