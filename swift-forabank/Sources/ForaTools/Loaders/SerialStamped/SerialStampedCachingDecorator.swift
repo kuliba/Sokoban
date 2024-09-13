@@ -7,7 +7,8 @@
 
 /// A decorator class that adds caching functionality to a `Decoratee` while ensuring
 /// that data is stored in a cache only when the serial of the fetched response is different from the provided serial.
-public final class SerialStampedCachingDecorator<Response> {
+public final class SerialStampedCachingDecorator<Serial, Value>
+where Serial: Equatable {
     
     /// The function being decorated (i.e., the original function whose result may be cached).
     private let decoratee: Decoratee
@@ -31,12 +32,9 @@ public final class SerialStampedCachingDecorator<Response> {
 
 public extension SerialStampedCachingDecorator {
     
-    /// A string that represents the serial associated with a cached or fetched response.
-    typealias Serial = String
-    
     /// The completion handler type for the decorated function.
-    /// - Result can either be a `SerialStamped<String, Response>` on success, or an error on failure.
-    typealias DecorateeCompletion = (Result<SerialStamped<String, Response>, Error>) -> Void
+    /// - Result can either be a `SerialStamped<Serial, Value>` on success, or an error on failure.
+    typealias DecorateeCompletion = (Result<SerialStamped<Serial, Value>, Error>) -> Void
     
     /// The original decoratee function that takes an optional `Serial` and a completion handler.
     /// It may perform some asynchronous work and then call the completion handler.
@@ -46,8 +44,8 @@ public extension SerialStampedCachingDecorator {
     /// - Result is `Void` on success, or an error on failure.
     typealias CacheCompletion = (Result<Void, Error>) -> Void
     
-    /// The cache function that stores a `SerialStamped<String, Response>` and calls a completion handler.
-    typealias Cache = (SerialStamped<String, Response>, @escaping CacheCompletion) -> Void
+    /// The cache function that stores a `SerialStamped<Serial, Value>` and calls a completion handler.
+    typealias Cache = (SerialStamped<Serial, Value>, @escaping CacheCompletion) -> Void
 }
 
 public extension SerialStampedCachingDecorator {

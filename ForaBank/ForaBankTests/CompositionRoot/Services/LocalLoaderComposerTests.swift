@@ -22,7 +22,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - load
+    // MARK: - composedLoad
     
     func test_composedLoad_shouldPerformOnInteractive() {
         
@@ -97,7 +97,7 @@ final class LocalLoaderComposerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
-    // MARK: - save
+    // MARK: - composedSave
     
     func test_composedSave_shouldPerformOnBackground() {
         
@@ -184,6 +184,163 @@ final class LocalLoaderComposerTests: XCTestCase {
         
         backgroundScheduler.advance()
         wait(for: [exp], timeout: 1)
+    }
+    
+    // MARK: - composeUpdate
+    
+    func test_composeUpdate_shouldPerformOnBackground() {
+        
+        let (sut, agent, _, backgroundScheduler) = makeSUT()
+        let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), anyMessage()) { _ in }
+        XCTAssertNoDiff(agent.loadCallCount, 0)
+        XCTAssertNoDiff(agent.storeCallCount, 0)
+        
+        backgroundScheduler.advance()
+        XCTAssertNoDiff(agent.loadCallCount, 1)
+        XCTAssertNoDiff(agent.storeCallCount, 1)
+    }
+    
+    func test_composeUpdate_shouldNotCallReduceOnEmptyLoad() {
+        
+        let (sut, _,_, backgroundScheduler) = makeSUT(
+            loadStub: nil
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), anyMessage()) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(reduce.callCount, 0)
+    }
+    
+    func test_composeUpdate_shouldCallReduceOnNonEmptyLoad() {
+        
+        let (stored, updated) = (makeModel(), makeModel())
+        let (sut, _,_, backgroundScheduler) = makeSUT(
+            loadStub: stored
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [updated])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), anyMessage()) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(reduce.payloads.map(\.0), [stored])
+        XCTAssertNoDiff(reduce.payloads.map(\.1), [updated])
+    }
+    
+    func test_composeUpdate_shouldCallStoreWithUpdateEmptySerialOnEmptyLoad() {
+        
+        let updated = makeModel()
+        let (sut, agent, _, backgroundScheduler) = makeSUT(
+            loadStub: nil
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [updated])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), nil) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [updated])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [nil])
+    }
+    
+    func test_composeUpdate_shouldCallStoreWithUpdateOnEmptyLoad() {
+        
+        let (updated, serial) = (makeModel(), anyMessage())
+        let (sut, agent, _, backgroundScheduler) = makeSUT(
+            loadStub: nil
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [updated])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), serial) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [updated])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
+    }
+    
+    func test_composeUpdate_shouldCallStoreWithReducesEmNonEmptySerialOnEmptyLoad() {
+        
+        let reduced = makeModel()
+        let (sut, agent, _, backgroundScheduler) = makeSUT(
+            loadStub: makeModel()
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(reduced, true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), nil) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [reduced])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [nil])
+    }
+    
+    func test_composeUpdate_shouldCallStoreWithReducesOnNonEmptyLoad() {
+        
+        let (reduced, serial) = (makeModel(), anyMessage())
+        let (sut, agent, _, backgroundScheduler) = makeSUT(
+            loadStub: makeModel()
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(reduced, true)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), serial) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [reduced])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
+    }
+    
+    func test_composeUpdate_shouldNotCallStoreOnNonEmptyLoadNoChanges() {
+        
+        let (sut, agent, _, backgroundScheduler) = makeSUT(
+            loadStub: makeModel()
+        )
+        let toModel = CallSpy<Value, Model>(stubs: [makeModel()])
+        let reduce = CallSpy<(Model, Model), (Model, Bool)>(stubs: [(makeModel(), false)])
+        let update = sut.composeUpdate(
+            toModel: toModel.call(payload:),
+            reduce: reduce.call
+        )
+        
+        update(makeValue(), anyMessage()) { _ in }
+        backgroundScheduler.advance()
+        
+        XCTAssertNoDiff(agent.storeCallCount, 0)
     }
     
     // MARK: - Helpers

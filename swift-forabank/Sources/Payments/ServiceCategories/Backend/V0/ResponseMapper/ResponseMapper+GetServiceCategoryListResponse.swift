@@ -9,7 +9,7 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public typealias GetServiceCategoryListResponse = SerialStamped<ServiceCategory>
+    public typealias GetServiceCategoryListResponse = SerialStamped<String, ServiceCategory>
 }
 
 extension ResponseMapper {
