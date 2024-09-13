@@ -2524,18 +2524,9 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
-            .cvvPin,
+            .foraTools,
             .genericRemoteService,
-            .getProcessingSessionCodeService,
-            .getInfoRepeatPaymentService,
             .rxViewModel,
-            .transferPublicKey,
-            .textFieldDomain,
-            .textFieldModel,
-            .anywayPaymentBackend,
-            .anywayPaymentCore,
-            .anywayPaymentDomain,
-            .utilityPayment,
         ]
     )
     
