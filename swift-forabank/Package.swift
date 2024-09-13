@@ -1305,7 +1305,7 @@ private extension Target {
         ],
         path: "Tests/Payments/OperatorsList/Backend/V0",
         resources: [
-            .copy("Resources/getOperatorsListByParam_prod.json")
+            .copy("Resources/getOperatorsListByParam.json")
         ]
     )
     
