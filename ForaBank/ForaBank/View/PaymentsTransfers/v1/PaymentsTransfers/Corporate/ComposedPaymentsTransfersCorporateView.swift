@@ -13,15 +13,26 @@ struct ComposedPaymentsTransfersCorporateView<ContentView>: View
 where ContentView: View {
     
     let corporate: Corporate
-    let makeContentView: () -> ContentView
+    let factory: Factory
     
     var body: some View {
         
-        makeContentView()
+        PaymentsTransfersCorporateFlowWrapperView(
+            model: corporate.flow,
+            makeContentView: {
+                
+                PaymentsTransfersCorporateFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: factory
+                )
+            }
+        )
     }
 }
 
 extension ComposedPaymentsTransfersCorporateView {
     
     typealias Corporate = PaymentsTransfersCorporate
+    typealias Factory = PaymentsTransfersCorporateFlowViewFactory<ContentView>
 }
