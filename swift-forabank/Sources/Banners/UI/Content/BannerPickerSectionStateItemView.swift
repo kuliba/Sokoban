@@ -1,37 +1,31 @@
 //
 //  BannerPickerSectionStateItemView.swift
-//  
 //
-//  Created by Andryusina Nataly on 11.09.2024.
+//
+//  Created by Andryusina Nataly on 13.09.2024.
 //
 
 import SwiftUI
 import PayHub
 
-public protocol ImageLink {
-    
-    var imageLink: String { get }
-}
-
-public struct BannerPickerSectionStateItemImage<BannerIcon, PlaceholderView, ServiceBanner>: View
-where BannerIcon: View,
-      PlaceholderView: View,
-      ServiceBanner: ImageLink {
+public struct BannerPickerSectionStateItemView<BannerView, PlaceholderView, ServiceBanner>: View
+where BannerView: View,
+      PlaceholderView: View {
     
     private let item: Item
     private let config: Config
-    private let bannerIcon: (ServiceBanner) -> BannerIcon
+    private let bannerView: (ServiceBanner) -> BannerView
     private let placeholderView: () -> PlaceholderView
     
     public init(
         item: Item,
         config: Config,
-        bannerIcon: @escaping (ServiceBanner) -> BannerIcon,
+        bannerView: @escaping (ServiceBanner) -> BannerView,
         placeholderView: @escaping () -> PlaceholderView
     ) {
         self.item = item
         self.config = config
-        self.bannerIcon = bannerIcon
+        self.bannerView = bannerView
         self.placeholderView = placeholderView
     }
     
@@ -42,55 +36,31 @@ where BannerIcon: View,
             switch identified.element {
             case let .banner(banner):
                 bannerView(banner)
+                    .modifier(FrameWithCornerRadiusModifier(config: config))
             }
             
         case .placeholder:
-            placeholderLabel()
+            placeholderView()
+                .modifier(FrameWithCornerRadiusModifier(config: config))
+                ._shimmering()
         }
     }
 }
 
-public extension BannerPickerSectionStateItemImage {
+public extension BannerPickerSectionStateItemView {
     
     typealias Item = BannerPickerSectionState<ServiceBanner>.Item
     typealias Config = BannerPickerSectionStateItemViewConfig
 }
 
-private extension BannerPickerSectionStateItemImage {
+private struct FrameWithCornerRadiusModifier: ViewModifier {
     
-    func bannerView(
-        _ banner: ServiceBanner
-    ) -> some View {
-        
-        HStack(spacing: config.spacing) {
-            
-           /* bannerIcon(banner)
-                .frame(config.)
-                .renderIconBackground(with: config.iconBackground)
-            
-            category.name.text(withConfig: config.title)
-                .frame(maxWidth: .infinity, alignment: .leading)*/
-        }
-    }
+    let config: BannerPickerSectionStateItemViewConfig
     
-    func placeholderLabel() -> some View {
-        
-        HStack(spacing: 10) {
-            
-           /* placeholderView()
-                .clipShape(RoundedRectangle(
-                    cornerRadius: config.placeholder.icon.radius
-                ))
-                ._shimmering()
-                .frame(config.placeholder.icon.size)
-            
-            placeholderView()
-                .clipShape(RoundedRectangle(
-                    cornerRadius: config.placeholder.title.radius
-                ))
-                ._shimmering()
-                .frame(config.placeholder.title.size)
-                .frame(maxWidth: .infinity, alignment: .leading)*/
-        }
+    func body(content: Content) -> some View {
+        content
+            .frame(config.size)
+            .cornerRadius(config.cornerRadius)
     }
 }
+
