@@ -55,15 +55,15 @@ extension ResponseMapper {
             case repaymentLoansAndAccounts
             case security
             case socialAndGames
-            case transport
             case taxAndStateService
+            case transport
         }
         
         public enum LatestPaymentsCategory: Equatable {
             
             case charity
-            case education
             case digitalWallets
+            case education
             case internet
             case mobile
             case networkMarketing
