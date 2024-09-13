@@ -11,6 +11,100 @@ import XCTest
 
 final class ResponseMapper_mapGetOperatorsListByParamOperatorOnlyTrueResponseTests: XCTestCase {
     
+    func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
+        
+        let invalidData = "invalid data".data(using: .utf8)!
+        
+        let result = Self.mapOK(invalidData)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
+    }
+    
+    func test_map_shouldDeliverServerErrorOnDataWithServerErrorWithOkHTTPURLResponseStatusCode() throws {
+        
+        let okResponse = anyHTTPURLResponse(statusCode: 200)
+        let result = Self.map(jsonWithServerError(), okResponse)
+        
+        assert(result, equals: .failure(.server(
+            statusCode: 102,
+            errorMessage: "Серверная ошибка при выполнении запроса"
+        )))
+    }
+    
+    func test_map_shouldDeliverServerErrorOnDataWithServerErrorWithNonOkHTTPURLResponseStatusCode() throws {
+        
+        let nonOkResponse = anyHTTPURLResponse(statusCode: 400)
+        let result = Self.map(jsonWithServerError(), nonOkResponse)
+        
+        assert(result, equals: .failure(.server(
+            statusCode: 102,
+            errorMessage: "Серверная ошибка при выполнении запроса"
+        )))
+    }
+    
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCode() throws {
+        
+        let statusCode = 400
+        let data = Data()
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = Self.map(data, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: data
+        )))
+    }
+    
+    func test_map_shouldDeliverInvalidOnNonOkHTTPURLResponseStatusCodeWithBadData() throws {
+        
+        let badData = Data(jsonStringWithBadData.utf8)
+        let statusCode = 400
+        let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
+        let result = Self.map(badData, nonOkResponse)
+        
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: badData
+        )))
+    }
+    
+    func test_map_should_deliverEmptyListOnMissingType() throws {
+        
+        let json = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "e484a0fa6826200868cb821394efa1ef",
+        "operatorList": [
+            {
+                "type": null,
+                "atributeList": []
+            }
+        ]
+    }
+}
+"""
+        let validData = Data(json.utf8)
+        let result = Self.mapOK(validData)
+        
+        assert(result, equals: .success(.init(
+            list: [],
+            serial: "e484a0fa6826200868cb821394efa1ef"
+        )))
+    }
+    
+    func test_map_shouldDeliverInvalidOnOkHTTPURLResponseStatusCodeWithValidData() throws {
+        
+        let validData = Data(jsonStringWithEmpty.utf8)
+        let result = Self.mapOK(validData)
+        
+        assert(result, equals: .failure(.invalid(statusCode: 200, data: validData)))
+    }
+    
     func test_fromFile() throws {
         
         let data = try data(from: "getOperatorsListByParam")
