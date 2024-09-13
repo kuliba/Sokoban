@@ -28,6 +28,7 @@ extension SerialLoaderComposer {
     typealias Serial = String
     typealias Load<T> = (@escaping (T?) -> Void) -> Void
     
+    /// - Warning: Use for atomic services only, don't use for `dict/getOperatorsListByParam` which performs a sequence of requests and should use `composeUpdate` instead of `composeSave` to cache data.
     func compose<T, Model: Codable>(
         getSerial: @escaping () -> Serial?,
         fromModel: @escaping ([Model]) -> [T],
