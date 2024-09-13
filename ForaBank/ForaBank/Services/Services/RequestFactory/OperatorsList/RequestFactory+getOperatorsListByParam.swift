@@ -10,6 +10,13 @@ import Foundation
 extension RequestFactory {
     
     static func getOperatorsListByParam(
+        category: ServiceCategory
+    ) throws -> URLRequest {
+        
+        try getOperatorsListByParam(category.typeName)
+    }
+    
+    static func getOperatorsListByParam(
         _ type: String = "housingAndCommunalService"
     ) throws -> URLRequest {
         
@@ -56,5 +63,27 @@ extension RequestFactory {
         request.httpMethod = "GET"
         
         return request
+    }
+}
+
+extension ServiceCategory {
+    
+    var typeName: String {
+        
+        switch type {
+        case .charity:                   return "charity"
+        case .digitalWallets:            return "digitalWallets"
+        case .education:                 return "education"
+        case .housingAndCommunalService: return "housingAndCommunalService"
+        case .internet:                  return "internet"
+        case .mobile:                    return "mobile"
+        case .networkMarketing:          return "networkMarketing"
+        case .qr:                        return "qr"
+        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
+        case .security:                  return "security"
+        case .socialAndGames:            return "socialAndGames"
+        case .taxAndStateService:        return "taxAndStateService"
+        case .transport:                 return "transport"
+        }
     }
 }

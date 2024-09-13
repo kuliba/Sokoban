@@ -26,7 +26,7 @@ extension ServiceCategoryRemoteComposer {
     func compose() -> Remote {
         
         let perform = self.nanoServiceFactory.compose(
-            makeRequest: RequestFactory.getOperatorsListByParam(_:),
+            makeRequest: RequestFactory.getOperatorsListByParam(category:),
             mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
         )
         
@@ -39,32 +39,10 @@ extension ServiceCategoryRemoteComposer {
             guard !withStandard.isEmpty
             else { return completion(.success(())) }
             
-            batcher.call(withStandard.map(\.typeName)) { _ in
+            batcher.call(withStandard) { _ in
                 
                 completion(.success(()))
             }
-        }
-    }
-}
-
-extension ServiceCategory {
-    
-    var typeName: String {
-        
-        switch type {
-        case .charity:                   return "charity"
-        case .digitalWallets:            return "digitalWallets"
-        case .education:                 return "education"
-        case .housingAndCommunalService: return "housingAndCommunalService"
-        case .internet:                  return "internet"
-        case .mobile:                    return "mobile"
-        case .networkMarketing:          return "networkMarketing"
-        case .qr:                        return "qr"
-        case .repaymentLoansAndAccounts: return "repaymentLoansAndAccounts"
-        case .security:                  return "security"
-        case .socialAndGames:            return "socialAndGames"
-        case .taxAndStateService:        return "taxAndStateService"
-        case .transport:                 return "transport"
         }
     }
 }
