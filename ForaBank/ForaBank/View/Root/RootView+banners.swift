@@ -34,8 +34,7 @@ extension RootView {
         BannerPickerSectionStateItemView(
             item: item,
             config: .iFora,
-            bannerView: { rootViewFactory.makeIconView(.image($0.imageEndpoint))
-            },
+            bannerView: { rootViewFactory.makeIconView(.image($0.imageEndpoint)) },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
     }
