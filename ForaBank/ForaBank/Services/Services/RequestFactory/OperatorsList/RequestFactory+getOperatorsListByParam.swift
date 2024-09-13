@@ -10,12 +10,12 @@ import Foundation
 extension RequestFactory {
     
     static func getOperatorsListByParam(
-        _ type: String
+        _ type: String = "housingAndCommunalService"
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
             ("operatorOnly", "true"),
-            ("type", "housingAndCommunalService")
+            ("type", type)
         ]
         
         let endpoint = Services.Endpoint.getOperatorsListByParam
