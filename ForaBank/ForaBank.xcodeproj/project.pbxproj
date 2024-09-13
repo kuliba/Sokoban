@@ -2780,6 +2780,7 @@
 		839E53072BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */; };
 		83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219AF2A4D8FD500A34482 /* ProductConfig.swift */; };
 		83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219B12A4D940900A34482 /* ProductConfigTests.swift */; };
+		83A3F5B12C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */; };
 		83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */; };
 		83A9C6DC2C060010005EAF62 /* UpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A9C6DB2C060010005EAF62 /* UpdateInfo.swift */; };
 		83A9C6DE2C060ED0005EAF62 /* UpdateInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */; };
@@ -6186,6 +6187,7 @@
 		839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createCardGuardianPanel.swift"; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
+		83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BannerPickerSectionStateItemViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift"; sourceTree = "<group>"; };
 		83A9C6DB2C060010005EAF62 /* UpdateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfo.swift; sourceTree = "<group>"; };
 		83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfoView.swift; sourceTree = "<group>"; };
@@ -8494,6 +8496,7 @@
 				2A556B4D2C7CEB08002050C2 /* LatestPlaceholderConfig+iFora.swift */,
 				2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iFora.swift */,
 				2A26C2B42C8828BD0011BB5A /* PaymentsTransfersCorporateContentViewConfig+iFora.swift */,
+				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -20145,6 +20148,7 @@
 				509E265D292E3F7A00362642 /* ButtonAuthViewComponent.swift in Sources */,
 				2AB197A82B24A4B300F0F87B /* Services+makeSberQRServices.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
+				83A3F5B12C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iFora.swift in Sources */,
 				68CD24A728BE85A1002E5D08 /* ServerCommands+SBPay.swift in Sources */,
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				2AC2FB102C5103FC001972CB /* PaymentProviderServicePickerFlowState.swift in Sources */,
