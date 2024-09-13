@@ -523,23 +523,22 @@
                         
                     } else {
                        
-                        if model.errorMessage?.contains("Открытие вклада уже выполняется") == true {
-                            
-                            self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
-                                self.navigationController?.popToRootViewController(animated: true)
-                            }
-                            
-                        } else if model.statusCode == 102 &&
-                                  model.errorMessage?.contains("код 3100") == true {
-                            
-                            self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
-                                self.navigationController?.popToRootViewController(animated: true)
-                            }
-                            
-                        } else {
-                            self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                        }
+                        self.handleError(model: model)
                     }
+                }
+            }
+        }
+        
+       private func handleError(model: MakeDepositDecodableModel) {
+           
+            let errorMessage = model.errorMessage ?? ""
+            let isSpecialCase = errorMessage.contains("Открытие вклада уже выполняется") ||
+                                (model.statusCode == 102 && errorMessage.contains("код 3100"))
+            
+            showAlert(with: "Ошибка", and: errorMessage) {
+                
+                if isSpecialCase {
+                    self.navigationController?.popToRootViewController(animated: true)
                 }
             }
         }
