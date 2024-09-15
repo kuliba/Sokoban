@@ -32,37 +32,41 @@ where Serial: Equatable {
 
 public extension SerialStampedCachingDecorator {
     
+    /// A typealias representing the payload, which is an `AnySerialContainer` encapsulating an optional `Serial`.
+    typealias Payload = AnySerialContainer<Serial?>
+    
     /// The completion handler type for the decorated function.
-    /// - Result can either be a `SerialStamped<Serial, Value>` on success, or an error on failure.
+    /// - Parameter result: A `Result` containing either a `SerialStamped<Serial, Value>` on success or an `Error` on failure.
     typealias DecorateeCompletion = (Result<SerialStamped<Serial, Value>, Error>) -> Void
     
-    /// The original decoratee function that takes an optional `Serial` and a completion handler.
+    /// The original decoratee function that takes a `Payload` and a completion handler.
     /// It may perform some asynchronous work and then call the completion handler.
-    typealias Decoratee = (Serial?, @escaping DecorateeCompletion) -> Void
+    typealias Decoratee = (Payload, @escaping DecorateeCompletion) -> Void
     
     /// The completion handler type for caching operations.
-    /// - Result is `Void` on success, or an error on failure.
+    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
     typealias CacheCompletion = (Result<Void, Error>) -> Void
     
     /// The cache function that stores a `SerialStamped<Serial, Value>` and calls a completion handler.
     typealias Cache = (SerialStamped<Serial, Value>, @escaping CacheCompletion) -> Void
 }
 
+// MARK: - SerialStampedCachingDecorator Methods
 public extension SerialStampedCachingDecorator {
     
-    /// Allows the instance to be called as a function, applying the decorated behavior.
+    /// Allows the instance to be called as a function, applying the decorated behaviour.
     ///
     /// - Parameters:
-    ///   - serial: An optional serial to compare against the response's serial.
+    ///   - payload: A `Payload` to provide the serial.
     ///   - completion: A completion handler that returns the result of the decorated function.
     ///
     /// This method will fetch a response using the decoratee, and if the response's serial
     /// is different from the provided serial, it will be cached.
     func callAsFunction(
-        _ serial: Serial?,
+        _ payload: Payload,
         completion: @escaping DecorateeCompletion
     ) {
-        decorated(serial, completion: completion)
+        decorated(payload, completion: completion)
     }
 }
 
@@ -71,27 +75,27 @@ public extension SerialStampedCachingDecorator {
     /// The main decorated function that applies caching logic to the original decoratee.
     ///
     /// - Parameters:
-    ///   - serial: An optional serial to compare with the serial of the response.
+    ///   - payload: A `Payload` to provide the serial.
     ///   - completion: A completion handler that returns the result of the decorated function.
     ///
     /// This function first invokes the decoratee to fetch the result. If the result's serial is
     /// different from the provided serial, it will cache the result and then call the completion handler.
     /// If the serials are the same, it skips caching and simply calls the completion handler.
     func decorated(
-        _ serial: Serial?,
+        _ payload: Payload,
         completion: @escaping DecorateeCompletion
     ) {
-        decoratee(serial) { [weak self] in
+        decoratee(payload) { [weak self] result in
             
-            guard let self else { return }
+            guard let self = self else { return }
             
-            switch $0 {
+            switch result {
             case let .failure(failure):
                 completion(.failure(failure))
                 
             case let .success(success):
                 // Cache the response only if the serials are different
-                if success.serial != serial {
+                if success.serial != payload.serial {
                     self.cache(success) { _ in completion(.success(success)) }
                 } else {
                     completion(.success(success))

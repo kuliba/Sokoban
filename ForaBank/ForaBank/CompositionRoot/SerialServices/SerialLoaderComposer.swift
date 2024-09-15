@@ -70,7 +70,7 @@ extension SerialLoaderComposer {
         
         let fallback = SerialFallback<Serial, T, Error>(
             getSerial: getSerial,
-            primary: decorator.decorated,
+            primary: { decorator.decorated(.init($0), completion: $1) },
             secondary: localLoad
         )
         
@@ -80,27 +80,47 @@ extension SerialLoaderComposer {
 
 private extension SerialStampedCachingDecorator {
     
+    /// A completion handler type for the remote decoratee function.
+    ///
+    /// - Parameter result: A `Result` containing either a `RemoteServices.SerialStamped<Serial, T>` on success or an `Error` on failure.
     typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
-    typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void
-    typealias Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
     
-    /// Convenience initialiser for `SerialStampedCachingDecorator` when the value is an array of `T`.
+    /// A remote decoratee function that fetches data.
     ///
     /// - Parameters:
-    ///   - decoratee: The remote loader function.
-    ///   - save: The function to save data locally.
+    ///   - serial: An optional `Serial` used to fetch the remote data.
+    ///   - completion: A closure that handles the result of the remote fetch.
+    typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void
+    
+    /// A function type for saving data locally.
+    ///
+    /// - Parameters:
+    ///   - items: An array of items of type `T` to be saved.
+    ///   - serial: The `Serial` associated with the items.
+    ///   - completion: A closure that handles the result of the save operation.
+    typealias Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
+    
+    /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Value` is an array of `T`.
+    ///
+    /// This initialiser sets up the decorator to handle multiple items by transforming the remote response
+    /// into the expected format and handling the saving of multiple items locally.
+    ///
+    /// - Parameters:
+    ///   - decoratee: The remote loader function that fetches data.
+    ///   - save: The function responsible for saving data locally.
     convenience init<T>(
         decoratee: @escaping RemoteDecoratee<T>,
         save: @escaping Save<T>
     ) where Value == [T] {
         
         self.init(
-            decoratee: { serial, completion in
+            decoratee: { serialContainer, completion in
                 
-                decoratee(serial) { result in
+                decoratee(serialContainer.serial) { result in
                     
-                    completion(result.map { response in
-                            .init(value: response.list, serial: response.serial)
+                    completion(result.map {
+                        
+                        return .init(value: $0.list, serial: $0.serial)
                     })
                 }
             },
