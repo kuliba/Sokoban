@@ -30,7 +30,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         
         sut(serial) { _ in }
         
-        XCTAssertNoDiff(loadSpy.payloads.map(\.serial), [serial])
+        XCTAssertNoDiff(loadSpy.payloads, [serial])
     }
     
     func test_decorated_shouldNotCallCacheOnLoadFailure() {
@@ -160,8 +160,8 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Serial = String
-    private typealias SUT = SerialStampedCachingDecorator<Serial, Value>
-    private typealias LoadSpy = Spy<SUT.Payload, Result<SerialStamped<String, Value>, Error>>
+    private typealias SUT = SerialStampedCachingDecorator<Serial?, Serial, Value>
+    private typealias LoadSpy = Spy<Serial?, Result<SerialStamped<String, Value>, Error>>
     private typealias CacheSpy = Spy<SerialStamped<String, Value>, Result<Void, Error>>
     
     private func makeSUT(

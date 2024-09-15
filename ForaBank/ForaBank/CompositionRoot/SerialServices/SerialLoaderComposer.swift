@@ -78,24 +78,7 @@ extension SerialLoaderComposer {
     }
 }
 
-private extension SerialFallback {
-    
-    typealias SerialPrimary = (SerialPayload<Serial?>, @escaping PrimaryCompletion) -> Void
-    
-    convenience init(
-        getSerial: @escaping () -> Serial?,
-        primary: @escaping SerialPrimary,
-        secondary: @escaping Secondary
-    ) {
-        self.init(
-            getSerial: getSerial,
-            primary: { primary(.serial($0), $1) },
-            secondary: secondary
-        )
-    }
-}
-
-private extension SerialStampedCachingDecorator {
+private extension SerialStampedCachingDecorator where Payload == Serial? {
     
     /// A completion handler type for the remote decoratee function.
     ///
@@ -131,9 +114,9 @@ private extension SerialStampedCachingDecorator {
     ) where Value == [T] {
         
         self.init(
-            decoratee: { serialContainer, completion in
+            decoratee: { serial, completion in
                 
-                decoratee(serialContainer.serial) { result in
+                decoratee(serial) { result in
                     
                     completion(result.map {
                         

@@ -7,35 +7,42 @@
 
 /// A decorator class that adds caching functionality to a `Decoratee` while ensuring
 /// that data is stored in a cache only when the serial of the fetched response is different from the provided serial.
-public final class SerialStampedCachingDecorator<Serial, Value>
+public final class SerialStampedCachingDecorator<Payload, Serial, Value>
 where Serial: Equatable {
     
     /// The function being decorated (i.e., the original function whose result may be cached).
     private let decoratee: Decoratee
     
+    /// A function to extract the `Serial` from the provided `Payload`.
+    private let getSerial: GetSerial
+    
     /// The caching mechanism that will store the response if it has a different serial.
     private let cache: Cache
     
-    /// Initialises a new `SerialStampedCachingDecorator` with a decoratee and a cache.
+    /// Initialises a new `SerialStampedCachingDecorator` with a decoratee, a serial extractor, and a cache.
     ///
     /// - Parameters:
     ///   - decoratee: The original function whose results may be cached.
+    ///   - getSerial: A function that extracts the `Serial` from the provided `Payload`.
     ///   - cache: The cache that will store the decorated results.
     public init(
         decoratee: @escaping Decoratee,
+        getSerial: @escaping GetSerial,
         cache: @escaping Cache
     ) {
         self.decoratee = decoratee
+        self.getSerial = getSerial
         self.cache = cache
     }
 }
 
 public extension SerialStampedCachingDecorator {
     
-    /// A typealias representing the payload, which is an `AnySerialContainer` encapsulating an optional `Serial`.
-    typealias Payload = SerialPayload<Serial?>
+    /// A typealias representing a function that extracts a `Serial` from a given `Payload`.
+    typealias GetSerial = (Payload) -> Serial?
     
     /// The completion handler type for the decorated function.
+    ///
     /// - Parameter result: A `Result` containing either a `SerialStamped<Serial, Value>` on success or an `Error` on failure.
     typealias DecorateeCompletion = (Result<SerialStamped<Serial, Value>, Error>) -> Void
     
@@ -44,6 +51,7 @@ public extension SerialStampedCachingDecorator {
     typealias Decoratee = (Payload, @escaping DecorateeCompletion) -> Void
     
     /// The completion handler type for caching operations.
+    ///
     /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
     typealias CacheCompletion = (Result<Void, Error>) -> Void
     
@@ -51,7 +59,6 @@ public extension SerialStampedCachingDecorator {
     typealias Cache = (SerialStamped<Serial, Value>, @escaping CacheCompletion) -> Void
 }
 
-// MARK: - SerialStampedCachingDecorator Methods
 public extension SerialStampedCachingDecorator {
     
     /// Allows the instance to be called as a function, applying the decorated behaviour.
@@ -59,9 +66,6 @@ public extension SerialStampedCachingDecorator {
     /// - Parameters:
     ///   - payload: A `Payload` to provide the serial.
     ///   - completion: A completion handler that returns the result of the decorated function.
-    ///
-    /// This method will fetch a response using the decoratee, and if the response's serial
-    /// is different from the provided serial, it will be cached.
     func callAsFunction(
         _ payload: Payload,
         completion: @escaping DecorateeCompletion
@@ -95,7 +99,7 @@ public extension SerialStampedCachingDecorator {
                 
             case let .success(success):
                 // Cache the response only if the serials are different
-                if success.serial != payload.serial {
+                if success.serial != getSerial(payload) {
                     self.cache(success) { _ in completion(.success(success)) }
                 } else {
                     completion(.success(success))
@@ -105,7 +109,19 @@ public extension SerialStampedCachingDecorator {
     }
 }
 
-public extension SerialStampedCachingDecorator {
+public extension SerialStampedCachingDecorator where Payload == Serial? {
+    
+    /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Payload` is a `Serial?`.
+    ///
+    /// - Parameters:
+    ///   - decoratee: The original function whose results may be cached.
+    ///   - cache: The cache that will store the decorated results.
+    convenience init(
+        decoratee: @escaping Decoratee,
+        cache: @escaping Cache
+    ) {
+        self.init(decoratee: decoratee, getSerial: { $0 }, cache: cache)
+    }
     
     /// Allows the instance to be called with a `Serial` value.
     ///
@@ -116,19 +132,34 @@ public extension SerialStampedCachingDecorator {
         _ serial: Serial?,
         completion: @escaping DecorateeCompletion
     ) {
-        callAsFunction(.serial(serial), completion: completion)
+        decorated(serial, completion: completion)
+    }
+}
+
+public extension SerialStampedCachingDecorator
+where Payload: WithSerial, Payload.Serial == Serial {
+    
+    /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Payload` conforms to `WithSerial`.
+    ///
+    /// - Parameters:
+    ///   - decoratee: The original function whose results may be cached.
+    ///   - cache: The cache that will store the decorated results.
+    convenience init(
+        decoratee: @escaping Decoratee,
+        cache: @escaping Cache
+    ) {
+        self.init(decoratee: decoratee, getSerial: { $0.serial }, cache: cache)
     }
     
     /// Allows the instance to be called with a type conforming to `WithSerial`.
     ///
     /// - Parameters:
-    ///   - withSerial: An instance conforming to `WithSerial<Serial>`.
+    ///   - payload: An instance conforming to `WithSerial<Serial>`.
     ///   - completion: A completion handler that returns the result of the decorated function.
-    func callAsFunction<T: WithSerial>(
-        _ withSerial: T,
+    func callAsFunction(
+        _ payload: Payload,
         completion: @escaping DecorateeCompletion
-    ) where T.Serial == Serial? {
-        
-        callAsFunction(.withSerial(withSerial), completion: completion)
+    ) {
+        decorated(payload, completion: completion)
     }
 }
