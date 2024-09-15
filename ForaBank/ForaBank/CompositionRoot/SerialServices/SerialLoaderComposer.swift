@@ -80,16 +80,16 @@ extension SerialLoaderComposer {
 
 private extension SerialFallback {
     
-    typealias AnySerialPrimary = (AnySerialContainer<Serial?>, @escaping PrimaryCompletion) -> Void
+    typealias SerialPrimary = (SerialPayload<Serial?>, @escaping PrimaryCompletion) -> Void
     
     convenience init(
         getSerial: @escaping () -> Serial?,
-        primary: @escaping AnySerialPrimary,
+        primary: @escaping SerialPrimary,
         secondary: @escaping Secondary
     ) {
         self.init(
             getSerial: getSerial,
-            primary: { primary(.init($0), $1) },
+            primary: { primary(.serial($0), $1) },
             secondary: secondary
         )
     }

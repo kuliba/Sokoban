@@ -28,7 +28,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        sut(.init(serial)) { _ in }
+        sut(serial) { _ in }
         
         XCTAssertNoDiff(loadSpy.payloads.map(\.serial), [serial])
     }
@@ -37,7 +37,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut(.init(anyMessage())) { _ in }
+        sut(anyMessage()) { _ in }
         loadSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -73,7 +73,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut(.init(serial)) { _ in }
+        sut(serial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: serial)))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -111,7 +111,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut(.init(oldSerial)) { _ in }
+        sut(oldSerial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: newSerial)))
         
         XCTAssertEqual(cacheSpy.callCount, 1)
@@ -124,7 +124,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut(.init(oldSerial)) { _ in }
+        sut(oldSerial) { _ in }
         loadSpy.complete(with: .success(response))
         
         XCTAssertEqual(cacheSpy.payloads, [response])
@@ -216,7 +216,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for load completion")
         
-        sut(.init(serial)) {
+        sut(serial) {
             
             switch ($0, expectedResult) {
             case (.failure, .failure):

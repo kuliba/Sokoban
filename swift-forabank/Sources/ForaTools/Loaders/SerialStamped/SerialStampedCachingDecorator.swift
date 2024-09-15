@@ -33,7 +33,7 @@ where Serial: Equatable {
 public extension SerialStampedCachingDecorator {
     
     /// A typealias representing the payload, which is an `AnySerialContainer` encapsulating an optional `Serial`.
-    typealias Payload = AnySerialContainer<Serial?>
+    typealias Payload = SerialPayload<Serial?>
     
     /// The completion handler type for the decorated function.
     /// - Parameter result: A `Result` containing either a `SerialStamped<Serial, Value>` on success or an `Error` on failure.
@@ -102,5 +102,33 @@ public extension SerialStampedCachingDecorator {
                 }
             }
         }
+    }
+}
+
+public extension SerialStampedCachingDecorator {
+    
+    /// Allows the instance to be called with a `Serial` value.
+    ///
+    /// - Parameters:
+    ///   - serial: A `Serial` value.
+    ///   - completion: A completion handler that returns the result of the decorated function.
+    func callAsFunction(
+        _ serial: Serial?,
+        completion: @escaping DecorateeCompletion
+    ) {
+        callAsFunction(.serial(serial), completion: completion)
+    }
+    
+    /// Allows the instance to be called with a type conforming to `WithSerial`.
+    ///
+    /// - Parameters:
+    ///   - withSerial: An instance conforming to `WithSerial<Serial>`.
+    ///   - completion: A completion handler that returns the result of the decorated function.
+    func callAsFunction<T: WithSerial>(
+        _ withSerial: T,
+        completion: @escaping DecorateeCompletion
+    ) where T.Serial == Serial? {
+        
+        callAsFunction(.withSerial(withSerial), completion: completion)
     }
 }
