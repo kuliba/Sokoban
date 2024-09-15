@@ -1692,7 +1692,7 @@
 		2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */; };
 		2AF177552AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177542AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift */; };
 		2AF177572AC4B68200D100DD /* Services+makeKeyTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177562AC4B68200D100DD /* Services+makeKeyTransferService.swift */; };
-		2AF2C97C2C9570CA00FF775E /* ServiceCategoryRemoteComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F392C93F8ED003556B1 /* ServiceCategoryRemoteComposerTests.swift */; };
+		2AF2C97C2C9570CA00FF775E /* OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F392C93F8ED003556B1 /* OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift */; };
 		2AF2C97E2C9579EE00FF775E /* RemoteDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF2C97D2C9579EE00FF775E /* RemoteDomain.swift */; };
 		2AF2C9802C957C9B00FF775E /* RemoteDomainOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF2C97F2C957C9B00FF775E /* RemoteDomainOf.swift */; };
 		2AF2C9822C957CF100FF775E /* StringSerialRemoteDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF2C9812C957CF100FF775E /* StringSerialRemoteDomain.swift */; };
@@ -5139,7 +5139,7 @@
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
-		2AF59F392C93F8ED003556B1 /* ServiceCategoryRemoteComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryRemoteComposerTests.swift; sourceTree = "<group>"; };
+		2AF59F392C93F8ED003556B1 /* OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift; sourceTree = "<group>"; };
 		2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientSpy+assertQueryItems.swift"; sourceTree = "<group>"; };
 		2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
 		2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift"; sourceTree = "<group>"; };
@@ -10654,7 +10654,7 @@
 				2A7CA21E2C92154F00B900E9 /* SerialServices */,
 				2A94AAFC2C8F79D6003B4FB1 /* Services */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
-				2AF59F392C93F8ED003556B1 /* ServiceCategoryRemoteComposerTests.swift */,
+				2AF59F392C93F8ED003556B1 /* OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift */,
 				2A6DC7AA2C970CE100A801A0 /* BatchSerialCachingRemoteLoaderComposerTests.swift */,
 				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
 				2A42B4022C8D64EF00A9B658 /* LoggingRemoteNanoServicesComposer */,
@@ -22134,7 +22134,7 @@
 				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,
 				2AF718DB2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift in Sources */,
 				2AEDAD5429A6355600017F73 /* ServerCommandsDictionaryControllerGetMobileListResponseHelpersTests.swift in Sources */,
-				2AF2C97C2C9570CA00FF775E /* ServiceCategoryRemoteComposerTests.swift in Sources */,
+				2AF2C97C2C9570CA00FF775E /* OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift in Sources */,
 				2A3599A92ADA7F5000820369 /* KeyChainStoreTests.swift in Sources */,
 				2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,

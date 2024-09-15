@@ -1,5 +1,5 @@
 //
-//  ServiceCategoryRemoteComposerTests.swift
+//  OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -88,7 +88,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class ServiceCategoryRemoteComposerTests: XCTestCase {
+final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     // MARK: - compose
     
