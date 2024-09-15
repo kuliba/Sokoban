@@ -139,7 +139,7 @@ where Payload == Serial? {
 
 public extension SerialStampedCachingDecorator
 where Payload: WithSerial,
-      Payload.Serial == Serial {
+      Payload.Serial == Serial? {
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Payload` conforms to `WithSerial`.
     ///
