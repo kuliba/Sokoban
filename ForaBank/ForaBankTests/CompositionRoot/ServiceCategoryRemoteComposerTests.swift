@@ -55,9 +55,11 @@ extension BatchSerialCachingRemoteLoaderComposer {
     typealias ServicePaymentProviderService = StringSerialRemoteDomain<GetOperatorsListByParamPayload, RemoteProvider>.BatchService
     
     func composeServicePaymentProviderService(
+        getSerial: @escaping (GetOperatorsListByParamPayload) -> String?
     ) -> ServicePaymentProviderService {
         
         let composed = self.compose(
+            getSerial: getSerial,
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam(payload:),
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentProvider].init(providers:)
@@ -321,7 +323,9 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
             updateMaker: localComposer,
             nanoServiceFactory: nanoServiceComposer
         )
-        let sut = composer.composeServicePaymentProviderService()
+        let sut = composer.composeServicePaymentProviderService(
+            getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }
+        )
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)

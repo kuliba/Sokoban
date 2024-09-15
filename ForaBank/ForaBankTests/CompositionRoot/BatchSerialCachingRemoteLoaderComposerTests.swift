@@ -47,11 +47,12 @@ final class BatchSerialCachingRemoteLoaderComposer {
 
 extension BatchSerialCachingRemoteLoaderComposer {
     
-    func compose<Payload: WithSerial, T, Model: Codable & Identifiable>(
+    func compose<Payload, T, Model: Codable & Identifiable>(
+        getSerial: @escaping (Payload) -> String?,
         makeRequest: @escaping StringSerialRemoteDomain<Payload, T>.MakeRequest,
         mapResponse: @escaping StringSerialRemoteDomain<Payload, T>.MapResponse,
         toModel: @escaping ([T]) -> [Model]
-    ) -> StringSerialRemoteDomain<Payload, T>.BatchService where Payload.Serial == String? {
+    ) -> StringSerialRemoteDomain<Payload, T>.BatchService {
         
         let perform = nanoServiceFactory.compose(
             makeRequest: makeRequest,
@@ -63,6 +64,7 @@ extension BatchSerialCachingRemoteLoaderComposer {
         )
         let decorator = SerialStampedCachingDecorator(
             decoratee: perform,
+            getSerial: getSerial,
             save: update
         )
         let batcher = Batcher(perform: decorator.decorated(_:completion:))
@@ -73,9 +75,7 @@ extension BatchSerialCachingRemoteLoaderComposer {
 
 // MARK: - Adapters
 
-private extension SerialStampedCachingDecorator
-where Payload: WithSerial,
-      Payload.Serial == Serial? {
+private extension SerialStampedCachingDecorator {
     
     typealias _RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
     
@@ -85,6 +85,7 @@ where Payload: WithSerial,
     
     convenience init<T>(
         decoratee: @escaping _RemoteDecoratee<T>,
+        getSerial: @escaping (Payload) -> Serial?,
         save: @escaping _Save<T>
     ) where Value == [T] {
         
@@ -93,7 +94,7 @@ where Payload: WithSerial,
                 
                 decoratee(withSerial) { completion($0.map(\.stamped)) }
             },
-            getSerial: { $0.serial },
+            getSerial: getSerial,
             cache: { save($0.value, $0.serial, $1) }
         )
     }
