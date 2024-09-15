@@ -40,7 +40,7 @@ extension ServiceCategoryRemoteComposer {
             guard !withStandard.isEmpty
             else { return completion([]) }
             
-            batcher.call(withStandard.map(\.type), completion: completion)
+            batcher.callAsFunction(withStandard.map(\.type), completion: completion)
         }
     }
 }

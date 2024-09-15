@@ -35,7 +35,7 @@ public extension Batcher {
     /// - Parameters:
     ///   - parameters: An array of parameters to be processed.
     ///   - completion: A completion handler that is called with the array of parameters that failed during processing.
-    func call(
+    func callAsFunction(
         _ parameters: [Parameter],
         completion: @escaping ([Parameter]) -> Void
     ) {

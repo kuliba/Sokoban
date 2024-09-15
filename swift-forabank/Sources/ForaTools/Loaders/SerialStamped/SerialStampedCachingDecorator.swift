@@ -109,7 +109,8 @@ public extension SerialStampedCachingDecorator {
     }
 }
 
-public extension SerialStampedCachingDecorator where Payload == Serial? {
+public extension SerialStampedCachingDecorator
+where Payload == Serial? {
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Payload` is a `Serial?`.
     ///
@@ -137,7 +138,8 @@ public extension SerialStampedCachingDecorator where Payload == Serial? {
 }
 
 public extension SerialStampedCachingDecorator
-where Payload: WithSerial, Payload.Serial == Serial {
+where Payload: WithSerial,
+      Payload.Serial == Serial {
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Payload` conforms to `WithSerial`.
     ///
