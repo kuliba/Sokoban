@@ -75,7 +75,7 @@ final class LoggingRemoteNanoServiceComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = LoggingRemoteNanoServiceComposer
-    private typealias NanoService<Payload> = SUT.NanoService<Payload, Response, Failure>
+    private typealias NanoService<Payload> = RemoteDomain<Payload, Response, Error, Failure>.Service
     
     private func makeSUT(
         file: StaticString = #file,

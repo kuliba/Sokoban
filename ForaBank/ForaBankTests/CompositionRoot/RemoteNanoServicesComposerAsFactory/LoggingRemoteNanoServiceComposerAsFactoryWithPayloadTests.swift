@@ -146,8 +146,8 @@ final class LoggingRemoteNanoServiceComposerAsFactoryWithPayloadTests: LoggingRe
     
     // MARK: - Helpers
     
-    private typealias NanoService<Payload> = Composer.NanoService<Payload, Response, Error>
-    
+    private typealias NanoService<Payload> = RemoteDomain<Payload, Response, Error, Error>.Service
+
     private func expect<Payload>(
         _ sut: SUT,
         with payload: Payload,
