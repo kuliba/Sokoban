@@ -70,11 +70,28 @@ extension SerialLoaderComposer {
         
         let fallback = SerialFallback<Serial, T, Error>(
             getSerial: getSerial,
-            primary: { decorator.decorated(.init($0), completion: $1) },
+            primary: decorator.decorated,
             secondary: localLoad
         )
         
         return (localLoad, fallback.callAsFunction(completion:))
+    }
+}
+
+private extension SerialFallback {
+    
+    typealias AnySerialPrimary = (AnySerialContainer<Serial?>, @escaping PrimaryCompletion) -> Void
+    
+    convenience init(
+        getSerial: @escaping () -> Serial?,
+        primary: @escaping AnySerialPrimary,
+        secondary: @escaping Secondary
+    ) {
+        self.init(
+            getSerial: getSerial,
+            primary: { primary(.init($0), $1) },
+            secondary: secondary
+        )
     }
 }
 
