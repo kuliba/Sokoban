@@ -27,7 +27,7 @@ extension ServiceCategoryRemoteComposer {
     func compose() -> Remote {
         
         let perform = nanoServiceFactory.compose(
-            makeRequest: RequestFactory.getOperatorsListByParam(categoryType:),
+            makeRequest: RequestFactory.getOperatorsListByParam(payload:),
             mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
         )
         
@@ -40,7 +40,11 @@ extension ServiceCategoryRemoteComposer {
             guard !withStandard.isEmpty
             else { return completion([]) }
             
-            batcher.callAsFunction(withStandard.map(\.type), completion: completion)
+            #warning("nil serial")
+            batcher.callAsFunction(withStandard.map({ .init(serial: nil, category: $0) })) {
+                
+                completion($0.map(\.category.type))
+            }
         }
     }
 }
