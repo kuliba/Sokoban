@@ -123,13 +123,129 @@ import XCTest
 
 final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
-    func test_init_shouldNotCallCollaborators() {
+    // MARK: - compose
+    
+    func test_compose_shouldNotCallCollaborators() {
         
         let (sut, httpClientSpy, updateMakerSpy) = makeSUT()
         
         XCTAssertEqual(httpClientSpy.callCount, 0)
         XCTAssertEqual(updateMakerSpy.callCount, 0)
         XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - call: empty payloads
+    
+    func test_shouldDeliverEmptyOnEmptyPayloads() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        expect(sut, with: [], toDeliver: []) {}
+    }
+    
+    func test_shouldNotCallHTTPClientOnEmptyPayloads() {
+        
+        let (sut, httpClientSpy, _) = makeSUT()
+        
+        expect(sut, with: [], toDeliver: []) {
+            
+            XCTAssertEqual(httpClientSpy.callCount, 0)
+        }
+    }
+    
+    func test_shouldNotCallUpdateOnEmptyPayloads() {
+        
+        let (sut, _, updateMakerSpy) = makeSUT()
+        
+        expect(sut, with: [], toDeliver: []) {
+            
+            XCTAssertEqual(updateMakerSpy.callCount, 0)
+        }
+    }
+    
+    // MARK: - call: one payload
+    
+    func test_shouldCallHTTPClientWithRequest() {
+        
+        let request = anyURLRequest()
+        let (sut, httpClientSpy, _) = makeSUT(makeRequestStub: [request])
+        
+        sut([makePayload()]) { _ in }
+        
+        XCTAssertNoDiff(httpClientSpy.requests, [request])
+    }
+    
+    func test_shouldDeliverPayloadOnHTTPClientFailure() {
+        
+        let payload = makePayload()
+        let (sut, httpClientSpy, _) = makeSUT()
+        
+        expect(sut, with: [payload], toDeliver: [payload]) {
+            
+            httpClientSpy.complete(with: .failure(anyError()))
+        }
+    }
+    
+    func test_shouldNotCallUpdateOnHTTPClientFailure() {
+        
+        let payload = makePayload()
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT()
+        
+        expect(sut, with: [payload], toDeliver: [payload]) {
+            
+            httpClientSpy.complete(with: .failure(anyError()))
+            XCTAssertEqual(updateMakerSpy.callCount, 0)
+        }
+    }
+    
+    // MARK: - call: two payloads
+    
+    func test_shouldCallHTTPClientWithRequests() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (request1, request2) = (anyURLRequest(), anyURLRequest())
+        let (sut, httpClientSpy, _) = makeSUT(
+            makeRequestStub: [request1, request2]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: [payload1, payload2]) {
+            
+            httpClientSpy.complete(with: .failure(anyError()))
+            httpClientSpy.complete(with: .failure(anyError()), at: 1)
+            
+            XCTAssertNoDiff(httpClientSpy.requests, [request1, request2])
+        }
+    }
+    
+    func test_shouldDeliverPayloadsOnHTTPClientFailures() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (sut, httpClientSpy, _) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [makeStampedFailure(), makeStampedFailure()]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: [payload1, payload2]) {
+            
+            httpClientSpy.complete(with: .failure(anyError()))
+            httpClientSpy.complete(with: .failure(anyError()), at: 1)
+        }
+    }
+    
+    func test_shouldNotCallUpdateOnHTTPClientFailures() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [makeStampedFailure(), makeStampedFailure()]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: [payload1, payload2]) {
+            
+            httpClientSpy.complete(with: .failure(anyError()))
+            httpClientSpy.complete(with: .failure(anyError()), at: 1)
+            XCTAssertEqual(updateMakerSpy.callCount, 0)
+        }
     }
     
     // MARK: - Helpers
@@ -144,8 +260,8 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     private func makeSUT(
         serial: String? = nil,
-        makeRequestStub: URLRequest? = nil,
-        mapResponseStub: StampedResult? = nil,
+        makeRequestStub: [URLRequest] = [anyURLRequest()],
+        mapResponseStub: [StampedResult] = [.failure(.invalid(statusCode: 200, data: .empty))],
         models: [Model] = [],
         file: StaticString = #file,
         line: UInt = #line
@@ -162,16 +278,11 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         )
         let updateMakerSpy = UpdateMakerSpy()
         let composer = Composer(
-            nanoServiceFactory: nanoServiceComposer, 
+            nanoServiceFactory: nanoServiceComposer,
             updateMaker: updateMakerSpy
         )
-        let makeRequestSpy = MakeRequestSpy(
-            stubs: [makeRequestStub ?? anyURLRequest()]
-        )
-        let mapResponseStub = mapResponseStub ?? .failure(.invalid(statusCode: 200, data: .empty))
-        let mapResponseSpy = MapResponseSpy(
-            stubs: [mapResponseStub]
-        )
+        let makeRequestSpy = MakeRequestSpy(stubs: makeRequestStub)
+        let mapResponseSpy = MapResponseSpy(stubs: mapResponseStub)
         let toModelSpy = ToModelSpy(stubs: [models])
         let sut = composer.compose(
             getSerial: { _ in serial },
@@ -216,6 +327,13 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         return .init(value: value)
     }
     
+    private func makeStampedFailure(
+        _ mappingError: RemoteServices.ResponseMapper.MappingError = .server(statusCode: 200, errorMessage: "Error")
+    ) -> StampedResult {
+        
+        return .failure(mappingError)
+    }
+    
     private struct Value: Equatable {
         
         let value: String
@@ -226,6 +344,27 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     ) -> Value {
         
         return .init(value: value)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with payloads: [Payload],
+        toDeliver expected: [Payload],
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut(payloads) { received in
+            
+            XCTAssertNoDiff(received, expected, "Expected \(expected), got \(received) instead.", file: file, line: line)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
     }
 }
 
@@ -241,9 +380,16 @@ final class UpdateMakerSpy: UpdateMaker {
     ) -> Update<T> where Model: Codable {
         
         return { value, serial, completion in
-        
+            
             self.messages.append(.init(value: value, serial: serial, completion: completion))
         }
+    }
+    
+    func complete(
+        with result: Result<Void, Error>,
+        at index: Int = 0
+    ) {
+        messages[index].completion(result)
     }
     
     func values<Value>() -> [Value] {
