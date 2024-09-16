@@ -82,7 +82,6 @@ extension Model {
         )
     }
 
-    
     func landingStickerViewModelFactory(
         abroadType: AbroadType,
         config: UILanding.Component.Config,
