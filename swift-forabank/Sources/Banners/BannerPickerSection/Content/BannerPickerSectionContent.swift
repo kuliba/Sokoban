@@ -12,7 +12,6 @@ import RxViewModel
 public enum BannerPickerSectionItem<ServiceBanner> {
     
     case banner(ServiceBanner)
-    case showAll
 }
 
 extension BannerPickerSectionItem: Equatable where ServiceBanner: Equatable {}

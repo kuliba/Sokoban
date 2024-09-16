@@ -5,7 +5,26 @@
 //  Created by Igor Malyarov on 04.09.2024.
 //
 
-public final class PaymentsTransfersCorporateContent {
+import Foundation
+
+public final class PaymentsTransfersCorporateContent<BannerPicker>: ObservableObject {
     
-    public init() {}
+    public let bannerPicker: BannerPicker
+    private let _reload: () -> Void
+    
+    public init(
+        bannerPicker: BannerPicker,
+        reload: @escaping () -> Void
+    ) {
+        self.bannerPicker = bannerPicker
+        self._reload = reload
+    }
+}
+
+public extension PaymentsTransfersCorporateContent {
+    
+    func reload() {
+        
+        _reload()
+    }
 }

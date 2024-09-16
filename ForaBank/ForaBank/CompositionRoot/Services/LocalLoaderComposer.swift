@@ -67,3 +67,62 @@ extension LocalLoaderComposer {
         }
     }
 }
+
+extension LocalLoaderComposer {
+    
+    typealias Reduce<T> = (T, T) -> (T, Bool)
+    typealias Update<T> = (T, Serial?, @escaping (Result<Void, Error>) -> Void) -> Void
+    
+    func composeUpdate<T, Model: Codable>(
+        toModel: @escaping (T) -> Model,
+        reduce: @escaping Reduce<Model>
+    ) -> Update<T> {
+        
+        return { value, serial, completion in
+            
+            self.backgroundScheduler.schedule {
+                
+                do {
+                    try self.agent.update(
+                        with: toModel(value),
+                        serial: serial,
+                        using: reduce
+                    )
+                    completion(.success(()))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+}
+
+// MARK: - update
+
+extension LocalAgentProtocol {
+    
+    func update<T: Codable>(
+        with newData: T,
+        serial: String?,
+        using reduce: (T, T) -> (T, Bool)
+    ) throws {
+        
+        let lock = NSRecursiveLock()
+        lock.lock()
+        defer { lock.unlock() }
+        
+        guard let existing = try? load(type: T.self).get(orThrow: LocalAgentLoadError())
+        else {
+            return try store(newData, serial: serial)
+        }
+        
+        let (updated, hasChanges) = reduce(existing, newData)
+        
+        if hasChanges {
+            
+            try store(updated, serial: serial)
+        }
+    }
+}
+
+struct LocalAgentLoadError: Error {}

@@ -1,18 +1,19 @@
 //
-//  RootViewModelFactory+makeLoadServiceCategoriesTests.swift
+//  SerialLoaderComposerTests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 11.09.2024.
+//  Created by Igor Malyarov on 12.09.2024.
 //
 
 @testable import ForaBank
+import RemoteServices
 import XCTest
 
-final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
+final class SerialLoaderComposerTests: XCTestCase {
     
-    // MARK: - make
+    // MARK: - init
     
-    func test_make_shouldNotCallCollaborators() {
+    func test_init_shouldNotCallCollaborators() {
         
         let (sut, agent, httpClient) = makeSUT()
         
@@ -27,9 +28,10 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
     func test_local_shouldCallLocalAgent() {
         
         let (sut, agent, _) = makeSUT()
+        let (local, _) = compose(sut)
         let exp = expectation(description: "wait for local load completion")
         
-        sut.local { _ in exp.fulfill() }
+        local { _ in exp.fulfill() }
         wait(for: [exp], timeout: 0.1)
         
         XCTAssertEqual(agent.loadCallCount, 1)
@@ -38,22 +40,24 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
     func test_local_shouldNotCallHTTPClient() {
         
         let (sut, _, httpClient) = makeSUT()
+        let (local, _) = compose(sut)
         let exp = expectation(description: "wait for local load completion")
         
-        sut.local { _ in exp.fulfill() }
+        local { _ in exp.fulfill() }
         wait(for: [exp], timeout: 0.1)
         
         XCTAssertEqual(httpClient.callCount, 0)
     }
-    
+
     // MARK: - remote
     
     func test_remote_shouldCallHTTPClient() {
         
         let (sut, _, httpClient) = makeSUT()
+        let (_, remote) = compose(sut)
         let exp = expectation(description: "wait for remote load completion")
         
-        sut.remote { _ in exp.fulfill() }
+        remote { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         wait(for: [exp], timeout: 0.1)
         
@@ -63,9 +67,10 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
     func test_remote_shouldNotCallLocalAgentOnFailure() {
         
         let (sut, agent, httpClient) = makeSUT()
+        let (_, remote) = compose(sut)
         let exp = expectation(description: "wait for remote load completion")
         
-        sut.remote { _ in exp.fulfill() }
+        remote { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         wait(for: [exp], timeout: 0.1)
         
@@ -74,8 +79,7 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Load = RootViewModelFactory._LoadServiceCategories
-    private typealias SUT = (local: Load, remote: Load)
+    private typealias SUT = SerialLoaderComposer
     private typealias LocalAgent = LocalAgentSpy<[CodableServiceCategory]>
     
     private func makeSUT(
@@ -92,7 +96,6 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
         httpClient: HTTPClientSpy
         // logger: LoggerAgent
     ) {
-        
         let agent = LocalAgent(
             loadStub: loadStub,
             storeStub: storeStub,
@@ -114,8 +117,7 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
             logger: logger
         )
         
-        let sut = RootViewModelFactory.makeLoadServiceCategories(
-            getSerial: { serialStub },
+        let sut = SUT(
             localComposer: localComposer,
             nanoServiceComposer: nanoServiceComposer
         )
@@ -129,5 +131,19 @@ final class RootViewModelFactory_makeLoadServiceCategoriesTests: XCTestCase {
         trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)
         
         return (sut, agent, httpClient)
+    }
+    
+    private func compose(
+        _ sut: SUT,
+        with serial: SUT.Serial? = nil
+    ) -> (local: SUT.Load<[ServiceCategory]>, remote: SUT.Load<[ServiceCategory]>) {
+        
+        sut.compose(
+            getSerial: { serial },
+            fromModel: [ServiceCategory].init(codable:),
+            toModel: [CodableServiceCategory].init(categories:),
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
+        )
     }
 }

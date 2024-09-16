@@ -28,7 +28,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        sut.decorated(serial) { _ in }
+        sut(serial) { _ in }
         
         XCTAssertNoDiff(loadSpy.payloads, [serial])
     }
@@ -37,7 +37,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.decorated(anyMessage()) { _ in }
+        sut(anyMessage()) { _ in }
         loadSpy.complete(with: .failure(anyError()))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -61,7 +61,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let exp = expectation(description: "wait for load completion")
         exp.isInverted = true
         
-        sut?.decorated(anyMessage()) { _ in exp.fulfill() }
+        sut?(.init(anyMessage())) { _ in exp.fulfill() }
         sut = nil
         loadSpy.complete(with: .failure(anyError()))
         
@@ -73,7 +73,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let serial = anyMessage()
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.decorated(serial) { _ in }
+        sut(serial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: serial)))
         
         XCTAssertEqual(cacheSpy.callCount, 0)
@@ -99,7 +99,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let exp = expectation(description: "wait for load completion")
         exp.isInverted = true
         
-        sut?.decorated(anyMessage()) { _ in exp.fulfill() }
+        sut?(.init(anyMessage())) { _ in exp.fulfill() }
         sut = nil
         loadSpy.complete(with: .success(makeLoadResponse()))
         
@@ -111,7 +111,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.decorated(oldSerial) { _ in }
+        sut(oldSerial) { _ in }
         loadSpy.complete(with: .success(makeLoadResponse(serial: newSerial)))
         
         XCTAssertEqual(cacheSpy.callCount, 1)
@@ -124,7 +124,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         let response = makeLoadResponse(serial: newSerial)
         let (sut, loadSpy, cacheSpy) = makeSUT()
         
-        sut.decorated(oldSerial) { _ in }
+        sut(oldSerial) { _ in }
         loadSpy.complete(with: .success(response))
         
         XCTAssertEqual(cacheSpy.payloads, [response])
@@ -159,9 +159,10 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = SerialStampedCachingDecorator<Response>
-    private typealias LoadSpy = Spy<String?, Result<SerialStamped<String, Response>, Error>>
-    private typealias CacheSpy = Spy<SerialStamped<String, Response>, Result<Void, Error>>
+    private typealias Serial = String
+    private typealias SUT = SerialStampedCachingDecorator<Serial?, Serial, Value>
+    private typealias LoadSpy = Spy<Serial?, Result<SerialStamped<String, Value>, Error>>
+    private typealias CacheSpy = Spy<SerialStamped<String, Value>, Result<Void, Error>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -185,37 +186,37 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         return (sut, loadSpy, cacheSpy)
     }
     
-    private struct Response: Equatable {
+    private struct Value: Equatable {
         
         let serial: String
     }
     
-    private func makeResponse(
+    private func makeValue(
         serial: String = anyMessage()
-    ) -> Response {
+    ) -> Value {
         
         return .init(serial: serial)
     }
     
     private func makeLoadResponse(
         serial: String = anyMessage(),
-        value: Response? = nil
-    ) -> SerialStamped<String, Response> {
+        value: Value? = nil
+    ) -> SerialStamped<String, Value> {
         
-        return .init(value: value ?? makeResponse(), serial: serial)
+        return .init(value: value ?? makeValue(), serial: serial)
     }
     
     private func expect(
         _ sut: SUT,
         with serial: String?,
-        toDeliver expectedResult: Result<SerialStamped<String, Response>, Error>,
+        toDeliver expectedResult: Result<SerialStamped<String, Value>, Error>,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "wait for load completion")
-
-        sut.decorated(serial) {
+        
+        sut(serial) {
             
             switch ($0, expectedResult) {
             case (.failure, .failure):

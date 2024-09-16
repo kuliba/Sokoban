@@ -26,18 +26,15 @@ final class LoggingRemoteNanoServiceComposer {
 
 extension LoggingRemoteNanoServiceComposer {
     
-    typealias NanoService<Payload, Response, Failure: Error> = (Payload, @escaping (Result<Response, Failure>) -> Void) -> Void
-    typealias CreateRequest<Payload> = (Payload) throws -> URLRequest
-    typealias MapResponse<Response, Failure: Error> = (Data, HTTPURLResponse) -> Result<Response, Failure>
     typealias MapError<E: Error, F: Error> = (RemoteServiceErrorOf<E>) -> F
 
     func compose<Payload, Response, MapResponseError: Error, Failure: Error>(
-        createRequest: @escaping CreateRequest<Payload>,
-        mapResponse: @escaping MapResponse<Response, MapResponseError>,
+        createRequest: @escaping RemoteDomain<Payload, Response, MapResponseError, Failure>.MakeRequest,
+        mapResponse: @escaping RemoteDomain<Payload, Response, MapResponseError, Failure>.MapResponse,
         mapError: @escaping MapError<MapResponseError, Failure>,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> NanoService<Payload, Response, Failure> {
+    ) -> RemoteDomain<Payload, Response, MapResponseError, Failure>.Service {
         
         let remote = RemoteService(
             createRequest: logger.decorate(createRequest, with: .network, file: file, line: line),
@@ -57,11 +54,11 @@ extension LoggingRemoteNanoServiceComposer {
 
     // TODO: replace with `RemoteNanoServiceFactory` conformance
     func compose<Payload, Response, MapResponseError: Error>(
-        createRequest: @escaping CreateRequest<Payload>,
-        mapResponse: @escaping MapResponse<Response, MapResponseError>,
+        createRequest: @escaping RemoteDomain<Payload, Response, MapResponseError, Error>.MakeRequest,
+        mapResponse: @escaping RemoteDomain<Payload, Response, MapResponseError, Error>.MapResponse,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> NanoService<Payload, Response, Error> {
+    ) -> RemoteDomain<Payload, Response, MapResponseError, Error>.Service {
         
         let remote = RemoteService(
             createRequest: logger.decorate(createRequest, with: .network, file: file, line: line),

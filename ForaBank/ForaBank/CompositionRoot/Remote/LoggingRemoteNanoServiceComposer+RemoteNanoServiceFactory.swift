@@ -2,21 +2,18 @@
 //  LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 09.09.2024.
+//  Created by Igor Malyarov on 13.09.2024.
 //
 
-extension LoggingRemoteNanoServiceComposer: RemoteNanoServiceFactory {
+import RemoteServices
 
+extension LoggingRemoteNanoServiceComposer: RemoteNanoServiceFactory {
+    
     func compose<Payload, Response>(
-        createRequest: @escaping CreateRequest<Payload>,
-        mapResponse: @escaping MapResponse<Response, Error>
-    ) -> NanoService<Payload, Response, Error> {
-        
-        compose(
-            createRequest: createRequest,
-            mapResponse: mapResponse,
-            mapError: { $0 },
-            file: #file, line: #line
-        )
+        makeRequest: @escaping RemoteDomainOf<Payload, Response, Error>.MakeRequest,
+        mapResponse: @escaping RemoteDomainOf<Payload, Response, Error>.MapResponse
+    ) -> RemoteDomainOf<Payload, Response, Error>.Service {
+
+        compose(createRequest: makeRequest, mapResponse: mapResponse)
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 07.11.2023.
 //
 
+import Combine
 import Foundation
 import ForaTools
 import ManageSubscriptionsUI
@@ -14,6 +15,7 @@ import RemoteServices
 import SberQR
 import SwiftUI
 import PayHub
+import PayHubUI
 import Fetcher
 
 extension RootViewModelFactory {
@@ -24,6 +26,7 @@ extension RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        bindings: inout Set<AnyCancellable>,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
@@ -34,6 +37,7 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
+        interactiveScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInteractive),
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
@@ -305,45 +309,35 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let localBannerListLoader = ServiceItemsLoader.default
-        let getBannerList = NanoServices.makeGetBannerCatalogListV2(
-            httpClient: httpClient,
-            log: infoNetworkLog
-        )
-
-        let getBannerListLoader = AnyLoader { completion in
-            
-            backgroundScheduler.delay(for: .milliseconds(20)) {
-                
-                localBannerListLoader.serial {
-                    getBannerList(($0, 120)) {
-                        
-                        completion($0)
-                    }
-                }
-            }
-        }
-        
-        let bannerListDecorated = CacheDecorator(
-            decoratee: getBannerListLoader,
-            cache: { response, completion in
-                localBannerListLoader.save(.init(response), completion)
-            }
-        )
-       
-        let loadBannersList: LoadBanners = { completion in
-            
-            bannerListDecorated.load {
-                
-                let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
-                completion(banners.bannerCatalogList.map { .banner($0)})
-            }
-        }
-        
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        // reusable factory
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
             logger: logger
+        )
+        // reusable factory
+        let localComposer = LocalLoaderComposer(
+            agent: model.localAgent,
+            interactiveScheduler: interactiveScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        // reusable factory
+        let batchSerialComposer = BatchSerialCachingRemoteLoaderComposer(
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: localComposer
+        )
+        // reusable factory
+        let serialLoaderComposer = SerialLoaderComposer(
+            localComposer: localComposer,
+            nanoServiceComposer: nanoServiceComposer
+        )
+        
+        let (serviceCategoriesLocalLoad, serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
+            getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
+            fromModel: [ServiceCategory].init(codable:),
+            toModel: [CodableServiceCategory].init(categories:),
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
         
         let localServiceCategoryLoader = ServiceCategoryLoader.default
@@ -398,21 +392,82 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        // call and notify categoryPicker
-        loadServiceCategories {
+        let operatorsService = batchSerialComposer.composeServicePaymentProviderService(
+            getSerial: { _ in
+                
+                model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+            }
+        )
+        
+        let oneTime = FireAndForgetDecorator(
+            decoratee: loadServiceCategories,
+            decoration: { [weak paymentsTransfersPersonal] response, completion in
+                
+                // notify categoryPicker
+                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(response))
+                
+                // load operators
+                let categories = response.categories
+                let serial = model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                
+                operatorsService(categories.map { .init(serial: serial, category: $0) }) {
+                    
+                    if !$0.isEmpty {
+                        
+                        logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \($0.map(\.category))", file: #file, line: #line)
+                    }
+                }
+                
+                completion()
+            }
+        )
+
+        bindings.saveAndRun {
             
-            paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
+            oneTime {
+                
+                guard let items = try? $0.get() else { return }
+
+                logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(items.categories)", file: #file, line: #line)
+            }
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
+        let (banners, loadBannersList) = makeBannersBinder(
+            model: model,
+            httpClient: httpClient,
+            infoNetworkLog: infoNetworkLog,
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+
+        let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
+            bannerPickerPlaceholderCount: 6,
+            nanoServices: .init(
+                loadBanners: loadBannersList
+            ),
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        
+        // call and notify bannerPicker
+        bindings.saveAndRun {
+            
+            loadBannersList {
+                
+                banners.content.bannerPicker.content.event(.loaded($0))
+                paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+            }
+        }
+
         let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
-            corporate: .init(),
+            corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
-        
+        _ = oneTime
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -845,5 +900,22 @@ private extension UserAccountModelEffectHandler {
                 model.auth.value = .unlockRequiredManual
             }
         )
+    }
+}
+
+extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
+    
+    var categories: [ServiceCategory] {
+        
+        compactMap {
+            
+            switch $0 {
+            case let .category(category):
+                return category
+                
+            case .showAll:
+                return .none
+            }
+        }
     }
 }

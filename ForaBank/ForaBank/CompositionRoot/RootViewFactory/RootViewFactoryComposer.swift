@@ -334,6 +334,9 @@ extension ImageCache {
         
         case let .md5Hash(md5Hash) where !md5Hash.rawValue.isEmpty:
             return makeIconView(for: md5Hash.rawValue)
+            
+        case let .image(imageLink) where !imageLink.isEmpty:
+            return makeIconView(for: imageLink)
         
         default:
             return makeIconView(for: "placeholder")

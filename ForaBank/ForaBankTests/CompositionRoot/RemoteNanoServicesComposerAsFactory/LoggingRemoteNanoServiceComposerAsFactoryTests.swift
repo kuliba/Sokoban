@@ -10,7 +10,7 @@ import XCTest
 
 class LoggingRemoteNanoServiceComposerAsFactoryTests: XCTestCase {
     
-    typealias SUT = RemoteNanoServiceFactory
+    typealias SUT = ErasedRemoteNanoServiceFactory
     typealias Composer = LoggingRemoteNanoServiceComposer
     
     func makeSUT(
