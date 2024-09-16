@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 07.11.2023.
 //
 
+import Combine
 import Foundation
 import ForaTools
 import ManageSubscriptionsUI
@@ -24,6 +25,7 @@ extension RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        bindings: inout Set<AnyCancellable>,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
@@ -385,9 +387,12 @@ extension RootViewModelFactory {
         )
         
         // call and notify categoryPicker
-        loadServiceCategories {
+        bindings.saveAndRun {
             
-            paymentsTransfersPersonal.content.categoryPicker.content.event(.loaded($0))
+            loadServiceCategories { [weak paymentsTransfersPersonal] in
+                
+                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded($0))
+            }
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
@@ -410,9 +415,13 @@ extension RootViewModelFactory {
         )
         
         // call and notify bannerPicker
-        loadBannersList {
-            banners.content.bannerPicker.content.event(.loaded($0))
-            paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+        bindings.saveAndRun {
+            
+            loadBannersList {
+                
+                banners.content.bannerPicker.content.event(.loaded($0))
+                paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+            }
         }
 
         let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(

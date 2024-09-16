@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         model: model,
         httpClient: httpClient,
         logger: logger,
+        bindings: &bindings,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,

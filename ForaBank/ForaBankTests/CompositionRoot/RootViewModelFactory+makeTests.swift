@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.08.2024.
 //
 
+import Combine
 import CombineSchedulers
 @testable import ForaBank
 import XCTest
@@ -18,7 +19,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
-        XCTAssertNoDiff(httpClient.callCount, 1)
+        XCTAssertNoDiff(httpClient.callCount, 2)
     }
     
     func test_shouldCallHTTPClientWithGetServiceCategoryList() throws {
@@ -27,9 +28,10 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
-        XCTAssertNoDiff(httpClient.requests, [
+        XCTAssertNoDiff(
+            httpClient.requests.first,
             try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: nil)
-        ])
+        )
     }
     
     func test_shouldSetCategoryPickerStateToLoading() throws {
@@ -77,10 +79,12 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     ) {
         let httpClient = HTTPClientSpy()
         let backgroundScheduler = DispatchQueue.test
+        var bindings = Set<AnyCancellable>()
         let sut = RootViewModelFactory.make(
             model: .mockWithEmptyExcept(),
             httpClient: httpClient,
             logger: LoggerSpy(),
+            bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
             utilitiesPaymentsFlag: .init(.active(.live)),
