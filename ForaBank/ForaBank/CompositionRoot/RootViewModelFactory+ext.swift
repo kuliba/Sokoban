@@ -15,6 +15,7 @@ import RemoteServices
 import SberQR
 import SwiftUI
 import PayHub
+import PayHubUI
 import Fetcher
 
 extension RootViewModelFactory {
@@ -321,6 +322,11 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         // reusable factory
+        let batchSerialComposer = BatchSerialCachingRemoteLoaderComposer(
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: localComposer
+        )
+        // reusable factory
         let serialLoaderComposer = SerialLoaderComposer(
             localComposer: localComposer,
             nanoServiceComposer: nanoServiceComposer
@@ -386,12 +392,43 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        // call and notify categoryPicker
+        let operatorsService = batchSerialComposer.composeServicePaymentProviderService(
+            getSerial: { _ in
+                
+                model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+            }
+        )
+        
+        let oneTime = FireAndForgetDecorator(
+            decoratee: loadServiceCategories,
+            decoration: { [weak paymentsTransfersPersonal] response, completion in
+                
+                // notify categoryPicker
+                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(response))
+                
+                // load operators
+                let categories = response.categories
+                let serial = model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                
+                operatorsService(categories.map { .init(serial: serial, category: $0) }) {
+                    
+                    if !$0.isEmpty {
+                        
+                        logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \($0.map(\.category))", file: #file, line: #line)
+                    }
+                }
+                
+                completion()
+            }
+        )
+
         bindings.saveAndRun {
             
-            loadServiceCategories { [weak paymentsTransfersPersonal] in
+            oneTime {
                 
-                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded($0))
+                guard let items = try? $0.get() else { return }
+
+                logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(items.categories)", file: #file, line: #line)
             }
         }
         
@@ -430,7 +467,7 @@ extension RootViewModelFactory {
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
-        
+        _ = oneTime
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -863,5 +900,22 @@ private extension UserAccountModelEffectHandler {
                 model.auth.value = .unlockRequiredManual
             }
         )
+    }
+}
+
+extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
+    
+    var categories: [ServiceCategory] {
+        
+        compactMap {
+            
+            switch $0 {
+            case let .category(category):
+                return category
+                
+            case .showAll:
+                return .none
+            }
+        }
     }
 }
