@@ -27,6 +27,7 @@ extension RootView {
         )
     }
 
+    @ViewBuilder
     private func itemView(
         item: BannerPickerSectionState.Item
     ) -> some View {
@@ -34,9 +35,24 @@ extension RootView {
         BannerPickerSectionStateItemView(
             item: item,
             config: .iFora,
-            bannerView: { rootViewFactory.makeIconView(.image($0.imageEndpoint))
+            bannerView: { item in
+                
+                let label = rootViewFactory.makeIconView(.image(item.imageEndpoint))
+                    .frame(Config.iFora.size)
+                    .cornerRadius(Config.iFora.cornerRadius)
+                
+                if viewModel.model.onlyCorporateCards, let url = item.orderURL {
+                    
+                    Button { MainViewModel.openLinkURL(url) } label: { label }
+                        .buttonStyle(PushButtonStyle())
+                        .accessibilityIdentifier("corporateActionBanner")
+                } else {
+                    label
+                }
             },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
     }
+    
+    private typealias Config = BannerPickerSectionStateItemViewConfig
 }
