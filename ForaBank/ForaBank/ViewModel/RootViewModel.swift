@@ -233,7 +233,7 @@ class RootViewModel: ObservableObject, Resetable {
                 
                 switch deepLink {
                 case let .me2me(bankId):
-                    self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+                    self.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
                     
                 case let .c2b(url):
                     let operationViewModel = PaymentsViewModel(
