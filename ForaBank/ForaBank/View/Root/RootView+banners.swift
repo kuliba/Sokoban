@@ -32,7 +32,16 @@ extension RootView {
     ) -> some View {
         
         BannerPickerSectionStateItemView(
-            item: item,
+            item: item, 
+            event: {
+                
+                if viewModel.model.onlyCorporateCards, 
+                    case let .select(item) = $0,
+                    let url = item?.orderURL {
+                    
+                    MainViewModel.openLinkURL(url)
+                }
+            },
             config: .iFora,
             bannerView: { rootViewFactory.makeIconView(.image($0.imageEndpoint)) },
             placeholderView: { PlaceholderView(opacity: 0.5) }
