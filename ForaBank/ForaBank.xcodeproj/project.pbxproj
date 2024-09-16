@@ -1069,6 +1069,8 @@
 		2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */; };
 		2A6DC7382AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */; };
 		2A6DC7AC2C97F3C300A801A0 /* BatchSerialCachingRemoteLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7AA2C970CE100A801A0 /* BatchSerialCachingRemoteLoaderComposerTests.swift */; };
+		2A6DC7AE2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7AD2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift */; };
+		2A6DC7B02C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7AF2C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift */; };
 		2A6EAA7C2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */; };
 		2A6EAA7E2B50576D0093EE83 /* UserAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */; };
 		2A6EAA802B50576F0093EE83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A6EAA7F2B50576F0093EE83 /* Assets.xcassets */; };
@@ -4532,6 +4534,8 @@
 		2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+StoreTests.swift"; sourceTree = "<group>"; };
 		2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteServiceDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6DC7AA2C970CE100A801A0 /* BatchSerialCachingRemoteLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchSerialCachingRemoteLoaderComposerTests.swift; sourceTree = "<group>"; };
+		2A6DC7AD2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchSerialCachingRemoteLoaderComposer.swift; sourceTree = "<group>"; };
+		2A6DC7AF2C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalLoaderComposer+UpdateMaker.swift"; sourceTree = "<group>"; };
 		2A6EAA792B50576D0093EE83 /* FastPaymentsSettingsPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FastPaymentsSettingsPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A6EAA7B2B50576D0093EE83 /* FastPaymentsSettingsPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentsSettingsPreviewApp.swift; sourceTree = "<group>"; };
 		2A6EAA7D2B50576D0093EE83 /* UserAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountView.swift; sourceTree = "<group>"; };
@@ -10887,6 +10891,8 @@
 			isa = PBXGroup;
 			children = (
 				2A6CCF4E2C92D7D4008ADA74 /* SerialLoaderComposer.swift */,
+				2A6DC7AD2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift */,
+				2A6DC7AF2C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift */,
 				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 			);
 			path = SerialServices;
@@ -20969,6 +20975,7 @@
 				77F9F2662A45F80D00699433 /* PaymentsSuccessOptionsComponent.swift in Sources */,
 				0C58FB75290B1A94005B76B5 /* UInt64+Extentions.swift in Sources */,
 				68A07C4128122FDC00797A54 /* Model+Card.swift in Sources */,
+				2A6DC7B02C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift in Sources */,
 				773D0C7D2886CEDD0088251F /* RoundedCornerShape.swift in Sources */,
 				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
 				2A4593C92A7CCAC6008593A3 /* Services+transferPublicKeyService.swift in Sources */,
@@ -21678,6 +21685,7 @@
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				2AC2ADC72B22FBCA0049EE9B /* FeatureFlag.swift in Sources */,
 				C16DDBEE2B2C95BA001BF988 /* QRPaymentType.swift in Sources */,
+				2A6DC7AE2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				2A35DDA52C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
