@@ -65,48 +65,79 @@ final class ProductProfileFlowReducer {
             switch filterEvent {
             case let .openSheet(services):
                 state.filter = .init(
-                    title: "Фильтры", 
-                    selectDates: nil,
-                    selectedServices: [],
-                    periods: FilterState.Period.allCases,
-                    transactionType: FilterState.TransactionType.allCases,
-                    services: services
+                    productId: state.filter?.productId,
+                    calendar: state.filter?.calendar ?? .init(
+                        date: Date(),
+                        range: .init(),
+                        monthsData: [],
+                        periods: []
+                    ),
+                    filter: .init(
+                        title: "Фильтры",
+                        selectDates: nil,
+                        selectedServices: [],
+                        periods: FilterHistoryState.Period.allCases,
+                        transactionType: FilterHistoryState.TransactionType.allCases,
+                        services: services,
+                        historyService: { _,_ in
+                                
+                            print("### Open Sheet action")
+                        }
+                    ), dateFilter: { _,_ in
+                        
+                    }
                 )
             case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
                 state.filter = .init(
-                    title: "Фильтры",
-                    selectDates: (lowerDate, upperDate),
-                    selectedServices: [],
-                    periods: FilterState.Period.allCases,
-                    transactionType: FilterState.TransactionType.allCases,
-                    services: state.history?.categories ?? []
+                    productId: state.filter?.productId,
+                    calendar: .init(
+                        date: Date(),
+                        range: .init(startDate: lowerDate, endDate: upperDate),
+                        monthsData: [],
+                        periods: []
+                    ),
+                    filter: .init(
+                        title: "Фильтры",
+                        selectDates: (lowerDate, upperDate),
+                        selectedServices: [],
+                        periods: FilterHistoryState.Period.allCases,
+                        transactionType: FilterHistoryState.TransactionType.allCases,
+                        services: state.history?.categories ?? [],
+                        historyService: { _,_ in
+                            
+                            print("### selectedDates action")
+                        }
+                    ), dateFilter: { _,_ in
+                        
+                    }
                 )
                 
             case let .selectedCategory(category):
 //                if state.filter?.selectedServices.contains(category) ?? false {
 //                    state.filter?.selectedServices.remove(category)
 //                } else {
-                    state.filter?.selectedServices = category
+                state.filter?.filter.selectedServices = category
 //                }
                 
             case let .selectedPeriod(period):
-                if state.filter?.selectedPeriod == period {
-                    state.filter?.selectedPeriod = .month
+                if state.filter?.filter.selectedPeriod == period {
+                    state.filter?.filter.selectedPeriod = .month
                 } else {
-                    state.filter?.selectedPeriod = period
+                    state.filter?.filter.selectedPeriod = period
                 }
 
             case let .selectedTransaction(transaction):
-                if state.filter?.selectedTransaction == transaction {
-                    state.filter?.selectedTransaction = nil
+                if state.filter?.filter.selectedTransaction == transaction {
+                    state.filter?.filter.selectedTransaction = nil
                 } else {
-                    state.filter?.selectedTransaction = transaction
+                    state.filter?.filter.selectedTransaction = transaction
                 }
                 
             case .clearOptions:
-                state.filter?.selectedTransaction = nil
-                state.filter?.selectedPeriod = .month
-                state.filter?.selectedServices.removeAll()
+                state.filter?.filter.selectedTransaction = nil
+                state.filter?.filter.selectedPeriod = .month
+                state.filter?.filter.selectedServices.removeAll()
+                state.filter?.calendar.range = .init()
                 
             }
             

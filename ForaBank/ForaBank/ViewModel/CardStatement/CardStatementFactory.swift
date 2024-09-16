@@ -20,12 +20,12 @@ extension Services {
         name: CardStatementForPeriodPayload.Name? = nil,
         statementFormat: CardStatementForPeriodPayload.StatementFormat? = nil,
         cardNumber: CardStatementForPeriodPayload.CardNumber? = nil,
-        operationType: [CardStatementForPeriodPayload.OperationType]? = nil,
-        operationGroup: [CardStatementForPeriodPayload.OperationGroup]? = nil,
+        operationType: String? = nil,
+        operationGroup: [String]? = nil,
         includeAdditionalCards: Bool? = nil
     ) async throws-> [ProductStatementData] {
         
-        let payload = CardStatementForPeriodPayload.init(
+        let payload = CardStatementForPeriodPayload(
             id: .init(productId),
             name: name,
             period: .init(start: period.start, end: period.end),

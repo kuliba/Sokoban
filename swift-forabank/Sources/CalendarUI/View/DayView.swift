@@ -12,9 +12,17 @@ import SharedConfigs
 public struct DayConfig {
 
     let selectedColor: Color
+    let todayBackground: Color
+    let todayForeground: Color
     
-    public init(selectedColor: Color) {
+    public init(
+        selectedColor: Color,
+        todayBackground: Color,
+        todayForeground: Color
+    ) {
         self.selectedColor = selectedColor
+        self.todayBackground = todayBackground
+        self.todayForeground = todayForeground
     }
 }
 
@@ -113,7 +121,7 @@ private extension DayView {
             
             Text(getStringFromDay(format: "d"))
                 .font(.system(size: 16, weight: .medium))
-                .foregroundColor(isSelected() ? .selectedLabel : .red)
+                .foregroundColor(isSelected() ? .selectedLabel : config.todayForeground)
             
         } else {
             
@@ -135,7 +143,7 @@ private extension DayView {
     func todayView() -> some View {
         
         Circle()
-            .fill(isSelected() ? Color.black : Color.gray.opacity(0.4))
+            .fill(isSelected() ? Color.black : config.todayBackground)
             .frame(width: 32, height: 32, alignment: .center)
             .transition(.asymmetric(insertion: .scale(scale: 0.52).combined(with: .opacity), removal: .opacity))
         
@@ -157,6 +165,10 @@ private extension DayView {
         
         if isBeginningOfRange() {
             return [.topLeft, .bottomLeft]
+        }
+        
+        if date.getWeekday() == .monday, isEndOfRange() {
+            return [.topLeft, .bottomLeft, .topRight, .bottomRight]
         }
         
         if date.getWeekday() == .monday {
@@ -188,7 +200,7 @@ public extension DayView {
         
         if !isFuture() {
             
-            selectedRange?.addToRange(date)
+            selectDate(date)
         }
     }
 }
@@ -241,7 +253,23 @@ public extension DayView {
     
     func isWithinRange() -> Bool {
         
-        selectedRange?.isRangeCompleted() == true && selectedRange?.contains(date) == true
+        if selectedRange?.isRangeCompleted() == true {
+          
+            if let range = selectedRange?.getRange() {
+                
+                let upperDate = range.upperBound
+                let lowerDate = range.lowerBound
+                
+                let range = lowerDate...upperDate
+                
+                if range.contains(date) {
+                
+                 return true
+                }
+            }
+        }
+        
+        return false
     }
 }
 

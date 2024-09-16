@@ -7,44 +7,47 @@
 
 import SwiftUI
 
-public struct CalendarState {
+public struct CalendarState  {
     
-    let date: Date?
-    public let range: MDateRange?
-    let monthsData: [Month]
-    let selectPeriod: FilterState.Period? = nil
-    let periods: [FilterState.Period]
+    public let date: Date?
+    public var range: MDateRange?
+    public let monthsData: [Month]
+    public var selectPeriod: FilterHistoryState.Period?
+    public let periods: [FilterHistoryState.Period]
     
     public init(
         date: Date?,
         range: MDateRange?,
         monthsData: [Month],
-        periods: [FilterState.Period]
+        selectPeriod: FilterHistoryState.Period? = nil,
+        periods: [FilterHistoryState.Period]
     ) {
         self.date = date
         self.range = range
         self.monthsData = monthsData
+        self.selectPeriod = selectPeriod
         self.periods = periods
     }
 }
-//self.monthsData = .generate(startDate: startDate)
 
 public enum CalendarEvent {
     
+    case selectedDate(Date)
+    case selectPeriod(FilterHistoryState.Period, lowerDate: Date, upperDate: Date)
+    case selectCustomPeriod
 }
 
 public struct CalendarView: View {
     
-    public typealias State = CalendarState
     public typealias Event = CalendarEvent
     public typealias Config = CalendarConfig
     
-    let state: State
+    var state: CalendarState
     let event: (Event) -> Void
     let config: Config
-    
+        
     public init(
-        state: State,
+        state: CalendarState,
         event: @escaping (Event) -> Void,
         config: Config
     ) {
@@ -57,23 +60,117 @@ public struct CalendarView: View {
         
         VStack(spacing: 24) {
             
-//            HStack(spacing: 8) {
-//            
-//                ForEach(state.periods, id: \.id) { item in
-//                    
-//                    OptionButtonView(state: .init(
-//                        title: item.id,
-//                        type: item,
-//                        range: state.selectedData.range
-//                    ))
-//                        .font(config.option.textFont)
-//                        .foregroundColor(item == state.selectPeriod ? Color.white : Color.black)
-//                        .background(Capsule().foregroundColor(item == state.selectPeriod ? Color.black.opacity(0.9) : Color.gray.opacity(0.1)))
-//                }
-//
-//                
-//                Spacer()
-//            }
+            HStack {
+                
+                ForEach(state.periods) { period in
+                
+                    switch period {
+                    case .week:
+                        
+                        Button {
+                            
+                            event(.selectPeriod(period, lowerDate: .startOfWeek ?? Date(), upperDate: Date()))
+                            
+                        } label: {
+                           
+                            if state.selectPeriod == .week {
+                                
+                                Text("Неделя")
+                                    .foregroundColor(Color.white)
+                                    .font(.system(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Capsule().foregroundColor(config.optionSelectBackground))
+                                
+                            } else {
+                                
+                                Text("Неделя")
+                                    .foregroundColor(Color.black)
+                                    .font(.system(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
+                            }
+                        }
+                    case .month:
+                        
+                        Button {
+                            
+                            event(.selectPeriod(period, lowerDate: .startOfMonth, upperDate: Date()))
+                        } label: {
+                            if state.selectPeriod == .month {
+                                
+                                Text("Месяц")
+                                    .foregroundColor(Color.white)
+                                    .font(.system(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Capsule().foregroundColor(config.optionSelectBackground))
+                                
+                            } else {
+                                
+                                Text("Месяц")
+                                    .foregroundColor(Color.black)
+                                    .font(.system(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
+                            }
+                        }
+                        .onAppear {
+                            event(.selectPeriod(period, lowerDate: Calendar.current.date(byAdding: .day, value: -31, to: Date())!, upperDate: Date()))
+                        }
+                        
+                    case .dates:
+                        
+                        Button {
+                            
+                            event(.selectCustomPeriod)
+                            
+                        } label: {
+                            
+                            if let range = state.range,
+                               let lowerDate = range.lowerDate,
+                               let upperDate = range.upperDate
+                            {
+                                
+                                let lowerString = DateFormatter.shortDate.string(from: lowerDate)
+                                let upperString = DateFormatter.shortDate.string(from: upperDate)
+                                
+                                HStack(spacing: 0) {
+                                    
+                                    Text("\(lowerString) - \(upperString)")
+                                        .foregroundColor(Color.white)
+                                        .font(.system(size: 14))
+                                        .padding(.leading, 12)
+                                        .padding(.trailing, 4)
+                                        .padding(.vertical, 6)
+                                    
+                                    config.closeImage
+                                        .resizable()
+                                        .frame(width: 16, height: 16, alignment: .center)
+                                        .foregroundColor(.white)
+                                        .padding(.trailing, 8)
+                                    
+                                }
+                                .background(Capsule().foregroundColor(config.optionSelectBackground))
+
+
+                            } else {
+                                Text("Выбрать период")
+                                    .foregroundColor(Color.black)
+                                    .font(.system(size: 14))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
+
+                            }
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
             
             weekdaysView()
             scrollView()
@@ -102,9 +199,7 @@ private extension CalendarView {
                 .background(config.monthsViewBackground)
             }
             .onAppear() { scrollToDate(reader, animatable: false) }
-            .onChange(of: config.scrollDate) { _ in
-//                scrollToDate(reader, animatable: true)
-            }
+            .onChange(of: config.scrollDate) { _ in }
         }
     }
 }
@@ -140,7 +235,7 @@ private extension CalendarView {
             data: data,
             config: config
         ) { date in
-            self.state.range?.addToRange(date)
+            event(.selectedDate(date))
         }
     }
 }

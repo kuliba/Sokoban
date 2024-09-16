@@ -489,6 +489,15 @@ extension ProductProfileViewModel {
                 product: product, 
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
+                filterHistoryRequest: { lowerDate, upperDate, operationType, category in
+
+                    model.action.send(ModelAction.Statement.List.Request(
+                        productId: product.id,
+                        direction: .custom(start: lowerDate, end: upperDate),
+                        operationType: .init(rawValue: operationType ?? .avtodorGroupTitle),
+                        category: category
+                    ))
+                },
                 rootView: rootView,
                 dismissAction: dismissAction
             )

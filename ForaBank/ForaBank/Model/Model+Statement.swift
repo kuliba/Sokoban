@@ -22,6 +22,7 @@ extension ModelAction {
                 
                 let productId: ProductData.ID
                 let direction: Period.Direction
+                let operationType: Services.CardStatementForPeriodPayload.OperationType?
                 let category: [String]?
             }
         }
@@ -109,13 +110,8 @@ extension Model {
                         token: token,
                         product: product,
                         period: requestProperties.period,
-                        operationType: requestProperties.operationType?.map({ 
-                            .init(rawValue: $0.rawValue) ?? .credit
-                        }),
-                        operationGroup: payload.category?.map({ .init(rawValue: $0) ?? .aviaTickets} )
-//                            requestProperties.operationGroup?.map({
-//                            .init(rawValue: $0.rawValue) ?? .aviaTickets
-//                        })
+                        operationType: payload.operationType,
+                        operationGroup: payload.category
                     )
                     statementsCheckDuplicates(product: product, statements: resultStatements)
      
@@ -175,8 +171,8 @@ extension Model {
         token: String,
         product: ProductData,
         period: Period,
-        operationType: [Services.CardStatementForPeriodPayload.OperationType]?,
-        operationGroup: [Services.CardStatementForPeriodPayload.OperationGroup]?
+        operationType: Services.CardStatementForPeriodPayload.OperationType?,
+        operationGroup: [String]?
     ) async throws -> [ProductStatementData] {
         
         switch product.productType {
@@ -186,7 +182,7 @@ extension Model {
                 httpClient: self.authenticatedHTTPClient(), 
                 productId: product.id,
                 period: period,
-                operationType: operationType,
+                operationType: operationType?.id.uppercased(),
                 operationGroup: operationGroup
             )
             

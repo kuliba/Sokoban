@@ -40,9 +40,14 @@ class ProductProfileViewModel: ObservableObject {
     @Published var accentColor: Color
     
     @Published var historyState: HistoryState?
-    @Published var filterState: FilterState?
+    @Published var filterState: FilterState? {
+        didSet {
+            print("### filter State setup \(filterState)")
+        }
+    }
 //    @Published var calendarState: CalendarState
-
+    let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
+    
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -109,6 +114,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         productNavigationStateManager: ProductProfileFlowManager,
         cvvPINServicesClient: CVVPINServicesClient,
+        filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -131,6 +137,7 @@ class ProductProfileViewModel: ObservableObject {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
         self.cvvPINServicesClient = cvvPINServicesClient
+        self.filterHistoryRequest = filterHistoryRequest
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
@@ -190,6 +197,7 @@ class ProductProfileViewModel: ObservableObject {
         product: ProductData,
         productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
+        filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -224,6 +232,7 @@ class ProductProfileViewModel: ObservableObject {
             operationDetailFactory: operationDetailFactory,
             productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
+            filterHistoryRequest: filterHistoryRequest,
             productProfileViewModelFactory: productProfileViewModelFactory,
             rootView: rootView,
             scheduler: scheduler
@@ -540,7 +549,12 @@ private extension ProductProfileViewModel {
                     if let productType = productData?.productType {
                         model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
                     }
-                    model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest, category: nil))
+                    model.action.send(ModelAction.Statement.List.Request(
+                        productId: product.activeProductId,
+                        direction: .latest,
+                        operationType: nil,
+                        category: nil
+                    ))
                     switch product.productType {
                     case .deposit:
                         model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
@@ -956,6 +970,9 @@ private extension ProductProfileViewModel {
                     withAnimation {
                         history = historyViewModel
                     }
+                    
+                    self.event(.history(.clearOptions))
+                    self.event(.filter(.clearOptions))
                     
                     historyPool[activeProductId] = historyViewModel
                     bind(history: historyViewModel)
@@ -1691,7 +1708,11 @@ private extension ProductProfileViewModel {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
-            productProfileViewModelFactory: productProfileViewModelFactory,
+            productProfileViewModelFactory: productProfileViewModelFactory, 
+            filterHistoryRequest: { _,_,_,_ in
+            
+                print("### SEND ACTION ProductProfileViewModel.swift:1680")
+            },
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -3105,9 +3126,9 @@ extension ProductProfileViewModel {
     func calendarDayStart() -> Date {
         
         if product.productType == .card {
-            return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+            return Calendar.current.date(from: .init(calendar: .current, year: 1992, month: 5, day: 27))!
         } else {
-            return Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+            return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         }
     }
 }

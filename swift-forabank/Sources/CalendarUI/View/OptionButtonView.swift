@@ -11,7 +11,7 @@ import SwiftUI
 struct OptionButtonState {
 
     let title: String
-    let type: FilterState.Period
+    let type: FilterHistoryState.Period
     let range: MDateRange?
 }
 

@@ -42,7 +42,10 @@ extension MDateRange {
     
     func setUpperDate(_ date: Date) {
         if let lowerDate, date >= lowerDate { upperDate = date }
-        else if let lowerDate { upperDate = lowerDate; self.lowerDate = date }
+        else if let lowerDate { 
+            upperDate = lowerDate
+            self.lowerDate = date
+        }
     }
     
     func updateExistedRange(_ date: Date) {

@@ -95,13 +95,19 @@ public extension CalendarConfig {
         titleConfig:.init(textFont: .textH3M18240(), textColor: .textSecondary),
         option: .init(textFont: .textBodyMR14200(), textColor: .mainColorsBlack),
         month: .init(textFont: .textH3M18240(), textColor: .mainColorsGray),
+        optionSelectBackground: .mainColorsBlackMedium,
         weekdaysView: {
             WeekdaysView()
         },
         monthLabel: { date in
             MonthLabel(month: date)
         },
-        dayConfig: .init(selectedColor: .mainColorsBlackMedium),
+        dayConfig: .init(
+            selectedColor: .mainColorsBlackMedium,
+            todayBackground: .mainColorsGrayLightest,
+            todayForeground: .mainColorsRed
+        ),
+        closeImage: .ic24Close,
         scrollDate: Date()
     )
 }

@@ -9,15 +9,22 @@ import Foundation
 import SwiftUI
 import CalendarUI
 import SharedConfigs
+ 
+extension CalendarWrapperView {
+    
+    enum Event {
+        
+        case clear
+        case dismiss
+    }
+}
 
 struct CalendarWrapperView: View {
     
-//    @ObservedObject var selectedRange: MDateRange
     @State var state: CalendarState
-//    let closeAction: () -> Void
-//    let applyAction: (MDateRange) -> Void
-//    let endDateCalendar: Date?
+    let event: (Event) -> Void
     let config: CalendarConfig
+    let apply: (Date?, Date?) -> Void
     
     var body: some View {
         
@@ -27,7 +34,7 @@ struct CalendarWrapperView: View {
                 
                 HStack {
                     
-                    Button(action: {} /*closeAction*/, label: {
+                    Button(action: { event(.dismiss) }, label: {
                         Image.ic24ChevronLeft
                             .foregroundColor(.textSecondary)
                     })
@@ -44,7 +51,7 @@ struct CalendarWrapperView: View {
                 
                 ZStack {
                     
-                    calendarView(endDate: Date()/*endDateCalendar*/)
+                    calendarView()
                         .padding(10)
                     
                     VStack {
@@ -62,7 +69,7 @@ struct CalendarWrapperView: View {
                                     ),
                                     background: .buttonSecondary
                                 ),
-                                action: {}/*closeAction*/
+                                action: { event(.dismiss) }
                             )
                             
                             simpleButtonView(
@@ -75,10 +82,11 @@ struct CalendarWrapperView: View {
                                     background: .buttonPrimary
                                 ),
                                 action: {
-//                                    applyAction(state.range?.rangeSelected)
+                                    //                                    applyAction(state.range?.rangeSelected)
+                                    apply(state.range?.lowerDate, state.range?.upperDate)
                                 }
                             )
-//                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
+                            //                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
                             
                         }
                         .padding(.horizontal, 16)
@@ -93,13 +101,73 @@ struct CalendarWrapperView: View {
 
 private extension CalendarWrapperView {
     
-    func calendarView(endDate: Date?) -> some View {
+    func calendarView() -> some View {
         
         CalendarView(
             state: state,
-            event: { _ in },
+            event: { event in
+                switch event {
+                case let .selectedDate(date):
+                    self.state = .init(
+                        date: state.date,
+                        range: updateRange(range: state.range, date: date),
+                        monthsData: state.monthsData,
+                        periods: state.periods
+                    )
+                case let .selectPeriod(period, lowerDate, upperDate):
+                    self.state = .init(
+                        date: state.date,
+                        range: .init(startDate: lowerDate, endDate: upperDate),
+                        monthsData: state.monthsData,
+                        selectPeriod: period,
+                        periods: state.periods
+                    )
+                case .selectCustomPeriod:
+                    self.state = .init(
+                        date: state.date,
+                        range: .init(startDate: nil, endDate: nil),
+                        monthsData: state.monthsData,
+                        selectPeriod: nil,
+                        periods: state.periods
+                    )
+                    break
+                }
+            },
             config: config
         )
+    }
+    
+    func updateRange(range: MDateRange?, date: Date) -> MDateRange {
+        
+        if let lowerDate = range?.lowerDate,
+           let upperDate = range?.upperDate {
+            
+            return .init(startDate: date, endDate: nil)
+            
+        } else if let lowerDate = range?.lowerDate {
+            
+            let upperRange = lowerDate...lowerDate.addingTimeInterval(2678400)
+            let lowRange = lowerDate.addingTimeInterval(-2678400)...lowerDate
+
+            if (upperRange.contains(date) || lowRange.contains(date)) {
+                
+                if lowerDate > date {
+                    
+                    return .init(startDate: date, endDate: lowerDate)
+                    
+                } else {
+                    
+                    return .init(startDate: lowerDate, endDate: date)
+                }
+                
+            } else {
+                
+                return .init(startDate: lowerDate, endDate: nil)
+            }
+            
+        } else {
+            return .init(startDate: date, endDate: nil)
+        }
     }
     
     func simpleButtonView(

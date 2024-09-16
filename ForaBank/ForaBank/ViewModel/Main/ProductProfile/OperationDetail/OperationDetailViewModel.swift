@@ -559,7 +559,6 @@ private extension ProductStatementData {
     var repeatButtonAvailable: Bool {
         
         let availableTypes: [ProductStatementData.Kind] = [
-            .otherBank,
             .taxes,
             .betweenTheir,
             .insideBank,

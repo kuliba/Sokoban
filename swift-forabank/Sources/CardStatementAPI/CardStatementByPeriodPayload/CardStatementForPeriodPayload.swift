@@ -15,8 +15,8 @@ public struct CardStatementForPeriodPayload: Equatable {
     public let period: Period
     public let statementFormat: StatementFormat?
     public let cardNumber: CardNumber?
-    public let operationType: [OperationType]?
-    public let operationGroup: [OperationGroup]?
+    public let operationType: String?
+    public let operationGroup: [String]?
     public let includeAdditionalCards: Bool?
     
     public typealias ProductID = Tagged<_ProductID, Int>
@@ -34,8 +34,8 @@ public struct CardStatementForPeriodPayload: Equatable {
         period: Period,
         statementFormat: StatementFormat?,
         cardNumber: CardNumber?,
-        operationType: [OperationType]?,
-        operationGroup: [OperationGroup]?,
+        operationType: String?,
+        operationGroup: [String]?,
         includeAdditionalCards: Bool?
     ) {
         self.id = id
@@ -88,6 +88,8 @@ extension CardStatementForPeriodPayload {
         case debit = "DEBIT"
         case debitPlan = "DEBIT_PLAN"
         case debitFict = "DEBIT_FICT"
+        
+        public var id: String { self.rawValue }
     }
 }
 

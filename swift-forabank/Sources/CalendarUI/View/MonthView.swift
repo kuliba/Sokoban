@@ -48,17 +48,12 @@ extension MonthView {
             date: date,
             isCurrentMonth: isCurrentMonth(date),
             config: config.dayConfig,
-            selectedDate: selectedDate,
             selectedRange: selectedRange,
-            selectDate: selectDate
+            selectDate: {
+                selectDate(date)
+                selectedRange?.addToRange($0)
+            }
         )
-        
-//        config.dayView(
-//            date,
-//            isCurrentMonth(date),
-//            selectedDate,
-//            { selectedRange?.addToRange($0) }
-//        ).erased()
     }
 }
 
@@ -129,11 +124,10 @@ public extension WeekdayLabel {
 
 // MARK: - Helpers
 public extension WeekdayLabel {
-    /// Returns a string of the selected format for the weekday.
-    func getString(with format: WeekdaySymbolFormat) -> String { MDateFormatter.getString(for: weekday, format: format) }
-
-    /// Returns a type-erased object.
-//    func erased() -> AnyWeekdayLabel { .init(self) }
+    
+    func getString(with format: WeekdaySymbolFormat) -> String {
+        MDateFormatter.getString(for: weekday, format: format)
+    }
 }
 
 // MARK: - Others
@@ -165,11 +159,21 @@ public extension WeekdaysView {
 
 // MARK: - Helpers
 public extension WeekdaysView {
-    /// Creates weekdays view using the selected weekday labels. Cannot be overriden.
-    func weekdaysView() -> some View { HStack(spacing: 0) { ForEach(WeekDay.allCases, id: \.self, content: weekdayItem) } }
+    
+    func weekdaysView() -> some View {
+        
+        HStack(spacing: 0) {
+     
+            ForEach(WeekDay.allCases, id: \.self, content: weekdayItem)
+        }
+    }
 }
 private extension WeekdaysView {
-    func weekdayItem(_ weekday: WeekDay) -> some View { weekdayLabel(weekday).frame(maxWidth: .infinity) }
+    
+    func weekdayItem(_ weekday: WeekDay) -> some View {
+    
+        weekdayLabel(weekday).frame(maxWidth: .infinity)
+    }
 }
 
 // MARK: - Others

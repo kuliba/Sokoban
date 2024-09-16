@@ -76,10 +76,20 @@ extension ProductProfileHistoryView {
                     
                     switch action {
                     case _ as ProductProfileHistoryViewModelAction.DownloadLatest:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .latest, category: nil))
+                        model.action.send(ModelAction.Statement.List.Request(
+                            productId: productId,
+                            direction: .latest,
+                            operationType: nil,
+                            category: nil
+                        ))
                         
                     case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
-                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest, category: nil))
+                        model.action.send(ModelAction.Statement.List.Request(
+                            productId: productId,
+                            direction: .eldest,
+                            operationType: nil,
+                            category: nil
+                        ))
                         
                     case let payload as ProductProfileHistoryViewModelAction.Filter:
                         guard let storage = model.statements.value[id] else {
@@ -92,9 +102,9 @@ extension ProductProfileHistoryView {
                             let filter = filter()
                             storageData = storage.statements
                             
-                            if filter?.selectedTransaction != nil {
+                            if filter?.filter.selectedTransaction != nil {
                                 
-                                switch filter?.selectedTransaction {
+                                switch filter?.filter.selectedTransaction {
                                 case .debit:
                                     storageData = storage.statements.filter({
                                         $0.isDebitType
@@ -108,9 +118,9 @@ extension ProductProfileHistoryView {
                                 }
                             }
 
-                            if payload.filterState?.selectedPeriod != nil {
+                            if payload.filterState?.filter.selectedPeriod != nil {
                                 
-                                switch payload.filterState?.selectedPeriod {
+                                switch payload.filterState?.filter.selectedPeriod {
                                 case .week:
                                     storageData = storageData.filter({
                                         $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
@@ -129,17 +139,23 @@ extension ProductProfileHistoryView {
                                 }
                             }
                             
-                            if let services = filter?.selectedServices, services.count >= 1 {
+                            if let services = filter?.filter.selectedServices, services.count >= 1 {
                                 
                                 storageData = storageData.filter({ item in
-                                    return item.groupName.contained(in: filter?.selectedServices.sorted() ?? [])
+                                    return item.groupName.contained(in: filter?.filter.selectedServices.sorted() ?? [])
                                 })
                                 
                             }
                             
+                            if let lowerDate = payload.period.lowerDate,
+                               let upperDate = payload.period.upperDate {
+                             
+                                storageData = storageData.filter({
+                                    $0.date.isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
+                                })
+                            }
                             updateContent(with: .downloading(.custom(start: Date(), end: Date())), storage: storage)
 
-                            
                             let update = await reduce(
                                 content: content,
                                 statements: storageData,
@@ -171,35 +187,85 @@ extension ProductProfileHistoryView {
                         return
                     }
                     
-                    // isMapped = false  это согласованный костыль
-                    updateSegmentedBar(
-                        productId: id,
-                        statements: storage.statements,
-                        isMapped: false
-                    )
-                    
                     Task.detached(priority: .high) { [self] in
+                        
+                        var storageStatements: [ProductStatementData] = storage.statements
+                        if let filter = filter() {
+                            
+                            if let lowerDate = filter.calendar.range?.lowerDate,
+                               let upperDate = filter.calendar.range?.upperDate {
+                                
+                                storageStatements = storage.statements.filter({
+                                    $0.tranDate?.isBetweenStartDate(lowerDate.addingTimeInterval(14401), endDateInclusive: upperDate.addingTimeInterval(86400)) ?? false
+                                })
+                            }
+                            if filter.filter.selectedTransaction != nil {
+                                
+                                switch filter.filter.selectedTransaction {
+                                case .debit:
+                                    storageStatements = storageStatements.filter({
+                                        $0.isDebitType
+                                    })
+                                case .credit:
+                                    storageStatements = storageStatements.filter({
+                                        $0.isCreditType
+                                    })
+                                case .none:
+                                    break
+                                }
+                            }
+
+                            switch filter.filter.selectedPeriod {
+                            case .week:
+                                storageStatements = storageStatements.filter({
+                                    $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                })
+                                
+                            case .month:
+                                storageStatements = storageStatements.filter({
+                                    $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                })
+                            case .dates:
+                                storageStatements = storageStatements.filter({
+                                    $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
+                                })
+                            }
+                            
+                            if filter.filter.selectedServices.count >= 1 {
+                                
+                                storageStatements = storageStatements.filter({ item in
+                                    return item.groupName.contained(in: filter.filter.selectedServices.sorted())
+                                })
+                            }
+                        }
+                        
+                        // isMapped = false  это согласованный костыль
+                        updateSegmentedBar(
+                            productId: id,
+                            statements: storageStatements,
+                            isMapped: false
+                        )
                         
                         let update = await reduce(
                             content: content,
-                            statements: storage.statements,
+                            statements: storageStatements,
                             images: model.images.value,
                             model: model
                         ) { [weak self] statementId in
-                            { 
+                            {
                                 self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId))
                             }
                         }
                         
                         await MainActor.run {
-    
+                            
                             updateContent(with: update.groups)
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
                                 updateContent(with: state, storage: storage)
                             }
-
+                            
                             services()
                             
                             if update.downloadImagesIds.isEmpty == false {
@@ -822,7 +888,7 @@ extension ProductProfileHistoryView {
                     ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
                         .background(Color.mainColorsGrayLightest)
                         .cornerRadius(12)
-                        .padding(.bottom, 16)
+                        .padding(.bottom, 14)
                 }
                 
                 if let eldestUpdate = viewModel.eldestUpdate {
@@ -846,12 +912,11 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
                 
                 Text(viewModel.title)
                     .font(.textBodyMSb14200())
                     .foregroundColor(.textSecondary)
-                    .padding(.bottom, 16)
                     .accessibilityIdentifier("historyGroupDate")
           
                 ForEach(viewModel.operations) { operationViewModel in

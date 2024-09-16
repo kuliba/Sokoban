@@ -9,6 +9,26 @@ import Foundation
 
 public struct FilterState {
     
+    public let productId: Int?
+    public var calendar: CalendarState
+    public var filter: FilterHistoryState
+    let dateFilter: (Date, Date) -> Void
+    
+    public init(
+        productId: Int?,
+        calendar: CalendarState,
+        filter: FilterHistoryState,
+        dateFilter: @escaping (Date, Date) -> Void
+    ) {
+        self.productId = productId
+        self.calendar = calendar
+        self.filter = filter
+        self.dateFilter = dateFilter
+    }
+}
+
+public struct FilterHistoryState {
+    
     public let title: String
     
     public var selectDates: (lowerDate: Date?, upperDate: Date?)?
@@ -20,6 +40,8 @@ public struct FilterState {
     public let transactionType: [TransactionType]
     public var services: [String]
     
+    let historyService: (Date?, Date?) -> Void
+    
     public init(
         title: String,
         selectDates: (lowerDate: Date?, upperDate: Date?)?,
@@ -28,7 +50,8 @@ public struct FilterState {
         selectedServices: Set<String> = [],
         periods: [Period],
         transactionType: [TransactionType],
-        services: [String]
+        services: [String],
+        historyService: @escaping (Date?, Date?) -> Void
     ) {
         self.title = title
         self.selectDates = selectDates
@@ -38,20 +61,27 @@ public struct FilterState {
         self.periods = periods
         self.transactionType = transactionType
         self.services = services
+        self.historyService = historyService
     }
 }
 
-public extension FilterState {
+public extension FilterHistoryState {
     
-    enum TransactionType: String, Identifiable, CaseIterable {
+    enum TransactionType: String, CaseIterable {
         
-        public var id: String { self.rawValue }
+        case debit
+        case credit
         
-        case debit = "Списание"
-        case credit = "Пополнение"
+        var title: String {
+            
+            switch self {
+            case .debit: "Списание"
+            case .credit: "Пополнение"
+            }
+        }
     }
     
-    public enum Period: String, Identifiable, CaseIterable {
+    enum Period: String, Identifiable, CaseIterable {
         
         public var id: String { self.rawValue }
         

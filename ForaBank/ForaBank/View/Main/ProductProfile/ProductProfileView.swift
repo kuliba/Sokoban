@@ -92,17 +92,18 @@ struct ProductProfileView: View {
                                                 {
                                                     viewModel.event(.history($0))
                                                 },{
-                                                    viewModel.filterState?.selectedServices.isEmpty == false || viewModel.filterState?.selectedTransaction != nil || viewModel.filterState?.selectedPeriod == .week
+                                                    viewModel.filterState?.filter.selectedServices.isEmpty == false || viewModel.filterState?.filter.selectedTransaction != nil || viewModel.filterState?.filter.selectedPeriod == .week
                                                 },{
-                                                    return viewModel.filterState?.selectDates?.lowerDate != nil
+                                                    return viewModel.filterState?.calendar.range?.lowerDate != nil
                                                     
                                                 }, {
                                                     
                                                     self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
-                                                    viewModel.filterState?.selectedServices = []
-                                                    viewModel.filterState?.selectedTransaction = nil
-                                                    viewModel.filterState?.selectedPeriod = .month
-                                                    viewModel.filterState?.selectDates = nil
+                                                    viewModel.filterState?.filter.selectedServices = []
+                                                    viewModel.filterState?.filter.selectedTransaction = nil
+                                                    viewModel.filterState?.filter.selectedPeriod = .month
+                                                    viewModel.filterState?.filter.selectDates = nil
+                                                    viewModel.filterState?.calendar.range = .init()
                                                 })
                                         } else {
                                             return nil
@@ -196,77 +197,96 @@ struct ProductProfileView: View {
                 
                 switch state.buttonAction {
                 case .calendar:
-                    
                     CalendarWrapperView(
                         state: .init(
                             date: Date(),
                             range: .init(),
                             monthsData: .generate(startDate: viewModel.calendarDayStart()),
-                            periods: []
+                            periods: [.week, .month, .dates]
                         ),
-                        config: .iFora
+                        event: { event in
+                            
+                            switch event {
+//                            case let .apply(state):
+//                                
+////                                viewModel.event(.filter(.selectedDates(
+////                                    lowerDate: state.range?.lowerDate,
+////                                    upperDate: state.range?.upperDate
+////                                )))
+////                                
+////                                viewModel.event(.history(.dismiss))
+//                                print("### APPLY action")
+
+                            case .clear:
+                                print("### Clear action")
+                                break
+                            case .dismiss:
+                                print("### DISMISS action")
+                                viewModel.event(.history(.dismiss))
+                            }
+                        },
+                        config: .iFora,
+                        apply: { lowerDate, upperDate in
+                            if let lowerDate = lowerDate,
+                               let upperDate = upperDate {
+                                
+                                viewModel.filterState?.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
+                                viewModel.filterHistoryRequest(
+                                    lowerDate,
+                                    upperDate,
+                                    nil,
+                                    []
+                                )
+                            }
+                            
+                            viewModel.event(.history(.dismiss))
+
+                        }
                     )
                     
                 case .filter:
                     if let filterState = self.viewModel.filterState {
-                                             
+
                         FilterView(
-                            filterState: .init(
-                                title: filterState.title,
-                                selectDates: state.selectedDates,
-                                selectedPeriod: filterState.selectedPeriod,
-                                selectedTransaction: filterState.selectedTransaction,
-                                selectedServices: filterState.selectedServices,
-                                periods: filterState.periods,
-                                transactionType: filterState.transactionType,
-                                services: viewModel.historyCategories()
-                            ),
+                            filterState: filterState,
                             event: { event in
-                                
-                                self.viewModel.filterState?.services = self.viewModel.historyCategories()
+
                                 self.viewModel.event(.filter(event))
                                 
                             },
                             config: .iFora,
-                            makeButtonsContainer: { applyAction, state in
+                            makeButtonsContainer: { applyAction, state, clearOptions in
                                 .init(
                                     applyAction: {
-//                                        applyAction()
                                         
-                                        self.viewModel.filterState?.selectedServices = state.selectedServices
-                                        self.viewModel.filterState?.selectedPeriod = state.selectedPeriod
-                                        self.viewModel.filterState?.selectedTransaction = state.selectedTransaction
+                                        self.viewModel.filterState?.filter = state.filter
                                         
+//                                        self.viewModel.event(.filter(.selectedCategory(state.filter.selectedServices)))
+//                                        self.viewModel.event(.filter(.selectedPeriod(state.filter.selectedPeriod)))
+//                                        self.viewModel.event(.filter(.selectedTransaction(state.filter.selectedTransaction)))
                                         self.viewModel.event(.history(.dismiss))
-                                                                            
-                                        self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
-                                            filterState: viewModel.filterState,
-                                            period: (lowerDate: nil, upperDate: nil)
-                                        ))
                                         
-                                        self.viewModel.history?.action.send(ModelAction.Statement.List.Request(
-                                            productId: viewModel.product.activeProductId,
-                                            direction: .custom(start: Date(), end: Date()),
-                                            category: filterState.selectedServices.map({ $0 })
-                                        ))
+                                        if let lowerDate = state.filter.selectDates?.lowerDate,
+                                           let upperDate = state.filter.selectDates?.upperDate {
+                                         
+                                            viewModel.filterHistoryRequest(
+                                                lowerDate.addingTimeInterval(86400),
+                                                upperDate.addingTimeInterval(86400),
+                                                state.filter.selectedTransaction?.rawValue.uppercased(),
+                                                state.filter.selectedServices.map({ $0 })
+                                            )
+                                        }
                                     },
                                     clearOptionsAction: {
                                         self.viewModel.event(.filter(.clearOptions))
                                         self.viewModel.filterState = nil
-                                        self.viewModel.action.send(ModelAction.Statement.List.Request(productId: viewModel.product.activeProductId, direction: .latest, category: nil))
+                                        clearOptions()
                                     },
                                     config: .init(
                                         clearButtonTitle: "Очистить",
                                         applyButtonTitle: "Применить"
                                     )
                                 )
-                            },
-                            clearOptionsAction: {
-                                self.viewModel.event(.history(.clearOptions))
-                            },
-                            dismissAction: {
-                                self.viewModel.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
-                                self.viewModel.event(.history(.dismiss))
                             }, calendarViewAction: {
                                 
                                 self.viewModel.event(.history(.button(.calendar({ lowerDate, upperDate in
@@ -753,6 +773,7 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
+        filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
         rootView: ""
     )
@@ -773,6 +794,7 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
+        filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
         rootView: ""
     )
