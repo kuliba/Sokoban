@@ -14,7 +14,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClient() {
         
-        let (_, httpClient, backgroundScheduler) = makeSUT()
+        let (_, httpClient, backgroundScheduler, _) = makeSUT()
         XCTAssertNoDiff(httpClient.callCount, 0)
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
@@ -24,7 +24,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClientWithGetServiceCategoryList() throws {
         
-        let (_, httpClient, backgroundScheduler) = makeSUT()
+        let (_, httpClient, backgroundScheduler, _) = makeSUT()
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
@@ -36,7 +36,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
-        let (sut, _,_) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
         let initialState = try sut.categoryPickerContent().state
         
@@ -45,24 +45,26 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _, backgroundScheduler) = makeSUT()
+        let (sut, _, backgroundScheduler, bindings) = makeSUT()
         let initialState = try sut.categoryPickerContent().state
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
+        XCTAssertNotNil(bindings)
     }
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
         
-        let (sut, httpClient, backgroundScheduler) = makeSUT()
+        let (sut, httpClient, backgroundScheduler, bindings) = makeSUT()
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         httpClient.complete(with: success())
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNotNil(bindings)
     }
     
     // MARK: - Helpers
@@ -75,7 +77,8 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     ) -> (
         sut: SUT,
         httpClient: HTTPClientSpy,
-        backgroundScheduler: TestSchedulerOf<DispatchQueue>
+        backgroundScheduler: TestSchedulerOf<DispatchQueue>,
+        bindings: Set<AnyCancellable>
     ) {
         let httpClient = HTTPClientSpy()
         let backgroundScheduler = DispatchQueue.test
@@ -98,7 +101,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         )
         
-        return (sut, httpClient, backgroundScheduler)
+        return (sut, httpClient, backgroundScheduler, bindings)
     }
     
     private func success(
