@@ -30,7 +30,7 @@ public extension ResponseMapper {
 
 private extension ResponseMapper._DTO {
     
-    var providers: [ServicePaymentProvider] {
+    var providers: [ResponseMapper.ServicePaymentProvider] {
         
         operatorList.flatMap(\.providers)
     }
@@ -38,20 +38,20 @@ private extension ResponseMapper._DTO {
 
 private extension ResponseMapper._DTO._List {
     
-    var providers: [ServicePaymentProvider] {
+    var providers: [ResponseMapper.ServicePaymentProvider] {
         
         guard let operators = atributeList,
               let type = type
         else { return [] }
         
-        return operators.compactMap { (item) -> ServicePaymentProvider? in
+        return operators.compactMap { item in
             
             guard let id = item.customerId,
                   let inn = item.inn,
                   let name = item.juridicalName
             else { return nil }
             
-            return ServicePaymentProvider(id: id, inn: inn, md5Hash: item.md5hash, name: name, type: type)
+            return .init(id: id, inn: inn, md5Hash: item.md5hash, name: name, type: type)
         }
     }
 }
