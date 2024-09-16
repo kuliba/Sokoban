@@ -930,6 +930,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListBackendV0"
+               BuildableName = "OperatorsListBackendV0"
+               BlueprintName = "OperatorsListBackendV0"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -991,6 +1005,16 @@
                BlueprintIdentifier = "GetProductListByTypeV6ServiceTests"
                BuildableName = "GetProductListByTypeV6ServiceTests"
                BlueprintName = "GetProductListByTypeV6ServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListBackendV0Tests"
+               BuildableName = "OperatorsListBackendV0Tests"
+               BlueprintName = "OperatorsListBackendV0Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
