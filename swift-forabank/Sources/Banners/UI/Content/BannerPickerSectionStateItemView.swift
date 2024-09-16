@@ -13,20 +13,17 @@ where BannerView: View,
       PlaceholderView: View {
     
     private let item: Item
-    private let event: (Event) -> Void
     private let config: Config
     private let bannerView: (ServiceBanner) -> BannerView
     private let placeholderView: () -> PlaceholderView
     
     public init(
         item: Item,
-        event: @escaping (Event) -> Void,
         config: Config,
         bannerView: @escaping (ServiceBanner) -> BannerView,
         placeholderView: @escaping () -> PlaceholderView
     ) {
         self.item = item
-        self.event = event
         self.config = config
         self.bannerView = bannerView
         self.placeholderView = placeholderView
@@ -38,12 +35,7 @@ where BannerView: View,
         case let .element(identified):
             switch identified.element {
             case let .banner(banner):
-                Button(
-                    action: { event(.select(banner)) },
-                    label: {
-                        bannerView(banner)
-                            .modifier(FrameWithCornerRadiusModifier(config: config))
-                    })
+                bannerView(banner)
             }
             
         case .placeholder:
@@ -58,7 +50,6 @@ public extension BannerPickerSectionStateItemView {
     
     typealias Item = BannerPickerSectionState<ServiceBanner>.Item
     typealias Config = BannerPickerSectionStateItemViewConfig
-    typealias Event = LoadablePickerEvent<ServiceBanner>
 }
 
 private struct FrameWithCornerRadiusModifier: ViewModifier {

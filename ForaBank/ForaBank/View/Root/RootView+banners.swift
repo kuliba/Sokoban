@@ -33,18 +33,26 @@ extension RootView {
         
         BannerPickerSectionStateItemView(
             item: item, 
-            event: {
-                
-                if viewModel.model.onlyCorporateCards, 
-                    case let .select(item) = $0,
-                    let url = item?.orderURL {
-                    
-                    MainViewModel.openLinkURL(url)
-                }
-            },
             config: .iFora,
-            bannerView: { rootViewFactory.makeIconView(.image($0.imageEndpoint)) },
+            bannerView: { item in
+                Button(
+                    action: {
+                        if viewModel.model.onlyCorporateCards, let url = item.orderURL {
+                            
+                            MainViewModel.openLinkURL(url)
+                        }
+                    },
+                    label: {
+                        rootViewFactory.makeIconView(.image(item.imageEndpoint))
+                            .frame(Config.iFora.size)
+                            .cornerRadius(Config.iFora.cornerRadius)
+                    })
+                .buttonStyle(PushButtonStyle())
+                .accessibilityIdentifier("corporateActionBanner")
+            },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
     }
+    
+    private typealias Config = BannerPickerSectionStateItemViewConfig
 }
