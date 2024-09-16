@@ -123,13 +123,147 @@ import XCTest
 
 final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT()
+        
+        XCTAssertEqual(httpClientSpy.callCount, 0)
+        XCTAssertEqual(updateMakerSpy.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias Composer = BatchSerialCachingRemoteLoaderComposer
+    private typealias Domain = StringSerialRemoteDomain<Payload, Value>
+    private typealias SUT = Domain.BatchService
+    private typealias MakeRequestSpy = CallSpy<Payload, URLRequest>
+    private typealias StampedResult = Result<RemoteServices.SerialStamped<String, Value>, RemoteServices.ResponseMapper.MappingError>
+    private typealias MapResponseSpy = CallSpy<(Data, HTTPURLResponse), StampedResult>
+    private typealias ToModelSpy = CallSpy<[Value], [Model]>
+    
+    private func makeSUT(
+        serial: String? = nil,
+        makeRequestStub: URLRequest? = nil,
+        mapResponseStub: StampedResult? = nil,
+        models: [Model] = [],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        httpClientSpy: HTTPClientSpy,
+        updateMakerSpy: UpdateMakerSpy
+    ) {
+        let httpClientSpy = HTTPClientSpy()
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClientSpy,
+            // TODO: add logging tests
+            logger: LoggerAgent()
+        )
+        let updateMakerSpy = UpdateMakerSpy()
+        let composer = Composer(
+            nanoServiceFactory: nanoServiceComposer, 
+            updateMaker: updateMakerSpy
+        )
+        let makeRequestSpy = MakeRequestSpy(
+            stubs: [makeRequestStub ?? anyURLRequest()]
+        )
+        let mapResponseStub = mapResponseStub ?? .failure(.invalid(statusCode: 200, data: .empty))
+        let mapResponseSpy = MapResponseSpy(
+            stubs: [mapResponseStub]
+        )
+        let toModelSpy = ToModelSpy(stubs: [models])
+        let sut = composer.compose(
+            getSerial: { _ in serial },
+            makeRequest: makeRequestSpy.call(payload:),
+            mapResponse: mapResponseSpy.call(_:_:),
+            toModel: toModelSpy.call(payload:)
+        )
+        
+        trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(httpClientSpy, file: file, line: line)
+        trackForMemoryLeaks(makeRequestSpy, file: file, line: line)
+        trackForMemoryLeaks(mapResponseSpy, file: file, line: line)
+        trackForMemoryLeaks(toModelSpy, file: file, line: line)
+        trackForMemoryLeaks(updateMakerSpy, file: file, line: line)
+        
+        return (sut, httpClientSpy, updateMakerSpy)
+    }
+    
+    private struct Model: Codable, Equatable, Identifiable {
+        
+        let value: String
+        
+        var id: String { value }
+    }
+    
+    private func makeModel(
+        _ value: String = anyMessage()
+    ) -> Model {
+        
+        return .init(value: value)
+    }
+    
+    private struct Payload: Equatable {
+        
+        let value: String
+    }
+    
+    private func makePayload(
+        _ value: String = anyMessage()
+    ) -> Payload {
+        
+        return .init(value: value)
+    }
+    
+    private struct Value: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeValue(
+        _ value: String = anyMessage()
+    ) -> Value {
+        
+        return .init(value: value)
+    }
+}
+
+final class UpdateMakerSpy: UpdateMaker {
+    
+    private(set) var messages = [Message]()
+    
+    var callCount: Int { messages.count }
+    
+    func makeUpdate<T, Model>(
+        toModel: @escaping ToModel<T, Model>,
+        reduce: @escaping Reduce<Model>
+    ) -> Update<T> where Model: Codable {
+        
+        return { value, serial, completion in
+        
+            self.messages.append(.init(value: value, serial: serial, completion: completion))
+        }
+    }
+    
+    func values<Value>() -> [Value] {
+        
+        messages.compactMap { $0.value as? Value }
+    }
+    
+    struct Message {
+        
+        let value: Any
+        let serial: String?
+        let completion: (Result<Void, Error>) -> Void
+    }
 }
 
 // MARK: - API check
 
 private extension BatchSerialCachingRemoteLoaderComposer {
     
-    convenience init() {
+    convenience init(apiCheckOnly: Bool) {
         
         let model: Model = .shared
         let agent = model.localAgent
