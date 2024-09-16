@@ -9,24 +9,12 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public struct GetServiceCategoryListResponse: Equatable {
-        
-        public let categoryGroupList: [Category]
-        public let serial: String
-        
-        public init(
-            categoryGroupList: [Category],
-            serial: String
-        ) {
-            self.categoryGroupList = categoryGroupList
-            self.serial = serial
-        }
-    }
+    public typealias GetServiceCategoryListResponse = SerialStamped<String, ServiceCategory>
 }
 
-extension ResponseMapper.GetServiceCategoryListResponse {
+extension ResponseMapper {
     
-    public struct Category: Equatable {
+    public struct ServiceCategory: Equatable {
         
         public let latestPaymentsCategory: LatestPaymentsCategory?
         public let md5Hash: String
@@ -67,15 +55,15 @@ extension ResponseMapper.GetServiceCategoryListResponse {
             case repaymentLoansAndAccounts
             case security
             case socialAndGames
-            case transport
             case taxAndStateService
+            case transport
         }
         
         public enum LatestPaymentsCategory: Equatable {
             
             case charity
-            case education
             case digitalWallets
+            case education
             case internet
             case mobile
             case networkMarketing

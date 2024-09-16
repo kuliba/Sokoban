@@ -506,6 +506,13 @@
         "identifier" : "LatestPaymentsBackendV3Tests",
         "name" : "LatestPaymentsBackendV3Tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "OperatorsListBackendV0Tests",
+        "name" : "OperatorsListBackendV0Tests"
+      }
     }
   ],
   "version" : 1

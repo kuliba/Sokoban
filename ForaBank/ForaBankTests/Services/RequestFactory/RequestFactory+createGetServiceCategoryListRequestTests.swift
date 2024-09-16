@@ -11,11 +11,29 @@ import XCTest
 
 final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase {
     
-    func test_createRequest_shouldSetRequestURL() throws {
+    func test_createRequest_shouldSetRequestURLWithoutSerialOnNilSerial() throws {
         
         try XCTAssertNoDiff(
-            createRequest().url?.absoluteString,
+            createRequest(serial: nil).url?.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+        )
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithoutSerialOnEmptySerial() throws {
+        
+        try XCTAssertNoDiff(
+            createRequest(serial: "").url?.absoluteString,
+            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList"
+        )
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithSerial() throws {
+        
+        let serial = anyMessage()
+        
+        try XCTAssertNoDiff(
+            createRequest(serial: serial).url?.absoluteString,
+            "https://pl.forabank.ru/dbo/api/v3/dict/getServiceCategoryList?serial=\(serial)"
         )
     }
     
@@ -36,8 +54,10 @@ final class RequestFactory_createGetServiceCategoryListRequestTests: XCTestCase 
     
     // MARK: - Helpers
     
-    private func createRequest() throws -> URLRequest {
+    private func createRequest(
+        serial: String? = nil
+    ) throws -> URLRequest {
         
-        try RequestFactory.createGetServiceCategoryListRequest()
+        try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
 }

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "95E12006-BCED-42C8-9F5F-BAC2B1565A19",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OperatorsListBackendV0Tests",
+        "name" : "OperatorsListBackendV0Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

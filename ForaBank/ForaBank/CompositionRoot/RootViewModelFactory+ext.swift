@@ -10,6 +10,7 @@ import ForaTools
 import ManageSubscriptionsUI
 import OperatorsListComponents
 import PaymentSticker
+import RemoteServices
 import SberQR
 import SwiftUI
 import PayHub
@@ -33,6 +34,7 @@ extension RootViewModelFactory {
         paymentsTransfersFlag: PaymentsTransfersFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
+        interactiveScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInteractive),
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
@@ -304,40 +306,31 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        let localBannerListLoader = ServiceItemsLoader.default
-        let getBannerList = NanoServices.makeGetBannerCatalogListV2(
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        // reusable factory
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
-            log: infoNetworkLog
+            logger: logger
         )
-
-        let getBannerListLoader = AnyLoader { completion in
-            
-            backgroundScheduler.delay(for: .milliseconds(20)) {
-                
-                localBannerListLoader.serial {
-                    getBannerList(($0, 120)) {
-                        
-                        completion($0)
-                    }
-                }
-            }
-        }
+        // reusable factory
+        let localComposer = LocalLoaderComposer(
+            agent: model.localAgent,
+            interactiveScheduler: interactiveScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        // reusable factory
+        let serialLoaderComposer = SerialLoaderComposer(
+            localComposer: localComposer,
+            nanoServiceComposer: nanoServiceComposer
+        )
         
-        let bannerListDecorated = CacheDecorator(
-            decoratee: getBannerListLoader,
-            cache: { response, completion in
-                localBannerListLoader.save(.init(response), completion)
-            }
+        let (serviceCategoriesLocalLoad, serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
+            getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
+            fromModel: [ServiceCategory].init(codable:),
+            toModel: [CodableServiceCategory].init(categories:),
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
-       
-        let loadBannersList: LoadBanners = { completion in
-            
-            bannerListDecorated.load {
-                
-                let banners = (try? $0.get()) ?? .init(bannerCatalogList: [], serial: "")
-                completion(banners.bannerCatalogList.map { .banner($0)})
-            }
-        }
         
         let localServiceCategoryLoader = ServiceCategoryLoader.default
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
@@ -348,9 +341,9 @@ extension RootViewModelFactory {
             
             backgroundScheduler.delay(for: .seconds(2)) {
                 
-                getServiceCategoryList {
+                getServiceCategoryList(nil) {
                     
-                    completion($0.map(\.categoryGroupList))
+                    completion($0.map(\.list))
                 }
             }
         }
@@ -367,9 +360,9 @@ extension RootViewModelFactory {
             }
         }
         
-        let getLatestPayments = NanoServices.makeGetAllLatestPaymentsV3Stringly(
-            httpClient: httpClient,
-            log: logger.log
+        let getLatestPayments = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
         )
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: localServiceCategoryLoader.load,
@@ -384,7 +377,7 @@ extension RootViewModelFactory {
             nanoServices: .init(
                 loadCategories: loadServiceCategories,
                 loadAllLatest: loadLatestOperations,
-                loadLatestForCategory: NanoServices.getLatestPayments,
+                loadLatestForCategory: { getLatestPayments([$0.name], $1) },
                 loadOperators: { _, completion in completion(.success([])) }
             ),
             mainScheduler: mainScheduler,
@@ -399,9 +392,32 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
+        let (banners, loadBannersList) = makeBannersBinder(
+            model: model,
+            httpClient: httpClient,
+            infoNetworkLog: infoNetworkLog,
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+
+        let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
+            bannerPickerPlaceholderCount: 6,
+            nanoServices: .init(
+                loadBanners: loadBannersList
+            ),
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        
+        // call and notify bannerPicker
+        loadBannersList {
+            banners.content.bannerPicker.content.event(.loaded($0))
+            paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+        }
+
         let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
-            corporate: .init(),
+            corporate: paymentsTransfersCorporate,
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
