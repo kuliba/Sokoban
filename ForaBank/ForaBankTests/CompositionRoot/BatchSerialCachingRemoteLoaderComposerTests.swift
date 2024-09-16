@@ -198,6 +198,50 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         }
     }
     
+    func test_shouldDeliverEmptyOnUpdateFailure() {
+        
+        let payload = makePayload()
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            mapResponseStub: [mapResponseSuccess()]
+        )
+        
+        expect(sut, with: [payload], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .failure(anyError()))
+        }
+    }
+    
+    func test_shouldDeliverEmptyOnUpdateSuccess() {
+        
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            mapResponseStub: [mapResponseSuccess()]
+        )
+        
+        expect(sut, with: [makePayload()], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+        }
+    }
+    
+    func test_shouldCallUpdateOnSuccess() {
+        
+        let (value, serial) = (makeValue(), anyMessage())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            mapResponseStub: [mapResponseSuccess(list: [value], serial: serial)]
+        )
+        
+        expect(sut, with: [makePayload()], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+            
+            XCTAssertEqual(updateMakerSpy.values(), [[value]])
+            XCTAssertEqual(updateMakerSpy.serials, [serial])
+        }
+    }
+    
     // MARK: - call: two payloads
     
     func test_shouldCallHTTPClientWithRequests() {
@@ -262,7 +306,7 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         serial: String? = nil,
         makeRequestStub: [URLRequest] = [anyURLRequest()],
         mapResponseStub: [StampedResult] = [.failure(.invalid(statusCode: 200, data: .empty))],
-        models: [Model] = [],
+        toModels models: [Model] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -301,6 +345,14 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         return (sut, httpClientSpy, updateMakerSpy)
     }
     
+    private func httpClientSuccess(
+        _ data: Data = anyData(),
+        _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
+    ) -> HTTPClient.Result {
+        
+        return .success((data, httpURLResponse))
+    }
+
     private struct Model: Codable, Equatable, Identifiable {
         
         let value: String
@@ -320,6 +372,14 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         let value: String
     }
     
+    private func mapResponseSuccess(
+        list: [Value]? = nil,
+        serial: String = anyMessage()
+    ) -> StampedResult {
+        
+        return .success(.init(list: list ?? [makeValue()], serial: serial))
+    }
+
     private func makePayload(
         _ value: String = anyMessage()
     ) -> Payload {
@@ -373,6 +433,7 @@ final class UpdateMakerSpy: UpdateMaker {
     private(set) var messages = [Message]()
     
     var callCount: Int { messages.count }
+    var serials: [String?] { messages.map(\.serial) }
     
     func makeUpdate<T, Model>(
         toModel: @escaping ToModel<T, Model>,
@@ -381,7 +442,11 @@ final class UpdateMakerSpy: UpdateMaker {
         
         return { value, serial, completion in
             
-            self.messages.append(.init(value: value, serial: serial, completion: completion))
+            self.messages.append(.init(
+                value: value,
+                serial: serial,
+                completion: completion
+            ))
         }
     }
     
