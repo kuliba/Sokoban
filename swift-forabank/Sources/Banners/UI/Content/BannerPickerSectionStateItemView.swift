@@ -20,7 +20,7 @@ where BannerView: View,
     public init(
         item: Item,
         config: Config,
-        bannerView: @escaping (ServiceBanner) -> BannerView,
+        @ViewBuilder bannerView: @escaping (ServiceBanner) -> BannerView,
         placeholderView: @escaping () -> PlaceholderView
     ) {
         self.item = item
