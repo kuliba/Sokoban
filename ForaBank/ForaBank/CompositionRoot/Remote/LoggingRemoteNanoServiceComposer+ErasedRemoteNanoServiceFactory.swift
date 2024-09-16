@@ -8,9 +8,9 @@
 extension LoggingRemoteNanoServiceComposer: ErasedRemoteNanoServiceFactory {
 
     func compose<Payload, Response>(
-        createRequest: @escaping CreateRequest<Payload>,
-        mapResponse: @escaping MapResponse<Response, Error>
-    ) -> NanoService<Payload, Response, Error> {
+        createRequest: @escaping RemoteDomain<Payload, Response, Error, Error>.MakeRequest,
+        mapResponse: @escaping RemoteDomain<Payload, Response, Error, Error>.MapResponse
+    ) -> RemoteDomain<Payload, Response, Error, Error>.Service {
         
         compose(
             createRequest: createRequest,
