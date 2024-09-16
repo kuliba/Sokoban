@@ -558,8 +558,14 @@ private extension MainViewModel {
                 promo.action
                     .receive(on: scheduler)
                     .sink { [unowned self] action in
-                        
-                        bannerAction(action)
+                      
+                        switch action {
+                        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
+                            
+                            bannerAction(payload)
+                        default:
+                            break
+                        }
                         
                     }.store(in: &bindings)
                 
@@ -706,39 +712,35 @@ private extension MainViewModel {
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
     
-    func bannerAction(_ action: any Action) {
-        switch action {
-        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
-            switch payload.actionData {
-            case let payload as BannerActionDepositOpen:
-                guard let depositId = Int(payload.depositProductId),
-                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
-                    
-                    return
-                }
-                route.destination = .openDeposit(openDepositViewModel)
+    func bannerAction(_ payload: MainSectionViewModelAction.PromoAction.ButtonTapped) {
+        
+        switch payload.actionData {
+        case let payload as BannerActionDepositOpen:
+            guard let depositId = Int(payload.depositProductId),
+                  let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
                 
-            case _ as BannerActionDepositsList:
-                route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
-                    self?.action.send(MainViewModelAction.Close.Link())
-                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
-                
-            case let payload as BannerActionMigTransfer:
-                openMigTransfer(payload)
-                
-            case let payload as BannerActionContactTransfer:
-                openContactTransfer(payload)
-                
-            case let payload as BannerActionLanding:
-                if payload.target == .abroadSticker {
-                    handleLandingAction(.sticker)
-                } else {
-                    handleLandingAction(payload.target)
-                }
-
-            default:
-                break
+                return
             }
+            route.destination = .openDeposit(openDepositViewModel)
+            
+        case _ as BannerActionDepositsList:
+            route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                self?.action.send(MainViewModelAction.Close.Link())
+            }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
+            
+        case let payload as BannerActionMigTransfer:
+            openMigTransfer(payload)
+            
+        case let payload as BannerActionContactTransfer:
+            openContactTransfer(payload)
+            
+        case let payload as BannerActionLanding:
+            if payload.target == .abroadSticker {
+                handleLandingAction(.sticker)
+            } else {
+                handleLandingAction(payload.target)
+            }
+            
         default:
             break
         }
