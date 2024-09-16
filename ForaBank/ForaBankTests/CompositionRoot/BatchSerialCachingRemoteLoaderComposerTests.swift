@@ -225,6 +225,23 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         }
     }
     
+    func test_shouldCallUpdateOnSuccessWithEmptyList() {
+        
+        let serial = anyMessage()
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            mapResponseStub: [mapResponseSuccess(list: [], serial: serial)]
+        )
+        
+        expect(sut, with: [makePayload()], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+            
+            XCTAssertEqual(updateMakerSpy.values(), [[Value]()])
+            XCTAssertEqual(updateMakerSpy.serials, [serial])
+        }
+    }
+    
     func test_shouldCallUpdateOnSuccess() {
         
         let (value, serial) = (makeValue(), anyMessage())
@@ -289,6 +306,112 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
             httpClientSpy.complete(with: .failure(anyError()))
             httpClientSpy.complete(with: .failure(anyError()), at: 1)
             XCTAssertEqual(updateMakerSpy.callCount, 0)
+        }
+    }
+    
+    func test_shouldDeliverEmptyOnUpdateFailureWithTwoPayloads() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [mapResponseSuccess(), mapResponseSuccess()]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .failure(anyError()))
+            
+            httpClientSpy.complete(with: httpClientSuccess(), at: 1)
+            updateMakerSpy.complete(with: .failure(anyError()), at: 1)
+        }
+    }
+    
+    func test_shouldDeliverEmptyOnUpdateSuccessWithTwoPayloads() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [mapResponseSuccess(), mapResponseSuccess()]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+            
+            httpClientSpy.complete(with: httpClientSuccess(), at: 1)
+            updateMakerSpy.complete(with: .success(()), at: 1)
+        }
+    }
+    
+    func test_shouldDeliverEmptyOnUpdateMixWithTwoPayloads() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [mapResponseSuccess(), mapResponseSuccess()]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .failure(anyError()))
+
+            httpClientSpy.complete(with: httpClientSuccess(), at: 1)
+            updateMakerSpy.complete(with: .success(()), at: 1)
+        }
+    }
+    
+    func test_shouldCallUpdateOnSuccessWithTwoPayloadsOneEmptyList() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let serial1 = anyMessage()
+        let (value2, serial2) = (makeValue(), anyMessage())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [
+                mapResponseSuccess(list: [], serial: serial1),
+                mapResponseSuccess(list: [value2], serial: serial2),
+            ]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+            
+            httpClientSpy.complete(with: httpClientSuccess(), at: 1)
+            updateMakerSpy.complete(with: .success(()), at: 1)
+
+            XCTAssertEqual(updateMakerSpy.values(), [[], [value2]])
+            XCTAssertEqual(updateMakerSpy.serials, [serial1, serial2])
+        }
+    }
+    
+    func test_shouldCallUpdateOnSuccessWithTwoPayloads() {
+        
+        let (payload1, payload2) = (makePayload(), makePayload())
+        let (value1, serial1) = (makeValue(), anyMessage())
+        let (value2, serial2) = (makeValue(), anyMessage())
+        let (sut, httpClientSpy, updateMakerSpy) = makeSUT(
+            makeRequestStub: [anyURLRequest(), anyURLRequest()],
+            mapResponseStub: [
+                mapResponseSuccess(list: [value1], serial: serial1),
+                mapResponseSuccess(list: [value2], serial: serial2),
+            ]
+        )
+        
+        expect(sut, with: [payload1, payload2], toDeliver: []) {
+            
+            httpClientSpy.complete(with: httpClientSuccess())
+            updateMakerSpy.complete(with: .success(()))
+            
+            httpClientSpy.complete(with: httpClientSuccess(), at: 1)
+            updateMakerSpy.complete(with: .success(()), at: 1)
+
+            XCTAssertEqual(updateMakerSpy.values(), [[value1], [value2]])
+            XCTAssertEqual(updateMakerSpy.serials, [serial1, serial2])
         }
     }
     
