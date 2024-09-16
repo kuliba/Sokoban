@@ -23,15 +23,15 @@ protocol UpdateMaker {
 
 final class BatchSerialCachingRemoteLoaderComposer {
     
-    private let updateMaker: UpdateMaker
     private let nanoServiceFactory: RemoteNanoServiceFactory
+    private let updateMaker: UpdateMaker
     
     init(
-        updateMaker: UpdateMaker,
-        nanoServiceFactory: RemoteNanoServiceFactory
+        nanoServiceFactory: RemoteNanoServiceFactory,
+        updateMaker: UpdateMaker
     ) {
-        self.updateMaker = updateMaker
         self.nanoServiceFactory = nanoServiceFactory
+        self.updateMaker = updateMaker
     }
 }
 
@@ -100,20 +100,19 @@ private extension RemoteServices.SerialStamped {
 
 private extension Batcher {
     
+    typealias ResultPerform<T> = (Parameter, @escaping (Result<T, Error>) -> Void) -> Void
+    
     convenience init<T>(
-        perform: @escaping (Parameter, @escaping (Result<T, Error>) -> Void) -> Void
+        perform: @escaping ResultPerform<T>
     ) {
         self.init(perform: { parameter, completion in
             
             perform(parameter) {
                 
-                switch $0 {
-                case let .failure(failure):
-                    completion(failure)
-                    
-                case .success:
-                    completion(nil)
-                }
+                guard case let .failure(failure) = $0
+                else { return completion(nil) }
+                
+                completion(failure)
             }
         })
     }
@@ -144,8 +143,8 @@ private extension BatchSerialCachingRemoteLoaderComposer {
             logger: LoggerAgent()
         )
         self.init(
-            updateMaker: localLoaderComposer,
-            nanoServiceFactory: nanoServiceComposer
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: localLoaderComposer
         )
     }
 }

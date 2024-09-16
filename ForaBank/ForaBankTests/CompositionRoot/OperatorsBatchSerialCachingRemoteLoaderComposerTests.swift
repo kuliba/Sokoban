@@ -320,8 +320,8 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
             logger: LoggerAgent()
         )
         let composer = Composer(
-            updateMaker: localComposer,
-            nanoServiceFactory: nanoServiceComposer
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: localComposer
         )
         let sut = composer.composeServicePaymentProviderService(
             getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }
