@@ -238,9 +238,13 @@ struct MainView<NavigationOperationView: View>: View {
                     title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
-        case let .landing(viewModel):
-            LandingWrapperView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.bottom)
+        case let .landing(viewModel, needIgnoringSafeArea):
+            if needIgnoringSafeArea {
+                LandingWrapperView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+            } else {
+                LandingWrapperView(viewModel: viewModel)
+            }
             
         case let .orderSticker(viewModel):
             LandingWrapperView(viewModel: viewModel)

@@ -86,4 +86,17 @@ final class ModelAuthLoginViewModelFactory {
                 landingActions: landingActions
             )
         }
+    
+    func makeMarketPlaceLandingViewModel(
+        _ type: String,
+        config: LandingUIComponent.UILanding.Component.Config,
+        landingActions: @escaping (LandingUIComponent.LandingEvent.Card) -> () -> Void
+    ) -> LandingUIComponent.LandingWrapperViewModel {
+        
+        self.model.landingMarketplaceViewModelFactory(
+            abroadType: type,
+            config: config,
+            landingActions: landingActions
+        )
+    }
 }

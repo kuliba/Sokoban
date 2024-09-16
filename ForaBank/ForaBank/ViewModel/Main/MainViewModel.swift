@@ -559,34 +559,7 @@ private extension MainViewModel {
                     .receive(on: scheduler)
                     .sink { [unowned self] action in
                         
-                        switch action {
-                        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
-                            switch payload.actionData {
-                            case let payload as BannerActionDepositOpen:
-                                guard let depositId = Int(payload.depositProductId),
-                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
-                                    
-                                    return
-                                }
-                                route.destination = .openDeposit(openDepositViewModel)
-                                
-                            case _ as BannerActionDepositsList:
-                                route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Link())
-                                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
-                                
-                            case let payload as BannerActionMigTransfer:
-                                openMigTransfer(payload)
-                                
-                            case let payload as BannerActionContactTransfer:
-                                openContactTransfer(payload)
-                                
-                            default:
-                                handleLandingAction(.sticker)
-                            }
-                        default:
-                            break
-                        }
+                        bannerAction(action)
                         
                     }.store(in: &bindings)
                 
@@ -731,6 +704,44 @@ private extension MainViewModel {
             .map(\.external)
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
+    }
+    
+    func bannerAction(_ action: any Action) {
+        switch action {
+        case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
+            switch payload.actionData {
+            case let payload as BannerActionDepositOpen:
+                guard let depositId = Int(payload.depositProductId),
+                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
+                    
+                    return
+                }
+                route.destination = .openDeposit(openDepositViewModel)
+                
+            case _ as BannerActionDepositsList:
+                route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())
+                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
+                
+            case let payload as BannerActionMigTransfer:
+                openMigTransfer(payload)
+                
+            case let payload as BannerActionContactTransfer:
+                openContactTransfer(payload)
+                
+            case let payload as BannerActionLanding:
+                if payload.target == .abroadSticker {
+                    handleLandingAction(.sticker)
+                } else {
+                    handleLandingAction(payload.target)
+                }
+
+            default:
+                break
+            }
+        default:
+            break
+        }
     }
     
     func openCurrencyWallet( _ code: Currency, _ operation: CurrencySwapView.ViewModel.CurrencyOperation) {
@@ -1627,7 +1638,7 @@ extension MainViewModel {
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
-        case landing(LandingWrapperViewModel)
+        case landing(LandingWrapperViewModel, Bool)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
         case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
@@ -1750,9 +1761,21 @@ extension MainViewModel {
         )
         
         UIApplication.shared.endEditing()
-        route.destination = .landing(viewModel)
+        route.destination = .landing(viewModel, true)
     }
     
+    func handleLandingAction(_ abroadType: String) {
+        
+        let viewModel = authFactory.makeMarketPlaceLandingViewModel(
+                    abroadType,
+                    config: .default,
+                    landingActions: landingAction
+                )
+        
+        UIApplication.shared.endEditing()
+        route.destination = .landing(viewModel, false)
+    }
+
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
         
         switch event {
@@ -1761,6 +1784,36 @@ extension MainViewModel {
         case .order:
             return orderSticker
         }
+    }
+    
+    private func landingAction(for event: LandingEvent.Card) -> () -> Void {
+        
+            switch event {
+            case .goToMain:
+                return handleCloseLinkAction
+                
+             case let .order(cardTarif, cardType):
+                return { [weak self] in
+                    self?.orderCard(cardTarif, cardType)
+                }
+                
+            case let .openUrl(link):
+                return {
+                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            }
+    }
+    
+    func orderCard(
+        _ cardTarif: Int,
+        _ cardType: Int
+    ) {
+       /* if let catalogProduct = self.eventHandlers.catalogProduct(.tarif(cardTarif, type: cardType)) {
+            
+            handleShowOrderProductAction(catalogProduct)
+        }*/
     }
     
     private func handleCloseLinkAction() {
@@ -1877,4 +1930,9 @@ extension Array where Element == MainSectionViewModel {
     var stickerViewModel: ProductCarouselView.StickerViewModel? {
         productsSection?.productCarouselViewModel.stickerViewModel
     }
+}
+
+extension String {
+    
+    static let abroadSticker: Self = "abroadSticker"
 }
