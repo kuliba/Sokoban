@@ -9,16 +9,6 @@ import ForaTools
 import Foundation
 import RemoteServices
 
-extension RemoteDomain {
-    
-    /// Performs batch network requests with an array of payloads.
-    ///
-    /// - Parameters:
-    ///   - payloads: An array of payloads to process.
-    ///   - completion: A closure called with the array of payloads that failed during processing.
-    typealias BatchService = ([Payload], @escaping ([Payload]) -> Void) -> Void
-}
-
 protocol UpdateMaker {
     
     typealias ToModel<T, Model> = (T) -> Model
@@ -67,7 +57,7 @@ extension BatchSerialCachingRemoteLoaderComposer {
             getSerial: getSerial,
             save: update
         )
-        let batcher = Batcher(perform: decorator.decorated(_:completion:))
+        let batcher = Batcher(perform: decorator.decorated)
         
         return batcher.callAsFunction
     }
