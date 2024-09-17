@@ -190,7 +190,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldCallRemoteWithoutSerialOnMissingAgentData() {
         
         let (sut, _) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -200,7 +200,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldCallRemoteWithoutSerialOnAgentEmptyDataMissingSerial() {
         
         let (sut, _) = makeSUT(load: [], serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -210,7 +210,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldCallRemoteWithoutSerialOnMissingAgentSerial() {
         
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -220,7 +220,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldCallRemoteWithoutSerialOnBothAgentDataAndSerialMissing() {
         
         let (sut, _) = makeSUT(load: nil, serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -231,7 +231,7 @@ final class ComposerTests: XCTestCase {
         
         let serial = anyMessage()
         let (sut, _) = makeSUT(load: [], serial: serial)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -242,7 +242,7 @@ final class ComposerTests: XCTestCase {
         
         let serial = anyMessage()
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: serial)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         remoteLoad { _ in }
         
@@ -252,7 +252,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldDeliverFailureOnRemoteFailureMissingAgentData() {
         
         let (sut, _) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         expect(remoteLoad, toDeliver: nil) {
             
@@ -263,7 +263,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldDeliverFailureOnRemoteFailureAgentEmptyDataMissingSerial() {
         
         let (sut, _) = makeSUT(load: [], serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         expect(remoteLoad, toDeliver: nil) {
             
@@ -274,7 +274,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldDeliverFailureOnRemoteFailureMissingAgentSerial() {
         
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         expect(remoteLoad, toDeliver: nil) {
             
@@ -285,7 +285,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldDeliverFailureOnRemoteFailureBothAgentDataAndSerialMissing() {
         
         let (sut, _) = makeSUT(load: nil, serial: nil)
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         expect(remoteLoad, toDeliver: nil) {
             
@@ -296,7 +296,7 @@ final class ComposerTests: XCTestCase {
     func test_remoteLoad_shouldDeliverEmptyOnRemoteFailureEmptyAgentEmptyDataAndSerial() {
         
         let (sut, _) = makeSUT(load: [], serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         
         expect(remoteLoad, toDeliver: []) {
             
@@ -308,7 +308,7 @@ final class ComposerTests: XCTestCase {
         
         let value = makeValue()
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, fromLocal: [value])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, fromLocal: [value])
         
         expect(remoteLoad, toDeliver: [value]) {
             
@@ -320,7 +320,7 @@ final class ComposerTests: XCTestCase {
         
         let (value1, value2) = (makeValue(), makeValue())
         let (sut, _) = makeSUT(load: [makeLocalModel(), makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, fromLocal: [value1, value2])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, fromLocal: [value1, value2])
         
         expect(remoteLoad, toDeliver: [value1, value2]) {
             
@@ -332,7 +332,7 @@ final class ComposerTests: XCTestCase {
         
         let remoteModel = makeRemoteModel()
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _, fromRemote) = composeRemote(sut)
+        let (remoteLoad, remote, _, fromRemote, _) = composeRemote(sut)
         
         remoteLoad { _ in
             
@@ -346,7 +346,7 @@ final class ComposerTests: XCTestCase {
         
         let value = makeValue()
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, fromRemote: [value])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, fromRemote: [value])
         
         expect(remoteLoad, toDeliver: [value]) {
             
@@ -358,7 +358,7 @@ final class ComposerTests: XCTestCase {
         
         let (remoteModel1, remoteModel2) = (makeRemoteModel(), makeRemoteModel())
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _, fromRemote) = composeRemote(sut)
+        let (remoteLoad, remote, _, fromRemote, _) = composeRemote(sut)
         
         remoteLoad { _ in
             
@@ -372,7 +372,7 @@ final class ComposerTests: XCTestCase {
         
         let (value1, value2) = (makeValue(), makeValue())
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, fromRemote: [value1, value2])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, fromRemote: [value1, value2])
         
         expect(remoteLoad, toDeliver: [value1, value2]) {
             
@@ -385,7 +385,7 @@ final class ComposerTests: XCTestCase {
     func test_cacheRemoteLoad_shouldNotCacheOnRemoteFailure() {
         
         let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         let remoteExp = expectation(description: "wait for remote completion")
         
         remoteLoad { _ in remoteExp.fulfill() }
@@ -400,7 +400,7 @@ final class ComposerTests: XCTestCase {
         
         let serial = anyMessage()
         let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut)
         let remoteExp = expectation(description: "wait for remote completion")
         
         remoteLoad { _ in remoteExp.fulfill() }
@@ -412,11 +412,26 @@ final class ComposerTests: XCTestCase {
         XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
     }
     
+    func test_cacheRemoteLoad_shouldCallToLocalWithOnwOnRemoteLoadOne() {
+        
+        let remoteModel = makeRemoteModel()
+        let (sut, _) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_, toLocal) = composeRemote(sut)
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: .init(list: [remoteModel], serial: anyMessage()))
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssertNoDiff(toLocal.payloads, [[remoteModel]])
+    }
+    
     func test_cacheRemoteLoad_shouldCacheOneOnToLocalOne() {
         
         let (local, serial) = (makeLocalModel(), anyMessage())
         let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, toLocal: [local])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, toLocal: [local])
         let remoteExp = expectation(description: "wait for remote completion")
         
         remoteLoad { _ in remoteExp.fulfill() }
@@ -428,11 +443,26 @@ final class ComposerTests: XCTestCase {
         XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
     }
     
+    func test_cacheRemoteLoad_shouldCallToLocalWithTwoOnRemoteLoadTwo() {
+        
+        let (remoteModel1, remoteModel2) = (makeRemoteModel(), makeRemoteModel())
+        let (sut, _) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_, toLocal) = composeRemote(sut)
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: .init(list: [remoteModel1, remoteModel2], serial: anyMessage()))
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssertNoDiff(toLocal.payloads, [[remoteModel1, remoteModel2]])
+    }
+    
     func test_cacheRemoteLoad_shouldCacheTwoOnToLocalTwo() {
         
         let (local1, local2, serial) = (makeLocalModel(), makeLocalModel(), anyMessage())
         let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
-        let (remoteLoad, remote, _,_) = composeRemote(sut, toLocal: [local1, local2])
+        let (remoteLoad, remote, _,_,_) = composeRemote(sut, toLocal: [local1, local2])
         let remoteExp = expectation(description: "wait for remote completion")
         
         remoteLoad { _ in remoteExp.fulfill() }
@@ -452,7 +482,6 @@ final class ComposerTests: XCTestCase {
     private typealias FromLocalSpy = CallSpy<[LocalModel], [Value]>
     private typealias FromRemoteSpy = CallSpy<[RemoteModel], [Value]>
     private typealias ToLocalSpy = CallSpy<[RemoteModel], [LocalModel]>
-#warning("need overload for Payload: WithSerial")
     private typealias RemoteLoadSpy = Spy<SUT.Serial?, SerialStamped<SUT.Serial, RemoteModel>?>
     
     private func makeSUT(
@@ -500,8 +529,13 @@ final class ComposerTests: XCTestCase {
         toLocal: [LocalModel] = [],
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (composed: Load, remote: RemoteLoadSpy, fromLocal: FromLocalSpy, fromRemote: FromRemoteSpy) {
-        
+    ) -> (
+        composed: Load, 
+        remote: RemoteLoadSpy,
+        fromLocal: FromLocalSpy,
+        fromRemote: FromRemoteSpy,
+        toLocal: ToLocalSpy
+    ) {
         let remote = RemoteLoadSpy()
         let fromLocal = FromLocalSpy(response: fromLocal)
         let fromRemote = FromRemoteSpy(response: fromRemote)
@@ -516,8 +550,9 @@ final class ComposerTests: XCTestCase {
         trackForMemoryLeaks(remote, file: file, line: line)
         trackForMemoryLeaks(fromLocal, file: file, line: line)
         trackForMemoryLeaks(fromRemote, file: file, line: line)
+        trackForMemoryLeaks(toLocal, file: file, line: line)
         
-        return (composed, remote, fromLocal, fromRemote)
+        return (composed, remote, fromLocal, fromRemote, toLocal)
     }
     
     private struct LocalModel: Codable, Equatable {
