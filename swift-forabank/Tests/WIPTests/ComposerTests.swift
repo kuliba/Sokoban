@@ -56,8 +56,10 @@ extension BlaComposer {
             let serial = models == nil ? nil : serial
             
 #warning("wrap in scheduler")
-            remote(serial) { _ in }
-            completion([])
+            remote(serial) { _ in
+           
+                completion(nil)
+            }
         }
     }
 }
@@ -238,6 +240,50 @@ final class ComposerTests: XCTestCase {
         XCTAssertNoDiff(remote.payloads, [serial])
     }
     
+    func test_remoteLoad_shouldDeliverFailureOnRemoteFailureOnMissingAgentData() {
+        
+        let (sut, _) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _) = composeRemote(sut)
+        
+        expect(remoteLoad, toDeliver: nil) {
+            
+            remote.complete(with: .none)
+        }
+    }
+    
+    func test_remoteLoad_shouldDeliverFailureOnRemoteFailureOnAgentEmptyDataMissingSerial() {
+        
+        let (sut, _) = makeSUT(load: [], serial: nil)
+        let (remoteLoad, remote, _) = composeRemote(sut)
+        
+        expect(remoteLoad, toDeliver: nil) {
+            
+            remote.complete(with: .none)
+        }
+    }
+    
+    func test_remoteLoad_shouldDeliverFailureOnRemoteFailureOnMissingAgentSerial() {
+        
+        let (sut, _) = makeSUT(load: [makeModel()], serial: nil)
+        let (remoteLoad, remote, _) = composeRemote(sut)
+        
+        expect(remoteLoad, toDeliver: nil) {
+            
+            remote.complete(with: .none)
+        }
+    }
+    
+    func test_remoteLoad_shouldDeliverFailureOnRemoteFailureOnBothAgentDataAndSerialMissing() {
+        
+        let (sut, _) = makeSUT(load: nil, serial: nil)
+        let (remoteLoad, remote, _) = composeRemote(sut)
+        
+        expect(remoteLoad, toDeliver: nil) {
+            
+            remote.complete(with: .none)
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = BlaComposer
@@ -346,6 +392,7 @@ final class ComposerTests: XCTestCase {
     private func expect<T: Equatable>(
         _ sut: SUT.Load<T>,
         toDeliver expected: [T]?,
+        on action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -357,6 +404,8 @@ final class ComposerTests: XCTestCase {
             
             exp.fulfill()
         }
+        
+        action()
         
         wait(for: [exp], timeout: 1)
     }
