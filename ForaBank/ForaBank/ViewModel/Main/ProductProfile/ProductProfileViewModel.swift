@@ -40,12 +40,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var accentColor: Color
     
     @Published var historyState: HistoryState?
-    @Published var filterState: FilterState? {
-        didSet {
-            print("### filter State setup \(filterState)")
-        }
-    }
-//    @Published var calendarState: CalendarState
+    @Published var filterState: FilterState?
+
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
@@ -1709,10 +1705,7 @@ private extension ProductProfileViewModel {
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
             productProfileViewModelFactory: productProfileViewModelFactory, 
-            filterHistoryRequest: { _,_,_,_ in
-            
-                print("### SEND ACTION ProductProfileViewModel.swift:1680")
-            },
+            filterHistoryRequest: { _,_,_,_ in },
             rootView: rootView,
             dismissAction: dismissAction
         )

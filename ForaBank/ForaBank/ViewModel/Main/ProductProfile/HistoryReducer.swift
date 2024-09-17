@@ -42,7 +42,6 @@ extension HistoryReducer {
                     showSheet: true,
                     categories: state?.categories ?? [],
                     applyAction: {lowerDate,upperDate in
-                    
                         
                     }
                 )

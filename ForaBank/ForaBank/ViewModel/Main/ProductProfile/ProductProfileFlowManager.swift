@@ -74,18 +74,14 @@ final class ProductProfileFlowReducer {
                     ),
                     filter: .init(
                         title: "Фильтры",
-                        selectDates: nil,
-                        selectedServices: [],
+                        selectDates: state.filter?.filter.selectDates,
+                        selectedServices: state.filter?.filter.selectedServices ?? [],
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
                         services: services,
-                        historyService: { _,_ in
-                                
-                            print("### Open Sheet action")
-                        }
-                    ), dateFilter: { _,_ in
-                        
-                    }
+                        historyService: state.filter?.filter.historyService ?? { _,_ in }
+                    ),
+                    dateFilter: state.filter?.dateFilter ?? { _,_ in }
                 )
             case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
                 state.filter = .init(
