@@ -154,7 +154,7 @@ extension ProductProfileHistoryView {
                                     $0.date.isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
                                 })
                             }
-                            updateContent(with: .downloading(.custom(start: Date(), end: Date())), storage: storage)
+                            updateContent(with: .idle, storage: storage)
 
                             let update = await reduce(
                                 content: content,
@@ -215,20 +215,23 @@ extension ProductProfileHistoryView {
                                 }
                             }
 
-                            switch filter.filter.selectedPeriod {
-                            case .week:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
-                                })
+                            if filter.filter.selectDates != nil {
                                 
-                            case .month:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
-                                })
-                            case .dates:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
-                                })
+                                switch filter.filter.selectedPeriod {
+                                case .week:
+                                    storageStatements = storageStatements.filter({
+                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                    })
+                                    
+                                case .month:
+                                    storageStatements = storageStatements.filter({
+                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                    })
+                                case .dates:
+                                    storageStatements = storageStatements.filter({
+                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
+                                    })
+                                }
                             }
                             
                             if filter.filter.selectedServices.count >= 1 {
@@ -263,7 +266,13 @@ extension ProductProfileHistoryView {
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
-                                updateContent(with: state, storage: storage)
+                                if filter()?.filter.selectDates?.lowerDate != nil || filter()?.calendar.range?.lowerDate != nil {
+                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerDate ?? Date(), end: filter()?.filter.selectDates?.upperDate ?? Date())), storage: storage)
+
+                                } else {
+                                    updateContent(with: state, storage: storage)
+
+                                }
                             }
                             
                             services()
@@ -381,7 +390,7 @@ extension ProductProfileHistoryView {
             
             if groups.isEmpty == false {
 
-                if case .list(let historyListViewModel) = content {
+                if case let .list(historyListViewModel) = content {
 
                     withAnimation {
                         

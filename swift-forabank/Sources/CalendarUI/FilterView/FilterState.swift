@@ -12,7 +12,7 @@ public struct FilterState {
     public let productId: Int?
     public var calendar: CalendarState
     public var filter: FilterHistoryState
-    let dateFilter: (Date, Date) -> Void
+    public let dateFilter: (Date, Date) -> Void
     
     public init(
         productId: Int?,
@@ -40,7 +40,7 @@ public struct FilterHistoryState {
     public let transactionType: [TransactionType]
     public var services: [String]
     
-    let historyService: (Date?, Date?) -> Void
+    public let historyService: (Date?, Date?) -> Void
     
     public init(
         title: String,
