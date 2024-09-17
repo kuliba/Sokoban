@@ -6,6 +6,7 @@
 //
 
 import ActivateSlider
+import Banners
 import Combine
 import FooterComponent
 import ForaTools
@@ -15,6 +16,7 @@ import PaymentSticker
 import SberQR
 import ScrollViewProxy
 import SwiftUI
+import UIPrimitives
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -127,6 +129,11 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let promoViewModel  as MainSectionPromoView.ViewModel:
             MainSectionPromoView(viewModel: promoViewModel)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+            
+        case let promo as BannerPickerSectionBinderWrapper:
+            makeBannerSectionView(binder: promo.binder)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             
@@ -321,6 +328,54 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
         }
     }
+}
+
+// MARK: - banners
+
+private extension MainView {
+        
+    typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
+
+    func makeBannerSectionView(
+        binder: BannerPickerSectionBinder
+    ) -> some View {
+        
+        ComposedBannerPickerSectionFlowView(
+            binder: binder,
+            config: .init(spacing: 10),
+            itemView: itemView,
+            makeDestinationView: { Text(String(describing: $0)) }
+        )
+    }
+
+    @ViewBuilder
+    private func itemView(
+        item: BannerPickerSectionState.Item
+    ) -> some View {
+        
+        BannerPickerSectionStateItemView(
+            item: item,
+            config: .iFora,
+            bannerView: { item in
+                
+                let label = viewFactory.makeIconView(.image(item.imageEndpoint))
+                    .frame(Config.iFora.size)
+                    .cornerRadius(Config.iFora.cornerRadius)
+                
+                if let url = item.orderURL {
+                    
+                    Button { MainViewModel.openLinkURL(url) } label: { label }
+                        .buttonStyle(PushButtonStyle())
+                        .accessibilityIdentifier("corporateActionBanner")
+                } else {
+                    label
+                }
+            },
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private typealias Config = BannerPickerSectionStateItemViewConfig
 }
 
 // MARK: - payment provider & service pickers
