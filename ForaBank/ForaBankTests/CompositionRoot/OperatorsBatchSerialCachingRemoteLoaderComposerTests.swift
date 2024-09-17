@@ -1,88 +1,25 @@
 //
-//  ServiceCategoryRemoteComposerTests.swift
+//  OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
 //
 
-import ForaTools
-import RemoteServices
-
-final class ServiceCategoryRemoteComposer {
-    
-    private let nanoServiceFactory: RemoteNanoServiceFactory
-    
-    init(
-        nanoServiceFactory: RemoteNanoServiceFactory
-    ) {
-        self.nanoServiceFactory = nanoServiceFactory
-    }
-}
-
-extension ServiceCategoryRemoteComposer {
-    
-    typealias CategoryType = ServiceCategory.CategoryType
-    typealias Remote = ([ServiceCategory], @escaping ([CategoryType]) -> Void) -> Void
-    
-    func compose() -> Remote {
-        
-        let perform = nanoServiceFactory.compose(
-            makeRequest: RequestFactory.getOperatorsListByParam(categoryType:),
-            mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
-        )
-        
-        let batcher = Batcher(perform: perform)
-        
-        return { categories, completion in
-            
-            let withStandard = categories.filter(\.hasStandardFlow)
-            
-            guard !withStandard.isEmpty
-            else { return completion([]) }
-            
-            batcher.call(withStandard.map(\.type), completion: completion)
-        }
-    }
-}
-
-extension Batcher {
-    
-    convenience init<T>(
-        perform: @escaping (Parameter, @escaping (Result<T, Error>) -> Void) -> Void
-    ) {
-        self.init(perform: { parameter, completion in
-            
-            perform(parameter) {
-                
-                switch $0 {
-                case let .failure(failure):
-                    completion(failure)
-                    
-                case .success:
-                    completion(nil)
-                }
-            }
-        })
-    }
-}
-
-extension ServiceCategory {
-    
-    var hasStandardFlow: Bool { paymentFlow == .standard }
-}
-
+import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class ServiceCategoryRemoteComposerTests: XCTestCase {
+final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     // MARK: - compose
     
     func test_compose_shouldNotCallCollaborators() {
         
-        let (sut, httpClient) = makeSUT()
+        let (sut, httpClient, local) = makeSUT()
         
         XCTAssertEqual(httpClient.callCount, 0)
+        XCTAssertEqual(local.loadCallCount, 0)
+        XCTAssertEqual(local.storeCallCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -90,7 +27,7 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldNotCallHTTPClientOnEmptyCategories() {
         
-        let (sut, httpClient) = makeSUT()
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut([]) { _ in exp.fulfill() }
@@ -101,11 +38,13 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldNotCallHTTPClientOnNonStandardFlowCategory() {
         
-        let categories = [makeCategory(flow: .mobile)]
-        let (sut, httpClient) = makeSUT()
+        let payloads = [
+            makeCategory(flow: .mobile)
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) { _ in exp.fulfill() }
+        sut(payloads) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(httpClient.callCount, 0)
@@ -113,16 +52,16 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldNotCallHTTPClientOnNonStandardFlowCategories() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .mobile),
             makeCategory(flow: .qr),
             makeCategory(flow: .taxAndStateServices),
             makeCategory(flow: .transport),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) { _ in exp.fulfill() }
+        sut(payloads) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(httpClient.callCount, 0)
@@ -130,13 +69,13 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldCallHTTPClientOnStandardFlowCategory() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .standard, type: .digitalWallets)
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) { _ in exp.fulfill() }
+        sut(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         
         wait(for: [exp], timeout: 1)
@@ -147,14 +86,14 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldCallHTTPClientOnStandardFlowCategories() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .standard, type: .education),
             makeCategory(flow: .standard, type: .digitalWallets),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) { _ in exp.fulfill() }
+        sut(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         httpClient.complete(with: .failure(anyError()), at: 1)
         
@@ -167,16 +106,16 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldCallHTTPClientOnStandardFlowCategories_mixed() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .qr),
             makeCategory(flow: .standard, type: .charity),
             makeCategory(flow: .mobile),
             makeCategory(flow: .standard, type: .security),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) { _ in exp.fulfill() }
+        sut(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         httpClient.complete(with: .failure(anyError()), at: 1)
         
@@ -189,16 +128,16 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldDeliverEmptyOnNonStandardFlowCategories() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .mobile),
             makeCategory(flow: .qr),
             makeCategory(flow: .taxAndStateServices),
             makeCategory(flow: .transport),
-        ]
-        let (sut, _) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, _, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) {
+        sut(payloads) {
             
             XCTAssertNoDiff($0, [])
             exp.fulfill()
@@ -209,15 +148,16 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldDeliverCategoryOnHTTPFailureOneStandardCategory() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .standard, type: .internet),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) {
+        sut(payloads) {
             
-            XCTAssertNoDiff($0, [.internet])
+            XCTAssertNoDiff($0.map(\.category.type), [.internet])
+            XCTAssertNoDiff($0.map(\.serial), [nil])
             exp.fulfill()
         }
         
@@ -227,16 +167,17 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldDeliverTwoCategoriesOnHTTPFailuresTwoStandardCategory() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .standard, type: .internet),
             makeCategory(flow: .standard, type: .security),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) {
+        sut(payloads) {
             
-            XCTAssertNoDiff($0, [.internet, .security])
+            XCTAssertNoDiff($0.map(\.category.type), [.internet, .security])
+            XCTAssertNoDiff($0.map(\.serial), [nil, nil])
             exp.fulfill()
         }
         
@@ -247,16 +188,17 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     func test_remote_shouldDeliverMixedOnMixedHTTPFailures() {
         
-        let categories = [
+        let payloads = [
             makeCategory(flow: .standard, type: .internet),
             makeCategory(flow: .standard, type: .security),
-        ]
-        let (sut, httpClient) = makeSUT()
+        ].map { Payload(serial: nil, category: $0) }
+        let (sut, httpClient, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut(categories) {
+        sut(payloads) {
             
-            XCTAssertNoDiff($0, [.internet])
+            XCTAssertNoDiff($0.map(\.category.type), [.internet])
+            XCTAssertNoDiff($0.map(\.serial), [nil])
             exp.fulfill()
         }
         
@@ -267,30 +209,75 @@ final class ServiceCategoryRemoteComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = ServiceCategoryRemoteComposer
-    private typealias SUT = Composer.Remote
+    private typealias Composer = BatchSerialCachingRemoteLoaderComposer
+    private typealias SUT = Composer.ServicePaymentProviderService
+    private typealias Payload = BatchSerialCachingRemoteLoaderComposer.GetOperatorsListByParamPayload
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     
     private func makeSUT(
+        loadStub: Model? = nil,
+        storeStub: Result<Void, any Error> = .failure(anyError()),
+        serialStub: String? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        httpClient: HTTPClientSpy
+        httpClient: HTTPClientSpy,
+        agent: LocalAgentSpy<Model>
     ) {
+        let agent = LocalAgentSpy(
+            loadStub: loadStub,
+            storeStub: storeStub,
+            serialStub: serialStub
+        )
+        let localComposer = LocalLoaderComposer(
+            agent: agent,
+            interactiveScheduler: .immediate,
+            backgroundScheduler: .immediate
+        )
         let httpClient = HTTPClientSpy()
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,
             logger: LoggerAgent()
         )
-        let composer = Composer(nanoServiceFactory: nanoServiceComposer)
-        let sut = composer.compose()
+        let composer = Composer(
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: localComposer
+        )
+        let sut = composer.composeServicePaymentProviderService(
+            getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }
+        )
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)
         trackForMemoryLeaks(httpClient, file: file, line: line)
+        trackForMemoryLeaks(agent, file: file, line: line)
         
-        return (sut, httpClient)
+        return (sut, httpClient, agent)
+    }
+    
+    private struct Value: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeValue(
+        _ value: String = anyMessage()
+    ) -> Value {
+        
+        return .init(value: value)
+    }
+    
+    private struct Model: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeModel(
+        _ value: String = anyMessage()
+    ) -> Model {
+        
+        return .init(value: value)
     }
     
     private func makeCategory(

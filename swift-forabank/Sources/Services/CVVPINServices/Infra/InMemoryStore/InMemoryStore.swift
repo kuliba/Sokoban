@@ -13,8 +13,8 @@ public final class InMemoryStore<Model> {
     
     private let queue = DispatchQueue(
         label: "\(InMemoryStore.self)Queue",
-        qos: .userInitiated,
-        attributes: .concurrent
+        qos: .userInitiated
+    //    attributes: .concurrent
     )
     
     public init(

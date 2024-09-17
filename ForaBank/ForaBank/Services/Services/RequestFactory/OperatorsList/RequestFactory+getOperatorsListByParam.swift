@@ -5,25 +5,37 @@
 //  Created by Дмитрий Савушкин on 16.02.2024.
 //
 
+import ForaTools
 import Foundation
 
 extension RequestFactory {
     
+    struct GetOperatorsListByParamPayload: Equatable, WithSerial {
+        
+        let serial: String?
+        let category: ServiceCategory
+    }
+
     static func getOperatorsListByParam(
-        categoryType: ServiceCategory.CategoryType
+        payload: GetOperatorsListByParamPayload
     ) throws -> URLRequest {
         
-        try getOperatorsListByParam(categoryType.name)
+        try getOperatorsListByParam(
+            serial: payload.serial,
+            type: payload.category.type.name
+        )
     }
     
     static func getOperatorsListByParam(
-        _ type: String = "housingAndCommunalService"
+        serial: String? = nil,
+        type: String
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
             ("operatorOnly", "true"),
-            ("type", type)
-        ]
+            ("type", type),
+            serial.map { ("serial", $0) }
+        ].compactMap { $0 }
         
         let endpoint = Services.Endpoint.getOperatorsListByParam
         let url = try! endpoint.url(
