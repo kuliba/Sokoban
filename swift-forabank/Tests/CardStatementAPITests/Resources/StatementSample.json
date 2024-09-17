@@ -1,46 +1,67 @@
 {
-    "statusCode": 0,
-    "errorMessage": null,
-    "data": [
-        {
-            "type": "INSIDE",
-            "accountID": 10000872827,
-            "operationType": "DEBIT",
-            "paymentDetailType": "C2B_PAYMENT",
-            "amount": 10,
-            "documentAmount": 10,
-            "comment": "Перевод C2B СБП получателю ООО \"АГРОТОРГ\".",
-            "documentID": 20017126099,
-            "accountNumber": "30302810900060000006",
-            "currencyCodeNumeric": 810,
-            "merchantName": "34T4 Пятерочка",
-            "merchantNameRus": "34T4 Пятерочка",
-            "groupName": "Оплата по QR-коду",
-            "md5hash": "d46cb4ded97c143291ea3fab225b0e2f",
-            "svgImage": null,
-            "fastPayment": {
-                "opkcid": "A3359170018807390000040011150101",
-                "foreignName": "ООО \"АГРОТОРГ\"",
-                "foreignPhoneNumber": "                                                  ",
-                "foreignBankBIC": "044525593",
-                "foreignBankID": "10000000818",
-                "foreignBankName": "АО \"АЛЬФА-БАНК\"",
-                "documentComment": "",
-                "operTypeFP": "CBPH",
-                "tradeName": "34T4 Пятерочка",
-                "guid": "640949825"
-            },
-            "terminalCode": "",
-            "deviceCode": "",
-            "country": "",
-            "city": "",
-            "operationId": "a1cc1739-68cf-465e-b606-119f6dea3940",
-            "isCancellation": false,
-            "cardTranNumber": "4656260144403580",
-            "opCode": 1,
-            "date": "2001-01-01T00:00:00.000Z",
-            "tranDate": null,
-            "MCC": 0
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "summary": {
+      "currencyCodeNumeric": "string",
+      "creditOperation": true,
+      "debitOperation": true
+    },
+    "aggregated": [
+      {
+        "groupByName": "string",
+        "baseColor": "string",
+        "debit": {
+          "amount": 0,
+          "amountPercent": 0
+        },
+        "credit": {
+          "amount": 0,
+          "amountPercent": 0
         }
+      }
+    ],
+    "operationList": [
+      {
+        "type": "INSIDE",
+        "accountID": 10004111477,
+        "operationType": "DEBIT",
+        "paymentDetailType": "BETWEEN_THEIR",
+        "amount": 144.21,
+        "documentAmount": 144.21,
+        "comment": "Перевод денежных средств. НДС не облагается.",
+        "documentID": 10230444722,
+        "accountNumber": "70601810711002740401",
+        "currencyCodeNumeric": 810,
+        "merchantName": "DBO MERCHANT FORA, Zubovskiy 2",
+        "merchantNameRus": "DBO MERCHANT FORA, Zubovskiy 2",
+        "groupName": "Прочие операции",
+        "md5hash": "75f3ee3b2d44e5808f41777c613f23c9",
+        "svgImage": "string",
+        "fastPayment": {
+          "opkcid": "A1355084612564010000057CAFC75755",
+          "foreignName": "Петров Петр Петрович",
+          "foreignPhoneNumber": "70115110217",
+          "foreignBankBIC": "044525491",
+          "foreignBankID": "10000001153",
+          "foreignBankName": "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
+          "documentComment": "string",
+          "operTypeFP": "string",
+          "tradeName": "string",
+          "guid": "string"
+        },
+        "terminalCode": "41010601",
+        "deviceCode": "string",
+        "country": "string",
+        "city": "string",
+        "operationId": "909743",
+        "isCancellation": false,
+        "cardTranNumber": "4256901080508437",
+        "opCode": 1,
+        "date": "2021-07-28T19:32:00Z",
+        "tranDate": "2021-07-28T19:32:00Z",
+        "MCC": 3245
+      }
     ]
+  }
 }

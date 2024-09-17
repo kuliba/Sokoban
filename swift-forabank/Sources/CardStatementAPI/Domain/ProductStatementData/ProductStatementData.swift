@@ -7,31 +7,80 @@
 
 import Foundation
 
-public struct ProductStatementWithExtendedInfo {
+public struct ProductStatementWithExtendedInfo: Equatable {
 
     public let summary: ProductStatementSummary?
     public let aggregated: [ProductStatementAggregated]?
     public let operationList: [ProductStatementData]
     
-    public struct ProductStatementSummary: Equatable {
-    
-        let currencyCodeNumeric: String?
-        let creditOperation: Bool?
-        let debitOperation: Bool?
+    public init(
+        summary: ProductStatementWithExtendedInfo.ProductStatementSummary? = nil,
+        aggregated: [ProductStatementWithExtendedInfo.ProductStatementAggregated]? = nil,
+        operationList: [ProductStatementData]
+    ) {
+        self.summary = summary
+        self.aggregated = aggregated
+        self.operationList = operationList
     }
+}
+
+public extension ProductStatementWithExtendedInfo {
     
-    public struct ProductStatementAggregated: Equatable {
+    struct ProductStatementAmountAndPercent: Equatable {
+        
+        let amount: Double?
+        let amountPercent: Double?
+        
+        public init(
+            amount: Double?,
+            amountPercent: Double?
+        ) {
+            self.amount = amount
+            self.amountPercent = amountPercent
+        }
+    }
+}
+
+public extension ProductStatementWithExtendedInfo {
+
+    struct ProductStatementAggregated: Equatable {
         
         let groupByName: String?
         let baseColor: String?
         let debit: ProductStatementAmountAndPercent?
         let credit: ProductStatementAmountAndPercent?
-    }
-    
-    public struct ProductStatementAmountAndPercent: Equatable {
         
-        let amount: Double?
-        let amountPercent: Double?
+        public init(
+            groupByName: String? = nil,
+            baseColor: String? = nil,
+            debit: ProductStatementWithExtendedInfo.ProductStatementAmountAndPercent? = nil,
+            credit: ProductStatementWithExtendedInfo.ProductStatementAmountAndPercent? = nil
+        ) {
+            self.groupByName = groupByName
+            self.baseColor = baseColor
+            self.debit = debit
+            self.credit = credit
+        }
+    }
+}
+
+public extension ProductStatementWithExtendedInfo {
+    
+    struct ProductStatementSummary: Equatable {
+    
+        let currencyCodeNumeric: String?
+        let creditOperation: Bool?
+        let debitOperation: Bool?
+        
+        internal init(
+            currencyCodeNumeric: String? = nil,
+            creditOperation: Bool? = nil,
+            debitOperation: Bool? = nil
+        ) {
+            self.currencyCodeNumeric = currencyCodeNumeric
+            self.creditOperation = creditOperation
+            self.debitOperation = debitOperation
+        }
     }
 }
 

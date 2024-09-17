@@ -19,7 +19,7 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/v4/getCardStatementForPeriod"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v5/getCardStatementForPeriod"
         )
     }
     
@@ -92,7 +92,11 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
             name: name,
             period: period,
             statementFormat: statementFormat,
-            cardNumber: cardNumber)
+            cardNumber: cardNumber,
+            operationType: nil,
+            operationGroup: nil,
+            includeAdditionalCards: nil
+        )
     }
     
     private struct DecodableRequest: Decodable {

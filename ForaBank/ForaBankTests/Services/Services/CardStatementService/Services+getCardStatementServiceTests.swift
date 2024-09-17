@@ -92,12 +92,16 @@ final class Services_getCardStatementServiceTests: XCTestCase {
 
         let exp = expectation(description: "wait for completion")
         let testPeriod = try testPeriod()
-        let payload = Payload.init(
+        let payload = Payload(
             id: 1,
             name: "cardName",
             period: testPeriod,
             statementFormat: .csv,
-            cardNumber: "1111")
+            cardNumber: "1111",
+            operationType: nil,
+            operationGroup: nil,
+            includeAdditionalCards: nil
+        )
         
         sut.process(payload) { receivedResult in
             

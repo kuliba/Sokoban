@@ -33,7 +33,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             .gibdd,
             .latestPayment(1),
             .qr,
-            .sfp(phone: "123", bankId: .contact),
+            .sfp(phone: "123", bankId: .contact, amount: nil, productId: nil),
         ]
         
         sources.forEach { source in
@@ -92,7 +92,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let sut = makeSUT()
         let operation = Payments.Operation(
             service: .sfp,
-            source: .sfp(phone: "phone", bankId: "1")
+            source: .sfp(phone: "phone", bankId: "1", amount: nil, productId: nil)
         )
         
         let bankParameter = sut.createBankParameter(
@@ -364,7 +364,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_headerCase_returnsExpectedParameterHeader() {
         
-        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID", amount: nil, productId: nil))
         let sut = makeSUT()
         
         do {
@@ -383,7 +383,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_paymentsProcessDependencyReducerSFP_headerCase_withCodeParameter_returnsExpectedParameterHeader() {
         
-        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID", amount: nil, productId: nil))
         let sut = makeSUT()
 
         let parameters: [PaymentsParameterRepresentable] = [
@@ -408,7 +408,7 @@ final class Model_PaymensSFPTests: XCTestCase {
 
     func test_paymentsProcessDependencyReducerSFP_headerCase_withoutCodeParameter_returnsExpectedParameterHeader() {
        
-        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .foraBankID))
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .foraBankID, amount: nil, productId: nil))
         let sut = makeSUT()
         
         do {
@@ -493,7 +493,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     private func makeSPFSource(bankID: String = .foraBankID) -> Payments.Operation.Source {
         
-        return .sfp(phone: "123", bankId: bankID)
+        return .sfp(phone: "123", bankId: bankID, amount: nil, productId: nil)
     }
     
     private func makeParameter(_ value: String? = nil) -> [PaymentsParameterRepresentable] {
@@ -649,7 +649,7 @@ private extension Payments.Operation {
         
         return Payments.Operation(
             service: .sfp,
-            source: .sfp(phone: phone, bankId: bankId),
+            source: .sfp(phone: phone, bankId: bankId, amount: nil, productId: nil),
             steps: [step],
             visible: visible
         )
