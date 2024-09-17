@@ -64,7 +64,7 @@ extension BlaComposer {
                     completion(models.map(fromLocal))
                     
                 case let .some(stamped):
-                    completion(nil)
+                    completion(fromRemote(stamped.list))
                 }
             }
         }
@@ -304,8 +304,8 @@ final class ComposerTests: XCTestCase {
     
     func test_remoteLoad_shouldDeliverOneOnRemoteFailureAgentLoadOne() {
         
-        let (model, value) = (makeLocalModel(), makeValue())
-        let (sut, _) = makeSUT(load: [model], serial: anyMessage())
+        let value = makeValue()
+        let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
         let (remoteLoad, remote, _,_) = composeRemote(sut, fromLocal: [value])
         
         expect(remoteLoad, toDeliver: [value]) {
@@ -316,14 +316,65 @@ final class ComposerTests: XCTestCase {
     
     func test_remoteLoad_shouldDeliverTwoOnRemoteFailureAgentLoadTwo() {
         
-        let (model1, value1) = (makeLocalModel(), makeValue())
-        let (model2, value2) = (makeLocalModel(), makeValue())
-        let (sut, _) = makeSUT(load: [model1, model2], serial: anyMessage())
+        let (value1, value2) = (makeValue(), makeValue())
+        let (sut, _) = makeSUT(load: [makeLocalModel(), makeLocalModel()], serial: anyMessage())
         let (remoteLoad, remote, _,_) = composeRemote(sut, fromLocal: [value1, value2])
         
         expect(remoteLoad, toDeliver: [value1, value2]) {
             
             remote.complete(with: .none)
+        }
+    }
+    
+    func test_remoteLoad_shouldCallFromRemoteWithOneOnRemoteLoadOne() {
+        
+        let remoteModel = makeRemoteModel()
+        let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
+        let (remoteLoad, remote, _, fromRemote) = composeRemote(sut)
+        
+        remoteLoad { _ in
+            
+            XCTAssertNoDiff(fromRemote.payloads, [[remoteModel]])
+        }
+        
+        remote.complete(with: .init(list: [remoteModel], serial: anyMessage()))
+    }
+    
+    func test_remoteLoad_shouldDeliverOneOnFromRemoteOne() {
+        
+        let value = makeValue()
+        let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut, fromRemote: [value])
+        
+        expect(remoteLoad, toDeliver: [value]) {
+            
+            remote.complete(with: .init(list: [], serial: anyMessage()))
+        }
+    }
+    
+    func test_remoteLoad_shouldCallFromRemoteWithTwoOnRemoteLoadTwo() {
+        
+        let (remoteModel1, remoteModel2) = (makeRemoteModel(), makeRemoteModel())
+        let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
+        let (remoteLoad, remote, _, fromRemote) = composeRemote(sut)
+        
+        remoteLoad { _ in
+            
+            XCTAssertNoDiff(fromRemote.payloads, [[remoteModel1, remoteModel2]])
+        }
+        
+        remote.complete(with: .init(list: [remoteModel1, remoteModel2], serial: anyMessage()))
+    }
+    
+    func test_remoteLoad_shouldDeliverTwoOnFromRemoteTwo() {
+        
+        let (value1, value2) = (makeValue(), makeValue())
+        let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut, fromRemote: [value1, value2])
+        
+        expect(remoteLoad, toDeliver: [value1, value2]) {
+            
+            remote.complete(with: .init(list: [], serial: anyMessage()))
         }
     }
     
