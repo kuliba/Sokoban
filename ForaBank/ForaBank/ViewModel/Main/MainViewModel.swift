@@ -1790,35 +1790,23 @@ extension MainViewModel {
     
     private func landingAction(for event: LandingEvent.Card) -> () -> Void {
         
-            switch event {
-            case .goToMain:
-                return handleCloseLinkAction
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+            
+        case let .order(cardTarif, cardType):
+            return {}
+            
+        case let .openUrl(link):
+            return {
                 
-             case let .order(cardTarif, cardType):
-                return { [weak self] in
-                    self?.orderCard(cardTarif, cardType)
-                }
-                
-            case let .openUrl(link):
-                return {
-                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
-                        UIApplication.shared.open(url)
-                    }
+                if let url = URL(string: link) {
+                    MainViewModel.openLinkURL(url)
                 }
             }
+        }
     }
-    
-    func orderCard(
-        _ cardTarif: Int,
-        _ cardType: Int
-    ) {
-        // уточнить у аналитика нужен ли заказ карт
-       /* if let catalogProduct = self.eventHandlers.catalogProduct(.tarif(cardTarif, type: cardType)) {
-            
-            handleShowOrderProductAction(catalogProduct)
-        }*/
-    }
-    
+        
     private func handleCloseLinkAction() {
         
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
