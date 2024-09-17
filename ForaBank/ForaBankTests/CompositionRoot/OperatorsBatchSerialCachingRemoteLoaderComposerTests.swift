@@ -230,7 +230,7 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
             storeStub: storeStub,
             serialStub: serialStub
         )
-        let localComposer = LocalLoaderComposer(
+        let asyncLocalAgent = LocalAgentAsyncWrapper(
             agent: agent,
             interactiveScheduler: .immediate,
             backgroundScheduler: .immediate
@@ -242,7 +242,7 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
         )
         let composer = Composer(
             nanoServiceFactory: nanoServiceComposer,
-            updateMaker: localComposer
+            updateMaker: asyncLocalAgent
         )
         let sut = composer.composeServicePaymentProviderService(
             getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }

@@ -1,5 +1,5 @@
 //
-//  LocalLoaderComposerTests.swift
+//  LocalAgentAsyncWrapperTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 10.09.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class LocalLoaderComposerTests: XCTestCase {
+final class LocalAgentAsyncWrapperTests: XCTestCase {
     
     // MARK: - init
     
@@ -345,7 +345,7 @@ final class LocalLoaderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = LocalLoaderComposer
+    private typealias SUT = LocalAgentAsyncWrapper
     
     private func makeSUT(
         loadStub: Model? = nil,

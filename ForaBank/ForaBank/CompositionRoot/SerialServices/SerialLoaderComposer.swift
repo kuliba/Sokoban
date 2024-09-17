@@ -12,19 +12,19 @@ import RemoteServices
 /// A composer responsible for creating loaders that handle serial-stamped data, supporting both local and remote data sources with caching capabilities.
 final class SerialLoaderComposer {
     
-    private let localComposer: LocalLoaderComposer
+    private let asyncLocalAgent: LocalAgentAsyncWrapper
     private let nanoServiceComposer: LoggingRemoteNanoServiceComposer
     
     /// Initialises a new instance of `SerialLoaderComposer`.
     ///
     /// - Parameters:
-    ///   - localComposer: Composer for local data loading and saving.
+    ///   - asyncLocalAgent: Agent for local data loading and saving.
     ///   - nanoServiceComposer: Composer for remote data loading with logging capabilities.
     init(
-        localComposer: LocalLoaderComposer,
+        asyncLocalAgent: LocalAgentAsyncWrapper,
         nanoServiceComposer: LoggingRemoteNanoServiceComposer
     ) {
-        self.localComposer = localComposer
+        self.asyncLocalAgent = asyncLocalAgent
         self.nanoServiceComposer = nanoServiceComposer
     }
 }
@@ -54,9 +54,9 @@ extension SerialLoaderComposer {
         mapResponse: @escaping (Data, HTTPURLResponse) -> RemoteServices.ResponseMapper.MappingResult<RemoteServices.SerialStamped<String, T>>
     ) -> (local: Load<[T]>, remote: Load<[T]>) {
         
-        let localLoad = localComposer.composeLoad(fromModel: fromModel)
+        let localLoad = asyncLocalAgent.composeLoad(fromModel: fromModel)
         
-        let save = localComposer.composeSave(toModel: toModel)
+        let save = asyncLocalAgent.composeSave(toModel: toModel)
         
         let remoteLoad = nanoServiceComposer.compose(
             createRequest: createRequest,
