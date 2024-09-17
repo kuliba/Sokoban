@@ -489,7 +489,7 @@ private extension BatchSerialCachingRemoteLoaderComposer {
         
         let model: Model = .shared
         let agent = model.localAgent
-        let localLoaderComposer = LocalLoaderComposer(
+        let asyncLocalAgent = LocalAgentAsyncWrapper(
             agent: agent,
             interactiveScheduler: .global(qos: .userInteractive),
             backgroundScheduler: .global(qos: .background)
@@ -501,7 +501,7 @@ private extension BatchSerialCachingRemoteLoaderComposer {
         
         self.init(
             nanoServiceFactory: nanoServiceComposer,
-            updateMaker: localLoaderComposer
+            updateMaker: asyncLocalAgent
         )
     }
 }
