@@ -1812,6 +1812,7 @@ extension MainViewModel {
         _ cardTarif: Int,
         _ cardType: Int
     ) {
+        // уточнить у аналитика нужен ли заказ карт
        /* if let catalogProduct = self.eventHandlers.catalogProduct(.tarif(cardTarif, type: cardType)) {
             
             handleShowOrderProductAction(catalogProduct)
