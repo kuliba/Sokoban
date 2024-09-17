@@ -17,12 +17,12 @@ final class BlaComposer {
 
 extension BlaComposer {
     
-    typealias LoadCompletion<T> = (T) -> Void
+    typealias LoadCompletion<T> = ([T]?) -> Void
     typealias Load<T> = (@escaping LoadCompletion<T>) -> Void
     
     func compose<T, Model: Decodable>(
-        fromModel: @escaping (Model) -> T
-    ) -> Load<T?> {
+        fromModel: @escaping ([Model]) -> [T]
+    ) -> Load<T> {
         
         return {
             
@@ -35,14 +35,14 @@ extension BlaComposer {
 private extension BlaComposer {
     
     func agentLoad<T, Model: Decodable>(
-        fromModel: @escaping (Model) -> T,
-        completion: @escaping LoadCompletion<T?>
+        fromModel: @escaping ([Model]) -> [T],
+        completion: @escaping LoadCompletion<T>
     ) {
         guard self.agent.serial(for: Model.self) != nil
         else { return completion(nil) }
         
-        let model = self.agent.load(type: Model.self)
-        completion(model.map(fromModel))
+        let models = self.agent.load(type: [Model].self)
+        completion(models.map(fromModel))
     }
 }
 
@@ -62,57 +62,97 @@ final class ComposerTests: XCTestCase {
     
     // MARK: - local load
     
-    func test_localLoad_shouldDeliverFailureOnAgentDataFailure() {
+    func test_localLoad_shouldDeliverFailureOnMissingAgentData() {
         
         let (sut, _,_) = makeSUT(load: nil, serial: anyMessage())
         
         expect(sut, toDeliver: nil)
     }
     
-    func test_localLoad_shouldDeliverFailureOnAgentSerialFailure() {
+    func test_localLoad_shouldDeliverFailureOnAgentEmptyDataMissingSerial() {
         
-        let (sut, _,_) = makeSUT(load: makeModel(), serial: nil)
+        let (sut, _,_) = makeSUT(load: [], serial: nil)
         
         expect(sut, toDeliver: nil)
     }
     
-    func test_localLoad_shouldDeliverFailureOnBothAgentDataAndSerialFailures() {
+    func test_localLoad_shouldDeliverFailureOnMissingAgentSerial() {
+        
+        let (sut, _,_) = makeSUT(load: [makeModel()], serial: nil)
+        
+        expect(sut, toDeliver: nil)
+    }
+    
+    func test_localLoad_shouldDeliverFailureOnBothAgentDataAndSerialMissing() {
         
         let (sut, _,_) = makeSUT(load: nil, serial: nil)
         
         expect(sut, toDeliver: nil)
     }
     
-    func test_localLoad_shouldCallFromModelWithAgentLoad() {
+    func test_localLoad_shouldCallFromModelWithEmptyOnEmptyLoad() {
         
-        let model = makeModel()
-        let (sut, _, fromModel) = makeSUT(load: model, serial: anyMessage(), fromModel: makeValue())
+        let (sut, _, fromModel) = makeSUT(load: [], serial: anyMessage())
         
         sut { _ in }
         
-        XCTAssertNoDiff(fromModel.payloads, [model])
+        XCTAssertNoDiff(fromModel.payloads, [[]])
     }
     
-    func test_localLoad_shouldDeliverValueOnBothAgentDataAndSerial() {
+    func test_localLoad_shouldCallFromModelWithOneOnAgentLoadOne() {
+        
+        let model = makeModel()
+        let (sut, _, fromModel) = makeSUT(load: [model], serial: anyMessage())
+        
+        sut { _ in }
+        
+        XCTAssertNoDiff(fromModel.payloads, [[model]])
+    }
+    
+    func test_localLoad_shouldCallFromModelWithTwoOnAgentLoadTwo() {
+        
+        let (model1, model2) = (makeModel(), makeModel())
+        let (sut, _, fromModel) = makeSUT(load: [model1, model2], serial: anyMessage())
+        
+        sut { _ in }
+        
+        XCTAssertNoDiff(fromModel.payloads, [[model1, model2]])
+    }
+    
+    func test_localLoad_shouldDeliverEmptyOnFromModelEmptyAgentEmptyDataAndSerial() {
+        
+        let (sut, _,_) = makeSUT(load: [], serial: anyMessage(), fromModel: [])
+        
+        expect(sut, toDeliver: [])
+    }
+    
+    func test_localLoad_shouldDeliverEmptyOnFromModelEmptyAgentDataAndSerial() {
+        
+        let (sut, _,_) = makeSUT(load: [makeModel()], serial: anyMessage(), fromModel: [])
+        
+        expect(sut, toDeliver: [])
+    }
+    
+    func test_localLoad_shouldDeliverFromModelValueOnBothAgentDataAndSerial() {
         
         let value = makeValue()
-        let (sut, _,_) = makeSUT(load: makeModel(), serial: anyMessage(), fromModel: value)
+        let (sut, _,_) = makeSUT(load: [makeModel()], serial: anyMessage(), fromModel: [value])
         
-        expect(sut, toDeliver: value)
+        expect(sut, toDeliver: [value])
     }
     
     // MARK: - Helpers
     
     private typealias Composer = BlaComposer
     private typealias SUT = Composer.Load<Value?>
-    private typealias LocalAgent = LocalAgentSpy<Model>
-    private typealias FromModelSpy = CallSpy<Model, Value>
+    private typealias LocalAgent = LocalAgentSpy<[Model]>
+    private typealias FromModelSpy = CallSpy<[Model], [Value]>
     
     private func makeSUT(
-        load loadStub: Model? = nil,
+        load loadStub: [Model]? = nil,
         store storeStub: Result<Void, Error> = .success(()),
         serial serialStub: String? = nil,
-        fromModel value: Value? = nil,
+        fromModel values: [Value]? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -126,7 +166,7 @@ final class ComposerTests: XCTestCase {
             serialStub: serialStub
         )
         let composer = Composer(agent: agent)
-        let fromModelSpy = FromModelSpy(response: value ?? makeValue())
+        let fromModelSpy = FromModelSpy(response: values ?? [makeValue()])
         let sut: SUT = composer.compose(fromModel: fromModelSpy.call(payload:))
         
         trackForMemoryLeaks(composer, file: file, line: line)
@@ -161,8 +201,8 @@ final class ComposerTests: XCTestCase {
     }
     
     private func expect<T: Equatable>(
-        _ sut: Composer.Load<T?>,
-        toDeliver expected: T?,
+        _ sut: Composer.Load<T>,
+        toDeliver expected: [T]?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
