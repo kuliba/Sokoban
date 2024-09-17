@@ -42,10 +42,11 @@ extension BlaComposer {
     typealias RemoteLoadCompletion<T> = (SerialStamped<Serial, T>?) -> Void
     typealias RemoteLoad<T> = (Serial?, @escaping RemoteLoadCompletion<T>) -> Void
     
-    func compose<T, LocalModel: Decodable, RemoteModel>(
+    func compose<T, LocalModel: Codable, RemoteModel>(
         remote: @escaping RemoteLoad<RemoteModel>,
         fromLocal: @escaping ([LocalModel]) -> [T],
-        fromRemote: @escaping ([RemoteModel]) -> [T]
+        fromRemote: @escaping ([RemoteModel]) -> [T],
+        toLocal: @escaping ([RemoteModel]) -> ([LocalModel])
     ) -> Load<T> {
         
         let serial = self.agent.serial(for: [LocalModel].self)
@@ -65,6 +66,7 @@ extension BlaComposer {
                     
                 case let .some(stamped):
                     completion(fromRemote(stamped.list))
+                    try? self.agent.store(toLocal(stamped.list), serial: stamped.serial)
                 }
             }
         }
@@ -104,28 +106,28 @@ final class ComposerTests: XCTestCase {
         
         let (sut, _) = makeSUT(load: nil, serial: anyMessage())
         
-        expect(composeLocal(sut).load, toDeliver: nil)
+        expect(composeLocal(sut).composed, toDeliver: nil)
     }
     
     func test_localLoad_shouldDeliverFailureOnAgentEmptyDataMissingSerial() {
         
         let (sut, _) = makeSUT(load: [], serial: nil)
         
-        expect(composeLocal(sut).load, toDeliver: nil)
+        expect(composeLocal(sut).composed, toDeliver: nil)
     }
     
     func test_localLoad_shouldDeliverFailureOnMissingAgentSerial() {
         
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: nil)
         
-        expect(composeLocal(sut).load, toDeliver: nil)
+        expect(composeLocal(sut).composed, toDeliver: nil)
     }
     
     func test_localLoad_shouldDeliverFailureOnBothAgentDataAndSerialMissing() {
         
         let (sut, _) = makeSUT(load: nil, serial: nil)
         
-        expect(composeLocal(sut).load, toDeliver: nil)
+        expect(composeLocal(sut).composed, toDeliver: nil)
     }
     
     func test_localLoad_shouldCallFromModelWithEmptyOnEmptyLoad() {
@@ -164,14 +166,14 @@ final class ComposerTests: XCTestCase {
         
         let (sut, _) = makeSUT(load: [], serial: anyMessage())
         
-        expect(composeLocal(sut).load, toDeliver: [])
+        expect(composeLocal(sut).composed, toDeliver: [])
     }
     
     func test_localLoad_shouldDeliverEmptyOnFromModelEmptyAgentDataAndSerial() {
         
         let (sut, _) = makeSUT(load: [makeLocalModel()], serial: anyMessage())
         
-        expect(composeLocal(sut).load, toDeliver: [])
+        expect(composeLocal(sut).composed, toDeliver: [])
     }
     
     func test_localLoad_shouldDeliverFromModelValueOnBothAgentDataAndSerial() {
@@ -378,6 +380,70 @@ final class ComposerTests: XCTestCase {
         }
     }
     
+    // MARK: - cache remote load
+    
+    func test_cacheRemoteLoad_shouldNotCacheOnRemoteFailure() {
+        
+        let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: nil)
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssert(agent.storeMessages.isEmpty)
+    }
+    
+    func test_cacheRemoteLoad_shouldCacheEmptyOnRemoteEmptyLoad() {
+        
+        let serial = anyMessage()
+        let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut)
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: .init(list: [], serial: serial))
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [[]])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
+    }
+    
+    func test_cacheRemoteLoad_shouldCacheOneOnToLocalOne() {
+        
+        let (local, serial) = (makeLocalModel(), anyMessage())
+        let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut, toLocal: [local])
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: .init(list: [], serial: serial))
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [[local]])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
+    }
+    
+    func test_cacheRemoteLoad_shouldCacheTwoOnToLocalTwo() {
+        
+        let (local1, local2, serial) = (makeLocalModel(), makeLocalModel(), anyMessage())
+        let (sut, agent) = makeSUT(load: nil, serial: anyMessage())
+        let (remoteLoad, remote, _,_) = composeRemote(sut, toLocal: [local1, local2])
+        let remoteExp = expectation(description: "wait for remote completion")
+        
+        remoteLoad { _ in remoteExp.fulfill() }
+        
+        remote.complete(with: .init(list: [], serial: serial))
+        wait(for: [remoteExp], timeout: 1)
+        
+        XCTAssertNoDiff(agent.storeMessages.map(\.0), [[local1, local2]])
+        XCTAssertNoDiff(agent.storeMessages.map(\.1), [serial])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = BlaComposer
@@ -385,6 +451,7 @@ final class ComposerTests: XCTestCase {
     private typealias LocalAgent = LocalAgentSpy<[LocalModel]>
     private typealias FromLocalSpy = CallSpy<[LocalModel], [Value]>
     private typealias FromRemoteSpy = CallSpy<[RemoteModel], [Value]>
+    private typealias ToLocalSpy = CallSpy<[RemoteModel], [LocalModel]>
 #warning("need overload for Payload: WithSerial")
     private typealias RemoteLoadSpy = Spy<SUT.Serial?, SerialStamped<SUT.Serial, RemoteModel>?>
     
@@ -416,20 +483,21 @@ final class ComposerTests: XCTestCase {
         with response: [Value] = [],
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (load: Load, fromLocal: FromLocalSpy) {
+    ) -> (composed: Load, fromLocal: FromLocalSpy) {
         
         let fromLocal = FromLocalSpy(response: response)
-        let load = sut.compose(fromLocal: fromLocal.call(payload:))
+        let composed = sut.compose(fromLocal: fromLocal.call(payload:))
         
         trackForMemoryLeaks(fromLocal, file: file, line: line)
         
-        return (load, fromLocal)
+        return (composed, fromLocal)
     }
     
     private func composeRemote(
         _ sut: SUT,
         fromLocal: [Value] = [],
         fromRemote: [Value] = [],
+        toLocal: [LocalModel] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (composed: Load, remote: RemoteLoadSpy, fromLocal: FromLocalSpy, fromRemote: FromRemoteSpy) {
@@ -437,10 +505,12 @@ final class ComposerTests: XCTestCase {
         let remote = RemoteLoadSpy()
         let fromLocal = FromLocalSpy(response: fromLocal)
         let fromRemote = FromRemoteSpy(response: fromRemote)
+        let toLocal = ToLocalSpy(response: toLocal)
         let composed = sut.compose(
             remote: remote.process(_:completion:),
             fromLocal: fromLocal.call(payload:),
-            fromRemote: fromRemote.call(payload:)
+            fromRemote: fromRemote.call(payload:),
+            toLocal: toLocal.call(payload:)
         )
         
         trackForMemoryLeaks(remote, file: file, line: line)
@@ -450,7 +520,7 @@ final class ComposerTests: XCTestCase {
         return (composed, remote, fromLocal, fromRemote)
     }
     
-    private struct LocalModel: Decodable, Equatable {
+    private struct LocalModel: Codable, Equatable {
         
         let value: String
     }
