@@ -133,7 +133,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .padding(.bottom, 32)
             
         case let promo as BannerPickerSectionBinderWrapper:
-            makeBannerSectionView(binder: promo.binder)
+            makeBannersView(promo.binder)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             
@@ -334,6 +334,27 @@ struct MainView<NavigationOperationView: View>: View {
 
 private extension MainView {
         
+    func makeBannersView(
+        _ binder: BannersBinder
+    ) -> some View {
+        
+        ComposedBannersView(
+            bannersBinder: binder,
+            factory: .init(
+                makeContentView: {
+                    BannersContentView(
+                        content: binder.content,
+                        factory: .init(
+                            makeBannerSectionView: makeBannerSectionView
+                        ),
+                        config: .init(bannerSectionHeight: 128, spacing: 10)
+                    )
+                }
+            )
+        )
+    }
+
+    
     typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
 
     func makeBannerSectionView(
@@ -638,7 +659,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {}, 
+        bannersBinder: .preview
     )
     
     static let sampleProducts = MainViewModel(
@@ -667,7 +689,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -696,7 +719,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
 }
 

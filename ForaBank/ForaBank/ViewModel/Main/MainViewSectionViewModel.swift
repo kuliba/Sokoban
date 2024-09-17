@@ -13,9 +13,9 @@ import Banners
 final class BannerPickerSectionBinderWrapper: MainSectionViewModel {
     override var type: MainSectionType { .promo }
     
-    let binder: BannerPickerSectionBinder
+    let binder: BannersBinder
     
-    init(binder: BannerPickerSectionBinder) {
+    init(binder: BannersBinder) {
         self.binder = binder
     }
 }

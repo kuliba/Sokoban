@@ -53,6 +53,8 @@ class MainViewModel: ObservableObject, Resetable {
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     
+    let bannersBinder: BannersBinder
+    
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -66,12 +68,13 @@ class MainViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
+        bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
+        self.sections = Self.getSections(model, bannersBinder, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -81,6 +84,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
+        self.bannersBinder = bannersBinder
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -91,6 +95,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private static func getSections(
         _ model: Model,
+        _ binder: BannersBinder,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
@@ -102,6 +107,7 @@ class MainViewModel: ObservableObject, Resetable {
             ),
             MainSectionFastOperationView.ViewModel(),
             MainSectionPromoView.ViewModel(model),
+        //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial

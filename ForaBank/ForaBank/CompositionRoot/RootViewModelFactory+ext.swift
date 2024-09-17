@@ -451,6 +451,15 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
+        let bannersBinder = makeBannersForMainView(
+            bannerPickerPlaceholderCount: 6,
+            nanoServices: .init(
+                loadBanners: loadBannersList
+            ),
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+
         // call and notify bannerPicker
         bindings.saveAndRun {
             
@@ -458,6 +467,7 @@ extension RootViewModelFactory {
                 
                 banners.content.bannerPicker.content.event(.loaded($0))
                 paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
+                bannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
 
@@ -485,7 +495,8 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            paymentsTransfersSwitcher: paymentsTransfersSwitcher
+            paymentsTransfersSwitcher: paymentsTransfersSwitcher,
+            bannersBinder: bannersBinder
         )
     }
     
@@ -795,7 +806,9 @@ private extension RootViewModelFactory {
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
-        paymentsTransfersSwitcher: PaymentsTransfersSwitcher
+        paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
+        bannersBinder: BannersBinder
+
     ) -> RootViewModel {
             
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -825,7 +838,8 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            onRegister: onRegister
+            onRegister: onRegister, 
+            bannersBinder: bannersBinder
         )
         
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(

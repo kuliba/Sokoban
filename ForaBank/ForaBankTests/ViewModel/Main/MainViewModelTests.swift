@@ -127,7 +127,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {}
+            onRegister: {},
+            bannersBinder: .preview
         )
      
       sut.orderSticker()
@@ -568,7 +569,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            onRegister: {}
+            onRegister: {},
+            bannersBinder: .preview
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -600,7 +602,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {}
+            onRegister: {},
+            bannersBinder: .preview
         )
 
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -636,7 +639,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {}
+            onRegister: {},
+            bannersBinder: .preview
         )
 
         // trackForMemoryLeaks(sut, file: file, line: line)
@@ -690,7 +694,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             paymentsTransfersFactory: .preview,
             updateInfoStatusFlag: .init(.inactive),
-            onRegister: {}
+            onRegister: {},
+            bannersBinder: .preview
         )
 
         // trackForMemoryLeaks(sut, file: file, line: line)
