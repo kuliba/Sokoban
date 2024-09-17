@@ -57,7 +57,7 @@ extension Period {
             switch self {
             case .latest: return "direction: latest"
             case .eldest: return "direction: eldest"
-            case let .custom(start: star, end: end): return "direction: eldest"
+            case .custom: return "direction: custom"
             }
         }
     }

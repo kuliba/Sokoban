@@ -82,12 +82,9 @@ struct CalendarWrapperView: View {
                                     background: .buttonPrimary
                                 ),
                                 action: {
-                                    //                                    applyAction(state.range?.rangeSelected)
                                     apply(state.range?.lowerDate, state.range?.upperDate)
                                 }
                             )
-                            //                            .allowsHitTesting(selectedRange.rangeSelected == true ? false : true)
-                            
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 30)
@@ -137,37 +134,30 @@ private extension CalendarWrapperView {
         )
     }
     
-    func updateRange(range: MDateRange?, date: Date) -> MDateRange {
-        
-        if let lowerDate = range?.lowerDate,
-           let upperDate = range?.upperDate {
-            
-            return .init(startDate: date, endDate: nil)
-            
-        } else if let lowerDate = range?.lowerDate {
-            
-            let upperRange = lowerDate...lowerDate.addingTimeInterval(2678400)
-            let lowRange = lowerDate.addingTimeInterval(-2678400)...lowerDate
-
-            if (upperRange.contains(date) || lowRange.contains(date)) {
-                
-                if lowerDate > date {
-                    
-                    return .init(startDate: date, endDate: lowerDate)
-                    
-                } else {
-                    
-                    return .init(startDate: lowerDate, endDate: date)
-                }
-                
-            } else {
-                
-                return .init(startDate: lowerDate, endDate: nil)
-            }
-            
-        } else {
+    private func updateRange(range: MDateRange?, date: Date) -> MDateRange {
+        guard let range = range else {
             return .init(startDate: date, endDate: nil)
         }
+        
+        if let lowerDate = range.lowerDate, let upperDate = range.upperDate {
+            return .init(startDate: date, endDate: nil)
+            
+        } else if let lowerDate = range.lowerDate {
+            
+            let oneMonthInSeconds: TimeInterval = 2678400
+            let upperRange = lowerDate...lowerDate.addingTimeInterval(oneMonthInSeconds)
+            let lowRange = lowerDate.addingTimeInterval(-oneMonthInSeconds)...lowerDate
+            
+            if upperRange.contains(date) || lowRange.contains(date) {
+                return lowerDate > date ?
+                    .init(startDate: date, endDate: lowerDate) :
+                    .init(startDate: lowerDate, endDate: date)
+            } else {
+                return .init(startDate: lowerDate, endDate: nil)
+            }
+        }
+        
+        return .init(startDate: date, endDate: nil)
     }
     
     func simpleButtonView(
@@ -195,77 +185,4 @@ extension CalendarWrapperView {
         let titleConfig: TextConfig
         let background: Color
     }
-}
-
-struct RangeSelector {
-    
-    let date: Date
-    let isCurrentMonth: Bool
-    let selectedDate: Date?
-    var selectedRange: MDateRange?
-    let selectDate: (Date) -> Void
-    
-    func dayLabel() -> AnyView {
-        
-        Text(getStringFromDay(format: "d"))
-            .font(.system(size: 15))
-            .foregroundColor(isSelected() ? .white : .black)
-            .opacity(isFuture() ? 0.2 : 1)
-            .erased()
-    }
-}
-
-extension RangeSelector {
-    
-    func onSelection() {
-        
-        if !isFuture() {
-            
-            if let lowerDate = selectedRange?.lowerDate,
-               lowerDate.isBetweenStartDate(date.addingTimeInterval(2629800), endDateInclusive: date.addingTimeInterval(-2629800))
-            {
-                selectDate(date)
-            } else if selectedRange?.lowerDate == nil{
-                selectDate(date)
-            } else if selectedRange?.upperDate != nil {
-                selectDate(date)
-            }
-        }
-    }
-    
-    func isFuture() -> Bool {
-        date.isLater(.day, than: Date())
-    }
-    
-    func getStringFromDay(format: String) -> String {
-    
-        MDateFormatter.getString(from: date, format: format)
-    }
-    
-    func isSelected() -> Bool {
-        date.isSame(.day, as: selectedDate) || isBeginningOfRange() || isEndOfRange()
-    }
-    
-    func isBeginningOfRange() -> Bool {
-        date.isSame(.day, as: selectedRange?.getRange()?.lowerBound)
-        
-    }
-    
-    func isEndOfRange() -> Bool {
-        date.isSame(.day, as: selectedRange?.getRange()?.upperBound)
-    }
-    
-    func isWithinRange() -> Bool {
-        
-        selectedRange?.isRangeCompleted() == true && selectedRange?.contains(date) == true
-    }
-    
-    func isRangeCompleted() -> Bool { 
-        selectedRange?.upperDate != nil
-    }
-    
-    func contains(_ date: Date) -> Bool { 
-        selectedRange?.getRange()?.contains(date) == true
-    }
-
 }

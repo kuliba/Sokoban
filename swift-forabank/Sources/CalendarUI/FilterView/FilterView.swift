@@ -75,6 +75,9 @@ public struct FilterView: View {
                     closeImage: config.optionButtonCloseImage
                 )
             )
+            .onAppear {
+                filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
+            }
             
             if !filterState.filter.services.isEmpty {
                 
