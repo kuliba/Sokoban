@@ -2642,6 +2642,8 @@
 		C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */; };
 		C139D9162AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */; };
 		C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9172AFCB175008B5F5E /* MainViewModelSamples.swift */; };
+		C13D8F6B2C9B16E800A79263 /* HistoryEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13D8F6A2C9B16E800A79263 /* HistoryEffectHandler.swift */; };
+		C13D8F6D2C9B223D00A79263 /* FilterModelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13D8F6C2C9B223D00A79263 /* FilterModelReducer.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
 		C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F02A84259000FAD5AA /* AccountCellViewModelTests.swift */; };
 		C14303F32A842B4B00FAD5AA /* ProductDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F22A842B4B00FAD5AA /* ProductDataTests.swift */; };
@@ -5740,6 +5742,8 @@
 		C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeTransferResponse.swift; sourceTree = "<group>"; };
 		C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+MakeTransfer.swift"; sourceTree = "<group>"; };
 		C139D9172AFCB175008B5F5E /* MainViewModelSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelSamples.swift; sourceTree = "<group>"; };
+		C13D8F6A2C9B16E800A79263 /* HistoryEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEffectHandler.swift; sourceTree = "<group>"; };
+		C13D8F6C2C9B223D00A79263 /* FilterModelReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModelReducer.swift; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
 		C14303F02A84259000FAD5AA /* AccountCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCellViewModelTests.swift; sourceTree = "<group>"; };
 		C14303F22A842B4B00FAD5AA /* ProductDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataTests.swift; sourceTree = "<group>"; };
@@ -11659,6 +11663,8 @@
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */,
 				C192D4282C23E87700A6B338 /* HistoryReducer.swift */,
+				C13D8F6A2C9B16E800A79263 /* HistoryEffectHandler.swift */,
+				C13D8F6C2C9B223D00A79263 /* FilterModelReducer.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -18395,6 +18401,7 @@
 				5078CDF02937831B006D1576 /* TransfersSupportViewComponent.swift in Sources */,
 				C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
+				C13D8F6D2C9B223D00A79263 /* FilterModelReducer.swift in Sources */,
 				2AFD59E92B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift in Sources */,
 				ED374C8F2861FBCE00A97219 /* ActivityViewComponent.swift in Sources */,
 				C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */,
@@ -18704,6 +18711,7 @@
 				ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */,
 				77D0385F2987DF0400FBE5AB /* PaymentParameter.swift in Sources */,
 				77D0385F2987DF0400FBE5AB /* PaymentParameter.swift in Sources */,
+				C13D8F6B2C9B16E800A79263 /* HistoryEffectHandler.swift in Sources */,
 				2A3EB71C29B1098C002A1309 /* Config.swift in Sources */,
 				7769F5BC27D3A2EA00F80607 /* MainView.swift in Sources */,
 				2A2ECBBB2AE51D6F00F3C946 /* GenericLoaderOf.swift in Sources */,

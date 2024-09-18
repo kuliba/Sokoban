@@ -8,30 +8,66 @@
 
 import SwiftUI
 import SharedConfigs
+import RxViewModel
+
+public enum FilterEffect: Equatable {}
+
+public struct FilterWrapperView: View {
+    
+    public typealias State = FilterState
+    public typealias Event = FilterEvent
+    public typealias Effect = FilterEffect
+    public typealias Config = FilterConfig
+    
+    public typealias Model = RxViewModel<State, Event, Effect>
+    
+    @ObservedObject private var model: Model
+    private let config: Config
+    private let calendarViewAction: (CalendarState) -> Void
+
+    public init(
+        model: Model,
+        config: Config,
+        calendarViewAction: @escaping (CalendarState) -> Void
+    ) {
+        self.model = model
+        self.calendarViewAction = calendarViewAction
+        self.config = config
+    }
+    
+    public var body: some View {
+    
+        FilterView(
+            filterState: model.state,
+            event: model.event(_:),
+            config: config,
+            calendarViewAction: calendarViewAction
+        )
+    }
+}
 
 public struct FilterView: View {
     
     public typealias Event = FilterEvent
     public typealias Config = FilterConfig
     
-    @State var filterState: FilterState
+    private let initialState: FilterState
+    @State private var filterState: FilterState
     let filterEvent: (Event) -> Void
     let config: Config
     
-    let makeButtonsContainer: (@escaping () -> Void, FilterState, @escaping () -> Void) -> ButtonsContainer
-    let calendarViewAction: () -> Void
+    let calendarViewAction: (CalendarState) -> Void
     
     public init(
         filterState: FilterState,
         event: @escaping (Event) -> Void,
         config: Config,
-        makeButtonsContainer: @escaping (@escaping () -> Void, FilterState, @escaping () -> Void) -> ButtonsContainer,
-        calendarViewAction: @escaping () -> Void
+        calendarViewAction: @escaping (CalendarState) -> Void
     ) {
         self._filterState = .init(wrappedValue: filterState)
+        self.initialState = filterState
         self.filterEvent = event
         self.config = config
-        self.makeButtonsContainer = makeButtonsContainer
         self.calendarViewAction = calendarViewAction
     }
     
@@ -52,7 +88,7 @@ public struct FilterView: View {
 
                     switch event {
                     case .calendar:
-                        calendarViewAction()
+                        calendarViewAction(filterState.calendar)
                     case .clearOptions:
                         filterEvent(.clearOptions)
                     case let .selectPeriod(period):
@@ -75,9 +111,10 @@ public struct FilterView: View {
                     closeImage: config.optionButtonCloseImage
                 )
             )
-            .onAppear {
-                filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
-            }
+            //MARK: Remove
+//            .onAppear {
+//                filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
+//            }
             
             if !filterState.filter.services.isEmpty {
                 
@@ -120,15 +157,42 @@ public struct FilterView: View {
             
             Spacer()
             
-            makeButtonsContainer({
-//                filterEvent(.selectedPeriod(filterState.filter.selectedPeriod))
-//                filterEvent(.selectedTransaction(filterState.filter.selectedTransaction))
-//                filterEvent(.selectedCategory(filterState.filter.selectedServices))
-                print("Clear action")
-            },filterState, {
-                filterState.filter.selectedServices = []
-                filterState.filter.selectedTransaction = nil
-            })
+            ButtonsContainer(
+                applyAction: {
+                    
+                    filterEvent(.updateFilter(filterState))
+//                    filterState?.filter = state.filter
+                    
+                    //                    self.viewModel.event(.history(.dismiss))
+                    
+//                    if let lowerDate = state.filter.selectDates?.lowerDate,
+//                       let upperDate = state.filter.selectDates?.upperDate {
+//                        
+//                        viewModel.filterHistoryRequest(
+//                            lowerDate.addingTimeInterval(86400),
+//                            upperDate.addingTimeInterval(86400),
+//                            state.filter.selectedTransaction?.rawValue.uppercased(),
+//                            state.filter.selectedServices.map({ $0 })
+//                        )
+//                    }
+                },
+                clearOptionsAction: {
+                    filterEvent(.clearOptions)
+                    filterState = initialState
+//                    self.viewModel.filterState = nil
+                    //                    clearOptions()
+                },
+                config: .init(
+                    clearButtonTitle: "Очистить",
+                    applyButtonTitle: "Применить"
+                )
+            )
+//            makeButtonsContainer({ filterState in
+//                
+//            }, {
+//                filterState.filter.selectedServices = []
+//                filterState.filter.selectedTransaction = nil
+//            })
         }
         .padding()
     }
@@ -538,17 +602,7 @@ struct FilterView_Previews: PreviewProvider {
                     ), 
                     optionButtonCloseImage: .init(systemName: "")
                 ),
-                makeButtonsContainer: { _,_,_   in 
-                    .init(
-                        applyAction: {},
-                        clearOptionsAction: {},
-                        config: .init(
-                            clearButtonTitle: "Очистить",
-                            applyButtonTitle: "Применить"
-                        )
-                    )
-                },
-                calendarViewAction: {}
+                calendarViewAction: {_ in }
             )
         }
     }

@@ -13,7 +13,7 @@ typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> Sber
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
-typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool,  @escaping () -> Void) -> HistoryButtonView?
+typealias MakeHistoryButtonView = (@escaping (ProductProfileFlowEvent.ButtonEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool,  @escaping () -> Void) -> HistoryButtonView?
 typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 
 struct RootViewFactory {
@@ -67,7 +67,7 @@ extension RootViewFactory {
 struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
-    let makeHistoryButton: (@escaping (HistoryEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool, @escaping () -> Void) -> HistoryButtonView?
+    let makeHistoryButton: (@escaping (ProductProfileFlowEvent.ButtonEvent) -> Void, @escaping () -> Bool, @escaping () -> Bool, @escaping () -> Void) -> HistoryButtonView?
     let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
 }
 
@@ -99,7 +99,7 @@ struct RepeatButtonView: View {
 
 struct HistoryButtonView: View {
     
-    let event: (HistoryEvent) -> Void
+    let event: (ProductProfileFlowEvent.ButtonEvent) -> Void
     let isFiltered: () -> Bool
     let isDateFiltered: () -> Bool
     let clearOptions: () -> Void
@@ -108,9 +108,7 @@ struct HistoryButtonView: View {
         
         HStack {
             
-            Button(action: {
-                event(.button(.calendar({ _,_ in print("calendar action") })))
-            }) {
+            Button { event(.calendar) } label: {
                 
                 ZStack {
                     
@@ -138,9 +136,7 @@ struct HistoryButtonView: View {
                 }
             }
             
-            Button(action: {
-                event(.button(.filter(nil, nil)))
-            }) {
+            Button { event(.filter) } label: {
                 
                 ZStack {
                     

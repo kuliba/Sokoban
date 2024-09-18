@@ -174,9 +174,10 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
+    //MARK: remove
     func historyCategories() -> [String] {
-                
-        Array(Set(self.model.statements.value[self.product.activeProductId]?.statements.map(\.groupName) ?? []))
+            
+        model.historyCategories(productId: self.product.activeProductId)
     }
     
     convenience init?(
@@ -2343,34 +2344,53 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    struct CalendarStateWrapper: Identifiable {
+    
+        let id: UUID
+        let state: CalendarState
+        
+        init(
+            id: UUID = .init(),
+            state: CalendarState
+        ) {
+            self.id = id
+            self.state = state
+        }
+    }
+    
     struct HistoryState: Identifiable {
         
         var id: Int { buttonAction.hashValue }
         
         var date: Date?
         var filters: [Filter]?
-        let selectedDates: (lowerDate: Date?, upperDate: Date?)
+        var selectedDates: (lowerDate: Date?, upperDate: Date?)
         var buttonAction: ButtonAction
-        var showSheet: Bool
+        var showSheet: Sheet
         var categories: [String]
         var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
+        var calendarState: CalendarStateWrapper? //Filter Only
         
-        public init(
-            date: Date? = nil,
-            filters: [Filter]? = nil,
-            selectedDates: (lowerDate: Date?, upperDate: Date?),
-            buttonAction: ButtonAction,
-            showSheet: Bool,
-            categories: [String] = [],
-            applyAction: @escaping (_ lowerDate: Date?, _ upperDate: Date?) -> Void
-        ) {
-            self.date = date
-            self.filters = filters
-            self.selectedDates = selectedDates
-            self.buttonAction = buttonAction
-            self.showSheet = showSheet
-            self.categories = categories
-            self.applyAction = applyAction
+        enum Sheet: Identifiable {
+            
+            var id: ID {
+
+                switch self {
+                case .calendar:
+                    return .calendar
+                case .filter:
+                    return .filter
+                }
+            }
+            
+            case calendar
+            case filter(FilterWrapperView.Model)
+            
+            enum ID: Hashable {
+                
+                case calendar
+                case filter
+            }
         }
         
         enum Filter {
@@ -2380,6 +2400,7 @@ extension ProductProfileViewModel {
         }
         
         enum ButtonAction: Identifiable {
+            
             case calendar
             case filter
             
@@ -2942,6 +2963,8 @@ extension ProductProfileViewModel {
                 self?.event(.alert(.showAlert(alert)))
             case let .showBottomSheet(bottomSheet):
                 self?.event(.bottomSheet(.showBottomSheet(bottomSheet)))
+            case let .history(event):
+                self?.event(.history(event))
             }
         }
     }
@@ -3123,5 +3146,48 @@ extension ProductProfileViewModel {
         } else {
             return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         }
+    }
+}
+
+extension Date {
+
+    static let bankOpenDate: Date = {
+        
+        let components = DateComponents(year: 1992, month: 5, day: 27)
+        return Calendar.current.date(from: components)!
+    }()
+}
+
+extension Model {
+
+    func calendarDayStart(
+        _ productId: ProductData.ID
+    ) -> Date {
+        
+        product(productId: productId)?.calendarDayStart() ?? .bankOpenDate
+    }
+    
+}
+
+extension ProductData {
+    
+    func calendarDayStart(
+    ) -> Date {
+        
+        if productType == .card {
+            return .bankOpenDate
+        } else {
+            return openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+        }
+    }
+}
+
+extension Model {
+    
+    func historyCategories(
+        productId: ProductData.ID
+    ) -> [String] {
+                
+        Array(Set(statements.value[productId]?.statements.map(\.groupName) ?? []))
     }
 }

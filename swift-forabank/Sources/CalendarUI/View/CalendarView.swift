@@ -34,7 +34,7 @@ public enum CalendarEvent {
     
     case selectedDate(Date)
     case selectPeriod(FilterHistoryState.Period, lowerDate: Date, upperDate: Date)
-    case selectCustomPeriod
+    case selectCustomPeriod //MARK: Remove
 }
 
 public struct CalendarView: View {

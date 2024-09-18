@@ -218,7 +218,7 @@ private extension RootViewFactoryComposer {
         isFiltered: @escaping () -> Bool,
         isDateFiltered: @escaping () -> Bool,
         clearAction: @escaping () -> Void,
-        event: @escaping (HistoryEvent) -> Void
+        event: @escaping (ProductProfileFlowEvent.ButtonEvent) -> Void
     ) -> HistoryButtonView? {
         
         if historyFeatureFlag.rawValue {

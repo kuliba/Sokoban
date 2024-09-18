@@ -28,35 +28,75 @@ extension HistoryReducer {
                     filters: state?.filters,
                     selectedDates: (lowerDate: nil, upperDate: nil),
                     buttonAction: .calendar,
-                    showSheet: true,
+                    showSheet: .calendar,
                     categories: state?.categories ?? [],
-                    applyAction: applyAction
+                    applyAction: applyAction,
+                    calendarState: nil
                 )
                 
-            case let .filter(lowerDate, upperDate):
+            case let .filter(productId, lowerDate, upperDate):
+                effect = .filter(
+                    productId: productId,
+                    lowerDate: lowerDate,
+                    upperDate: upperDate,
+                    selectServices: .init(state?.categories ?? [])
+                )
+//                state = .init(
+//                    date: state?.date,
+//                    filters: state?.filters,
+//                    selectedDates: (lowerDate: lowerDate, upperDate: upperDate),
+//                    buttonAction: .filter,
+//                    showSheet: .filter,
+//                    categories: state?.categories ?? [],
+//                    applyAction: {lowerDate,upperDate in
+//                        
+//                    },
+//                    calendarState: nil
+//                )
+            }
+        case let .receive(filterModel):
+            state = .init(
+                date: state?.date,
+                filters: state?.filters,
+                selectedDates: (lowerDate: filterModel.state.calendar.range?.lowerDate, upperDate: filterModel.state.calendar.range?.upperDate),
+                buttonAction: .filter,
+                showSheet: .filter(filterModel),
+                categories: state?.categories ?? [],
+                applyAction: {lowerDate,upperDate in
+                    
+                },
+                calendarState: nil
+            )
+            
+        case let .filter(event):
+            switch event {
+            case let .calendar(event):
+                switch event {
+                case .selectCustomPeriod:
+                    break
+                case let .selectPeriod(period, lowerDate: lowerDate, upperDate: upperDate):
+                    state?.selectedDates = (lowerDate, upperDate)
+                    state?.calendarState = nil
+                case let .selectedDate(date):
+                    break
+                }
+                
+            case let .period(calendarState):
+                
                 state = .init(
                     date: state?.date,
                     filters: state?.filters,
-                    selectedDates: (lowerDate: lowerDate, upperDate: upperDate),
+                    selectedDates: (lowerDate: nil, upperDate: nil),
                     buttonAction: .filter,
-                    showSheet: true,
+                    showSheet: .calendar,
                     categories: state?.categories ?? [],
-                    applyAction: {lowerDate,upperDate in
-                        
-                    }
+                    applyAction: { lowerDate,upperDate in },
+                    calendarState: .init(state: calendarState)
                 )
+                
+            case .dismissCalendar:
+                state?.calendarState = nil
             }
-        case let .filter(filter):
-            state = .init(
-                date: state?.date,
-                filters: filter,
-                selectedDates: (lowerDate: nil, upperDate: nil),
-                buttonAction: .filter,
-                showSheet: false,
-                categories: state?.categories ?? [],
-                applyAction: {lowerDate,upperDate in }
-
-            )
             
         case let .calendar(date):
             state = .init(
@@ -64,7 +104,7 @@ extension HistoryReducer {
                 filters: state?.filters,
                 selectedDates: (lowerDate: nil, upperDate: nil),
                 buttonAction: .calendar,
-                showSheet: false,
+                showSheet: .calendar,
                 categories: state?.categories ?? [],
                 applyAction: {lowerDate,upperDate in }
             )
@@ -84,5 +124,10 @@ extension HistoryReducer {
     
     typealias Event = HistoryEvent
     typealias State = ProductProfileViewModel.HistoryState?
-    typealias Effect = ProductProfileFlowEffect
+    typealias Effect = HistoryEffect
+}
+
+enum HistoryEffect {
+    
+    case filter(productId: ProductData.ID, lowerDate: Date?, upperDate: Date?, selectServices: Set<String>)
 }

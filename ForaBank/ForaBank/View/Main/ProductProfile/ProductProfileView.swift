@@ -90,7 +90,7 @@ struct ProductProfileView: View {
                                             
                                             return productProfileViewFactory.makeHistoryButton(
                                                 {
-                                                    viewModel.event(.history($0))
+                                                    viewModel.event(.button($0))
                                                 },{
                                                     viewModel.filterState?.filter.selectedServices.isEmpty == false || viewModel.filterState?.filter.selectedTransaction != nil || viewModel.filterState?.filter.selectedPeriod == .week
                                                 },{
@@ -141,7 +141,7 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
                
-            if viewModel.historyState?.showSheet == true {
+            if viewModel.historyState != nil {
                 
                 historySheet()
             }
@@ -184,117 +184,99 @@ struct ProductProfileView: View {
         Color.clear
             .sheet(
                 modal: viewModel.historyState,
-                dismissModal: { viewModel.historyState?.showSheet = false },
-                content: { _ in historySheetContent() }
+                dismissModal: { viewModel.event(.history(.dismiss)) },
+                content: historySheetContent
             )
     }
     
-    private func historySheetContent() -> some View {
+    private func historySheetContent(
+        state: ProductProfileViewModel.HistoryState
+    ) -> some View {
         
         VStack(spacing: 15) {
             
-            if let state = viewModel.historyState {
-                
-                switch state.buttonAction {
-                case .calendar:
-                    CalendarWrapperView(
-                        state: .init(
-                            date: Date(),
-                            range: .init(),
-                            monthsData: .generate(startDate: viewModel.calendarDayStart()),
-                            periods: [.week, .month, .dates]
-                        ),
-                        event: { event in
-                            
-                            switch event {
+            switch state.showSheet {
+            case .calendar:
+                CalendarWrapperView(
+                    state: .init(
+                        date: Date(),
+                        range: .init(),
+                        monthsData: .generate(startDate: viewModel.calendarDayStart()),
+                        periods: [.week, .month, .dates]
+                    ),
+                    event: { event in
+                        
+                        switch event {
 //                            case let .apply(state):
-//                                
+//
 ////                                viewModel.event(.filter(.selectedDates(
 ////                                    lowerDate: state.range?.lowerDate,
 ////                                    upperDate: state.range?.upperDate
 ////                                )))
-////                                
+////
 ////                                viewModel.event(.history(.dismiss))
 //                                print("### APPLY action")
 
-                            case .clear:
-                                print("### Clear action")
-                                break
-                            case .dismiss:
-                                print("### DISMISS action")
-                                viewModel.event(.history(.dismiss))
-                            }
-                        },
-                        config: .iFora,
-                        apply: { lowerDate, upperDate in
-                            if let lowerDate = lowerDate,
-                               let upperDate = upperDate {
-                                
-                                viewModel.filterState?.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
-                                viewModel.filterHistoryRequest(
-                                    lowerDate,
-                                    upperDate,
-                                    nil,
-                                    []
-                                )
-                            }
-                            
+                        case .clear:
+                            print("### Clear action")
+                            break
+                        case .dismiss:
+                            print("### DISMISS action")
                             viewModel.event(.history(.dismiss))
-
+                        }
+                    },
+                    config: .iFora,
+                    apply: { lowerDate, upperDate in
+                        if let lowerDate = lowerDate,
+                           let upperDate = upperDate {
+                            
+                            viewModel.filterState?.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
+                            viewModel.filterHistoryRequest(
+                                lowerDate,
+                                upperDate,
+                                nil,
+                                []
+                            )
+                        }
+                        viewModel.event(.history(.dismiss))
+                    }
+                )
+                
+            case let .filter(filter):
+                    
+                NavigationView {
+                    
+                    FilterWrapperView(
+                        model: filter,
+                        config: .iFora
+                    ) {
+                        viewModel.event(.history(.filter(.period($0))))
+                    }
+                    .navigationBarHidden(true)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(
+                        destination: viewModel.historyState?.calendarState,
+                        dismissDestination: { viewModel.event(.history(.filter(.dismissCalendar))) },
+                        content: { state in
+                            
+                            CalendarWrapperView(
+                                state: state.state,
+                                event: { event in
+                                    switch event {
+                                    case .clear:
+                                        break
+                                    case .dismiss:
+                                        break
+                                    }
+                                },
+                                config: .iFora,
+                                apply: { lowerDate, upperDate in
+                                    
+                                    filter.event(.selectedDates(lowerDate: lowerDate, upperDate: upperDate))
+                                }
+                            )
                         }
                     )
-                    
-                case .filter:
-                    if let filterState = self.viewModel.filterState {
-
-                        FilterView(
-                            filterState: filterState,
-                            event: { event in
-
-                                self.viewModel.event(.filter(event))
-                                
-                            },
-                            config: .iFora,
-                            makeButtonsContainer: { applyAction, state, clearOptions in
-                                .init(
-                                    applyAction: {
-                                        
-                                        self.viewModel.filterState?.filter = state.filter
-                                        
-//                                        self.viewModel.event(.filter(.selectedCategory(state.filter.selectedServices)))
-//                                        self.viewModel.event(.filter(.selectedPeriod(state.filter.selectedPeriod)))
-//                                        self.viewModel.event(.filter(.selectedTransaction(state.filter.selectedTransaction)))
-                                        self.viewModel.event(.history(.dismiss))
-                                        
-                                        if let lowerDate = state.filter.selectDates?.lowerDate,
-                                           let upperDate = state.filter.selectDates?.upperDate {
-                                         
-                                            viewModel.filterHistoryRequest(
-                                                lowerDate.addingTimeInterval(86400),
-                                                upperDate.addingTimeInterval(86400),
-                                                state.filter.selectedTransaction?.rawValue.uppercased(),
-                                                state.filter.selectedServices.map({ $0 })
-                                            )
-                                        }
-                                    },
-                                    clearOptionsAction: {
-                                        self.viewModel.event(.filter(.clearOptions))
-                                        self.viewModel.filterState = nil
-                                        clearOptions()
-                                    },
-                                    config: .init(
-                                        clearButtonTitle: "Очистить",
-                                        applyButtonTitle: "Применить"
-                                    )
-                                )
-                            }, calendarViewAction: {
-                                
-                                self.viewModel.event(.history(.button(.calendar({ lowerDate, upperDate in
-                                    self.viewModel.event(.history(.button(.filter(lowerDate, upperDate))))
-                                }))))
-                            }
-                        )
-                    }
                 }
             }
         }

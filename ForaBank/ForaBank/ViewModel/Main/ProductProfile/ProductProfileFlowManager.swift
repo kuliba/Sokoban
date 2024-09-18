@@ -20,7 +20,7 @@ final class ProductProfileFlowReducer {
     typealias BottomSheetReduce = (BottomSheetState, BottomSheetEvent) -> (BottomSheetState, Effect?)
     typealias BottomSheetState = ProductProfileViewModel.BottomSheet?
     
-    typealias HistoryReduce = (ProductProfileViewModel.HistoryState?, HistoryEvent) -> (ProductProfileViewModel.HistoryState?, Effect?)
+    typealias HistoryReduce = (ProductProfileViewModel.HistoryState?, HistoryEvent) -> (ProductProfileViewModel.HistoryState?, HistoryEffect?)
     
     private let alertReduce: AlertReduce
     private let bottomSheetReduce: BottomSheetReduce
@@ -49,6 +49,23 @@ final class ProductProfileFlowReducer {
             let alert: AlertState
             (alert, effect) = alertReduce(state.alert, alertEvent)
             state.alert = alert
+        
+        case let .button(event):
+            switch event {
+            case .calendar:
+                break
+            case .filter:
+                #warning("FIX OPTIONAL PRODUCT ID")
+                let (history, historyEffect) = historyReduce(
+                    state.history,
+                    .button(.filter(
+                        state.filter?.productId ?? 0,
+                        state.filter?.filter.selectDates?.lowerDate,
+                        state.filter?.filter.selectDates?.upperDate
+                    )))
+                state.history = history
+                effect = historyEffect.map(Effect.history)
+            }
             
         case let .bottomSheet(bottomEvent):
             let bottomSheet: BottomSheetState
@@ -56,10 +73,10 @@ final class ProductProfileFlowReducer {
             state.bottomSheet = bottomSheet
             
         case let .history(historyEvent):
-            let history: ProductProfileViewModel.HistoryState?
-            (history, effect) = historyReduce(state.history, historyEvent)
+            let (history, historyEffect) = historyReduce(state.history, historyEvent)
             state.history = history
-            
+            effect = historyEffect.map(Effect.history)
+        
         case let .filter(filterEvent):
             
             switch filterEvent {
@@ -128,6 +145,10 @@ final class ProductProfileFlowReducer {
                 } else {
                     state.filter?.filter.selectedTransaction = transaction
                 }
+            
+            case let .updateFilter(state):
+                //MARK: update
+                break
                 
             case .clearOptions:
                 state.filter?.filter.selectedTransaction = nil
@@ -200,6 +221,7 @@ enum ProductProfileFlowEffect {
     
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
     case delayBottomSheet(ProductProfileViewModel.BottomSheet, DispatchTimeInterval)
+    case history(HistoryEffect)
 }
 
 extension ProductProfileFlowManager {
@@ -210,7 +232,7 @@ extension ProductProfileFlowManager {
             bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
             historyReduce: HistoryReducer().reduce
         ).reduce,
-        handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+        handleEffect: ProductNavigationStateEffectHandler(handleHistoryEffect: { _,_ in }).handleEffect,
         handleModelEffect: {_,_ in }
     )
 }
@@ -225,24 +247,40 @@ struct ProductProfileFlowState {
 }
 
 enum ProductProfileFlowEvent {
+    
     case alert(AlertEvent)
     case bottomSheet(BottomSheetEvent)
     case history(HistoryEvent)
     case filter(FilterEvent)
     case payment(PaymentsViewModel)
+    case button(ButtonEvent)
+    
+    enum ButtonEvent {
+        
+        case calendar
+        case filter
+    }
 }
 
 enum HistoryEvent {
     
     case button(ButtonEvent)
-    case filter([ProductProfileViewModel.HistoryState.Filter]?)
+    case filter(FilterEvent)
     case calendar(Date?)
     case clearOptions
+    case receive(FilterWrapperView.Model)
     case dismiss
+    
+    enum FilterEvent {
+        case calendar(CalendarEvent)
+        case period(CalendarState)
+        case dismissCalendar
+    }
     
     enum ButtonEvent {
         
         case calendar((Date?, Date?) -> Void)
-        case filter(Date?, Date?)
+        case filter(ProductData.ID, Date?, Date?)
     }
 }
+

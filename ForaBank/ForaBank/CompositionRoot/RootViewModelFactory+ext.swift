@@ -12,6 +12,7 @@ import OperatorsListComponents
 import PaymentSticker
 import SberQR
 import SwiftUI
+import CalendarUI
 
 extension RootViewModelFactory {
     
@@ -178,9 +179,53 @@ extension RootViewModelFactory {
                 model.action.send(action)
             })
         
+        let historyEffectHandlerMicroServices = HistoryEffectHandlerMicroServices(
+            makeFilterModel: { payload, completion in
+                
+                let reducer = FilterModelReducer()
+                let effectHandler = FilterModelEffectHandler()
+                let viewModel = FilterWrapperView.Model(
+                    initialState: .init(
+                        productId: payload.productId,
+                        calendar: .init(
+                            date: Date(),
+                            range: .init(
+                                startDate: payload.lowerDate,
+                                endDate: payload.upperDate
+                            ),
+                            monthsData: .generate(startDate: model.calendarDayStart(payload.productId)),
+                            periods: FilterHistoryState.Period.allCases
+                        ),
+                        filter: .init(
+                            title: "Фильтры",
+                            selectDates: (payload.lowerDate, payload.upperDate),
+                            selectedServices: payload.selectedServices,
+                            periods: FilterHistoryState.Period.allCases,
+                            transactionType: FilterHistoryState.TransactionType.allCases,
+                            services: model.historyCategories(productId: payload.productId),
+                            historyService: { _,_ in
+                                
+                                fatalError()
+                            }
+                        ),
+                        dateFilter: { _,_ in fatalError() }
+                    ),
+                    reduce: reducer.reduce,
+                    handleEffect: effectHandler.handleEffect
+                )
+                completion(viewModel)
+            }
+        )
+        
+        let historyEffectHandler = HistoryEffectHandler(
+            microServices: historyEffectHandlerMicroServices
+        )
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleEffect: ProductNavigationStateEffectHandler(
+                handleHistoryEffect: historyEffectHandler.handleEffect
+            ).handleEffect,
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
