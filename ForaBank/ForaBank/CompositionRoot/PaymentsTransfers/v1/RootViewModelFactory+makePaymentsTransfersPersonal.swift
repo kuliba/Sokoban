@@ -244,7 +244,7 @@ final class PaymentFlowMicroServiceComposerNanoServicesComposer {
         self.standardNanoServices = standardNanoServices
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, Error>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, FailedPaymentProviderPickerStub>
 }
 
 extension PaymentFlowMicroServiceComposerNanoServicesComposer {
@@ -265,7 +265,7 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<MobileBinderStub, QRBinderStub, Result<SelectedCategoryStub, Error>, TaxBinderStub, TransportBinderStub>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<MobileBinderStub, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
 }
 
 final class StandardSelectedCategoryDestinationNanoServicesComposer {
@@ -297,7 +297,7 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
         return .init(
             loadLatest: loadLatest,
             loadOperators: loadOperators,
-            makeFailure: { $0(NSError(domain: "Failure", code: -1)) },
+            makeFailure: { $0(.init()) },
             makeSuccess: { payload, completion in
                 
                 completion(.init(
@@ -309,5 +309,5 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
         )
     }
     
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, Error>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, FailedPaymentProviderPickerStub>
 }
