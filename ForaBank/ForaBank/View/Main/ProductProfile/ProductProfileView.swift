@@ -445,6 +445,7 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .internet, .transport, .housingAndCommunalService:
+                                        
                                         if let transfer = infoPayment.parameterList.first,
                                            let puref = transfer.puref,
                                            let amount = infoPayment.parameterList.first?.amount ?? infoPayment.parameterList.last?.amount,
@@ -455,7 +456,8 @@ struct ProductProfileView: View {
                                                 self.viewModel.link = .payment(.init(source: .servicePayment(
                                                     puref: puref,
                                                     additionalList: additional.map{ .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil )},
-                                                    amount: amount
+                                                    amount: amount,
+                                                    productId: transfer.payer?.cardId
                                                 ), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))

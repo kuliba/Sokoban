@@ -954,7 +954,8 @@ extension MainViewModel {
             source: .servicePayment(
                 puref: puref,
                 additionalList: additionalList,
-                amount: amount/100
+                amount: amount/100, 
+                productId: nil
             ),
             model: self.model,
             closeAction: { [weak self] in

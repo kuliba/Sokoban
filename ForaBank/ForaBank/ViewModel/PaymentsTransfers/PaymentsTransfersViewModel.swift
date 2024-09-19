@@ -1588,7 +1588,8 @@ extension PaymentsTransfersViewModel {
             source: .servicePayment(
                 puref: puref,
                 additionalList: additionalList,
-                amount: amount/100
+                amount: amount/100,
+                productId: nil
             ),
             model: model,
             closeAction: { [weak self] in
