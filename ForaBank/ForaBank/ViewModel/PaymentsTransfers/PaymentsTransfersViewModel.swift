@@ -1828,13 +1828,7 @@ extension FilterState {
                 selectDates: nil,
                 periods: FilterHistoryState.Period.allCases,
                 transactionType: [],
-                services: [],
-                historyService: { lowerDate, upperDate in
-                    
-                    fatalError()
-                }
-            )) { lowerDate, upperDate in
-                fatalError()
-            }
+                services: []
+            ))
     }
 }

@@ -12,18 +12,15 @@ public struct FilterState {
     public let productId: Int?
     public var calendar: CalendarState
     public var filter: FilterHistoryState
-    public let dateFilter: (Date, Date) -> Void
     
     public init(
         productId: Int?,
         calendar: CalendarState,
-        filter: FilterHistoryState,
-        dateFilter: @escaping (Date, Date) -> Void
+        filter: FilterHistoryState
     ) {
         self.productId = productId
         self.calendar = calendar
         self.filter = filter
-        self.dateFilter = dateFilter
     }
 }
 
@@ -40,8 +37,6 @@ public struct FilterHistoryState {
     public let transactionType: [TransactionType]
     public var services: [String]
     
-    public let historyService: (Date?, Date?) -> Void
-    
     public init(
         title: String,
         selectDates: (lowerDate: Date?, upperDate: Date?)?,
@@ -50,8 +45,7 @@ public struct FilterHistoryState {
         selectedServices: Set<String> = [],
         periods: [Period],
         transactionType: [TransactionType],
-        services: [String],
-        historyService: @escaping (Date?, Date?) -> Void
+        services: [String]
     ) {
         self.title = title
         self.selectDates = selectDates
@@ -61,7 +55,6 @@ public struct FilterHistoryState {
         self.periods = periods
         self.transactionType = transactionType
         self.services = services
-        self.historyService = historyService
     }
 }
 
@@ -96,8 +89,7 @@ extension FilterState {
     public static let preview: Self = .init(
         productId: 0,
         calendar: .preview,
-        filter: .preview,
-        dateFilter: {_,_ in }
+        filter: .preview
     )
 }
 
@@ -108,8 +100,7 @@ extension FilterHistoryState {
         selectDates: (nil, nil),
         periods: [],
         transactionType: [],
-        services: [],
-        historyService: { _,_ in }
+        services: []
     )
 }
 

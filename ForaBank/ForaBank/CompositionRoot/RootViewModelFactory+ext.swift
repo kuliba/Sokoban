@@ -202,13 +202,8 @@ extension RootViewModelFactory {
                             selectedServices: payload.selectedServices,
                             periods: FilterHistoryState.Period.allCases,
                             transactionType: FilterHistoryState.TransactionType.allCases,
-                            services: model.historyCategories(productId: payload.productId),
-                            historyService: { _,_ in
-                                
-                                fatalError()
-                            }
-                        ),
-                        dateFilter: { _,_ in fatalError() }
+                            services: model.historyCategories(productId: payload.productId)
+                        )
                     ),
                     reduce: reducer.reduce,
                     handleEffect: effectHandler.handleEffect

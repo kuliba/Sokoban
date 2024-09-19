@@ -161,38 +161,16 @@ public struct FilterView: View {
                 applyAction: {
                     
                     filterEvent(.updateFilter(filterState))
-//                    filterState?.filter = state.filter
-                    
-                    //                    self.viewModel.event(.history(.dismiss))
-                    
-//                    if let lowerDate = state.filter.selectDates?.lowerDate,
-//                       let upperDate = state.filter.selectDates?.upperDate {
-//                        
-//                        viewModel.filterHistoryRequest(
-//                            lowerDate.addingTimeInterval(86400),
-//                            upperDate.addingTimeInterval(86400),
-//                            state.filter.selectedTransaction?.rawValue.uppercased(),
-//                            state.filter.selectedServices.map({ $0 })
-//                        )
-//                    }
                 },
                 clearOptionsAction: {
                     filterEvent(.clearOptions)
                     filterState = initialState
-//                    self.viewModel.filterState = nil
-                    //                    clearOptions()
                 },
                 config: .init(
                     clearButtonTitle: "Очистить",
                     applyButtonTitle: "Применить"
                 )
             )
-//            makeButtonsContainer({ filterState in
-//                
-//            }, {
-//                filterState.filter.selectedServices = []
-//                filterState.filter.selectedTransaction = nil
-//            })
         }
         .padding()
     }
@@ -552,9 +530,8 @@ struct FilterView_Previews: PreviewProvider {
                         selectedServices: [],
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
-                        services: ["Неделя", "Месяц", "Выбрать период"],
-                        historyService: { _,_ in }
-                    ), dateFilter: { _,_ in }
+                        services: ["Неделя", "Месяц", "Выбрать период"]
+                    )
                 ),
                 event: { _ in },
                 config: .init(
