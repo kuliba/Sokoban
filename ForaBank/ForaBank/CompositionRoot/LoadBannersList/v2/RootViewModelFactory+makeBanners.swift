@@ -9,16 +9,21 @@ import CombineSchedulers
 import Foundation
 import Banners
 import PayHub
+import LandingMapping
 
 struct BannersNanoServices {
     
     let loadBanners: LoadBanners
+    let loadLandingByType: LoadLandingByType
 }
 
 extension BannersNanoServices {
     
     typealias LoadBannersCompletion = ([BannerPickerSectionItem<BannerCatalogListData>]) -> Void
     typealias LoadBanners = (@escaping LoadBannersCompletion) -> Void
+    typealias LandingType = String
+    typealias LoadLandingByTypeCompletion = (Result<Landing, Error>) -> Void
+    typealias LoadLandingByType = (LandingType, @escaping LoadLandingByTypeCompletion) -> Void
 }
 
 extension RootViewModelFactory {

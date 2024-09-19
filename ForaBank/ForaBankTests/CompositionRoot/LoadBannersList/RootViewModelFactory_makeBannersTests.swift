@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import Banners
+import LandingMapping
 import PayHub
 import XCTest
 
@@ -14,19 +15,20 @@ final class RootViewModelFactory_makeBannersTests: XCTestCase {
 
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, bannersSpy, landingSpy) = makeSUT()
         
-        XCTAssertEqual(spy.callCount, 0)
+        XCTAssertEqual(bannersSpy.callCount, 0)
+        XCTAssertEqual(landingSpy.callCount, 0)
         XCTAssertNotNil(sut)
     }
 
     func test_init_shouldCallLoadOnLoad() {
         
-        let (sut, spy) = makeSUT()
-        
+        let (sut, bannersSpy, _) = makeSUT()
+
         sut.content.bannerPicker.content.event(.load)
         
-        XCTAssertEqual(spy.callCount, 1)
+        XCTAssertEqual(bannersSpy.callCount, 1)
         XCTAssertNotNil(sut)
     }
 
@@ -41,6 +43,7 @@ final class RootViewModelFactory_makeBannersTests: XCTestCase {
     
     private typealias SUT = BannersBinder
     private typealias LoadBannersSpy = Spy<Void, [BannerPickerSectionItem<BannerCatalogListData>], Never>
+    private typealias LoadLandingSpy = Spy<String, Result<Landing, Error>, Never>
 
     private func makeSUT(
         bannerPickerPlaceholderCount: Int = 6,
@@ -48,14 +51,18 @@ final class RootViewModelFactory_makeBannersTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadBannersSpy: LoadBannersSpy
+        loadBannersSpy: LoadBannersSpy,
+        loadLandingByTypeSpy: LoadLandingSpy
     ) {
         let loadBannersSpy = LoadBannersSpy()
+        let loadLandingByTypeSpy = LoadLandingSpy()
+
         let sut = RootViewModelFactory.makeBanners(
             model: .mockWithEmptyExcept(),
             bannerPickerPlaceholderCount: bannerPickerPlaceholderCount,
             nanoServices: .init(
-                loadBanners: loadBannersSpy.process(completion:)
+                loadBanners: loadBannersSpy.process(completion:),
+                loadLandingByType: loadLandingByTypeSpy.process(_:completion:)
             ),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate
@@ -63,7 +70,8 @@ final class RootViewModelFactory_makeBannersTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadBannersSpy, file: file, line: line)
-        
-        return (sut, loadBannersSpy)
+        trackForMemoryLeaks(loadLandingByTypeSpy, file: file, line: line)
+
+        return (sut, loadBannersSpy, loadLandingByTypeSpy)
     }
 }
