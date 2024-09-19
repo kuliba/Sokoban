@@ -36,8 +36,6 @@ class Model {
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     
-    let marketplaceLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -204,7 +202,6 @@ class Model {
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
         self.stickerLanding = .init(.success(.none))
-        self.marketplaceLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])

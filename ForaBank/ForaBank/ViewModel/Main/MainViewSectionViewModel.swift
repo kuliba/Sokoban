@@ -8,17 +8,6 @@
 import Foundation
 import Combine
 import SwiftUI
-import Banners
-
-final class BannerPickerSectionBinderWrapper: MainSectionViewModel {
-    override var type: MainSectionType { .promo }
-    
-    let binder: BannersBinder
-    
-    init(binder: BannersBinder) {
-        self.binder = binder
-    }
-}
 
 class MainSectionViewModel: Identifiable {
 
