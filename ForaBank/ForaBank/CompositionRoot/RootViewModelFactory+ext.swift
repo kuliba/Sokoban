@@ -318,8 +318,8 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             logger: logger
         )
-        // reusable factory
-        let localComposer = LocalLoaderComposer(
+        // reusable component
+        let asyncLocalAgent = LocalAgentAsyncWrapper(
             agent: model.localAgent,
             interactiveScheduler: interactiveScheduler,
             backgroundScheduler: backgroundScheduler
@@ -327,11 +327,11 @@ extension RootViewModelFactory {
         // reusable factory
         let batchSerialComposer = BatchSerialCachingRemoteLoaderComposer(
             nanoServiceFactory: nanoServiceComposer,
-            updateMaker: localComposer
+            updateMaker: asyncLocalAgent
         )
         // reusable factory
         let serialLoaderComposer = SerialLoaderComposer(
-            localComposer: localComposer,
+            asyncLocalAgent: asyncLocalAgent,
             nanoServiceComposer: nanoServiceComposer
         )
         
