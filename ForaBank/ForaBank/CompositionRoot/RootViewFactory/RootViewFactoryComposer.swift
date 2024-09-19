@@ -21,15 +21,18 @@ final class RootViewFactoryComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let historyFeatureFlag: HistoryFilterFlag
-    
+    private let marketFeatureFlag: MarketplaceFlag
+
     init(
         model: Model,
         httpClient: HTTPClient,
-        historyFeatureFlag: HistoryFilterFlag
+        historyFeatureFlag: HistoryFilterFlag,
+        marketFeatureFlag: MarketplaceFlag
     ) {
         self.model = model
         self.httpClient = httpClient
         self.historyFeatureFlag = historyFeatureFlag
+        self.marketFeatureFlag = marketFeatureFlag
     }
 }
 
@@ -49,7 +52,8 @@ extension RootViewFactoryComposer {
             makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeMarketView: makeMarketView
         )
     }
 }
@@ -283,6 +287,15 @@ private extension RootViewFactoryComposer {
             
             return .init(viewModel: viewModel)
         }
+    }
+    
+    func makeMarketView(
+        viewModel: MarketPlaceViewModel
+    ) -> MarketView? {
+        if marketFeatureFlag.isActive {
+            return .init()
+        } 
+        else { return nil }
     }
 }
 

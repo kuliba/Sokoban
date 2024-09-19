@@ -38,7 +38,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,
         httpClient: httpClient,
-        historyFeatureFlag: featureFlags.historyFilterFlag
+        historyFeatureFlag: featureFlags.historyFilterFlag,
+        marketFeatureFlag: featureFlags.marketplaceFlag
     ).compose()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
