@@ -436,14 +436,8 @@ extension RootViewModelFactory {
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
-        
-
-        let getLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createMarketplaceLandingRequest,
-            mapResponse: LandingMapper.map
-        )
-        
-        let (banners, loadBannersList) = makeBannersBinder(
+                
+        let loadBannersList = makeBannersBinder(
             model: model,
             httpClient: httpClient,
             infoNetworkLog: infoNetworkLog,
@@ -454,18 +448,23 @@ extension RootViewModelFactory {
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
-                loadBanners: loadBannersList,
-                // TODO: add real serial model.localAgent.serial(for: LandingType.self)
-                loadLandingByType: { getLanding(( "", $0), $1) }
+                loadBanners: loadBannersList
             ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
         
+        let getLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createMarketplaceLandingRequest,
+            mapResponse: LandingMapper.map
+        )
+
         let bannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
-                loadBanners: loadBannersList
+                loadBanners: loadBannersList, 
+                // TODO: add real serial model.localAgent.serial(for: LandingType.self)
+                loadLandingByType: { getLanding(( "", $0), $1) }
             ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
@@ -476,7 +475,6 @@ extension RootViewModelFactory {
             
             loadBannersList {
                 
-                banners.content.bannerPicker.content.event(.loaded($0))
                 paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
                 bannersBinder.content.bannerPicker.content.event(.loaded($0))
             }

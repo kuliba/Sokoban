@@ -18,7 +18,7 @@ extension RootViewModelFactory {
         infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
-    ) -> (binder: BannersBinder, loader: LoadBanners) {
+    ) -> LoadBanners {
         
         let localBannerListLoader = ServiceItemsLoader.default
         let getBannerList = NanoServices.makeGetBannerCatalogListV2(
@@ -54,18 +54,8 @@ extension RootViewModelFactory {
                 completion(banners.bannerCatalogList.map { .banner($0)})
             }
         }
-        
-        let banners = makeBanners(
-            model: model,
-            bannerPickerPlaceholderCount: 6,
-            nanoServices: .init(
-                loadBanners: loadBannersList
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
                 
-        return (banners, loadBannersList)
+        return loadBannersList
     }
     
     static func makeBannersForMainView(
@@ -91,7 +81,7 @@ extension RootViewModelFactory {
             prefix: [],
             suffix: (0..<6).map { _ in .placeholder(.init()) }
         )
-                
+        
         // MARK: - Banners
         
         let content = BannersContent(
@@ -118,5 +108,12 @@ extension RootViewModelFactory {
 
 extension BannersBinder {
     
-    static let preview: BannersBinder = RootViewModelFactory.makeBannersForMainView(bannerPickerPlaceholderCount: 1, nanoServices: .init(loadBanners: {_ in }), mainScheduler: .main, backgroundScheduler: .global())
+    static let preview: BannersBinder = RootViewModelFactory.makeBannersForMainView(
+        bannerPickerPlaceholderCount: 1,
+        nanoServices: .init(
+            loadBanners: {_ in },
+            loadLandingByType: {_, _ in }
+        ),
+        mainScheduler: .main,
+        backgroundScheduler: .global())
 }
