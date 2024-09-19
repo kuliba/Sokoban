@@ -2651,6 +2651,7 @@
 		C14303F72A84653000FAD5AA /* UpdateC2BSubscriptionGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C14303F62A84653000FAD5AA /* UpdateC2BSubscriptionGeneric.json */; };
 		C14303FA2A85F0BB00FAD5AA /* Model+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F92A85F0BB00FAD5AA /* Model+Success.swift */; };
 		C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1434566295B76DD007AAD2E /* Payments+Limitation.swift */; };
+		C14389F12C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */; };
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
 		C14C57CF2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C57CE2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift */; };
 		C14C57D12C6193B8008C2618 /* InfoRepeatPaymentServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C57D02C6193B8008C2618 /* InfoRepeatPaymentServices.swift */; };
@@ -5751,6 +5752,7 @@
 		C14303F62A84653000FAD5AA /* UpdateC2BSubscriptionGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UpdateC2BSubscriptionGeneric.json; sourceTree = "<group>"; };
 		C14303F92A85F0BB00FAD5AA /* Model+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Success.swift"; sourceTree = "<group>"; };
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
+		C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEffectMicroServicesComposer.swift; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
 		C14C57CE2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeInfoRepeatPaymentServices.swift"; sourceTree = "<group>"; };
 		C14C57D02C6193B8008C2618 /* InfoRepeatPaymentServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRepeatPaymentServices.swift; sourceTree = "<group>"; };
@@ -14034,6 +14036,7 @@
 		C123110A2C4E0954002871A8 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
+				C14389EF2C9C487500D2A8FB /* CalendarComposer */,
 				C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */,
 			);
 			path = Calendar;
@@ -14071,6 +14074,14 @@
 				C14303F92A85F0BB00FAD5AA /* Model+Success.swift */,
 			);
 			path = Success;
+			sourceTree = "<group>";
+		};
+		C14389EF2C9C487500D2A8FB /* CalendarComposer */ = {
+			isa = PBXGroup;
+			children = (
+				C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */,
+			);
+			path = CalendarComposer;
 			sourceTree = "<group>";
 		};
 		C152489C2B83A67F0043F412 /* MyProducts */ = {
@@ -18377,6 +18388,7 @@
 				77D0386C2988441D00FBE5AB /* C2BSubscriptionData.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
+				C14389F12C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift in Sources */,
 				77A6A9CC27F46B3800CE7E28 /* PlacesMapView.swift in Sources */,
 				ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,

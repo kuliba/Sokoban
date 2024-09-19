@@ -82,17 +82,7 @@ extension HistoryReducer {
                 }
                 
             case let .period(calendarState):
-                
-                state = .init(
-                    date: state?.date,
-                    filters: state?.filters,
-                    selectedDates: (lowerDate: nil, upperDate: nil),
-                    buttonAction: .filter,
-                    showSheet: .calendar,
-                    categories: state?.categories ?? [],
-                    applyAction: { lowerDate,upperDate in },
-                    calendarState: .init(state: calendarState)
-                )
+                state?.calendarState = .init(state: calendarState)
                 
             case .dismissCalendar:
                 state?.calendarState = nil

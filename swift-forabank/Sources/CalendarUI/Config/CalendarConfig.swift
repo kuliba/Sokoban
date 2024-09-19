@@ -12,8 +12,8 @@ import SharedConfigs
 //TODO: fix `CalendarConfig` to normal config, remove any
 public struct CalendarConfig {
     
-    public let title: String
-    public let titleConfig: TextConfig
+    public let title: String //FIX: remove title 
+    public let titleConfig: TextConfig //FIX: remove title
     public let option: TextConfig
     let month: TextConfig
     let optionSelectBackground: Color

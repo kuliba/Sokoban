@@ -10,7 +10,10 @@ import SwiftUI
 import SharedConfigs
 import RxViewModel
 
-public enum FilterEffect: Equatable {}
+public enum FilterEffect: Equatable {
+    
+    case updateFilter(Range<Date>)
+}
 
 public struct FilterWrapperView: View {
     
@@ -37,12 +40,28 @@ public struct FilterWrapperView: View {
     
     public var body: some View {
     
-        FilterView(
-            filterState: model.state,
-            event: model.event(_:),
-            config: config,
-            calendarViewAction: calendarViewAction
-        )
+        if model.state.isLoading {
+            PlaceHolderFilterView(state: model.state)
+            
+        } else {
+         
+            FilterView(
+                filterState: model.state,
+                event: model.event(_:),
+                config: config,
+                calendarViewAction: calendarViewAction
+            )
+        }
+    }
+}
+
+struct PlaceHolderFilterView: View {
+
+    let state: FilterState
+    
+    var body: some View {
+        
+        Text("TBD")
     }
 }
 
@@ -51,8 +70,7 @@ public struct FilterView: View {
     public typealias Event = FilterEvent
     public typealias Config = FilterConfig
     
-    private let initialState: FilterState
-    @State private var filterState: FilterState
+    private let filterState: FilterState
     let filterEvent: (Event) -> Void
     let config: Config
     
@@ -64,8 +82,7 @@ public struct FilterView: View {
         config: Config,
         calendarViewAction: @escaping (CalendarState) -> Void
     ) {
-        self._filterState = .init(wrappedValue: filterState)
-        self.initialState = filterState
+        self.filterState = filterState
         self.filterEvent = event
         self.config = config
         self.calendarViewAction = calendarViewAction
@@ -92,18 +109,20 @@ public struct FilterView: View {
                     case .clearOptions:
                         filterEvent(.clearOptions)
                     case let .selectPeriod(period):
-                        filterState.filter.selectedPeriod = period
-                        
-                        switch period {
-                        case .week:
-                            filterState.filter.selectDates = .some((lowerDate: .startOfWeek, upperDate: Date()))
-                            
-                        case .month:
-                            filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
-                            
-                        case .dates:
-                            break
-                        }
+                        break
+                    //TODO: setup send event for selectPeriod
+//                        filterState.filter.selectedPeriod = period
+//                        
+//                        switch period {
+//                        case .week:
+//                            filterState.filter.selectDates = .some((lowerDate: .startOfWeek, upperDate: Date()))
+//                            
+//                        case .month:
+//                            filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
+//                            
+//                        case .dates:
+//                            break
+//                        }
                     }
                 },
                 config: .init(
@@ -124,9 +143,9 @@ public struct FilterView: View {
                 TransactionContainer(
                     transactions: filterState.filter.transactionType,
                     selectedTransaction: filterState.filter.selectedTransaction,
-                    event: { transaction in
+                    event: { event in
                         
-                        self.filterState.filter.selectedTransaction = transaction
+//                        event(.selectedTransaction())
                     },
                     config: config
                 )
@@ -139,12 +158,12 @@ public struct FilterView: View {
                     selectedItems: filterState.filter.selectedServices,
                     serviceButtonTapped: { service in
                         
-                        if filterState.filter.selectedServices.contains(service) {
-                            
-                            self.filterState.filter.selectedServices.remove(service)
-                        } else {
-                            self.filterState.filter.selectedServices.insert(service)
-                        }
+//                        if filterState.filter.selectedServices.contains(service) {
+//                            
+//                            self.filterState.filter.selectedServices.remove(service)
+//                        } else {
+//                            self.filterState.filter.selectedServices.insert(service)
+//                        }
                     },
                     config: .init(
                         title: "",
@@ -164,7 +183,6 @@ public struct FilterView: View {
                 },
                 clearOptionsAction: {
                     filterEvent(.clearOptions)
-                    filterState = initialState
                 },
                 config: .init(
                     clearButtonTitle: "Очистить",
@@ -173,6 +191,24 @@ public struct FilterView: View {
             )
         }
         .padding()
+    }
+}
+
+extension FilterState {
+    
+    func formattedPeriod(
+        fallback: String
+    ) -> String {
+        
+        if let lowerDate = filter.selectDates?.lowerDate,
+           let upperDate = filter.selectDates?.upperDate {
+            
+            "\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))"
+            
+        } else {
+            
+            fallback
+        }
     }
 }
 
@@ -213,19 +249,11 @@ extension FilterView {
                             
                             Button(action: { event(.calendar) }) {
                                 
-                                if let lowerDate = state.filter.selectDates?.lowerDate,
-                                   let upperDate = state.filter.selectDates?.upperDate {
-                                    
-                                    Text("\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))")
-                                    
-                                } else {
-                                    
-                                    Text(period.id)
-                                }
+                                Text(state.formattedPeriod(fallback: period.id))
                             }
                             
-                            if let _ = state.filter.selectDates?.lowerDate,
-                               let _ = state.filter.selectDates?.upperDate {
+                            if state.filter.selectDates?.lowerDate != nil,
+                               state.filter.selectDates?.upperDate != nil {
                                 
                                 Button { event(.clearOptions) } label: {
                                     

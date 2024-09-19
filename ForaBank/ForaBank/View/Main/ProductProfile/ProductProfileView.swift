@@ -207,21 +207,9 @@ struct ProductProfileView: View {
                     event: { event in
                         
                         switch event {
-//                            case let .apply(state):
-//
-////                                viewModel.event(.filter(.selectedDates(
-////                                    lowerDate: state.range?.lowerDate,
-////                                    upperDate: state.range?.upperDate
-////                                )))
-////
-////                                viewModel.event(.history(.dismiss))
-//                                print("### APPLY action")
-
                         case .clear:
-                            print("### Clear action")
                             break
                         case .dismiss:
-                            print("### DISMISS action")
                             viewModel.event(.history(.dismiss))
                         }
                     },
@@ -252,7 +240,9 @@ struct ProductProfileView: View {
                     ) {
                         viewModel.event(.history(.filter(.period($0))))
                     }
-                    .navigationBarHidden(true)
+                    .onChange(of: filter.state.filter.selectDates?.lowerDate, perform: { newValue in
+                        print("====", newValue)
+                    })
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(
                         destination: viewModel.historyState?.calendarState,
@@ -261,20 +251,29 @@ struct ProductProfileView: View {
                             
                             CalendarWrapperView(
                                 state: state.state,
-                                event: { event in
-                                    switch event {
+                                event: {
+                                    
+                                    fatalError()
+                                    switch $0 {
                                     case .clear:
                                         break
                                     case .dismiss:
-                                        break
+                                        viewModel.event(.history(.filter(.dismissCalendar)))
                                     }
                                 },
                                 config: .iFora,
                                 apply: { lowerDate, upperDate in
                                     
                                     filter.event(.selectedDates(lowerDate: lowerDate, upperDate: upperDate))
+                                    
+                                    viewModel.event(.history(.filter(.dismissCalendar)))
                                 }
                             )
+                            .navigationBarWithBack(
+                                title: "Выберите период",
+                                dismiss: {
+                                viewModel.event(.history(.filter(.dismissCalendar)))
+                            }) //TODO: resolve with hidden nav bar
                         }
                     )
                 }

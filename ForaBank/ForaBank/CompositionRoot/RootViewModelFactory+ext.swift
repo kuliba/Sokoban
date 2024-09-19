@@ -183,7 +183,10 @@ extension RootViewModelFactory {
             makeFilterModel: { payload, completion in
                 
                 let reducer = FilterModelReducer()
-                let effectHandler = FilterModelEffectHandler()
+                let composer = FilterEffectHandlerMicroServicesComposer()
+                let effectHandler = FilterModelEffectHandler(
+                    microServices: composer.compose()
+                )
                 let viewModel = FilterWrapperView.Model(
                     initialState: .init(
                         productId: payload.productId,

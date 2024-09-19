@@ -12,15 +12,18 @@ public struct FilterState {
     public let productId: Int?
     public var calendar: CalendarState
     public var filter: FilterHistoryState
-    
+    public var isLoading: Bool
+
     public init(
         productId: Int?,
         calendar: CalendarState,
-        filter: FilterHistoryState
+        filter: FilterHistoryState,
+        isLoading: Bool = false
     ) {
         self.productId = productId
         self.calendar = calendar
         self.filter = filter
+        self.isLoading = isLoading
     }
 }
 
@@ -28,7 +31,7 @@ public struct FilterHistoryState {
     
     public let title: String
     
-    public var selectDates: (lowerDate: Date?, upperDate: Date?)?
+    public var selectDates: (lowerDate: Date?, upperDate: Date?)? //TODO: replace with optional range
     public var selectedPeriod: Period
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
@@ -36,7 +39,7 @@ public struct FilterHistoryState {
     public let periods: [Period]
     public let transactionType: [TransactionType]
     public var services: [String]
-    
+        
     public init(
         title: String,
         selectDates: (lowerDate: Date?, upperDate: Date?)?,
