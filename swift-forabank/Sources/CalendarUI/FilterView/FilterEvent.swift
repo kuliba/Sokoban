@@ -14,6 +14,6 @@ public enum FilterEvent {
     case selectedTransaction(FilterHistoryState.TransactionType?)
     case selectedCategory(Set<String>)
     case selectedDates(lowerDate: Date?, upperDate: Date?)
-    case updateFilter(FilterState)
+    case updateFilter(FilterState?)
     case clearOptions
 }

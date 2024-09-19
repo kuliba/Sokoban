@@ -12,7 +12,21 @@ import RxViewModel
 
 public enum FilterEffect: Equatable {
     
-    case updateFilter(Range<Date>)
+    case updateFilter(UpdateFilterPayload)
+    
+    public struct UpdateFilterPayload: Equatable {
+
+        public let range: Range<Date>
+        public let productId: Int? //TODO: remove optionality productId
+        
+        public init(
+            range: Range<Date>,
+            productId: Int?
+        ) {
+            self.range = range
+            self.productId = productId
+        }
+    }
 }
 
 public struct FilterWrapperView: View {
@@ -61,7 +75,7 @@ struct PlaceHolderFilterView: View {
     
     var body: some View {
         
-        Text("TBD")
+        Text("ProgressView")
     }
 }
 

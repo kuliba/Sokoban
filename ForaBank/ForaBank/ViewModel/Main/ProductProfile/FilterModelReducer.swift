@@ -32,20 +32,22 @@ final class FilterModelReducer {
         case .selectedCategory(_):
             fatalError()
         case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
-            let newRange: Range<Date>? = {
-                //TODO: resolve
-                return ((.distantPast)..<(.distantFuture))
-            }()
             
             state.filter.selectDates = (lowerDate, upperDate)
             state.filter.selectedPeriod = .dates
-            if let newRange {
+            if let lowerDate, let upperDate  {
                 
                 state.isLoading = true
-                effect = .updateFilter(newRange)
+                effect = .updateFilter(.init(
+                    range: (lowerDate..<upperDate),
+                    productId: state.productId
+                ))
             }
             
-        case let .updateFilter(newState):
+        case let .updateFilter(nil):
+            fatalError()
+            
+        case let .updateFilter(.some(newState)):
             state = newState
             state.isLoading = false
 
@@ -92,8 +94,8 @@ final class FilterModelEffectHandler {
 struct FilterModelEffectHandlerMicroServices {
     
     //TODO: replace `FilterState` with Result
-    typealias UpdateFilterCompletion = (FilterState) -> Void
-    typealias UpdateFilter = (Range<Date>, @escaping UpdateFilterCompletion) -> Void
+    typealias UpdateFilterCompletion = (FilterState?) -> Void
+    typealias UpdateFilter = (FilterEffect.UpdateFilterPayload, @escaping UpdateFilterCompletion) -> Void
     
     let updateFilter: UpdateFilter
 }
