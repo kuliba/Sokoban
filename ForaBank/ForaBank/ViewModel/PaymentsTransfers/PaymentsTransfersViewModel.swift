@@ -11,6 +11,7 @@ import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
 import OperatorsListComponents
+import CalendarUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -883,8 +884,8 @@ private extension PaymentsTransfersViewModel {
               let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
                 product,
                 "\(type(of: self))",
-                { [weak self] in self?.event(.dismiss(.destination)) })
-        else { return }
+                .defaultFilterComponents(product: product),
+                { [weak self] in self?.event(.dismiss(.destination)) }) else { return }
         
         productProfileViewModel.rootActions = rootActions
         bind(productProfileViewModel)
@@ -1807,5 +1808,33 @@ private extension NavigationBarButtonViewModel {
             icon: .ic24BarcodeScanner2,
             action: action
         )
+    }
+}
+extension FilterState {
+    
+    static func defaultFilterComponents(
+        product: ProductData
+    ) -> FilterState {
+        .init(
+            productId: product.id,
+            calendar: .init(
+                date: Date(),
+                range: .init(),
+                monthsData: .generate(startDate: product.openDate),
+                periods: FilterHistoryState.Period.allCases
+            ),
+            filter: .init(
+                title: "Фильтры",
+                selectDates: nil,
+                periods: FilterHistoryState.Period.allCases,
+                transactionType: [],
+                services: [],
+                historyService: { lowerDate, upperDate in
+                    
+                    fatalError()
+                }
+            )) { lowerDate, upperDate in
+                fatalError()
+            }
     }
 }

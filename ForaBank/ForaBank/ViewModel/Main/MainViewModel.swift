@@ -14,10 +14,11 @@ import SberQR
 import SwiftUI
 import LandingUIComponent
 import PaymentSticker
+import CalendarUI
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -243,8 +244,9 @@ private extension MainViewModel {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() })
-                    else { return }
+                            .defaultFilterComponents(product: product),
+                            { [weak self] in self?.resetDestination() }
+                          ) else { return }
                     
                     productProfileViewModel.rootActions = rootActions
                     productProfileViewModel.contactsAction = { [weak self] in self?.showContacts() }

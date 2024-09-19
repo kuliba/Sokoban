@@ -90,3 +90,35 @@ public extension FilterHistoryState {
         case dates = "Выбрать период"
     }
 }
+
+extension FilterState {
+    
+    public static let preview: Self = .init(
+        productId: 0,
+        calendar: .preview,
+        filter: .preview,
+        dateFilter: {_,_ in }
+    )
+}
+
+extension FilterHistoryState {
+
+    static let preview: Self = .init(
+        title: "Фильтры",
+        selectDates: (nil, nil),
+        periods: [],
+        transactionType: [],
+        services: [],
+        historyService: { _,_ in }
+    )
+}
+
+extension CalendarState {
+    
+    static let preview: Self = .init(
+        date: nil,
+        range: .init(),
+        monthsData: [],
+        periods: []
+    )
+}

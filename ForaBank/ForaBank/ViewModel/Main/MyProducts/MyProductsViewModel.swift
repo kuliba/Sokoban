@@ -12,11 +12,12 @@ import UIKit
 import SwiftUI
 import PinCodeUI
 import LandingUIComponent
+import CalendarUI
 
 class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -214,7 +215,11 @@ class MyProductsViewModel: ObservableObject {
                             .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }
+                        guard let productProfileViewModel = makeProductProfileViewModel(
+                            product,
+                            "\(type(of: self))",
+                            .defaultFilterComponents(product: product),
+                            { [weak self] in self?.link = nil }
                         )
                         else { return }
                         

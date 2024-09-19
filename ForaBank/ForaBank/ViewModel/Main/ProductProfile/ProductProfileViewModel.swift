@@ -40,7 +40,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var accentColor: Color
     
     @Published var historyState: HistoryState?
-    @Published var filterState: FilterState?
+    @Published var filterState: FilterState
 
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
@@ -87,7 +87,7 @@ class ProductProfileViewModel: ObservableObject {
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
-    private let filterSubject = PassthroughSubject<FilterState?, Never>()
+    private let filterSubject = PassthroughSubject<FilterState, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
 
     init(
@@ -112,6 +112,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
+        filterState: FilterState,
         rootView: String,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
@@ -137,6 +138,7 @@ class ProductProfileViewModel: ObservableObject {
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.filterState = filterState
         self.cardAction = createCardAction(cvvPINServicesClient, model)
       
         
@@ -195,6 +197,7 @@ class ProductProfileViewModel: ObservableObject {
         productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
+        filterState: FilterState,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -231,6 +234,7 @@ class ProductProfileViewModel: ObservableObject {
             cvvPINServicesClient: cvvPINServicesClient,
             filterHistoryRequest: filterHistoryRequest,
             productProfileViewModelFactory: productProfileViewModelFactory,
+            filterState: filterState,
             rootView: rootView,
             scheduler: scheduler
         )
@@ -1689,6 +1693,7 @@ private extension ProductProfileViewModel {
     func makeProductProfileViewModel(
         product: ProductData,
         rootView: String,
+        filterState: FilterState,
         dismissAction: @escaping () -> Void
     ) -> ProductProfileViewModel? {
         
@@ -1707,6 +1712,7 @@ private extension ProductProfileViewModel {
             productNavigationStateManager: productNavigationStateManager,
             productProfileViewModelFactory: productProfileViewModelFactory, 
             filterHistoryRequest: { _,_,_,_ in },
+            filterState: filterState,
             rootView: rootView,
             dismissAction: dismissAction
         )

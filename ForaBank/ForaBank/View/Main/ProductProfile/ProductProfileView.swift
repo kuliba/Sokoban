@@ -92,18 +92,18 @@ struct ProductProfileView: View {
                                                 {
                                                     viewModel.event(.button($0))
                                                 },{
-                                                    viewModel.filterState?.filter.selectedServices.isEmpty == false || viewModel.filterState?.filter.selectedTransaction != nil || viewModel.filterState?.filter.selectedPeriod == .week
+                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week
                                                 },{
-                                                    return viewModel.filterState?.calendar.range?.lowerDate != nil
+                                                    return viewModel.filterState.calendar.range?.lowerDate != nil
                                                     
                                                 }, {
                                                     
                                                     self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
-                                                    viewModel.filterState?.filter.selectedServices = []
-                                                    viewModel.filterState?.filter.selectedTransaction = nil
-                                                    viewModel.filterState?.filter.selectedPeriod = .month
-                                                    viewModel.filterState?.filter.selectDates = nil
-                                                    viewModel.filterState?.calendar.range = .init()
+                                                    viewModel.filterState.filter.selectedServices = []
+                                                    viewModel.filterState.filter.selectedTransaction = nil
+                                                    viewModel.filterState.filter.selectedPeriod = .month
+                                                    viewModel.filterState.filter.selectDates = nil
+                                                    viewModel.filterState.calendar.range = .init()
                                                 })
                                         } else {
                                             return nil
@@ -230,7 +230,7 @@ struct ProductProfileView: View {
                         if let lowerDate = lowerDate,
                            let upperDate = upperDate {
                             
-                            viewModel.filterState?.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
+                            viewModel.filterState.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
                             viewModel.filterHistoryRequest(
                                 lowerDate,
                                 upperDate,
@@ -757,6 +757,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
     
@@ -778,6 +779,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: SadCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
 }

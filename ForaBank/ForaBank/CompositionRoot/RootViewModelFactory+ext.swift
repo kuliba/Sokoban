@@ -429,7 +429,7 @@ extension ProductProfileViewModel {
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
         with model: Model,
@@ -448,7 +448,7 @@ extension ProductProfileViewModel {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
-        return { product, rootView, dismissAction in
+        return { product, rootView, filterState, dismissAction in
             
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
@@ -543,6 +543,7 @@ extension ProductProfileViewModel {
                         category: category
                     ))
                 },
+                filterState: filterState,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -576,7 +577,7 @@ private extension RootViewModelFactory {
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
