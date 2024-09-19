@@ -50,38 +50,6 @@ extension Model {
         )
     }
     
-    func landingMarketplaceViewModelFactory(
-        abroadType: String,
-        config: UILanding.Component.Config,
-        landingActions: @escaping (LandingEvent.Card) -> () -> Void
-    ) -> LandingWrapperViewModel {
-        
-        let service = self.getLandingCachingService(abroadType: abroadType) {
-            
-            self.currentValueSubject(abroadType).value = .success($0)
-        }
-        service.process(("", abroadType)) { [service] _ in _ = service }
-        
-        return LandingWrapperViewModel(
-            statePublisher: statePublisher(abroadType)(),
-            imagePublisher: imagePublisher(),
-            imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
-            scheduler: .main,
-            config: config,
-            landingActions: { event in
-                switch event {
-                case let .card(card):
-                    return landingActions(card)()
-                    
-                case .sticker: break
-                case .bannerAction: break
-                case .listVerticalRoundImageAction: break
-                }
-            }
-        )
-    }
-
     func landingStickerViewModelFactory(
         abroadType: AbroadType,
         config: UILanding.Component.Config,
@@ -166,28 +134,6 @@ private extension Model {
                 .eraseToAnyPublisher()
         }
     }
-    
-    // MARK: - Current Value Subject
-    func currentValueSubject(_ abroadType: String) -> CurrentValueSubjectTA {
-        let currentValueSubject: CurrentValueSubject<Result<UILanding?, Error>, Never> = marketplaceLanding
-        return currentValueSubject
-    }
-    
-    // MARK: - State Publisher
-    func statePublisher(_ abroadType: String) -> StatePublisher {
-        return {
-            return self.currentValueSubject(abroadType)
-                .map {
-                    $0.mapError {
-                        LandingWrapperViewModel.Error(
-                            message: $0.localizedDescription
-                        )
-                    }
-                }
-                .eraseToAnyPublisher()
-        }
-    }
-
     
     // MARK: - image Publisher
     func imagePublisher() -> ImagePublisher {
@@ -329,31 +275,6 @@ private extension Model {
         }
         
         return Services.getLandingService(
-            httpClient: httpClient,
-            withCache: cache)
-    }
-    
-    func getLandingCachingService(
-        abroadType: String,
-        observe: @escaping (UILanding) -> Void
-    ) -> Services.GetMarketplaceLandingService {
-        
-        let httpClient: HTTPClient = HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
-                
-        let cache: Services.Cache = { codableLanding in
-            
-            let landingUI = UILanding(codableLanding)
-            
-            observe(landingUI)
-            
-            let serial = codableLanding.serial
-            
-            let data: Codable = LocalAgentDomain.Marketplace(target: abroadType, landing: codableLanding)
-            
-            try? self.localAgent.store(data, serial: serial)
-        }
-        
-        return Services.getMarketPlaceLandingService(
             httpClient: httpClient,
             withCache: cache)
     }

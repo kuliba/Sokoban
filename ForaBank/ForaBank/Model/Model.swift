@@ -1728,10 +1728,4 @@ extension LocalAgentDomain {
         
         let landing: Landing
     }
-    
-    struct Marketplace: Codable {
-        
-        let target: String
-        let landing: Landing
-    }
 }

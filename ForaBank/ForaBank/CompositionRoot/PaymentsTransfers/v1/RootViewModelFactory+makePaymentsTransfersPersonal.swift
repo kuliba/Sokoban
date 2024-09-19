@@ -10,6 +10,7 @@ import Foundation
 import PayHub
 import PayHubUI
 import Banners
+import LandingMapping
 
 struct PaymentsTransfersPersonalNanoServices {
     
@@ -37,6 +38,14 @@ extension PaymentsTransfersPersonalNanoServices {
 struct PaymentsTransfersCorporateNanoServices {
     
     let loadBanners: LoadBanners
+    let loadLandingByType: LoadLandingByType
+}
+
+extension PaymentsTransfersCorporateNanoServices {
+    
+    typealias LandingType = String
+    typealias LoadLandingByTypeCompletion = (Result<Landing, Error>) -> Void
+    typealias LoadLandingByType = (LandingType, @escaping LoadLandingByTypeCompletion) -> Void
 }
 
 extension RootViewModelFactory {

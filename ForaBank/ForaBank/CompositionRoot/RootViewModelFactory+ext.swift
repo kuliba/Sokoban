@@ -17,6 +17,9 @@ import SwiftUI
 import PayHub
 import PayHubUI
 import Fetcher
+import LandingUIComponent
+import LandingMapping
+import CodableLanding
 
 extension RootViewModelFactory {
     
@@ -434,6 +437,12 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
+
+        let getLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createMarketplaceLandingRequest,
+            mapResponse: LandingMapper.map
+        )
+        
         let (banners, loadBannersList) = makeBannersBinder(
             model: model,
             httpClient: httpClient,
@@ -445,7 +454,9 @@ extension RootViewModelFactory {
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
-                loadBanners: loadBannersList
+                loadBanners: loadBannersList,
+                // TODO: add real serial model.localAgent.serial(for: LandingType.self)
+                loadLandingByType: { getLanding(( "", $0), $1) }
             ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler

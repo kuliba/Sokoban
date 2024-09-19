@@ -1774,14 +1774,7 @@ extension MainViewModel {
     
     func handleLandingAction(_ abroadType: String) {
         
-        let viewModel = authFactory.makeMarketPlaceLandingViewModel(
-                    abroadType,
-                    config: .default,
-                    landingActions: landingAction
-                )
-        
-        UIApplication.shared.endEditing()
-        route.destination = .landing(viewModel, false)
+        // TODO: add data from bannersBinder
     }
 
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -1800,7 +1793,7 @@ extension MainViewModel {
         case .goToMain:
             return handleCloseLinkAction
             
-        case let .order(cardTarif, cardType):
+        case .order:
             return {}
             
         case let .openUrl(link):
