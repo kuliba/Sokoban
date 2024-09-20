@@ -12,7 +12,7 @@ struct PaymentsTransfersPersonalNanoServices {
     let loadCategories: LoadCategories
     let loadAllLatest: LoadAllLatest
     let loadLatestForCategory: LoadLatestForCategory
-    let loadOperators: LoadOperators
+    let loadOperatorsForCategory: LoadOperatorsForCategory
 }
 
 extension PaymentsTransfersPersonalNanoServices {
@@ -20,12 +20,10 @@ extension PaymentsTransfersPersonalNanoServices {
     typealias LoadCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
     typealias LoadCategories = (@escaping LoadCategoriesCompletion) -> Void
     
-    typealias LoadAllLatestCompletion = (Result<[Latest], Error>) -> Void
-    typealias LoadAllLatest = (@escaping LoadAllLatestCompletion) -> Void
-    
-    typealias LoadLatestForCategoryCompletion = (Result<[Latest], Error>) -> Void
-    typealias LoadLatestForCategory = (ServiceCategory, @escaping LoadLatestForCategoryCompletion) -> Void
+    typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadAllLatest = (@escaping LoadLatestCompletion) -> Void
+    typealias LoadLatestForCategory = (ServiceCategory, @escaping LoadLatestCompletion) -> Void
     
     typealias LoadOperatorsCompletion = (Result<[Operator], Error>) -> Void
-    typealias LoadOperators = (ServiceCategory, @escaping LoadOperatorsCompletion) -> Void
+    typealias LoadOperatorsForCategory = (ServiceCategory, @escaping LoadOperatorsCompletion) -> Void
 }
