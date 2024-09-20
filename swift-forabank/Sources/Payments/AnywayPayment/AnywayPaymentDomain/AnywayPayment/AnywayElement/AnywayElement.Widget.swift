@@ -22,7 +22,7 @@ extension AnywayElement.Widget {
     public var id: ID {
         
         switch self {
-        case .info:     return .info
+        case .info:    return .info
         case .otp:     return .otp
         case .product: return .product
         }
@@ -36,13 +36,16 @@ extension AnywayElement.Widget {
     public struct Info: Equatable {
         
         public let currency: Currency?
+        public let debitAmount: Decimal?
         public let fields: [Field]
         
         public init(
             currency: Currency?,
+            debitAmount: Decimal?,
             fields: [Field]
         ) {
             self.currency = currency
+            self.debitAmount = debitAmount
             self.fields = fields
         }
         

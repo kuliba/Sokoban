@@ -320,13 +320,10 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
-        
-        case let .payment(paymentViewModel):
-            PaymentsView(viewModel: paymentViewModel)
             
-        case let .paymentsTransfers(viewModel):
+        case let .paymentsTransfers(node):
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: node.model,
                 viewFactory: viewFactory, 
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
@@ -801,7 +798,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: QRViewModel.ScanResult.init
+            qrResolve: { _ in .unknown }
         )
     }
 }

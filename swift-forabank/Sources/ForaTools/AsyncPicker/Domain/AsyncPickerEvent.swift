@@ -14,6 +14,9 @@ public enum AsyncPickerEvent<Item, Response> {
     /// Event indicating the picker has loaded with the given items.
     case loaded([Item])
     
+    /// Event to reset received response.
+    case reset
+    
     /// Event indicating a response associated with the picker.
     case response(Response)
     

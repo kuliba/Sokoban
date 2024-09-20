@@ -37,7 +37,7 @@ struct ProductStatementWithExtendedInfo: Codable, Equatable {
 
 struct ProductStatementData: Identifiable, Equatable, Hashable {
     
-    var id: String { operationId + operationType.rawValue }
+    var id: String { operationId }
     let mcc: Int?
     let accountId: Int?
     let accountNumber: String

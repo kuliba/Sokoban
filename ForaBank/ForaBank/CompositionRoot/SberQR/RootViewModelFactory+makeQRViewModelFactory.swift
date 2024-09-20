@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 11.12.2023.
 //
 
+import CombineSchedulers
 import Foundation
 
 extension RootViewModelFactory {
@@ -12,13 +13,17 @@ extension RootViewModelFactory {
     static func makeQRViewModelFactory(
         model: Model,
         logger: LoggerAgentProtocol,
-        qrResolverFeatureFlag: QRResolverFeatureFlag
+        qrResolverFeatureFlag: QRResolverFeatureFlag,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) -> QRViewModelFactory {
         
         .init(
             makeQRScannerModel: makeMakeQRScannerModel(
                 model: model,
-                qrResolverFeatureFlag: qrResolverFeatureFlag
+                qrResolverFeatureFlag: qrResolverFeatureFlag,
+                utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+                scheduler: scheduler
             ),
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(
                 model: model,

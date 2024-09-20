@@ -52,7 +52,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     config: config.navigationBarConfig
                 )
 
-                LandingWrapperView(viewModel: viewModel)
+                LandingWrapperView(
+                    viewModel: viewModel,
+                    updateSaveButtonAction: { updateSaveButtonAction(viewModel: viewModel) }
+                )
                     .frame(maxHeight: .infinity)
                     .alert(
                         item: .init(
@@ -63,7 +66,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     )
                 
                 if state.editEnableFor(limitType) {
-                    Button(action: { event(.saveLimits(viewModel.newLimitsValue)) }) {
+                    Button(action: {
+                        UIApplication.shared.endEditing()
+                        event(.saveLimits(viewModel.newLimitsValue))
+                    }) {
                         ZStack {
                             if state.saveButtonEnable {
                                 Color(red: 255/255, green: 54/255, blue: 54/255)
@@ -115,6 +121,21 @@ struct ListHorizontalRectangleLimitsView: View {
                 }
         )
     }
+    
+    private func updateSaveButtonAction(viewModel: LandingWrapperViewModel) {
+        
+        let newValueMoreThenMaxValue: Bool  = {
+            
+            if case let .success(landing) = viewModel.state {
+                
+                return landing?.blockHorizontalRectangular? .newValueMoreThenMaxValue(viewModel.newLimitsValue) ?? false
+            }
+            
+            return false
+        }()
+        
+        event(.limitChanging(viewModel.newLimitsValue, newValueMoreThenMaxValue))
+    }
 }
 
 extension ListHorizontalRectangleLimitsView {
@@ -138,7 +159,7 @@ extension Spent {
         let balance = limit.value - limit.currentValue
         
         switch balance {
-        case 0:
+        case _ where balance <= 0:
             return .spentEverything
             
         case limit.value:
@@ -247,8 +268,8 @@ extension ListHorizontalRectangleLimitsView {
                 if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
                     
                     switch limit.value {
-                    case 999999999...:
-                        Text("Без ограничений")
+                    case .maxLimit...:
+                        Text(String.noLimits)
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
@@ -358,7 +379,8 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? value.formattedValue : "0"
+            let valueRounded = value.rounded(toDecimalPlace: 0)
+            return valueRounded > 0 ? valueRounded.formattedValue : "0"
         }
     }
 }

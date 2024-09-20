@@ -217,16 +217,17 @@ final class RootViewModelTests: XCTestCase {
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
                 updateInfoStatusFlag: .init(.inactive),
-                onRegister: {}
+                onRegister: {}, 
+                bannersBinder: .preview
             ),
-            paymentsViewModel: .init(
+            paymentsModel: .legacy(.init(
                 model: model,
                 makeFlowManager: { _ in .preview },
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
                 paymentsTransfersFactory: .preview
-            ),
+            )),
             chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 

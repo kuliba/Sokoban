@@ -1,0 +1,109 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "19975e6eb7a590251afdd00e6fdbc7fa",
+        "templateList": [
+            {
+                "paymentTemplateId": 3760,
+                "name": "Э. Финстрим Финстримович",
+                "groupName": "Перевод МИГ",
+                "type": "NEW_DIRECT",
+                "sort": 1,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 120,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            },
+                            {
+                                "fieldname": "RECP",
+                                "fieldid": 3,
+                                "fieldvalue": "37496127188"
+                            },
+                            {
+                                "fieldname": "##CURR",
+                                "fieldid": 4,
+                                "fieldvalue": "RUB"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2dab5e994b3925a213dd63bffcc948ab"
+            }
+        ]
+    }
+}

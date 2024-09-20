@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "BA4B998D-62C3-4593-9C21-0411BE73EF21",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetBannerCatalogListAPITests",
+        "name" : "GetBannerCatalogListAPITests"
+      }
+    }
+  ],
+  "version" : 1
+}

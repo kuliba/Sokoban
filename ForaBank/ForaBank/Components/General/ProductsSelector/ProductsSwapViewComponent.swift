@@ -68,6 +68,7 @@ extension ProductsSwapView {
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.DemandDepositRule(),
                             ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                             ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
@@ -78,6 +79,7 @@ extension ProductsSwapView {
                     rules: [ProductData.Filter.CreditRule(),
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.CardActiveRule(),
+                            ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                             ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
 
@@ -144,20 +146,20 @@ extension ProductsSwapView {
                 self.init(model: model, items: [from, to], divider: .init())
                 
             case let .makePaymentTo(productToData, _):
-                var filterFrom = ProductData.Filter.generalFrom
+                var filterFrom = ProductData.Filter.generalFromWithIndividualBusinessmanMain
                 /*
                  temp off because of case with the single account product. Additional analytics is required.
                  
                 filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
                  */
                 
-                guard let productFromData = model.firstProduct(with: filterFrom) else {
+                guard let productFromData = model.firstProduct(with: filterFrom, excluding: productToData) else {
                     return nil
                 }
                 
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
                 
-                let filterTo = ProductData.Filter.generalToWithDeposit
+                let filterTo = ProductData.Filter.generalToWithDepositAndIndividualBusinessmanMain
                 
                 let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
 

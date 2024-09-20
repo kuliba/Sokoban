@@ -17,7 +17,7 @@ struct AnywayPaymentParameterView: View {
     
     var body: some View {
         
-        switch parameter {
+        switch parameter.type {
         case .hidden:
             EmptyView()
             
@@ -25,29 +25,35 @@ struct AnywayPaymentParameterView: View {
 #warning("replace with real components")
             Text("TBD: nonEditable parameter view")
             
-        case let .numberInput(viewModel):
-#warning("replace with specific number input view")
-            InputWrapperView(
-                viewModel: viewModel,
-                makeIconView: {
+        case let .numberInput(node):
+            TextInputWrapperView(
+                model: node.model,
+                config: .iFora(
+                    keyboard: .decimal, 
+                    title: parameter.origin.title
+                ),
+                iconView: {
                     
-                    factory.makeIconView(viewModel.state.settings.icon)
+                    factory.makeIconView(parameter.origin.icon)
                         .frame(width: 32, height: 32)
                 }
             )
             .paddedRoundedBackground()
-            .keyboardType(.decimalPad)
             
         case let .select(viewModel):
-            factory.makeSelectorView(viewModel)
+            factory.makeSelectorView(parameter, viewModel)
                 .paddedRoundedBackground()
             
-        case let .textInput(viewModel):
-            InputWrapperView(
-                viewModel: viewModel,
-                makeIconView: {
+        case let .textInput(node):
+            TextInputWrapperView(
+                model: node.model,
+                config: .iFora(
+                    keyboard: .default,
+                    title: parameter.origin.title
+                ),
+                iconView: {
                     
-                    factory.makeIconView(viewModel.state.settings.icon)
+                    factory.makeIconView(parameter.origin.icon)
                         .frame(width: 32, height: 32)
                 }
             )

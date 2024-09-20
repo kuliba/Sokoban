@@ -17,6 +17,7 @@ enum ExamplesDataToFormat {
     case us(US)
     case otherNotValid(OtherNotValid)
     case empty
+    case custom(String)
     
     var typeName: String {
         switch self {
@@ -26,6 +27,7 @@ enum ExamplesDataToFormat {
         case .us:            return "US"
         case .otherNotValid: return "OtherNotValid"
         case .empty:         return "Empty"
+        case .custom:        return "Сustom"
         }
     }
     
@@ -37,6 +39,7 @@ enum ExamplesDataToFormat {
         case let .us(value):            return value.rawValue
         case let .otherNotValid(value): return value.rawValue
         case .empty:                    return ""
+        case let .custom(value):        return value
         }
     }
 }

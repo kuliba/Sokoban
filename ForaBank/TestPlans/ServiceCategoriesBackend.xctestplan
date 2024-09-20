@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9EB2E0D4-5CE9-4645-A553-85C0F71E726F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServiceCategoriesBackendTests",
+        "name" : "ServiceCategoriesBackendTests"
+      }
+    }
+  ],
+  "version" : 1
+}

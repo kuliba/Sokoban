@@ -10,5 +10,5 @@ import AnywayPaymentCore
 public enum AnywayMessage: Equatable {
     
     case otpWarning(String)
-    case validation(AnywayPaymentValidationError)
+    case updateValueTo(String)
 }

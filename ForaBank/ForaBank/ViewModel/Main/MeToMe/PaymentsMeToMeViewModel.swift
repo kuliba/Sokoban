@@ -131,86 +131,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                                              primary: .init(type: .default, title: "Наши офисы", action: { [weak self] in self?.action.send(PaymentsMeToMeAction.Show.PlacesMap())}),
                                                              secondary: .init(type: .default, title: "ОК", action: {}))
                         self.alert = .init(alertViewModel)
-                        
-                    }
-
-                case let payload as ModelAction.Payment.MeToMe.CreateTransfer.Response:
-                    
-                    state = .normal
-
-                    switch payload.result {
-                    case let .success(response):
-
-                        // For currency transfers
-                        if response.needMake == true {
-
-                            model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: response))
-                            state = .loading
-
-                        } else {
-                            
-                            // For ruble transfers
-                            if response.needOTP == false {
-                                
-                                let mode = modeForSuccessView(
-                                    templateId: getTemplateId(),
-                                    productIdFrom: swapViewModel.productIdFrom,
-                                    productIdTo: swapViewModel.productIdTo,
-                                    transferData: response
-                                )
-                                
-                                guard let success = Payments.Success(
-                                    model: model,
-                                    mode: mode,
-                                    amountFormatter: model.amountFormatted(amount:currencyCode:style:)
-                                ) else {
-                                    return
-                                }
-                                
-                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                
-                            } else {
-                                
-                                self.action.send(PaymentsMeToMeAction.Response.Failed())
-                            }
-                            
-                        }
-                        
-                    case let .failure(error):
-                        
-                        makeAlert(error)
                     }
                     
-                case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
-                    
-                    state = .normal
-
-                    switch payload.result {
-                    case let .success(transferData):
-                        let mode = modeForSuccessView(
-                            templateId: getTemplateId(),
-                            productIdFrom: swapViewModel.productIdFrom,
-                            productIdTo: swapViewModel.productIdTo,
-                            transferData: transferData
-                        )
-                        
-                        guard let success = Payments.Success(
-                            model: model,
-                            mode: mode,
-                            amountFormatter: model.amountFormatted(amount:currencyCode:style:)
-                        ) else {
-                            return
-                        }
-                        
-                        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-
-                    case let .failure(error):
-                        makeAlert(error)
-                    }
-                    
-
                 case let payload as ModelAction.Account.Close.Response:
                     
                     state = .normal
@@ -326,6 +248,28 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        // ME2ME Actions
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .first { $0 is ModelAction.Payment.MeToMe.CreateTransfer.Response }
+            .sink { [unowned self] action in
+                if let payload = action as? ModelAction.Payment.MeToMe.CreateTransfer.Response {
+                    handleCreateTransferResponse(payload)
+                }
+            }
+            .store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .first { $0 is ModelAction.Payment.MeToMe.MakeTransfer.Response }
+            .sink { [unowned self] action in
+                if let payload = action as? ModelAction.Payment.MeToMe.MakeTransfer.Response {
+                    handleMakeTransferResponse(payload)
+                }
+            }
+            .store(in: &bindings)
         
         model.rates
             .receive(on: DispatchQueue.main)
@@ -957,32 +901,55 @@ class PaymentsMeToMeViewModel: ObservableObject {
         })
     }
     
-    private func makeAlert(_ error: ModelError) {
-
+    private func makeAlert(
+        _ error: ModelError,
+        isFromMeToMeCreateTransfer: Bool = false
+    ) {
+        
+        guard let alertData = createAlertData(error, isFromMeToMeCreateTransfer: isFromMeToMeCreateTransfer) else {
+            return
+        }
+        
+        alert = .init(
+            title: alertData.title,
+            message: alertData.messageError,
+            primary: .init(type: .default, title: "ОК") { [weak self] in
+                
+                self?.alert = nil
+                if isFromMeToMeCreateTransfer {
+                    
+                    self?.action.send(PaymentsMeToMeAction.Close.BottomSheet())
+                }
+            })
+    }
+    
+    func createAlertData(
+        _ error: ModelError,
+        isFromMeToMeCreateTransfer: Bool = false
+    ) -> (title: String, messageError: String)? {
+        
         var messageError: String?
         
         switch error {
-        case let .emptyData(message):
-            messageError = message
-        case let .statusError(_, message):
-            messageError = message
-        case let .serverCommandError(error):
-            messageError = error
-            
-        default:
+        case let .emptyData(errorMessage):
+            messageError = errorMessage
+        case let .statusError(_, errorMessage):
+            messageError = errorMessage
+        case let .serverCommandError(errorMessage):
+            messageError = errorMessage
+        case .unauthorizedCommandAttempt:
             messageError = nil
         }
-
+        
         guard let messageError = messageError else {
-            return
+            return nil
+        }
+        
+        if isFromMeToMeCreateTransfer {
+            return (title: "Операция в обработке", messageError: "Проверьте её статус позже в истории операций.")
         }
 
-        alert = .init(
-            title: "Ошибка",
-            message: messageError,
-            primary: .init(type: .default, title: "Ok") { [weak self] in
-                self?.alert = nil
-            })
+        return (title: "Ошибка", messageError: messageError)
     }
 }
 
@@ -1008,6 +975,98 @@ extension PaymentsMeToMeViewModel {
             
         default:
             return nil
+        }
+    }
+    
+    func handleCreateTransferResponse(_ payload: ModelAction.Payment.MeToMe.CreateTransfer.Response) {
+        
+        state = .normal
+
+        switch payload.result {
+        case let .success(response):
+            
+            // For currency transfers
+            if response.needMake == true {
+                
+                model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: response))
+                state = .loading
+                
+            } else {
+                
+                // For ruble transfers
+                if response.needOTP == false {
+                    
+                    let mode = modeForSuccessView(
+                        templateId: getTemplateId(),
+                        productIdFrom: swapViewModel.productIdFrom,
+                        productIdTo: swapViewModel.productIdTo,
+                        transferData: response
+                    )
+                    guard let success = Payments.Success(
+                        model: model,
+                        mode: mode,
+                        amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                    ) else {
+                        return
+                    }
+                    
+                    let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                    self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                    
+                } else {
+                    
+                    self.action.send(PaymentsMeToMeAction.Response.Failed())
+                }
+                
+            }
+            
+        case let .failure(error):
+            
+            switch error {
+               
+            case let .statusError(status, _):
+                makeAlert(error, isFromMeToMeCreateTransfer: status == .timeout)
+                
+            default:
+                makeAlert(error)
+            }
+        }
+    }
+    
+    func handleMakeTransferResponse(_ payload: ModelAction.Payment.MeToMe.MakeTransfer.Response) {
+        
+        state = .normal
+
+        switch payload.result {
+        case let .success(transferData):
+            let mode = modeForSuccessView(
+                templateId: getTemplateId(),
+                productIdFrom: swapViewModel.productIdFrom,
+                productIdTo: swapViewModel.productIdTo,
+                transferData: transferData
+            )
+            
+            guard let success = Payments.Success(
+                model: model,
+                mode: mode,
+                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+            ) else {
+                return
+            }
+            
+            let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+
+        case let .failure(error):
+            
+            switch error {
+               
+            case let .statusError(status, _):
+                makeAlert(error, isFromMeToMeCreateTransfer: status == .timeout)
+                
+            default:
+                makeAlert(error)
+            }
         }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import UIPrimitives
+import SharedConfigs
 
 extension UILanding.Multi.LineHeader {
     
@@ -444,7 +445,8 @@ extension UILanding.TextsWithIconHorizontal.Config {
                     padding: .init(vertical: 0, leading: 12)),
         height: 40,
         spacing: 12,
-        text: .init(color: .green, font: .body))
+        text: .init(color: .green, font: .body), 
+        images: [:])
 }
 
 extension UILanding.ImageBlock.Config {
@@ -697,13 +699,15 @@ extension UILanding.List.HorizontalRectangleLimits {
 extension UILanding.BlockHorizontalRectangular.Config {
     
     static let `default`: Self = .init(
+        cornerRadius: 12,
         colors: .init(
             background: .init(red: 246/255, green: 246/255, blue: 247/255),
             divider: .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3),
-            title: .init(red: 28/255, green: 28/255, blue: 1/255),
-            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255),
             warning: .red),
-        cornerRadius: 12,
+        limitConfig: .preview,
+        titleConfig: .init(textFont: .caption, textColor: .gray),
+        subtitleConfig: .init(textFont: .body, textColor: .black),
+        limitTitleConfig: .init(textFont: .caption, textColor: .black),
         sizes: .init(iconWidth: 24, height: 124, width: 272),
         paddings: .init(horizontal: 16, vertical: 8),
         spacing: 8)

@@ -68,9 +68,55 @@ final class ModelPreferredProductTests: XCTestCase {
         // then
         XCTAssertEqual(result?.id, 0)
     }
-}
+    
+    func test_firstProductExcluding_shouldReturnFirstProductNotEqualExcluding() {
+        
+        let card1 = makeCardProduct(id: 1, cardType: .individualBusinessmanMain)
+        let card2 = makeCardProduct(id: 2, cardType: .main)
+        let sut = makeSUT(products: [
+            .card : [card1, card2]
+        ])
+        
+        let result = sut.firstProduct(with: .generalToWithDepositAndIndividualBusinessmanMain, excluding: card1)
+        
+        XCTAssertNoDiff(result?.id, card2.id)
+    }
+    
+    func test_firstProductExcluding_emptyProducts_shouldReturnNil() {
+        
+        let card1 = makeCardProduct(id: 1, cardType: .individualBusinessmanMain)
+        let sut = makeSUT(products: [:])
+        
+        let result = sut.firstProduct(with: .generalToWithDepositAndIndividualBusinessmanMain, excluding: card1)
+        
+        XCTAssertNil(result)
+    }
 
-extension ModelPreferredProductTests {
+    func test_firstProductExcluding_onlyOneProduct_shouldProduct() {
+        
+        let card = makeCardProduct(id: 1, cardType: .individualBusinessmanMain)
+        let sut = makeSUT(products: [.card: [card]])
+        
+        let result = sut.firstProduct(with: .generalToWithDepositAndIndividualBusinessmanMain, excluding: card)
+        
+        XCTAssertNoDiff(result?.id, card.id)
+    }
+
+    // MARK: - Helpers
+    
+    private func makeSUT(
+        products: ProductsData,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Model {
+        
+        let sut = Model.mockWithEmptyExcept()
+        sut.products.value = products
+
+        trackForMemoryLeaks(sut, file: file, line: line)
+
+        return sut
+    }
     
     func makeSut(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
         

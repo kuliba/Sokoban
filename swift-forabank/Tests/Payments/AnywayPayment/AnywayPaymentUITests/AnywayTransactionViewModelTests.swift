@@ -251,6 +251,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         
         XCTAssertNoDiff(footer.messages.map(\.isEnabled), [
+            true,
             false,
             true,
             false,
@@ -275,6 +276,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         
         XCTAssertNoDiff(footer.messages.map(\.isEnabled), [
+            true,
             false,
             true,
             false,
@@ -301,6 +303,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         
         XCTAssertNoDiff(footer.messages.map(\.style), [
+            .button,
             .button,
             .amount,
             .amount,

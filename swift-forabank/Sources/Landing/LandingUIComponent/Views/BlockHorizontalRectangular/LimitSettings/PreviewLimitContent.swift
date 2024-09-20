@@ -23,7 +23,6 @@ extension LimitConfig {
             textFont: .title.bold(),
             textColor: .black
         ),
-        backgroundColor: .black.opacity(0.8),
         title: .init(
             textFont: .caption,
             textColor: .gray

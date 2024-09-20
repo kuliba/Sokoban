@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SharedConfigs
 
 public extension UILanding.BlockHorizontalRectangular {
     
@@ -14,6 +15,10 @@ public extension UILanding.BlockHorizontalRectangular {
         
         let cornerRadius: CGFloat
         let colors: Colors
+        let limitConfig: LimitConfig
+        let titleConfig: TextConfig
+        let subtitleConfig: TextConfig
+        let limitTitleConfig: TextConfig
         let sizes: Sizes
         let paddings: Paddings
         let spacing: CGFloat
@@ -22,21 +27,15 @@ public extension UILanding.BlockHorizontalRectangular {
             
             let background: Color
             let divider: Color
-            let title: Color
-            let subtitle: Color
             let warning: Color
             
             public init(
                 background: Color,
                 divider: Color,
-                title: Color,
-                subtitle: Color,
                 warning: Color
             ) {
                 self.background = background
                 self.divider = divider
-                self.title = title
-                self.subtitle = subtitle
                 self.warning = warning
             }
         }
@@ -66,14 +65,22 @@ public extension UILanding.BlockHorizontalRectangular {
         }
         
         public init(
-            colors: Colors,
             cornerRadius: CGFloat,
+            colors: Colors,
+            limitConfig: LimitConfig,
+            titleConfig: TextConfig,
+            subtitleConfig: TextConfig,
+            limitTitleConfig: TextConfig,
             sizes: Sizes,
             paddings: Paddings,
             spacing: CGFloat
-        ){
-            self.colors = colors
+        ) {
             self.cornerRadius = cornerRadius
+            self.colors = colors
+            self.limitConfig = limitConfig
+            self.titleConfig = titleConfig
+            self.subtitleConfig = subtitleConfig
+            self.limitTitleConfig = limitTitleConfig
             self.sizes = sizes
             self.paddings = paddings
             self.spacing = spacing

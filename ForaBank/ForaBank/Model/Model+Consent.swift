@@ -75,7 +75,7 @@ extension Model {
             switch result {
             case .success(let data):
                 
-                if let me2meDebit = data.data { 
+                if let me2meDebit = data.data {
                     
                     action.send(ModelAction.Consent.Me2MeDebit.Response(result: .success(me2meDebit)))
                 }

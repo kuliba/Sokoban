@@ -67,8 +67,49 @@ final class Model_makeSectionsTests: XCTestCase {
             after:  (3, .latestPayments))
     }
 
+    func test_makeSections_onlyCorporateCards_ShouldReturnFirstDisableForCorCardsSection () {
+        
+        let sut = makeSUT(products: [
+            .card : [
+                makeCardProduct(id: 1, cardType: .corporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessman),
+                makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+            ]])
+        let sectionBeforeUpdate = sut.makeSections(flag: .init(.inactive))
+        
+        assert(sections: sectionBeforeUpdate, count: 4, firstType: .disableForCorCards)
+    }
+    
+    func test_makeSections_notOnlyCorporateCards_ShouldReturnFirstLatestPaymentsSection () {
+        
+        let sut = makeSUT(products: [
+            .card : [
+                makeCardProduct(id: 1, cardType: .corporate),
+                makeCardProduct(id: 2, cardType: .individualBusinessman),
+                makeCardProduct(id: 3, cardType: .individualBusinessmanMain),
+                makeCardProduct(id: 4, cardType: .main),
+            ]])
+        let sectionBeforeUpdate = sut.makeSections(flag: .init(.inactive))
+        
+        assert(sections: sectionBeforeUpdate, count: 3, firstType: .latestPayments)
+    }
+
     // MARK: - Helpers
 
+    private func makeSUT(
+        products: ProductsData = [:],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Model {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.products.value = products
+        
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return model
+    }
+    
     private func assert(
         sections: [PaymentsTransfersSectionViewModel],
         count: Int,

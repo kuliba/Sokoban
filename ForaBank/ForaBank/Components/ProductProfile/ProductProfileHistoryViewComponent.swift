@@ -528,22 +528,31 @@ extension ProductProfileHistoryView.ViewModel {
     func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
         var updatedOperations = [HistoryListViewModel.DayGroupViewModel.Operation]()
-        
         var downloadImagesIds = [String]()
+        let groupedStatements = Dictionary(grouping: statements, by: { $0.operationId })
         
-        for statement in statements {
+        for (_, statementsGroup) in groupedStatements {
             
-            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
-            updatedOperations.append(operation)
-
-            let imageId = statement.md5hash
-            if let imageData = images[imageId] {
+            if let latestStatement = statementsGroup.max(by: {
                 
-                operation.image = imageData.image
+                if let lhsTranDate = $0.tranDate, let rhsTranDate = $1.tranDate {
+                    return lhsTranDate > rhsTranDate
+                    
+                } else {
+                    return $0.date > $1.date
+                }
+            }) {
                 
-            } else {
+                let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: latestStatement, model: model, action: action(latestStatement.id))
+                updatedOperations.append(operation)
                 
-                downloadImagesIds.append(imageId)
+                let imageId = latestStatement.md5hash
+                if let imageData = images[imageId] {
+                    operation.image = imageData.image
+                    
+                } else {
+                    downloadImagesIds.append(imageId)
+                }
             }
         }
         
@@ -551,7 +560,6 @@ extension ProductProfileHistoryView.ViewModel {
         
         return (sortedUpdatedOperations, downloadImagesIds)
     }
-    
 }
 
 //MARK: - Action
@@ -723,8 +731,7 @@ extension ProductProfileHistoryView.ViewModel {
                         self.imageId = statement.md5hash
                     }
                 }
-                
-                
+                  
                 struct Amount {
                     
                     let value: String

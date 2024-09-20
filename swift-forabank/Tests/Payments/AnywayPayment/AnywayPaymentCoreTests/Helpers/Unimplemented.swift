@@ -13,3 +13,13 @@ func unimplemented<T>(
     
     fatalError("Unimplemented: \(message)", file: file, line: line)
 }
+
+func unimplemented<T, V>(
+    _ t: T,
+    _ message: String = "",
+    file: StaticString = #file,
+    line: UInt = #line
+) -> V {
+    
+    fatalError("Unimplemented: \(message)", file: file, line: line)
+}
