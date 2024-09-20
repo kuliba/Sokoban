@@ -500,6 +500,7 @@ extension RootViewModel {
         
         case main
         case payments
+        case market
         case history
         case chat
         
@@ -508,6 +509,7 @@ extension RootViewModel {
             switch self {
             case .main: return "Главный"
             case .payments: return "Платежи"
+            case .market: return "Маркет"
             case .history: return "История"
             case .chat: return "Чат"
             }

@@ -28,6 +28,7 @@ struct RootView: View {
                     
                     mainViewTab(viewModel.mainViewModel)
                     paymentsViewTab(viewModel.paymentsModel)
+                    marketViewTab("")
                     chatViewTab(viewModel.chatViewModel)
                 }
                 .accentColor(.black)
@@ -98,6 +99,19 @@ struct RootView: View {
         ChatView(viewModel: chatViewModel)
             .taggedTabItem(.chat, selected: viewModel.selected)
             .accessibilityIdentifier("tabBarChatButton")
+    }
+    
+    private func marketViewTab(
+        _ marketViewModel: MarketPlaceViewModel
+    ) -> some View {
+        
+        rootViewFactory.makeMarketView("").map {
+            $0
+            .taggedTabItem(.market, selected: viewModel.selected)
+        }
+        .taggedTabItem(.market, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
+        .accessibilityIdentifier("tabBarMarketButton")
     }
     
     @ViewBuilder
@@ -463,6 +477,9 @@ extension RootViewModel.TabType {
             
         case .chat:
             return isSelected ? .ic24ChatActive : .ic24ChatInactive
+            
+        case .market:
+            return isSelected ? .ic24MarketplaceActive : .ic24MarketplaceInactive
         }
     }
 }
@@ -533,7 +550,8 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeMarketView: { _ in MarketView() }
         )
     }
 }

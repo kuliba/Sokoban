@@ -20,6 +20,9 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 
+typealias MarketPlaceViewModel = String
+typealias MakeMarketView = (MarketPlaceViewModel) -> MarketView?
+
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
@@ -34,6 +37,7 @@ struct RootViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
+    let makeMarketView: MakeMarketView
 }
 
 extension RootViewFactory {
