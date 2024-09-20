@@ -2472,6 +2472,7 @@ extension ProductProfileViewModel {
     enum Link {
         
         case productInfo(InfoProductViewModel)
+        case payment(PaymentsViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)

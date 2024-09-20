@@ -485,7 +485,9 @@ private extension RootViewFactory {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeHistoryButtonView: { _ in .init { event in }},
+            makeHistoryButtonView: { _,_,_,_   in
+                HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
+            },
             makeIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
@@ -512,16 +514,6 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:)
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeIconView: IconDomain.preview,
-            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-            makeUpdateInfoView: UpdateInfoView.init(text:),
-            makeAnywayPaymentFactory: { _ in fatalError() },
-            makePaymentCompleteView: { _,_ in fatalError() }, 
-            makeHistoryButtonView: { _,_,_,_   in
-                HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
-            },
-            makeReturnButtonView: { _ in .init(action: {}) }
         )
     }
 }

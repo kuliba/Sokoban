@@ -42,20 +42,6 @@ extension RootViewFactoryComposer {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
-            makeIconView: imageCache.makeIconView(for:),
-            makePaymentCompleteView: makePaymentCompleteView,
-            makePaymentsTransfersView: makePaymentsTransfersView,
-            makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeInfoViews: .default,
-            makeUserAccountView: makeUserAccountView
-            makeUserAccountView: makeUserAccountView,
-            makeIconView: imageCache.makeIconView(for:), 
-            makeActivateSliderView: ActivateSliderStateWrapperView.init, 
-            makeUpdateInfoView: UpdateInfoView.init,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makePaymentCompleteView: makePaymentCompleteView, 
             makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
                 self.makeHistoryButtonView(
                     self.historyFeatureFlag,
@@ -65,7 +51,13 @@ extension RootViewFactoryComposer {
                     event: event
                 )
             },
-            makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
+            makeIconView: imageCache.makeIconView(for:),
+            makePaymentCompleteView: makePaymentCompleteView,
+            makePaymentsTransfersView: makePaymentsTransfersView,
+            makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
+            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeInfoViews: .default,
+            makeUserAccountView: makeUserAccountView
         )
     }
 }

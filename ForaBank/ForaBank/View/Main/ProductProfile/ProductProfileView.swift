@@ -328,6 +328,8 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+        case let .payment(viewModel):
+            PaymentsView(viewModel: viewModel)
         }
     }
     
