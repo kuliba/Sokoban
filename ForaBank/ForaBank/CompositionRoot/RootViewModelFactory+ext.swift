@@ -389,16 +389,25 @@ extension RootViewModelFactory {
                 loadCategories: loadServiceCategories,
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) },
-                loadOperatorsForCategory: { _, completion in completion(.success([])) }
+                loadOperatorsForCategory: { category, completion in
+                    
+                    // TODO: replace with paginated or just first page
+                    let operators = model.localAgent
+                        .load(type: [CodableServicePaymentOperator].self)?
+                        .filter { $0.type == category.type.name }
+                        .sorted(by: \.name)
+                        .map(PaymentServiceOperator.init(codable:))
+                    
+                    completion(.success(operators ?? [])) }
             ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
         
-        let operatorsService = batchSerialComposer.composeServicePaymentProviderService(
+        let operatorsService = batchSerialComposer.composeServicePaymentOperatorService(
             getSerial: { _ in
                 
-                model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                model.localAgent.serial(for: [CodableServicePaymentOperator].self)
             }
         )
         
@@ -411,7 +420,7 @@ extension RootViewModelFactory {
                 
                 // load operators
                 let categories = response.categories
-                let serial = model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                let serial = model.localAgent.serial(for: [CodableServicePaymentOperator].self)
                 
                 operatorsService(categories.map { .init(serial: serial, category: $0) }) {
                     

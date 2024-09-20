@@ -244,8 +244,8 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
             nanoServiceFactory: nanoServiceComposer,
             updateMaker: asyncLocalAgent
         )
-        let sut = composer.composeServicePaymentProviderService(
-            getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }
+        let sut = composer.composeServicePaymentOperatorService(
+            getSerial: { _ in agent.serial(for: [CodableServicePaymentOperator].self) }
         )
         
         trackForMemoryLeaks(composer, file: file, line: line)

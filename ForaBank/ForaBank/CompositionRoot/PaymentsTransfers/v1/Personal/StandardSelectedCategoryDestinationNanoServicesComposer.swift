@@ -21,6 +21,8 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
     }
     
     typealias LoadLatest = (ServiceCategory, @escaping (Result<[Latest], Error>) -> Void) -> Void
+
+    typealias Operator = PaymentServiceOperator
     typealias LoadOperators = (ServiceCategory, @escaping (Result<[Operator], Error>) -> Void) -> Void
 }
 
