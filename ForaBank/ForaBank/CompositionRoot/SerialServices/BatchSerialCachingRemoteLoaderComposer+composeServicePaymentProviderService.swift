@@ -47,6 +47,10 @@ extension ForaBank.RequestFactory.GetOperatorsListByParamPayload {
 struct CodableServicePaymentProvider: Codable, Identifiable {
     
     let id: String
+    let inn: String
+    let md5Hash: String?
+    let name: String
+    let type: String
 }
 
 extension Array where Element == CodableServicePaymentProvider {
@@ -61,6 +65,6 @@ private extension RemoteServices.ResponseMapper.ServicePaymentProvider {
     
     var codable: CodableServicePaymentProvider {
         
-        return .init(id: id)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
     }
 }
