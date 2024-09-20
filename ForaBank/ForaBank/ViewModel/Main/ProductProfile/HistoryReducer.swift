@@ -37,7 +37,7 @@ extension HistoryReducer {
             case let .filter(productId, range):
                 effect = .filter(
                     productId: productId,
-                    range: range,
+                    range: range ?? (.startOfMonth)..<Date(),
                     selectServices: .init(state?.categories ?? [])
                 )
             }

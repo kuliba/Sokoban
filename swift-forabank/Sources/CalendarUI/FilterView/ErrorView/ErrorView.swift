@@ -11,15 +11,23 @@ public struct ErrorView: View {
     
     typealias Config = ErrorConfig
     
-    let icon: () -> Image
     let config: Config
     
     public var body: some View {
         
         VStack(spacing: 24) {
             
-            icon()
-            
+            ZStack {
+                
+                Circle()
+                    .foregroundColor(config.backgroundIcon)
+                    .frame(width: 64, height: 64)
+                
+                config.icon
+                    .renderingMode(.template)
+                    .foregroundColor(config.iconForeground)
+            }
+
             config.title.text(withConfig: config.titleConfig)
         }
     }
@@ -28,15 +36,12 @@ public struct ErrorView: View {
 #Preview {
     
     ErrorView(
-        icon: {
-            return .init(systemName: "slider.horizontal.2.square")
-        },
         config: .init(
-            title: "Ошибка",
-            titleConfig: .init(
-                textFont: .body,
-                textColor: .red
-            )
+            title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
+            titleConfig: .init(textFont: .body, textColor: .red),
+            icon: .init(systemName: "slider.horizontal.2.square"),
+            iconForeground: .black,
+            backgroundIcon: .red
         )
     )
 }

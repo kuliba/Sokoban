@@ -962,7 +962,6 @@ private extension ProductProfileViewModel {
                         history = historyViewModel
                     }
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                 } else {
                     
@@ -973,7 +972,6 @@ private extension ProductProfileViewModel {
                     }
                     
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                     historyPool[activeProductId] = historyViewModel
                     bind(history: historyViewModel)
@@ -1903,13 +1901,8 @@ private extension ProductProfileViewModel {
             productId: productId, 
             filter: { [weak self] in
                 return self?.filterState
-            },
-            services: { [weak self] in
-                if let categories = self?.historyCategories() {
-                    
-                    self?.event(.filter(.openSheet(categories)))
-                }
-            })
+            }
+        )
     }
     
     static func accentColor(with product: ProductData) -> Color {

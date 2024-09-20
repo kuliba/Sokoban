@@ -206,7 +206,7 @@ extension RootViewModelFactory {
                 
                 let reducer = FilterModelReducer()
                 let composer = FilterEffectHandlerMicroServicesComposer(model: model)
-                let effectHandler = FilterModelEffectHandler(
+                let filterEffectHandler = FilterModelEffectHandler(
                     microServices: composer.compose()
                 )
                 let services = model.historyCategories(productId: payload.productId)
@@ -230,7 +230,7 @@ extension RootViewModelFactory {
                         status: services.isEmpty ? .empty : .normal
                     ),
                     reduce: reducer.reduce,
-                    handleEffect: effectHandler.handleEffect
+                    handleEffect: filterEffectHandler.handleEffect
                 )
                 completion(viewModel)
             }
