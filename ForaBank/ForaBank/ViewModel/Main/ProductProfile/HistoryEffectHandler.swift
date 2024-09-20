@@ -13,8 +13,7 @@ struct HistoryEffectHandlerMicroServices {
     struct MakeFilterModelPayload: Equatable {
         
         let productId: ProductData.ID
-        let lowerDate: Date?
-        let upperDate: Date?
+        let range: Range<Date>
         let selectedServices: Set<String>
     }
     
@@ -43,12 +42,11 @@ extension HistoryEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .filter(productId: productId, lowerDate: lowerDate, upperDate: upperDate, selectServices):
+        case let .filter(productId: productId, range: range, selectServices):
             
             microServices.makeFilterModel(.init(
                 productId: productId,
-                lowerDate: lowerDate,
-                upperDate: upperDate,
+                range: range,
                 selectedServices: selectServices
             )) {
                 dispatch(.receive($0))

@@ -1,0 +1,2653 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "19975e6eb7a590251afdd00e6fdbc7fa",
+        "templateList": [
+            {
+                "paymentTemplateId": 3760,
+                "name": "Э. Финстрим Финстримович",
+                "groupName": "Перевод МИГ",
+                "type": "NEW_DIRECT",
+                "sort": 1,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 120,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            },
+                            {
+                                "fieldname": "RECP",
+                                "fieldid": 3,
+                                "fieldvalue": "37496127188"
+                            },
+                            {
+                                "fieldname": "##CURR",
+                                "fieldid": 4,
+                                "fieldvalue": "RUB"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2dab5e994b3925a213dd63bffcc948ab"
+            },
+            {
+                "paymentTemplateId": 4046,
+                "name": "ИП Домрачев Сергей Николаевич",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_ENTITY",
+                "sort": 2,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 125.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "погаар рпарлл растолл окатлжлоп окол 133",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40802810938050002771",
+                            "compilerStatus": null,
+                            "date": "2024-08-21",
+                            "name": "ИП Домрачев Сергей Николаевич",
+                            "bankBIC": "044525225",
+                            "tax": null,
+                            "INN": "772016190450",
+                            "KPP": null
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 4249,
+                "name": "Дарья Владимировна П.",
+                "groupName": "Перевод внутри банка",
+                "type": "BY_PHONE",
+                "sort": 3,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 100.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 10004891120,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": "79636124249",
+                            "productCustomName": "2200 **** **** 4324"
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 4252,
+                "name": "Петр Петрович П.",
+                "groupName": "Исходящие СБП",
+                "type": "SFP",
+                "sort": 4,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 155.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TransferC2CSTEP",
+                        "additional": [
+                            {
+                                "fieldname": "BankRecipientID",
+                                "fieldid": 1,
+                                "fieldvalue": "1crt88888881"
+                            },
+                            {
+                                "fieldname": "RecipientID",
+                                "fieldid": 3,
+                                "fieldvalue": "0115110217"
+                            },
+                            {
+                                "fieldname": "SumSTrs",
+                                "fieldid": 5,
+                                "fieldvalue": "155.0"
+                            },
+                            {
+                                "fieldname": "CcyCode",
+                                "fieldid": 6,
+                                "fieldvalue": "RUB"
+                            },
+                            {
+                                "fieldname": "Ustrd",
+                                "fieldid": 7,
+                                "fieldvalue": ""
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 4260,
+                "name": "Дарья Владимировна П.",
+                "groupName": "Между своими",
+                "type": "BY_PHONE",
+                "sort": 5,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 75.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 10004890455,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": "79160744365",
+                            "productCustomName": null
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 4339,
+                "name": "Александра Андреевна М.",
+                "groupName": "Перевод внутри банка",
+                "type": "BY_PHONE",
+                "sort": 6,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 10.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "",
+                        "payeeInternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": "79636188169",
+                            "productCustomName": "2200 **** **** 1401"
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 4647,
+                "name": "рооп ппр ",
+                "groupName": "Перевод Contact",
+                "type": "ADDRESSING_CASH",
+                "sort": 7,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iFora||Addressing||cash",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "IL"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iFora||Addressing||cash",
+                        "additional": [
+                            {
+                                "fieldname": "bCountryId",
+                                "fieldid": 0,
+                                "fieldvalue": "376"
+                            },
+                            {
+                                "fieldname": "search#3#",
+                                "fieldid": 4,
+                                "fieldvalue": "161007"
+                            },
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "IL"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iFora||Addressing||cash",
+                        "additional": [
+                            {
+                                "fieldname": "bCountryId",
+                                "fieldid": 0,
+                                "fieldvalue": "376"
+                            },
+                            {
+                                "fieldname": "search#5#",
+                                "fieldid": 6,
+                                "fieldvalue": "97761"
+                            },
+                            {
+                                "fieldname": "bCityId",
+                                "fieldid": 4,
+                                "fieldvalue": "161007"
+                            },
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "IL"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 100.0,
+                        "currencyAmount": "USD",
+                        "payer": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 10004769686,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||Addressing||cash",
+                        "additional": [
+                            {
+                                "fieldname": "bCountryId",
+                                "fieldid": 0,
+                                "fieldvalue": "376"
+                            },
+                            {
+                                "fieldname": "trnPickupPointId",
+                                "fieldid": 0,
+                                "fieldvalue": "97761"
+                            },
+                            {
+                                "fieldname": "bSurName",
+                                "fieldid": 13,
+                                "fieldvalue": ""
+                            },
+                            {
+                                "fieldname": "bName",
+                                "fieldid": 11,
+                                "fieldvalue": "рооп"
+                            },
+                            {
+                                "fieldname": "search#5#",
+                                "fieldid": 6,
+                                "fieldvalue": "97761"
+                            },
+                            {
+                                "fieldname": "bCityId",
+                                "fieldid": 4,
+                                "fieldvalue": "161007"
+                            },
+                            {
+                                "fieldname": "bLastName",
+                                "fieldid": 12,
+                                "fieldvalue": "ппр"
+                            },
+                            {
+                                "fieldname": "bIDnumber",
+                                "fieldid": 14,
+                                "fieldvalue": "123456"
+                            },
+                            {
+                                "fieldname": "payee_fio",
+                                "fieldid": 0,
+                                "fieldvalue": "рооп ппр  "
+                            },
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "IL"
+                            },
+                            {
+                                "fieldname": "CURR",
+                                "fieldid": 1,
+                                "fieldvalue": "USD"
+                            },
+                            {
+                                "fieldname": "search#3#",
+                                "fieldid": 1,
+                                "fieldvalue": "161007"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "a992d8c035544dbc82c00c4b9d4e0e54"
+            },
+            {
+                "paymentTemplateId": 4649,
+                "name": "Э. Финстрим Финстримович",
+                "groupName": "Перевод МИГ",
+                "type": "NEW_DIRECT",
+                "sort": 8,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 100.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||MIG",
+                        "additional": [
+                            {
+                                "fieldname": "RECP",
+                                "fieldid": 1,
+                                "fieldvalue": "+37496127188"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 1,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            },
+                            {
+                                "fieldname": "##CURR",
+                                "fieldid": 1,
+                                "fieldvalue": "RUB"
+                            },
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2dab5e994b3925a213dd63bffcc948ab"
+            },
+            {
+                "paymentTemplateId": 4723,
+                "name": "MIR ADVANCED R-5",
+                "groupName": "Между своими",
+                "type": "BETWEEN_THEIR",
+                "sort": 9,
+                "parameterList": [
+                    {
+                        "check": true,
+                        "amount": 10,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "productCustomName": null
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5438,
+                "name": "ПАО \"ТНС ЭНЕРГО ЯРОСЛАВЛЬ\"",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 10,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 101.5,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": "**** **** **08 7003",
+                            "accountId": 10004526647,
+                            "accountNumber": "40817810435005000947",
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TNS",
+                        "additional": [
+                            {
+                                "fieldname": "ru.forabank.sense.operator",
+                                "fieldid": 1,
+                                "fieldvalue": "iFora||TNS"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.header",
+                                "fieldid": 2,
+                                "fieldvalue": "ru.forabank.sense.header"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.product",
+                                "fieldid": 3,
+                                "fieldvalue": "10000216938"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldid": 9,
+                                "fieldvalue": "101.5"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldid": 11,
+                                "fieldvalue": "0 ₽"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.code",
+                                "fieldid": 13,
+                                "fieldvalue": "926961"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7606052264",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5789,
+                "name": "БАНК ВТБ (ПАО)",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_ENTITY",
+                "sort": 11,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "ормиулаттирролт6567? оплшод",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40911810100180000361",
+                            "compilerStatus": null,
+                            "date": "2024-08-08",
+                            "name": "БАНК ВТБ ПАО",
+                            "bankBIC": "044525411",
+                            "tax": null,
+                            "INN": "7702070139",
+                            "KPP": "784201002"
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5871,
+                "name": "+7(903) 111-53-11",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 12,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.5,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000247777,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5898,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 13,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 11.4,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5901,
+                "name": "АКАДО Телеком",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 14,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 16.2,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": "**** **** **08 7003",
+                            "accountId": 10004526647,
+                            "accountNumber": "40817810435005000947",
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 4,
+                                "fieldvalue": "33694934"
+                            },
+                            {
+                                "fieldname": "paymentsServiceAmount",
+                                "fieldid": 6,
+                                "fieldvalue": "16,2 ₽"
+                            },
+                            {
+                                "fieldname": "paymentsServiceOperatorLogo",
+                                "fieldid": 8,
+                                "fieldvalue": "iFora||CTV"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5904,
+                "name": "Короткое название 2",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 15,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 16.5,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 1,
+                                "fieldvalue": "33694934"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5905,
+                "name": "Геворг Акопович Ч.",
+                "groupName": "Перевод внутри банка",
+                "type": "INSIDE_BANK",
+                "sort": 16,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 14.8,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": 10000184510,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "productCustomName": "4656 **** **** 8016"
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": {
+                    "id": 10000184510,
+                    "numberMask": "4656 **** **** 8016",
+                    "customName": "Геворг",
+                    "currency": "RUB",
+                    "type": "CARD",
+                    "smallDesign": "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect y=\"5\" width=\"32\" height=\"22\" rx=\"3\" fill=\"#F6F6F7\"/>\n<g clip-path=\"url(#clip0_5224_29400)\">\n<path d=\"M5 10.5C5 10.2239 5.22386 10 5.5 10H9.5C9.77614 10 10 10.2239 10 10.5V11.8557C10 11.9744 9.83338 12.0308 9.75526 11.9414C9.3714 11.5021 8.56071 10.752 7.5 10.752C6.43929 10.752 5.6286 11.5021 5.24474 11.9414C5.16662 12.0308 5 11.9744 5 11.8557V10.5Z\" fill=\"#3D3D45\"/>\n<path d=\"M5 14.7431C5 14.8871 5.11678 15.0039 5.26084 15.0039H9.73916C9.88322 15.0039 10 14.8871 10 14.7431V14.7431C10 14.7348 9.99724 14.7273 9.99125 14.7216C9.89001 14.6245 8.91861 13.7301 7.5 13.7301C6.08139 13.7301 5.10999 14.6245 5.00875 14.7216C5.00276 14.7273 5 14.7348 5 14.7431V14.7431Z\" fill=\"#3D3D45\"/>\n<path d=\"M5 13.4207C5 13.5175 5.10972 13.5763 5.1917 13.5248C5.61983 13.2561 6.68048 12.6472 7.5 12.6472C8.31955 12.6472 9.38023 13.2558 9.80833 13.5243C9.89031 13.5757 10 13.5169 10 13.4201V13.1861C10 13.1282 9.9805 13.0727 9.94118 13.0302C9.70656 12.7763 8.78745 11.8805 7.5 11.8805C6.21255 11.8805 5.29344 12.7763 5.05882 13.0302C5.0195 13.0727 5 13.1282 5 13.1861V13.4207Z\" fill=\"#3D3D45\"/>\n</g>\n<defs>\n<clipPath id=\"clip0_5224_29400\">\n<rect x=\"5\" y=\"10\" width=\"5\" height=\"5.00391\" rx=\"1\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n",
+                    "paymentSystemImage": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_6979_35326)\">\n<path d=\"M9.60973 8.42856L8.39001 15.5863H10.3408L11.5615 8.42856H9.60973Z\" fill=\"#3D3D45\"/>\n<path d=\"M6.75437 8.43666L4.84376 13.318L4.64006 12.581C4.26326 11.6929 3.19356 10.4175 1.93771 9.61373L3.68476 15.5829L5.74889 15.5794L8.82102 8.43515L6.75437 8.43666Z\" fill=\"#3D3D45\"/>\n<path d=\"M3.89949 8.94906C3.78609 8.51306 3.45746 8.38311 3.04955 8.36755H0.0250868L0 8.51005C2.35364 9.08102 3.91103 10.4568 4.55726 12.111L3.89949 8.94906Z\" fill=\"#3D3D45\"/>\n<path d=\"M15.5152 9.80097C16.1534 9.79094 16.616 9.93042 16.9752 10.0749L17.1513 10.1577L17.4152 8.60634C17.0289 8.46134 16.4233 8.3058 15.6677 8.3058C13.74 8.3058 12.3813 9.27666 12.3708 10.668C12.3582 11.696 13.3386 12.27 14.0792 12.6127C14.8393 12.9639 15.0942 13.1872 15.0907 13.5008C15.0847 13.9799 14.4846 14.1997 13.9242 14.1997C13.143 14.1997 12.728 14.0918 12.0873 13.8249L11.8359 13.7105L11.5615 15.3125C12.0181 15.5127 12.8605 15.6848 13.735 15.6939C15.7856 15.6939 17.1182 14.7345 17.1323 13.2479C17.1408 12.4346 16.6205 11.8139 15.4931 11.3047C14.8107 10.9725 14.3933 10.7518 14.3973 10.4166C14.3973 10.1191 14.7515 9.80097 15.5152 9.80097Z\" fill=\"#3D3D45\"/>\n<path d=\"M22.4216 8.43669H20.9143C20.4462 8.43669 20.098 8.56413 19.8923 9.03075L16.9958 15.5904H19.0444C19.0444 15.5904 19.3785 14.7084 19.4543 14.5152C19.6786 14.5152 21.6689 14.5182 21.9524 14.5182C22.0106 14.7681 22.1903 15.5904 22.1903 15.5904H24L22.4216 8.43669ZM20.0157 13.0501C20.1763 12.6392 20.7929 11.0497 20.7929 11.0497C20.7824 11.0693 20.952 10.6358 21.0528 10.3664L21.1843 10.9835C21.1843 10.9835 21.5581 12.6924 21.6363 13.0501H20.0157Z\" fill=\"#3D3D45\"/>\n</g>\n<defs>\n<clipPath id=\"clip0_6979_35326\">\n<rect width=\"24\" height=\"24\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n"
+                }
+            },
+            {
+                "paymentTemplateId": 5907,
+                "name": "Александра Андреевна М.",
+                "groupName": "Перевод внутри банка",
+                "type": "BY_PHONE",
+                "sort": 17,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 10,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": "79636188169",
+                            "productCustomName": "2200 **** **** 7803"
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5910,
+                "name": "Э. Финстрим Финстримович",
+                "groupName": "Перевод МИГ",
+                "type": "NEW_DIRECT",
+                "sort": 18,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 120,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 20000349211,
+                            "accountNumber": "40817810100000500065",
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "Перевод денежных средств по распоряжению клиента № 2 от 31.05.2024, получатель Эвоков Финстрим Финстримович, источником не являются дивиденды и иные аналогичные выплаты от распределения прибыли",
+                        "puref": "iFora||TransferEvocaClient12",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            },
+                            {
+                                "fieldname": "RECP",
+                                "fieldid": 3,
+                                "fieldvalue": "+37496127188"
+                            },
+                            {
+                                "fieldname": "##CURR",
+                                "fieldid": 4,
+                                "fieldvalue": "RUB"
+                            },
+                            {
+                                "fieldname": "countryPayee",
+                                "fieldid": 6,
+                                "fieldvalue": "Финстрим Финстримович Э."
+                            },
+                            {
+                                "fieldname": "countryCurrencyAmount",
+                                "fieldid": 7,
+                                "fieldvalue": "120 ₽"
+                            },
+                            {
+                                "fieldname": "countryPayeeAmount",
+                                "fieldid": 8,
+                                "fieldvalue": "633,24 ֏"
+                            },
+                            {
+                                "fieldname": "SumSTrs",
+                                "fieldid": 9,
+                                "fieldvalue": "220 ₽"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldid": 10,
+                                "fieldvalue": "100 ₽"
+                            },
+                            {
+                                "fieldname": "countryDividend",
+                                "fieldid": 11,
+                                "fieldvalue": "true"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5911,
+                "name": "Э. Финстрим Финстримович",
+                "groupName": "Перевод МИГ",
+                "type": "NEW_DIRECT",
+                "sort": 19,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 121,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "Перевод денежных средств по распоряжению клиента № 1 от 03.06.2024, получатель Эвоков Финстрим Финстримович, источником не являются дивиденды и иные аналогичные выплаты от распределения прибыли",
+                        "puref": "iFora||TransferEvocaClient12",
+                        "additional": [
+                            {
+                                "fieldname": "trnPickupPoint",
+                                "fieldid": 1,
+                                "fieldvalue": "AM"
+                            },
+                            {
+                                "fieldname": "DIRECT_BANKS",
+                                "fieldid": 2,
+                                "fieldvalue": "iFora||TransferEvocaClient12"
+                            },
+                            {
+                                "fieldname": "RECP",
+                                "fieldid": 3,
+                                "fieldvalue": "+37496127188"
+                            },
+                            {
+                                "fieldname": "##CURR",
+                                "fieldid": 4,
+                                "fieldvalue": "RUB"
+                            },
+                            {
+                                "fieldname": "countryPayee",
+                                "fieldid": 6,
+                                "fieldvalue": "Финстрим Финстримович Э."
+                            },
+                            {
+                                "fieldname": "countryCurrencyAmount",
+                                "fieldid": 7,
+                                "fieldvalue": "121 ₽"
+                            },
+                            {
+                                "fieldname": "countryPayeeAmount",
+                                "fieldid": 8,
+                                "fieldvalue": "637,84 ֏"
+                            },
+                            {
+                                "fieldname": "SumSTrs",
+                                "fieldid": 9,
+                                "fieldvalue": "221 ₽"
+                            },
+                            {
+                                "fieldname": "countryDividend",
+                                "fieldid": 11,
+                                "fieldvalue": "true"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5915,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 20,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 11.5,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5916,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 21,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.7,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5919,
+                "name": "ПАО ТНС энерго Ярославль",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 22,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.9,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TNS",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 4,
+                                "fieldvalue": "766440148001"
+                            },
+                            {
+                                "fieldname": "counter",
+                                "fieldid": 5,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterDay",
+                                "fieldid": 6,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterNight",
+                                "fieldid": 7,
+                                "fieldvalue": "12"
+                            },
+                            {
+                                "fieldname": "fine",
+                                "fieldid": 8,
+                                "fieldvalue": "42"
+                            },
+                            {
+                                "fieldname": "paymentsServiceAmount",
+                                "fieldid": 10,
+                                "fieldvalue": "12,9 ₽"
+                            },
+                            {
+                                "fieldname": "paymentsServiceOperatorLogo",
+                                "fieldid": 12,
+                                "fieldvalue": "iFora||TNS"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7606052264",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5920,
+                "name": "ПАО ТНС энерго Ярославль",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 23,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.7,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TNS",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 1,
+                                "fieldvalue": "766440148001"
+                            },
+                            {
+                                "fieldname": "counter",
+                                "fieldid": 2,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterDay",
+                                "fieldid": 3,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterNight",
+                                "fieldid": 4,
+                                "fieldvalue": "12"
+                            },
+                            {
+                                "fieldname": "fine",
+                                "fieldid": 5,
+                                "fieldvalue": "42"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7606052264",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5923,
+                "name": "ПАО ТНС энерго Ярославль",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 24,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 13.4,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TNS",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 4,
+                                "fieldvalue": "766440148001"
+                            },
+                            {
+                                "fieldname": "counter",
+                                "fieldid": 5,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterDay",
+                                "fieldid": 6,
+                                "fieldvalue": "97"
+                            },
+                            {
+                                "fieldname": "counterNight",
+                                "fieldid": 7,
+                                "fieldvalue": "12"
+                            },
+                            {
+                                "fieldname": "fine",
+                                "fieldid": 8,
+                                "fieldvalue": "41"
+                            },
+                            {
+                                "fieldname": "paymentsServiceAmount",
+                                "fieldid": 10,
+                                "fieldvalue": "13,4 ₽"
+                            },
+                            {
+                                "fieldname": "paymentsServiceOperatorLogo",
+                                "fieldid": 12,
+                                "fieldvalue": "iFora||TNS"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7606052264",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5924,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 25,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 14.35,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5925,
+                "name": "АКАДО Телеком",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 26,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 10,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000247777,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 4,
+                                "fieldvalue": "33694934"
+                            },
+                            {
+                                "fieldname": "paymentsServiceAmount",
+                                "fieldid": 6,
+                                "fieldvalue": "10 ₽"
+                            },
+                            {
+                                "fieldname": "paymentsServiceOperatorLogo",
+                                "fieldid": 8,
+                                "fieldvalue": "iFora||CTV"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5926,
+                "name": "АО \"МОСЭНЕРГОСБЫТ\"",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_ENTITY",
+                "sort": 27,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 43.6,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "попог нжл д пьдибл пьдпбомдо пьдпбои птдор",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40702810738360027199",
+                            "compilerStatus": null,
+                            "date": null,
+                            "name": "АО \"МОСЭНЕРГОСБЫТ\"",
+                            "bankBIC": "044525225",
+                            "tax": null,
+                            "INN": "7736520080",
+                            "KPP": "773601001"
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5945,
+                "name": "ПАО Калужская сбытовая компания",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 28,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000247777,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||KSK",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 1,
+                                "fieldvalue": "110110581"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "4029030252",
+                "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5947,
+                "name": "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)",
+                "groupName": "Налоги и госуслуги",
+                "type": "TAX_AND_STATE_SERVICE",
+                "sort": 29,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 1,
+                                "fieldvalue": "3"
+                            },
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 2,
+                                "fieldvalue": "inn_oktmo"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 1,
+                                "fieldvalue": "33"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 2,
+                                "fieldvalue": "7723013452"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 3,
+                                "fieldvalue": "45390000"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 94,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_fio_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "Пыркова Дарья Владимировна "
+                            },
+                            {
+                                "fieldname": "a3_address_2_2",
+                                "fieldid": 2,
+                                "fieldvalue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563"
+                            },
+                            {
+                                "fieldname": "a3_docType_3_2",
+                                "fieldid": 3,
+                                "fieldvalue": "2"
+                            },
+                            {
+                                "fieldname": "a3_docValue_4_2",
+                                "fieldid": 4,
+                                "fieldvalue": "500803508035"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldid": 5,
+                                "fieldvalue": "94.0"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "Налоги",
+                "md5hash": "c2f4632ed9ee1b5cbd4fdaed5146e464",
+                "paymentFlow": "TAX_AND_STATE_SERVICE"
+            },
+            {
+                "paymentTemplateId": 5953,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 30,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 14.35,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5956,
+                "name": "Петр Петрович П.",
+                "groupName": "Исходящие СБП",
+                "type": "SFP",
+                "sort": 31,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 1000000.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 20000349211,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||TransferC2CSTEP",
+                        "additional": [
+                            {
+                                "fieldname": "BankRecipientID",
+                                "fieldid": 1,
+                                "fieldvalue": "1crt88888881"
+                            },
+                            {
+                                "fieldname": "RecipientID",
+                                "fieldid": 3,
+                                "fieldvalue": "79160744365"
+                            },
+                            {
+                                "fieldname": "SumSTrs",
+                                "fieldid": 5,
+                                "fieldvalue": "1000000.0"
+                            },
+                            {
+                                "fieldname": "CcyCode",
+                                "fieldid": 6,
+                                "fieldvalue": "RUB"
+                            },
+                            {
+                                "fieldname": "Ustrd",
+                                "fieldid": 7,
+                                "fieldvalue": ""
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5960,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 32,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.5,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5961,
+                "name": "АКАДО Телеком",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 33,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 25,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": "**** **** **07 0031",
+                            "accountId": 10004526660,
+                            "accountNumber": "40817810735005000948",
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "ru.forabank.sense.operator",
+                                "fieldid": 1,
+                                "fieldvalue": "iFora||CTV"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.header",
+                                "fieldid": 2,
+                                "fieldvalue": "ru.forabank.sense.header"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.product",
+                                "fieldid": 3,
+                                "fieldvalue": "10000220675"
+                            },
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 4,
+                                "fieldvalue": "33694934"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.amount",
+                                "fieldid": 5,
+                                "fieldvalue": "25.0"
+                            },
+                            {
+                                "fieldname": "paymentsServiceAmount",
+                                "fieldid": 6,
+                                "fieldvalue": "25 ₽"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.fee",
+                                "fieldid": 7,
+                                "fieldvalue": "0 ₽"
+                            },
+                            {
+                                "fieldname": "paymentsServiceOperatorLogo",
+                                "fieldid": 8,
+                                "fieldvalue": "iFora||CTV"
+                            },
+                            {
+                                "fieldname": "ru.forabank.sense.code",
+                                "fieldid": 9,
+                                "fieldvalue": "338516"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5971,
+                "name": "АКАДО Телеком",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 34,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 25,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 1,
+                                "fieldvalue": "33694934"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 5989,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 35,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 11.7,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9031115311"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 5995,
+                "name": "ООО УК ЛЕНИНСКАЯ",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 36,
+                "parameterList": [
+                    {
+                        "check": true,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iForaNKORR||18662",
+                        "additional": [
+                            {
+                                "fieldname": "1",
+                                "fieldid": 0,
+                                "fieldvalue": "009"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": true,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iForaNKORR||18662",
+                        "additional": [
+                            {
+                                "fieldname": "1",
+                                "fieldid": 0,
+                                "fieldvalue": "009"
+                            },
+                            {
+                                "fieldname": "4",
+                                "fieldid": 1,
+                                "fieldvalue": "0720"
+                            },
+                            {
+                                "fieldname": "6",
+                                "fieldid": 2,
+                                "fieldvalue": "1000.15"
+                            },
+                            {
+                                "fieldname": "8",
+                                "fieldid": 3,
+                                "fieldvalue": "200.15"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": true,
+                        "amount": null,
+                        "currencyAmount": null,
+                        "payer": null,
+                        "comment": null,
+                        "puref": "iForaNKORR||18662",
+                        "additional": [],
+                        "mcc": null
+                    },
+                    {
+                        "check": true,
+                        "amount": 1200.3,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iForaNKORR||18662",
+                        "additional": [
+                            {
+                                "fieldname": "1",
+                                "fieldid": 0,
+                                "fieldvalue": "009"
+                            },
+                            {
+                                "fieldname": "4",
+                                "fieldid": 1,
+                                "fieldvalue": "0720"
+                            },
+                            {
+                                "fieldname": "6",
+                                "fieldid": 2,
+                                "fieldvalue": "1000.15"
+                            },
+                            {
+                                "fieldname": "8",
+                                "fieldid": 3,
+                                "fieldvalue": "200.15"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "5404005067",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 6000,
+                "name": "Дарья Владимировна П.",
+                "groupName": "Между своими",
+                "type": "BETWEEN_THEIR",
+                "sort": 37,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 1.0,
+                        "currencyAmount": "USD",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "payeeInternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": 10004769686,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "productCustomName": null
+                        },
+                        "payeeExternal": null
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 6002,
+                "name": "УФК по Калужской области (УМВД России по Калужской области)",
+                "groupName": "Налоги и госуслуги",
+                "type": "TAX_AND_STATE_SERVICE",
+                "sort": 38,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "29701000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "2"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "4028003880"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 52.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_address_2_2",
+                                "fieldid": 19,
+                                "fieldvalue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563"
+                            },
+                            {
+                                "fieldname": "a3_fio_1_2",
+                                "fieldid": 18,
+                                "fieldvalue": "Пыркова Дарья Владимировна"
+                            },
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_docValue_4_2",
+                                "fieldid": 21,
+                                "fieldvalue": "4606638620"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "29701000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "2"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "4028003880"
+                            },
+                            {
+                                "fieldname": "a3_docType_3_2",
+                                "fieldid": 20,
+                                "fieldvalue": "1"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "Госпошлины",
+                "md5hash": "0cbfae2ff5f6f09883865d416fc7bf02",
+                "paymentFlow": "TAX_AND_STATE_SERVICE"
+            },
+            {
+                "paymentTemplateId": 6003,
+                "name": "УФК по Калужской области (УМВД России по Калужской области)",
+                "groupName": "Налоги и госуслуги",
+                "type": "TAX_AND_STATE_SERVICE",
+                "sort": 39,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "29701000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "2"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "4028003880"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 68.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6887",
+                        "additional": [
+                            {
+                                "fieldname": "a3_address_2_2",
+                                "fieldid": 19,
+                                "fieldvalue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563"
+                            },
+                            {
+                                "fieldname": "a3_fio_1_2",
+                                "fieldid": 18,
+                                "fieldvalue": "Пыркова Дарья Владимировна"
+                            },
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_docValue_4_2",
+                                "fieldid": 21,
+                                "fieldvalue": "4606638620"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "29701000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "1"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "2"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "4028003880"
+                            },
+                            {
+                                "fieldname": "a3_docType_3_2",
+                                "fieldid": 20,
+                                "fieldvalue": "1"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "Госпошлины",
+                "md5hash": "0cbfae2ff5f6f09883865d416fc7bf02",
+                "paymentFlow": "TAX_AND_STATE_SERVICE"
+            },
+            {
+                "paymentTemplateId": 6004,
+                "name": "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)",
+                "groupName": "Налоги и госуслуги",
+                "type": "TAX_AND_STATE_SERVICE",
+                "sort": 40,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "3"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": null,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "45390000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "3"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "48"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "7723013452"
+                            }
+                        ],
+                        "mcc": null
+                    },
+                    {
+                        "check": false,
+                        "amount": 43.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 20000016229,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||6273",
+                        "additional": [
+                            {
+                                "fieldname": "a3_address_2_2",
+                                "fieldid": 19,
+                                "fieldvalue": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 125445, Москва г, Ленинградское ш,  д. 112,  к. 2,  кв. 563"
+                            },
+                            {
+                                "fieldname": "a3_fio_1_2",
+                                "fieldid": 18,
+                                "fieldvalue": "Пыркова Дарья Владимировна"
+                            },
+                            {
+                                "fieldname": "a3_divisionSelect_2_1",
+                                "fieldid": 3,
+                                "fieldvalue": "inn_oktmo"
+                            },
+                            {
+                                "fieldname": "a3_docValue_4_2",
+                                "fieldid": 21,
+                                "fieldvalue": "500803508035"
+                            },
+                            {
+                                "fieldname": "a3_OKTMO_5_1",
+                                "fieldid": 6,
+                                "fieldvalue": "45390000"
+                            },
+                            {
+                                "fieldname": "a3_dutyCategory_1_1",
+                                "fieldid": 2,
+                                "fieldvalue": "3"
+                            },
+                            {
+                                "fieldname": "a3_categorySelect_3_1",
+                                "fieldid": 4,
+                                "fieldvalue": "48"
+                            },
+                            {
+                                "fieldname": "a3_INN_4_1",
+                                "fieldid": 5,
+                                "fieldvalue": "7723013452"
+                            },
+                            {
+                                "fieldname": "a3_docType_3_2",
+                                "fieldid": 20,
+                                "fieldvalue": "2"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "Налоги",
+                "md5hash": "c2f4632ed9ee1b5cbd4fdaed5146e464",
+                "paymentFlow": "TAX_AND_STATE_SERVICE"
+            },
+            {
+                "paymentTemplateId": 6020,
+                "name": "пеньков дмитрий",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_INDIVIDUAL",
+                "sort": 41,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 16.8,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "Перевод денежных средств. НДС не облагается hvjfhjg",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40817810008080055530",
+                            "compilerStatus": null,
+                            "date": null,
+                            "name": "пеньков дмитрий ",
+                            "bankBIC": "044525593",
+                            "tax": null,
+                            "INN": null,
+                            "KPP": null
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 5990,
+                "name": "пеньков",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_INDIVIDUAL",
+                "sort": 42,
+                "parameterList": [
+                    {
+                        "check": true,
+                        "amount": 10,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000247777,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "Перевод денежных средств. НДС не облагается",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40817810008080055530",
+                            "compilerStatus": null,
+                            "date": null,
+                            "name": "п д ",
+                            "bankBIC": "044525593",
+                            "tax": null,
+                            "INN": null,
+                            "KPP": null
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 6021,
+                "name": "АО \"МОСЭНЕРГОСБЫТ\"",
+                "groupName": "Перевод по реквизитам",
+                "type": "EXTERNAL_ENTITY",
+                "sort": 43,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 43.52,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000216938,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": "попог нжл д пьдибл пьдпбомдо пьдпбои птдор",
+                        "payeeInternal": null,
+                        "payeeExternal": {
+                            "cardId": null,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": "40702810738360027199",
+                            "compilerStatus": null,
+                            "date": "2024-06-26",
+                            "name": "АО \"МОСЭНЕРГОСБЫТ\"",
+                            "bankBIC": "044525225",
+                            "tax": null,
+                            "INN": "7736520080",
+                            "KPP": "773601001"
+                        }
+                    }
+                ],
+                "productTemplate": null
+            },
+            {
+                "paymentTemplateId": 6120,
+                "name": "ПАО Калужская сбытовая компания",
+                "groupName": "Услуги ЖКХ",
+                "type": "HOUSING_AND_COMMUNAL_SERVICE",
+                "sort": 44,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 12.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||KSK",
+                        "additional": [
+                            {
+                                "fieldname": "account",
+                                "fieldid": 1,
+                                "fieldvalue": "110110580"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "4029030252",
+                "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 6121,
+                "name": "",
+                "groupName": "Интернет, ТВ",
+                "type": "INTERNET",
+                "sort": 45,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 666.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000247777,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||CTV",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 1,
+                                "fieldvalue": "3377777"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7717020170",
+                "md5hash": "fe9594527b02d8295319c7aca3d13ee0",
+                "paymentFlow": "STANDARD_FLOW"
+            },
+            {
+                "paymentTemplateId": 6173,
+                "name": "Мобильная связь",
+                "groupName": "Пополнение телефона",
+                "type": "MOBILE",
+                "sort": 46,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 33.33,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||4285",
+                        "additional": [
+                            {
+                                "fieldname": "a3_NUMBER_1_2",
+                                "fieldid": 1,
+                                "fieldvalue": "9206526152"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+                "paymentFlow": "MOBILE"
+            },
+            {
+                "paymentTemplateId": 6199,
+                "name": "Автодор Платные дороги (по договору)",
+                "groupName": "Транспорт",
+                "type": "TRANSPORT",
+                "sort": 48,
+                "parameterList": [
+                    {
+                        "check": false,
+                        "amount": 10.0,
+                        "currencyAmount": "RUB",
+                        "payer": {
+                            "cardId": 10000220675,
+                            "cardNumber": null,
+                            "accountId": null,
+                            "accountNumber": null,
+                            "phoneNumber": null,
+                            "INN": null
+                        },
+                        "comment": null,
+                        "puref": "iFora||AVDD",
+                        "additional": [
+                            {
+                                "fieldname": "P1",
+                                "fieldid": 1,
+                                "fieldvalue": "161807"
+                            }
+                        ],
+                        "mcc": null
+                    }
+                ],
+                "productTemplate": null,
+                "inn": "7710965662",
+                "md5hash": "425e86123a5415c2ada1770b9e4abf1b",
+                "paymentFlow": "TRANSPORT"
+            }
+        ]
+    }
+}

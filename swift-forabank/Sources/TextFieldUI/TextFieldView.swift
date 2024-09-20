@@ -70,24 +70,22 @@ public struct TextFieldView: UIViewRepresentable {
                 textView.text = textState.text
                 textView.setCursorPosition(to: textState.cursorPosition)
                 textView.textColor = .init(textFieldConfig.textColor)
-                textView.becomeFirstResponder()
+                if !textView.isFirstResponder {
+                    textView.becomeFirstResponder()
+                }
                 
             case let .noFocus(text):
                 textView.text = text
                 textView.textColor = .init(textFieldConfig.textColor)
                 if textView.isFirstResponder {
-                    DispatchQueue.main.async { [weak textView] in
-                        textView?.resignFirstResponder()
-                    }
+                    textView.resignFirstResponder()
                 }
                 
             case let .placeholder(placeholderText):
                 textView.text = placeholderText
                 textView.textColor = .init(textFieldConfig.placeholderColor)
                 if textView.isFirstResponder {
-                    DispatchQueue.main.async { [weak textView] in
-                        textView?.resignFirstResponder()
-                    }
+                    textView.resignFirstResponder()
                 }
             }
         }
@@ -192,18 +190,12 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.send(.startEditing)
-        }
+        send(.startEditing)
     }
         
     public func textViewDidEndEditing(_ textView: UITextView) {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.send(.finishEditing)
-        }
+        send(.finishEditing)
     }
     
     public func textView(
@@ -212,10 +204,7 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
         replacementText text: String
     ) -> Bool {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            self?.send(.changeText(text, in: range))
-        }
+        send(.changeText(text, in: range))
         return false
     }
 }

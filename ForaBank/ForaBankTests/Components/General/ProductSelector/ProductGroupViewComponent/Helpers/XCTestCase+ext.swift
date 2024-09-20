@@ -96,6 +96,7 @@ extension XCTestCase {
         id: Int,
         currency: String = "RUB",
         status: ProductData.Status = .active,
+        cardType: ProductCardData.CardType = .main,
         isMain: Bool? = nil
     ) -> ProductCardData {
         
@@ -124,7 +125,7 @@ extension XCTestCase {
             fontDesignColor: anyColorData(),
             background: [],
             accountId: nil,
-            cardId: 0,
+            cardId: id,
             name: "CARD",
             validThru: Date(),
             status: status,
@@ -136,13 +137,16 @@ extension XCTestCase {
             paymentSystemName: nil,
             paymentSystemImage: nil,
             loanBaseParam: nil,
-            statusPc: nil,
+            statusPc: .active,
             isMain: isMain,
             externalId: nil,
             order: 0,
             visibility: true,
             smallDesignMd5hash: "",
-            smallBackgroundDesignHash: "")
+            smallBackgroundDesignHash: "",
+            statusCard: .active,
+            cardType: cardType
+        )
     }
     
     func makeAccountProduct(

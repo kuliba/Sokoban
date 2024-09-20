@@ -7,6 +7,7 @@
 
 import LandingUIComponent
 import SwiftUI
+import SharedConfigs
 import UIPrimitives
 
 extension UILanding.Component.Config {
@@ -313,7 +314,7 @@ extension UILanding.TextsWithIconHorizontal.Config {
             vertical: 8
         ),
         backgroundColor: .mainColorsGrayLightest,
-        cornerRadius: 20,
+        cornerRadius: 90,
         circleSize: 32,
         icon: .init(
             width: 24,
@@ -324,12 +325,13 @@ extension UILanding.TextsWithIconHorizontal.Config {
                 leading: 12
             )
         ),
-        height: 40,
+        height: 58,
         spacing: 12,
         text: .init(
             color: .textSecondary,
             font: .textBodyMR14200()
-        )
+        ), 
+        images: ["472c6bf19f04641f277d838797288bfa" : .ic24SmsColor]
     )
 }
 
@@ -416,14 +418,29 @@ extension NavigationBarConfig {
 extension UILanding.BlockHorizontalRectangular.Config {
         
     static let `default`: Self = .init(
+        cornerRadius: 12,
         colors: .init(
             background: .mainColorsGrayLightest,
             divider: .blurMediumGray30,
-            title: .secondary,
-            subtitle: .textPlaceholder,
             warning: .mainColorsRed
         ),
-        cornerRadius: 12,
+        limitConfig: .init(
+            limit: .secondary,
+            title: .placeholder,
+            widthAndHeight: 24
+        ),
+        titleConfig: .init(
+            textFont: .textH3Sb18240(),
+            textColor: .textSecondary
+        ),
+        subtitleConfig: .init(
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
+        ),
+        limitTitleConfig: .init(
+            textFont: .textH4Sb16240(),
+            textColor: .textSecondary
+        ),
         sizes: .init(
             iconWidth: 24,
             height: 124,

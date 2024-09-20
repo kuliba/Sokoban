@@ -13,16 +13,16 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
     let productName: String
     let conditions: [String]
     let imageEndpoint: String
-    let orderURL: URL
-    let conditionURL: URL
+    let orderURL: URL?
+    let conditionURL: URL?
     let action: BannerAction?
     
     internal init(
         productName: String,
         conditions: [String],
         imageEndpoint: String,
-        orderURL: URL,
-        conditionURL: URL,
+        orderURL: URL?,
+        conditionURL: URL?,
         action: BannerAction?
     ) {
         self.productName = productName
@@ -48,13 +48,14 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
         productName = try container.decode(String.self, forKey: .productName)
         conditions = try container.decode([String].self, forKey: .conditions)
         imageEndpoint = try container.decode(String.self, forKey: .imageEndpoint)
-        orderURL = try container.decode(URL.self, forKey: .orderURL)
-        conditionURL = try container.decode(URL.self, forKey: .conditionURL)
+        orderURL = try container.decodeIfPresent(URL.self, forKey: .orderURL)
+        conditionURL = try container.decodeIfPresent(URL.self, forKey: .conditionURL)
        
         if let action = try container.decodeIfPresent(BannerAction.self, forKey: .action) {
             
             switch action.type {
             case .landing:
+                let action = try? container.decodeIfPresent(BannerActionLanding.self, forKey: .action)
                 self.action = action
                 
             case .openDeposit:
@@ -299,6 +300,37 @@ class BannerActionDepositTransfer: BannerAction {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(countryId, forKey: .countryId)
+        
+        try super.encode(to: encoder)
+    }
+}
+
+class BannerActionLanding: BannerAction {
+    
+    let target: String
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case target
+    }
+    
+    internal init(target: String) {
+        self.target = target
+        super.init(type: .landing)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        target = try container.decodeIfPresent(String.self, forKey: .target) ?? ""
+        
+        try super.init(from: decoder)
+    }
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(target, forKey: .target)
         
         try super.encode(to: encoder)
     }

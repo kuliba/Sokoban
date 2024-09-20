@@ -26,6 +26,9 @@ enum ControlPanelEvent {
 
     case alert(Alert.ViewModel)
     case destination(ControlPanelState.Destination)
+    
+    case showSpinner
+    case hideSpinner
 
     case cancelC2BSub(SubscriptionViewModel.Token)
 }

@@ -240,9 +240,6 @@ struct ProductProfileView: View {
                     ) {
                         viewModel.event(.history(.filter(.period($0))))
                     }
-                    .onChange(of: filter.state.filter.selectDates?.lowerDate, perform: { newValue in
-                        print("====", newValue)
-                    })
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(
                         destination: viewModel.historyState?.calendarState,
@@ -264,7 +261,10 @@ struct ProductProfileView: View {
                                 config: .iFora,
                                 apply: { lowerDate, upperDate in
                                     
-                                    filter.event(.selectedDates(lowerDate: lowerDate, upperDate: upperDate))
+                                    if let lowerDate, let upperDate {
+                                    
+                                        filter.event(.selectedDates(lowerDate..<upperDate))
+                                    }
                                     
                                     viewModel.event(.history(.filter(.dismissCalendar)))
                                 }
@@ -273,7 +273,7 @@ struct ProductProfileView: View {
                                 title: "Выберите период",
                                 dismiss: {
                                 viewModel.event(.history(.filter(.dismissCalendar)))
-                            }) //TODO: resolve with hidden nav bar
+                            })
                         }
                     )
                 }
@@ -320,17 +320,16 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
-        
-        case let .payment(paymentViewModel):
-            PaymentsView(viewModel: paymentViewModel)
             
-        case let .paymentsTransfers(viewModel):
+        case let .paymentsTransfers(node):
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: node.model,
                 viewFactory: viewFactory, 
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+        case let .payment(viewModel):
+            PaymentsView(viewModel: viewModel)
         }
     }
     
@@ -801,7 +800,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: QRViewModel.ScanResult.init
+            qrResolve: { _ in .unknown }
         )
     }
 }

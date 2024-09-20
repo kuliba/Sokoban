@@ -353,11 +353,6 @@ private extension Model {
         dictionaryCurrencySymbol(for: Currency.rub.description)
     }
     
-    func addCurrency(_ currency: CurrencyData) {
-        
-        currencyList.value.append(currency)
-    }
-    
     func addTemplate(_ template: PaymentTemplateData) {
         
         paymentTemplates.value.append(template)

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 30.07.2024.
 //
 
+import Combine
 import PaymentCompletionUI
 import SwiftUI
 
@@ -181,7 +182,14 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
     ) -> some View {
         
         PaymentCompletionStatusView(
-            state: completion,
+            state: completion, 
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0!),
+                    publisher: Just(.init(systemName: $0!)).eraseToAnyPublisher()
+                )
+            },
             config: .iFora
         )
     }
@@ -191,27 +199,27 @@ private extension PaymentCompletion {
     
     static let completed: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .completed
     )
     static let inflight: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .inflight
     )
     static let rejected: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .rejected
     )
     static let fraudCancelled: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .fraud(.cancelled)
     )
     static let fraudExpired: Self = .init(
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        merchantIcon: "externaldrive.connected.to.line.below",
         status: .fraud(.expired)
     )
 }

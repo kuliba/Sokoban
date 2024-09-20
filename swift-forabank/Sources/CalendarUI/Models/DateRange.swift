@@ -17,6 +17,11 @@ public class MDateRange: ObservableObject {
         self.lowerDate = lowerDate
         self.upperDate = upperDate
     }
+    
+    convenience public init(range: Range<Date>) {
+        
+        self.init(startDate: range.lowerBound, endDate: range.upperBound)
+    }
 }
 
 // MARK: - Updating Range

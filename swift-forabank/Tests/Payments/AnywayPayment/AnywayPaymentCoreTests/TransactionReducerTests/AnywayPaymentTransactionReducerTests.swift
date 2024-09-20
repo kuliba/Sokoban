@@ -21,7 +21,7 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
     func test_dismissRecoverableError_shouldNotChangeTerminatedState() {
         
         let state = makeState(
-            status: .result(.failure(.updatePaymentFailure))
+            status: .result(.failure(.updatePaymentFailure(anyMessage())))
         )
         
         assertState(.dismissRecoverableError, on: state)
@@ -42,7 +42,7 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
     func test_dismissRecoverableError_shouldNotDeliverEffect() {
         
         let state = makeState(
-            status: .result(.failure(.updatePaymentFailure))
+            status: .result(.failure(.updatePaymentFailure(anyMessage())))
         )
         
         assert(.dismissRecoverableError, on: state, effect: nil)
@@ -62,7 +62,7 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(state.context.payment.footer, .continue)
         XCTAssertFalse(state.context.payment.isFinalStep)
         
-        XCTAssertNotNil(state.context.outline.amount)
+        XCTAssertNil(state.context.outline.amount)
         XCTAssertNotNil(state.context.outline.product)
         XCTAssertNoDiff(state.context.outline.fields, [:])
         XCTAssertNotNil(state.context.outline.payload)

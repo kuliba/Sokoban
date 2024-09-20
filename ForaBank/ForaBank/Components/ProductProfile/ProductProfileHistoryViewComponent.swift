@@ -229,7 +229,8 @@ extension ProductProfileHistoryView {
                                     })
                                 case .dates:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
+                                        
+                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
                                     })
                                 }
                             }
@@ -266,8 +267,8 @@ extension ProductProfileHistoryView {
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
-                                if filter()?.filter.selectDates?.lowerDate != nil || filter()?.calendar.range?.lowerDate != nil {
-                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerDate ?? Date(), end: filter()?.filter.selectDates?.upperDate ?? Date())), storage: storage)
+                                if filter()?.filter.selectDates?.lowerBound != nil || filter()?.calendar.range?.upperDate != nil {
+                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerBound ?? Date(), end: filter()?.filter.selectDates?.upperBound ?? Date())), storage: storage)
 
                                 } else {
                                     updateContent(with: state, storage: storage)
@@ -527,22 +528,31 @@ extension ProductProfileHistoryView.ViewModel {
     func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
         var updatedOperations = [HistoryListViewModel.DayGroupViewModel.Operation]()
-        
         var downloadImagesIds = [String]()
+        let groupedStatements = Dictionary(grouping: statements, by: { $0.operationId })
         
-        for statement in statements {
+        for (_, statementsGroup) in groupedStatements {
             
-            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
-            updatedOperations.append(operation)
-
-            let imageId = statement.md5hash
-            if let imageData = images[imageId] {
+            if let latestStatement = statementsGroup.max(by: {
                 
-                operation.image = imageData.image
+                if let lhsTranDate = $0.tranDate, let rhsTranDate = $1.tranDate {
+                    return lhsTranDate > rhsTranDate
+                    
+                } else {
+                    return $0.date > $1.date
+                }
+            }) {
                 
-            } else {
+                let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: latestStatement, model: model, action: action(latestStatement.id))
+                updatedOperations.append(operation)
                 
-                downloadImagesIds.append(imageId)
+                let imageId = latestStatement.md5hash
+                if let imageData = images[imageId] {
+                    operation.image = imageData.image
+                    
+                } else {
+                    downloadImagesIds.append(imageId)
+                }
             }
         }
         
@@ -550,7 +560,6 @@ extension ProductProfileHistoryView.ViewModel {
         
         return (sortedUpdatedOperations, downloadImagesIds)
     }
-    
 }
 
 //MARK: - Action
@@ -722,8 +731,7 @@ extension ProductProfileHistoryView.ViewModel {
                         self.imageId = statement.md5hash
                     }
                 }
-                
-                
+                  
                 struct Amount {
                     
                     let value: String

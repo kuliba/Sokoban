@@ -40,9 +40,7 @@ extension PTSectionPaymentsView {
                     type: item,
                     action: {
                         
-                        self.action.send(PTSectionPaymentsViewAction
-                            .ButtonTapped
-                            .Payment(type: item))
+                        self.action.send(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: item))
                     })
                 }
         }

@@ -15,6 +15,8 @@ import CalendarUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
+    typealias Templates = PaymentsTransfersFactory.Templates
+    typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
@@ -171,12 +173,49 @@ extension PaymentsTransfersViewModel {
     
     func openScanner() {
         
-        let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
+        let qrModel = qrViewModelFactory.makeQRScannerModel()
+        let cancellable = bind(qrModel)
+        var route = route
+        route.modal = .fullScreenSheet(.init(
+            type: .qrScanner(.init(
+                model: qrModel,
+                cancellable: cancellable
+            ))
+        ))
+        routeSubject.send(route)
+    }
+    
+    private func openTemplates() {
+        
+        let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
             
-            self?.event(.dismiss(.modal))
+            self?.event(.dismiss(.destination))
         }
-        bind(qrScannerModel)
-        self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
+        let cancellable = bind(templates)
+        var route = route
+        route.destination = .templates(.init(
+            model: templates,
+            cancellable: cancellable
+        ))
+        routeSubject.send(route)
+    }
+    
+    func dismissPaymentProviderPicker() {
+        
+        guard case .paymentProviderPicker = route.destination
+        else { return }
+        
+        route.destination = nil
+        openScanner()
+    }
+    
+    func dismissProviderServicePicker() {
+        
+        guard case .providerServicePicker = route.destination
+        else { return }
+        
+        route.destination = nil
+        openScanner()
     }
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
@@ -314,11 +353,14 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
             }
             
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                delayMS: 50,
+                action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                    model: paymentsViewModel,
+                    cancellable: cancellable
+                )))
             )
             
         default: //error matching
@@ -407,8 +449,8 @@ extension PaymentsTransfersViewModel {
             case successMeToMe(PaymentsSuccessViewModel)
             case transferByPhone(TransferByPhoneViewModel)
             case anotherCard(AnotherCardViewModel)
-            case fastPayment(ContactsViewModel)
-            case country(ContactsViewModel)
+            case fastPayment(Node<ContactsViewModel>)
+            case country(Node<ContactsViewModel>)
         }
     }
     
@@ -422,20 +464,20 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum Link: Identifiable {
+    enum Link {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
         case phone(PaymentByPhoneViewModel)
-        case payments(PaymentsViewModel)
+        case payments(Node<PaymentsViewModel>)
         case serviceOperators(OperatorsViewModel)
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)
         case service(OperatorsViewModel)
         case internet(OperatorsViewModel)
         case transport(OperatorsViewModel)
-        case template(TemplatesListViewModel)
+        case templates(TemplatesNode)
         case country(CountryPaymentView.ViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case failedView(QRFailedViewModel)
@@ -449,11 +491,12 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
-        case servicePayment(ServicePaymentState)
-        
-        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
-        
-       typealias ServicePaymentState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
+        case servicePayment(UtilityServicePaymentFlowState)
+        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case providerServicePicker(Node<AnywayServicePickerFlowModel>)
+
+        typealias MixedOperators = MultiElementArray<OperatorProvider<SegmentedOperatorData, SegmentedProvider>>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentBinder>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -463,7 +506,7 @@ extension PaymentsTransfersViewModel {
         
         enum Kind {
             
-            case qrScanner(QRViewModel)
+            case qrScanner(Node<QRModel>)
             case paymentCancelled(expired: Bool)
             case success(PaymentsSuccessViewModel)
         }
@@ -514,7 +557,7 @@ extension PaymentsTransfersViewModel.Modal {
     }
 }
 
-extension PaymentsTransfersViewModel.Link {
+extension PaymentsTransfersViewModel.Link: Identifiable {
     
     var id: Case {
         
@@ -527,8 +570,8 @@ extension PaymentsTransfersViewModel.Link {
             return .mobile
         case .phone:
             return .phone
-        case .payments:
-            return .payments
+        case let .payments(node):
+            return .payments(ObjectIdentifier(node.model))
         case .serviceOperators:
             return .serviceOperators
         case .internetOperators:
@@ -541,7 +584,7 @@ extension PaymentsTransfersViewModel.Link {
             return .internet
         case .transport:
             return .transport
-        case .template:
+        case .templates:
             return .template
         case .country:
             return .country
@@ -571,15 +614,19 @@ extension PaymentsTransfersViewModel.Link {
             return .utilityPayment
         case .servicePayment:
             return .servicePayment
+        case .paymentProviderPicker:
+            return .paymentProviderPicker
+        case .providerServicePicker:
+            return .providerServicePicker
         }
     }
     
-    enum Case {
+    enum Case: Hashable {
         case exampleDetail
         case userAccount
         case mobile
         case phone
-        case payments
+        case payments(ObjectIdentifier)
         case serviceOperators
         case internetOperators
         case transportOperators
@@ -601,6 +648,8 @@ extension PaymentsTransfersViewModel.Link {
         case sberQRPayment
         case utilityPayment
         case servicePayment
+        case paymentProviderPicker
+        case providerServicePicker
     }
 }
 
@@ -643,7 +692,7 @@ enum PaymentsTransfersViewModelAction {
         
         struct Payment: Action {
             
-            let viewModel: PaymentsViewModel
+            let node: Node<PaymentsViewModel>
         }
         
         struct Requisites: Action {
@@ -801,7 +850,7 @@ private extension PaymentsTransfersViewModel {
         
         action
             .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Payment }
-            .map(\.viewModel)
+            .map(\.node)
             .receive(on: scheduler)
             .sink { [unowned self] in
                 
@@ -815,9 +864,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .fastPayment(contactsViewModel)))
+                route.modal = .sheet(.init(type: .fastPayment(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -827,9 +879,12 @@ private extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
-                bind(contactsViewModel)
+                let cancellable = bind(contactsViewModel)
                 
-                route.modal = .sheet(.init(type: .country(contactsViewModel)))
+                route.modal = .sheet(.init(type: .country(.init(
+                    model: contactsViewModel,
+                    cancellable: cancellable
+                ))))
             }
             .store(in: &bindings)
         
@@ -865,6 +920,14 @@ private extension PaymentsTransfersViewModel {
     }
     
     func updateSections(_ updateInfo: UpdateInfo) {
+       
+        if model.onlyCorporateCards {
+            let containDisableCorporateSection: Bool = sections.first(where: { $0.type == .disableForCorCards }) is DisableForCorCardsPTViewModel
+            if !containDisableCorporateSection {
+                sections.insert(DisableForCorCardsPTViewModel.init(), at: 0)
+            }
+        }
+        
         let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateFailureInfo }) is UpdateInfoPTViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
@@ -900,7 +963,8 @@ private extension PaymentsTransfersViewModel {
             dismissAction: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
-            }
+            }, 
+            makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard
         )
         route.destination = .openDepositsList(openDepositViewModel)
     }
@@ -931,47 +995,69 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            ))))
+    }
+    
+    func disableForCorporateCard(_ action: any Action) -> Bool {
+
+        guard model.onlyCorporateCards else { return false }
+        
+        guard case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer = action,
+              payload.type == .betweenSelf else { return true }
+        
+        return model.containsLessThenTwoIndividualBusinessmanMainCard
     }
     
     func handlePaymentButtonTapped(_ action: any Action) {
         
-        if !model.updateInfo.value.areCardsOrAccountsUpdated, let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+        if !model.updateInfo.value.areCardsOrAccountsUpdated, 
+            let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.dataUpdateFailure({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
             event(.setModal(to: .alert(alertViewModel)))
         } else {
             
-            switch action {
-                //LatestPayments Section Buttons
-            case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                switch payload.latestPayment.type {
-                case .service:
-                    event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+            if disableForCorporateCard(action),
+               let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
                 
+                event(.setModal(to: .alert(alertViewModel)))
+            }
+            else {
+                
+                switch action {
+                    //LatestPayments Section Buttons
+                case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                    switch payload.latestPayment.type {
+                    case .service:
+                        event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+                        
+                    default:
+                        handle(latestPayment: payload.latestPayment)
+                    }
+                    
+                    //LatestPayment Section TemplateButton
+                case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
+                    openTemplates()
+                    
+                case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
+                    handleCurrencyWalletButtonTapped()
+                    
+                    //Transfers Section
+                case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
+                    handleTransferButtonTapped(for: payload.type)
+                    
+                    //Payments Section
+                case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
+                    handlePaymentButtonTapped(for: payload.type)
+                    
                 default:
-                    handle(latestPayment: payload.latestPayment)
+                    break
                 }
-                
-                //LatestPayment Section TemplateButton
-            case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                handleTemplatesButtonTapped()
-                
-            case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
-                handleCurrencyWalletButtonTapped()
-                
-                //Transfers Section
-            case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                handleTransferButtonTapped(for: payload.type)
-                
-                //Payments Section
-            case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
-                handlePaymentButtonTapped(for: payload.type)
-                
-            default:
-                break
             }
         }
     }
@@ -986,17 +1072,6 @@ private extension PaymentsTransfersViewModel {
                 .sink { [weak self] in self?.handlePaymentButtonTapped($0) }
                 .store(in: &bindings)
         }
-    }
-    
-    private func handleTemplatesButtonTapped() {
-        
-        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
-            
-            self?.event(.dismiss(.destination))
-        }
-        
-        bind(viewModel)
-        route.destination = .template(viewModel)
     }
     
     private func handleCurrencyWalletButtonTapped() {
@@ -1047,9 +1122,12 @@ private extension PaymentsTransfersViewModel {
             service: .toAnotherCard,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        )))
     }
     
     private func handleBetweenSelfTransferButtonTapped() {
@@ -1087,7 +1165,10 @@ private extension PaymentsTransfersViewModel {
                 
                 self?.event(.dismiss(.destination))
             }
-            route.destination = .payments(paymentsViewModel)
+            route.destination = .payments(.init(
+                model: paymentsViewModel,
+                cancellables: []
+            ))
             
         case .socialAndGame:
             route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue))) //TODO:
@@ -1108,27 +1189,30 @@ private extension PaymentsTransfersViewModel {
             service: .mobileConnection,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        )))
     }
     
-    private func makeByInstructionsPaymentsViewModel() -> PaymentsViewModel {
+    private func makeByInstructionsPaymentsViewModel() -> Node<PaymentsViewModel> {
         
         let paymentsViewModel = PaymentsViewModel(
             model,
             service: .requisites,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        return paymentsViewModel
+        return .init(model: paymentsViewModel, cancellable: cancellable)
     }
     
     private func payByRequisites() {
         
         action.send(PaymentsTransfersViewModelAction.Show.Payment(
-            viewModel: makeByInstructionsPaymentsViewModel()
+            node: makeByInstructionsPaymentsViewModel()
         ))
     }
     
@@ -1192,32 +1276,53 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+    func bind(
+        _ templates: Templates
+    ) -> AnyCancellable {
         
-        templatesListViewModel.action
+        templates.$state
+            .map(\.external)
             .receive(on: scheduler)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as TemplatesListViewModelAction.OpenProductProfile:
-                    
-                    self.event(.dismiss(.destination))
-                    self.delay(for: .milliseconds(800)) {
-                        
-                        self.action.send(
-                            PaymentsTransfersViewModelAction.Show.ProductProfile(
-                                productId: payload.productId
-                            )
-                        )
-                    }
-                    
-                default:
-                    break
-                }
-            }
-            .store(in: &bindings)
+            .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
     
+    private func handleTemplatesFlowState(
+        _ external: Templates.State.ExternalTemplatesListFlowState
+    ) {
+        rootActions?.showSpinner(external.isLoading)
+
+        switch external.outside {
+        case .none:
+            rootActions?.spinner.hide()
+
+        case let .productID(productID):
+            rootActions?.spinner.hide()
+            action.send(PaymentsTransfersViewModelAction.Close.Link())
+            
+            delay(for: .milliseconds(800)) { [weak self] in
+                
+                self?.action.send(
+                    MainViewModelAction.Show.ProductProfile(
+                        productId: productID
+                    )
+                )
+            }
+            
+        case .tab(.main):
+            rootActions?.spinner.hide()
+            action.send(MainViewModelAction.Close.Link())
+            
+            delay(for: .milliseconds(800)) { [weak self] in
+                
+                self?.rootActions?.switchTab(.main)
+            }
+
+        case .tab(.payments):
+            rootActions?.spinner.hide()
+            action.send(PaymentsTransfersViewModelAction.Close.Link())
+        }
+    }
+
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action
@@ -1234,7 +1339,7 @@ private extension PaymentsTransfersViewModel {
             .store(in: &bindings)
     }
     
-    private func bind(_ paymentsViewModel: PaymentsViewModel) {
+    private func bind(_ paymentsViewModel: PaymentsViewModel) -> AnyCancellable {
         
         paymentsViewModel.action
             .receive(on: scheduler)
@@ -1253,7 +1358,6 @@ private extension PaymentsTransfersViewModel {
                 default: break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func handleContactAbroad(
@@ -1269,7 +1373,10 @@ private extension PaymentsTransfersViewModel {
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellables: []
+            )))
         )
     }
     
@@ -1351,7 +1458,7 @@ private extension PaymentsTransfersViewModel {
         self.rootActions?.switchTab(.payments)
     }
     
-    private func bind(_ viewModel: ContactsViewModel) {
+    private func bind(_ viewModel: ContactsViewModel) -> AnyCancellable {
         
         viewModel.action
             .receive(on: scheduler)
@@ -1368,7 +1475,6 @@ private extension PaymentsTransfersViewModel {
                     break
                 }
             }
-            .store(in: &bindings)
     }
     
     private func requestContactsPayment(
@@ -1410,11 +1516,15 @@ private extension PaymentsTransfersViewModel {
                 }
             }
             
-            bind(paymentsViewModel)
+            let cancellable = bind(paymentsViewModel)
             
             self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                delayMS: 50,
+                action: PaymentsTransfersViewModelAction.Show.Payment(
+                    node: .init(
+                        model: paymentsViewModel,
+                        cancellable: cancellable
+                    )))
             )
         }
     }
@@ -1448,36 +1558,58 @@ private extension PaymentsTransfersViewModel {
             }
         }
         
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         self.action.send(DelayWrappedAction(
             delayMS: 300,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
-    func bind(_ qrViewModel: QRViewModel) {
+    func bind(_ qrModel: QRModel) -> AnyCancellable {
         
-        qrViewModel.action
-            .compactMap { $0 as? QRViewModelAction.Result }
-            .map(\.result)
+        qrModel.$state
+            .compactMap { $0 }
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: scheduler)
-            .sink { [unowned self] in
+            .sink { [weak self] in
                 
-                self.handleQRViewModelActionResult($0)
+                switch $0 {
+                case .cancelled:
+                    self?.rootActions?.spinner.hide()
+                    self?.event(.dismiss(.fullScreenCover))
+                    
+                case .inflight:
+                    self?.rootActions?.spinner.show()
+                    
+                case let .qrResult(qrResult):
+                    self?.rootActions?.spinner.hide()
+                    self?.handleQRResult(qrResult)
+                }
             }
-            .store(in: &bindings)
     }
     
     private func payByInstructions() {
         
+        event(.dismiss(.destination))
         event(.dismiss(.modal))
         
-        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
+        let node = makeByInstructionsPaymentsViewModel()
         
         action.send(DelayWrappedAction(
             delayMS: 800,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: node))
         )
+    }
+    
+    private func payByInstructions(with qrCode: QRCode) {
+        
+        event(.dismiss(.destination))
+        event(.dismiss(.modal))
+
+        action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qrCode))
     }
     
     private func makeAlert(_ message: String) {
@@ -1492,7 +1624,19 @@ private extension PaymentsTransfersViewModel {
     private func createNavButtonsRight(
     ) -> [NavigationBarButtonViewModel] {
         
-        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+        [.barcodeScanner(action: { [weak self] in  self?.barcodeScannerAction() })]
+    }
+    
+    private func barcodeScannerAction() {
+        
+        if disableForCorporateCard(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .qrPayment)),
+           let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+            
+            event(.setModal(to: .alert(alertViewModel)))
+        }
+        else {
+            openScanner()
+        }
     }
 }
 
@@ -1500,114 +1644,95 @@ private extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    private func handleQRViewModelActionResult(
-        _ result: QRViewModel.ScanResult
+    private func handleQRResult(
+        _ result: QRModelResult
     ) {
         event(.dismiss(.modal))
-
-        switch result {
-        case let .qrCode(qr):
+        
+        delay(for: .milliseconds(300)) { [weak self] in
             
-            if let qrMapping = model.qrMapping.value {
-                handleQRMapping(qr, qrMapping)
-            } else {
-                handleFailure(qr: qr)
+            guard let self else { return }
+            
+            switch result {
+            case let .c2bSubscribeURL(url):
+                handleC2bSubscribeURL(url)
+                
+            case let .c2bURL(url):
+                handleC2bURL(url)
+                
+            case let .failure(qrCode):
+                handleFailure(qrCode)
+                
+            case let .mapped(mapped):
+                handleMapped(mapped)
+                
+            case let .sberQR(url):
+                handleSberQRURL(url)
+                
+            case let .url(url):
+                handleURL(url)
+                
+            case .unknown:
+                handleUnknownQR()
             }
-            
-        case let .c2bURL(url):
-            handleC2bURL(url)
-            
-        case let .c2bSubscribeURL(url):
-            handleC2bSubscribeURL(url)
-            
-        case let .sberQR(url):
-            handleSberQRURL(url)
-            
-        case .url:
-            handleURL()
-            
-        case .unknown:
+        }
+    }
+    
+    private func handleMapped(
+        _ mapped: QRModelResult.Mapped
+    ) {
+        switch mapped {
+        case .missingINN:
             handleUnknownQR()
-        }
-    }
-    
-    private func handleQRMapping(
-        _ qr: QRCode,
-        _ qrMapping: QRMapping
-    ) {
-        let operators = model.operatorsFromQR(qr, qrMapping)
-        let multipleOperators = MultiElementArray(operators ?? [])
-        
-        switch (multipleOperators, operators?.first) {
-        case let (_, .some(`operator`)):
-            payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
+
+        case let .mixed(mixed, qrCode, qrMapping):
+            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+
+        case let .multiple(multipleOperators, qrCode, qrMapping):
+            searchOperators(multipleOperators, with: qrCode)
             
-        case let (.some(multipleOperators), _):
-            scheduler.delay(for:.milliseconds(700)) { [weak self] in
-                
-                self?.handleQRMappingWithMultipleOperators(qr, multipleOperators.elements)
-            }
+        case let .none(qrCode):
+            payByInstructions(with: qrCode)
             
-        default:
-            self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        case let .provider(payload):
+            makeServicePicker(payload)
+
+        case let .single(`operator`, qrCode, qrMapping):
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: qrCode,
+                mapping: qrMapping
+            )
+            
+            self.route.destination = .operatorView(viewModel)
+            
+        case let .source(source):
+            makePayment(with: source)
         }
     }
     
-    private func payWith(
-        operator: OperatorGroupData.OperatorData,
-        qr: QRCode,
-        qrMapping: QRMapping
+    private func makePayment(
+        with source: Payments.Operation.Source
     ) {
-        let isServicePayment = Payments
-            .paymentsServicesOperators
-            .map(\.rawValue)
-            .contains(`operator`.parentCode)
-        
-        if isServicePayment {
-            handleQRMappingWithSingleOperator(qr, `operator`)
-        } else {
-            delay(for: .milliseconds(700)) { [self] in
-                
-                let viewModel = InternetTVDetailsViewModel(
-                    model: model,
-                    qrCode: qr,
-                    mapping: qrMapping
-                )
-                self.route.destination = .operatorView(viewModel)
-            }
-        }
-    }
-    
-    private func handleQRMappingWithSingleOperator(
-        _ qr: QRCode,
-        _ operatorValue: OperatorGroupData.OperatorData
-    ) {
-        let puref = operatorValue.code
-        let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
-        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
         let paymentsViewModel = PaymentsViewModel(
-            source: .servicePayment(
-                puref: puref,
-                additionalList: additionalList,
-                amount: amount/100
-            ),
+            source: source,
             model: model,
             closeAction: { [weak self] in
                 
                 self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
-        scheduler.schedule { [weak self] in
-            
-            self?.route.destination = .init(.payments(paymentsViewModel))
-        }
+        route.destination = .payments(.init(
+            model: paymentsViewModel,
+            cancellable: cancellable
+        ))
     }
     
-    private func handleQRMappingWithMultipleOperators(
-        _ qr: QRCode,
-        _ operators: [OperatorGroupData.OperatorData]
+    private func searchOperators(
+        _ operators: MultiElementArray<SegmentedOperatorData>,
+        with qr: QRCode
     ) {
         let navigationBarViewModel = NavigationBarView.ViewModel(
             title: "Все регионы",
@@ -1628,13 +1753,9 @@ extension PaymentsTransfersViewModel {
         let operatorsViewModel = QRSearchOperatorViewModel(
             searchBar: .nameOrTaxCode(),
             navigationBar: navigationBarViewModel, model: self.model,
-            operators: operators,
+            operators: operators.elements.map(\.origin),
             addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
-            requisitesAction: { [weak self] in
-                
-                self?.event(.dismiss(.destination))
-                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-            },
+            requisitesAction: { [weak self] in self?.payByInstructions(with: qr) },
             qrCode: qr
         )
         
@@ -1654,7 +1775,7 @@ extension PaymentsTransfersViewModel {
         }
     }
 
-    private func handleFailure(qr: QRCode) {
+    private func handleFailure(_ qrCode: QRCode) {
         
         delay(for: .milliseconds(700)) { [weak self] in
             
@@ -1663,11 +1784,7 @@ extension PaymentsTransfersViewModel {
             let failedView = QRFailedViewModel(
                 model: self.model,
                 addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
-                requisitsAction: { [weak self] in
-                    
-                    self?.event(.dismiss(.modal))
-                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                }
+                requisitsAction: { [weak self] in self?.payByInstructions(with: qrCode) }
             )
             
             route.destination = .failedView(failedView)
@@ -1681,11 +1798,14 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1696,11 +1816,14 @@ extension PaymentsTransfersViewModel {
             model: model,
             closeAction: { [weak self] in self?.event(.dismiss(.destination)) }
         )
-        bind(paymentsViewModel)
+        let cancellable = bind(paymentsViewModel)
         
         self.action.send(DelayWrappedAction(
             delayMS: 700,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            action: PaymentsTransfersViewModelAction.Show.Payment(node: .init(
+                model: paymentsViewModel,
+                cancellable: cancellable
+            )))
         )
     }
     
@@ -1783,8 +1906,9 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    private func handleURL() {
-        
+    private func handleURL(
+        _ url: URL
+    ) {
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1794,6 +1918,135 @@ extension PaymentsTransfersViewModel {
             )
             
             self.route.destination = .failedView(failedView)
+        }
+    }
+}
+
+// MARK: - PaymentProviderPicker
+
+private extension PaymentsTransfersViewModel {
+    
+    func makePaymentProviderPicker(
+        _ mixed: MultiElementArray<SegmentedOperatorProvider>,
+        _ qrCode: QRCode,
+        _ qrMapping: QRMapping
+    ) {
+        let flowModel = paymentsTransfersFactory.makePaymentProviderPickerFlowModel(mixed, qrCode, qrMapping)
+        route.destination = .paymentProviderPicker(.init(
+            model: flowModel,
+            cancellables: bind(flowModel)
+        ))
+    }
+    
+    private func bind(
+        _ flowModel: PaymentProviderPickerFlowModel
+    ) -> Set<AnyCancellable> {
+        
+        let spinner = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.handle($0) }
+        
+        return [spinner, outside]
+    }
+    
+    private func showSpinner(_ isShowing: Bool) {
+        
+        if isShowing {
+            rootActions?.spinner.show()
+        } else {
+            rootActions?.spinner.hide()
+        }
+    }
+    
+    func handle(
+        _ outside: PaymentProviderPickerFlowState.Status.Outside
+    ) {
+        event(.dismiss(.destination))
+        rootActions?.spinner.hide()
+
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
+        }
+    }
+}
+
+// MARK: - PaymentProviderServicePicker
+
+private extension PaymentsTransfersViewModel {
+    
+    func makeServicePicker(
+        _ payload: PaymentProviderServicePickerPayload
+    ) {
+        let make = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel
+        let flowModel = make(payload)
+        var route = route
+        route.modal = nil
+        route.destination = .providerServicePicker(.init(
+            model: flowModel,
+            cancellables: bind(flowModel)
+        ))
+        routeSubject.send(route)
+    }
+    
+    private func bind(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> Set<AnyCancellable> {
+        
+        let loading = flowModel.$state
+            .map(\.isLoading)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.showSpinner($0) }
+        
+        let outside = flowModel.$state
+            .compactMap(\.outside)
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handle($0) }
+        
+        return [loading, outside]
+    }
+
+    private func handle(
+        _ outside: AnywayServicePickerFlowState.Status.Outside
+    ) {
+        event(.dismiss(.destination))
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .addCompany:
+                self?.rootActions?.switchTab(.chat)
+                
+            case .main:
+                self?.rootActions?.switchTab(.main)
+
+            case .payments:
+                self?.rootActions?.switchTab(.payments)
+                
+            case .scanQR:
+                self?.openScanner()
+            }
         }
     }
 }
@@ -1812,6 +2065,7 @@ private extension NavigationBarButtonViewModel {
 }
 extension FilterState {
     
+    //TODO: Create fabric for FilterState
     static func defaultFilterComponents(
         product: ProductData
     ) -> FilterState {
@@ -1829,6 +2083,8 @@ extension FilterState {
                 periods: FilterHistoryState.Period.allCases,
                 transactionType: [],
                 services: []
-            ))
+            ),
+            status: .normal
+        )
     }
 }

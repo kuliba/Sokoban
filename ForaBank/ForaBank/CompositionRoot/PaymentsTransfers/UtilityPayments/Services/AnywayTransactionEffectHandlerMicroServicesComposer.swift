@@ -66,8 +66,8 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
             case let .failure(.otpFailure(message)):
                 completion(.failure(.otpFailure(message)))
                 
-            case .failure(.terminal):
-                completion(.failure(.terminal))
+            case let .failure(.terminal(message)):
+                completion(.failure(.terminal(message)))
                 
             case let .success(response):
                 getDetails(response, completion)

@@ -221,7 +221,7 @@ extension Payments {
 extension Payments.Operation {
     
     /// Source of operation
-    enum Source: CustomDebugStringConvertible {
+    enum Source: Equatable & CustomDebugStringConvertible {
         
         /// operation started from template
         case template(PaymentTemplateData.ID)

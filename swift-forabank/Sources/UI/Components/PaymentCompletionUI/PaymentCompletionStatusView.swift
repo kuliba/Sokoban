@@ -5,12 +5,14 @@
 //  Created by Igor Malyarov on 30.07.2024.
 //
 
+import Combine
 import SwiftUI
 import UIPrimitives
 
 public struct PaymentCompletionStatusView: View {
     
     let state: State
+    let makeIconView: MakeIconView
     let config: Config
     
     public var body: some View {
@@ -32,6 +34,7 @@ public struct PaymentCompletionStatusView: View {
 extension PaymentCompletionStatusView {
     
     typealias State = PaymentCompletionStatus
+    public typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
     typealias Config = PaymentCompletionStatusViewConfig
 }
 
@@ -73,17 +76,7 @@ private extension PaymentCompletionStatusView {
     @ViewBuilder
     func merchantLogoView() -> some View {
         
-        state.merchantIcon.map(logoView)
-    }
-    
-    private func logoView(
-        logo: Image
-    ) -> some View {
-        
-        logo
-            .renderingMode(.original)
-            .resizable()
-            .scaledToFit()
+        makeIconView(state.merchantIcon)
             .frame(width: config.logoHeight, height: config.logoHeight)
     }
 }
@@ -94,13 +87,13 @@ private extension PaymentCompletionStatus {
     static let preview: Self = .init(
         status: .preview,
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "pencil.and.outline")
+        merchantIcon: nil
     )
     
     static let withSubtitle: Self = .init(
         status: .withSubtitle,
         formattedAmount: "1 000 ₽",
-        merchantIcon: .init(systemName: "tray.full.fill")
+        merchantIcon: nil
     )
 }
 
@@ -150,16 +143,26 @@ struct PaymentCompletionStatusView_Previews: PreviewProvider {
         
         Group {
             
-            tcStatusView(.preview)
-            tcStatusView(.withSubtitle)
+            paymentCompletionStatusView(.preview)
+            paymentCompletionStatusView(.withSubtitle)
         }
     }
     
-    private static func tcStatusView(
+    private static func paymentCompletionStatusView(
         _ state: PaymentCompletionStatusView.State
     ) -> some View {
         
-        PaymentCompletionStatusView(state: state, config: .preview)
+        PaymentCompletionStatusView(
+            state: state,
+            makeIconView: {
+                
+                return .init(
+                    image: .init(systemName: $0 ?? "pencil.and.outline"),
+                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                )
+            },
+            config: .preview
+        )
     }
 }
 #endif

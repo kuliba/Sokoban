@@ -169,9 +169,10 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     
     func test_select_shouldDeliverEffectOnExistingSingleItem() {
         
-        let item = makeItem()
+        let (item, payload) = (makeItem(), makePayload())
+        let state = makeState(payload: payload, items: [item])
         
-        assert(makeState(items: [item]), event: .select(item), delivers: .select(item))
+        assert(state, event: .select(item), delivers: .select(item, payload))
     }
     
     func test_select_shouldChangeStateOnOneOfExistingItems() {
@@ -186,9 +187,26 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     
     func test_select_shouldDeliverEffectOnOneOfExistingItems() {
         
-        let item = makeItem()
+        let (item, payload) = (makeItem(), makePayload())
+        let state = makeState(payload: payload, items: [item, makeItem()])
+
         
-        assert(makeState(items: [item, makeItem()]), event: .select(item), delivers: .select(item))
+        assert(state, event: .select(item), delivers: .select(item, payload))
+    }
+    
+    // MARK: - reset
+    
+    func test_reset_shouldResetResponse() {
+        
+        assert(makeState(response: makeResponse()), event: .reset) {
+            
+            $0.response = nil
+        }
+    }
+    
+    func test_reset_shouldNotDeliverEffect() {
+        
+        assert(makeState(response: makeResponse()), event: .reset, delivers: nil)
     }
     
     // MARK: - response
@@ -230,10 +248,11 @@ final class AsyncPickerReducerTests: AsyncPickerTests {
     private func makeState(
         payload: Payload? = nil,
         isLoading: Bool = false,
-        items: [Item]? = nil
+        items: [Item]? = nil,
+        response: Response? = nil
     ) -> SUT.State {
         
-        return .init(payload: payload ?? makePayload(), isLoading: isLoading, items: items)
+        return .init(payload: payload ?? makePayload(), isLoading: isLoading, items: items, response: response)
     }
     
     @discardableResult

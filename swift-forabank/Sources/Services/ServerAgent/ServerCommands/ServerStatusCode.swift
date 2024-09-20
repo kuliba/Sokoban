@@ -18,6 +18,7 @@ public enum ServerStatusCode: Decodable, Equatable {
     case incorrectRequest
     case unknownRequest
     case unknownStatus(Int)
+    case timeout
     
     public init(from decoder: Decoder) throws {
         
@@ -30,6 +31,7 @@ public enum ServerStatusCode: Decodable, Equatable {
         case 102: self = .serverError
         case 400: self = .incorrectRequest
         case 404: self = .unknownRequest
+        case -1001: self = .timeout
         default:
             self = .unknownStatus(statusCode)
         }
@@ -48,6 +50,7 @@ extension ServerStatusCode: CustomDebugStringConvertible {
         case .incorrectRequest: return "400: Incorrect Request"
         case .unknownRequest: return "404: Unknown Request"
         case .unknownStatus(let code): return "Unknown status: \(code)"
+        case .timeout: return "-1001: Timeout"
         }
     }
 }
