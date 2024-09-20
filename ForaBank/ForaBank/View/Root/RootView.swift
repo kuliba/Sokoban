@@ -28,10 +28,7 @@ struct RootView: View {
                     
                     mainViewTab(viewModel.mainViewModel)
                     paymentsViewTab(viewModel.paymentsModel)
-                    rootViewFactory.makeMarketView("").map {
-                        $0
-                        .taggedTabItem(.market, selected: viewModel.selected)
-                    }
+                    marketViewTab("")
                     chatViewTab(viewModel.chatViewModel)
                 }
                 .accentColor(.black)
@@ -102,6 +99,19 @@ struct RootView: View {
         ChatView(viewModel: chatViewModel)
             .taggedTabItem(.chat, selected: viewModel.selected)
             .accessibilityIdentifier("tabBarChatButton")
+    }
+    
+    private func marketViewTab(
+        _ marketViewModel: MarketPlaceViewModel
+    ) -> some View {
+        
+        rootViewFactory.makeMarketView("").map {
+            $0
+            .taggedTabItem(.market, selected: viewModel.selected)
+        }
+        .taggedTabItem(.market, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
+        .accessibilityIdentifier("tabBarMarketButton")
     }
     
     @ViewBuilder

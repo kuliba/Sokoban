@@ -15,7 +15,6 @@ struct MarketView: View {
             Text("Market")
             Image.ic24MarketplaceActive
         }
-        .accessibilityIdentifier("tabBarMarketButton")
     }
 }
 
