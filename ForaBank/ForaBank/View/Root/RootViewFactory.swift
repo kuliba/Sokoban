@@ -31,6 +31,7 @@ struct RootViewFactory {
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
     let makeIconView: MakeIconView
+    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
@@ -61,6 +62,7 @@ extension RootViewFactory {
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,

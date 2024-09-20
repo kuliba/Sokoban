@@ -379,7 +379,7 @@ private extension MainView {
             config: .iFora,
             bannerView: { item in
                 
-                let label = viewFactory.makeIconView(.image(item.imageEndpoint))
+                let label = viewFactory.makeGeneralIconView(.image(item.imageEndpoint))
                     .frame(Config.iFora.size)
                     .cornerRadius(Config.iFora.cornerRadius)
                 
@@ -611,7 +611,8 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview,
+            makeIconView: IconDomain.preview, 
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
