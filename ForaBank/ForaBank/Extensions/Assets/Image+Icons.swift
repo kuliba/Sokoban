@@ -610,6 +610,8 @@ public extension Image {
     static var ic24Male: Image { Image(#function) }
     static var ic24Map: Image { Image(#function) }
     static var ic24MapPin: Image { Image(#function) }
+    static var ic24MarketplaceActive: Image { Image(#function) }
+    static var ic24MarketplaceInactive: Image { Image(#function) }
     static var ic24MathMinus: Image { Image(#function) }
     static var ic24MathPlus: Image { Image(#function) }
     static var ic24Maximize: Image { Image(#function) }
