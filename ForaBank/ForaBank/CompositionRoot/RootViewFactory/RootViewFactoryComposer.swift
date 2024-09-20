@@ -292,10 +292,7 @@ private extension RootViewFactoryComposer {
     func makeMarketView(
         viewModel: MarketPlaceViewModel
     ) -> MarketView? {
-        if marketFeatureFlag.isActive {
-            return .init()
-        } 
-        else { return nil }
+        marketFeatureFlag.isActive ? .init() : nil
     }
 }
 
