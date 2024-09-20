@@ -229,7 +229,8 @@ extension ProductProfileHistoryView {
                                     })
                                 case .dates:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
+                                        
+                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
                                     })
                                 }
                             }
@@ -266,8 +267,8 @@ extension ProductProfileHistoryView {
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
-                                if filter()?.filter.selectDates?.lowerDate != nil || filter()?.calendar.range?.lowerDate != nil {
-                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerDate ?? Date(), end: filter()?.filter.selectDates?.upperDate ?? Date())), storage: storage)
+                                if filter()?.filter.selectDates?.lowerBound != nil || filter()?.calendar.range?.upperDate != nil {
+                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerBound ?? Date(), end: filter()?.filter.selectDates?.upperBound ?? Date())), storage: storage)
 
                                 } else {
                                     updateContent(with: state, storage: storage)

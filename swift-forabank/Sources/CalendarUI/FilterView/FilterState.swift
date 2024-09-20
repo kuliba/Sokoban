@@ -9,13 +9,13 @@ import Foundation
 
 public struct FilterState {
     
-    public let productId: Int?
+    public let productId: Int
     public var calendar: CalendarState
     public var filter: FilterHistoryState
     public var status: Status
 
     public init(
-        productId: Int?,
+        productId: Int,
         calendar: CalendarState,
         filter: FilterHistoryState,
         status: Status
@@ -39,7 +39,7 @@ public struct FilterHistoryState {
     
     public let title: String
     
-    public var selectDates: (lowerDate: Date?, upperDate: Date?)? //TODO: replace with optional range
+    public var selectDates: Range<Date>?
     public var selectedPeriod: Period
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
@@ -50,7 +50,7 @@ public struct FilterHistoryState {
         
     public init(
         title: String,
-        selectDates: (lowerDate: Date?, upperDate: Date?)?,
+        selectDates: Range<Date>?,
         selectedPeriod: Period = .month,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
@@ -109,7 +109,7 @@ extension FilterHistoryState {
 
     static let preview: Self = .init(
         title: "Фильтры",
-        selectDates: (nil, nil),
+        selectDates: (.distantPast)..<(.distantFuture),
         periods: [],
         transactionType: [],
         services: []

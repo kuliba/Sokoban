@@ -2375,7 +2375,7 @@ extension ProductProfileViewModel {
         var showSheet: Sheet
         var categories: [String]
         var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
-        var calendarState: CalendarStateWrapper? //Filter Only
+        var calendarState: CalendarStateWrapper?
         
         enum Sheet: Identifiable {
             

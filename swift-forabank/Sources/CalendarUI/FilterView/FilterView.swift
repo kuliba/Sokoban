@@ -17,11 +17,11 @@ public enum FilterEffect: Equatable {
     public struct UpdateFilterPayload: Equatable {
 
         public let range: Range<Date>
-        public let productId: Int? //TODO: remove optionality productId
+        public let productId: Int
         
         public init(
             range: Range<Date>,
-            productId: Int?
+            productId: Int
         ) {
             self.range = range
             self.productId = productId
@@ -222,8 +222,8 @@ extension FilterState {
         fallback: String
     ) -> String {
         
-        if let lowerDate = filter.selectDates?.lowerDate,
-           let upperDate = filter.selectDates?.upperDate {
+        if let lowerDate = filter.selectDates?.lowerBound,
+           let upperDate = filter.selectDates?.upperBound {
             
             "\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))"
             
@@ -274,8 +274,8 @@ extension FilterView {
                                 Text(state.formattedPeriod(fallback: period.id))
                             }
                             
-                            if state.filter.selectDates?.lowerDate != nil,
-                               state.filter.selectDates?.upperDate != nil {
+                            if state.filter.selectDates?.lowerBound != nil,
+                               state.filter.selectDates?.upperBound != nil {
                                 
                                 Button { event(.clearOptions) } label: {
                                     
@@ -572,7 +572,7 @@ struct FilterView_Previews: PreviewProvider {
             
             FilterView(
                 filterState: .init(
-                    productId: nil,
+                    productId: 0,
                     calendar: .init(date: nil, range: nil, monthsData: [], periods: []),
                     filter: .init(
                         title: "Фильтры",

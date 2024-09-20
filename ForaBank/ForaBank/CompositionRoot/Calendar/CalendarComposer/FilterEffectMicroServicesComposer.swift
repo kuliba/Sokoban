@@ -34,12 +34,8 @@ private extension FilterEffectHandlerMicroServicesComposer {
         completion: @escaping (FilterState?) -> Void
     ) {
         
-        guard let productId = payload.productId else {
-            return completion(nil)
-        }
-        
         model.handleStatementRequest(.init(
-            productId: productId,
+            productId: payload.productId,
             direction: .custom(
                 start: payload.range.lowerBound,
                 end: payload.range.upperBound
@@ -51,7 +47,7 @@ private extension FilterEffectHandlerMicroServicesComposer {
         cancellable = model.statementsUpdating
             .dropFirst()
             .debounce(for: 0.3, scheduler: DispatchQueue.global(qos: .userInitiated))
-            .compactMap { $0[productId] }
+            .compactMap { $0[payload.productId ] }
             .sink { state in
                 
                 self.handleStatementResult(payload, state, completion)
@@ -72,9 +68,8 @@ private extension FilterEffectHandlerMicroServicesComposer {
             completion(nil)
             
         case .idle:
-            if let productId = payload.productId,
-               let product = model.product(productId: productId),
-               let statements = model.statements.value[productId] {
+            if let product = model.product(productId: payload.productId),
+               let statements = model.statements.value[payload.productId] {
                 
                 let filteredStatements = statements.statements.filter({
                     payload.range.contains($0.date)
@@ -111,7 +106,7 @@ private extension FilterState {
             ),
             filter: .init(
                 title: "",
-                selectDates: ((lowerDate: range.lowerBound, upperDate: range.upperBound)),
+                selectDates: range,
                 periods: [.week, .month, .dates],
                 transactionType: [.credit, .debit],
                 services: services

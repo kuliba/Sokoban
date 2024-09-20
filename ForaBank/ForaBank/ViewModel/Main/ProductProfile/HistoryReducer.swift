@@ -34,25 +34,12 @@ extension HistoryReducer {
                     calendarState: nil
                 )
                 
-            case let .filter(productId, lowerDate, upperDate):
+            case let .filter(productId, range):
                 effect = .filter(
                     productId: productId,
-                    lowerDate: lowerDate,
-                    upperDate: upperDate,
+                    range: range,
                     selectServices: .init(state?.categories ?? [])
                 )
-//                state = .init(
-//                    date: state?.date,
-//                    filters: state?.filters,
-//                    selectedDates: (lowerDate: lowerDate, upperDate: upperDate),
-//                    buttonAction: .filter,
-//                    showSheet: .filter,
-//                    categories: state?.categories ?? [],
-//                    applyAction: {lowerDate,upperDate in
-//                        
-//                    },
-//                    calendarState: nil
-//                )
             }
         case let .receive(filterModel):
             state = .init(
@@ -119,5 +106,5 @@ extension HistoryReducer {
 
 enum HistoryEffect {
     
-    case filter(productId: ProductData.ID, lowerDate: Date?, upperDate: Date?, selectServices: Set<String>)
+    case filter(productId: ProductData.ID, range: Range<Date>, selectServices: Set<String>)
 }

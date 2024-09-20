@@ -55,16 +55,18 @@ final class ProductProfileFlowReducer {
             case .calendar:
                 break
             case .filter:
-                #warning("FIX OPTIONAL PRODUCT ID")
-                let (history, historyEffect) = historyReduce(
-                    state.history,
-                    .button(.filter(
-                        state.filter.productId ?? 0,
-                        state.filter.filter.selectDates?.lowerDate,
-                        state.filter.filter.selectDates?.upperDate
-                    )))
-                state.history = history
-                effect = historyEffect.map(Effect.history)
+                
+                if let range = state.filter.filter.selectDates {
+                    let (history, historyEffect) = historyReduce(
+                        state.history,
+                        .button(.filter(
+                            state.filter.productId,
+                            range
+                            
+                        )))
+                    state.history = history
+                    effect = historyEffect.map(Effect.history)
+                }
             }
             
         case let .bottomSheet(bottomEvent):
@@ -94,18 +96,18 @@ final class ProductProfileFlowReducer {
                     ),
                     status: .normal
                 )
-            case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
+            case let .selectedDates(range):
                 state.filter = .init(
                     productId: state.filter.productId,
                     calendar: .init(
                         date: Date(),
-                        range: .init(startDate: lowerDate, endDate: upperDate),
+                        range: .init(range: range),
                         monthsData: [],
                         periods: []
                     ),
                     filter: .init(
                         title: "Фильтры",
-                        selectDates: (lowerDate, upperDate),
+                        selectDates: range,
                         selectedServices: [],
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
@@ -265,7 +267,7 @@ enum HistoryEvent {
     enum ButtonEvent {
         
         case calendar((Date?, Date?) -> Void)
-        case filter(ProductData.ID, Date?, Date?)
+        case filter(ProductData.ID, Range<Date>)
     }
 }
 

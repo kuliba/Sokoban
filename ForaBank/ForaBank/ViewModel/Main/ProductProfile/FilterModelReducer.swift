@@ -31,18 +31,16 @@ final class FilterModelReducer {
             fatalError()
         case .selectedCategory(_):
             fatalError()
-        case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
+        case let .selectedDates(range):
             
-            state.filter.selectDates = (lowerDate, upperDate)
+            state.filter.selectDates = range
             state.filter.selectedPeriod = .dates
-            if let lowerDate, let upperDate  {
-                
-                state.status = .loading
-                effect = .updateFilter(.init(
-                    range: (lowerDate..<upperDate),
-                    productId: state.productId
-                ))
-            }
+            
+            state.status = .loading
+            effect = .updateFilter(.init(
+                range: range,
+                productId: state.productId
+            ))
             
         case .updateFilter(nil):
             state.status = .failure
