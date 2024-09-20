@@ -189,7 +189,11 @@ struct PlaceHolderFilterView: View {
                     clearOptionsAction: {},
                     config: .init(
                         clearButtonTitle: "Очистить",
-                        applyButtonTitle: "Применить"
+                        applyButtonTitle: "Применить",
+                        applyButtonColors: .init(
+                            bgColor: .red.opacity(0.2),
+                            fgColor: .white
+                        )
                     )
                 )
             }
@@ -319,11 +323,7 @@ public struct FilterView: View {
                 },
                 config: .init(
                     clearButtonTitle: "Очистить",
-                    applyButtonTitle: "Применить", 
-                    applyButtonColors: .init(
-                        bgColor: .red.opacity(0.2),
-                        fgColor: .white
-                    )
+                    applyButtonTitle: "Применить"
                 )
             )
         }
@@ -494,8 +494,8 @@ public struct ButtonsContainer: View {
                 title: config.applyButtonTitle,
                 action: applyAction,
                 config: .init(
-                    background: .red,
-                    foreground: .white
+                    background: config.applyButtonColors?.bgColor ?? .red,
+                    foreground: config.applyButtonColors?.fgColor ?? .white
                 ))
         }
     }
