@@ -6,6 +6,7 @@
 //
 
 import ActivateSlider
+import Banners
 import Combine
 import FooterComponent
 import ForaTools
@@ -15,6 +16,7 @@ import PaymentSticker
 import SberQR
 import ScrollViewProxy
 import SwiftUI
+import UIPrimitives
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -130,6 +132,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             
+        case let promo as BannerPickerSectionBinderWrapper:
+            makeBannersView(promo.binder)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+            
         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
             MainSectionCurrencyView(viewModel: currencyViewModel)
                 .padding(.bottom, 32)
@@ -238,9 +245,13 @@ struct MainView<NavigationOperationView: View>: View {
                     title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
-        case let .landing(viewModel):
-            LandingWrapperView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.bottom)
+        case let .landing(viewModel, needIgnoringSafeArea):
+            if needIgnoringSafeArea {
+                LandingWrapperView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+            } else {
+                LandingWrapperView(viewModel: viewModel)
+            }
             
         case let .orderSticker(viewModel):
             LandingWrapperView(viewModel: viewModel)
@@ -317,6 +328,75 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
         }
     }
+}
+
+// MARK: - banners
+
+private extension MainView {
+        
+    func makeBannersView(
+        _ binder: BannersBinder
+    ) -> some View {
+        
+        ComposedBannersView(
+            bannersBinder: binder,
+            factory: .init(
+                makeContentView: {
+                    BannersContentView(
+                        content: binder.content,
+                        factory: .init(
+                            makeBannerSectionView: makeBannerSectionView
+                        ),
+                        config: .init(bannerSectionHeight: 128, spacing: 10)
+                    )
+                }
+            )
+        )
+    }
+
+    
+    typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
+
+    func makeBannerSectionView(
+        binder: BannerPickerSectionBinder
+    ) -> some View {
+        
+        ComposedBannerPickerSectionFlowView(
+            binder: binder,
+            config: .init(spacing: 10),
+            itemView: itemView,
+            makeDestinationView: { Text(String(describing: $0)) }
+        )
+    }
+
+    @ViewBuilder
+    private func itemView(
+        item: BannerPickerSectionState.Item
+    ) -> some View {
+        
+        BannerPickerSectionStateItemView(
+            item: item,
+            config: .iFora,
+            bannerView: { item in
+                
+                let label = viewFactory.makeIconView(.image(item.imageEndpoint))
+                    .frame(Config.iFora.size)
+                    .cornerRadius(Config.iFora.cornerRadius)
+                
+                if let url = item.orderURL {
+                    
+                    Button { MainViewModel.openLinkURL(url) } label: { label }
+                        .buttonStyle(PushButtonStyle())
+                        .accessibilityIdentifier("corporateActionBanner")
+                } else {
+                    label
+                }
+            },
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private typealias Config = BannerPickerSectionStateItemViewConfig
 }
 
 // MARK: - payment provider & service pickers
@@ -579,7 +659,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {}, 
+        bannersBinder: .preview
     )
     
     static let sampleProducts = MainViewModel(
@@ -608,7 +689,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -637,7 +719,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
 }
 

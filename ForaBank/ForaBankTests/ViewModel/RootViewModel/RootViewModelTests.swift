@@ -217,7 +217,8 @@ final class RootViewModelTests: XCTestCase {
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
                 updateInfoStatusFlag: .init(.inactive),
-                onRegister: {}
+                onRegister: {}, 
+                bannersBinder: .preview
             ),
             paymentsModel: .legacy(.init(
                 model: model,
