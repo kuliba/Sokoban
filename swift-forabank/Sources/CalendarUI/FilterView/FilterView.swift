@@ -11,7 +11,7 @@ import SharedConfigs
 import RxViewModel
 import Shimmer
 
-public struct FilterWrapperView: View {
+public struct FilterWrapperView<ButtonsView: View>: View {
     
     public typealias State = FilterState
     public typealias Event = FilterEvent
@@ -23,15 +23,18 @@ public struct FilterWrapperView: View {
     @ObservedObject private var model: Model
     private let config: Config
     private let calendarViewAction: (CalendarState) -> Void
+    private let buttonsView: () -> ButtonsView
 
     public init(
         model: Model,
         config: Config,
-        calendarViewAction: @escaping (CalendarState) -> Void
+        calendarViewAction: @escaping (CalendarState) -> Void,
+        buttonsView: @escaping () -> ButtonsView
     ) {
         self.model = model
         self.calendarViewAction = calendarViewAction
         self.config = config
+        self.buttonsView = buttonsView
     }
     
     public var body: some View {
@@ -40,7 +43,8 @@ public struct FilterWrapperView: View {
             filterState: model.state,
             event: model.event(_:),
             config: config,
-            calendarViewAction: calendarViewAction
+            calendarViewAction: calendarViewAction,
+            buttonsView: buttonsView
         )
     }
 }
@@ -110,27 +114,30 @@ struct PlaceHolderFilterView: View {
     }
 }
 
-public struct FilterView: View {
+public struct FilterView<ButtonsView: View>: View {
     
     public typealias Event = FilterEvent
     public typealias Config = FilterConfig
     
     private let filterState: FilterState
-    let filterEvent: (Event) -> Void
-    let config: Config
-    
-    let calendarViewAction: (CalendarState) -> Void
+    private let filterEvent: (Event) -> Void
+    private let config: Config
+    private let buttonsView: () -> ButtonsView
+
+    private let calendarViewAction: (CalendarState) -> Void
     
     public init(
         filterState: FilterState,
         event: @escaping (Event) -> Void,
         config: Config,
-        calendarViewAction: @escaping (CalendarState) -> Void
+        calendarViewAction: @escaping (CalendarState) -> Void,
+        buttonsView: @escaping () -> ButtonsView
     ) {
         self.filterState = filterState
         self.filterEvent = event
         self.config = config
         self.calendarViewAction = calendarViewAction
+        self.buttonsView = buttonsView
     }
     
     public var body: some View {
@@ -213,19 +220,7 @@ public struct FilterView: View {
             }
             Spacer()
             
-            ButtonsContainer(
-                applyAction: {
-                    //TODO: inject event 
-//                    filterEvent(.updateFilter(filterState))
-                },
-                clearOptionsAction: {
-                    filterEvent(.clearOptions)
-                },
-                config: .init(
-                    clearButtonTitle: "Очистить",
-                    applyButtonTitle: "Применить"
-                )
-            )
+            buttonsView()
         }
         .padding()
     }
@@ -687,7 +682,8 @@ struct FilterView_Previews: PreviewProvider {
                         backgroundIcon: .gray
                     )
                 ),
-                calendarViewAction: {_ in }
+                calendarViewAction: {_ in },
+                buttonsView: { Text("Buttons") }
             )
         }
     }
