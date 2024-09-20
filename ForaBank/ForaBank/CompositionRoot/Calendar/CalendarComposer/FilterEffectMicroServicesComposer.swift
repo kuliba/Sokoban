@@ -23,17 +23,29 @@ final class FilterEffectHandlerMicroServicesComposer {
     
     func compose() -> MicroServices {
         
-        .init(updateFilter: updateFilter)
+        .init(resetPeriod: resetPeriod, updateFilter: updateFilter)
     }
 }
 
 private extension FilterEffectHandlerMicroServicesComposer {
     
+    func resetPeriod(
+        productId: ProductData.ID,
+        completion: @escaping MicroServices.ResetPeriodCompletion
+    ) {
+        guard let period = model.statements.value[productId]?.period
+        else {
+            return completion(model.calendarDayStart(productId)..<Date())
+        }
+        
+        let range = period.start..<period.end
+        completion(range)
+    }
+            
     func updateFilter(
         payload: FilterEffect.UpdateFilterPayload,
-        completion: @escaping (FilterState?) -> Void
+        completion: @escaping MicroServices.UpdateFilterCompletion
     ) {
-        
         model.handleStatementRequest(.init(
             productId: payload.productId,
             direction: .custom(
@@ -95,7 +107,7 @@ private extension FilterState {
         range: Range<Date>,
         statements: [ProductStatementData]
     ) {
-        let services = statements.map(\.groupName)
+        let services = Array(Set(statements.compactMap { $0.groupName }))
         self.init(
             productId: product.id,
             calendar: .init(
@@ -105,7 +117,7 @@ private extension FilterState {
                 periods: [.week, .month, .dates]
             ),
             filter: .init(
-                title: "",
+                title: "Фильтры",
                 selectDates: range,
                 periods: [.week, .month, .dates],
                 transactionType: [.credit, .debit],

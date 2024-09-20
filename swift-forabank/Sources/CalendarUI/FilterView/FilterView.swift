@@ -12,6 +12,7 @@ import RxViewModel
 
 public enum FilterEffect: Equatable {
     
+    case resetPeriod(Int)
     case updateFilter(UpdateFilterPayload)
     
     public struct UpdateFilterPayload: Equatable {
@@ -53,27 +54,13 @@ public struct FilterWrapperView: View {
     }
     
     public var body: some View {
-    
-        switch model.state.status {
-        case .empty:
-            Text("TBD: Empty")
-                .foregroundColor(.orange)
-            
-        case .failure:
-            Text("TBD: Failure")
-                .foregroundColor(.red)
-            
-        case .loading:
-            PlaceHolderFilterView(state: model.state)
-            
-        case .normal:
-            FilterView(
-                filterState: model.state,
-                event: model.event(_:),
-                config: config,
-                calendarViewAction: calendarViewAction
-            )
-        }
+        
+        FilterView(
+            filterState: model.state,
+            event: model.event(_:),
+            config: config,
+            calendarViewAction: calendarViewAction
+        )
     }
 }
 
@@ -124,27 +111,14 @@ public struct FilterView: View {
             PeriodContainer(
                 state: filterState,
                 event: { event in
-
+                    
                     switch event {
                     case .calendar:
                         calendarViewAction(filterState.calendar)
                     case .clearOptions:
                         filterEvent(.clearOptions)
                     case let .selectPeriod(period):
-                        break
-                    //TODO: setup send event for selectPeriod
-//                        filterState.filter.selectedPeriod = period
-//                        
-//                        switch period {
-//                        case .week:
-//                            filterState.filter.selectDates = .some((lowerDate: .startOfWeek, upperDate: Date()))
-//                            
-//                        case .month:
-//                            filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
-//                            
-//                        case .dates:
-//                            break
-//                        }
+                        filterEvent(.selectedPeriod(period))
                     }
                 },
                 config: .init(
@@ -152,56 +126,79 @@ public struct FilterView: View {
                     closeImage: config.optionButtonCloseImage
                 )
             )
-            //MARK: Remove
-//            .onAppear {
-//                filterState.filter.selectDates = .some((lowerDate: .startOfMonth, upperDate: Date()))
-//            }
             
-            if !filterState.filter.services.isEmpty {
+            switch filterState.status {
+            case .empty:
+                Spacer()
                 
-                config.transactionTitle.title.text(withConfig: config.transactionTitle.titleConfig)
-                    .padding(.bottom, 5)
+                HStack {
+                    
+                    Spacer()
+                    ErrorView(config: config.emptyConfig)
+                    Spacer()
+                }
                 
-                TransactionContainer(
-                    transactions: filterState.filter.transactionType,
-                    selectedTransaction: filterState.filter.selectedTransaction,
-                    event: { event in
-                        
-//                        event(.selectedTransaction())
-                    },
-                    config: config
-                )
+            case .failure:
+                Spacer()
                 
-                config.categoryTitle.title.text(withConfig: config.categoryTitle.titleConfig)
-                    .padding(.bottom, 5)
+                HStack {
+                    
+                    Spacer()
+                    ErrorView(config: config.failureConfig)
+                    Spacer()
+                }
                 
-                FlexibleContainerButtons(
-                    data: filterState.filter.services.sorted(),
-                    selectedItems: filterState.filter.selectedServices,
-                    serviceButtonTapped: { service in
-                        
-//                        if filterState.filter.selectedServices.contains(service) {
-//                            
-//                            self.filterState.filter.selectedServices.remove(service)
-//                        } else {
-//                            self.filterState.filter.selectedServices.insert(service)
-//                        }
-                    },
-                    config: .init(
-                        title: "",
-                        titleConfig: .init(
-                            textFont: .callout,
-                            textColor: .red
-                        ))
-                )
+            case .loading:
+                Spacer()
+                
+                HStack {
+                    
+                    Spacer()
+                    PlaceHolderFilterView(state: filterState)
+                    Spacer()
+                }
+                
+            case .normal:
+                
+                if !filterState.filter.services.isEmpty {
+                    
+                    config.transactionTitle.title.text(withConfig: config.transactionTitle.titleConfig)
+                        .padding(.bottom, 5)
+                    
+                    TransactionContainer(
+                        transactions: filterState.filter.transactionType,
+                        selectedTransaction: filterState.filter.selectedTransaction,
+                        event: {
+                            filterEvent(.selectedTransaction($0))
+                        },
+                        config: config
+                    )
+                    
+                    config.categoryTitle.title.text(withConfig: config.categoryTitle.titleConfig)
+                        .padding(.bottom, 5)
+                    
+                    FlexibleContainerButtons(
+                        data: filterState.filter.services.sorted(),
+                        selectedItems: filterState.filter.selectedServices,
+                        serviceButtonTapped: {
+                            filterEvent(.selectedCategory($0))
+                        },
+                        config: .init(
+                            title: "",
+                            titleConfig: .init(
+                                textFont: .callout,
+                                textColor: .red
+                            ))
+                    )
+                }
+                
             }
-            
             Spacer()
             
             ButtonsContainer(
                 applyAction: {
-                    
-                    filterEvent(.updateFilter(filterState))
+                    //TODO: inject event 
+//                    filterEvent(.updateFilter(filterState))
                 },
                 clearOptionsAction: {
                     filterEvent(.clearOptions)
@@ -289,6 +286,7 @@ extension FilterView {
                         .foregroundColor(Color.black)
                         .frame(height: 32)
                         .cornerRadius(90)
+                        //TODO: add font 
                         
                     } else {
                         
@@ -624,11 +622,21 @@ struct FilterView_Previews: PreviewProvider {
                         clearButtonTitle: "Очистить",
                         applyButtonTitle: "Применить"
                     ),
-                    errorConfig: .init(
-                        title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
-                        titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
-                    ), 
-                    optionButtonCloseImage: .init(systemName: "")
+                    optionButtonCloseImage: .init(systemName: ""),
+                    failureConfig: .init(
+                        title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
+                        titleConfig: .init(textFont: .body, textColor: .red),
+                        icon: .init(systemName: "slider.horizontal.2.square"),
+                        iconForeground: .black,
+                        backgroundIcon: .gray
+                    ),
+                    emptyConfig: .init(
+                        title: "В этот период операции отсутствовали",
+                        titleConfig: .init(textFont: .body, textColor: .red),
+                        icon: .init(systemName: "slider.horizontal.2.square"),
+                        iconForeground: .black,
+                        backgroundIcon: .gray
+                    )
                 ),
                 calendarViewAction: {_ in }
             )

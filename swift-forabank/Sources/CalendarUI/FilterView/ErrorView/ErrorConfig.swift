@@ -6,17 +6,27 @@
 //
 
 import SharedConfigs
+import SwiftUI
 
 public struct ErrorConfig {
     
-    let title: String
+    public let title: String
     public let titleConfig: TextConfig
+    public let icon: Image
+    public let iconForeground: Color
+    public let backgroundIcon: Color
     
     public init(
         title: String,
-        titleConfig: TextConfig
+        titleConfig: TextConfig,
+        icon: Image,
+        iconForeground: Color,
+        backgroundIcon: Color
     ) {
         self.title = title
         self.titleConfig = titleConfig
+        self.icon = icon
+        self.iconForeground = iconForeground
+        self.backgroundIcon = backgroundIcon
     }
 }

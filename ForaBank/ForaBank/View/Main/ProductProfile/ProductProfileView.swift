@@ -250,7 +250,6 @@ struct ProductProfileView: View {
                                 state: state.state,
                                 event: {
                                     
-                                    fatalError()
                                     switch $0 {
                                     case .clear:
                                         break

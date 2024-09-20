@@ -1903,13 +1903,8 @@ private extension ProductProfileViewModel {
             productId: productId, 
             filter: { [weak self] in
                 return self?.filterState
-            },
-            services: { [weak self] in
-                if let categories = self?.historyCategories() {
-                    
-                    self?.event(.filter(.openSheet(categories)))
-                }
-            })
+            }
+        )
     }
     
     static func accentColor(with product: ProductData) -> Color {
