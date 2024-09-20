@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory_makeBannersTests.swift
+//  RootViewModelFactory_makeBannersForMainViewTests.swift
 //  ForaBankTests
 //
 //  Created by Andryusina Nataly on 10.09.2024.
@@ -11,7 +11,7 @@ import LandingMapping
 import PayHub
 import XCTest
 
-final class RootViewModelFactory_makeBannersTests: XCTestCase {
+final class RootViewModelFactory_makeBannersForMainViewTests: XCTestCase {
 
     func test_init_shouldNotCallCollaborators() {
         
@@ -57,8 +57,7 @@ final class RootViewModelFactory_makeBannersTests: XCTestCase {
         let loadBannersSpy = LoadBannersSpy()
         let loadLandingByTypeSpy = LoadLandingSpy()
 
-        let sut = RootViewModelFactory.makeBanners(
-            model: .mockWithEmptyExcept(),
+        let sut = RootViewModelFactory.makeBannersForMainView(
             bannerPickerPlaceholderCount: bannerPickerPlaceholderCount,
             nanoServices: .init(
                 loadBanners: loadBannersSpy.process(completion:),
