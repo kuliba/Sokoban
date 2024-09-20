@@ -49,71 +49,6 @@ public struct FilterWrapperView<ButtonsView: View>: View {
     }
 }
 
-struct PlaceHolderFilterView: View {
-    
-    let state: FilterState
-    let config: FilterConfig
-    
-    var body: some View {
-        
-        GeometryReader { geometry in
-            
-            let width = geometry.size.width - 40
-            
-            VStack(alignment: .leading) {
-                
-                // MARK: - TransactionContainer, движение средств
-                
-                config.transactionTitle.title.text(withConfig: config.transactionTitle.titleConfig)
-                    .padding(.bottom, 5)
-                
-                HStack(spacing: 8) {
-                    ShimmerRectangle(width: width * 0.25)
-                    ShimmerRectangle(width: width * 0.31)
-                }
-                .cornerRadius(16)
-                .padding(.bottom, 20)
-                
-                // MARK: - FlexibleContainerButtons, категории
-                
-                config.categoryTitle.title.text(withConfig: config.categoryTitle.titleConfig)
-                    .padding(.bottom, 5)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    HStack(spacing: 8) {
-                        ShimmerRectangle(width: width * 0.33)
-                        ShimmerRectangle(width: width * 0.36)
-                        ShimmerRectangle(width: width * 0.14)
-                    }
-                    
-                    HStack(spacing: 8) {
-                        ShimmerRectangle(width: width * 0.45)
-                        ShimmerRectangle(width: width * 0.36)
-                    }
-                    HStack(spacing: 8) {
-                        ShimmerRectangle(width: width * 0.28)
-                        ShimmerRectangle(width: width * 0.31)
-                        ShimmerRectangle(width: width * 0.29)
-                    }
-                    HStack(spacing: 8) {
-                        ShimmerRectangle(width: width * 0.4)
-                        ShimmerRectangle(width: width * 0.38)
-                    }
-                    HStack(spacing: 8) {
-                        ShimmerRectangle(width: width * 0.42)
-                        ShimmerRectangle(width: width * 0.32)
-                    }
-                    
-                    ShimmerRectangle(width: width * 0.63)
-                }
-                .cornerRadius(16)
-            }
-            .padding()
-        }
-    }
-}
-
 public struct FilterView<ButtonsView: View>: View {
     
     public typealias Event = FilterEvent
@@ -226,7 +161,7 @@ public struct FilterView<ButtonsView: View>: View {
     }
 }
 
-extension FilterState {
+private extension FilterState {
     
     func formattedPeriod(
         fallback: String
@@ -244,7 +179,7 @@ extension FilterState {
     }
 }
 
-extension FilterView {
+private extension FilterView {
     
     struct PeriodState {
         
@@ -357,220 +292,6 @@ extension FilterView {
     }
 }
 
-public struct ButtonsContainer: View {
-    
-    let applyAction: () -> Void
-    let clearOptionsAction: () -> Void
-    
-    let config: Config
-    
-    public init(
-        applyAction: @escaping () -> Void,
-        clearOptionsAction: @escaping () -> Void,
-        config: Config
-    ) {
-        self.applyAction = applyAction
-        self.clearOptionsAction = clearOptionsAction
-        self.config = config
-    }
-    
-    public var body: some View {
-        
-        HStack(spacing: 8) {
-            
-            BottomButton(
-                title: config.clearButtonTitle,
-                action: clearOptionsAction,
-                config: .init(
-                    background: .gray.opacity(0.2),
-                    foreground: .black
-                ))
-            
-            BottomButton(
-                title: config.applyButtonTitle,
-                action: applyAction,
-                config: .init(
-                    background: config.applyButtonColors?.bgColor ?? .red,
-                    foreground: config.applyButtonColors?.fgColor ?? .white
-                ))
-        }
-    }
-    
-    public struct Config {
-        
-        let clearButtonTitle: String
-        let applyButtonTitle: String
-        let applyButtonColors: ApplyButtonColor?
-        
-        public init(
-            clearButtonTitle: String,
-            applyButtonTitle: String,
-            applyButtonColors: ApplyButtonColor? = nil
-        ) {
-            self.clearButtonTitle = clearButtonTitle
-            self.applyButtonTitle = applyButtonTitle
-            self.applyButtonColors = applyButtonColors
-        }
-        
-        public struct ApplyButtonColor {
-            
-            let bgColor: Color
-            let fgColor: Color
-        }
-    }
-}
-
-struct BottomButton: View {
-    
-    typealias Config = ButtonConfig
-    
-    let title: String
-    let action: () -> Void
-    let config: Config
-    
-    var body: some View {
-        
-        Button(action: action) {
-            
-            Text(title)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .foregroundColor(config.foreground)
-                .background(config.background)
-                .cornerRadius(12)
-                .font(.system(size: 18))
-        }
-    }
-    
-    struct ButtonConfig {
-        
-        let background: Color
-        let foreground: Color
-    }
-}
-
-struct FlexibleContainerButtons: View {
-    
-    let data: [String]
-    var selectedItems: Set<String>
-    let serviceButtonTapped: (String) -> Void
-    let config: ServiceButton.Config
-    
-    var body: some View {
-        
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        
-        GeometryReader { geometry in
-            
-            ZStack(alignment: .topLeading) {
-                
-                ForEach(data, id: \.self) { service in
-                    
-                    ServiceButton(
-                        state: .init(isSelected: selectedItems.contains(service)),
-                        action: serviceButtonTapped,
-                        config: .init(
-                            title: service,
-                            titleConfig: .init(
-                                textFont: .system(size: 16),
-                                textColor: .white
-                            ))
-                    )
-                    .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { dimension in
-                        if abs(width - dimension.width) > geometry.size.width {
-                            width = 0
-                            height -= dimension.height
-                        }
-                        
-                        let result = width
-                        if service == data.last! {
-                            width = 0
-                        } else {
-                            width -= dimension.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        if service == data.last! {
-                            height = 0
-                        }
-                        return result
-                    })
-                }
-            }
-        }
-    }
-}
-
-extension View {
-    
-    @ViewBuilder func serviceButtonAlignmentGuide(
-        data: [String],
-        service: String,
-        geometry: GeometryProxy
-    ) -> some View {
-        
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        
-        self
-            .alignmentGuide(.leading, computeValue: { dimension in
-                if abs(width - dimension.width) > geometry.size.width {
-                    width = 0
-                    height -= dimension.height
-                }
-                
-                let result = width
-                if service == data.last {
-                    width = 0
-                } else {
-                    width -= dimension.width
-                }
-                return result
-            })
-            .alignmentGuide(.top, computeValue: { _ in
-                let result = height
-                if service == data.last {
-                    height = 0
-                }
-                return result
-            })
-    }
-}
-
-struct ServiceButton: View {
-    
-    let state: State
-    let action: (String) -> Void
-    let config: Config
-    
-    var body: some View {
-        
-        Button(action: { action(self.config.title) }) {
-            
-            Text(config.title)
-                .padding()
-                .background(state.isSelected ? Color.black : .gray.opacity(0.2))
-                .foregroundColor(state.isSelected ? .white : .black)
-                .frame(height: 32)
-                .cornerRadius(90)
-        }
-    }
-    
-    struct State {
-        
-        let isSelected: Bool
-    }
-    
-    struct Config {
-        
-        let title: String
-        let titleConfig: TextConfig
-    }
-}
-
 public struct TitleConfig {
     
     let title: String
@@ -582,28 +303,6 @@ public struct TitleConfig {
     ) {
         self.title = title
         self.titleConfig = titleConfig
-    }
-}
-
-struct ShimmerRectangle: View {
-    
-    var width: CGFloat
-    var height: CGFloat = 32
-    var cornerRadius: CGFloat = 90
-    var gradient: Gradient = Gradient(colors: [.init(red: Double(211/255), green: Double(211/255), blue: Double(211/255), opacity: 0.3)])
-
-    var body: some View {
-        
-            SwiftUI.RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(
-                    LinearGradient(
-                        gradient: gradient,
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .frame(width: width, height: height)
-                .shimmering()
     }
 }
 
