@@ -249,11 +249,33 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
     func selectedCategoryView(
         _ selected: SelectedCategoryDestination
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
+        switch selected {
+        case let .mobile(mobile):
+            Text("TBD: \(String(describing: mobile))")
+
+        case let .qr(qr):
+            Text("TBD: \(String(describing: qr))")
+
+        case let .standard(standard):
+            switch standard {
+            case let .failure(failedPaymentProviderPicker):
+                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+            
+            case let .success(paymentProviderPicker):
+                Text("TBD: \(String(describing: paymentProviderPicker))")
+            }
+
+        case let .taxAndStateServices(taxAndStateServices):
+            Text("TBD: \(String(describing: taxAndStateServices))")
+
+        case let .transport(transport):
+            Text("TBD: \(String(describing: transport))")
+        }
     }
     
     func categoryListView(

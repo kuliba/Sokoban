@@ -379,7 +379,7 @@ extension RootViewModelFactory {
             getAllLoadedCategories: localServiceCategoryLoader.load,
             getLatestPayments: getLatestPayments
         )
-        let loadLatestOperations = _makeLoadLatestOperations(.all)
+        let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             model: model,
@@ -387,9 +387,9 @@ extension RootViewModelFactory {
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
                 loadCategories: loadServiceCategories,
-                loadAllLatest: loadLatestOperations,
+                loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) },
-                loadOperators: { _, completion in completion(.success([])) }
+                loadOperatorsForCategory: { _, completion in completion(.success([])) }
             ),
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler

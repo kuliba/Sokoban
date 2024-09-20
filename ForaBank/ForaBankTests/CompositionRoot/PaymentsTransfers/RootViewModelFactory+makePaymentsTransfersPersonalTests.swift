@@ -72,7 +72,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
                 loadCategories: loadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in },
-                loadOperators: { _,_ in }
+                loadOperatorsForCategory: { _,_ in }
             ),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate
