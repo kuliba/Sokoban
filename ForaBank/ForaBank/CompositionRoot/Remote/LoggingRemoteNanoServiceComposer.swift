@@ -39,7 +39,7 @@ extension LoggingRemoteNanoServiceComposer {
         let remote = RemoteService(
             createRequest: logger.decorate(createRequest, with: .network, file: file, line: line),
             httpClient: httpClient,
-            mapResponse: logger.decorate(f: mapResponse, with: .network, file: file, line: line)
+            mapResponse: logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
         )
         let adapted = FetchAdapter(
             fetch: remote.process(_:completion:),
