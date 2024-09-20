@@ -54,11 +54,19 @@ public struct FilterWrapperView: View {
     
     public var body: some View {
     
-        if model.state.isLoading {
+        switch model.state.status {
+        case .empty:
+            Text("TBD: Empty")
+                .foregroundColor(.orange)
+            
+        case .failure:
+            Text("TBD: Failure")
+                .foregroundColor(.red)
+            
+        case .loading:
             PlaceHolderFilterView(state: model.state)
             
-        } else {
-         
+        case .normal:
             FilterView(
                 filterState: model.state,
                 event: model.event(_:),
@@ -75,7 +83,7 @@ struct PlaceHolderFilterView: View {
     
     var body: some View {
         
-        Text("ProgressView")
+        ProgressView()
     }
 }
 
@@ -573,7 +581,8 @@ struct FilterView_Previews: PreviewProvider {
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
                         services: ["Неделя", "Месяц", "Выбрать период"]
-                    )
+                    ),
+                    status: .normal
                 ),
                 event: { _ in },
                 config: .init(

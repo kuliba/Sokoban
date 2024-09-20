@@ -37,19 +37,26 @@ final class FilterModelReducer {
             state.filter.selectedPeriod = .dates
             if let lowerDate, let upperDate  {
                 
-                state.isLoading = true
+                state.status = .loading
                 effect = .updateFilter(.init(
                     range: (lowerDate..<upperDate),
                     productId: state.productId
                 ))
             }
             
-        case let .updateFilter(nil):
-            fatalError()
+        case .updateFilter(nil):
+            state.status = .failure
             
         case let .updateFilter(.some(newState)):
+            if newState.filter.services.isEmpty {
+                
+                state.status = .empty
+            } else {
+            
+                state.status = .normal
+            }
+            
             state = newState
-            state.isLoading = false
 
         case .clearOptions:
             state.filter.selectedServices = []

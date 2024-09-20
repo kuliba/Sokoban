@@ -1812,6 +1812,7 @@ private extension NavigationBarButtonViewModel {
 }
 extension FilterState {
     
+    //TODO: Create fabric for FilterState
     static func defaultFilterComponents(
         product: ProductData
     ) -> FilterState {
@@ -1829,6 +1830,8 @@ extension FilterState {
                 periods: FilterHistoryState.Period.allCases,
                 transactionType: [],
                 services: []
-            ))
+            ),
+            status: .normal
+        )
     }
 }

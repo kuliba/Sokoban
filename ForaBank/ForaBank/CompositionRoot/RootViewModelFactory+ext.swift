@@ -187,6 +187,7 @@ extension RootViewModelFactory {
                 let effectHandler = FilterModelEffectHandler(
                     microServices: composer.compose()
                 )
+                let services = model.historyCategories(productId: payload.productId)
                 let viewModel = FilterWrapperView.Model(
                     initialState: .init(
                         productId: payload.productId,
@@ -205,8 +206,9 @@ extension RootViewModelFactory {
                             selectedServices: payload.selectedServices,
                             periods: FilterHistoryState.Period.allCases,
                             transactionType: FilterHistoryState.TransactionType.allCases,
-                            services: model.historyCategories(productId: payload.productId)
-                        )
+                            services: services
+                        ),
+                        status: services.isEmpty ? .empty : .normal
                     ),
                     reduce: reducer.reduce,
                     handleEffect: effectHandler.handleEffect

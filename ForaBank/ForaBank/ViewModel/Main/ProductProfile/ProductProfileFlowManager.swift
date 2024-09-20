@@ -91,7 +91,8 @@ final class ProductProfileFlowReducer {
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
                         services: services
-                    )
+                    ),
+                    status: .normal
                 )
             case let .selectedDates(lowerDate: lowerDate, upperDate: upperDate):
                 state.filter = .init(
@@ -109,7 +110,8 @@ final class ProductProfileFlowReducer {
                         periods: FilterHistoryState.Period.allCases,
                         transactionType: FilterHistoryState.TransactionType.allCases,
                         services: state.history?.categories ?? []
-                    )
+                    ),
+                    status: .normal
                 )
                 
             case let .selectedCategory(category):

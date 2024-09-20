@@ -12,18 +12,26 @@ public struct FilterState {
     public let productId: Int?
     public var calendar: CalendarState
     public var filter: FilterHistoryState
-    public var isLoading: Bool
+    public var status: Status
 
     public init(
         productId: Int?,
         calendar: CalendarState,
         filter: FilterHistoryState,
-        isLoading: Bool = false
+        status: Status
     ) {
         self.productId = productId
         self.calendar = calendar
         self.filter = filter
-        self.isLoading = isLoading
+        self.status = status
+    }
+    
+    public enum Status: Equatable {
+        
+        case empty
+        case failure
+        case loading
+        case normal
     }
 }
 
@@ -92,7 +100,8 @@ extension FilterState {
     public static let preview: Self = .init(
         productId: 0,
         calendar: .preview,
-        filter: .preview
+        filter: .preview,
+        status: .normal
     )
 }
 
