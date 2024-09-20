@@ -459,7 +459,7 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
 
-        let bannersBinder = makeBannersForMainView(
+        let mainViewBannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
                 loadBanners: loadBannersList, 
@@ -476,7 +476,7 @@ extension RootViewModelFactory {
             loadBannersList {
                 
                 paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
-                bannersBinder.content.bannerPicker.content.event(.loaded($0))
+                mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
 
@@ -486,7 +486,7 @@ extension RootViewModelFactory {
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
-        _ = oneTime
+
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -505,7 +505,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
-            bannersBinder: bannersBinder
+            bannersBinder: mainViewBannersBinder
         )
     }
     
