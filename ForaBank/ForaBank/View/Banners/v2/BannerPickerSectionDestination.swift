@@ -9,7 +9,7 @@ import Banners
 
 typealias BannerPickerSectionDestination = Banners.BannerPickerSectionDestination<SelectedBannerDestination, BannerListModelStub>
 
-typealias SelectedBannerDestination = Banners.BannerFlow< StandardSelectedBannerDestination, StickerStub, LandingStub>
+typealias SelectedBannerDestination = Banners.BannerFlow<StandardSelectedBannerDestination, StickerStub, LandingStub>
 
 
 typealias StandardSelectedBannerDestination = Result<SelectedBannerStub, Error>

@@ -383,14 +383,10 @@ private extension MainView {
                     .frame(Config.iFora.size)
                     .cornerRadius(Config.iFora.cornerRadius)
                 
-                if let url = item.orderURL {
-                    
-                    Button { MainViewModel.openLinkURL(url) } label: { label }
-                        .buttonStyle(PushButtonStyle())
-                        .accessibilityIdentifier("corporateActionBanner")
-                } else {
-                    label
-                }
+                Button { viewModel.promoAction(item) } label: { label }
+                    .frame(Config.iFora.size)
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("mainActionBanner")
             },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
