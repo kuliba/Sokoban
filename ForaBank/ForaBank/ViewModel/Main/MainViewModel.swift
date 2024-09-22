@@ -43,7 +43,7 @@ class MainViewModel: ObservableObject, Resetable {
     private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
     }
     
-    private let model: Model
+     let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
@@ -994,6 +994,16 @@ private extension MainViewModel {
 // MARK: Banner Action
 
 extension MainViewModel {
+    
+    func promoAction(_ item: BannerCatalogListData) {
+        
+        if let action = item.action {
+            bannerAction(.init(actionData: action))
+        }
+        else if let url = item.orderURL {
+            MainViewModel.openLinkURL(url) 
+        }
+    }
     
     func openMigTransfer(_ payload: BannerActionMigTransfer) {
         

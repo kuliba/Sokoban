@@ -437,8 +437,7 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
                 
-        let loadBannersList = makeBannersBinder(
-            model: model,
+        let loadBannersList = makeLoadBanners(
             httpClient: httpClient,
             infoNetworkLog: infoNetworkLog,
             mainScheduler: mainScheduler,

@@ -2778,7 +2778,7 @@
 		8393319D2C8F193000D15379 /* BannerPickerSectionDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8393319C2C8F193000D15379 /* BannerPickerSectionDestination.swift */; };
 		8393319F2C8F263200D15379 /* BannersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8393319E2C8F263200D15379 /* BannersBinder.swift */; };
 		839331A12C8F2D4100D15379 /* BannersContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839331A02C8F2D4100D15379 /* BannersContent.swift */; };
-		839331A42C90315200D15379 /* RootViewModelFactory_makeBannersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839331A32C90315200D15379 /* RootViewModelFactory_makeBannersTests.swift */; };
+		839331A42C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839331A32C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift */; };
 		839331A62C903B0200D15379 /* NanoServices+makeGetBannerListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839331A52C903B0200D15379 /* NanoServices+makeGetBannerListTests.swift */; };
 		839331A82C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
@@ -6200,7 +6200,7 @@
 		8393319C2C8F193000D15379 /* BannerPickerSectionDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerPickerSectionDestination.swift; sourceTree = "<group>"; };
 		8393319E2C8F263200D15379 /* BannersBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBinder.swift; sourceTree = "<group>"; };
 		839331A02C8F2D4100D15379 /* BannersContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersContent.swift; sourceTree = "<group>"; };
-		839331A32C90315200D15379 /* RootViewModelFactory_makeBannersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory_makeBannersTests.swift; sourceTree = "<group>"; };
+		839331A32C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory_makeBannersForMainViewTests.swift; sourceTree = "<group>"; };
 		839331A52C903B0200D15379 /* NanoServices+makeGetBannerListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetBannerListTests.swift"; sourceTree = "<group>"; };
 		839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeBannersBinder.swift"; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
@@ -15660,7 +15660,7 @@
 		839331A22C90312700D15379 /* LoadBannersList */ = {
 			isa = PBXGroup;
 			children = (
-				839331A32C90315200D15379 /* RootViewModelFactory_makeBannersTests.swift */,
+				839331A32C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift */,
 				839331A52C903B0200D15379 /* NanoServices+makeGetBannerListTests.swift */,
 			);
 			path = LoadBannersList;
@@ -22336,7 +22336,7 @@
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */,
 				83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */,
-				839331A42C90315200D15379 /* RootViewModelFactory_makeBannersTests.swift in Sources */,
+				839331A42C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift in Sources */,
 				2A3BD61C2B6D262B009B16F7 /* RequestFactory+createCreateFastPaymentContractRequestTests.swift in Sources */,
 				2A94AB042C8FFDAB003B4FB1 /* LocalAgentSpy.swift in Sources */,
 				2A1E52762C4FB69100619E2B /* Model+QRHelpersTests.swift in Sources */,
