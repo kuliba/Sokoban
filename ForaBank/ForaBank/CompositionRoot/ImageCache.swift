@@ -40,19 +40,7 @@ final class ImageCache {
         self.fallback = fallback
         self.scheduler = scheduler
     }
-    
-    init(
-        requestGeneralImages: @escaping RequestImages,
-        imagesPublisher: ImagesPublisher,
-        fallback: @escaping Fallback,
-        scheduler: AnySchedulerOfDispatchQueue = .main
-    ) {
-        self.requestImages = requestGeneralImages
-        self.imagesPublisher = imagesPublisher
-        self.fallback = fallback
-        self.scheduler = scheduler
-    }
-    
+        
     func image(
         forKey imageKey: ImageKey
     ) -> ImageSubject {

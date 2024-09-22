@@ -24,7 +24,7 @@ extension Model {
     func generalImageCache() -> ImageCache {
         
         .init(
-            requestGeneralImages: {
+            requestImages: {
                $0.forEach { endpoint in
                     self.action.send(ModelAction.General.DownloadImage.Request(endpoint: endpoint.rawValue))
                 }
