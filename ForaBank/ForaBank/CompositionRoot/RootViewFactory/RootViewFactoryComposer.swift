@@ -21,15 +21,18 @@ final class RootViewFactoryComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let historyFeatureFlag: HistoryFilterFlag
-    
+    private let marketFeatureFlag: MarketplaceFlag
+
     init(
         model: Model,
         httpClient: HTTPClient,
-        historyFeatureFlag: HistoryFilterFlag
+        historyFeatureFlag: HistoryFilterFlag,
+        marketFeatureFlag: MarketplaceFlag
     ) {
         self.model = model
         self.httpClient = httpClient
         self.historyFeatureFlag = historyFeatureFlag
+        self.marketFeatureFlag = marketFeatureFlag
     }
 }
 
@@ -38,18 +41,21 @@ extension RootViewFactoryComposer {
     func compose() -> Factory {
         
         let imageCache = model.imageCache()
+        let generalImageCache = model.generalImageCache()
 
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
-            makeIconView: imageCache.makeIconView(for:),
+            makeIconView: imageCache.makeIconView(for:), 
+            makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeReturnButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeMarketShowcaseView: makeMarketShowcaseView
         )
     }
 }
@@ -66,6 +72,8 @@ private extension RootViewFactoryComposer {
     ) -> PaymentsTransfersView {
         
         let imageCache = model.imageCache()
+        let generalImageCache = model.generalImageCache()
+
         let getUImage = { self.model.images.value[$0]?.uiImage }
         
         return .init(
@@ -73,6 +81,7 @@ private extension RootViewFactoryComposer {
             viewFactory: .init(
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
                 makeIconView: imageCache.makeIconView(for:),
+                makeGeneralIconView: generalImageCache.makeIconView(for:),
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
@@ -283,6 +292,12 @@ private extension RootViewFactoryComposer {
             
             return .init(viewModel: viewModel)
         }
+    }
+    
+    func makeMarketShowcaseView(
+        viewModel: MarketShowcaseViewModel
+    ) -> MarketShowcaseView? {
+        marketFeatureFlag.isActive ? .init() : nil
     }
 }
 

@@ -48,6 +48,7 @@ extension AbroadType {
         case .orderCard:            return "abroadOrderCard"
         case .transfer:             return "abroadTransfer"
         case .sticker:              return "abroadSticker"
+        case .marketShowcase:       return "market_showcase"
             
         case let .control(cardType):
             switch cardType {

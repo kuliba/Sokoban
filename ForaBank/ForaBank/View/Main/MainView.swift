@@ -379,18 +379,14 @@ private extension MainView {
             config: .iFora,
             bannerView: { item in
                 
-                let label = viewFactory.makeIconView(.image(item.imageEndpoint))
+                let label = viewFactory.makeGeneralIconView(.image(item.imageEndpoint))
                     .frame(Config.iFora.size)
                     .cornerRadius(Config.iFora.cornerRadius)
                 
-                if let url = item.orderURL {
-                    
-                    Button { MainViewModel.openLinkURL(url) } label: { label }
-                        .buttonStyle(PushButtonStyle())
-                        .accessibilityIdentifier("corporateActionBanner")
-                } else {
-                    label
-                }
+                Button { viewModel.promoAction(item) } label: { label }
+                    .frame(Config.iFora.size)
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("mainActionBanner")
             },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
@@ -615,7 +611,8 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview,
+            makeIconView: IconDomain.preview, 
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 

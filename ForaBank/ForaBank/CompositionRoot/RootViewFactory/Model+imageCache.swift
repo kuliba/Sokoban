@@ -20,6 +20,19 @@ extension Model {
             fallback: ImageCacheFallback.image(forKey:)
         )
     }
+    
+    func generalImageCache() -> ImageCache {
+        
+        .init(
+            requestImages: {
+               $0.forEach { endpoint in
+                    self.action.send(ModelAction.General.DownloadImage.Request(endpoint: endpoint.rawValue))
+                }
+            },
+            imagesPublisher: images,
+            fallback: ImageCacheFallback.image(forKey:)
+        )
+    }
 }
 
 private enum ImageCacheFallback {
