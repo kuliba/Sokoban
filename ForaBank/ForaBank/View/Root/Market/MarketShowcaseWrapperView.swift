@@ -1,5 +1,5 @@
 //
-//  MarketShowcaseViewModelEffect.swift
+//  MarketShowcaseWrapperView.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 23.09.2024.
@@ -7,7 +7,6 @@
 
 import RxViewModel
 import SwiftUI
-import LandingUIComponent
 
 typealias MarketShowcaseViewModel = RxViewModel<MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
 
@@ -41,7 +40,7 @@ extension MarketShowcaseWrapperView {
     
     typealias ViewModel = MarketShowcaseViewModel
     typealias ViewFactory = MarketShowcaseView.ViewFactory
-    typealias Config = UILanding.Component.Config
+    typealias Config = MarketShowcaseConfig
 }
 
 extension MarketShowcaseViewModel {

@@ -2696,8 +2696,9 @@
 		833A44B22CA1696400121346 /* TabsViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B12CA1696400121346 /* TabsViewModelFactory.swift */; };
 		833A44B72CA17A0E00121346 /* MarketShowcaseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */; };
 		833A44B92CA17E9800121346 /* MarketShowcaseEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */; };
-		833A44BB2CA1839600121346 /* MarketShowcaseViewModelEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */; };
+		833A44BB2CA1839600121346 /* MarketShowcaseWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BA2CA1839600121346 /* MarketShowcaseWrapperView.swift */; };
 		833A44BD2CA184B200121346 /* MarketShowcaseEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */; };
+		833A44BF2CA1A33500121346 /* MarketShowcaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BE2CA1A33500121346 /* MarketShowcaseConfig.swift */; };
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */; };
 		833D3E382C2EDE31006626F2 /* ControlPanelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E332C2EDE2F006626F2 /* ControlPanelReducer.swift */; };
@@ -6128,8 +6129,9 @@
 		833A44B12CA1696400121346 /* TabsViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewModelFactory.swift; sourceTree = "<group>"; };
 		833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseState.swift; sourceTree = "<group>"; };
 		833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseEvent.swift; sourceTree = "<group>"; };
-		833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseViewModelEffect.swift; sourceTree = "<group>"; };
+		833A44BA2CA1839600121346 /* MarketShowcaseWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseWrapperView.swift; sourceTree = "<group>"; };
 		833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseEffect.swift; sourceTree = "<group>"; };
+		833A44BE2CA1A33500121346 /* MarketShowcaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseConfig.swift; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlPanelPanelViewConfig+ext.swift"; sourceTree = "<group>"; };
 		833D3E332C2EDE2F006626F2 /* ControlPanelReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelReducer.swift; sourceTree = "<group>"; };
@@ -15727,7 +15729,8 @@
 			isa = PBXGroup;
 			children = (
 				839673A22C9C8F3900E7F49C /* MarketShowcaseView.swift */,
-				833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */,
+				833A44BA2CA1839600121346 /* MarketShowcaseWrapperView.swift */,
+				833A44BE2CA1A33500121346 /* MarketShowcaseConfig.swift */,
 			);
 			path = Market;
 			sourceTree = "<group>";
@@ -20458,6 +20461,7 @@
 				C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */,
 				774CA5DA28782A2E00544C17 /* Resetable.swift in Sources */,
 				77EC58F027723C840054D75C /* AuthorizationState.swift in Sources */,
+				833A44BF2CA1A33500121346 /* MarketShowcaseConfig.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BB24AA326EFEFCF00DDA4F6 /* GetProductListByFilterSaved.swift in Sources */,
 				EDB02AE82816F07B005F64B5 /* AccountCellButtonViewComponent.swift in Sources */,
@@ -20950,7 +20954,7 @@
 				77517F9427A800C6005CFB77 /* ServerCommands+Transfer.swift in Sources */,
 				2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */,
 				2AA3A9702BFF91F800AEBCC9 /* AnywayPaymentFooterView.swift in Sources */,
-				833A44BB2CA1839600121346 /* MarketShowcaseViewModelEffect.swift in Sources */,
+				833A44BB2CA1839600121346 /* MarketShowcaseWrapperView.swift in Sources */,
 				2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
 				C10F481928E4A52F009918EA /* PushNotification.swift in Sources */,

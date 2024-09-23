@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIPrimitives
-import LandingUIComponent
 import Combine
 
 struct MarketShowcaseView: View {
@@ -22,7 +21,6 @@ struct MarketShowcaseView: View {
             
             content()
                 .modifier(RefreshModifier(action: {
-                    
                     if state != .inflight {
                         event(.update)
                     }
@@ -37,14 +35,8 @@ struct MarketShowcaseView: View {
         switch state {
         case .inflight:
             
-            Group{
-                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
-            }
-            .position(
-                x: UIScreen.main.bounds.width/2,
-                y: UIScreen.main.bounds.height/2
-            )
-            
+            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                .modifier(ViewByCenterModifier(height: config.spinnerHeight))
         default:
             VStack {
                 Text("Market")
@@ -59,7 +51,7 @@ extension MarketShowcaseView {
     typealias State = MarketShowcaseState
     typealias Event = MarketShowcaseEvent
     typealias Factory = ViewFactory
-    typealias Config = UILanding.Component.Config
+    typealias Config = MarketShowcaseConfig
 }
 
 #Preview {
@@ -72,7 +64,7 @@ extension MarketShowcaseView {
         state: .inflight,
         event: {_ in },
         factory: .preview,
-        config: .default)
+        config: .iFora)
 }
 
 extension MarketShowcaseView {
@@ -144,5 +136,22 @@ private struct RefreshModifier: ViewModifier {
         ) {
             value += nextValue()
         }
+    }
+}
+
+private struct ViewByCenterModifier: ViewModifier {
+    
+    let height: CGFloat
+    
+    func body(content: Content) -> some View {
+        
+        Group{
+            content
+                .frame(height: height)
+        }
+        .position(
+            x: UIScreen.main.bounds.width/2,
+            y: UIScreen.main.bounds.height/2 - height
+        )
     }
 }
