@@ -17,7 +17,7 @@ struct HistoryEffectHandlerMicroServices {
         let selectedServices: Set<String>
     }
     
-    typealias MakeFilterModelCompletion = (FilterWrapperView.Model) -> Void
+    typealias MakeFilterModelCompletion = (FilterViewModel) -> Void
     typealias MakeFilterModel = (MakeFilterModelPayload, @escaping MakeFilterModelCompletion) -> Void
     
     let makeFilterModel: MakeFilterModel
