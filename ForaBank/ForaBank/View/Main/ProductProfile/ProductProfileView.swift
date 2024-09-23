@@ -412,26 +412,29 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .externalEntity, .externalIndivudual:
-                                        
-                                            if let transfer = infoPayment.parameterList.last,
-                                               let inn = transfer.payeeExternal?.inn,
-                                               let bankBic = transfer.payeeExternal?.bankBIC,
-                                               let amount = transfer.amount?.description,
-                                               let accountNumber = transfer.payeeExternal?.accountNumber {
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                                    self.viewModel.link = .payment(.init(source: .repeatPaymentRequisites(
-                                                        accountNumber: accountNumber,
-                                                        bankId: bankBic,
-                                                        inn: inn, 
-                                                        kpp: transfer.payeeExternal?.kpp,
-                                                        amount: amount,
-                                                        productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
-                                                        comment: transfer.comment
-                                                    ), model: Model.shared, closeAction: {
-                                                        self.viewModel.link = nil
-                                                    }))
-                                                }
+                                       
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let bankBic = transfer.payeeExternal?.bankBIC,
+                                           let amount = transfer.amount?.description,
+                                           let accountNumber = transfer.payeeExternal?.accountNumber {
+                                            
+                                            let inn: String = transfer.payeeExternal?.inn ?? ""
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self.viewModel.link = .payment(.init(source: .repeatPaymentRequisites(
+                                                    accountNumber: accountNumber,
+                                                    bankId: bankBic,
+                                                    inn: inn,
+                                                    kpp: transfer.payeeExternal?.kpp,
+                                                    amount: amount,
+                                                    productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
+                                                    comment: transfer.comment
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
                                             }
+                                        }
+                                        
                                     case .insideBank:
                                         
                                         if let transfer = infoPayment.parameterList.last,

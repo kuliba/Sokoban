@@ -962,7 +962,6 @@ private extension ProductProfileViewModel {
                         history = historyViewModel
                     }
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                 } else {
                     
@@ -973,7 +972,6 @@ private extension ProductProfileViewModel {
                     }
                     
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                     historyPool[activeProductId] = historyViewModel
                     bind(history: historyViewModel)
