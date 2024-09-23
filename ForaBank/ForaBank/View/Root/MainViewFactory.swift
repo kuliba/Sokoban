@@ -11,6 +11,7 @@ struct MainViewFactory {
     
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeIconView: MakeIconView
+    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeInfoViews: RootViewFactory.MakeInfoViews

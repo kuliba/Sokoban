@@ -526,6 +526,7 @@ private extension RootViewFactory {
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _ in .init { event in }},
             makeIconView: IconDomain.preview,
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -533,7 +534,8 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makeIconView: IconDomain.preview,
+                        makeIconView: IconDomain.preview, 
+                        makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
