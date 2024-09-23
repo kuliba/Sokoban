@@ -12,7 +12,7 @@ typealias MarketShowcaseViewModel = RxViewModel<MarketShowcaseState, MarketShowc
 
 struct MarketShowcaseWrapperView: View {
     
-    let viewModel: MarketShowcaseViewModel
+    @ObservedObject private var viewModel: MarketShowcaseViewModel
     let factory: ViewFactory
     
     init(

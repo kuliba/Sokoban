@@ -7,4 +7,7 @@
 
 import Foundation
 
-enum MarketShowcaseEffect: Equatable {}
+enum MarketShowcaseEffect: Equatable {
+    
+    case load
+}

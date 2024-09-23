@@ -2881,6 +2881,8 @@
 		83F686382B98D49000B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */; };
 		83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */; };
 		83F775C22CA1B02000A05F69 /* MarketShowcase+ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775C12CA1B02000A05F69 /* MarketShowcase+ViewFactory.swift */; };
+		83F775C42CA1B94B00A05F69 /* MarketShowcaseReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775C32CA1B94B00A05F69 /* MarketShowcaseReducer.swift */; };
+		83F775C62CA1BA6E00A05F69 /* MarketShowcaseEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775C52CA1BA6E00A05F69 /* MarketShowcaseEffectHandler.swift */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
 		83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */; };
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
@@ -6307,6 +6309,8 @@
 		83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
 		83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDetailsRequest.swift"; sourceTree = "<group>"; };
 		83F775C12CA1B02000A05F69 /* MarketShowcase+ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketShowcase+ViewFactory.swift"; sourceTree = "<group>"; };
+		83F775C32CA1B94B00A05F69 /* MarketShowcaseReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseReducer.swift; sourceTree = "<group>"; };
+		83F775C52CA1BA6E00A05F69 /* MarketShowcaseEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseEffectHandler.swift; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -15491,6 +15495,8 @@
 			isa = PBXGroup;
 			children = (
 				833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */,
+				83F775C32CA1B94B00A05F69 /* MarketShowcaseReducer.swift */,
+				83F775C52CA1BA6E00A05F69 /* MarketShowcaseEffectHandler.swift */,
 				833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */,
 				833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */,
 			);
@@ -20601,6 +20607,7 @@
 				0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */,
 				2AB109AF2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift in Sources */,
 				508BC629286050B600F15DCD /* TextFieldToolbarViewComponent.swift in Sources */,
+				83F775C62CA1BA6E00A05F69 /* MarketShowcaseEffectHandler.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				6833E0CB273920CE004C070F /* LockerCoordinator.swift in Sources */,
 				77B6B35F2852305B00E3001B /* TimeInterval+Extensions.swift in Sources */,
@@ -22052,6 +22059,7 @@
 				774A8B822865FF4A00B81140 /* TagsGridView.swift in Sources */,
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */,
+				83F775C42CA1B94B00A05F69 /* MarketShowcaseReducer.swift in Sources */,
 				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				777460E0291E509900D3FF46 /* ContactsSectionViewModel.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,

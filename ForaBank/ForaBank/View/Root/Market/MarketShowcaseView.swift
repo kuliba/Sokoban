@@ -34,6 +34,7 @@ struct MarketShowcaseView: View {
             
             SpinnerRefreshView(icon: .init("Logo Fora Bank"))
                 .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+            Button(action: { event(.loaded) }, label: { Text("Loaded")})
         default:
             VStack {
                 Text("Market")

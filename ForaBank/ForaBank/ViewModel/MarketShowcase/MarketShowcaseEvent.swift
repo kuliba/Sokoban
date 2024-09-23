@@ -10,4 +10,5 @@ import Foundation
 enum MarketShowcaseEvent: Equatable {
     
     case update
+    case loaded
 }

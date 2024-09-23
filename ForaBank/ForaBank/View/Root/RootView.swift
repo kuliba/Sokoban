@@ -562,7 +562,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _ in .preview }
+            makeMarketShowcaseView: { _ in .none }
         )
     }
 }

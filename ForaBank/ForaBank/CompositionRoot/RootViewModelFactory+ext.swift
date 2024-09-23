@@ -898,8 +898,8 @@ private extension RootViewModelFactory {
         
         let marketShowcaseModel = MarketShowcaseViewModel(
             initialState: .inflight,
-            reduce: { state, _ in return (state, .none) },
-            handleEffect: {_,_  in })
+            reduce: MarketShowcaseReducer().reduce,
+            handleEffect: MarketShowcaseEffectHandler().handleEffect)
         
         let tabsViewModelFactory = TabsViewModelFactory(
             mainViewModel: mainViewModel,

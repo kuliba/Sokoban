@@ -10,5 +10,6 @@ import Foundation
 enum MarketShowcaseState: Equatable {
     
     case inflight
+    case loaded
     case failure
 }
