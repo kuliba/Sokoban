@@ -146,7 +146,7 @@ extension ProductProfileHistoryView {
                                let upperDate = payload.period.upperDate {
                                 
                                 storageData = storageData.filter({
-                                    $0.date.isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
+                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
                                 })
                             }
                             
@@ -199,7 +199,7 @@ extension ProductProfileHistoryView {
                                let upperDate = filter.calendar.range?.upperDate {
                                 
                                 storageStatements = storage.statements.filter({
-                                    $0.tranDate?.isBetweenStartDate(lowerDate.addingTimeInterval(14401), endDateInclusive: upperDate.addingTimeInterval(86400)) ?? false
+                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
                                 })
                             }
                             if filter.filter.selectedTransaction != nil {

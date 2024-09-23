@@ -541,6 +541,24 @@ private extension ProductProfileViewModel {
                 
             }.store(in: &bindings)
         
+        $filterState
+            .sink { state in
+
+                if let period = state.filter.selectDates {
+                
+                    let lowerDate = period.lowerBound.addingTimeInterval(10800)
+                    let upperDate = period.upperBound.addingTimeInterval(10800)
+                    self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
+                        filterState: state, 
+                        period: (
+                            lowerDate,
+                            upperDate
+                        ))
+                    )
+                }
+                
+            }.store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in

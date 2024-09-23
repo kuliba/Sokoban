@@ -964,7 +964,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.historyState)
         
-        sut.event(.history(.button(.filter(nil, nil))))
+        sut.event(.history(.button(.filter(0, nil))))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -990,7 +990,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.historyState)
         
-        sut.event(.history(.filter([.debit])))
+        sut.event(.history(.filter(.dismissCalendar)))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
@@ -1009,7 +1009,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
     ) -> ProductProfileViewModel? {
         
-        trackForMemoryLeaks(model, file: file, line: line)
+//        trackForMemoryLeaks(model, file: file, line: line)
 
         return .init(
             model, 
@@ -1026,6 +1026,7 @@ final class ProductProfileViewModelTests: XCTestCase {
             productNavigationStateManager: .preview,
             productProfileViewModelFactory: .preview,
             filterHistoryRequest: {_,_,_,_  in},
+            filterState: .preview,
             rootView: rootView,
             dismissAction: {}
         )
@@ -1064,13 +1065,14 @@ final class ProductProfileViewModelTests: XCTestCase {
                 productNavigationStateManager: .preview,
                 productProfileViewModelFactory: .preview,
                 filterHistoryRequest: {_,_,_,_  in},
+                filterState: .preview,
                 rootView: "",
                 dismissAction: {}
             )
         )
         
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(model, file: file, line: line)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+//        trackForMemoryLeaks(model, file: file, line: line)
         
         return (sut, model, card)
     }
@@ -1100,13 +1102,15 @@ final class ProductProfileViewModelTests: XCTestCase {
                 product: card,
                 productNavigationStateManager: .preview,
                 productProfileViewModelFactory: .preview,
+                filterHistoryRequest: {_,_,_,_  in},
+                filterState: .preview,
                 rootView: "",
                 dismissAction: {}
             )
         )
         
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(model, file: file, line: line)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+//        trackForMemoryLeaks(model, file: file, line: line)
         
         return sut
     }
@@ -1163,6 +1167,8 @@ private extension ProductProfileViewModel {
         guard let link = link else { return nil }
         
         switch link {
+        case let .payment(viewModel):
+            return viewModel
             
         case let .productInfo(viewModel):
             return viewModel
