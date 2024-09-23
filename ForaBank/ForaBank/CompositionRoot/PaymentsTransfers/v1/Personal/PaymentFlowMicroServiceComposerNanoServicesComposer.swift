@@ -17,6 +17,7 @@ final class PaymentFlowMicroServiceComposerNanoServicesComposer {
         self.standardNanoServices = standardNanoServices
     }
     
+    typealias Operator = PaymentServiceOperator
     typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, FailedPaymentProviderPickerStub>
 }
 

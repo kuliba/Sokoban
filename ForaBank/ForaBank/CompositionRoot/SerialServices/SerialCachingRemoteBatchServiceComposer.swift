@@ -1,5 +1,5 @@
 //
-//  BatchSerialCachingRemoteLoaderComposer.swift
+//  SerialCachingRemoteBatchServiceComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
@@ -10,7 +10,7 @@ import Foundation
 import RemoteServices
 
 /// A composer for creating batch services with serial caching remote loaders.
-final class BatchSerialCachingRemoteLoaderComposer {
+final class SerialCachingRemoteBatchServiceComposer {
     
     /// Factory for creating remote nano services.
     private let nanoServiceFactory: RemoteNanoServiceFactory
@@ -56,7 +56,7 @@ protocol UpdateMaker {
     ) -> Update<T>
 }
 
-extension BatchSerialCachingRemoteLoaderComposer {
+extension SerialCachingRemoteBatchServiceComposer {
     
     /// Composes a batch service with serial caching capabilities.
     ///
@@ -71,7 +71,7 @@ extension BatchSerialCachingRemoteLoaderComposer {
         makeRequest: @escaping StringSerialRemoteDomain<Payload, T>.MakeRequest,
         mapResponse: @escaping StringSerialRemoteDomain<Payload, T>.MapResponse,
         toModel: @escaping ([T]) -> [Model]
-    ) -> StringSerialRemoteDomain<Payload, T>.BatchService {
+    ) -> BatchService<Payload> {
         
         let perform = nanoServiceFactory.compose(
             makeRequest: makeRequest,
@@ -88,7 +88,7 @@ extension BatchSerialCachingRemoteLoaderComposer {
         )
         let batcher = Batcher(perform: decorator.decorated)
         
-        return batcher.callAsFunction
+        return batcher.process
     }
 }
 

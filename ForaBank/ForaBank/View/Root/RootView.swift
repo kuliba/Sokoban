@@ -281,7 +281,18 @@ private extension RootView {
                 Text("TBD: \(String(describing: failedPaymentProviderPicker))")
             
             case let .success(paymentProviderPicker):
-                Text("TBD: \(String(describing: paymentProviderPicker))")
+                VStack {
+                    
+                    Text(paymentProviderPicker.category.name)
+                        .font(.title)
+                    
+                    Text("TBD: \(String(describing: paymentProviderPicker))")
+                    
+                    List(paymentProviderPicker.operators) {
+                        
+                        Text($0.name)
+                    }
+                }
             }
 
         case let .taxAndStateServices(taxAndStateServices):

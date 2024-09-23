@@ -24,6 +24,8 @@ final class SelectedCategoryStub {
         self.latest = latest
         self.operators = operators
     }
+    
+    typealias Operator = PaymentServiceOperator
 }
 
 final class CategoryListModelStub {

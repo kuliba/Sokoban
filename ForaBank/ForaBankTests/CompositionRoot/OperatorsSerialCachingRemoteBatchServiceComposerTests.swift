@@ -1,5 +1,5 @@
 //
-//  OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift
+//  OperatorsSerialCachingRemoteBatchServiceComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
+final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     // MARK: - compose
     
@@ -209,9 +209,9 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = BatchSerialCachingRemoteLoaderComposer
-    private typealias SUT = Composer.ServicePaymentProviderService
-    private typealias Payload = BatchSerialCachingRemoteLoaderComposer.GetOperatorsListByParamPayload
+    private typealias Composer = SerialCachingRemoteBatchServiceComposer
+    private typealias SUT = Composer.ServicePaymentProviderBatchService
+    private typealias Payload = SerialCachingRemoteBatchServiceComposer.GetOperatorsListByParamPayload
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     
     private func makeSUT(
@@ -244,8 +244,8 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
             nanoServiceFactory: nanoServiceComposer,
             updateMaker: asyncLocalAgent
         )
-        let sut = composer.composeServicePaymentProviderService(
-            getSerial: { _ in agent.serial(for: [CodableServicePaymentProvider].self) }
+        let sut = composer.composeServicePaymentOperatorService(
+            getSerial: { _ in agent.serial(for: [CodableServicePaymentOperator].self) }
         )
         
         trackForMemoryLeaks(composer, file: file, line: line)
