@@ -17,8 +17,9 @@ public struct FilterConfig {
 
     let optionConfig: OptionConfig
     let buttonsContainerConfig: ButtonsContainer.Config
-    let errorConfig: ErrorConfig
-    
+    let failureConfig: ErrorConfig
+    let emptyConfig: ErrorConfig
+
     let optionButtonCloseImage: Image
     
     public init(
@@ -28,8 +29,9 @@ public struct FilterConfig {
         categoryTitle: TitleConfig,
         optionConfig: FilterConfig.OptionConfig,
         buttonsContainerConfig: ButtonsContainer.Config,
-        errorConfig: ErrorConfig,
-        optionButtonCloseImage: Image
+        optionButtonCloseImage: Image,
+        failureConfig: ErrorConfig,
+        emptyConfig: ErrorConfig
     ) {
         self.title = title
         self.periodTitle = periodTitle
@@ -37,8 +39,9 @@ public struct FilterConfig {
         self.categoryTitle = categoryTitle
         self.optionConfig = optionConfig
         self.buttonsContainerConfig = buttonsContainerConfig
-        self.errorConfig = errorConfig
         self.optionButtonCloseImage = optionButtonCloseImage
+        self.failureConfig = failureConfig
+        self.emptyConfig = emptyConfig
     }
     
     public struct OptionConfig {

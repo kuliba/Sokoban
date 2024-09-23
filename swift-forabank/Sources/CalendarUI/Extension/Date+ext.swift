@@ -111,6 +111,7 @@ extension DateFormatter {
 }
 
 public extension Date {
+    
     static var startOfWeek: Date? {
         let gregorian = Calendar(identifier: .gregorian)
         guard let sunday = gregorian.date(from: gregorian.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) else { return nil }
@@ -131,4 +132,35 @@ public extension Date {
         return  calendar.date(from: components)!
     }
     
+    static func date(_ date: Date, addCalendarComponents calendarComponents: Calendar.Component, amount: Int) -> Date? {
+        var components: DateComponents = DateComponents.init()
+        let gregorian: Calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        
+        switch calendarComponents {
+        case .second:
+            components.second = amount
+            break
+        case .minute:
+            components.minute = amount
+            break
+        case .hour:
+            components.hour = amount
+            break
+        case .day:
+            components.day = amount
+            break
+        case .weekOfMonth:
+            components.weekOfMonth = amount
+            break
+        case .month:
+            components.month = amount
+            break
+        case .year:
+            components.year = amount
+            break
+        default:
+            break
+        }
+        return gregorian.date(byAdding: components, to: date)
+    }
 }

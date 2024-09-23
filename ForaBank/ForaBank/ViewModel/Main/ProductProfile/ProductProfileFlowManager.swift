@@ -56,17 +56,14 @@ final class ProductProfileFlowReducer {
                 break
             case .filter:
                 
-                if let range = state.filter.filter.selectDates {
-                    let (history, historyEffect) = historyReduce(
-                        state.history,
-                        .button(.filter(
-                            state.filter.productId,
-                            range
-                            
-                        )))
-                    state.history = history
-                    effect = historyEffect.map(Effect.history)
-                }
+                let (history, historyEffect) = historyReduce(
+                    state.history,
+                    .button(.filter(
+                        state.filter.productId,
+                        nil
+                    )))
+                state.history = history
+                effect = historyEffect.map(Effect.history)
             }
             
         case let .bottomSheet(bottomEvent):
@@ -79,71 +76,12 @@ final class ProductProfileFlowReducer {
             state.history = history
             effect = historyEffect.map(Effect.history)
         
-        case let .filter(filterEvent):
+        case .updateFilter(nil):
+            fatalError()
+            break
             
-            switch filterEvent {
-            case let .openSheet(services):
-                state.filter = .init(
-                    productId: state.filter.productId,
-                    calendar: state.filter.calendar,
-                    filter: .init(
-                        title: "Фильтры",
-                        selectDates: state.filter.filter.selectDates,
-                        selectedServices: state.filter.filter.selectedServices ,
-                        periods: FilterHistoryState.Period.allCases,
-                        transactionType: FilterHistoryState.TransactionType.allCases,
-                        services: services
-                    ),
-                    status: .normal
-                )
-            case let .selectedDates(range):
-                state.filter = .init(
-                    productId: state.filter.productId,
-                    calendar: .init(
-                        date: Date(),
-                        range: .init(range: range),
-                        monthsData: [],
-                        periods: []
-                    ),
-                    filter: .init(
-                        title: "Фильтры",
-                        selectDates: range,
-                        selectedServices: [],
-                        periods: FilterHistoryState.Period.allCases,
-                        transactionType: FilterHistoryState.TransactionType.allCases,
-                        services: state.history?.categories ?? []
-                    ),
-                    status: .normal
-                )
-                
-            case let .selectedCategory(category):
-                state.filter.filter.selectedServices = category
-                
-            case let .selectedPeriod(period):
-                if state.filter.filter.selectedPeriod == period {
-                    state.filter.filter.selectedPeriod = .month
-                } else {
-                    state.filter.filter.selectedPeriod = period
-                }
-
-            case let .selectedTransaction(transaction):
-                if state.filter.filter.selectedTransaction == transaction {
-                    state.filter.filter.selectedTransaction = nil
-                } else {
-                    state.filter.filter.selectedTransaction = transaction
-                }
-            
-            case let .updateFilter(state):
-                //MARK: update
-                break
-                
-            case .clearOptions:
-                state.filter.filter.selectedTransaction = nil
-                state.filter.filter.selectedPeriod = .month
-                state.filter.filter.selectedServices.removeAll()
-                state.filter.calendar.range = .init()
-                
-            }
+        case let .updateFilter(.some(filterState)):
+            state.filter = filterState
             
         case let .payment(paymentViewModel):
             state.payment = paymentViewModel
@@ -220,7 +158,9 @@ extension ProductProfileFlowManager {
             bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
             historyReduce: HistoryReducer().reduce
         ).reduce,
-        handleEffect: ProductNavigationStateEffectHandler(handleHistoryEffect: { _,_ in }).handleEffect,
+        handleEffect: ProductNavigationStateEffectHandler(
+            handleHistoryEffect: { _,_ in }
+        ).handleEffect,
         handleModelEffect: {_,_ in }
     )
 }
@@ -239,7 +179,7 @@ enum ProductProfileFlowEvent {
     case alert(AlertEvent)
     case bottomSheet(BottomSheetEvent)
     case history(HistoryEvent)
-    case filter(FilterEvent)
+    case updateFilter(FilterState?)
     case payment(PaymentsViewModel)
     case button(ButtonEvent)
     
@@ -268,7 +208,7 @@ enum HistoryEvent {
     enum ButtonEvent {
         
         case calendar((Date?, Date?) -> Void)
-        case filter(ProductData.ID, Range<Date>)
+        case filter(ProductData.ID, Range<Date>?)
     }
 }
 
