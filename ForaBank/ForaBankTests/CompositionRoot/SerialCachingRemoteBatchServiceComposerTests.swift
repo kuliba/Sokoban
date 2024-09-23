@@ -1,5 +1,5 @@
 //
-//  BatchSerialCachingRemoteLoaderComposerTests.swift
+//  SerialCachingRemoteBatchServiceComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 15.09.2024.
@@ -9,7 +9,7 @@
 import RemoteServices
 import XCTest
 
-final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
+final class SerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     // MARK: - compose
     
@@ -305,7 +305,7 @@ final class BatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = BatchSerialCachingRemoteLoaderComposer
+    private typealias Composer = SerialCachingRemoteBatchServiceComposer
     private typealias Domain = StringSerialRemoteDomain<Payload, Value>
     private typealias SUT = Domain.BatchService
     private typealias MakeRequestSpy = CallSpy<Payload, URLRequest>
@@ -483,7 +483,7 @@ final class UpdateMakerSpy: UpdateMaker {
 
 // MARK: - API check
 
-private extension BatchSerialCachingRemoteLoaderComposer {
+private extension SerialCachingRemoteBatchServiceComposer {
     
     convenience init(apiCheckOnly: Bool) {
         

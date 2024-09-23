@@ -1,5 +1,5 @@
 //
-//  OperatorsBatchSerialCachingRemoteLoaderComposerTests.swift
+//  OperatorsSerialCachingRemoteBatchServiceComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
+final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     // MARK: - compose
     
@@ -209,9 +209,9 @@ final class OperatorsBatchSerialCachingRemoteLoaderComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = BatchSerialCachingRemoteLoaderComposer
+    private typealias Composer = SerialCachingRemoteBatchServiceComposer
     private typealias SUT = Composer.ServicePaymentProviderService
-    private typealias Payload = BatchSerialCachingRemoteLoaderComposer.GetOperatorsListByParamPayload
+    private typealias Payload = SerialCachingRemoteBatchServiceComposer.GetOperatorsListByParamPayload
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     
     private func makeSUT(

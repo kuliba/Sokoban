@@ -1,5 +1,5 @@
 //
-//  BatchSerialCachingRemoteLoaderComposer+composeServicePaymentOperatorService.swift
+//  SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
@@ -8,7 +8,7 @@
 import OperatorsListBackendV0
 import RemoteServices
 
-extension BatchSerialCachingRemoteLoaderComposer {
+extension SerialCachingRemoteBatchServiceComposer {
     
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias RemoteProvider = RemoteServices.ResponseMapper.ServicePaymentProvider

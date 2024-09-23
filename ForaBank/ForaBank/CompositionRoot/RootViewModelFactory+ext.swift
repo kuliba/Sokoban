@@ -325,7 +325,7 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         // reusable factory
-        let batchSerialComposer = BatchSerialCachingRemoteLoaderComposer(
+        let batchServiceComposer = SerialCachingRemoteBatchServiceComposer(
             nanoServiceFactory: nanoServiceComposer,
             updateMaker: asyncLocalAgent
         )
@@ -404,7 +404,7 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        let operatorsService = batchSerialComposer.composeServicePaymentOperatorService(
+        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService(
             getSerial: { _ in
                 
                 model.localAgent.serial(for: [CodableServicePaymentOperator].self)
