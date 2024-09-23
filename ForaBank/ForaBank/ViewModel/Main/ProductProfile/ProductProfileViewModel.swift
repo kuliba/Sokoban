@@ -541,6 +541,24 @@ private extension ProductProfileViewModel {
                 
             }.store(in: &bindings)
         
+        $filterState
+            .sink { state in
+
+                if let period = state.filter.selectDates {
+                
+                    let lowerDate = period.lowerBound.addingTimeInterval(10800)
+                    let upperDate = period.upperBound.addingTimeInterval(10800)
+                    self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
+                        filterState: state, 
+                        period: (
+                            lowerDate,
+                            upperDate
+                        ))
+                    )
+                }
+                
+            }.store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -2363,7 +2381,7 @@ extension ProductProfileViewModel {
         var filters: [Filter]?
         var selectedDates: (lowerDate: Date?, upperDate: Date?)
         var buttonAction: ButtonAction
-        var showSheet: Sheet
+        var showSheet: Sheet?
         var categories: [String]
         var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
         var calendarState: CalendarStateWrapper?
@@ -2381,7 +2399,7 @@ extension ProductProfileViewModel {
             }
             
             case calendar
-            case filter(FilterWrapperView.Model)
+            case filter(FilterViewModel)
             
             enum ID: Hashable {
                 

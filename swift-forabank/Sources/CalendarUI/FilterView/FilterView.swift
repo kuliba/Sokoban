@@ -9,48 +9,33 @@
 import SwiftUI
 import SharedConfigs
 import RxViewModel
+import Shimmer
 
-public enum FilterEffect: Equatable {
-    
-    case resetPeriod(Int)
-    case updateFilter(UpdateFilterPayload)
-    
-    public struct UpdateFilterPayload: Equatable {
+public typealias FilterViewModel = RxViewModel<FilterState, FilterEvent, FilterEffect>
 
-        public let range: Range<Date>
-        public let productId: Int
-        
-        public init(
-            range: Range<Date>,
-            productId: Int
-        ) {
-            self.range = range
-            self.productId = productId
-        }
-    }
-}
-
-public struct FilterWrapperView: View {
+public struct FilterWrapperView<ButtonsView: View>: View {
     
+    public typealias Model = FilterViewModel
     public typealias State = FilterState
     public typealias Event = FilterEvent
     public typealias Effect = FilterEffect
     public typealias Config = FilterConfig
-    
-    public typealias Model = RxViewModel<State, Event, Effect>
-    
+        
     @ObservedObject private var model: Model
     private let config: Config
     private let calendarViewAction: (CalendarState) -> Void
+    private let buttonsView: () -> ButtonsView
 
     public init(
         model: Model,
         config: Config,
-        calendarViewAction: @escaping (CalendarState) -> Void
+        calendarViewAction: @escaping (CalendarState) -> Void,
+        buttonsView: @escaping () -> ButtonsView
     ) {
         self.model = model
         self.calendarViewAction = calendarViewAction
         self.config = config
+        self.buttonsView = buttonsView
     }
     
     public var body: some View {
@@ -59,42 +44,36 @@ public struct FilterWrapperView: View {
             filterState: model.state,
             event: model.event(_:),
             config: config,
-            calendarViewAction: calendarViewAction
+            calendarViewAction: calendarViewAction,
+            buttonsView: buttonsView
         )
     }
 }
 
-struct PlaceHolderFilterView: View {
-
-    let state: FilterState
-    
-    var body: some View {
-        
-        ProgressView()
-    }
-}
-
-public struct FilterView: View {
+public struct FilterView<ButtonsView: View>: View {
     
     public typealias Event = FilterEvent
     public typealias Config = FilterConfig
     
     private let filterState: FilterState
-    let filterEvent: (Event) -> Void
-    let config: Config
-    
-    let calendarViewAction: (CalendarState) -> Void
+    private let filterEvent: (Event) -> Void
+    private let config: Config
+    private let buttonsView: () -> ButtonsView
+
+    private let calendarViewAction: (CalendarState) -> Void
     
     public init(
         filterState: FilterState,
         event: @escaping (Event) -> Void,
         config: Config,
-        calendarViewAction: @escaping (CalendarState) -> Void
+        calendarViewAction: @escaping (CalendarState) -> Void,
+        buttonsView: @escaping () -> ButtonsView
     ) {
         self.filterState = filterState
         self.filterEvent = event
         self.config = config
         self.calendarViewAction = calendarViewAction
+        self.buttonsView = buttonsView
     }
     
     public var body: some View {
@@ -129,34 +108,16 @@ public struct FilterView: View {
             
             switch filterState.status {
             case .empty:
-                Spacer()
-                
-                HStack {
-                    
-                    Spacer()
-                    ErrorView(config: config.emptyConfig)
-                    Spacer()
-                }
+                ErrorView(config: config.emptyConfig)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
             case .failure:
-                Spacer()
-                
-                HStack {
-                    
-                    Spacer()
-                    ErrorView(config: config.failureConfig)
-                    Spacer()
-                }
+                ErrorView(config: config.failureConfig)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
                 
             case .loading:
-                Spacer()
-                
-                HStack {
-                    
-                    Spacer()
-                    PlaceHolderFilterView(state: filterState)
-                    Spacer()
-                }
+                PlaceHolderFilterView(state: filterState, config: config)
                 
             case .normal:
                 
@@ -195,25 +156,13 @@ public struct FilterView: View {
             }
             Spacer()
             
-            ButtonsContainer(
-                applyAction: {
-                    //TODO: inject event 
-//                    filterEvent(.updateFilter(filterState))
-                },
-                clearOptionsAction: {
-                    filterEvent(.clearOptions)
-                },
-                config: .init(
-                    clearButtonTitle: "Очистить",
-                    applyButtonTitle: "Применить"
-                )
-            )
+            buttonsView()
         }
         .padding()
     }
 }
 
-extension FilterState {
+private extension FilterState {
     
     func formattedPeriod(
         fallback: String
@@ -231,7 +180,7 @@ extension FilterState {
     }
 }
 
-extension FilterView {
+private extension FilterView {
     
     struct PeriodState {
         
@@ -344,211 +293,6 @@ extension FilterView {
     }
 }
 
-public struct ButtonsContainer: View {
-    
-    let applyAction: () -> Void
-    let clearOptionsAction: () -> Void
-    
-    let config: Config
-    
-    public init(
-        applyAction: @escaping () -> Void,
-        clearOptionsAction: @escaping () -> Void,
-        config: Config
-    ) {
-        self.applyAction = applyAction
-        self.clearOptionsAction = clearOptionsAction
-        self.config = config
-    }
-    
-    public var body: some View {
-        
-        HStack(spacing: 8) {
-            
-            BottomButton(
-                title: config.clearButtonTitle,
-                action: clearOptionsAction,
-                config: .init(
-                    background: .gray.opacity(0.2),
-                    foreground: .black
-                ))
-            
-            BottomButton(
-                title: config.applyButtonTitle,
-                action: applyAction,
-                config: .init(
-                    background: .red,
-                    foreground: .white
-                ))
-        }
-    }
-    
-    public struct Config {
-        
-        let clearButtonTitle: String
-        let applyButtonTitle: String
-        
-        public init(
-            clearButtonTitle: String,
-            applyButtonTitle: String
-        ) {
-            self.clearButtonTitle = clearButtonTitle
-            self.applyButtonTitle = applyButtonTitle
-        }
-    }
-}
-
-struct BottomButton: View {
-    
-    typealias Config = ButtonConfig
-    
-    let title: String
-    let action: () -> Void
-    let config: Config
-    
-    var body: some View {
-        
-        Button(action: action) {
-            
-            Text(title)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .foregroundColor(config.foreground)
-                .background(config.background)
-                .cornerRadius(12)
-                .font(.system(size: 18))
-        }
-    }
-    
-    struct ButtonConfig {
-        
-        let background: Color
-        let foreground: Color
-    }
-}
-
-struct FlexibleContainerButtons: View {
-    
-    let data: [String]
-    var selectedItems: Set<String>
-    let serviceButtonTapped: (String) -> Void
-    let config: ServiceButton.Config
-    
-    var body: some View {
-        
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        
-        GeometryReader { geometry in
-            
-            ZStack(alignment: .topLeading) {
-                
-                ForEach(data, id: \.self) { service in
-                    
-                    ServiceButton(
-                        state: .init(isSelected: selectedItems.contains(service)),
-                        action: serviceButtonTapped,
-                        config: .init(
-                            title: service,
-                            titleConfig: .init(
-                                textFont: .system(size: 16),
-                                textColor: .white
-                            ))
-                    )
-                    .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { dimension in
-                        if abs(width - dimension.width) > geometry.size.width {
-                            width = 0
-                            height -= dimension.height
-                        }
-                        
-                        let result = width
-                        if service == data.last! {
-                            width = 0
-                        } else {
-                            width -= dimension.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        if service == data.last! {
-                            height = 0
-                        }
-                        return result
-                    })
-                }
-            }
-        }
-    }
-}
-
-extension View {
-    
-    @ViewBuilder func serviceButtonAlignmentGuide(
-        data: [String],
-        service: String,
-        geometry: GeometryProxy
-    ) -> some View {
-        
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        
-        self
-            .alignmentGuide(.leading, computeValue: { dimension in
-                if abs(width - dimension.width) > geometry.size.width {
-                    width = 0
-                    height -= dimension.height
-                }
-                
-                let result = width
-                if service == data.last {
-                    width = 0
-                } else {
-                    width -= dimension.width
-                }
-                return result
-            })
-            .alignmentGuide(.top, computeValue: { _ in
-                let result = height
-                if service == data.last {
-                    height = 0
-                }
-                return result
-            })
-    }
-}
-
-struct ServiceButton: View {
-    
-    let state: State
-    let action: (String) -> Void
-    let config: Config
-    
-    var body: some View {
-        
-        Button(action: { action(self.config.title) }) {
-            
-            Text(config.title)
-                .padding()
-                .background(state.isSelected ? Color.black : .gray.opacity(0.2))
-                .foregroundColor(state.isSelected ? .white : .black)
-                .frame(height: 32)
-                .cornerRadius(90)
-        }
-    }
-    
-    struct State {
-        
-        let isSelected: Bool
-    }
-    
-    struct Config {
-        
-        let title: String
-        let titleConfig: TextConfig
-    }
-}
-
 public struct TitleConfig {
     
     let title: String
@@ -638,7 +382,8 @@ struct FilterView_Previews: PreviewProvider {
                         backgroundIcon: .gray
                     )
                 ),
-                calendarViewAction: {_ in }
+                calendarViewAction: {_ in },
+                buttonsView: { Text("Buttons") }
             )
         }
     }

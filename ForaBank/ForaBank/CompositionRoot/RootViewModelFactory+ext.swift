@@ -210,7 +210,7 @@ extension RootViewModelFactory {
                     microServices: composer.compose()
                 )
                 let services = model.historyCategories(productId: payload.productId)
-                let viewModel = FilterWrapperView.Model(
+                let viewModel = FilterViewModel(
                     initialState: .init(
                         productId: payload.productId,
                         calendar: .init(

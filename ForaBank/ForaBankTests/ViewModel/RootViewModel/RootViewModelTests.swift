@@ -211,7 +211,7 @@ final class RootViewModelTests: XCTestCase {
             productNavigationStateManager: .preview,
             mainViewModel: .init(
                 model,
-                makeProductProfileViewModel: { _,_,_ in nil },
+                makeProductProfileViewModel: { _,_,_,_  in nil },
                 navigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),

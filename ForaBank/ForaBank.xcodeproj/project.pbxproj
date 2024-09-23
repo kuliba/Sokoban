@@ -3046,6 +3046,7 @@
 		C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */; };
 		C1BA23E52ACD543B00425B10 /* Service+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E42ACD543B00425B10 /* Service+Payments.swift */; };
 		C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */; };
+		C1BC3A732C9DCB06000E5920 /* FilterModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC3A722C9DCB06000E5920 /* FilterModelEffectHandler.swift */; };
 		C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1BC73E42AE277CE0022D849 /* TextFieldComponent */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C315E92C2DB8A0005C2BF8 /* HistoryReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C315E82C2DB8A0005C2BF8 /* HistoryReducerTests.swift */; };
@@ -6446,6 +6447,7 @@
 		C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsC2BTests.swift"; sourceTree = "<group>"; };
 		C1BA23E42ACD543B00425B10 /* Service+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+Payments.swift"; sourceTree = "<group>"; };
 		C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+stickerPayment.swift"; sourceTree = "<group>"; };
+		C1BC3A722C9DCB06000E5920 /* FilterModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModelEffectHandler.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C315E82C2DB8A0005C2BF8 /* HistoryReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducerTests.swift; sourceTree = "<group>"; };
 		C1C6F1C62B83642300237C07 /* OperatorsListPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OperatorsListPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -13578,6 +13580,7 @@
 				C192D4282C23E87700A6B338 /* HistoryReducer.swift */,
 				C13D8F6A2C9B16E800A79263 /* HistoryEffectHandler.swift */,
 				C13D8F6C2C9B223D00A79263 /* FilterModelReducer.swift */,
+				C1BC3A722C9DCB06000E5920 /* FilterModelEffectHandler.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -20335,6 +20338,7 @@
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,
 				0C2B55E5299C17B800F9074C /* ServerCommands+ProductTemplate.swift in Sources */,
 				2A90494D2C326E3500313CB8 /* LoggingDecorator.swift in Sources */,
+				C1BC3A732C9DCB06000E5920 /* FilterModelEffectHandler.swift in Sources */,
 				2ACFD6632C5CCBCC003F08AE /* QRScanResultMapper.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
 				774A8B632865FDAF00B81140 /* PaymentsSelectServiceViewComponent.swift in Sources */,
@@ -25001,7 +25005,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 19;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -25013,7 +25017,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.1;
+				MARKETING_VERSION = 10.3;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -25507,7 +25511,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -25518,7 +25522,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.1;
+				MARKETING_VERSION = 10.3;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -26487,7 +26491,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 19;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -26499,7 +26503,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.1;
+				MARKETING_VERSION = 10.3;
 				"OTHER_SWIFT_FLAGS[sdk=*]" = "-Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=400";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -26523,7 +26527,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -26534,7 +26538,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.1;
+				MARKETING_VERSION = 10.3;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
