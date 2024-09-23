@@ -55,7 +55,7 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketView: makeMarketView
+            makeMarketShowcaseView: makeMarketShowcaseView
         )
     }
 }
@@ -294,9 +294,9 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    func makeMarketView(
-        viewModel: MarketPlaceViewModel
-    ) -> MarketView? {
+    func makeMarketShowcaseView(
+        viewModel: MarketShowcaseViewModel
+    ) -> MarketShowcaseView? {
         marketFeatureFlag.isActive ? .init() : nil
     }
 }

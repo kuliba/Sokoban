@@ -26,10 +26,10 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab(viewModel.mainViewModel)
-                    paymentsViewTab(viewModel.paymentsModel)
-                    marketViewTab("")
-                    chatViewTab(viewModel.chatViewModel)
+                    mainViewTab(viewModel.tabsViewModelFactory.mainViewModel)
+                    paymentsViewTab(viewModel.tabsViewModelFactory.paymentsModel)
+                    marketShowcaseViewTab(viewModel.tabsViewModelFactory.marketShowcaseModel)
+                    chatViewTab(viewModel.tabsViewModelFactory.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -101,11 +101,11 @@ struct RootView: View {
             .accessibilityIdentifier("tabBarChatButton")
     }
     
-    private func marketViewTab(
-        _ marketViewModel: MarketPlaceViewModel
+    private func marketShowcaseViewTab(
+        _ marketShowcaseViewModel: MarketShowcaseViewModel
     ) -> some View {
         
-        rootViewFactory.makeMarketView("").map {
+        rootViewFactory.makeMarketShowcaseView("").map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -493,9 +493,7 @@ struct RootView_Previews: PreviewProvider {
                 fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
-                mainViewModel: .sample,
-                paymentsModel: .legacy(.sample),
-                chatViewModel: .init(),
+                tabsViewModelFactory: .preview,
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
@@ -553,7 +551,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketView: { _ in MarketView() }
+            makeMarketShowcaseView: { _ in MarketShowcaseView() }
         )
     }
 }

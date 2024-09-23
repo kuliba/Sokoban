@@ -21,9 +21,7 @@ class RootViewModel: ObservableObject, Resetable {
     @Published var alert: Alert.ViewModel?
     @Published private(set) var link: Link?
     
-    let mainViewModel: MainViewModel
-    let paymentsModel: PaymentsModel
-    let chatViewModel: ChatViewModel
+    let tabsViewModelFactory: TabsViewModelFactory
     let informerViewModel: InformerView.ViewModel
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
@@ -42,9 +40,7 @@ class RootViewModel: ObservableObject, Resetable {
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
-        mainViewModel: MainViewModel,
-        paymentsModel: PaymentsModel,
-        chatViewModel: ChatViewModel,
+        tabsViewModelFactory: TabsViewModelFactory,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
@@ -54,16 +50,14 @@ class RootViewModel: ObservableObject, Resetable {
         self.navigationStateManager = navigationStateManager
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
-        self.mainViewModel = mainViewModel
-        self.paymentsModel = paymentsModel
-        self.chatViewModel = chatViewModel
+        self.tabsViewModelFactory = tabsViewModelFactory
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
         
-        mainViewModel.rootActions = rootActions
-        if case let .legacy(paymentsViewModel) = paymentsModel {
+        tabsViewModelFactory.mainViewModel.rootActions = rootActions
+        if case let .legacy(paymentsViewModel) = tabsViewModelFactory.paymentsModel {
             paymentsViewModel.rootActions = rootActions
         }
         
@@ -74,9 +68,7 @@ class RootViewModel: ObservableObject, Resetable {
 
     func reset() {
         
-        mainViewModel.reset()
-        paymentsModel.reset()
-        chatViewModel.reset()
+        tabsViewModelFactory.reset()
     }
     
     func resetLink() {
@@ -152,7 +144,7 @@ class RootViewModel: ObservableObject, Resetable {
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
                         else { return }
                         
-                        self.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        self.tabsViewModelFactory.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
                     }
                 }
             }
@@ -421,10 +413,10 @@ class RootViewModel: ObservableObject, Resetable {
     
     private func bindTabBar() {
         
-        let mainViewModelHasDestination = mainViewModel.$route
+        let mainViewModelHasDestination = tabsViewModelFactory.mainViewModel.$route
             .map { $0.destination != nil }
         
-        let paymentsViewModelHasDestination = paymentsModel.hasDestination
+        let paymentsViewModelHasDestination = tabsViewModelFactory.paymentsModel.hasDestination
         
         mainViewModelHasDestination
             .combineLatest(paymentsViewModelHasDestination)
