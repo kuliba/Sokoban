@@ -18,26 +18,6 @@ public extension FailedPaymentProviderPickerContentReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        let effect = reduce(&state, event)
-        
-        return (state, effect)
-    }
-}
-
-public extension FailedPaymentProviderPickerContentReducer {
-    
-    typealias State = FailedPaymentProviderPickerContentState
-    typealias Event = FailedPaymentProviderPickerContentEvent
-    typealias Effect = FailedPaymentProviderPickerContentEffect
-}
-
-private extension FailedPaymentProviderPickerContentReducer {
-    
-    func reduce(
-        _ state: inout State,
-        _ event: Event
-    ) -> Effect? {
-        
         var effect: Effect?
         
         switch event {
@@ -48,6 +28,13 @@ private extension FailedPaymentProviderPickerContentReducer {
             state.selection = nil
         }
         
-        return effect
+        return (state, effect)
     }
+}
+
+public extension FailedPaymentProviderPickerContentReducer {
+    
+    typealias State = FailedPaymentProviderPickerContentState
+    typealias Event = FailedPaymentProviderPickerContentEvent
+    typealias Effect = FailedPaymentProviderPickerContentEffect
 }
