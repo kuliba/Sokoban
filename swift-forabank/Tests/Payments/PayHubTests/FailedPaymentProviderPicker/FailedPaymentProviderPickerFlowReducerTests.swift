@@ -5,11 +5,44 @@
 //  Created by Igor Malyarov on 23.09.2024.
 //
 
-struct FailedPaymentProviderPickerFlowState: Equatable {}
-enum FailedPaymentProviderPickerFlowEvent: Equatable {}
-enum FailedPaymentProviderPickerFlowEffect: Equatable {}
+struct FailedPaymentProviderPickerFlowState<Destination> {
+    
+    var destination: Destination?
+}
 
-final class FailedPaymentProviderPickerFlowReducer {
+extension FailedPaymentProviderPickerFlowState: Equatable where Destination: Equatable {}
+
+enum FailedPaymentProviderPickerFlowEvent<Destination> {
+    
+    case destination(Destination)
+    case resetDestination
+    case select(Selection)
+}
+
+extension FailedPaymentProviderPickerFlowEvent: Equatable where Destination: Equatable {}
+
+extension FailedPaymentProviderPickerFlowEvent {
+    
+    enum Selection: Equatable {
+        
+        case detailPay
+    }
+}
+
+enum FailedPaymentProviderPickerFlowEffect: Equatable {
+    
+    case select(Selection)
+}
+
+extension FailedPaymentProviderPickerFlowEffect {
+    
+    enum Selection: Equatable {
+        
+        case detailPay
+    }
+}
+
+final class FailedPaymentProviderPickerFlowReducer<Destination> {
     
     init() {}
 }
@@ -25,7 +58,14 @@ extension FailedPaymentProviderPickerFlowReducer {
         var effect: Effect?
         
         switch event {
+        case let .destination(destination):
+            state.destination = destination
             
+        case .resetDestination:
+            state.destination = nil
+            
+        case .select(.detailPay):
+            effect = .select(.detailPay)
         }
         
         return (state, effect)
@@ -34,19 +74,70 @@ extension FailedPaymentProviderPickerFlowReducer {
 
 extension FailedPaymentProviderPickerFlowReducer {
     
-    typealias State = FailedPaymentProviderPickerFlowState
-    typealias Event = FailedPaymentProviderPickerFlowEvent
+    typealias State = FailedPaymentProviderPickerFlowState<Destination>
+    typealias Event = FailedPaymentProviderPickerFlowEvent<Destination>
     typealias Effect = FailedPaymentProviderPickerFlowEffect
 }
 
 import PayHub
 import XCTest
 
-final class FailedPaymentProviderPickerFlowReducerTests: XCTestCase {
+final class FailedPaymentProviderPickerFlowReducerTests: FailedPaymentProviderPickerFlowTests {
+    
+    func test_destination_shouldChangeState_nilDestination() {
+        
+        let destination = makeDestination()
+        assert(makeState(destination: nil), event: .destination(destination)) {
+            
+            $0.destination = destination
+        }
+    }
+    
+    func test_destination_shouldNotDeliverEffect_nilDestination() {
+        
+        assert(makeState(destination: nil), event: .destination(makeDestination()), delivers: nil)
+    }
+    
+    func test_destination_shouldChangeState() {
+        
+        let destination = makeDestination()
+        assert(makeState(destination: makeDestination()), event: .destination(destination)) {
+            
+            $0.destination = destination
+        }
+    }
+    
+    func test_destination_shouldNotDeliverEffect() {
+        
+        assert(makeState(destination: makeDestination()), event: .destination(makeDestination()), delivers: nil)
+    }
+    
+    func test_resetDestination_shouldChangeState() {
+        
+        assert(makeState(destination: makeDestination()), event: .resetDestination) {
+            
+            $0.destination = nil
+        }
+    }
+    
+    func test_resetDestination_shouldNotDeliverEffect() {
+        
+        assert(makeState(destination: makeDestination()), event: .resetDestination, delivers: nil)
+    }
+    
+    func test_select_detailPay_shouldNotChangeState() {
+        
+        assert(makeState(), event: .select(.detailPay))
+    }
+    
+    func test_select_detailPay_shouldDeliverEffect() {
+        
+        assert(makeState(), event: .select(.detailPay), delivers: .select(.detailPay))
+    }
     
     // MARK: - Helpers
     
-    private typealias SUT = FailedPaymentProviderPickerFlowReducer
+    private typealias SUT = FailedPaymentProviderPickerFlowReducer<Destination>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -58,5 +149,63 @@ final class FailedPaymentProviderPickerFlowReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState(
+        destination: Destination? = nil
+    ) -> SUT.State {
+        
+        return .init(destination: destination)
+    }
+    
+    @discardableResult
+    private func assert(
+        sut: SUT? = nil,
+        _ state: SUT.State,
+        event: SUT.Event,
+        updateStateToExpected: ((inout SUT.State) -> Void)? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT.State {
+        
+        let sut = sut ?? makeSUT(file: file, line: line)
+        
+        var expectedState = state
+        updateStateToExpected?(&expectedState)
+        
+        let (receivedState, _) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedState,
+            expectedState,
+            "\nExpected \(String(describing: expectedState)), but got \(String(describing: receivedState)) instead.",
+            file: file, line: line
+        )
+        
+        return receivedState
+    }
+    
+    @discardableResult
+    private func assert(
+        sut: SUT? = nil,
+        _ state: SUT.State,
+        event: SUT.Event,
+        delivers expectedEffect: SUT.Effect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT.Effect? {
+        
+        let sut = sut ?? makeSUT(file: file, line: line)
+        
+        let (_, receivedEffect) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+        
+        return receivedEffect
     }
 }
