@@ -71,7 +71,7 @@ extension SerialCachingRemoteBatchServiceComposer {
         makeRequest: @escaping StringSerialRemoteDomain<Payload, T>.MakeRequest,
         mapResponse: @escaping StringSerialRemoteDomain<Payload, T>.MapResponse,
         toModel: @escaping ([T]) -> [Model]
-    ) -> StringSerialRemoteDomain<Payload, T>.BatchService {
+    ) -> BatchService<Payload> {
         
         let perform = nanoServiceFactory.compose(
             makeRequest: makeRequest,

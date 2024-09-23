@@ -210,7 +210,7 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Composer = SerialCachingRemoteBatchServiceComposer
-    private typealias SUT = Composer.ServicePaymentProviderService
+    private typealias SUT = Composer.ServicePaymentProviderBatchService
     private typealias Payload = SerialCachingRemoteBatchServiceComposer.GetOperatorsListByParamPayload
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     

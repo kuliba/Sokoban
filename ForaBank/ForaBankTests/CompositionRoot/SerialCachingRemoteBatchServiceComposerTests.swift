@@ -307,7 +307,7 @@ final class SerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     private typealias Composer = SerialCachingRemoteBatchServiceComposer
     private typealias Domain = StringSerialRemoteDomain<Payload, Value>
-    private typealias SUT = Domain.BatchService
+    private typealias SUT = BatchService<Payload>
     private typealias MakeRequestSpy = CallSpy<Payload, URLRequest>
     private typealias StampedResult = Result<RemoteServices.SerialStamped<String, Value>, RemoteServices.ResponseMapper.MappingError>
     private typealias MapResponseSpy = CallSpy<(Data, HTTPURLResponse), StampedResult>

@@ -12,11 +12,11 @@ extension SerialCachingRemoteBatchServiceComposer {
     
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias RemoteProvider = RemoteServices.ResponseMapper.ServicePaymentProvider
-    typealias ServicePaymentProviderService = StringSerialRemoteDomain<GetOperatorsListByParamPayload, RemoteProvider>.BatchService
+    typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
     func composeServicePaymentOperatorService(
         getSerial: @escaping (GetOperatorsListByParamPayload) -> String?
-    ) -> ServicePaymentProviderService {
+    ) -> ServicePaymentProviderBatchService {
         
         let composed = self.compose(
             getSerial: getSerial,
