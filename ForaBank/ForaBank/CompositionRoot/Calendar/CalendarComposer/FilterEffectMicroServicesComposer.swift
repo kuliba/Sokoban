@@ -23,7 +23,10 @@ final class FilterEffectHandlerMicroServicesComposer {
     
     func compose() -> MicroServices {
         
-        .init(resetPeriod: resetPeriod, updateFilter: updateFilter)
+        .init(
+            resetPeriod: resetPeriod,
+            updateFilter: updateFilter
+        )
     }
 }
 
@@ -33,13 +36,16 @@ private extension FilterEffectHandlerMicroServicesComposer {
         productId: ProductData.ID,
         completion: @escaping MicroServices.ResetPeriodCompletion
     ) {
-        guard let period = model.statements.value[productId]?.period
-        else {
-            return completion(model.calendarDayStart(productId)..<Date())
+        DispatchQueue.global(qos: .background).async { [model] in
+            
+            guard let period = model.statements.value[productId]?.period
+            else {
+                return completion(model.calendarDayStart(productId)..<Date())
+            }
+            
+            let range = period.start..<period.end
+            completion(range)
         }
-        
-        let range = period.start..<period.end
-        completion(range)
     }
             
     func updateFilter(

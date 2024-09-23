@@ -82,6 +82,7 @@ final class ProductProfileFlowReducer {
             
         case let .updateFilter(.some(filterState)):
             state.filter = filterState
+            state.history?.showSheet = nil
             
         case let .payment(paymentViewModel):
             state.payment = paymentViewModel
@@ -196,7 +197,7 @@ enum HistoryEvent {
     case filter(FilterEvent)
     case calendar(Date?)
     case clearOptions
-    case receive(FilterWrapperView.Model)
+    case receive(FilterViewModel)
     case dismiss
     
     enum FilterEvent {

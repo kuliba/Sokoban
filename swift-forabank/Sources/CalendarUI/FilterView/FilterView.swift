@@ -11,15 +11,16 @@ import SharedConfigs
 import RxViewModel
 import Shimmer
 
+public typealias FilterViewModel = RxViewModel<FilterState, FilterEvent, FilterEffect>
+
 public struct FilterWrapperView<ButtonsView: View>: View {
     
+    public typealias Model = FilterViewModel
     public typealias State = FilterState
     public typealias Event = FilterEvent
     public typealias Effect = FilterEffect
     public typealias Config = FilterConfig
-    
-    public typealias Model = RxViewModel<State, Event, Effect>
-    
+        
     @ObservedObject private var model: Model
     private let config: Config
     private let calendarViewAction: (CalendarState) -> Void

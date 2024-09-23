@@ -28,13 +28,9 @@ final class FilterModelEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .resetPeriod(productId, state):
-            microServices.resetPeriod(productId) { period in
-            
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    
-                    dispatch(.resetPeriod(period))
-                }
+        case let .resetPeriod(productId):
+            microServices.resetPeriod(productId) {
+                dispatch(.resetPeriod($0))
             }
             
         case let .updateFilter(range):

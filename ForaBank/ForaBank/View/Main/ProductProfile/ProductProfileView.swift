@@ -183,19 +183,19 @@ struct ProductProfileView: View {
         
         Color.clear
             .sheet(
-                modal: viewModel.historyState,
+                modal: viewModel.historyState?.showSheet,
                 dismissModal: { viewModel.event(.history(.dismiss)) },
                 content: historySheetContent
             )
     }
     
     private func historySheetContent(
-        state: ProductProfileViewModel.HistoryState
+        sheet: ProductProfileViewModel.HistoryState.Sheet
     ) -> some View {
         
         VStack(spacing: 15) {
             
-            switch state.showSheet {
+            switch sheet {
             case .calendar:
                 CalendarWrapperView(
                     state: .init(
@@ -239,6 +239,20 @@ struct ProductProfileView: View {
                         config: .iFora
                     ) {
                         viewModel.event(.history(.filter(.period($0))))
+                    } buttonsView: {
+                        ButtonsContainer(
+                            applyAction: {
+                                
+                                viewModel.event(.updateFilter(filter.state))
+                            },
+                            clearOptionsAction: {
+                                filter.event(.clearOptions)
+                            },
+                            config: .init(
+                                clearButtonTitle: "Очистить",
+                                applyButtonTitle: "Применить"
+                            )
+                        )
                     }
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(
