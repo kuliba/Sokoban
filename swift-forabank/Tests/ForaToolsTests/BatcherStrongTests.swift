@@ -1,5 +1,5 @@
 //
-//  BatcherTests.swift
+//  BatcherStrongTests.swift
 //
 //
 //  Created by Igor Malyarov on 21.08.2024.
@@ -8,7 +8,7 @@
 import ForaTools
 import XCTest
 
-final class BatcherTests: XCTestCase {
+final class BatcherStrongTests: XCTestCase {
     
     // MARK: - init
     
@@ -20,31 +20,30 @@ final class BatcherTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - process
+    // MARK: - callAsFunction
     
-    func test_process_shouldDeliverEmptyOnEmpty() {
+    func test_callAsFunction_shouldDeliverEmptyOnEmpty() {
         
         let sut = makeSUT().sut
         
         expect(sut, with: [], toDeliver: [], on: {})
     }
     
-    func test_process_shouldNotDeliverResultOnInstanceDeallocation() {
+    func test_callAsFunction_shouldDeliverResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let spy: PerformSpy
         (sut, spy) = makeSUT()
         let exp = expectation(description: "wait for completion")
-        exp.isInverted = true
         
-        sut?.process([makeParameter()]) { _ in exp.fulfill() }
+        sut?([makeParameter()]) { _ in exp.fulfill() }
         sut = nil
         spy.complete(with: anyError())
         
         wait(for: [exp], timeout: 0.1)
     }
     
-    func test_process_shouldDeliverEmptyOnSuccessWithOneParameter() {
+    func test_callAsFunction_shouldDeliverEmptyOnSuccessWithOneParameter() {
         
         let parameter = makeParameter()
         let (sut, spy) = makeSUT()
@@ -55,7 +54,7 @@ final class BatcherTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverParameterOnFailureWithOneParameter() {
+    func test_callAsFunction_shouldDeliverParameterOnFailureWithOneParameter() {
         
         let parameter = makeParameter()
         let (sut, spy) = makeSUT()
@@ -66,7 +65,7 @@ final class BatcherTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverEmptyOnBothSuccess() {
+    func test_callAsFunction_shouldDeliverEmptyOnBothSuccess() {
         
         let (parameter1, parameter2) = (makeParameter(), makeParameter())
         let (sut, spy) = makeSUT()
@@ -78,7 +77,7 @@ final class BatcherTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverFirstParameterOnSecondSuccess() {
+    func test_callAsFunction_shouldDeliverFirstParameterOnSecondSuccess() {
         
         let (parameter1, parameter2) = (makeParameter(), makeParameter())
         let (sut, spy) = makeSUT()
@@ -90,7 +89,7 @@ final class BatcherTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverSecondParameterOnFirstSuccess() {
+    func test_callAsFunction_shouldDeliverSecondParameterOnFirstSuccess() {
         
         let (parameter1, parameter2) = (makeParameter(), makeParameter())
         let (sut, spy) = makeSUT()
@@ -102,7 +101,7 @@ final class BatcherTests: XCTestCase {
         }
     }
     
-    func test_process_shouldDeliverBothParametersOnBothFailure() {
+    func test_callAsFunction_shouldDeliverBothParametersOnBothFailure() {
         
         let (parameter1, parameter2) = (makeParameter(), makeParameter())
         let (sut, spy) = makeSUT()
@@ -130,9 +129,6 @@ final class BatcherTests: XCTestCase {
         let spy = PerformSpy()
         let sut = SUT(perform: spy.process(_:completion:))
         
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
-        
         return (sut, spy)
     }
     
@@ -153,7 +149,7 @@ final class BatcherTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.process(parameters) {
+        sut(parameters) {
             
             XCTAssertNoDiff($0, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
