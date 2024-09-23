@@ -2694,6 +2694,10 @@
 		83378ABC2AA0DFE20087F8B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */; };
 		83378ABF2AA0DFE20087F8B1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */; };
 		833A44B22CA1696400121346 /* TabsViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B12CA1696400121346 /* TabsViewModelFactory.swift */; };
+		833A44B72CA17A0E00121346 /* MarketShowcaseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */; };
+		833A44B92CA17E9800121346 /* MarketShowcaseEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */; };
+		833A44BB2CA1839600121346 /* MarketShowcaseViewModelEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */; };
+		833A44BD2CA184B200121346 /* MarketShowcaseEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */; };
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */; };
 		833D3E382C2EDE31006626F2 /* ControlPanelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E332C2EDE2F006626F2 /* ControlPanelReducer.swift */; };
@@ -6122,6 +6126,10 @@
 		83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		833A44B12CA1696400121346 /* TabsViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewModelFactory.swift; sourceTree = "<group>"; };
+		833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseState.swift; sourceTree = "<group>"; };
+		833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseEvent.swift; sourceTree = "<group>"; };
+		833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseViewModelEffect.swift; sourceTree = "<group>"; };
+		833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseEffect.swift; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlPanelPanelViewConfig+ext.swift"; sourceTree = "<group>"; };
 		833D3E332C2EDE2F006626F2 /* ControlPanelReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelReducer.swift; sourceTree = "<group>"; };
@@ -13782,6 +13790,7 @@
 		770DCE9427BBFA49004099C1 /* Root */ = {
 			isa = PBXGroup;
 			children = (
+				839673A12C9C8F1E00E7F49C /* Market */,
 				770DCE9227BBF93B004099C1 /* RootView.swift */,
 				2A2B91E52C7CBA17008F5186 /* EXTRACT_TO_DESIGN_SYSTEM */,
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
@@ -14249,7 +14258,6 @@
 		7769F5BA27D3A2D900F80607 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				839673A12C9C8F1E00E7F49C /* Market */,
 				832F830F2BB8290D00C97BBD /* Carousel */,
 				7769F5BB27D3A2EA00F80607 /* MainView.swift */,
 				83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */,
@@ -14686,6 +14694,7 @@
 		77DC125C277098C600C917B0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				833A44B32CA1760900121346 /* MarketShowcase */,
 				839331962C8F173300D15379 /* Banners */,
 				8353CD5F2B57F65A005F7D1A /* CardStatement */,
 				83E455E22AC2E07B0045BEC1 /* C2B */,
@@ -15471,6 +15480,16 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		833A44B32CA1760900121346 /* MarketShowcase */ = {
+			isa = PBXGroup;
+			children = (
+				833A44B62CA17A0E00121346 /* MarketShowcaseState.swift */,
+				833A44B82CA17E9800121346 /* MarketShowcaseEvent.swift */,
+				833A44BC2CA184B200121346 /* MarketShowcaseEffect.swift */,
+			);
+			path = MarketShowcase;
+			sourceTree = "<group>";
+		};
 		833D3E322C2EDD9F006626F2 /* ControlPanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -15708,6 +15727,7 @@
 			isa = PBXGroup;
 			children = (
 				839673A22C9C8F3900E7F49C /* MarketShowcaseView.swift */,
+				833A44BA2CA1839600121346 /* MarketShowcaseViewModelEffect.swift */,
 			);
 			path = Market;
 			sourceTree = "<group>";
@@ -20930,6 +20950,7 @@
 				77517F9427A800C6005CFB77 /* ServerCommands+Transfer.swift in Sources */,
 				2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */,
 				2AA3A9702BFF91F800AEBCC9 /* AnywayPaymentFooterView.swift in Sources */,
+				833A44BB2CA1839600121346 /* MarketShowcaseViewModelEffect.swift in Sources */,
 				2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
 				C10F481928E4A52F009918EA /* PushNotification.swift in Sources */,
@@ -21750,9 +21771,11 @@
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				2AC2ADC72B22FBCA0049EE9B /* FeatureFlag.swift in Sources */,
 				C16DDBEE2B2C95BA001BF988 /* QRPaymentType.swift in Sources */,
+				833A44BD2CA184B200121346 /* MarketShowcaseEffect.swift in Sources */,
 				2A6DC7AE2C981F3E00A801A0 /* BatchSerialCachingRemoteLoaderComposer.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				2A35DDA52C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift in Sources */,
+				833A44B92CA17E9800121346 /* MarketShowcaseEvent.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
 				839331A82C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift in Sources */,
 				2A7183BC2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift in Sources */,
@@ -21822,6 +21845,7 @@
 				5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */,
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
 				2A5B23212BEE329200270D50 /* SberOperatorFailureFlowView.swift in Sources */,
+				833A44B72CA17A0E00121346 /* MarketShowcaseState.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				2ACFD6542C5CC72F003F08AE /* QRModelWrapperEffect.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,

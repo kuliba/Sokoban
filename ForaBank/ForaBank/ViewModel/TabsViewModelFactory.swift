@@ -19,8 +19,7 @@ struct TabsViewModelFactory {
         mainViewModel.reset()
         paymentsModel.reset()
         chatViewModel.reset()
-        // TODO: add marketShowcaseModel reset
-        //marketShowcaseModel.reset()
+        marketShowcaseModel.reset()
     }
 }
 
@@ -30,5 +29,5 @@ extension TabsViewModelFactory {
         mainViewModel: .sample,
         paymentsModel: .legacy(.sample),
         chatViewModel: .init(),
-        marketShowcaseModel: .init())
+        marketShowcaseModel: .preview)
 }

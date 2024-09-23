@@ -887,7 +887,10 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
-        let marketShowcaseModel = MarketShowcaseViewModel()
+        let marketShowcaseModel = MarketShowcaseViewModel(
+            initialState: .inflight,
+            reduce: { state, _ in return (state, .none) },
+            handleEffect: {_,_  in })
         
         let tabsViewModelFactory = TabsViewModelFactory(
             mainViewModel: mainViewModel,

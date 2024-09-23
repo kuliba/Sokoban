@@ -297,7 +297,7 @@ private extension RootViewFactoryComposer {
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseViewModel
     ) -> MarketShowcaseView? {
-        marketFeatureFlag.isActive ? .init() : nil
+        marketFeatureFlag.isActive ? .init(state: .inflight, event: {_ in }, factory: .preview, config: .default) : nil
     }
 }
 
