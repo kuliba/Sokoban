@@ -5,51 +5,6 @@
 //  Created by Igor Malyarov on 23.09.2024.
 //
 
-struct FailedPaymentProviderPickerFlowEffectHandlerMicroServices<Destination> {
-    
-    let makeDestination: MakeDestination
-}
-
-extension FailedPaymentProviderPickerFlowEffectHandlerMicroServices {
-    
-    typealias MakeDestination = (@escaping (Destination) -> Void) -> Void
-}
-
-final class FailedPaymentProviderPickerFlowEffectHandler<Destination> {
-    
-    private let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = FailedPaymentProviderPickerFlowEffectHandlerMicroServices<Destination>
-}
-
-extension FailedPaymentProviderPickerFlowEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case .select(.detailPay):
-            microServices.makeDestination { dispatch(.destination($0)) }
-        }
-    }
-}
-
-extension FailedPaymentProviderPickerFlowEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = FailedPaymentProviderPickerFlowEvent<Destination>
-    typealias Effect = FailedPaymentProviderPickerFlowEffect
-}
-
-
 import PayHub
 import XCTest
 
