@@ -1,5 +1,5 @@
 //
-//  BatchSerialCachingRemoteLoaderComposer+composeServicePaymentProviderService.swift
+//  SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
@@ -8,21 +8,21 @@
 import OperatorsListBackendV0
 import RemoteServices
 
-extension BatchSerialCachingRemoteLoaderComposer {
+extension SerialCachingRemoteBatchServiceComposer {
     
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias RemoteProvider = RemoteServices.ResponseMapper.ServicePaymentProvider
-    typealias ServicePaymentProviderService = StringSerialRemoteDomain<GetOperatorsListByParamPayload, RemoteProvider>.BatchService
+    typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
-    func composeServicePaymentProviderService(
+    func composeServicePaymentOperatorService(
         getSerial: @escaping (GetOperatorsListByParamPayload) -> String?
-    ) -> ServicePaymentProviderService {
+    ) -> ServicePaymentProviderBatchService {
         
         let composed = self.compose(
             getSerial: getSerial,
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
-            toModel: [CodableServicePaymentProvider].init(providers:)
+            toModel: [CodableServicePaymentOperator].init(providers:)
         )
         
         return { payloads, completion in
@@ -44,12 +44,16 @@ extension ForaBank.RequestFactory.GetOperatorsListByParamPayload {
     }
 }
 
-struct CodableServicePaymentProvider: Codable, Identifiable {
+struct CodableServicePaymentOperator: Codable, Identifiable {
     
     let id: String
+    let inn: String
+    let md5Hash: String?
+    let name: String
+    let type: String
 }
 
-extension Array where Element == CodableServicePaymentProvider {
+extension Array where Element == CodableServicePaymentOperator {
     
     init(providers: [RemoteServices.ResponseMapper.ServicePaymentProvider]) {
         
@@ -59,8 +63,8 @@ extension Array where Element == CodableServicePaymentProvider {
 
 private extension RemoteServices.ResponseMapper.ServicePaymentProvider {
     
-    var codable: CodableServicePaymentProvider {
+    var codable: CodableServicePaymentOperator {
         
-        return .init(id: id)
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
     }
 }
