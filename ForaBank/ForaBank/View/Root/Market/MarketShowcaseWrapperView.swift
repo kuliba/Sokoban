@@ -14,16 +14,13 @@ struct MarketShowcaseWrapperView: View {
     
     let viewModel: MarketShowcaseViewModel
     let factory: ViewFactory
-    let config: Config
     
     init(
         viewModel: ViewModel,
-        factory: ViewFactory,
-        config: Config
+        factory: ViewFactory
     ) {
         self.viewModel = viewModel
         self.factory = factory
-        self.config = config
     }
 
     var body: some View {
@@ -32,7 +29,8 @@ struct MarketShowcaseWrapperView: View {
             state: viewModel.state,
             event: viewModel.event(_:),
             factory: factory,
-            config: config)
+            config: .iFora
+        )
     }
 }
 

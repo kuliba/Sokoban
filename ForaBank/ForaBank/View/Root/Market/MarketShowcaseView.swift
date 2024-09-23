@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import UIPrimitives
-import Combine
 
 struct MarketShowcaseView: View {
     
@@ -27,7 +25,6 @@ struct MarketShowcaseView: View {
                 }))
         }
     }
-    
     
     @ViewBuilder
     private func content() -> some View {
@@ -65,26 +62,6 @@ extension MarketShowcaseView {
         event: {_ in },
         factory: .preview,
         config: .iFora)
-}
-
-extension MarketShowcaseView {
-    
-    struct ViewFactory {
-        
-        let makeIconView: MakeIconView
-    }
-}
-
-extension MarketShowcaseView.ViewFactory {
-    
-    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
-    
-    static let preview = MarketShowcaseView.ViewFactory.init(
-        makeIconView: {_ in
-                .init(
-                    image: Image.cardPlaceholder,
-                    publisher: Just(Image.ic24Tv).eraseToAnyPublisher()
-                )})
 }
 
 private struct RefreshModifier: ViewModifier {
