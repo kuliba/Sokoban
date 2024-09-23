@@ -83,3 +83,43 @@ extension BlockHorizontalRectangularView {
         }
     }
 }
+
+
+public extension UILanding.BlockHorizontalRectangular {
+    
+    func maxLimit(by type: String) -> Decimal {
+
+        let maxValue = {
+            
+            for item in list {
+                
+                for limit in item.limits {
+                    
+                    if limit.id == type {
+                        return limit.maxSum
+                    }
+                }
+            }
+            
+            return 999999999
+        }()
+        
+        return maxValue
+    }
+    
+    func newValueMoreThenMaxValue(
+        _ newLimitsValue: [BlockHorizontalRectangularEvent.Limit]
+    ) -> Bool {
+        
+        var newValueMoreThenMaxValue = false
+        
+        for newLimit in newLimitsValue {
+            
+            if newLimit.value > maxLimit(by: newLimit.id) {
+                newValueMoreThenMaxValue = true
+                break
+            }
+        }
+        return newValueMoreThenMaxValue
+    }
+}

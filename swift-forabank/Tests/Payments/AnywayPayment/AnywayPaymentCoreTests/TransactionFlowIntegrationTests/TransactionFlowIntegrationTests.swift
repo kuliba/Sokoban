@@ -24,18 +24,19 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_initiateFailureFlow_shouldIgnoreSuccessiveEvents() {
         
+        let message = anyMessage()
         let initialState = makeTransaction()
         let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(initialState: initialState)
         
         sut.event(.initiatePayment)
-        paymentInitiator.complete(with: .failure(.connectivityError))
+        paymentInitiator.complete(with: .failure(.connectivityError(message)))
         
         assert(stateSpy, initialState, {
             _ in
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .result(.failure(.updatePaymentFailure))
+            $0.status = .result(.failure(.updatePaymentFailure(message)))
         })
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
@@ -198,6 +199,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_paymentProcessingConnectivityError_shouldIgnoreSuccessiveEvents() {
         
+        let message = anyMessage()
         let initialState = makeTransaction()
         let updatedPayment = makeContext()
         let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
@@ -209,7 +211,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        paymentProcessing.complete(with: .failure(.connectivityError))
+        paymentProcessing.complete(with: .failure(.connectivityError(message)))
         
         assert(stateSpy, initialState, {
             _ in
@@ -222,7 +224,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .result(.failure(.updatePaymentFailure))
+            $0.status = .result(.failure(.updatePaymentFailure(message)))
         })
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
@@ -277,6 +279,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
+        let message = anyMessage()
         let initialState = makeTransaction()
         let verificationCode = makeVerificationCode()
         let updatedPayment = makeContext()
@@ -289,7 +292,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        paymentMaker.complete(with: .failure(.terminal))
+        paymentMaker.complete(with: .failure(.terminal(message)))
         
         assert(stateSpy, initialState, {
             _ in
@@ -302,7 +305,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .result(.failure(.transactionFailure))
+            $0.status = .result(.failure(.transactionFailure(message)))
         })
         
         assertSuccessiveEventsDeliverNoStateChanges(sut, stateSpy)
@@ -503,7 +506,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     ) {
         let accStates = stateSpy.values
         
-        sut.event(.completePayment(.failure(.terminal)))
+        sut.event(.completePayment(.failure(.terminal(anyMessage()))))
         sut.event(.continue)
         sut.event(.continue)
         sut.event(.fraud(.cancel))
@@ -511,7 +514,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         sut.event(.fraud(.expired))
         sut.event(.initiatePayment)
         sut.event(.payment(.select))
-        sut.event(.updatePayment(.failure(.connectivityError)))
+        sut.event(.updatePayment(.failure(.connectivityError(anyMessage()))))
         
         XCTAssertNoDiff(stateSpy.values, accStates)
     }

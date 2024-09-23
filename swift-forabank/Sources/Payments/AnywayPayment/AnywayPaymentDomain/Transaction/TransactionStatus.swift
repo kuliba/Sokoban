@@ -21,8 +21,8 @@ public extension TransactionStatus {
     enum Terminated: Error, Equatable {
         
         case fraud(Fraud)
-        case transactionFailure
-        case updatePaymentFailure
+        case transactionFailure(String)
+        case updatePaymentFailure(String)
     }
 }
 

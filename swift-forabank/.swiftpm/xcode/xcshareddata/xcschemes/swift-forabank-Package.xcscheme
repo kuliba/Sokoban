@@ -742,20 +742,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ChangeSVCardLimitAPI"
-               BuildableName = "ChangeSVCardLimitAPI"
-               BlueprintName = "ChangeSVCardLimitAPI"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "SelectorComponent"
                BuildableName = "SelectorComponent"
                BlueprintName = "SelectorComponent"
@@ -784,9 +770,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "LatestPayments"
-               BuildableName = "LatestPayments"
-               BlueprintName = "LatestPayments"
+               BlueprintIdentifier = "CalendarUI"
+               BuildableName = "CalendarUI"
+               BlueprintName = "CalendarUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -798,9 +784,163 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CalendarUI"
-               BuildableName = "CalendarUI"
-               BlueprintName = "CalendarUI"
+               BlueprintIdentifier = "SelectorComponents"
+               BuildableName = "SelectorComponents"
+               BlueprintName = "SelectorComponents"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetInfoRepeatPaymentService"
+               BuildableName = "GetInfoRepeatPaymentService"
+               BlueprintName = "GetInfoRepeatPaymentService"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeV6Service"
+               BuildableName = "GetProductListByTypeV6Service"
+               BlueprintName = "GetProductListByTypeV6Service"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PayHub"
+               BuildableName = "PayHub"
+               BlueprintName = "PayHub"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PayHubUI"
+               BuildableName = "PayHubUI"
+               BlueprintName = "PayHubUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetBannerCatalogListAPI"
+               BuildableName = "GetBannerCatalogListAPI"
+               BlueprintName = "GetBannerCatalogListAPI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LatestPaymentsBackendV2"
+               BuildableName = "LatestPaymentsBackendV2"
+               BlueprintName = "LatestPaymentsBackendV2"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PaymentTemplateBackendV3"
+               BuildableName = "PaymentTemplateBackendV3"
+               BlueprintName = "PaymentTemplateBackendV3"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ServiceCategoriesBackendV0"
+               BuildableName = "ServiceCategoriesBackendV0"
+               BlueprintName = "ServiceCategoriesBackendV0"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LatestPaymentsBackendV3"
+               BuildableName = "LatestPaymentsBackendV3"
+               BlueprintName = "LatestPaymentsBackendV3"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Banners"
+               BuildableName = "Banners"
+               BlueprintName = "Banners"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListBackendV0"
+               BuildableName = "OperatorsListBackendV0"
+               BlueprintName = "OperatorsListBackendV0"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -835,6 +975,46 @@
                BlueprintIdentifier = "SelectComponentTests"
                BuildableName = "SelectComponentTests"
                BlueprintName = "SelectComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "InputComponentTests"
+               BuildableName = "InputComponentTests"
+               BlueprintName = "InputComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetInfoRepeatPaymentServiceTests"
+               BuildableName = "GetInfoRepeatPaymentServiceTests"
+               BlueprintName = "GetInfoRepeatPaymentServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetProductListByTypeV6ServiceTests"
+               BuildableName = "GetProductListByTypeV6ServiceTests"
+               BlueprintName = "GetProductListByTypeV6ServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OperatorsListBackendV0Tests"
+               BuildableName = "OperatorsListBackendV0Tests"
+               BlueprintName = "OperatorsListBackendV0Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

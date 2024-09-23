@@ -90,20 +90,20 @@ struct ProductProfileView: View {
                                             
                                             return productProfileViewFactory.makeHistoryButton(
                                                 {
-                                                    viewModel.event(.history($0))
+                                                    viewModel.event(.button($0))
                                                 },{
-                                                    viewModel.filterState?.filter.selectedServices.isEmpty == false || viewModel.filterState?.filter.selectedTransaction != nil || viewModel.filterState?.filter.selectedPeriod == .week
+                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week
                                                 },{
-                                                    return viewModel.filterState?.calendar.range?.lowerDate != nil
+                                                    return viewModel.filterState.calendar.range?.lowerDate != nil
                                                     
                                                 }, {
                                                     
                                                     self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
-                                                    viewModel.filterState?.filter.selectedServices = []
-                                                    viewModel.filterState?.filter.selectedTransaction = nil
-                                                    viewModel.filterState?.filter.selectedPeriod = .month
-                                                    viewModel.filterState?.filter.selectDates = nil
-                                                    viewModel.filterState?.calendar.range = .init()
+                                                    viewModel.filterState.filter.selectedServices = []
+                                                    viewModel.filterState.filter.selectedTransaction = nil
+                                                    viewModel.filterState.filter.selectedPeriod = .month
+                                                    viewModel.filterState.filter.selectDates = nil
+                                                    viewModel.filterState.calendar.range = .init()
                                                 })
                                         } else {
                                             return nil
@@ -141,7 +141,7 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
                
-            if viewModel.historyState?.showSheet == true {
+            if viewModel.historyState != nil {
                 
                 historySheet()
             }
@@ -184,117 +184,97 @@ struct ProductProfileView: View {
         Color.clear
             .sheet(
                 modal: viewModel.historyState,
-                dismissModal: { viewModel.historyState?.showSheet = false },
-                content: { _ in historySheetContent() }
+                dismissModal: { viewModel.event(.history(.dismiss)) },
+                content: historySheetContent
             )
     }
     
-    private func historySheetContent() -> some View {
+    private func historySheetContent(
+        state: ProductProfileViewModel.HistoryState
+    ) -> some View {
         
         VStack(spacing: 15) {
             
-            if let state = viewModel.historyState {
-                
-                switch state.buttonAction {
-                case .calendar:
-                    CalendarWrapperView(
-                        state: .init(
-                            date: Date(),
-                            range: .init(),
-                            monthsData: .generate(startDate: viewModel.calendarDayStart()),
-                            periods: [.week, .month, .dates]
-                        ),
-                        event: { event in
-                            
-                            switch event {
-//                            case let .apply(state):
-//                                
-////                                viewModel.event(.filter(.selectedDates(
-////                                    lowerDate: state.range?.lowerDate,
-////                                    upperDate: state.range?.upperDate
-////                                )))
-////                                
-////                                viewModel.event(.history(.dismiss))
-//                                print("### APPLY action")
-
-                            case .clear:
-                                print("### Clear action")
-                                break
-                            case .dismiss:
-                                print("### DISMISS action")
-                                viewModel.event(.history(.dismiss))
-                            }
-                        },
-                        config: .iFora,
-                        apply: { lowerDate, upperDate in
-                            if let lowerDate = lowerDate,
-                               let upperDate = upperDate {
-                                
-                                viewModel.filterState?.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
-                                viewModel.filterHistoryRequest(
-                                    lowerDate,
-                                    upperDate,
-                                    nil,
-                                    []
-                                )
-                            }
-                            
+            switch state.showSheet {
+            case .calendar:
+                CalendarWrapperView(
+                    state: .init(
+                        date: Date(),
+                        range: .init(),
+                        monthsData: .generate(startDate: viewModel.calendarDayStart()),
+                        periods: [.week, .month, .dates]
+                    ),
+                    event: { event in
+                        
+                        switch event {
+                        case .clear:
+                            break
+                        case .dismiss:
                             viewModel.event(.history(.dismiss))
-
+                        }
+                    },
+                    config: .iFora,
+                    apply: { lowerDate, upperDate in
+                        if let lowerDate = lowerDate,
+                           let upperDate = upperDate {
+                            
+                            viewModel.filterState.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
+                            viewModel.filterHistoryRequest(
+                                lowerDate,
+                                upperDate,
+                                nil,
+                                []
+                            )
+                        }
+                        viewModel.event(.history(.dismiss))
+                    }
+                )
+                
+            case let .filter(filter):
+                    
+                NavigationView {
+                    
+                    FilterWrapperView(
+                        model: filter,
+                        config: .iFora
+                    ) {
+                        viewModel.event(.history(.filter(.period($0))))
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(
+                        destination: viewModel.historyState?.calendarState,
+                        dismissDestination: { viewModel.event(.history(.filter(.dismissCalendar))) },
+                        content: { state in
+                            
+                            CalendarWrapperView(
+                                state: state.state,
+                                event: {
+                                    
+                                    switch $0 {
+                                    case .clear:
+                                        break
+                                    case .dismiss:
+                                        viewModel.event(.history(.filter(.dismissCalendar)))
+                                    }
+                                },
+                                config: .iFora,
+                                apply: { lowerDate, upperDate in
+                                    
+                                    if let lowerDate, let upperDate {
+                                    
+                                        filter.event(.selectedDates(lowerDate..<upperDate))
+                                    }
+                                    
+                                    viewModel.event(.history(.filter(.dismissCalendar)))
+                                }
+                            )
+                            .navigationBarWithBack(
+                                title: "Выберите период",
+                                dismiss: {
+                                viewModel.event(.history(.filter(.dismissCalendar)))
+                            })
                         }
                     )
-                    
-                case .filter:
-                    if let filterState = self.viewModel.filterState {
-
-                        FilterView(
-                            filterState: filterState,
-                            event: { event in
-
-                                self.viewModel.event(.filter(event))
-                                
-                            },
-                            config: .iFora,
-                            makeButtonsContainer: { applyAction, state, clearOptions in
-                                .init(
-                                    applyAction: {
-                                        
-                                        self.viewModel.filterState?.filter = state.filter
-                                        
-//                                        self.viewModel.event(.filter(.selectedCategory(state.filter.selectedServices)))
-//                                        self.viewModel.event(.filter(.selectedPeriod(state.filter.selectedPeriod)))
-//                                        self.viewModel.event(.filter(.selectedTransaction(state.filter.selectedTransaction)))
-                                        self.viewModel.event(.history(.dismiss))
-                                        
-                                        if let lowerDate = state.filter.selectDates?.lowerDate,
-                                           let upperDate = state.filter.selectDates?.upperDate {
-                                         
-                                            viewModel.filterHistoryRequest(
-                                                lowerDate.addingTimeInterval(86400),
-                                                upperDate.addingTimeInterval(86400),
-                                                state.filter.selectedTransaction?.rawValue.uppercased(),
-                                                state.filter.selectedServices.map({ $0 })
-                                            )
-                                        }
-                                    },
-                                    clearOptionsAction: {
-                                        self.viewModel.event(.filter(.clearOptions))
-                                        self.viewModel.filterState = nil
-                                        clearOptions()
-                                    },
-                                    config: .init(
-                                        clearButtonTitle: "Очистить",
-                                        applyButtonTitle: "Применить"
-                                    )
-                                )
-                            }, calendarViewAction: {
-                                
-                                self.viewModel.event(.history(.button(.calendar({ lowerDate, upperDate in
-                                    self.viewModel.event(.history(.button(.filter(lowerDate, upperDate))))
-                                }))))
-                            }
-                        )
-                    }
                 }
             }
         }
@@ -339,17 +319,16 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
-        
-        case let .payment(paymentViewModel):
-            PaymentsView(viewModel: paymentViewModel)
             
-        case let .paymentsTransfers(viewModel):
+        case let .paymentsTransfers(node):
             PaymentsTransfersView(
-                viewModel: viewModel,
+                viewModel: node.model,
                 viewFactory: viewFactory, 
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+        case let .payment(viewModel):
+            PaymentsView(viewModel: viewModel)
         }
     }
     
@@ -777,6 +756,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
     
@@ -798,6 +778,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: SadCVVPINServicesClient(),
         filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
 }
@@ -820,7 +801,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolve: QRViewModel.ScanResult.init
+            qrResolve: { _ in .unknown }
         )
     }
 }

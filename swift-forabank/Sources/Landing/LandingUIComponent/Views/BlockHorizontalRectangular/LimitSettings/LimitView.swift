@@ -39,7 +39,7 @@ where InfoView: View {
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
-        self.getDecimal = formatter.getDecimal
+        self.getDecimal = formatter.getDecimalForLimit
         self.state = state
         self.event = event
         self.config = config
@@ -48,21 +48,25 @@ where InfoView: View {
     }
         
     var body: some View {
-                
+        
         VStack(alignment: .leading, spacing: 4) {
             
-            state.limit.title.text(withConfig: config.title)
-                .frame(height: 24)
             HStack {
+                
                 makeIconView(state.limit.md5Hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(widthAndHeight: config.widthAndHeight)
                 
-                textField()
+                VStack(alignment: .leading, spacing: 0){
+                    state.limit.title.text(withConfig: config.title)
+                        .frame(height: 18)
+                    textField()
+                        .frame(height: 24)
+                }
             }
             .frame(height: 46)
             infoView()
-                .hidden(state.hiddenInfo)
+                .hidden(state.hiddenInfo, 32)
         }
     }
 
@@ -71,13 +75,14 @@ where InfoView: View {
         
         let textFieldPublisher = textFieldModel.$state
             .map(getDecimal)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .removeDuplicates(by: decimalEqual)
         
         TextFieldView(
             viewModel: textFieldModel,
             textFieldConfig: .init(
                 font: .systemFont(ofSize: 16),
-                textColor: config.limit.textColor,
+                textColor: textFieldModel.textFieldColor(first: config.limit.textColor, second: config.title.textColor) ,
                 tintColor: .init(red: 28/255, green: 28/255, blue: 28/255),
                 backgroundColor: .clear,
                 placeholderColor: .clear
@@ -140,19 +145,22 @@ struct LimitView_Previews: PreviewProvider {
     }
 }
 
-extension View {
+private extension View {
     
     @ViewBuilder
-    func hidden(_ isHidden: Bool) -> some View {
+    func hidden(
+        _ isHidden: Bool,
+        _ height: CGFloat
+    ) -> some View {
         
         switch isHidden {
         case true: self.hidden()
-        case false: self
+        case false: self.frame(height: height)
         }
     }
 }
 
-private extension Decimal {
+extension Decimal {
     
  func rounded(toDecimalPlace digit: Int = 2) -> Decimal {
     var initialDecimal = self
@@ -160,4 +168,28 @@ private extension Decimal {
     NSDecimalRound(&roundedDecimal, &initialDecimal, digit, .plain)
     return roundedDecimal
   }
+}
+
+private extension DecimalFormatter {
+    
+    func getDecimalForLimit(
+        _ textFieldState: TextFieldState
+    ) -> Decimal {
+        
+        switch textFieldState {
+        case .placeholder:
+            return 0
+
+        case let .noFocus(text):
+            return valueFromText(text)
+            
+        case let .editing(textState):
+            return valueFromText(textState.text)
+        }
+    }
+    
+    func valueFromText(_ text: String) -> Decimal {
+        
+        text == .noLimits ? .maxLimit : number(from: text)
+    }
 }

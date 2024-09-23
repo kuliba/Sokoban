@@ -92,11 +92,16 @@ private extension FastPaymentsSettings.ServiceFailure {
     
     var requestLimitMessage: String? {
         
-        let errorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
+        let errorMessage: String = .errorRequestLimitExceeded
         
         guard case .serverError(errorMessage) = self
         else { return nil }
         
         return errorMessage
     }
+}
+
+extension String {
+    
+    static let errorRequestLimitExceeded = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
 }

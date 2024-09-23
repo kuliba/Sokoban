@@ -90,24 +90,25 @@ private extension AnywayPaymentFactoryComposer {
     }
     
     func makeSelectorView(
+        parameter: AnywayElementModel.Parameter,
         viewModel: ObservingSelectorViewModel
     ) -> SelectorWrapperView {
         
-        let icon = viewModel.state.icon
-        let title = viewModel.state.title
+        let icon = parameter.origin.icon
+        let title = parameter.origin.title
         
         return .init(
             viewModel: viewModel,
             factory: .init(
                 makeIconView: { self.makeIconView(icon) },
-                makeOptionLabel: {
+                makeItemLabel: {
                     
                     SimpleLabel(
                         text: $0.value,
                         makeIconView: { Image.ic24RadioDefolt }
                     )
                 },
-                makeSelectedOptionLabel: SelectedOptionView.init,
+                makeSelectedItemLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
             ),
             config: .iFora(title: title)

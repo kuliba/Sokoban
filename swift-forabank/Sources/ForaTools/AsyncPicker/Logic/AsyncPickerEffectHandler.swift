@@ -39,8 +39,8 @@ public extension AsyncPickerEffectHandler {
         case let .load(payload):
             microServices.load(payload) { dispatch(.loaded($0)) }
             
-        case let .select(item):
-            microServices.select(item) { dispatch(.response($0)) }
+        case let .select(item, payload):
+            microServices.select(item, payload) { dispatch(.response($0)) }
         }
     }
 }

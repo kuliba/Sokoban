@@ -104,6 +104,12 @@ extension ControlPanelReducer {
             
         case let .destination(destination):
             state.destination = destination
+            
+        case .showSpinner:
+            state.spinner = .init()
+            
+        case .hideSpinner:
+            state.spinner = nil
         }
         
         return (state, effect)

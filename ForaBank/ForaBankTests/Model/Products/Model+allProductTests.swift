@@ -104,6 +104,175 @@ final class Model_allProductTests: XCTestCase {
         
         XCTAssertNoDiff(products, [])
     }
+    
+    func test_onlyCorporateCards_productsWithoutCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    // MARK: - test onlyCorporateCards
+    
+    func test_onlyCorporateCards_productsWithOnlyIndividualCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .regular),
+                makeCardProduct(cardType: .additionalSelf)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsWithIndividualAndCorporateCards_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .regular),
+                makeCardProduct(cardType: .additionalSelf),
+                makeCardProduct(cardType: .individualBusinessman),
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsEmpty_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [],
+            .card: [],
+            .deposit: [],
+            .loan: []
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsIndividualAndCorporateCardsWithoutActiveProduct_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .main, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .regular, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .additionalSelf, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .individualBusinessman),
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsOnlyIndividualCardsWithoutActiveProduct_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .main, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .regular, status: .blockedUnlockAvailable),
+                makeCardProduct(cardType: .additionalSelf, status: .blockedUnlockAvailable)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsOnlyCorporateCards_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .individualBusinessman),
+                makeCardProduct(cardType: .corporate)
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsCorporateCardsWithNotDemandDeposits_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .deposit: [
+                .depositActiveRubNotDemand,
+            ],
+            .card: [
+                makeCardProduct(cardType: .corporate),
+                makeCardProduct(cardType: .individualBusinessmanMain)
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsCorporateCardsWithDemandDeposits_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .deposit: [
+                .depositActiveRubDemand,
+            ],
+            .card: [
+                makeCardProduct(cardType: .corporate),
+                makeCardProduct(cardType: .individualBusinessmanMain)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+
+    func test_onlyCorporateCards_productsCorporateCardsWithRubAccount_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 2, currency: "RUB")
+            ],
+            .card: [                
+                makeCardProduct(cardType: .additionalCorporate, status: .active)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.onlyCorporateCards)
+    }
+    
+    func test_onlyCorporateCards_productsCorporateCardsWithOnlyCurrencyAccount_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(cardType: .additionalCorporate, status: .active)
+            ],
+            .account: [
+                makeAccountProduct(id: 2, currency: "USD")
+            ]
+        ])
+                
+        XCTAssertTrue(sut.onlyCorporateCards)
+    }
 
     // MARK: - Helpers
     
@@ -120,7 +289,8 @@ final class Model_allProductTests: XCTestCase {
     }
     
     private func makeCardProduct(
-        cardType: ProductCardData.CardType
+        cardType: ProductCardData.CardType,
+        status: ProductCardData.StatusCard = .active
     ) -> ProductCardData {
         
         .init(
@@ -167,6 +337,7 @@ final class Model_allProductTests: XCTestCase {
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
+            statusCard: status, 
             cardType: cardType,
             idParent: nil
         )
@@ -176,7 +347,8 @@ final class Model_allProductTests: XCTestCase {
 extension XCTestCase {
 
     func makeAccountProduct(
-        id: Int
+        id: Int,
+        currency: String = "RUB"
     ) -> ProductAccountData {
         
         .init(
@@ -187,7 +359,7 @@ extension XCTestCase {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "RUB",
+            currency: currency,
             mainField: "Account",
             additionalField: nil,
             customName: nil,

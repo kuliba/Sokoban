@@ -60,6 +60,13 @@
         "identifier" : "TextFieldComponentTests",
         "name" : "TextFieldComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "InputComponentTests",
+        "name" : "InputComponentTests"
+      }
     }
   ],
   "version" : 1

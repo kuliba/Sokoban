@@ -28,24 +28,7 @@ struct CalendarWrapperView: View {
     
     var body: some View {
         
-        VStack(spacing: 16) {
-            
-            ZStack {
-                
-                HStack {
-                    
-                    Button(action: { event(.dismiss) }, label: {
-                        Image.ic24ChevronLeft
-                            .foregroundColor(.textSecondary)
-                    })
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                
-                config.title.text(withConfig: config.titleConfig)
-                    .multilineTextAlignment(.center)
-            }
+        VStack(spacing: 16) { //FIX: remove double VStack
             
             VStack(spacing: 24) {
                 

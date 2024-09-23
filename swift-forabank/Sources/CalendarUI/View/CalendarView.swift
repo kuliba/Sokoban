@@ -34,7 +34,7 @@ public enum CalendarEvent {
     
     case selectedDate(Date)
     case selectPeriod(FilterHistoryState.Period, lowerDate: Date, upperDate: Date)
-    case selectCustomPeriod
+    case selectCustomPeriod //MARK: Remove
 }
 
 public struct CalendarView: View {
@@ -117,9 +117,9 @@ public struct CalendarView: View {
                                     .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
                             }
                         }
-                        .onAppear {
-                            event(.selectPeriod(period, lowerDate: Calendar.current.date(byAdding: .day, value: -31, to: Date())!, upperDate: Date()))
-                        }
+//                        .onAppear {
+//                            event(.selectPeriod(period, lowerDate: Calendar.current.date(byAdding: .day, value: -31, to: Date())!, upperDate: Date()))
+//                        }
                         
                     case .dates:
                         

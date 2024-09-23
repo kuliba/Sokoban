@@ -24,11 +24,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         model: model,
         httpClient: httpClient,
         logger: logger,
+        bindings: &bindings,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         historyFilterFlag: featureFlags.historyFilterFlag,
-        changeSVCardLimitsFlag: featureFlags.changeSVCardLimitsFlag,
+        changeSVCardLimitsFlag: .init(.active),
+        getProductListByTypeV6Flag: .init(.active),
+        marketplaceFlag: featureFlags.marketplaceFlag,
+        paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
         updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(
@@ -51,7 +55,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         bind(rootViewModel: rootViewModel)
 
-        //FIXME: remove after refactor paymnets
+        //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,
                          selector:#selector(dismissAll),

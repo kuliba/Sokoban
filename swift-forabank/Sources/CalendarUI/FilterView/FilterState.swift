@@ -9,21 +9,29 @@ import Foundation
 
 public struct FilterState {
     
-    public let productId: Int?
+    public let productId: Int
     public var calendar: CalendarState
     public var filter: FilterHistoryState
-    let dateFilter: (Date, Date) -> Void
-    
+    public var status: Status
+
     public init(
-        productId: Int?,
+        productId: Int,
         calendar: CalendarState,
         filter: FilterHistoryState,
-        dateFilter: @escaping (Date, Date) -> Void
+        status: Status
     ) {
         self.productId = productId
         self.calendar = calendar
         self.filter = filter
-        self.dateFilter = dateFilter
+        self.status = status
+    }
+    
+    public enum Status: Equatable {
+        
+        case empty
+        case failure
+        case loading
+        case normal
     }
 }
 
@@ -31,7 +39,7 @@ public struct FilterHistoryState {
     
     public let title: String
     
-    public var selectDates: (lowerDate: Date?, upperDate: Date?)?
+    public var selectDates: Range<Date>?
     public var selectedPeriod: Period
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
@@ -39,19 +47,16 @@ public struct FilterHistoryState {
     public let periods: [Period]
     public let transactionType: [TransactionType]
     public var services: [String]
-    
-    let historyService: (Date?, Date?) -> Void
-    
+        
     public init(
         title: String,
-        selectDates: (lowerDate: Date?, upperDate: Date?)?,
+        selectDates: Range<Date>?,
         selectedPeriod: Period = .month,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
         periods: [Period],
         transactionType: [TransactionType],
-        services: [String],
-        historyService: @escaping (Date?, Date?) -> Void
+        services: [String]
     ) {
         self.title = title
         self.selectDates = selectDates
@@ -61,7 +66,6 @@ public struct FilterHistoryState {
         self.periods = periods
         self.transactionType = transactionType
         self.services = services
-        self.historyService = historyService
     }
 }
 
@@ -89,4 +93,35 @@ public extension FilterHistoryState {
         case month = "Месяц"
         case dates = "Выбрать период"
     }
+}
+
+extension FilterState {
+    
+    public static let preview: Self = .init(
+        productId: 0,
+        calendar: .preview,
+        filter: .preview,
+        status: .normal
+    )
+}
+
+extension FilterHistoryState {
+
+    static let preview: Self = .init(
+        title: "Фильтры",
+        selectDates: (.distantPast)..<(.distantFuture),
+        periods: [],
+        transactionType: [],
+        services: []
+    )
+}
+
+extension CalendarState {
+    
+    static let preview: Self = .init(
+        date: nil,
+        range: .init(),
+        monthsData: [],
+        periods: []
+    )
 }

@@ -233,7 +233,7 @@ extension AlertModelOf<UserAccountEvent> {
     ) -> Self {
         
         .default(
-            title: "Ошибка",
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
             message: message,
             primaryEvent: event
         )

@@ -202,14 +202,14 @@ extension ProductData.Filter {
             }
             
             switch cardType {
-            case .main, .regular:
-                return nil
-                
             case .additionalSelf, .additionalSelfAccOwn:
                 return true
                 
-            case .additionalOther:
+            case .additionalOther, .additionalCorporate:
                 return false
+                
+            default:
+                return nil
             }
         }
     }
@@ -223,15 +223,39 @@ extension ProductData.Filter {
             }
             
             switch cardType {
-            case .main, .regular:
-                return nil
                 
-            case .additionalSelf, .additionalOther:
+            case .additionalSelf, .additionalOther, .additionalCorporate:
                 return false
                 
             case .additionalSelfAccOwn:
                 return true
+                
+            default:
+                return nil
             }
+        }
+    }
+    
+    struct CardCorporateRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let cardType = productData.asCard?.cardType else {
+                return nil
+            }
+            
+            return !cardType.isCorporateCard 
+        }
+    }
+    
+    struct CardCorporateIsIndividualBusinessmanMainRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let cardType = productData.asCard?.cardType,
+                    cardType.isCorporateCard else { return nil }
+            
+            return cardType == .individualBusinessmanMain
         }
     }
 }
@@ -288,6 +312,16 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
+                CardCorporateRule(),
+                CardAdditionalSelfRule(),
+                AccountActiveRule()])
+    
+    static let generalFromWithIndividualBusinessmanMain = ProductData.Filter(
+        rules: [DebitRule(),
+                ProductTypeRule([.card, .account]),
+                CurrencyRule([.rub]),
+                CardActiveRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -296,6 +330,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
+                CardCorporateRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -305,6 +340,15 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
+                CardCorporateRule(),
+                CardAdditionalSelfRule(),
+                AccountActiveRule()])
+    
+    static let generalToWithDepositAndIndividualBusinessmanMain = ProductData.Filter(
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account, .deposit]),
+                CardActiveRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -314,6 +358,7 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
+                CardCorporateRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
@@ -322,6 +367,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
+                CardCorporateRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
@@ -332,6 +378,7 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardCorporateRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -339,6 +386,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardCorporateRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
 
@@ -354,6 +402,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     
@@ -370,6 +419,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
+                CardCorporateIsIndividualBusinessmanMainRule(),
                 CardAdditionalSelfRule(),
                 AccountActiveRule()])
     

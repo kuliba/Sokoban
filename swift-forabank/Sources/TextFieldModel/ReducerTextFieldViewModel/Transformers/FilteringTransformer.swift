@@ -35,6 +35,9 @@ public extension FilteringTransformer {
     
     static let digits: Self = .init(with: .decimalDigits)
     static let letters: Self = .init(with: .letters)
+    
+    /// Allows digits, period and comma.
+    static let numeric: Self = .init(with: .decimalDigits.union(.init(charactersIn: ".,")))
 }
 
 public extension Transformers {

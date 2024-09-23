@@ -31,7 +31,6 @@ extension ProductProfileHistoryView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        private let services: () -> Void
         private let filter: () -> FilterState?
         
         init(
@@ -39,8 +38,7 @@ extension ProductProfileHistoryView {
             state: Content,
             model: Model = .emptyMock,
             segmentBarVM: SegmentedBarView.ViewModel? = .spending,
-            filter: @escaping () -> FilterState?,
-            services: @escaping () -> Void
+            filter: @escaping () -> FilterState?
         ) {
             
             self.productId = productId
@@ -48,21 +46,18 @@ extension ProductProfileHistoryView {
             self.model = model
             self.segmentBarViewModel = segmentBarVM
             self.filter = filter
-            self.services = services
         }
         
         init(
             _ model: Model,
             productId: ProductData.ID,
-            filter: @escaping () -> FilterState?,
-            services: @escaping () -> Void
+            filter: @escaping () -> FilterState?
         ) {
             
             self.productId = productId
             self.content = .loading
             self.model = model
             self.filter = filter
-            self.services = services
             
             bind()
             action.send(ProductProfileHistoryViewModelAction.DownloadLatest())
@@ -154,7 +149,7 @@ extension ProductProfileHistoryView {
                                     $0.date.isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
                                 })
                             }
-                            updateContent(with: .downloading(.custom(start: Date(), end: Date())), storage: storage)
+                            updateContent(with: .idle, storage: storage)
 
                             let update = await reduce(
                                 content: content,
@@ -215,20 +210,24 @@ extension ProductProfileHistoryView {
                                 }
                             }
 
-                            switch filter.filter.selectedPeriod {
-                            case .week:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
-                                })
+                            if filter.filter.selectDates != nil {
                                 
-                            case .month:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
-                                })
-                            case .dates:
-                                storageStatements = storageStatements.filter({
-                                    $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerDate ?? Date(), endDateInclusive: filter.filter.selectDates?.upperDate ?? Date())
-                                })
+                                switch filter.filter.selectedPeriod {
+                                case .week:
+                                    storageStatements = storageStatements.filter({
+                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                    })
+                                    
+                                case .month:
+                                    storageStatements = storageStatements.filter({
+                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                    })
+                                case .dates:
+                                    storageStatements = storageStatements.filter({
+                                        
+                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
+                                    })
+                                }
                             }
                             
                             if filter.filter.selectedServices.count >= 1 {
@@ -263,10 +262,14 @@ extension ProductProfileHistoryView {
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
-                                updateContent(with: state, storage: storage)
+                                if filter()?.filter.selectDates?.lowerBound != nil || filter()?.calendar.range?.upperDate != nil {
+                                    updateContent(with: .downloading(.custom(start: filter()?.filter.selectDates?.lowerBound ?? Date(), end: filter()?.filter.selectDates?.upperBound ?? Date())), storage: storage)
+
+                                } else {
+                                    updateContent(with: state, storage: storage)
+
+                                }
                             }
-                            
-                            services()
                             
                             if update.downloadImagesIds.isEmpty == false {
                                 
@@ -381,7 +384,7 @@ extension ProductProfileHistoryView {
             
             if groups.isEmpty == false {
 
-                if case .list(let historyListViewModel) = content {
+                if case let .list(historyListViewModel) = content {
 
                     withAnimation {
                         
@@ -518,22 +521,31 @@ extension ProductProfileHistoryView.ViewModel {
     func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
         var updatedOperations = [HistoryListViewModel.DayGroupViewModel.Operation]()
-        
         var downloadImagesIds = [String]()
+        let groupedStatements = Dictionary(grouping: statements, by: { $0.operationId })
         
-        for statement in statements {
+        for (_, statementsGroup) in groupedStatements {
             
-            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
-            updatedOperations.append(operation)
-
-            let imageId = statement.md5hash
-            if let imageData = images[imageId] {
+            if let latestStatement = statementsGroup.max(by: {
                 
-                operation.image = imageData.image
+                if let lhsTranDate = $0.tranDate, let rhsTranDate = $1.tranDate {
+                    return lhsTranDate > rhsTranDate
+                    
+                } else {
+                    return $0.date > $1.date
+                }
+            }) {
                 
-            } else {
+                let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: latestStatement, model: model, action: action(latestStatement.id))
+                updatedOperations.append(operation)
                 
-                downloadImagesIds.append(imageId)
+                let imageId = latestStatement.md5hash
+                if let imageData = images[imageId] {
+                    operation.image = imageData.image
+                    
+                } else {
+                    downloadImagesIds.append(imageId)
+                }
             }
         }
         
@@ -541,7 +553,6 @@ extension ProductProfileHistoryView.ViewModel {
         
         return (sortedUpdatedOperations, downloadImagesIds)
     }
-    
 }
 
 //MARK: - Action
@@ -713,8 +724,7 @@ extension ProductProfileHistoryView.ViewModel {
                         self.imageId = statement.md5hash
                     }
                 }
-                
-                
+                  
                 struct Amount {
                     
                     let value: String
@@ -1149,9 +1159,9 @@ extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateS
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil }, services: {})
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание за октябрь 2021", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: .init(value: "- 230 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil })
     
-    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ), filter: { nil }, services: {})
+    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 65 Р", color: .black), amountStatusImage: Image("MigAvatar"))]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: .more(.init(title: "Смотреть еще", style: .gray, action: {}))) ), filter: { nil })
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil }, services: {})
+    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: "0", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "1", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "2", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "3", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar")), .init(statement: .init(id: "4", date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: .init(value: "- 100 Р", color: .black), amountStatusImage: Image("MigAvatar"))])], eldestUpdate: nil)), filter: { nil })
 }

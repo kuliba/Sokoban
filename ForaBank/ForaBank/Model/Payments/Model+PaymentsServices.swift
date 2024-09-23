@@ -522,57 +522,17 @@ extension Model {
     
     func accountNumberForPayment(qrCode: QRCode) -> String {
         
-        if let account = qrCode.rawData["persacc"] {
-            
-            return account
-        }
-        if let phone = qrCode.rawData["phone"] {
-            
-            return phone
-        }
-        if let numAbo = qrCode.rawData["numabo"] {
-            
-            return numAbo
-        }
-        
-        return ""
+        qrCode.accountNumberForPayment
     }
     
     private func getValue(for parameterData: ParameterData, with qrCode: QRCode) -> String {
         
-        guard let type = parameterData.parameterType else {
-            return ""
-        }
-        
-        switch type {
-        case .account, .personalAccount:
-            
-            return parameterData.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : ""
-            
-        case .code:
-            
-            return qrCode.rawData["category"] ?? ""
-        }
+        parameterData.value(matching: qrCode)
     }
     
     func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
         
-        operatorData.parameterList.compactMap {
-            
-            if $0.viewType == .input {
-                
-                return PaymentServiceData.AdditionalListData(
-                    fieldTitle: $0.title,
-                    fieldName: $0.id,
-                    fieldValue: getValue(for: $0, with: qrCode),
-                    svgImage: $0.svgImage?.description
-                )
-                
-            } else {
-                
-                return nil
-            }
-        }
+        operatorData.getAdditionalList(matching: qrCode)
     }
     
     func dataByOperation (_ operation: Payments.Operation) throws -> (puref: String, amount: Double, additionalList: [PaymentServiceData.AdditionalListData]) {
@@ -630,6 +590,72 @@ extension Model {
                 icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
             )
         )
+    }
+}
+
+extension OperatorGroupData.OperatorData {
+    
+    func getAdditionalList(
+        matching qrCode: QRCode
+    ) -> [PaymentServiceData.AdditionalListData]? {
+        
+        parameterList.compactMap {
+            
+            if $0.viewType == .input {
+                
+                return PaymentServiceData.AdditionalListData(
+                    fieldTitle: $0.title,
+                    fieldName: $0.id,
+                    fieldValue: $0.value(matching: qrCode),
+                    svgImage: $0.svgImage?.description
+                )
+                
+            } else {
+                
+                return nil
+            }
+        }
+    }
+}
+
+extension ParameterData {
+    
+    func value(
+        matching qrCode: QRCode
+    ) -> String {
+        
+        guard let type = parameterType else { return "" }
+        
+        switch type {
+        case .account, .personalAccount:
+            
+            return self.inputFieldType == .account ? qrCode.accountNumberForPayment : ""
+            
+        case .code:
+            
+            return qrCode.rawData["category"] ?? ""
+        }
+    }
+}
+
+extension QRCode {
+    
+    var accountNumberForPayment: String {
+        
+        if let account = rawData["persacc"] {
+            
+            return account
+        }
+        if let phone = rawData["phone"] {
+            
+            return phone
+        }
+        if let numAbo = rawData["numabo"] {
+            
+            return numAbo
+        }
+        
+        return ""
     }
 }
 

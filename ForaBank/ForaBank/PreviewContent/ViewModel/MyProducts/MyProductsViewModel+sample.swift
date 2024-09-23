@@ -23,7 +23,7 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -33,7 +33,10 @@ extension MyProductsViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {},
@@ -54,7 +57,7 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeTemplates: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -64,11 +67,37 @@ extension MyProductsViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active), 
+            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
         openOrderSticker: {},
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
+}
+
+extension AnywayServicePickerFlowModel {
+    
+    static func preview(
+        payload: PaymentProviderServicePickerPayload
+    ) -> AnywayServicePickerFlowModel {
+        
+        return .init(
+            initialState: .init(
+                content: .init(
+                    initialState: .init(payload: .preview),
+                    reduce: { state, _ in (state, nil) },
+                    handleEffect: { _,_ in }
+                )
+            ),
+            factory: .init(
+                makeAnywayFlowModel: { _ in fatalError() },
+                makePayByInstructionsViewModel: { _ in fatalError() }
+            ),
+            scheduler: .main
+        )
+    }
 }

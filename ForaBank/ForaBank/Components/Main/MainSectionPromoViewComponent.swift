@@ -27,7 +27,6 @@ extension MainSectionPromoView {
             
             switch promoType {
             case .general: return model.catalogBanners
-            case .auth: return model.authCatalogBanners
             }
         }
         
@@ -49,7 +48,6 @@ extension MainSectionPromoView {
         enum PromoType {
             
             case general
-            case auth
         }
 
         private func bind() {
@@ -103,9 +101,6 @@ extension MainSectionPromoView {
                     
                     banners = updated
                 }
-                
-            case .auth:
-                banners = updated
             }
         }
     }
@@ -174,8 +169,11 @@ extension MainSectionPromoView.ViewModel {
                          action: (() -> Void)? = nil) {
             
             let bannerImage = BannerImage(endpoint: bannerData.imageEndpoint, image: image)
-            let bannerAction = BannerAction(link: bannerData.orderURL, action: action)
-
+            let bannerAction: BannerAction = {
+                guard let orderURL = bannerData.orderURL else { return .action(action ?? {})}
+                
+                return .init(link: orderURL, action: action)
+            }()
             self.init(id: bannerData.id, image: bannerImage, action: bannerAction)
         }
         
@@ -214,6 +212,10 @@ extension MainSectionPromoView.ViewModel {
                     
                     self = .link(link)
                 }
+            }
+            
+            init(action: @escaping () -> Void) {
+                self = .action(action)
             }
         }
     }

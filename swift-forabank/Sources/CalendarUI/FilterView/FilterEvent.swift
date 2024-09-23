@@ -9,10 +9,11 @@ import Foundation
 
 public enum FilterEvent {
 
-    case openSheet([String])
+    case resetPeriod(Range<Date>)
     case selectedPeriod(FilterHistoryState.Period)
     case selectedTransaction(FilterHistoryState.TransactionType?)
-    case selectedCategory(Set<String>)
-    case selectedDates(lowerDate: Date?, upperDate: Date?)
+    case selectedCategory(String)
+    case selectedDates(Range<Date>)
+    case updateFilter(FilterState?)
     case clearOptions
 }

@@ -10,6 +10,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Новый экран Платежи</string>
+			<key>Key</key>
+			<string>payments_transfers</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Фильтр Истории Операций</string>
 			<key>Key</key>
 			<string>history_filter</string>
@@ -48,6 +58,26 @@
 			<key>Key</key>
 			<string>changeSVCardLimits</string>
 		</dict>
+        <dict>
+            <key>Type</key>
+            <string>PSToggleSwitchSpecifier</string>
+            <key>DefaultValue</key>
+            <false/>
+            <key>Title</key>
+            <string>Функционал корпоративных карт</string>
+            <key>Key</key>
+            <string>getProductListByTypeV6</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSToggleSwitchSpecifier</string>
+            <key>DefaultValue</key>
+            <false/>
+            <key>Title</key>
+            <string>Маркет</string>
+            <key>Key</key>
+            <string>marketplace</string>
+        </dict>
 	</array>
 </dict>
 </plist>

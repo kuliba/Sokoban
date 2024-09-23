@@ -40,12 +40,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var accentColor: Color
     
     @Published var historyState: HistoryState?
-    @Published var filterState: FilterState? {
-        didSet {
-            print("### filter State setup \(filterState)")
-        }
-    }
-//    @Published var calendarState: CalendarState
+    @Published var filterState: FilterState
+
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
@@ -91,7 +87,7 @@ class ProductProfileViewModel: ObservableObject {
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
-    private let filterSubject = PassthroughSubject<FilterState?, Never>()
+    private let filterSubject = PassthroughSubject<FilterState, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
 
     init(
@@ -116,6 +112,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
+        filterState: FilterState,
         rootView: String,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
@@ -141,6 +138,7 @@ class ProductProfileViewModel: ObservableObject {
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.filterState = filterState
         self.cardAction = createCardAction(cvvPINServicesClient, model)
       
         
@@ -178,9 +176,10 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
+    //MARK: remove
     func historyCategories() -> [String] {
-                
-        Array(Set(self.model.statements.value[self.product.activeProductId]?.statements.map(\.groupName) ?? []))
+            
+        model.historyCategories(productId: self.product.activeProductId)
     }
     
     convenience init?(
@@ -198,6 +197,7 @@ class ProductProfileViewModel: ObservableObject {
         productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         filterHistoryRequest: @escaping (Date, Date, String?, [String]) -> Void,
+        filterState: FilterState,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -234,6 +234,7 @@ class ProductProfileViewModel: ObservableObject {
             cvvPINServicesClient: cvvPINServicesClient,
             filterHistoryRequest: filterHistoryRequest,
             productProfileViewModelFactory: productProfileViewModelFactory,
+            filterState: filterState,
             rootView: rootView,
             scheduler: scheduler
         )
@@ -489,7 +490,7 @@ private extension ProductProfileViewModel {
                     mode: .link
                 )
                 paymentsTransfersViewModel.rootActions = rootActions
-                link = .paymentsTransfers(paymentsTransfersViewModel)
+                link = .paymentsTransfers(.init(model: paymentsTransfersViewModel, cancellables: []))
                 
             }.store(in: &bindings)
         
@@ -1169,7 +1170,7 @@ private extension ProductProfileViewModel {
                         if !(allowCreditValue && productType ) {
                             
                             if let card = productData?.asCard {
-                                createTopUpPanel(card)
+                                topLeftActionForCard(card)
                             }
                             else  {
                                 let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
@@ -1190,13 +1191,8 @@ private extension ProductProfileViewModel {
                     case .topRight:
                         switch product.productType {
                         case .card:
-                            guard let card = productData?.asCard else { return }
+                            topRightActionForCard(productData)
                             
-                            if card.cardType == .additionalOther {
-                                self.event(.alert(.delayAlert(.showTransferAdditionalOther)))
-                            } else {
-                                self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
-                            }
                         case .account:
                             self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
@@ -1692,6 +1688,7 @@ private extension ProductProfileViewModel {
     func makeProductProfileViewModel(
         product: ProductData,
         rootView: String,
+        filterState: FilterState,
         dismissAction: @escaping () -> Void
     ) -> ProductProfileViewModel? {
         
@@ -1709,10 +1706,8 @@ private extension ProductProfileViewModel {
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
             productProfileViewModelFactory: productProfileViewModelFactory, 
-            filterHistoryRequest: { _,_,_,_ in
-            
-                print("### SEND ACTION ProductProfileViewModel.swift:1680")
-            },
+            filterHistoryRequest: { _,_,_,_ in },
+            filterState: filterState,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -1908,13 +1903,8 @@ private extension ProductProfileViewModel {
             productId: productId, 
             filter: { [weak self] in
                 return self?.filterState
-            },
-            services: { [weak self] in
-                if let categories = self?.historyCategories() {
-                    
-                    self?.event(.filter(.openSheet(categories)))
-                }
-            })
+            }
+        )
     }
     
     static func accentColor(with product: ProductData) -> Color {
@@ -2102,7 +2092,9 @@ extension ProductProfileViewModel {
                 card: card,
                 productProfileServices: productProfileServices,
                 landingEvent: landingEvent, 
-                handleModelEffect: productNavigationStateManager.handleModelEffect
+                handleModelEffect: productNavigationStateManager.handleModelEffect,
+                hideKeyboard: { UIApplication.shared.hideKeyboardIfNeeds() }, 
+                getCurrencySymbol: { self.model.dictionaryCurrency(for: $0)?.currencySymbol } 
                     ).handleEffect(_:_:))
     }
     
@@ -2163,7 +2155,8 @@ extension ProductProfileViewModel {
                 catalogType: .deposit,
                 dismissAction: {
                     controlPanelViewModel.event(.dismiss(.destination))
-                })
+                }, 
+                makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard)
 
             controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
         }
@@ -2171,7 +2164,7 @@ extension ProductProfileViewModel {
     
     func openDeposit(_ depositId: Int ) {
         
-        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model) {
+        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) {
 
             controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
         }
@@ -2350,34 +2343,53 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    struct CalendarStateWrapper: Identifiable {
+    
+        let id: UUID
+        let state: CalendarState
+        
+        init(
+            id: UUID = .init(),
+            state: CalendarState
+        ) {
+            self.id = id
+            self.state = state
+        }
+    }
+    
     struct HistoryState: Identifiable {
         
         var id: Int { buttonAction.hashValue }
         
         var date: Date?
         var filters: [Filter]?
-        let selectedDates: (lowerDate: Date?, upperDate: Date?)
+        var selectedDates: (lowerDate: Date?, upperDate: Date?)
         var buttonAction: ButtonAction
-        var showSheet: Bool
+        var showSheet: Sheet
         var categories: [String]
         var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
+        var calendarState: CalendarStateWrapper?
         
-        public init(
-            date: Date? = nil,
-            filters: [Filter]? = nil,
-            selectedDates: (lowerDate: Date?, upperDate: Date?),
-            buttonAction: ButtonAction,
-            showSheet: Bool,
-            categories: [String] = [],
-            applyAction: @escaping (_ lowerDate: Date?, _ upperDate: Date?) -> Void
-        ) {
-            self.date = date
-            self.filters = filters
-            self.selectedDates = selectedDates
-            self.buttonAction = buttonAction
-            self.showSheet = showSheet
-            self.categories = categories
-            self.applyAction = applyAction
+        enum Sheet: Identifiable {
+            
+            var id: ID {
+
+                switch self {
+                case .calendar:
+                    return .calendar
+                case .filter:
+                    return .filter
+                }
+            }
+            
+            case calendar
+            case filter(FilterWrapperView.Model)
+            
+            enum ID: Hashable {
+                
+                case calendar
+                case filter
+            }
         }
         
         enum Filter {
@@ -2387,6 +2399,7 @@ extension ProductProfileViewModel {
         }
         
         enum ButtonAction: Identifiable {
+            
             case calendar
             case filter
             
@@ -2454,11 +2467,11 @@ extension ProductProfileViewModel {
     enum Link {
         
         case productInfo(InfoProductViewModel)
+        case payment(PaymentsViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
-        case payment(PaymentsViewModel)
-        case paymentsTransfers(PaymentsTransfersViewModel)
+        case paymentsTransfers(Node<PaymentsTransfersViewModel>)
         case controlPanel(ControlPanelViewModel)
     }
     
@@ -2732,30 +2745,56 @@ extension ProductProfileViewModel {
             
             guard let self else { return }
             
-            if case let .productInfo(productInfoViewModel) = self.link {
-                productInfoViewModel.action.send(DelayWrappedAction(
-                    delayMS: 10,
-                    action: InfoProductModelAction.Spinner.Show()))
-            }
-            else {
+            switch self.link {
+                
+            case .none:
                 self.action.send(DelayWrappedAction(
                     delayMS: 10,
                     action:ProductProfileViewModelAction.Spinner.Show()))
+                
+            case let .some(destination):
+                switch destination {
+                case let .productInfo(productInfoViewModel):
+                    productInfoViewModel.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action: InfoProductModelAction.Spinner.Show()))
+
+                case let .controlPanel(controlPanel):
+                    controlPanel.event(.showSpinner)
+                    
+                default:
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 10,
+                        action:ProductProfileViewModelAction.Spinner.Show()))
+                }
             }
         }
     }
     
     func hideSpinner() {
         
-        if case let .productInfo(productInfoViewModel) = self.link {
-            productInfoViewModel.action.send(DelayWrappedAction(
-                delayMS: 10,
-                action: InfoProductModelAction.Spinner.Hide()))
-        }
-        else {
+        switch self.link {
+            
+        case .none:
             self.action.send(DelayWrappedAction(
                 delayMS: 10,
                 action:ProductProfileViewModelAction.Spinner.Hide()))
+            
+        case let .some(destination):
+            switch destination {
+            case let .productInfo(productInfoViewModel):
+                productInfoViewModel.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action: InfoProductModelAction.Spinner.Hide()))
+                
+            case let .controlPanel(controlPanel):
+                controlPanel.event(.hideSpinner)
+                
+            default:
+                self.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action:ProductProfileViewModelAction.Spinner.Hide()))
+            }
         }
     }
     
@@ -2768,21 +2807,7 @@ extension ProductProfileViewModel {
             
             guard let self else { return }
             
-            DispatchQueue.main.async { [weak self] in
-                
-                guard let self else { return }
-                
-                if case let .productInfo(productInfoViewModel) = self.link {
-                    productInfoViewModel.action.send(DelayWrappedAction(
-                        delayMS: 10,
-                        action: InfoProductModelAction.Spinner.Hide()))
-                }
-                else {
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 10,
-                        action: ProductProfileViewModelAction.Spinner.Hide()))
-                }
-            }
+            hideSpinner()
             
             switch result {
             case let .failure(error):
@@ -2949,6 +2974,8 @@ extension ProductProfileViewModel {
                 self?.event(.alert(.showAlert(alert)))
             case let .showBottomSheet(bottomSheet):
                 self?.event(.bottomSheet(.showBottomSheet(bottomSheet)))
+            case let .history(event):
+                self?.event(.history(event))
             }
         }
     }
@@ -3010,22 +3037,33 @@ extension ProductProfileViewModel {
     func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
-            self.event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
+            event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
             
         default:
-            guard let viewModel = PaymentsMeToMeViewModel(
-                self.model,
-                mode: .makePaymentTo(productData, 0.0))
-            else { return }
             
-            self.bind(viewModel)
-            
-            self.event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            if model.needDisableForIndividualBusinessmanMainCardAlert(
+                product: productData,
+                with: .generalToWithDepositAndIndividualBusinessmanMain) {
+                event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+            } else {
+                guard let viewModel = PaymentsMeToMeViewModel(
+                    model,
+                    mode: .makePaymentTo(productData, 0.0))
+                else { return }
+                
+                bind(viewModel)
+                
+                event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
+            }
         }
     }
     
     func showPaymentAnotherBank(_ productData: ProductCardData) {
         switch productData.cardType {
+            
+        case .individualBusinessmanMain:
+            self.event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
+
         case .additionalSelf, .additionalOther:
             self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
@@ -3130,5 +3168,48 @@ extension ProductProfileViewModel {
         } else {
             return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         }
+    }
+}
+
+extension Date {
+
+    static let bankOpenDate: Date = {
+        
+        let components = DateComponents(year: 1992, month: 5, day: 27)
+        return Calendar.current.date(from: components)!
+    }()
+}
+
+extension Model {
+
+    func calendarDayStart(
+        _ productId: ProductData.ID
+    ) -> Date {
+        
+        product(productId: productId)?.calendarDayStart() ?? .bankOpenDate
+    }
+    
+}
+
+extension ProductData {
+    
+    func calendarDayStart(
+    ) -> Date {
+        
+        if productType == .card {
+            return .bankOpenDate
+        } else {
+            return openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+        }
+    }
+}
+
+extension Model {
+    
+    func historyCategories(
+        productId: ProductData.ID
+    ) -> [String] {
+                
+        Array(Set(statements.value[productId]?.statements.map(\.groupName) ?? []))
     }
 }

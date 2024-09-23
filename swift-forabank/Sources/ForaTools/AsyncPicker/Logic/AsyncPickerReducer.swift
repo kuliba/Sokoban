@@ -70,6 +70,9 @@ extension AsyncPickerReducer {
             state.isLoading = false
             state.items = items
             
+        case .reset:
+            state.response = nil
+            
         case let .response(response):
             state.isLoading = false
             state.response = response
@@ -80,7 +83,7 @@ extension AsyncPickerReducer {
             else { break }
             
             state.isLoading = true
-            effect = .select(item)
+            effect = .select(item, state.payload)
         }
         
         return effect

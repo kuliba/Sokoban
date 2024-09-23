@@ -113,15 +113,6 @@ protocol AuthLoginViewModelFactory {
     ) -> LandingWrapperViewModel
 }
 
-protocol MainViewModelFactory {
-    
-    func makeStickerLandingViewModel(
-        _ type: AbroadType,
-        config: UILanding.Component.Config,
-        landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
-    ) -> LandingWrapperViewModel
-}
-
 // MARK: Binding
 
 private extension AuthLoginViewModel {
@@ -388,6 +379,7 @@ private extension AuthLoginViewModel {
     ) -> CardViewModel.NextButtonViewModel? {
         
         switch (cardState, sessionState, fcmToken) {
+            
         case (.ready(let cardNumber), .active, .some), (.ready(let cardNumber), .active, .none),
              (.ready(let cardNumber), .activating, .some), (.ready(let cardNumber), .activating, .none),
              (.ready(let cardNumber), .expired, .some), (.ready(let cardNumber), .expired, .none),

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "3BDD5BBD-922F-4522-A45E-13D1BB474EE7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentTemplateBackendTests",
+        "name" : "PaymentTemplateBackendTests"
+      }
+    }
+  ],
+  "version" : 1
+}

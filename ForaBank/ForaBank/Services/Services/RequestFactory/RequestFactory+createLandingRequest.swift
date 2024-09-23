@@ -15,9 +15,18 @@ extension RequestFactory {
         abroadType: AbroadType)
     ) throws -> URLRequest {
         
+        return try createMarketplaceLandingRequest((input.serial, input.abroadType.rawValue))
+    }
+    
+    static func createMarketplaceLandingRequest(
+        _ input: (
+        serial: String,
+        type: String)
+    ) throws -> URLRequest {
+        
         let parameters: [(String, String)] = [
             ("serial", input.serial),
-            ("type", input.abroadType.rawValue)
+            ("type", input.type)
         ]
         let endpoint = Services.Endpoint.createLandingRequest
         let url = try! endpoint.url(
@@ -42,21 +51,28 @@ extension AbroadType {
             
         case let .control(cardType):
             switch cardType {
-            case .additionalOther:      return "CONTROL_ADDITIONAL_OTHER_CARD"
-            case .additionalSelf:       return "CONTROL_ADDITIONAL_SELF_CARD"
-            case .additionalSelfAccOwn: return "CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
-            case .main:                 return "CONTROL_MAIN_CARD"
-            case .regular:              return "CONTROL_REGULAR_CARD"
-                
+            case .additionalOther:           return "CONTROL_ADDITIONAL_OTHER_CARD"
+            case .additionalSelf:            return "CONTROL_ADDITIONAL_SELF_CARD"
+            case .additionalSelfAccOwn:      return "CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
+            case .main:                      return "CONTROL_MAIN_CARD"
+            case .regular:                   return "CONTROL_REGULAR_CARD"
+            case .additionalCorporate:       return "CONTROL_ADDITIONAL_CORPORATE_CARD"
+            case .corporate:                 return "CONTROL_CORPORATE_CARD"
+            case .individualBusinessman:     return "CONTROL_INDIVIDUAL_BUSINESSMAN_CARD"
+            case .individualBusinessmanMain: return "CONTROL_INDIVIDUAL_BUSINESSMAN_MAIN_CARD"
             }
             
         case let .limit(cardType):
             switch cardType {
-            case .additionalOther:      return "LIMIT_ADDITIONAL_OTHER_CARD"
-            case .additionalSelf:       return "LIMIT_ADDITIONAL_SELF_CARD"
-            case .additionalSelfAccOwn: return "LIMIT_ADDITIONAL_SELF_ACC_OWN_CARD"
-            case .main:                 return "LIMIT_MAIN_CARD"
-            case .regular:              return "LIMIT_REGULAR_CARD"
+            case .additionalOther:           return "LIMIT_ADDITIONAL_OTHER_CARD"
+            case .additionalSelf:            return "LIMIT_ADDITIONAL_SELF_CARD"
+            case .additionalSelfAccOwn:      return "LIMIT_ADDITIONAL_SELF_ACC_OWN_CARD"
+            case .main:                      return "LIMIT_MAIN_CARD"
+            case .regular:                   return "LIMIT_REGULAR_CARD"
+            case .additionalCorporate:       return "LIMIT_ADDITIONAL_CORPORATE_CARD"
+            case .corporate:                 return "LIMIT_CORPORATE_CARD"
+            case .individualBusinessman:     return "LIMIT_INDIVIDUAL_BUSINESSMAN_CARD"
+            case .individualBusinessmanMain: return "LIMIT_INDIVIDUAL_BUSINESSMAN_MAIN_CARD"
             }
         }
     }
