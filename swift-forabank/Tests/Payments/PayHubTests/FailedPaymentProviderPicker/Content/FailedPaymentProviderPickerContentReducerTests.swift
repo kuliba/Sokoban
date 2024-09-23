@@ -5,71 +5,7 @@
 //  Created by Igor Malyarov on 23.09.2024.
 //
 
-struct FailedPaymentProviderPickerContentState: Equatable {
-    
-    var selection: Selection?
-}
-extension FailedPaymentProviderPickerContentState {
-    
-    enum Selection: Equatable {
-        
-        case detailPay
-    }
-}
-enum FailedPaymentProviderPickerContentEvent: Equatable {
-    
-    case detailPay
-    case resetSelection
-}
-enum FailedPaymentProviderPickerContentEffect: Equatable {}
-
-final class FailedPaymentProviderPickerContentReducer {
-    
-    init() {}
-}
-
-extension FailedPaymentProviderPickerContentReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        let effect = reduce(&state, event)
-        
-        return (state, effect)
-    }
-}
-
-extension FailedPaymentProviderPickerContentReducer {
-    
-    typealias State = FailedPaymentProviderPickerContentState
-    typealias Event = FailedPaymentProviderPickerContentEvent
-    typealias Effect = FailedPaymentProviderPickerContentEffect
-}
-
-extension FailedPaymentProviderPickerContentReducer {
-    
-    func reduce(
-        _ state: inout State,
-        _ event: Event
-    ) -> Effect? {
-        
-        var effect: Effect?
-        
-        switch event {
-        case .detailPay:
-            state.selection = .detailPay
-            
-        case .resetSelection:
-            state.selection = nil
-        }
-        
-        return effect
-    }
-}
-
+import PayHub
 import XCTest
 
 final class FailedPaymentProviderPickerContentReducerTests: XCTestCase {
