@@ -77,7 +77,7 @@ public extension Date {
     func end(
         of component: Calendar.Component
     ) -> Date {
-        MCalendar.get().dateInterval(of: component, for: self)?.end.addingTimeInterval(-1) ?? .distantPast
+        MCalendar.get().dateInterval(of: component, for: self)?.end ?? .distantPast
     }
 }
 

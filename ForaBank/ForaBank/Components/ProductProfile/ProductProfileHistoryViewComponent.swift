@@ -112,7 +112,7 @@ extension ProductProfileHistoryView {
                                     break
                                 }
                             }
-
+                            
                             if payload.filterState?.filter.selectedPeriod != nil {
                                 
                                 switch payload.filterState?.filter.selectedPeriod {
@@ -144,13 +144,18 @@ extension ProductProfileHistoryView {
                             
                             if let lowerDate = payload.period.lowerDate,
                                let upperDate = payload.period.upperDate {
-                             
+                                
                                 storageData = storageData.filter({
-                                    $0.date.isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
+                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
                                 })
                             }
-                            updateContent(with: .idle, storage: storage)
-
+                            
+                            Task { @MainActor in
+                                
+                                updateContent(with: .idle, storage: storage)
+                                
+                            }
+                            
                             let update = await reduce(
                                 content: content,
                                 statements: storageData,
@@ -162,11 +167,14 @@ extension ProductProfileHistoryView {
                                 }
                             }
                             
-                            updateContent(with: update.groups)
-                            updateSegmentedBar(
-                                productId: id,
-                                statements: storageData
-                            )
+                            Task { @MainActor [storageData] in
+                                
+                                updateContent(with: update.groups)
+                                updateSegmentedBar(
+                                    productId: id,
+                                    statements: storageData
+                                )
+                            }
                         }
                     default:
                         break
@@ -191,7 +199,7 @@ extension ProductProfileHistoryView {
                                let upperDate = filter.calendar.range?.upperDate {
                                 
                                 storageStatements = storage.statements.filter({
-                                    $0.tranDate?.isBetweenStartDate(lowerDate.addingTimeInterval(14401), endDateInclusive: upperDate.addingTimeInterval(86400)) ?? false
+                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
                                 })
                             }
                             if filter.filter.selectedTransaction != nil {
@@ -358,10 +366,16 @@ extension ProductProfileHistoryView {
                                 }
                             }
                 
-                segmentBarViewModel = .init(mappedValues: dict,
-                                        productType: product.productType,
-                                        currencyCode: product.currency,
-                                        model: model)
+                Task { @MainActor in
+                    
+                    segmentBarViewModel = .init(
+                        mappedValues: dict,
+                        productType: product.productType,
+                        currencyCode: product.currency,
+                        model: model
+                    )
+                }
+                
             } else {
                 
                 let dict = statementFilteredPeriod
@@ -371,11 +385,15 @@ extension ProductProfileHistoryView {
                                     $0[$1.groupName, default: 0] += documentAmount
                                 }
                             }
-                
-                segmentBarViewModel = .init(stringValues: dict,
-                                        productType: product.productType,
-                                        currencyCode: product.currency,
-                                        model: model)
+                Task { @MainActor in
+                    
+                    segmentBarViewModel = .init(
+                        stringValues: dict,
+                        productType: product.productType,
+                        currencyCode: product.currency,
+                        model: model
+                    )
+                }
                 
             }
         }
