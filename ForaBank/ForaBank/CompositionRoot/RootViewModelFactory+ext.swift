@@ -896,13 +896,19 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
+        let marketShowcaseModel = MarketShowcaseViewModel()
+        
+        let tabsViewModelFactory = TabsViewModelFactory(
+            mainViewModel: mainViewModel,
+            paymentsModel: paymentsModel,
+            chatViewModel: chatViewModel,
+            marketShowcaseModel: marketShowcaseModel)
+        
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
-            mainViewModel: mainViewModel,
-            paymentsModel: paymentsModel,
-            chatViewModel: chatViewModel,
+            tabsViewModelFactory: tabsViewModelFactory,
             informerViewModel: informerViewModel,
             model,
             showLoginAction: showLoginAction

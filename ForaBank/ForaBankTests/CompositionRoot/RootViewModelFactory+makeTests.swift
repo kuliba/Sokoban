@@ -148,7 +148,7 @@ private extension RootViewModel {
     
     private var personal: PaymentsTransfersPersonal? {
         
-        guard case let .v1(switcher) = paymentsModel,
+        guard case let .v1(switcher) = tabsViewModelFactory.paymentsModel,
               case let .personal(personal) = switcher.state
         else { return nil }
         
