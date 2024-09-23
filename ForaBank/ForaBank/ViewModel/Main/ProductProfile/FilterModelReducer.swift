@@ -29,9 +29,9 @@ final class FilterModelReducer {
         case let .selectedPeriod(period):
             switch period {
             case .week:
-                state.filter.selectDates = (Date.date(Date(), addDays: -7) ?? .startOfWeek ?? Date())..<Date()
+                state.filter.selectDates = (.startOfWeek ?? Date())..<Date()
             case .month:
-                state.filter.selectDates = (Date.date(Date(), addDays: -31) ?? .startOfMonth )..<(Date())
+                state.filter.selectDates = (.startOfMonth)..<(Date())
             case .dates:
                 break
             }
@@ -84,52 +84,4 @@ final class FilterModelReducer {
         
         return (state, effect)
     }
-}
-
-//extract FilterModelEffectHandler to file
-
-final class FilterModelEffectHandler {
-    
-    typealias MicroServices = FilterModelEffectHandlerMicroServices
-    typealias Event = FilterEvent
-    typealias Effect = FilterEffect
-    typealias Dispatch = (Event) -> Void
-    
-    let microServices: MicroServices
-    
-    init(
-        microServices: MicroServices
-    ) {
-        self.microServices = microServices
-    }
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .resetPeriod(productId):
-            microServices.resetPeriod(productId) {
-                dispatch(.resetPeriod($0))
-            }
-            
-        case let .updateFilter(range):
-            microServices.updateFilter(range) {
-                dispatch(.updateFilter($0))
-            }
-        }
-    }
-}
-
-struct FilterModelEffectHandlerMicroServices {
-    
-    typealias ResetPeriodCompletion = (Range<Date>) -> Void
-    typealias ResetPeriod = (ProductData.ID, @escaping ResetPeriodCompletion) -> Void
-    
-    //TODO: replace `FilterState` with Result
-    typealias UpdateFilterCompletion = (FilterState?) -> Void
-    typealias UpdateFilter = (FilterEffect.UpdateFilterPayload, @escaping UpdateFilterCompletion) -> Void
-    
-    let resetPeriod: ResetPeriod
-    let updateFilter: UpdateFilter
 }

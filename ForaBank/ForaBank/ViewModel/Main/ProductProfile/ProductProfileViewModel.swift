@@ -962,7 +962,6 @@ private extension ProductProfileViewModel {
                         history = historyViewModel
                     }
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                 } else {
                     
@@ -973,7 +972,6 @@ private extension ProductProfileViewModel {
                     }
                     
                     self.event(.history(.clearOptions))
-                    self.event(.filter(.clearOptions))
                     
                     historyPool[activeProductId] = historyViewModel
                     bind(history: historyViewModel)
@@ -2365,7 +2363,7 @@ extension ProductProfileViewModel {
         var filters: [Filter]?
         var selectedDates: (lowerDate: Date?, upperDate: Date?)
         var buttonAction: ButtonAction
-        var showSheet: Sheet
+        var showSheet: Sheet?
         var categories: [String]
         var applyAction: (_ lowerDate: Date?, _ upperDate: Date?) -> Void
         var calendarState: CalendarStateWrapper?
@@ -2383,7 +2381,7 @@ extension ProductProfileViewModel {
             }
             
             case calendar
-            case filter(FilterWrapperView.Model)
+            case filter(FilterViewModel)
             
             enum ID: Hashable {
                 

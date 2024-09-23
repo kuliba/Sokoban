@@ -23,7 +23,10 @@ final class FilterEffectHandlerMicroServicesComposer {
     
     func compose() -> MicroServices {
         
-        .init(resetPeriod: resetPeriod, updateFilter: updateFilter)
+        .init(
+            resetPeriod: resetPeriod,
+            updateFilter: updateFilter
+        )
     }
 }
 
