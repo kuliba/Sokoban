@@ -18,7 +18,7 @@ final class PaymentFlowMicroServiceComposerNanoServicesComposer {
     }
     
     typealias Operator = PaymentServiceOperator
-    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, SelectedCategoryStub, FailedPaymentProviderPickerStub>
+    typealias StandardNanoServices = StandardSelectedCategoryDestinationNanoServices<ServiceCategory, Latest, Operator, PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
 }
 
 extension PaymentFlowMicroServiceComposerNanoServicesComposer {

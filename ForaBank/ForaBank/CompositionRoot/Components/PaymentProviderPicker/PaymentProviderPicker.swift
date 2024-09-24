@@ -13,6 +13,10 @@ enum PaymentProviderPicker {}
 
 extension PaymentProviderPicker {
     
+    // MARK: - Domains
+    
+    typealias FlowDomain = PayHub.PaymentProviderPickerFlowDomain<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
+    
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
@@ -27,7 +31,10 @@ extension PaymentProviderPicker {
     
     // MARK: - Flow
     
-    typealias Flow = PayHubUI.PaymentProviderPickerFlow<DetailPayment, Latest, Payment, Provider, Service, ServicePicker, ServicesFailure>
+    typealias Flow = FlowDomain.Flow
+    
+    typealias FlowReducer = FlowDomain.Reducer
+    typealias FlowEffectHandler = FlowDomain.EffectHandler
     
     typealias DetailPayment = Void
     typealias Payment = Void

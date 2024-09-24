@@ -9,6 +9,7 @@ import ActivateSlider
 import InfoComponent
 import PaymentSticker
 import PayHubUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
@@ -279,20 +280,35 @@ private extension RootView {
             switch standard {
             case let .failure(failedPaymentProviderPicker):
                 Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-            
-            case let .success(paymentProviderPicker):
-                VStack {
-                    
-                    Text(paymentProviderPicker.category.name)
-                        .font(.title)
-                    
-                    Text("TBD: \(String(describing: paymentProviderPicker))")
-                    
-                    List(paymentProviderPicker.operators) {
+                
+            case let .success(binder):
+                
+                RxWrapperView(
+                    model: binder.flow,
+                    makeContentView: { state, event in
                         
-                        Text($0.name)
+                        PaymentProviderPickerFlowView(
+                            state: state,
+                            event: event,
+                            contentView: {
+                                
+                                VStack {
+                                    
+                                    Text("TBD: paymentProviderPicker \(String(describing: binder))")
+                                        .font(.headline.bold())
+                                    
+                                    Text("TBD: search \(String(describing: binder.content.search))")
+                                    Text("TBD: operationPicker \(String(describing: binder.content.operationPicker))")
+                                    Text("TBD: providerList \(String(describing: binder.content.providerList))")
+                                }
+                            },
+                            destinationView: { destination in
+                            
+                                Text("TBD: destination view \(String(describing: destination))")
+                            }
+                        )
                     }
-                }
+                )
             }
 
         case let .taxAndStateServices(taxAndStateServices):

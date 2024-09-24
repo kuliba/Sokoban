@@ -25,7 +25,8 @@ extension RootViewModelFactory {
         
         let standardNanoServicesComposer = StandardSelectedCategoryDestinationNanoServicesComposer(
             loadLatest: nanoServices.loadLatestForCategory,
-            loadOperators: nanoServices.loadOperatorsForCategory
+            loadOperators: nanoServices.loadOperatorsForCategory, 
+            scheduler: mainScheduler
         )
         let categoryPickerComposer = CategoryPickerSectionBinderComposer(
             load: nanoServices.loadCategories,
