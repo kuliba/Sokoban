@@ -9165,13 +9165,13 @@
 			path = "Model+Products";
 			sourceTree = "<group>";
 		};
-		2A3624482C5E695C00174C50 /* PaymentProviderPicker */ = {
+		2A3624482C5E695C00174C50 /* SegmentedPaymentProviderPicker */ = {
 			isa = PBXGroup;
 			children = (
 				2A3624492C5E697000174C50 /* Content */,
 				2A36244A2C5E697B00174C50 /* Flow */,
 			);
-			path = PaymentProviderPicker;
+			path = SegmentedPaymentProviderPicker;
 			sourceTree = "<group>";
 		};
 		2A3624492C5E697000174C50 /* Content */ = {
@@ -14926,7 +14926,7 @@
 				83FAD89029CDB3A700474B06 /* InternetTV */,
 				0BE0BDF42905CE2C0064549E /* QR */,
 				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
-				2A3624482C5E695C00174C50 /* PaymentProviderPicker */,
+				2A3624482C5E695C00174C50 /* SegmentedPaymentProviderPicker */,
 				2A1DE2C92C512FD80091B99C /* PaymentProviderServicePicker */,
 				7709C77B2833E56800C1A8B6 /* General */,
 				0C534CAE296E24B000967FE8 /* ViewModel */,
