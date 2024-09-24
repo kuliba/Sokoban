@@ -32,9 +32,12 @@ extension UtilityPrepaymentMicroServicesComposer {
         for categoryType: ServiceCategory.CategoryType
     ) -> MicroServices {
         
+        let duplicatesRemover = DuplicatesRemover()
+        let decorated = duplicatesRemover(self.nanoServices.loadOperators)
+        
         return .init(
-            paginate: makePaginate(for: categoryType),
-            search: makeSearch(for: categoryType)
+            paginate: makePaginate(for: categoryType, with: decorated),
+            search: makeSearch(for: categoryType, with: decorated)
         )
     }
     
@@ -43,14 +46,14 @@ extension UtilityPrepaymentMicroServicesComposer {
 
 private extension UtilityPrepaymentMicroServicesComposer {
     
+    typealias Load = (NanoServices.LoadOperatorsPayload, @escaping ([Operator]) -> Void) -> Void
+    
     func makePaginate(
-        for categoryType: ServiceCategory.CategoryType
+        for categoryType: ServiceCategory.CategoryType,
+        with load: @escaping Load
     ) -> (PaginatePayload<Operator.ID>, @escaping ([Operator]) -> Void) -> Void {
         
         return { payload, completion in
-            
-            let duplicatesRemover = DuplicatesRemover()
-            let decorated = duplicatesRemover(self.nanoServices.loadOperators)
             
             let throttler = ThrottleDecorator(delay: 0.3)
             
@@ -61,18 +64,16 @@ private extension UtilityPrepaymentMicroServicesComposer {
                 pageSize: self.pageSize
             )
             
-            throttler { decorated(payload, completion) }
+            throttler { load(payload, completion) }
         }
     }
     
     func makeSearch(
-        for categoryType: ServiceCategory.CategoryType
+        for categoryType: ServiceCategory.CategoryType,
+        with load: @escaping Load
     ) -> (String, @escaping ([Operator]) -> Void) -> Void {
         
         return { searchText, completion in
-            
-            let duplicatesRemover = DuplicatesRemover()
-            let decorated = duplicatesRemover(self.nanoServices.loadOperators)
             
             let debouncer = DebounceDecorator(delay: 0.3)
             
@@ -83,7 +84,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
                 pageSize: self.pageSize
             )
             
-            debouncer { decorated(payload, completion) }
+            debouncer { load(payload, completion) }
         }
     }
     
