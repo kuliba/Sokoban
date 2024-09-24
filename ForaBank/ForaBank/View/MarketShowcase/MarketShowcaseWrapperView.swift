@@ -10,36 +10,8 @@ import SwiftUI
 
 typealias MarketShowcaseViewModel = RxViewModel<MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
 
-struct MarketShowcaseWrapperView: View {
-    
-    @ObservedObject private var viewModel: MarketShowcaseViewModel
-    let factory: ViewFactory
-    
-    init(
-        viewModel: ViewModel,
-        factory: ViewFactory
-    ) {
-        self.viewModel = viewModel
-        self.factory = factory
-    }
 
-    var body: some View {
-        
-        MarketShowcaseView(
-            state: viewModel.state,
-            event: viewModel.event(_:),
-            factory: factory,
-            config: .iFora
-        )
-    }
-}
-
-extension MarketShowcaseWrapperView {
-    
-    typealias ViewModel = MarketShowcaseViewModel
-    typealias ViewFactory = MarketShowcaseView.ViewFactory
-    typealias Config = MarketShowcaseConfig
-}
+typealias MarketShowcaseWrapperView = RxWrapperView<MarketShowcaseView, MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
 
 extension MarketShowcaseViewModel {
     

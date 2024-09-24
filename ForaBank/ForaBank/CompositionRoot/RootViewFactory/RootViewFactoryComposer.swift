@@ -297,7 +297,11 @@ private extension RootViewFactoryComposer {
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseViewModel
     ) -> MarketShowcaseWrapperView? {
-        marketFeatureFlag.isActive ? .init(viewModel: viewModel, factory: .init()) : nil
+        marketFeatureFlag.isActive ?
+            .init(
+                model: viewModel,
+                makeContentView: { MarketShowcaseView(state: $0, event: $1, config: .iFora) })
+        : nil
     }
 }
 

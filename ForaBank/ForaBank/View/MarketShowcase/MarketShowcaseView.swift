@@ -11,7 +11,6 @@ struct MarketShowcaseView: View {
     
     let state: State
     let event: (Event) -> Void
-    let factory: Factory
     let config: Config
     
     var body: some View {
@@ -48,7 +47,6 @@ extension MarketShowcaseView {
     
     typealias State = MarketShowcaseState
     typealias Event = MarketShowcaseEvent
-    typealias Factory = ViewFactory
     typealias Config = MarketShowcaseConfig
 }
 
@@ -61,7 +59,6 @@ extension MarketShowcaseView {
     static let preview = MarketShowcaseView(
         state: .inflight,
         event: {_ in },
-        factory: .preview,
         config: .iFora)
 }
 
