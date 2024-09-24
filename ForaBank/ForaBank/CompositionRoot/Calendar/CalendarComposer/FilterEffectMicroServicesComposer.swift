@@ -93,6 +93,7 @@ private extension FilterEffectHandlerMicroServicesComposer {
                 completion(.init(
                     product: product,
                     range: payload.range,
+                    selectedPeriod: payload.selectPeriod,
                     statements: filteredStatements
                 ))
             } else {
@@ -108,6 +109,7 @@ private extension FilterState {
     init(
         product: ProductData,
         range: Range<Date>,
+        selectedPeriod: FilterHistoryState.Period,
         statements: [ProductStatementData]
     ) {
         let services = Array(Set(statements.compactMap { $0.groupName }))
@@ -122,6 +124,7 @@ private extension FilterState {
             filter: .init(
                 title: "Фильтры",
                 selectDates: range,
+                selectedPeriod: selectedPeriod,
                 periods: [.week, .month, .dates],
                 transactionType: [.credit, .debit],
                 services: services

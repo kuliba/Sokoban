@@ -221,7 +221,8 @@ extension RootViewModelFactory {
                         ),
                         filter: .init(
                             title: "Фильтры",
-                            selectDates: payload.range,
+                            selectDates: payload.range, 
+                            selectedPeriod: .dates,
                             selectedServices: payload.selectedServices,
                             periods: FilterHistoryState.Period.allCases,
                             transactionType: FilterHistoryState.TransactionType.allCases,
@@ -807,7 +808,7 @@ extension ProductProfileViewModel {
 
                     model.action.send(ModelAction.Statement.List.Request(
                         productId: product.id,
-                        direction: .custom(start: lowerDate, end: upperDate),
+                        direction: .custom(start: lowerDate.addingTimeInterval(10800), end: upperDate.addingTimeInterval(97199)),
                         operationType: .init(rawValue: operationType ?? .avtodorGroupTitle),
                         category: category
                     ))

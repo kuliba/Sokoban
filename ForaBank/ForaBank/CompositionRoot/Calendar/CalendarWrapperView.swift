@@ -65,7 +65,10 @@ struct CalendarWrapperView: View {
                                     background: .buttonPrimary
                                 ),
                                 action: {
-                                    apply(state.range?.lowerDate, state.range?.upperDate)
+                                    apply(
+                                        state.range?.lowerDate,
+                                        state.range?.upperDate
+                                    )
                                 }
                             )
                         }

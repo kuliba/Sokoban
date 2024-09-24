@@ -53,9 +53,14 @@ final class ProductProfileFlowReducer {
         case let .button(event):
             switch event {
             case .calendar:
-                break
-            case .filter:
+                state.history = .init(
+                    buttonAction: .calendar,
+                    showSheet: .calendar,
+                    categories: [],
+                    applyAction: { _,_ in}
+                )
                 
+            case .filter:
                 let (history, historyEffect) = historyReduce(
                     state.history,
                     .button(.filter(

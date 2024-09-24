@@ -544,6 +544,18 @@ private extension ProductProfileViewModel {
         $filterState
             .sink { state in
 
+                if let range = state.calendar.range {
+                    let lowerDate = range.lowerDate?.addingTimeInterval(10800)
+                    let upperDate = range.upperDate?.addingTimeInterval(97199)
+                    self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
+                        filterState: state,
+                        period: (
+                            lowerDate,
+                            upperDate
+                        ))
+                    )
+                }
+                
                 if let period = state.filter.selectDates {
                 
                     let lowerDate = period.lowerBound.addingTimeInterval(10800)

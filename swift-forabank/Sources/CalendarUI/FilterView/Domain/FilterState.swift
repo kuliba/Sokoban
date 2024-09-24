@@ -51,7 +51,7 @@ public struct FilterHistoryState {
     public init(
         title: String,
         selectDates: Range<Date>?,
-        selectedPeriod: Period = .month,
+        selectedPeriod: Period,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
         periods: [Period],
@@ -110,6 +110,7 @@ extension FilterHistoryState {
     static let preview: Self = .init(
         title: "Фильтры",
         selectDates: (.distantPast)..<(.distantFuture),
+        selectedPeriod: .month,
         periods: [],
         transactionType: [],
         services: []
