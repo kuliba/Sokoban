@@ -35,7 +35,7 @@ extension Model {
     
     static let statementsSerial = "version 3"
     var statementsRequestDays: Int { 30 }
-    var statementslatestDaysOffset: Int { 7 }
+    var statementsLatestDaysOffset: Int { 10 }
     
     func statement(statementId: ProductStatementData.ID) -> ProductStatementData? {
         
@@ -101,7 +101,7 @@ extension Model {
                         direction: currentDirection,
                         days: statementsRequestDays,
                         currentDate: currentDate,
-                        latestDaysOffset: statementslatestDaysOffset
+                        latestDaysOffset: statementsLatestDaysOffset
                     ) else {
                         break
                     }

@@ -172,7 +172,8 @@ extension ProductProfileHistoryView {
                                 updateContent(with: update.groups)
                                 updateSegmentedBar(
                                     productId: id,
-                                    statements: storageData
+                                    statements: storageData, 
+                                    selectRange: filter?.filter.selectDates ?? filter?.calendar.selectedRange
                                 )
                             }
                         }
@@ -244,12 +245,16 @@ extension ProductProfileHistoryView {
                                     return item.groupName.contained(in: filter.filter.selectedServices.sorted())
                                 })
                             }
+                        } else {
+                            storageStatements = storageStatements
+                                .filter { Calendar.current.isInMonth($0.dateValue)}
                         }
                         
                         // isMapped = false  это согласованный костыль
                         updateSegmentedBar(
                             productId: id,
                             statements: storageStatements,
+                            selectRange: filter()?.filter.selectDates ?? filter()?.calendar.selectedRange,
                             isMapped: false
                         )
                         
@@ -327,6 +332,7 @@ extension ProductProfileHistoryView {
         func updateSegmentedBar(
             productId: ProductData.ID,
             statements: [ProductStatementData],
+            selectRange: Range<Date>?,
             isMapped: Bool = true
         ) {
             
@@ -352,13 +358,9 @@ extension ProductProfileHistoryView {
             case .loan: return
             }
             
-            let statementFilteredPeriod = statementFilteredOperation
-                .filter { Calendar.current.dateComponents([.year, .month], from: $0.dateValue)
-                    == Calendar.current.dateComponents([.year, .month], from: Date()) }
-            
             if isMapped {
                 
-                let dict = statementFilteredPeriod
+                let dict = statementFilteredOperation
                             .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
                                 if let documentAmount = $1.documentAmount {
                                     
@@ -372,25 +374,28 @@ extension ProductProfileHistoryView {
                         mappedValues: dict,
                         productType: product.productType,
                         currencyCode: product.currency,
+                        selectRange: selectRange,
                         model: model
                     )
                 }
                 
             } else {
                 
-                let dict = statementFilteredPeriod
-                            .reduce(into: [ String: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[$1.groupName, default: 0] += documentAmount
-                                }
-                            }
+                let dict = statementFilteredOperation
+                    .reduce(into: [ String: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[$1.groupName, default: 0] += documentAmount
+                        }
+                    }
+                
                 Task { @MainActor in
                     
                     segmentBarViewModel = .init(
                         stringValues: dict,
                         productType: product.productType,
                         currencyCode: product.currency,
+                        selectRange: selectRange,
                         model: model
                     )
                 }
@@ -487,6 +492,18 @@ extension ProductProfileHistoryView {
                 }
             }
         }
+    }
+}
+
+extension Calendar {
+ 
+    func isInMonth(
+        _ date: Date,
+        of currentDate: Date = .init()
+    ) -> Bool {
+        
+        dateComponents([.year, .month], from: date)
+            == dateComponents([.year, .month], from: currentDate)
     }
 }
 
@@ -598,6 +615,22 @@ enum ProductProfileHistoryViewModelAction {
 
 //MARK: - Types
 
+extension ProductProfileHistoryView.ViewModel.Content {
+    
+    var amounts: [Double]? {
+        guard case let .list(list) = self else { return nil }
+        return list.expences?.amounts
+    }
+}
+
+extension ProductProfileViewModel {
+
+    var amounts: [Double]? {
+     
+        history?.content.amounts
+    }
+}
+
 extension ProductProfileHistoryView.ViewModel {
     
     struct HeaderViewModel {
@@ -632,7 +665,12 @@ extension ProductProfileHistoryView.ViewModel {
         @Published var groups: [DayGroupViewModel]
         @Published var eldestUpdate: EldestUpdateState?
         
-        init(expences: MonthExpencesViewModel?, latestUpdate: LatestUpdateState?, groups: [DayGroupViewModel], eldestUpdate: EldestUpdateState?) {
+        init(
+            expences: MonthExpencesViewModel?,
+            latestUpdate: LatestUpdateState?,
+            groups: [DayGroupViewModel],
+            eldestUpdate: EldestUpdateState?
+        ) {
             
             self.expences = expences
             self.latestUpdate = latestUpdate
