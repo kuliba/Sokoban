@@ -241,3 +241,18 @@ extension CodableServicePaymentOperator {
         || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
+
+#warning("move to call site")
+private extension PaymentServiceOperator {
+    
+    init(codable: CodableServicePaymentOperator) {
+        
+        self.init(
+            id: codable.id,
+            inn: codable.inn,
+            md5Hash: codable.md5Hash,
+            name: codable.name,
+            type: codable.type
+        )
+    }
+}
