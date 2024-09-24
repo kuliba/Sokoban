@@ -16,18 +16,18 @@ extension UtilityPrepaymentNanoServices {
     
     struct LoadOperatorsPayload: Equatable {
         
-        let category: ServiceCategory
+        let categoryType: ServiceCategory.CategoryType
         let operatorID: Operator.ID?
         let searchText: String
         let pageSize: Int
         
         init(
             afterOperatorID operatorID: Operator.ID?,
-            for category: ServiceCategory,
+            for categoryType: ServiceCategory.CategoryType,
             searchText: String,
             pageSize: Int
         ) {
-            self.category = category
+            self.categoryType = categoryType
             self.operatorID = operatorID
             self.searchText = searchText
             self.pageSize = pageSize

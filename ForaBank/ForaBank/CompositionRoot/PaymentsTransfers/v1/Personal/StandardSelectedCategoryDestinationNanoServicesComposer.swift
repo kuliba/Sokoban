@@ -37,7 +37,7 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
     typealias Operator = PaymentServiceOperator
     typealias LoadOperators = (ServiceCategory, @escaping (Result<[Operator], Error>) -> Void) -> Void
     
-    typealias MakeMicroServices = (ServiceCategory) -> MicroServices
+    typealias MakeMicroServices = (ServiceCategory.CategoryType) -> MicroServices
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
 }
 
@@ -93,7 +93,7 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
         
         return .init(
             operationPicker: (),
-            providerList: makeProviderList(with: payload, for: category),
+            providerList: makeProviderList(with: payload, for: category.type),
             search: payload.category.hasSearch ? () : nil,
             cancellables: []
         )
@@ -101,14 +101,14 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     private func makeProviderList(
         with payload: StandardNanoServices.MakeSuccessPayload,
-        for category: ServiceCategory
+        for categoryType: ServiceCategory.CategoryType
     ) -> PaymentProviderPicker.ProviderList {
         
         let reducer = PaymentProviderPicker.ProviderListReducer(
             observeLast: observeLast
         )
         let effectHandler = PaymentProviderPicker.ProviderListEffectHandler(
-            microServices: makeMicroServices(category)
+            microServices: makeMicroServices(categoryType)
         )
         
         return .init(

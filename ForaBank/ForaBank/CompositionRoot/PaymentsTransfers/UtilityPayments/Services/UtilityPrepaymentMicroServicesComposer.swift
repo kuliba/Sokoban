@@ -29,12 +29,12 @@ where Operator: Identifiable {
 extension UtilityPrepaymentMicroServicesComposer {
     
     func compose(
-        for category: ServiceCategory
+        for categoryType: ServiceCategory.CategoryType
     ) -> MicroServices {
         
         return .init(
-            paginate: makePaginate(for: category),
-            search: makeSearch(for: category)
+            paginate: makePaginate(for: categoryType),
+            search: makeSearch(for: categoryType)
         )
     }
     
@@ -44,7 +44,7 @@ extension UtilityPrepaymentMicroServicesComposer {
 private extension UtilityPrepaymentMicroServicesComposer {
     
     func makePaginate(
-        for category: ServiceCategory
+        for categoryType: ServiceCategory.CategoryType
     ) -> (PaginatePayload<Operator.ID>, @escaping ([Operator]) -> Void) -> Void {
         
         return { payload, completion in
@@ -56,7 +56,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
             
             let payload = Payload(
                 afterOperatorID: payload.operatorID,
-                for: category,
+                for: categoryType,
                 searchText: payload.searchText,
                 pageSize: self.pageSize
             )
@@ -66,7 +66,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
     }
     
     func makeSearch(
-        for category: ServiceCategory
+        for categoryType: ServiceCategory.CategoryType
     ) -> (String, @escaping ([Operator]) -> Void) -> Void {
         
         return { searchText, completion in
@@ -78,7 +78,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
             
             let payload = Payload(
                 afterOperatorID: nil,
-                for: category,
+                for: categoryType,
                 searchText: searchText,
                 pageSize: self.pageSize
             )

@@ -290,15 +290,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 fraudDelay: settings.fraudDelay,
                 navTitle: settings.utilityNavTitle
             ),
-            microServices: microComposer.compose(for: .init(
-                latestPaymentsCategory: .service, 
-                md5Hash: "",
-                name: "Услуги ЖКХ", 
-                ord: 0,
-                paymentFlow: .standard,
-                hasSearch: true,
-                type: .housingAndCommunalService
-            )),
+            microServices: microComposer.compose(for: .housingAndCommunalService),
             scheduler: scheduler
         )
     }

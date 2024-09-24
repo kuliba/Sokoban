@@ -183,7 +183,7 @@ private extension Model {
             cacheLog("Total Operators count \(operators.count)", #file, #line)
             
             let page = operators.operators(for: payload)
-            cacheLog("Operators page count \(page.count) for \(payload.category.type.name)", #file, #line)
+            cacheLog("Operators page count \(page.count) for \(payload.categoryType.name)", #file, #line)
             
             completion(page)
         } else {
@@ -220,8 +220,7 @@ extension CodableServicePaymentOperator {
         _ payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload
     ) -> Bool {
         
-        type == payload.category.type.name &&
-        contains(payload.searchText)
+        type == payload.categoryType.name && contains(payload.searchText)
     }
     
     func contains(_ searchText: String) -> Bool {
