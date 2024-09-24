@@ -20,6 +20,7 @@ import Fetcher
 import LandingUIComponent
 import LandingMapping
 import CodableLanding
+import MarketShowcase
 
 extension RootViewModelFactory {
     

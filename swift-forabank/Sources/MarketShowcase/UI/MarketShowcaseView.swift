@@ -8,13 +8,23 @@
 import SwiftUI
 import UIPrimitives
 
-struct MarketShowcaseView: View {
+public struct MarketShowcaseView<RefreshView>: View
+where RefreshView: View
+{
     
     let state: State
     let event: (Event) -> Void
     let config: Config
+    let factory: Factory
     
-    var body: some View {
+    public init(state: State, event: @escaping (Event) -> Void, config: Config, factory: Factory) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         content()
             .modifier(RefreshModifier(action: {
@@ -30,13 +40,12 @@ struct MarketShowcaseView: View {
         switch state {
         case .inflight:
             
-            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+            factory.makeRefreshView()
                 .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             Button(action: { event(.loaded) }, label: { Text("Loaded")})
         default:
             VStack {
                 Text("Market")
-                Image.ic24MarketplaceActive
             }
             .frame(maxHeight: .infinity)
             .padding()
@@ -44,23 +53,25 @@ struct MarketShowcaseView: View {
     }
 }
 
-extension MarketShowcaseView {
+public extension MarketShowcaseView {
     
     typealias State = MarketShowcaseState
     typealias Event = MarketShowcaseEvent
     typealias Config = MarketShowcaseConfig
+    typealias Factory = ViewFactory<RefreshView>
 }
 
 #Preview {
     MarketShowcaseView.preview
 }
 
-extension MarketShowcaseView {
+extension MarketShowcaseView where RefreshView == Text {
     
     static let preview = MarketShowcaseView(
         state: .inflight,
         event: {_ in },
-        config: .iFora)
+        config: .iFora, 
+        factory: .init(makeRefreshView: { Text("Refresh") }))
 }
 
 private struct ViewByCenterModifier: ViewModifier {

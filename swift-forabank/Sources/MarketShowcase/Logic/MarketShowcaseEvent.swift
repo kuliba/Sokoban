@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MarketShowcaseEvent: Equatable {
+public enum MarketShowcaseEvent: Equatable {
     
     case update
     case loaded

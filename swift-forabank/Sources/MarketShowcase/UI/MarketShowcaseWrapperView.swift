@@ -8,19 +8,18 @@
 import RxViewModel
 import SwiftUI
 
-typealias MarketShowcaseViewModel = RxViewModel<MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
+public typealias MarketShowcaseViewModel = RxViewModel<MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
 
+public typealias MarketShowcaseWrapperView<RefreshView> = RxWrapperView<MarketShowcaseView<RefreshView>, MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect> where RefreshView: View
 
-typealias MarketShowcaseWrapperView = RxWrapperView<MarketShowcaseView, MarketShowcaseState, MarketShowcaseEvent, MarketShowcaseEffect>
-
-extension MarketShowcaseViewModel {
+public extension MarketShowcaseViewModel {
     
     func reset() {
         
     }
 }
 
-extension MarketShowcaseViewModel {
+public extension MarketShowcaseViewModel {
     
     static let preview = MarketShowcaseViewModel.init(
         initialState: .inflight,

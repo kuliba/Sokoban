@@ -163,6 +163,7 @@ let package = Package(
         .banners,
         // MarketShowcase
         .marketShowcase,
+        .marketShowcaseTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,

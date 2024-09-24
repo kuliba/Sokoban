@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct MarketShowcaseConfig {
+public struct MarketShowcaseConfig {
     
     let spinnerHeight: CGFloat
 }
 
-extension MarketShowcaseConfig {
+public extension MarketShowcaseConfig {
     
     static let iFora: Self = .init(spinnerHeight: 48)
 }

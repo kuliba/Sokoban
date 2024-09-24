@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MarketShowcaseState: Equatable {
+public enum MarketShowcaseState: Equatable {
     
     case inflight
     case loaded

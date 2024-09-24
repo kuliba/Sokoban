@@ -7,12 +7,12 @@
 
 import Foundation
 
-final class MarketShowcaseEffectHandler {
+public final class MarketShowcaseEffectHandler {
     
-    init(){}
+    public init(){}
 }
 
-extension MarketShowcaseEffectHandler {
+public extension MarketShowcaseEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -21,14 +21,14 @@ extension MarketShowcaseEffectHandler {
         switch effect {
         case .load:
           
-            DispatchQueue.main.delay(for: .seconds(2)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
                 dispatch(.loaded)
             }
         }
     }
 }
 
-extension MarketShowcaseEffectHandler {
+public extension MarketShowcaseEffectHandler {
     
     typealias Event = MarketShowcaseEvent
     typealias Effect = MarketShowcaseEffect

@@ -1,18 +1,24 @@
 {
   "configurations" : [
     {
-      "id" : "FDDE4A8C-E464-4D2B-8BF2-8C4A280B5C9E",
-      "name" : "Configuration 1",
+      "id" : "F477EE87-95AB-4C84-BEBF-CF323B678360",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-
+    "codeCoverage" : false
   },
   "testTargets" : [
-
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MarketShowcaseTests",
+        "name" : "MarketShowcaseTests"
+      }
+    }
   ],
   "version" : 1
 }

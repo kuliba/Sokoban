@@ -8,6 +8,7 @@
 import XCTest
 import RxViewModel
 import Combine
+import MarketShowcase
 
 final class MarketShowcaseReducerTests: XCTestCase {
     

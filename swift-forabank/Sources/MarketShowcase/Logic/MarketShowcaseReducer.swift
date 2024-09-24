@@ -7,16 +7,16 @@
 
 import Foundation
 
-final class MarketShowcaseReducer {
+public final class MarketShowcaseReducer {
     
     private let makeInformer: (String) -> Void
 
-    init(makeInformer: @escaping (String) -> Void) {
+    public init(makeInformer: @escaping (String) -> Void) {
         self.makeInformer = makeInformer
     }
 }
 
-extension MarketShowcaseReducer {
+public extension MarketShowcaseReducer {
     
     func reduce(
         _ state: State,
@@ -40,7 +40,7 @@ extension MarketShowcaseReducer {
     }
 }
 
-extension MarketShowcaseReducer {
+public extension MarketShowcaseReducer {
     
     typealias Event = MarketShowcaseEvent
     typealias State = MarketShowcaseState

@@ -11,6 +11,7 @@ import PaymentSticker
 import PayHubUI
 import SberQR
 import SwiftUI
+import MarketShowcase
 
 struct RootView: View {
     
