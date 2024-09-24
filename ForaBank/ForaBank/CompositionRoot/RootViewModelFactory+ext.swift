@@ -272,7 +272,7 @@ extension RootViewModelFactory {
             scheduler: mainScheduler
         )
         
-        let makePaymentProviderPickerFlowModel = makePaymentProviderPickerFlowModel(
+        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
             model: model,

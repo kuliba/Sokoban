@@ -491,7 +491,7 @@ extension PaymentsTransfersViewModel {
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
         case servicePayment(UtilityServicePaymentFlowState)
-        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
 
         typealias MixedOperators = MultiElementArray<OperatorProvider<SegmentedOperatorData, SegmentedProvider>>
@@ -1938,7 +1938,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     private func bind(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> Set<AnyCancellable> {
         
         let spinner = flowModel.$state
@@ -1965,7 +1965,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     func handle(
-        _ outside: PaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
     ) {
         event(.dismiss(.destination))
         rootActions?.spinner.hide()
