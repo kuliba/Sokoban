@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerView.swift
+//  SegmentedPaymentProviderPickerView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PaymentProviderPickerView<ProviderView, Footer>: View
+struct SegmentedPaymentProviderPickerView<ProviderView, Footer>: View
 where ProviderView: View,
       Footer: View {
     
@@ -34,10 +34,10 @@ where ProviderView: View,
     }
 }
 
-extension PaymentProviderPickerView {
+extension SegmentedPaymentProviderPickerView {
     
     typealias Segments = [Segment<SegmentedOperatorProvider>]
-    typealias Config = PaymentProviderPickerViewConfig
+    typealias Config = SegmentedPaymentProviderPickerViewConfig
 }
 
 extension SegmentedOperatorProvider: Identifiable {
@@ -54,7 +54,7 @@ extension SegmentedOperatorProvider: Identifiable {
     }
 }
 
-private extension PaymentProviderPickerView {
+private extension SegmentedPaymentProviderPickerView {
     
     func segmentView(
         segment: Segments.Element

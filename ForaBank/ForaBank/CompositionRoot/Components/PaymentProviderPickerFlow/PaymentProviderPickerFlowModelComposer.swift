@@ -52,8 +52,8 @@ private extension PaymentProviderPickerFlowModelComposer {
         _ qrMapping: QRMapping
     ) -> SegmentedPaymentProviderPickerFlowState.Content {
         
-        let reducer = PaymentProviderPickerReducer<SegmentedOperatorProvider>()
-        let effectHandler = PaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
+        let reducer = SegmentedPaymentProviderPickerReducer<SegmentedOperatorProvider>()
+        let effectHandler = SegmentedPaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
         
         return .init(
             initialState: .init(

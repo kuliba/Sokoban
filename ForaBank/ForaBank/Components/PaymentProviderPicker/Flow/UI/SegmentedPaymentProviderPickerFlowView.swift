@@ -69,7 +69,7 @@ private extension SegmentedPaymentProviderPickerFlowView {
     
     func content() -> some View {
         
-        PaymentProviderPickerWrapperView(
+        SegmentedPaymentProviderPickerWrapperView(
             model: flowModel.state.content,
             operatorLabel: operatorLabel,
             footer: {

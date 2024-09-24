@@ -1,11 +1,11 @@
 //
-//  PaymentProviderPickerViewConfig+iFora.swift
+//  SegmentedPaymentProviderPickerViewConfig+iFora.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-extension PaymentProviderPickerViewConfig {
+extension SegmentedPaymentProviderPickerViewConfig {
     
     static let iFora: Self = .init(
         background: .mainColorsGrayLightest,

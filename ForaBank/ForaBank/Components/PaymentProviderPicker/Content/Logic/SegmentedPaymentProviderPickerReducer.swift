@@ -1,13 +1,13 @@
 //
-//  PaymentProviderPickerReducer.swift
+//  SegmentedPaymentProviderPickerReducer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-final class PaymentProviderPickerReducer<Provider> {}
+final class SegmentedPaymentProviderPickerReducer<Provider> {}
 
-extension PaymentProviderPickerReducer {
+extension SegmentedPaymentProviderPickerReducer {
     
     func reduce(
         _ state: State,
@@ -29,14 +29,14 @@ extension PaymentProviderPickerReducer {
     }
 }
 
-extension PaymentProviderPickerReducer {
+extension SegmentedPaymentProviderPickerReducer {
     
-    typealias State = PaymentProviderPickerState<Provider>
-    typealias Event = PaymentProviderPickerEvent<Provider>
-    typealias Effect = PaymentProviderPickerEffect
+    typealias State = SegmentedPaymentProviderPickerState<Provider>
+    typealias Event = SegmentedPaymentProviderPickerEvent<Provider>
+    typealias Effect = SegmentedPaymentProviderPickerEffect
 }
 
-private extension PaymentProviderPickerReducer {
+private extension SegmentedPaymentProviderPickerReducer {
     
     func reduce(
         _ state: inout State,

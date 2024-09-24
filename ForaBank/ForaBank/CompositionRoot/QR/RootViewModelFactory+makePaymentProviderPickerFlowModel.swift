@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentProviderPickerFlowModel.swift
+//  RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
-    static func makePaymentProviderPickerFlowModel(
+    static func makeSegmentedPaymentProviderPickerFlowModel(
         httpClient: HTTPClient,
         log: @escaping Log,
         model: Model,
