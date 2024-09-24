@@ -61,7 +61,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowModel
+    private typealias SUT = SegmentedPaymentProviderPickerFlowModel
     
     private func makeSUT(
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
@@ -127,7 +127,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
 
 // MARK: - DSL
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     var servicePickerModel: AnywayServicePickerFlowModel? {
         

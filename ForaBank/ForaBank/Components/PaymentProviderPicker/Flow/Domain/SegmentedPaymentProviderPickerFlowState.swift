@@ -1,18 +1,18 @@
 //
-//  PaymentProviderPickerFlowState.swift
+//  SegmentedPaymentProviderPickerFlowState.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
 //
 
-struct PaymentProviderPickerFlowState {
+struct SegmentedPaymentProviderPickerFlowState {
     
     let content: Content
     var isLoading = false
     var status: Status?
 }
 
-extension PaymentProviderPickerFlowState {
+extension SegmentedPaymentProviderPickerFlowState {
     
     typealias Content = PaymentProviderPickerModel<SegmentedOperatorProvider>
     

@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerFlowView.swift
+//  SegmentedPaymentProviderPickerFlowView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -8,7 +8,7 @@
 import FooterComponent
 import SwiftUI
 
-struct PaymentProviderPickerFlowView<OperatorLabel, DestinationContent>: View
+struct SegmentedPaymentProviderPickerFlowView<OperatorLabel, DestinationContent>: View
 where OperatorLabel: View,
       DestinationContent: View {
     
@@ -28,15 +28,15 @@ where OperatorLabel: View,
     }
 }
 
-extension PaymentProviderPickerFlowView {
+extension SegmentedPaymentProviderPickerFlowView {
     
-    typealias FlowModel = PaymentProviderPickerFlowModel
-    typealias FlowState = PaymentProviderPickerFlowState
+    typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
+    typealias FlowState = SegmentedPaymentProviderPickerFlowState
     typealias Operator = SegmentedOperatorData
     typealias Provider = SegmentedProvider
 }
 
-extension PaymentProviderPickerFlowState {
+extension SegmentedPaymentProviderPickerFlowState {
     
     var destination: Status.Destination? {
         
@@ -45,7 +45,7 @@ extension PaymentProviderPickerFlowState {
     }
 }
 
-extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
+extension SegmentedPaymentProviderPickerFlowState.Status.Destination: Identifiable {
     
     var id: ID {
         
@@ -65,7 +65,7 @@ extension PaymentProviderPickerFlowState.Status.Destination: Identifiable {
     }
 }
 
-private extension PaymentProviderPickerFlowView {
+private extension SegmentedPaymentProviderPickerFlowView {
     
     func content() -> some View {
         

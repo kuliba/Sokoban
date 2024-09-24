@@ -1,5 +1,5 @@
 //
-//  ComposedPaymentProviderPickerFlowView.swift
+//  ComposedSegmentedPaymentProviderPickerFlowView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ComposedPaymentProviderPickerFlowView<AnywayFlowView>: View 
+struct ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView>: View 
 where AnywayFlowView: View {
     
     let flowModel: FlowModel
@@ -16,7 +16,7 @@ where AnywayFlowView: View {
     
     var body: some View {
         
-        PaymentProviderPickerFlowView(
+        SegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             operatorLabel: label(provider:),
             destinationContent: destinationContent(_:)
@@ -24,12 +24,12 @@ where AnywayFlowView: View {
     }
 }
 
-extension ComposedPaymentProviderPickerFlowView {
+extension ComposedSegmentedPaymentProviderPickerFlowView {
     
-    typealias FlowModel = PaymentProviderPickerFlowModel
+    typealias FlowModel = SegmentedPaymentProviderPickerFlowModel
 }
 
-private extension ComposedPaymentProviderPickerFlowView {
+private extension ComposedSegmentedPaymentProviderPickerFlowView {
     
     func label(
         provider: SegmentedOperatorProvider
@@ -43,7 +43,7 @@ private extension ComposedPaymentProviderPickerFlowView {
         )
     }
     
-    typealias FlowState = PaymentProviderPickerFlowState
+    typealias FlowState = SegmentedPaymentProviderPickerFlowState
     
     @ViewBuilder
     func destinationContent(

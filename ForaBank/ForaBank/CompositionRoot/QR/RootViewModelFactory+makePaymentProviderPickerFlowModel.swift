@@ -20,7 +20,7 @@ extension RootViewModelFactory {
         pageSize: Int = 50,
         flag: StubbedFeatureFlag.Option,
         scheduler: AnySchedulerOf<DispatchQueue>
-    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel {
+    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
             httpClient: httpClient,

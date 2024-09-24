@@ -25,7 +25,7 @@ final class PaymentProviderPickerFlowModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeServicePickerFlowModel = PaymentProviderPickerFlowFactory.MakeServicePickerFlowModel
+    typealias MakeServicePickerFlowModel = SegmentedPaymentProviderPickerFlowFactory.MakeServicePickerFlowModel
 }
 
 extension PaymentProviderPickerFlowModelComposer {
@@ -34,7 +34,7 @@ extension PaymentProviderPickerFlowModelComposer {
         with mix: MultiElementArray<SegmentedOperatorProvider>,
         qrCode: QRCode,
         qrMapping: QRMapping
-    ) -> PaymentProviderPickerFlowModel {
+    ) -> SegmentedPaymentProviderPickerFlowModel {
         
         return .init(
             initialState: .init(content: makeContent(mix, qrCode, qrMapping)),
@@ -50,7 +50,7 @@ private extension PaymentProviderPickerFlowModelComposer {
         _ mix: MultiElementArray<SegmentedOperatorProvider>,
         _ qrCode: QRCode,
         _ qrMapping: QRMapping
-    ) -> PaymentProviderPickerFlowState.Content {
+    ) -> SegmentedPaymentProviderPickerFlowState.Content {
         
         let reducer = PaymentProviderPickerReducer<SegmentedOperatorProvider>()
         let effectHandler = PaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
@@ -73,7 +73,7 @@ private extension PaymentProviderPickerFlowModelComposer {
     }
     
     func makeFactory(
-    ) -> PaymentProviderPickerFlowFactory {
+    ) -> SegmentedPaymentProviderPickerFlowFactory {
         
         return .init(
             makePayByInstructionsViewModel: {

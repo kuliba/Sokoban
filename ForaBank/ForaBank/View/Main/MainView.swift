@@ -400,10 +400,10 @@ private extension MainView {
 private extension MainView {
     
     func paymentProviderPicker(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedPaymentProviderPickerFlowView(
+        ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
@@ -647,7 +647,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active), 
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -677,7 +677,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -707,7 +707,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
