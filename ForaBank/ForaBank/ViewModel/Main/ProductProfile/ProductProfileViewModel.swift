@@ -547,7 +547,7 @@ private extension ProductProfileViewModel {
                 if let period = state.filter.selectDates {
                 
                     let lowerDate = period.lowerBound.addingTimeInterval(10800)
-                    let upperDate = period.upperBound.addingTimeInterval(10800)
+                    let upperDate = period.upperBound.addingTimeInterval(97199)
                     self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
                         filterState: state, 
                         period: (

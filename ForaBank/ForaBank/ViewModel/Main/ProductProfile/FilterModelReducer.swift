@@ -56,7 +56,7 @@ final class FilterModelReducer {
             
                 state.status = .loading
                 effect = .updateFilter(.init(
-                    range: range.lowerBound.addingTimeInterval(10800)..<range.upperBound.addingTimeInterval(10800),
+                    range: range.lowerBound.addingTimeInterval(10800)..<range.upperBound.addingTimeInterval(97199),
                     productId: state.productId
                 ))
             }
