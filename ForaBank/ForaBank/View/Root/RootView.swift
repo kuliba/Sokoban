@@ -292,18 +292,26 @@ private extension RootView {
                             event: event,
                             contentView: {
                                 
-                                VStack {
-                                    
-                                    Text("TBD: paymentProviderPicker \(String(describing: binder))")
-                                        .font(.headline.bold())
-                                    
-                                    Text("TBD: search \(String(describing: binder.content.search))")
-                                    Text("TBD: operationPicker \(String(describing: binder.content.operationPicker))")
-                                    Text("TBD: providerList \(String(describing: binder.content.providerList))")
-                                }
+                                PaymentProviderPickerContentView(
+                                    content: binder.content, 
+                                    factory: .init(
+                                        makeOperationPickerView: { operationPicker in
+                                            
+                                            Text("TBD: operationPicker \(String(describing: operationPicker))")
+                                        },
+                                        makeProviderList: { providerList in
+                                            
+                                            Text("TBD: providerList \(String(describing: providerList))")
+                                        },
+                                        makeSearchView: { search in
+                                            
+                                            Text("TBD: search \(String(describing: search))")
+                                        }
+                                    )
+                                )
                             },
                             destinationView: { destination in
-                            
+                                
                                 Text("TBD: destination view \(String(describing: destination))")
                             }
                         )
