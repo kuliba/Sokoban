@@ -1,8 +1,8 @@
 //
 //  MarketShowcaseState.swift
-//  ForaBank
+//  
 //
-//  Created by Andryusina Nataly on 23.09.2024.
+//  Created by Andryusina Nataly on 24.09.2024.
 //
 
 import Foundation

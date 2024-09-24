@@ -5,7 +5,6 @@
 //  Created by Andryusina Nataly on 24.09.2024.
 //
 
-@testable import ForaBank
 import XCTest
 import RxViewModel
 import Combine

@@ -2,7 +2,7 @@
 //  MarketShowcaseView.swift
 //  ForaBank
 //
-//  Created by Andryusina Nataly on 19.09.2024.
+//  Created by Andryusina Nataly on 24.09.2024.
 //
 
 import SwiftUI
