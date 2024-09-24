@@ -65,7 +65,7 @@ extension Model {
     
     func paymentsTransferPaymentsServicesStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
         func amountForPayment(operation: Payments.Operation) -> String? {
-            if case .servicePayment(_, _, let amountValue) = operation.source {
+            if case let .servicePayment(_, _, amountValue, _) = operation.source {
                 
                 let amount = Decimal(amountValue)
                 return "\(amount)"

@@ -92,7 +92,8 @@ final class QRScanResultMapperTests: XCTestCase {
         expect(sut, with: .qrCode(qr), delivers: .mapped(.source(.servicePayment(
             puref: puref,
             additionalList: [],
-            amount: 123.45
+            amount: 123.45, 
+            productId: nil
         )))) {
             spy.complete(with: .operator(`operator`))
         }
@@ -111,7 +112,8 @@ final class QRScanResultMapperTests: XCTestCase {
         expect(sut, with: .qrCode(qr), delivers: .mapped(.source(.servicePayment(
             puref: puref,
             additionalList: [],
-            amount: 0
+            amount: 0,
+            productId: nil
         )))) {
             spy.complete(with: .operator(`operator`))
         }
@@ -147,7 +149,8 @@ final class QRScanResultMapperTests: XCTestCase {
                     svgImage: nil
                 )
             ],
-            amount: 0
+            amount: 0, 
+            productId: nil
         )))) {
             spy.complete(with: .operator(`operator`))
         }

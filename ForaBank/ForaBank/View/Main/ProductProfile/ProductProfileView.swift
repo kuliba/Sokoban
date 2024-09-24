@@ -474,7 +474,8 @@ struct ProductProfileView: View {
                                                 self.viewModel.link = .payment(.init(source: .servicePayment(
                                                     puref: puref,
                                                     additionalList: additionalList,
-                                                    amount: amount
+                                                    amount: amount, 
+                                                    productId: transfer.payer?.cardId
                                                 ), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))
