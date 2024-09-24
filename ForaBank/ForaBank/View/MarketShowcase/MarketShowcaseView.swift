@@ -15,15 +15,13 @@ struct MarketShowcaseView: View {
     let config: Config
     
     var body: some View {
-        GeometryReader { geometry in
-            
-            content()
-                .modifier(RefreshModifier(action: {
-                    if state != .inflight {
-                        event(.update)
-                    }
-                }))
-        }
+        
+        content()
+            .modifier(RefreshModifier(action: {
+                if state != .inflight {
+                    event(.update)
+                }
+            }))
     }
     
     @ViewBuilder
