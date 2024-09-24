@@ -21,11 +21,13 @@ extension SegmentedBarView {
         
         private let model: Model
         
-        init(values: [ProductStatementMerchantGroup: Double],
-             titleLabel: String,
-             currencyCode: String,
-             prefixTotalValue: String = "",
-             model: Model = .emptyMock) {
+        init(
+            values: [ProductStatementMerchantGroup: Double],
+            titleLabel: String,
+            currencyCode: String,
+            prefixTotalValue: String = "",
+            model: Model = .emptyMock
+        ) {
             
             self.values = values
             self.model = model
@@ -40,23 +42,34 @@ extension SegmentedBarView {
                                             style: totalValue != 0 ? .normal : .clipped) ?? String(totalValue))
         }
         
-        convenience init(mappedValues: [ProductStatementMerchantGroup: Double],
-                         productType: ProductType,
-                         currencyCode: String,
-                         model: Model) {
+        convenience init(
+            mappedValues: [ProductStatementMerchantGroup: Double],
+            productType: ProductType,
+            currencyCode: String,
+            selectRange: Range<Date>?,
+            model: Model
+        ) {
             
-            self.init(values: mappedValues,
-                      titleLabel: Self.getTitleLabel(productType: productType),
-                      currencyCode: currencyCode,
-                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
-                      model: model)
+            self.init(
+                values: mappedValues,
+                titleLabel: Self.getTitleLabel(
+                    productType: productType,
+                    selectRange: selectRange
+                ),
+                currencyCode: currencyCode,
+                prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
+                model: model
+            )
         }
         
         // это согласованный костыль
-        convenience init(stringValues: [String: Double],
-                         productType: ProductType,
-                         currencyCode: String,
-                         model: Model) {
+        convenience init(
+            stringValues: [String: Double],
+            productType: ProductType,
+            currencyCode: String,
+            selectRange: Range<Date>?,
+            model: Model
+        ) {
             
             var mockValues = [ProductStatementMerchantGroup: Double]()
             let merchantGroup = ProductStatementMerchantGroup.allCases
@@ -64,32 +77,46 @@ extension SegmentedBarView {
             var sumEndGroup = 0.0
             
             stringValues.sorted(by: {$0.value > $1.value})
-                        .forEach { key, value in
-                
-                            if i < merchantGroup.count - 1 {
-                                mockValues[merchantGroup[i]] = value
-                            } else {
-                                sumEndGroup += value
-                                mockValues[merchantGroup[merchantGroup.count - 1]] = sumEndGroup
-                            }
-                            
-                            i += 1
-            }
+                .forEach { key, value in
+                    
+                    if i < merchantGroup.count - 1 {
+                        mockValues[merchantGroup[i]] = value
+                    } else {
+                        sumEndGroup += value
+                        mockValues[merchantGroup[merchantGroup.count - 1]] = sumEndGroup
+                    }
+                    
+                    i += 1
+                }
             
-            self.init(values: mockValues,
-                      titleLabel: Self.getTitleLabel(productType: productType),
-                      currencyCode: currencyCode,
-                      prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
-                      model: model)
-                
+            self.init(
+                values: mockValues,
+                titleLabel: Self.getTitleLabel(
+                    productType: productType,
+                    selectRange: selectRange
+                ),
+                currencyCode: currencyCode,
+                prefixTotalValue: Self.getPrefixTotalValue(productType: productType),
+                model: model
+            )
         }
         
-        private static func getTitleLabel(productType: ProductType) -> String {
+        private static func getTitleLabel(
+            productType: ProductType,
+            selectRange: Range<Date>?
+        ) -> String {
             
-            let dateFormatter = DateFormatter.monthFormatter
-            let currentMonth = dateFormatter.string(from: Date())
-            
-            return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
+            if let selectRange {
+                
+                return "Траты за \("\(DateFormatter.shortDate.string(from: selectRange.lowerBound)) - \(DateFormatter.shortDate.string(from: selectRange.upperBound))")"
+                
+            } else {
+                
+                let dateFormatter = DateFormatter.monthFormatter
+                let currentMonth = dateFormatter.string(from: Date())
+                
+                return productType == .deposit ? "Мой доход за \(currentMonth)" : "Tраты за \(currentMonth)"
+            }
         }
         
         private static func getPrefixTotalValue(productType: ProductType) -> String {

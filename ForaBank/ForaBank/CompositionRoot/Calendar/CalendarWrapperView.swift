@@ -95,13 +95,9 @@ private extension CalendarWrapperView {
                         periods: state.periods
                     )
                 case let .selectPeriod(period, lowerDate, upperDate):
-                    self.state = .init(
-                        date: state.date,
-                        range: .init(startDate: lowerDate, endDate: upperDate),
-                        monthsData: state.monthsData,
-                        selectPeriod: period,
-                        periods: state.periods
-                    )
+                    state.range = .init(startDate: lowerDate, endDate: upperDate)
+                    state.selectPeriod = period
+                        
                 case .selectCustomPeriod:
                     self.state = .init(
                         date: state.date,

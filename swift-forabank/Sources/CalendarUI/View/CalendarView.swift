@@ -117,9 +117,6 @@ public struct CalendarView: View {
                                     .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
                             }
                         }
-//                        .onAppear {
-//                            event(.selectPeriod(period, lowerDate: Calendar.current.date(byAdding: .day, value: -31, to: Date())!, upperDate: Date()))
-//                        }
                         
                     case .dates:
                         
@@ -256,5 +253,20 @@ private extension CalendarView {
     
     func onMonthChange(_ date: Date) {
         config.onMonthChange(date)
+    }
+}
+
+public extension CalendarState {
+
+    var selectedRange: Range<Date>? {
+     
+        if let lowerDate = range?.lowerDate,
+        let upperDate = range?.upperDate {
+            return lowerDate..<upperDate
+            
+        } else {
+            
+            return nil
+        }
     }
 }
