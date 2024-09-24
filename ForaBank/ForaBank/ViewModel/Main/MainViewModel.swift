@@ -1402,7 +1402,7 @@ private extension MainViewModel {
     }
     
     private func bind(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> Set<AnyCancellable> {
         
         let spinner = flowModel.$state
@@ -1429,7 +1429,7 @@ private extension MainViewModel {
     }
     
     func handle(
-        _ outside: PaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
     ) {
         resetDestination()
         rootActions?.spinner.hide()
@@ -1453,7 +1453,7 @@ private extension MainViewModel {
     }
 }
 
-extension PaymentProviderPickerFlowState {
+extension SegmentedPaymentProviderPickerFlowState {
     
     var outside: Status.Outside? {
         
@@ -1659,7 +1659,7 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel, Bool)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         
         var id: Case {

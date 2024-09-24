@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerViewConfig.swift
+//  SegmentedPaymentProviderPickerViewConfig.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -8,7 +8,7 @@
 import SharedConfigs
 import SwiftUI
 
-struct PaymentProviderPickerViewConfig: Equatable {
+struct SegmentedPaymentProviderPickerViewConfig: Equatable {
     
     let background: Color
     let cornerRadius: CGFloat

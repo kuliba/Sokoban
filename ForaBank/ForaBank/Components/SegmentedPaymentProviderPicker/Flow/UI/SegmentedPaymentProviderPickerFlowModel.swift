@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerFlowModel.swift
+//  SegmentedPaymentProviderPickerFlowModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2024.
@@ -9,7 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-final class PaymentProviderPickerFlowModel: ObservableObject {
+final class SegmentedPaymentProviderPickerFlowModel: ObservableObject {
     
     @Published private(set) var state: State
     
@@ -34,15 +34,15 @@ final class PaymentProviderPickerFlowModel: ObservableObject {
             .assign(to: &$state)
     }
     
-    typealias State = PaymentProviderPickerFlowState
-    typealias Event = PaymentProviderPickerFlowEvent
-    typealias Effect = PaymentProviderPickerFlowEffect
-    typealias Factory = PaymentProviderPickerFlowFactory
+    typealias State = SegmentedPaymentProviderPickerFlowState
+    typealias Event = SegmentedPaymentProviderPickerFlowEvent
+    typealias Effect = SegmentedPaymentProviderPickerFlowEffect
+    typealias Factory = SegmentedPaymentProviderPickerFlowFactory
     
     typealias Content = State.Content
 }
 
-extension PaymentProviderPickerFlowModel {
+extension SegmentedPaymentProviderPickerFlowModel {
     
     func event(_ event: Event) {
         
@@ -51,7 +51,7 @@ extension PaymentProviderPickerFlowModel {
     }
 }
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     func reduce(
         _ state: inout State,
@@ -122,7 +122,7 @@ private extension PaymentProviderPickerFlowModel {
 
 // MARK: - pay with operator
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithOperator(
         _ state: inout State,
@@ -151,7 +151,7 @@ private extension PaymentProviderPickerFlowModel {
 
 // MARK: - pay with provider
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payWithProvider(
         _ state: inout State,
@@ -202,7 +202,7 @@ extension AnywayServicePickerFlowState {
 
 private extension AnywayServicePickerFlowState {
     
-    var outsideEvent: PaymentProviderPickerFlowEvent.GoTo? {
+    var outsideEvent: SegmentedPaymentProviderPickerFlowEvent.GoTo? {
         
         switch outside {
         case .none:       return .none
@@ -216,7 +216,7 @@ private extension AnywayServicePickerFlowState {
 
 // MARK: - payByInstructions
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     func payByInstructions(
         _ state: inout State
@@ -250,7 +250,7 @@ private extension PaymentProviderPickerFlowModel {
     }
 }
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     func bind(_ content: Content) {
         

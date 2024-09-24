@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerFlowModelComposer.swift
+//  SegmentedPaymentProviderPickerFlowModelComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
-final class PaymentProviderPickerFlowModelComposer {
+final class SegmentedPaymentProviderPickerFlowModelComposer {
 
     private let makeServicePickerFlowModel: MakeServicePickerFlowModel
     private let model: Model
@@ -25,16 +25,16 @@ final class PaymentProviderPickerFlowModelComposer {
         self.scheduler = scheduler
     }
     
-    typealias MakeServicePickerFlowModel = PaymentProviderPickerFlowFactory.MakeServicePickerFlowModel
+    typealias MakeServicePickerFlowModel = SegmentedPaymentProviderPickerFlowFactory.MakeServicePickerFlowModel
 }
 
-extension PaymentProviderPickerFlowModelComposer {
+extension SegmentedPaymentProviderPickerFlowModelComposer {
     
     func compose(
         with mix: MultiElementArray<SegmentedOperatorProvider>,
         qrCode: QRCode,
         qrMapping: QRMapping
-    ) -> PaymentProviderPickerFlowModel {
+    ) -> SegmentedPaymentProviderPickerFlowModel {
         
         return .init(
             initialState: .init(content: makeContent(mix, qrCode, qrMapping)),
@@ -44,16 +44,16 @@ extension PaymentProviderPickerFlowModelComposer {
     }
 }
 
-private extension PaymentProviderPickerFlowModelComposer {
+private extension SegmentedPaymentProviderPickerFlowModelComposer {
     
     func makeContent(
         _ mix: MultiElementArray<SegmentedOperatorProvider>,
         _ qrCode: QRCode,
         _ qrMapping: QRMapping
-    ) -> PaymentProviderPickerFlowState.Content {
+    ) -> SegmentedPaymentProviderPickerFlowState.Content {
         
-        let reducer = PaymentProviderPickerReducer<SegmentedOperatorProvider>()
-        let effectHandler = PaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
+        let reducer = SegmentedPaymentProviderPickerReducer<SegmentedOperatorProvider>()
+        let effectHandler = SegmentedPaymentProviderPickerEffectHandler<SegmentedOperatorProvider>()
         
         return .init(
             initialState: .init(
@@ -73,7 +73,7 @@ private extension PaymentProviderPickerFlowModelComposer {
     }
     
     func makeFactory(
-    ) -> PaymentProviderPickerFlowFactory {
+    ) -> SegmentedPaymentProviderPickerFlowFactory {
         
         return .init(
             makePayByInstructionsViewModel: {

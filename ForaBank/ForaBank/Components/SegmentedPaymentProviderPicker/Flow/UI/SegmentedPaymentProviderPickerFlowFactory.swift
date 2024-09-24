@@ -1,18 +1,18 @@
 //
-//  PaymentProviderPickerFlowFactory.swift
+//  SegmentedPaymentProviderPickerFlowFactory.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 03.08.2024.
 //
 
-struct PaymentProviderPickerFlowFactory {
+struct SegmentedPaymentProviderPickerFlowFactory {
     
     let makePayByInstructionsViewModel: MakePayByInstructionsViewModel
     let makePaymentsViewModel: MakePaymentsViewModel
     let makeServicePickerFlowModel: MakeServicePickerFlowModel
 }
 
-extension PaymentProviderPickerFlowFactory {
+extension SegmentedPaymentProviderPickerFlowFactory {
     
     typealias MakePayByInstructionsViewModel = (QRCode, @escaping () -> Void) -> PaymentsViewModel
     

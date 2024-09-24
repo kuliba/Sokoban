@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerFlowModelIntegrationTests.swift
+//  SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -9,7 +9,7 @@
 import ForaTools
 import XCTest
 
-final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
+final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
     
     func test_init_shouldNotSetDestination() {
         
@@ -61,7 +61,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentProviderPickerFlowModel
+    private typealias SUT = SegmentedPaymentProviderPickerFlowModel
     
     private func makeSUT(
         mix: MultiElementArray<SegmentedOperatorProvider>? = nil,
@@ -77,7 +77,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
     ) {
         let model: Model = .mockWithEmptyExcept()
         let httpClient = HTTPClientSpy()
-        let make = RootViewModelFactory.makePaymentProviderPickerFlowModel(
+        let make = RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(
             httpClient: httpClient,
             log: { _,_,_,_,_ in },
             model: model,
@@ -127,7 +127,7 @@ final class PaymentProviderPickerFlowModelIntegrationTests: XCTestCase {
 
 // MARK: - DSL
 
-private extension PaymentProviderPickerFlowModel {
+private extension SegmentedPaymentProviderPickerFlowModel {
     
     var servicePickerModel: AnywayServicePickerFlowModel? {
         
