@@ -37,7 +37,17 @@ extension RootViewModelFactory {
         )
         let standardNanoServicesComposer = StandardSelectedCategoryDestinationNanoServicesComposer(
             loadLatest: nanoServices.loadLatestForCategory,
-            loadOperators: nanoServices.loadOperatorsForCategory,
+            loadOperators: { category, completion in
+                
+                model.loadOperators(.init(
+                    afterOperatorID: nil, 
+                    for: category.type,
+                    searchText: "",
+                    pageSize: pageSize
+                )) {
+                    completion(.success($0))
+                }
+            },
             makeMicroServices: microServicesComposer.compose,
             scheduler: mainScheduler
         )

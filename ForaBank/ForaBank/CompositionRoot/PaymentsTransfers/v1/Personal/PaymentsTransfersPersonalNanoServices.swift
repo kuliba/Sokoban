@@ -12,7 +12,6 @@ struct PaymentsTransfersPersonalNanoServices {
     let loadCategories: LoadCategories
     let loadAllLatest: LoadAllLatest
     let loadLatestForCategory: LoadLatestForCategory
-    let loadOperatorsForCategory: LoadOperatorsForCategory
 }
 
 extension PaymentsTransfersPersonalNanoServices {
@@ -23,10 +22,6 @@ extension PaymentsTransfersPersonalNanoServices {
     typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void
     typealias LoadAllLatest = (@escaping LoadLatestCompletion) -> Void
     typealias LoadLatestForCategory = (ServiceCategory, @escaping LoadLatestCompletion) -> Void
-    
-    typealias Operator = PaymentServiceOperator
-    typealias LoadOperatorsCompletion = (Result<[Operator], Error>) -> Void
-    typealias LoadOperatorsForCategory = (ServiceCategory, @escaping LoadOperatorsCompletion) -> Void
 }
 
 struct PaymentServiceOperator: Equatable, Identifiable {
