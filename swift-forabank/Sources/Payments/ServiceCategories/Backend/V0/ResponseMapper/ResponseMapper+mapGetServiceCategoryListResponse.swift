@@ -50,7 +50,7 @@ private extension ResponseMapper.ServiceCategory {
             name: category.name,
             ord: category.ord,
             paymentFlow: .init(category.paymentFlow),
-            search: category.search,
+            hasSearch: category.search,
             type: .init(category.type)
         )
     }

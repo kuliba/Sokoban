@@ -286,7 +286,7 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
         name: String = anyMessage(),
         ord: Int = .random(in: 1...100),
         flow paymentFlow: ServiceCategory.PaymentFlow,
-        search: Bool = false,
+        hasSearch: Bool = false,
         type: ServiceCategory.CategoryType = .charity
     ) -> ServiceCategory {
         
@@ -296,7 +296,7 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             name: name,
             ord: ord,
             paymentFlow: paymentFlow,
-            search: search,
+            hasSearch: hasSearch,
             type: type
         )
     }

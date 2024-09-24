@@ -80,7 +80,7 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
         return .init(
             operationPicker: (),
             providerList: (),
-            search: payload.category.search ? () : nil,
+            search: payload.category.hasSearch ? () : nil,
             cancellables: []
         )
     }

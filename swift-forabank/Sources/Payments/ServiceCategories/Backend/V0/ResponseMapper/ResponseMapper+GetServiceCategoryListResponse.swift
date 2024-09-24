@@ -21,7 +21,7 @@ extension ResponseMapper {
         public let name: String
         public let ord: Int
         public let paymentFlow: PaymentFlow
-        public let search: Bool
+        public let hasSearch: Bool
         public let type: CategoryType
         
         public init(
@@ -30,7 +30,7 @@ extension ResponseMapper {
             name: String,
             ord: Int,
             paymentFlow: PaymentFlow,
-            search: Bool,
+            hasSearch: Bool,
             type: CategoryType
         ) {
             self.latestPaymentsCategory = latestPaymentsCategory
@@ -38,7 +38,7 @@ extension ResponseMapper {
             self.name = name
             self.ord = ord
             self.paymentFlow = paymentFlow
-            self.search = search
+            self.hasSearch = hasSearch
             self.type = type
         }
         
