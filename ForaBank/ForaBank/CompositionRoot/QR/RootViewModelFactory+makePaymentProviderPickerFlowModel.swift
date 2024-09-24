@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         
-        let pickerFlowComposer = PaymentProviderPickerFlowModelComposer(
+        let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
             makeServicePickerFlowModel: servicePickerComposer.compose,
             model: model,
             scheduler: scheduler

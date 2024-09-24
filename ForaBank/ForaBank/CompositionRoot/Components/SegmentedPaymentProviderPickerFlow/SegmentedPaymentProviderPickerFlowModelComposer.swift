@@ -1,5 +1,5 @@
 //
-//  PaymentProviderPickerFlowModelComposer.swift
+//  SegmentedPaymentProviderPickerFlowModelComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
-final class PaymentProviderPickerFlowModelComposer {
+final class SegmentedPaymentProviderPickerFlowModelComposer {
 
     private let makeServicePickerFlowModel: MakeServicePickerFlowModel
     private let model: Model
@@ -28,7 +28,7 @@ final class PaymentProviderPickerFlowModelComposer {
     typealias MakeServicePickerFlowModel = SegmentedPaymentProviderPickerFlowFactory.MakeServicePickerFlowModel
 }
 
-extension PaymentProviderPickerFlowModelComposer {
+extension SegmentedPaymentProviderPickerFlowModelComposer {
     
     func compose(
         with mix: MultiElementArray<SegmentedOperatorProvider>,
@@ -44,7 +44,7 @@ extension PaymentProviderPickerFlowModelComposer {
     }
 }
 
-private extension PaymentProviderPickerFlowModelComposer {
+private extension SegmentedPaymentProviderPickerFlowModelComposer {
     
     func makeContent(
         _ mix: MultiElementArray<SegmentedOperatorProvider>,

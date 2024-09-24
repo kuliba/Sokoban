@@ -649,7 +649,7 @@
 		2A36249D2C5F414600174C50 /* AnywayServicePickerFlowModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36249C2C5F414600174C50 /* AnywayServicePickerFlowModelFactory.swift */; };
 		2A3624A12C5F4BD200174C50 /* AnywayServicePickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A02C5F4BD200174C50 /* AnywayServicePickerFlowView.swift */; };
 		2A3624A32C5F5C7A00174C50 /* AnywayServicePickerFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A22C5F5C7A00174C50 /* AnywayServicePickerFlowViewFactory.swift */; };
-		2A3624A72C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A62C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift */; };
+		2A3624A72C5F7BF600174C50 /* SegmentedPaymentProviderPickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A62C5F7BF600174C50 /* SegmentedPaymentProviderPickerFlowModelComposer.swift */; };
 		2A3624A92C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */; };
 		2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */; };
 		2A3624AF2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */; };
@@ -4115,7 +4115,7 @@
 		2A36249C2C5F414600174C50 /* AnywayServicePickerFlowModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowModelFactory.swift; sourceTree = "<group>"; };
 		2A3624A02C5F4BD200174C50 /* AnywayServicePickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowView.swift; sourceTree = "<group>"; };
 		2A3624A22C5F5C7A00174C50 /* AnywayServicePickerFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowViewFactory.swift; sourceTree = "<group>"; };
-		2A3624A62C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderPickerFlowModelComposer.swift; sourceTree = "<group>"; };
+		2A3624A62C5F7BF600174C50 /* SegmentedPaymentProviderPickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPaymentProviderPickerFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayServicePickerFlowModelComposer.swift; sourceTree = "<group>"; };
 		2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncPickerEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A3624AE2C5FB4E600174C50 /* PaymentsServicesViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModelComposer.swift; sourceTree = "<group>"; };
@@ -9314,21 +9314,21 @@
 		2A3624A42C5F7BD000174C50 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				2A3624A52C5F7BDF00174C50 /* PaymentProviderPickerFlow */,
+				2A3624A52C5F7BDF00174C50 /* SegmentedPaymentProviderPickerFlow */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		2A3624A52C5F7BDF00174C50 /* PaymentProviderPickerFlow */ = {
+		2A3624A52C5F7BDF00174C50 /* SegmentedPaymentProviderPickerFlow */ = {
 			isa = PBXGroup;
 			children = (
-				2A3624A62C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift */,
+				2A3624A62C5F7BF600174C50 /* SegmentedPaymentProviderPickerFlowModelComposer.swift */,
 				2A3624A82C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift */,
 				2A3624AC2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift */,
 				2AE259E32C63417A00B4088B /* AnywayTransactionComposer.swift */,
 				2AE259E52C636AD100B4088B /* MakeAnywayTransactionPayload.swift */,
 			);
-			path = PaymentProviderPickerFlow;
+			path = SegmentedPaymentProviderPickerFlow;
 			sourceTree = "<group>";
 		};
 		2A3834B02C4EDEBE00A5DF8C /* PaymentProviderSegments */ = {
@@ -21695,7 +21695,7 @@
 				774A8B782865FEE400B81140 /* SpinnerViewComponent.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				503B164E2889853F009F4CE3 /* CurrencyListViewModelMock.swift in Sources */,
-				2A3624A72C5F7BF600174C50 /* PaymentProviderPickerFlowModelComposer.swift in Sources */,
+				2A3624A72C5F7BF600174C50 /* SegmentedPaymentProviderPickerFlowModelComposer.swift in Sources */,
 				83B5DBF32A54B192006B0D6C /* ProductViewComponentPreviewContent.swift in Sources */,
 				833D3E532C352D8E006626F2 /* Services+makeBlockCardServices.swift in Sources */,
 				774A8B382865FCDD00B81140 /* UserAccountDocumentsView.swift in Sources */,
