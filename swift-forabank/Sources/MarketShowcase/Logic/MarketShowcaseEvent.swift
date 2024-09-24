@@ -11,4 +11,11 @@ public enum MarketShowcaseEvent: Equatable {
     
     case update
     case loaded
+    case failure(FailureKind)
+}
+
+public enum FailureKind: Equatable {
+    
+    case timeout
+    case error
 }

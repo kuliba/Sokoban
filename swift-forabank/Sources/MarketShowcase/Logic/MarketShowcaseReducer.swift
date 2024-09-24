@@ -9,10 +9,10 @@ import Foundation
 
 public final class MarketShowcaseReducer {
     
-    private let makeInformer: (String) -> Void
+    private let alertLifespan: DispatchTimeInterval
 
-    public init(makeInformer: @escaping (String) -> Void) {
-        self.makeInformer = makeInformer
+    public init(alertLifespan: DispatchTimeInterval = .milliseconds(400)) {
+        self.alertLifespan = alertLifespan
     }
 }
 
@@ -35,6 +35,16 @@ public extension MarketShowcaseReducer {
             
         case .loaded:
             state = .loaded
+            
+        case let .failure(kind):
+            switch kind {
+            case .timeout:
+                state = .failure
+                effect = .show(.informer)
+            case .error:
+                state = .failure
+                effect = .show(.alert(alertLifespan))
+            }
         }
         return (state, effect)
     }

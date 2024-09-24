@@ -9,7 +9,16 @@ import Foundation
 
 public final class MarketShowcaseEffectHandler {
     
-    public init(){}
+    private let makeInformer: () -> Void
+    private let makeAlert: (String) -> Void
+
+    public init(
+        makeInformer: @escaping () -> Void,
+        makeAlert: @escaping (String) -> Void
+    ) {
+        self.makeInformer = makeInformer
+        self.makeAlert = makeAlert
+    }
 }
 
 public extension MarketShowcaseEffectHandler {
@@ -23,6 +32,16 @@ public extension MarketShowcaseEffectHandler {
           
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
                 dispatch(.loaded)
+            }
+        case let .show(info):
+            
+            switch info {
+            case .informer:
+                makeInformer()
+            case let .alert(dispatchTimeInterval):
+                DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) { [weak self] in
+                    self?.makeAlert("Попробуйте позже")
+                }
             }
         }
     }

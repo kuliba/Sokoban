@@ -59,6 +59,28 @@ final class MarketShowcaseReducerTests: XCTestCase {
         
         assert(.loaded, on: .loaded, effect: nil)
     }
+    
+    func test_reduce_failure_error_stateInflight_shouldStateToFailure() {
+        
+        assertState(.failure(.error), on: .failure)
+    }
+    
+    func test_reduce_failure_error_stateInflight_shouldDeliverShowAlertEffect
+    () {
+        
+        assert(.failure(.error), on: .inflight, effect: .show(.alert(.never)))
+    }
+
+    func test_reduce_failure_timeout_stateInflight_shouldStateToFailure() {
+        
+        assertState(.failure(.timeout), on: .failure)
+    }
+    
+    func test_reduce_failure_timeout_stateInflight_shouldDeliverShowInformerEffect
+    () {
+        
+        assert(.failure(.timeout), on: .inflight, effect: .show(.informer))
+    }
 
     // MARK: - Helpers
     
@@ -68,12 +90,12 @@ final class MarketShowcaseReducerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     
     private func makeSUT(
-        makeInformer: @escaping (String) -> Void = {_ in },
+        alertLifespan: DispatchTimeInterval = .never,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(makeInformer: makeInformer)
+        let sut = SUT(alertLifespan: alertLifespan)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

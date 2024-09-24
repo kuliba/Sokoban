@@ -17,7 +17,12 @@ where RefreshView: View
     let config: Config
     let factory: Factory
     
-    public init(state: State, event: @escaping (Event) -> Void, config: Config, factory: Factory) {
+    public init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config,
+        factory: Factory
+    ) {
         self.state = state
         self.event = event
         self.config = config
@@ -43,9 +48,19 @@ where RefreshView: View
             factory.makeRefreshView()
                 .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             Button(action: { event(.loaded) }, label: { Text("Loaded")})
-        default:
+            Button(action: { event(.failure(.timeout)) }, label: { Text("Informer")})
+            Button(action: { event(.failure(.error)) }, label: { Text("Alert")})
+
+        case .loaded:
             VStack {
                 Text("Market")
+            }
+            .frame(maxHeight: .infinity)
+            .padding()
+
+        case .failure:
+            VStack {
+                Text("Failure")
             }
             .frame(maxHeight: .infinity)
             .padding()
