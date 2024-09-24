@@ -15,6 +15,7 @@ import PDFKit
 import SberQR
 import SwiftUI
 import UIPrimitives
+import MarketShowcase
 
 final class RootViewFactoryComposer {
     
@@ -296,8 +297,20 @@ private extension RootViewFactoryComposer {
     
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseViewModel
-    ) -> MarketShowcaseView? {
-        marketFeatureFlag.isActive ? .init() : nil
+    ) -> MarketShowcaseWrapperView<SpinnerRefreshView>? {
+        marketFeatureFlag.isActive ?
+            .init(
+                model: viewModel,
+                makeContentView: {
+                    MarketShowcaseView(
+                        state: $0,
+                        event: $1,
+                        config: .iFora,
+                        factory: .init(
+                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
+                    )
+                })
+        : nil
     }
 }
 

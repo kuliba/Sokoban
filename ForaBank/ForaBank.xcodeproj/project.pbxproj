@@ -2787,7 +2787,6 @@
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */; };
 		8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */; };
-		839673A32C9C8F3900E7F49C /* MarketShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839673A22C9C8F3900E7F49C /* MarketShowcaseView.swift */; };
 		839914772C6CF72300E9D275 /* GetProductListByTypeV6Flag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */; };
 		8399147B2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */; };
 		8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */ = {isa = PBXBuildFile; productRef = 8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */; };
@@ -2875,6 +2874,7 @@
 		83F686362B988A0F00B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */; };
 		83F686382B98D49000B87AAB /* Services+getProductDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */; };
 		83F6863A2B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */; };
+		83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */ = {isa = PBXBuildFile; productRef = 83F775CA2CA2CE0700A05F69 /* MarketShowcase */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
 		83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */; };
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
@@ -6212,7 +6212,6 @@
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
-		839673A22C9C8F3900E7F49C /* MarketShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseView.swift; sourceTree = "<group>"; };
 		839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV6Service.xctestplan; sourceTree = "<group>"; };
 		839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductListByTypeV6Flag.swift; sourceTree = "<group>"; };
 		8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByTypeV6.swift"; sourceTree = "<group>"; };
@@ -6295,6 +6294,7 @@
 		83F686352B988A0F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
 		83F686372B98D48F00B87AAB /* Services+getProductDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDetails.swift"; sourceTree = "<group>"; };
 		83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDetailsRequest.swift"; sourceTree = "<group>"; };
+		83F775CD2CA2D10500A05F69 /* MarketShowcase.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MarketShowcase.xctestplan; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -7133,6 +7133,7 @@
 				2A3947182A19E84500EB9757 /* TextFieldComponent in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
+				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
 				2A392BD82B934B3800029790 /* PrePaymentPicker in Frameworks */,
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
@@ -9944,6 +9945,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				83F775CD2CA2D10500A05F69 /* MarketShowcase.xctestplan */,
 				2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */,
 				83FD8FB22C807BBC003A5C93 /* GetBannerCatalogListAPI.xctestplan */,
 				2AF718E02C75149100511C02 /* PayHubUI.xctestplan */,
@@ -14252,7 +14254,6 @@
 		7769F5BA27D3A2D900F80607 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				839673A12C9C8F1E00E7F49C /* Market */,
 				832F830F2BB8290D00C97BBD /* Carousel */,
 				7769F5BB27D3A2EA00F80607 /* MainView.swift */,
 				83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */,
@@ -15705,14 +15706,6 @@
 				C14C57CE2C619086008C2618 /* Services+makeInfoRepeatPaymentServices.swift */,
 			);
 			path = ProductProfile;
-			sourceTree = "<group>";
-		};
-		839673A12C9C8F1E00E7F49C /* Market */ = {
-			isa = PBXGroup;
-			children = (
-				839673A22C9C8F3900E7F49C /* MarketShowcaseView.swift */,
-			);
-			path = Market;
 			sourceTree = "<group>";
 		};
 		839914792C6DE79800E9D275 /* GetProductListByTypeV6Service */ = {
@@ -18672,6 +18665,7 @@
 				2A6ECBAD2C8AC70C007C44CB /* LatestPaymentsBackendV3 */,
 				838C095F2C8DD9E700E894AC /* Banners */,
 				2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */,
+				83F775CA2CA2CE0700A05F69 /* MarketShowcase */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -20693,7 +20687,6 @@
 				C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */,
 				2A6CF7352C662BCB00F2B85A /* TemplatesListFlowModel.swift in Sources */,
 				2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */,
-				839673A32C9C8F3900E7F49C /* MarketShowcaseView.swift in Sources */,
 				2A3834B62C4EDF5000A5DF8C /* Segment.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
@@ -21754,6 +21747,7 @@
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				2AC2ADC72B22FBCA0049EE9B /* FeatureFlag.swift in Sources */,
 				C16DDBEE2B2C95BA001BF988 /* QRPaymentType.swift in Sources */,
+				2A6DC7AE2C981F3E00A801A0 /* SerialCachingRemoteBatchServiceComposer.swift in Sources */,
 				2A6DC7AE2C981F3E00A801A0 /* SerialCachingRemoteBatchServiceComposer.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				2A35DDA52C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift in Sources */,
@@ -27703,6 +27697,10 @@
 		83E513382AA73CFC00F8183B /* LandingMapping */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LandingMapping;
+		};
+		83F775CA2CA2CE0700A05F69 /* MarketShowcase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MarketShowcase;
 		};
 		C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -20,6 +20,7 @@ import Fetcher
 import LandingUIComponent
 import LandingMapping
 import CodableLanding
+import MarketShowcase
 
 extension RootViewModelFactory {
     
@@ -896,7 +897,14 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
-        let marketShowcaseModel = MarketShowcaseViewModel()
+        let marketShowcaseReducer = MarketShowcaseReducer(
+            makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))}
+        )
+        
+        let marketShowcaseModel = MarketShowcaseViewModel(
+            initialState: .inflight,
+            reduce: marketShowcaseReducer.reduce,
+            handleEffect: MarketShowcaseEffectHandler().handleEffect)
         
         let tabsViewModelFactory = TabsViewModelFactory(
             mainViewModel: mainViewModel,

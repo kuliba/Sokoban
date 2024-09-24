@@ -9,6 +9,7 @@ import ActivateSlider
 import AnywayPaymentDomain
 import SberQR
 import SwiftUI
+import MarketShowcase
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -20,8 +21,7 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 
-typealias MarketShowcaseViewModel = String
-typealias MakeMarketShowcaseView = (MarketShowcaseViewModel) -> MarketShowcaseView?
+typealias MakeMarketShowcaseView = (MarketShowcaseViewModel) -> MarketShowcaseWrapperView<SpinnerRefreshView>?
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
