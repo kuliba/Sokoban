@@ -26,7 +26,6 @@ extension PaymentProviderPicker {
     typealias Content = PayHub.PaymentProviderPickerContent<OperationPicker, ProviderList, Search>
     
     typealias OperationPicker = Void
-    typealias ProviderList = Void
     typealias Search = Void
     
     // MARK: - Flow
@@ -42,4 +41,22 @@ extension PaymentProviderPicker {
     typealias Service = Void
     typealias ServicePicker = Void
     typealias ServicesFailure = Void
+}
+
+// MARK: - ProviderList
+
+import RxViewModel
+import UtilityServicePrepaymentCore
+import UtilityServicePrepaymentDomain
+
+extension PaymentProviderPicker {
+    
+    typealias ProviderList = RxViewModel<ProviderListState, ProviderListEvent, ProviderListEffect>
+    
+    typealias ProviderListState = PrepaymentPickerSuccess<Latest, Provider>
+    typealias ProviderListEvent = PrepaymentPickerEvent<Provider>
+    typealias ProviderListEffect = PrepaymentPickerEffect<Provider.ID>
+    
+    typealias ProviderListReducer = PrepaymentSuccessPickerReducer<Latest, Provider>
+    typealias ProviderListEffectHandler = PrepaymentPickerEffectHandler<Provider>
 }

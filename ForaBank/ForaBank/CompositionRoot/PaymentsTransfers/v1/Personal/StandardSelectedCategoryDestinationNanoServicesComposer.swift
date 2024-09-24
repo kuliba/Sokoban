@@ -8,20 +8,27 @@
 import CombineSchedulers
 import Foundation
 import PayHub
+import UtilityServicePrepaymentCore
 
 final class StandardSelectedCategoryDestinationNanoServicesComposer {
     
     private let loadLatest: LoadLatest
     private let loadOperators: LoadOperators
+    private let makeMicroServices: MakeMicroServices
+    private let observeLast: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         loadLatest: @escaping LoadLatest,
         loadOperators: @escaping LoadOperators,
+        makeMicroServices: @escaping MakeMicroServices,
+        observeLast: Int = 10,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.loadLatest = loadLatest
         self.loadOperators = loadOperators
+        self.makeMicroServices = makeMicroServices
+        self.observeLast = observeLast
         self.scheduler = scheduler
     }
     
@@ -29,6 +36,9 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
     
     typealias Operator = PaymentServiceOperator
     typealias LoadOperators = (ServiceCategory, @escaping (Result<[Operator], Error>) -> Void) -> Void
+    
+    typealias MakeMicroServices = (ServiceCategory) -> MicroServices
+    typealias MicroServices = PrepaymentPickerMicroServices<Operator>
 }
 
 extension StandardSelectedCategoryDestinationNanoServicesComposer {
@@ -46,7 +56,7 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
             makeFailure: { $0(.init()) },
             makeSuccess: { payload, completion in
                 
-                completion(self.makePickerBinder(with: payload))
+                completion(self.makePickerBinder(with: payload, for: category))
             }
         )
     }
@@ -57,13 +67,11 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makePickerBinder(
-        //        category: ServiceCategory,
-        //        latest: [Latest],
-        //        operators: [Operator]
-        with payload: StandardNanoServices.MakeSuccessPayload
+        with payload: StandardNanoServices.MakeSuccessPayload,
+        for category: ServiceCategory
     ) -> PaymentProviderPicker.Binder {
         
-        let content = makeContent(with: payload)
+        let content = makeContent(with: payload, for: category)
         let flow = makeFlow(with: payload)
         
         return .init(
@@ -72,20 +80,55 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
             bind: { _,_ in [] }
         )
     }
+}
+
+// MARK: - Content
+
+private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
-    private func makeContent(
-        with payload: StandardNanoServices.MakeSuccessPayload
+    func makeContent(
+        with payload: StandardNanoServices.MakeSuccessPayload,
+        for category: ServiceCategory
     ) -> PaymentProviderPicker.Content {
         
         return .init(
             operationPicker: (),
-            providerList: (),
+            providerList: makeProviderList(with: payload, for: category),
             search: payload.category.hasSearch ? () : nil,
             cancellables: []
         )
     }
     
-    private func makeFlow(
+    private func makeProviderList(
+        with payload: StandardNanoServices.MakeSuccessPayload,
+        for category: ServiceCategory
+    ) -> PaymentProviderPicker.ProviderList {
+        
+        let reducer = PaymentProviderPicker.ProviderListReducer(
+            observeLast: observeLast
+        )
+        let effectHandler = PaymentProviderPicker.ProviderListEffectHandler(
+            microServices: makeMicroServices(category)
+        )
+        
+        return .init(
+            initialState: .init(
+                lastPayments: payload.latest,
+                operators: payload.operators,
+                searchText: ""
+            ),
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
+    }
+}
+
+// MARK: - Flow
+
+private extension StandardSelectedCategoryDestinationNanoServicesComposer {
+    
+    func makeFlow(
         with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.Flow {
         

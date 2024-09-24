@@ -399,7 +399,7 @@ extension RootViewModelFactory {
                         .map(PaymentServiceOperator.init(codable:))
                     
                     completion(.success(operators ?? [])) }
-            ),
+            ), 
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
