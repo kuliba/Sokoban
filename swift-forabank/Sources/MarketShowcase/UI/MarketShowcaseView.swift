@@ -27,11 +27,11 @@ where RefreshView: View
     public var body: some View {
         
         content()
-            .modifier(RefreshModifier(action: {
+            .refresh(action: {
                 if state != .inflight {
                     event(.update)
                 }
-            }))
+            })
     }
     
     @ViewBuilder

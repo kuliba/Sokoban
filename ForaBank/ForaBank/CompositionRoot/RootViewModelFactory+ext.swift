@@ -897,7 +897,7 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
-        let marketShowcaseReducer = MarketShowcaseReducer.init(
+        let marketShowcaseReducer = MarketShowcaseReducer(
             makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))}
         )
         

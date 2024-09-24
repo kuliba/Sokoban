@@ -302,7 +302,7 @@ private extension RootViewFactoryComposer {
             .init(
                 model: viewModel,
                 makeContentView: {
-                    MarketShowcaseView<SpinnerRefreshView>(
+                    MarketShowcaseView(
                         state: $0,
                         event: $1,
                         config: .iFora,
