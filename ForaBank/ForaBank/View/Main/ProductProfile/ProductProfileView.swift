@@ -366,14 +366,33 @@ struct ProductProfileView: View {
                                     switch infoPayment.type {
                                         
                                     case .betweenTheir:
-                                        if let transfer = infoPayment.parameterList.last,
-                                           let productId = transfer.payeeInternal?.cardId ?? transfer.payeeInternal?.accountId,
-                                           let product = viewModel.model.products.value.flatMap({ $0.value }).first(where: { $0.id == productId }),
-                                           let amount = transfer.amount,
-                                           let paymentViewModel = PaymentsMeToMeViewModel.init(Model.shared, mode: .makePaymentTo(product, amount)) {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        
+                                        let paymentViewModels = infoPayment.parameterList.compactMap { transfer -> PaymentsMeToMeViewModel? in
+                                            let allProducts = viewModel.model.products.value.flatMap({ $0.value })
+                                            
+                                            if let payeeInternalId = transfer.payeeInternal?.cardId ?? transfer.payeeInternal?.accountId,
+                                               let product = allProducts.first(where: { $0.id == payeeInternalId }),
+                                               let amount = transfer.amount,
+                                               let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
                                                 
-                                                self.viewModel.bottomSheet = .init(type: .meToMe(paymentViewModel))
+                                                return paymentViewModel
+                                            }
+                                            
+                                            if let payerId = transfer.payer?.cardId ?? transfer.payer?.accountId,
+                                               let product = allProducts.first(where: { $0.id == payerId }),
+                                               let amount = transfer.amount,
+                                               let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
+                                                
+                                                return paymentViewModel
+                                            }
+                                            
+                                            return nil
+                                        }
+                                        
+                                        if let firstPaymentViewModel = paymentViewModels.first {
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
+                                                self.viewModel.bottomSheet = .init(type: .meToMe(firstPaymentViewModel))
                                             }
                                         }
                                         
@@ -407,25 +426,29 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .externalEntity, .externalIndivudual:
-                                            if let transfer = infoPayment.parameterList.last,
-                                               let inn = transfer.payeeExternal?.inn,
-                                               let bankBic = transfer.payeeExternal?.bankBIC,
-                                               let amount = transfer.amount?.description,
-                                               let accountNumber = transfer.payeeExternal?.accountNumber {
-                                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                                    self.viewModel.link = .payment(.init(source: .repeatPaymentRequisites(
-                                                        accountNumber: accountNumber,
-                                                        bankId: bankBic,
-                                                        inn: inn, 
-                                                        kpp: transfer.payeeExternal?.kpp,
-                                                        amount: amount,
-                                                        productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
-                                                        comment: transfer.comment
-                                                    ), model: Model.shared, closeAction: {
-                                                        self.viewModel.link = nil
-                                                    }))
-                                                }
+                                       
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let bankBic = transfer.payeeExternal?.bankBIC,
+                                           let amount = transfer.amount?.description,
+                                           let accountNumber = transfer.payeeExternal?.accountNumber {
+                                            
+                                            let inn: String = transfer.payeeExternal?.inn ?? ""
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self.viewModel.link = .payment(.init(source: .repeatPaymentRequisites(
+                                                    accountNumber: accountNumber,
+                                                    bankId: bankBic,
+                                                    inn: inn,
+                                                    kpp: transfer.payeeExternal?.kpp,
+                                                    amount: amount,
+                                                    productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
+                                                    comment: transfer.comment
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
                                             }
+                                        }
+                                        
                                     case .insideBank:
                                         
                                         if let transfer = infoPayment.parameterList.last,
@@ -438,16 +461,20 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .internet, .transport, .housingAndCommunalService:
+                                        
                                         if let transfer = infoPayment.parameterList.first,
                                            let puref = transfer.puref,
-                                           let amount = infoPayment.parameterList.first?.amount ?? infoPayment.parameterList.last?.amount,
-                                           let additional = transfer.additional {
+                                           let amount = infoPayment.parameterList.first?.amount ?? infoPayment.parameterList.last?.amount {
+                                            
+                                            let additionalList: [PaymentServiceData.AdditionalListData]? = transfer.additional?.map {
+                                                .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
+                                            }
                                             
                                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                                 
                                                 self.viewModel.link = .payment(.init(source: .servicePayment(
                                                     puref: puref,
-                                                    additionalList: additional.map{ .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil )},
+                                                    additionalList: additionalList,
                                                     amount: amount
                                                 ), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
@@ -456,6 +483,7 @@ struct ProductProfileView: View {
                                         }
                                         
                                     case .otherBank:
+                                        
                                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
                                             
                                             self.viewModel.link = .payment(.init(Model.shared, service: .toAnotherCard, closeAction: {
@@ -464,6 +492,7 @@ struct ProductProfileView: View {
                                         }
                                         
                                     case .byPhone:
+                                        
                                         if let phone = infoPayment.parameterList.last?.payeeInternal?.phoneNumber,
                                            let amount = infoPayment.parameterList.last?.amount?.description {
                                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
@@ -473,6 +502,7 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .sfp:
+                                        
                                         if let transfer = infoPayment.parameterList.last,
                                            let phone = transfer.additional?.first(where: { $0.fieldname == "RecipientID"})?.fieldvalue,
                                            let bankId = transfer.additional?.first(where: { $0.fieldname == "BankRecipientID"})?.fieldvalue,
@@ -500,6 +530,7 @@ struct ProductProfileView: View {
                                             }
                                         }
                                     case .taxes:
+                                        
                                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
                                             
                                             self.viewModel.link = .payment(.init(source: .taxes(parameterData: nil), model: Model.shared, closeAction: {
