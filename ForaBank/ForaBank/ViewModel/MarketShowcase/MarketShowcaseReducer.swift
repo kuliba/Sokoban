@@ -9,7 +9,11 @@ import Foundation
 
 final class MarketShowcaseReducer {
     
-    init() {}
+    private let makeInformer: (String) -> Void
+
+    init(makeInformer: @escaping (String) -> Void) {
+        self.makeInformer = makeInformer
+    }
 }
 
 extension MarketShowcaseReducer {

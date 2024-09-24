@@ -40,6 +40,8 @@ struct MarketShowcaseView: View {
                 Text("Market")
                 Image.ic24MarketplaceActive
             }
+            .frame(maxHeight: .infinity)
+            .padding()
         }
     }
 }
