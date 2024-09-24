@@ -144,6 +144,7 @@ public extension FilterConfig {
             )
         ),
         optionConfig: .init(
+            font: .textBodyMR14200(),
             selectBackgroundColor: .mainColorsBlackMedium,
             notSelectedBackgroundColor: .mainColorsGrayLightest,
             selectForegroundColor: .textWhite,

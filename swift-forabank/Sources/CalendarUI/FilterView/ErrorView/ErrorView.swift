@@ -29,6 +29,7 @@ public struct ErrorView: View {
             }
 
             config.title.text(withConfig: config.titleConfig)
+                .multilineTextAlignment(.center)
         }
     }
 }

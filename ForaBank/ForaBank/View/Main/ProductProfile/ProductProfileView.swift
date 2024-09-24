@@ -94,7 +94,7 @@ struct ProductProfileView: View {
                                                 },{
                                                     viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
                                                 },{
-                                                    return viewModel.filterState.calendar.selectPeriod != nil
+                                                    return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil)
                                                 }, {
                                                     
                                                     self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
@@ -199,7 +199,10 @@ struct ProductProfileView: View {
                 CalendarWrapperView(
                     state: .init(
                         date: Date(),
-                        range: .init(),
+                        range: .init(
+                            startDate: Date.date(Date(), addDays: -31),
+                            endDate: Date()
+                        ),
                         monthsData: .generate(startDate: viewModel.calendarDayStart()),
                         periods: [.week, .month, .dates]
                     ),
@@ -228,6 +231,12 @@ struct ProductProfileView: View {
                         viewModel.event(.history(.dismiss))
                     }
                 )
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarWithBack(
+                    title: "Выберите период",
+                    dismiss: {
+                    viewModel.event(.history(.filter(.dismissCalendar)))
+                })
                 
             case let .filter(filter):
                     
@@ -275,7 +284,7 @@ struct ProductProfileView: View {
                                     
                                     if let lowerDate, let upperDate {
                                     
-                                        filter.event(.selectedDates(lowerDate..<upperDate))
+                                        filter.event(.selectedDates(lowerDate..<upperDate, .dates))
                                     }
                                     
                                     viewModel.event(.history(.filter(.dismissCalendar)))
