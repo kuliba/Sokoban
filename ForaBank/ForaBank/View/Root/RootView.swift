@@ -313,7 +313,7 @@ private extension RootView {
                     },
                     destinationView: {
                         
-                        Text("TBD: destination view \(String(describing: $0))")
+                        paymentProviderPickerDestinationView($0)
                     }
                 )
             }
@@ -439,6 +439,29 @@ private extension RootView {
                     search.setText(to: nil)
                 }
             )
+        }
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerDestinationView(
+        _ destination: PaymentProviderPicker.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .backendFailure(backendFailure):
+            Text("TBD: destination view \(String(describing: backendFailure))")
+            
+        case let .detailPayment(detailPayment):
+            Text("TBD: destination view \(String(describing: detailPayment))")
+            
+        case let .payment(payment):
+            Text("TBD: destination view \(String(describing: payment))")
+            
+        case let .servicePicker(servicePicker):
+            Text("TBD: destination view \(String(describing: servicePicker))")
+            
+        case let .servicesFailure(servicesFailure):
+            Text("TBD: destination view \(String(describing: servicesFailure))")
         }
     }
     

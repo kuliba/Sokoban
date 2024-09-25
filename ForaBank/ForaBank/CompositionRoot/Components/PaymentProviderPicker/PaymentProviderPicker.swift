@@ -41,6 +41,8 @@ extension PaymentProviderPicker {
     typealias Service = Void
     typealias ServicePicker = Void
     typealias ServicesFailure = Void
+    
+    typealias Destination = PaymentProviderPickerDestination<DetailPayment, Payment, ServicePicker, ServicesFailure>
 }
 
 // MARK: - ProviderList
