@@ -21,7 +21,7 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 
-typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder) -> MarketShowcaseContentWrapperView?
+typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder) -> MarketShowcaseWrapperView?
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 

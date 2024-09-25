@@ -26,11 +26,15 @@ where ContentView: View {
     
     public var body: some View {
         
-        contentView()
-            .alert(
-                item: backendFailure,
-                content: alert(event: event)
-            )
+        VStack {
+            Button(action: { event(.failure(.error("Попробуйте позже"))) }, label: { Text("Алерт")})
+
+            contentView()
+                .alert(
+                    item: backendFailure,
+                    content: alert(event: event)
+                )
+        }
     }
     
     func alert(

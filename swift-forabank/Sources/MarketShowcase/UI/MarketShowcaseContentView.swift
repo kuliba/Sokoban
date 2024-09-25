@@ -45,7 +45,6 @@ where RefreshView: View
             
             factory.makeRefreshView()
                 .modifier(ViewByCenterModifier(height: config.spinnerHeight))
-            Button(action: { event(.loadFailure) }, label: { Text("Informer")})
             
         case .loaded:
             VStack {
