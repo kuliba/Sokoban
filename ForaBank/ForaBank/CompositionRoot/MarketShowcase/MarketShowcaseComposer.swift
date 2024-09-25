@@ -8,10 +8,7 @@
 import CombineSchedulers
 import Foundation
 
-final class MarketShowcaseComposerNanoServicesComposer {
-    
-    
-}
+final class MarketShowcaseComposerNanoServicesComposer {}
 
 extension MarketShowcaseComposerNanoServicesComposer {
     
@@ -45,9 +42,8 @@ extension MarketShowcaseComposerNanoServicesComposer {
     ) {
         
     }
-    
-    
 }
+
 struct MarketShowcaseComposerNanoServices {
     
     let loadLanding: LoadLanding
