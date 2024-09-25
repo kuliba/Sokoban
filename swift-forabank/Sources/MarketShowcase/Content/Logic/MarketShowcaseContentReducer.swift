@@ -23,8 +23,11 @@ public extension MarketShowcaseContentReducer {
         switch event {
             
         case .load:
-            state.status = .inflight
-            effect = .load
+            
+            if !state.status.isLoading {
+                state.status = .inflight
+                effect = .load
+            }
             
         case let .loaded(landing):
             state.status = .loaded(landing)

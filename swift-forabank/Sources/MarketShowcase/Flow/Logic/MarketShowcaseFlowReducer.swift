@@ -39,10 +39,10 @@ public extension MarketShowcaseFlowReducer {
             switch select {
             case .goToMain:
                 state.status = .outside(.main)
-            case .orderSticker:
-                effect = .select(.orderSticker)
             case .orderCard:
                 effect = .select(.orderCard)
+            case .orderSticker:
+                effect = .select(.orderSticker)
             case let .openURL(url):
                 state.status = .outside(.openURL(url))
             }

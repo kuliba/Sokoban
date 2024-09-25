@@ -39,12 +39,11 @@ public extension MarketShowcaseFlowState {
 
 public struct BackendFailure: Equatable, Identifiable {
     
-    public let id: UUID
+    public var id: String { message }
 
     let message: String
     
-    public init(id: UUID = UUID(), message: String) {
-        self.id = id
+    public init(message: String) {
         self.message = message
     }
 }
