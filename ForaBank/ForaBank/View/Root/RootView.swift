@@ -311,7 +311,8 @@ private extension RootView {
                         
                         paymentProviderPickerContentView(
                             content: binder.content,
-                            handleFooterEvent: binder.flow.handleFooterEvent(_:)
+                            handleFooterEvent: binder.flow.handleFooterEvent(_:),
+                            selectProvider: binder.flow.selectProvider(_:)
                         )
                     },
                     destinationView: { destination in
@@ -325,7 +326,8 @@ private extension RootView {
     
     func paymentProviderPickerContentView(
         content: PaymentProviderPicker.Content,
-        handleFooterEvent: @escaping (FooterEvent) -> Void
+        handleFooterEvent: @escaping (FooterEvent) -> Void,
+        selectProvider: @escaping (PaymentProviderPicker.Provider) -> Void
     ) -> some View {
         
         PaymentProviderPickerContentView(
@@ -351,7 +353,10 @@ private extension RootView {
                                         )
                                     },
                                     makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
-                                    makeOperatorView: { Text($0.name) },
+                                    makeOperatorView: {
+                                    
+                                        makeOperatorView(provider: $0, event: selectProvider)
+                                    },
                                     makeSearchView: {
                                         
                                         paymentProviderPickerSearchView(content.search)
@@ -365,7 +370,34 @@ private extension RootView {
             )
         )
     }
-
+    
+    func makeOperatorView(
+        provider: PaymentProviderPicker.Provider,
+        event: @escaping (PaymentProviderPicker.Provider) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(provider) },
+            label: {
+                
+                OperatorLabel(
+                    title: provider.name,
+                    subtitle: provider.inn,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: provider.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+    }
+    
+    func makeIconView(
+        md5Hash: String?
+    ) -> some View {
+        
+        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+    
     @ViewBuilder
     func paymentProviderPickerSearchView(
         _ search: RegularFieldViewModel?
@@ -513,6 +545,12 @@ extension PaymentProviderPicker.Flow {
         case .payByInstruction:
             self.event(.select(.detailPayment))
         }
+    }
+    
+    func selectProvider(
+        _ provider: PaymentProviderPicker.Provider
+    ) {
+        self.event(.select(.provider(provider)))
     }
 }
 
