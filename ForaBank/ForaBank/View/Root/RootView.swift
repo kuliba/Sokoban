@@ -284,56 +284,7 @@ private extension RootView {
                 Text("TBD: \(String(describing: failedPaymentProviderPicker))")
                 
             case let .success(binder):
-                
-                RxWrapperView(
-                    model: binder.flow,
-                    makeContentView: { state, event in
-                        
-                        PaymentProviderPickerFlowView(
-                            state: state,
-                            event: event,
-                            contentView: {
-                                
-                                PaymentProviderPickerContentView(
-                                    content: binder.content, 
-                                    factory: .init(
-                                        makeOperationPickerView: { operationPicker in
-                                            
-                                            Text("TBD: operationPicker \(String(describing: operationPicker))")
-                                        },
-                                        makeProviderList: { providerList in
-                                            
-                                            RxWrapperView(
-                                                model: providerList,
-                                                makeContentView: { state, event in
-                                                    
-                                                    PrepaymentPickerSuccessView(
-                                                        state: state,
-                                                        event: event,
-                                                        factory: .init(
-                                                            makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
-                                                            makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
-                                                            makeOperatorView: { Text($0.name) },
-                                                            makeSearchView: { Text("TBD: search") }
-                                                        )
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        makeSearchView: { search in
-                                            
-                                            Text("TBD: search \(String(describing: search))")
-                                        }
-                                    )
-                                )
-                            },
-                            destinationView: { destination in
-                                
-                                Text("TBD: destination view \(String(describing: destination))")
-                            }
-                        )
-                    }
-                )
+                paymentProviderPicker(binder)
             }
 
         case let .taxAndStateServices(taxAndStateServices):
@@ -342,6 +293,68 @@ private extension RootView {
         case let .transport(transport):
             Text("TBD: \(String(describing: transport))")
         }
+    }
+
+    func paymentProviderPicker(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: { state, event in
+                
+                PaymentProviderPickerFlowView(
+                    state: state,
+                    event: event,
+                    contentView: {
+                        
+                        paymentProviderPickerContentView(binder.content)
+                    },
+                    destinationView: { destination in
+                        
+                        Text("TBD: destination view \(String(describing: destination))")
+                    }
+                )
+            }
+        )
+    }
+    
+    func paymentProviderPickerContentView(
+        _ content: PaymentProviderPicker.Content
+    ) -> some View {
+        
+        PaymentProviderPickerContentView(
+            content: content,
+            factory: .init(
+                makeOperationPickerView: { operationPicker in
+                    
+                    Text("TBD: operationPicker \(String(describing: operationPicker))")
+                },
+                makeProviderList: { providerList in
+                    
+                    RxWrapperView(
+                        model: providerList,
+                        makeContentView: { state, event in
+                            
+                            PrepaymentPickerSuccessView(
+                                state: state,
+                                event: event,
+                                factory: .init(
+                                    makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
+                                    makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
+                                    makeOperatorView: { Text($0.name) },
+                                    makeSearchView: { Text("TBD: search") }
+                                )
+                            )
+                        }
+                    )
+                },
+                makeSearchView: { search in
+                    
+                    Text("TBD: search \(String(describing: search))")
+                }
+            )
+        )
     }
     
     func categoryListView(
