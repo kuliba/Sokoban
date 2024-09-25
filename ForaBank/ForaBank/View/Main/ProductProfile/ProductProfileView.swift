@@ -92,10 +92,9 @@ struct ProductProfileView: View {
                                                 {
                                                     viewModel.event(.button($0))
                                                 },{
-                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week
+                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
                                                 },{
-                                                    return viewModel.filterState.calendar.range?.lowerDate != nil
-                                                    
+                                                    return viewModel.filterState.calendar.selectPeriod != nil
                                                 }, {
                                                     
                                                     self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
@@ -475,7 +474,8 @@ struct ProductProfileView: View {
                                                 self.viewModel.link = .payment(.init(source: .servicePayment(
                                                     puref: puref,
                                                     additionalList: additionalList,
-                                                    amount: amount
+                                                    amount: amount, 
+                                                    productId: transfer.payer?.cardId
                                                 ), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))

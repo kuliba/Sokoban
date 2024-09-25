@@ -174,7 +174,8 @@ final class PaymentsServicesTests: XCTestCase {
             let step = try await sut.paymentsProcessLocalStepServicesStep0(
                 operatorCode: "",
                 additionalList: nil,
-                amount: 0,
+                amount: 0, 
+                productId: nil,
                 isSingle: true,
                 source: nil
             )
@@ -584,7 +585,8 @@ extension Model {
             source: .servicePayment(
                 puref: "",
                 additionalList: nil,
-                amount: 0)
+                amount: 0, 
+                productId: nil)
         )
         
         return try await paymentsProcessLocalStepServices(
@@ -623,7 +625,8 @@ extension Model {
         return try await paymentsProcessLocalStepServicesStep0(
             operatorCode: "iFora||5576",
             additionalList: nil,
-            amount: 0,
+            amount: 0, 
+            productId: nil,
             isSingle: isSingle,
             source: nil)
         
@@ -635,6 +638,7 @@ extension Model {
             operatorCode: "iFora||C31",
             additionalList: nil,
             amount: 0,
+            productId: nil,
             isSingle: isSingle,
             source: nil)
     }
@@ -652,7 +656,8 @@ extension Model {
             source: .servicePayment(
                 puref: puref,
                 additionalList: additionalList,
-                amount: amount
+                amount: amount, 
+                productId: nil
             )
         )
         

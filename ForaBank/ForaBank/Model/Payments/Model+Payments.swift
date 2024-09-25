@@ -396,7 +396,7 @@ extension Model {
                 throw Payments.Error.unsupported
             }
             
-        case .servicePayment(let operatorCode, _, _):
+        case .servicePayment(let operatorCode, _, _, _):
             guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
                 throw Payments.Error.missingValueForParameter(operatorCode)
             }

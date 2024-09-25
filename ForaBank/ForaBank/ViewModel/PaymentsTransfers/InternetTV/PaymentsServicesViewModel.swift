@@ -87,7 +87,8 @@ class PaymentsServicesViewModel: ObservableObject {
                     .servicePayment(
                         puref: payload.latestPayment.puref,
                         additionalList: payload.latestPayment.additionalList,
-                        amount: payload.latestPayment.amount
+                        amount: payload.latestPayment.amount, 
+                        productId: nil
                     )
                 )
                 
@@ -206,7 +207,7 @@ extension PaymentsServicesViewModel {
     func link(for code: String) -> Link {
         
         let paymentsViewModel = makePaymentsViewModel(
-            .servicePayment(puref: code, additionalList: .none, amount: 0)
+            .servicePayment(puref: code, additionalList: .none, amount: 0, productId: nil)
         )
         
         return .payments(paymentsViewModel)
