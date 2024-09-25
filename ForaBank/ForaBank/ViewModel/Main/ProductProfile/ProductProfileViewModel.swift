@@ -1026,9 +1026,8 @@ private extension ProductProfileViewModel {
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
         
-        guard let history = history else {
-            return
-        }
+        guard let history = history else { return }
+        
         history.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -1037,28 +1036,32 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
+                    
                     guard let storage = self.model.statements.value[self.product.activeProductId],
-                          let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
-                          statementData.paymentDetailType != .notFinance,
-                          let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+                          let latestStatementData = storage.statements
+                        .filter({ $0.operationId == payload.statementId })
+                        .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+                        .first,
+                          latestStatementData.paymentDetailType != .notFinance,
+                          let productData = self.model.products.value.values
+                        .flatMap({ $0 })
+                        .first(where: { $0.id == self.product.activeProductId }) 
                     else { return }
                     
                     let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                        statementData,
+                        latestStatementData,
                         productData,
                         self.model
                     )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
                     if #unavailable(iOS 14.5) {
-                        
                         self.bind(operationDetailViewModel)
                     }
                     
                 default:
                     break
                 }
-                
             }.store(in: &bindings)
     }
     

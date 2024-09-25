@@ -341,23 +341,15 @@ extension ProductProfileHistoryView.ViewModel {
         
         for (_, statementsGroup) in groupedStatements {
             
-            if let latestStatement = statementsGroup.max(by: {
-                
-                if let lhsTranDate = $0.tranDate, let rhsTranDate = $1.tranDate {
-                    return lhsTranDate > rhsTranDate
-                    
-                } else {
-                    return $0.date > $1.date
-                }
-            }) {
-                
+            let sortedGroup = statementsGroup.sorted(by: sortStatements)
+            
+            if let latestStatement = sortedGroup.first {
                 let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: latestStatement, model: model, action: action(latestStatement.id))
                 updatedOperations.append(operation)
                 
                 let imageId = latestStatement.md5hash
                 if let imageData = images[imageId] {
                     operation.image = imageData.image
-                    
                 } else {
                     downloadImagesIds.append(imageId)
                 }
@@ -367,6 +359,20 @@ extension ProductProfileHistoryView.ViewModel {
         let sortedUpdatedOperations = updatedOperations.sorted(by: { $0.statement.date > $1.statement.date })
         
         return (sortedUpdatedOperations, downloadImagesIds)
+    }
+    
+    func sortStatements(_ lhs: ProductStatementData, _ rhs: ProductStatementData) -> Bool {
+        
+        switch (lhs.tranDate, rhs.tranDate) {
+        case (.some(let lhsDate), .some(let rhsDate)):
+            return lhsDate > rhsDate
+        case (.some, .none):
+            return true
+        case (.none, .some):
+            return false
+        case (.none, .none):
+            return lhs.date > rhs.date
+        }
     }
 }
 
