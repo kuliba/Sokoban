@@ -9,9 +9,11 @@ import ActivateSlider
 import InfoComponent
 import PaymentSticker
 import PayHubUI
+import RxViewModel
 import SberQR
 import SwiftUI
 import MarketShowcase
+import UtilityServicePrepaymentUI
 
 struct RootView: View {
     
@@ -280,20 +282,58 @@ private extension RootView {
             switch standard {
             case let .failure(failedPaymentProviderPicker):
                 Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-            
-            case let .success(paymentProviderPicker):
-                VStack {
-                    
-                    Text(paymentProviderPicker.category.name)
-                        .font(.title)
-                    
-                    Text("TBD: \(String(describing: paymentProviderPicker))")
-                    
-                    List(paymentProviderPicker.operators) {
+                
+            case let .success(binder):
+                
+                RxWrapperView(
+                    model: binder.flow,
+                    makeContentView: { state, event in
                         
-                        Text($0.name)
+                        PaymentProviderPickerFlowView(
+                            state: state,
+                            event: event,
+                            contentView: {
+                                
+                                PaymentProviderPickerContentView(
+                                    content: binder.content, 
+                                    factory: .init(
+                                        makeOperationPickerView: { operationPicker in
+                                            
+                                            Text("TBD: operationPicker \(String(describing: operationPicker))")
+                                        },
+                                        makeProviderList: { providerList in
+                                            
+                                            RxWrapperView(
+                                                model: providerList,
+                                                makeContentView: { state, event in
+                                                    
+                                                    PrepaymentPickerSuccessView(
+                                                        state: state,
+                                                        event: event,
+                                                        factory: .init(
+                                                            makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
+                                                            makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
+                                                            makeOperatorView: { Text($0.name) },
+                                                            makeSearchView: { Text("TBD: search") }
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        makeSearchView: { search in
+                                            
+                                            Text("TBD: search \(String(describing: search))")
+                                        }
+                                    )
+                                )
+                            },
+                            destinationView: { destination in
+                                
+                                Text("TBD: destination view \(String(describing: destination))")
+                            }
+                        )
                     }
-                }
+                )
             }
 
         case let .taxAndStateServices(taxAndStateServices):

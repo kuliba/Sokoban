@@ -146,7 +146,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
-                search: false,
+                hasSearch: false,
                 type: .mobile
             )
         ],
@@ -160,7 +160,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Оплата по QR",
                 ord: 10,
                 paymentFlow: .qr,
-                search: false,
+                hasSearch: false,
                 type: .qr
             ),
             .init(
@@ -169,7 +169,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
-                search: false,
+                hasSearch: false,
                 type: .mobile
             ),
             .init(
@@ -178,7 +178,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Услуги ЖКХ",
                 ord: 30,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .housingAndCommunalService
             ),
             .init(
@@ -187,7 +187,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Интернет, ТВ",
                 ord: 40,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .internet
             ),
             .init(
@@ -196,7 +196,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Транспорт",
                 ord: 50,
                 paymentFlow: .transport,
-                search: false,
+                hasSearch: false,
                 type: .transport
             ),
             .init(
@@ -205,7 +205,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Налоги и госуслуги",
                 ord: 60,
                 paymentFlow: .taxAndStateServices,
-                search: false,
+                hasSearch: false,
                 type: .taxAndStateService
             ),
             .init(
@@ -214,7 +214,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Охранные системы",
                 ord: 70,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .security
             ),
             .init(
@@ -223,7 +223,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Электронный кошелек",
                 ord: 80,
                 paymentFlow: .standard,
-                search: false,
+                hasSearch: false,
                 type: .digitalWallets
             ),
             .init(
@@ -232,7 +232,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Погашение кредита ",
                 ord: 90,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .repaymentLoansAndAccounts
             ),
             .init(
@@ -241,7 +241,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Развлечения (игры и соц.сети)",
                 ord: 100,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .socialAndGames
             ),
             .init(
@@ -250,7 +250,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Сетевой маркетинг",
                 ord: 110,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .networkMarketing
             ),
             .init(
@@ -259,7 +259,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Образование",
                 ord: 120,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .education
             ),
             .init(
@@ -268,7 +268,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
                 name: "Благотворительность",
                 ord: 130,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .charity
             ),
         ],

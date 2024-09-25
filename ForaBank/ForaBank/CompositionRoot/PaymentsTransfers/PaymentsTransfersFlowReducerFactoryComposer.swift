@@ -192,8 +192,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         )
         let binder = UtilityPrepaymentBinder(
             model: viewModel,
-            searchModel: searchModel,
-            scheduler: scheduler
+            searchModel: searchModel
         )
         
         return .init(content: binder, navTitle: settings.navTitle)

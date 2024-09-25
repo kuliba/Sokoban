@@ -6,7 +6,6 @@
 //
 
 import Combine
-import CombineSchedulers
 import Foundation
 
 final class UtilityPrepaymentBinder {
@@ -18,14 +17,12 @@ final class UtilityPrepaymentBinder {
     
     init(
         model: UtilityPrepaymentViewModel,
-        searchModel: RegularFieldViewModel,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        searchModel: RegularFieldViewModel
     ) {
         self.model = model
         self.searchModel = searchModel
         self.cancellable = searchModel.$state
             .map(\.text)
-            .receive(on: scheduler)
             .sink { [weak model] in model?.event(.search($0 ?? "")) }
     }
 }
