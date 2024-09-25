@@ -496,10 +496,10 @@ extension PaymentsTransfersView {
 private extension PaymentsTransfersView {
     
     func paymentProviderPicker(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedPaymentProviderPickerFlowView(
+        ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView

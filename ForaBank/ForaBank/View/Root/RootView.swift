@@ -9,8 +9,11 @@ import ActivateSlider
 import InfoComponent
 import PaymentSticker
 import PayHubUI
+import RxViewModel
 import SberQR
 import SwiftUI
+import MarketShowcase
+import UtilityServicePrepaymentUI
 
 struct RootView: View {
     
@@ -26,9 +29,10 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab(viewModel.mainViewModel)
-                    paymentsViewTab(viewModel.paymentsModel)
-                    chatViewTab(viewModel.chatViewModel)
+                    mainViewTab(viewModel.tabsViewModelFactory.mainViewModel)
+                    paymentsViewTab(viewModel.tabsViewModelFactory.paymentsModel)
+                    marketShowcaseViewTab(viewModel.tabsViewModelFactory.marketShowcaseModel)
+                    chatViewTab(viewModel.tabsViewModelFactory.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -100,6 +104,19 @@ struct RootView: View {
             .accessibilityIdentifier("tabBarChatButton")
     }
     
+    private func marketShowcaseViewTab(
+        _ marketShowcaseViewModel: MarketShowcaseViewModel
+    ) -> some View {
+        
+        rootViewFactory.makeMarketShowcaseView(viewModel.tabsViewModelFactory.marketShowcaseModel).map {
+            $0
+            .taggedTabItem(.market, selected: viewModel.selected)
+        }
+        .taggedTabItem(.market, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
+        .accessibilityIdentifier("tabBarMarketButton")
+    }
+    
     @ViewBuilder
     private func destinationView(
         link: RootViewModel.Link
@@ -115,6 +132,7 @@ struct RootView: View {
         case .me2me(let requestMeToMeModel):
             //FIXME: looks like NavigationView required
             MeToMeRequestView(viewModel: requestMeToMeModel)
+                .ignoresSafeArea()
             //FIXME: looks like zIndex not needed
                 .zIndex(.greatestFiniteMagnitude)
             
@@ -248,11 +266,82 @@ private extension RootView {
         }
     }
     
+    @ViewBuilder
     func selectedCategoryView(
         _ selected: SelectedCategoryDestination
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
+        switch selected {
+        case let .mobile(mobile):
+            Text("TBD: \(String(describing: mobile))")
+
+        case let .qr(qr):
+            Text("TBD: \(String(describing: qr))")
+
+        case let .standard(standard):
+            switch standard {
+            case let .failure(failedPaymentProviderPicker):
+                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                
+            case let .success(binder):
+                
+                RxWrapperView(
+                    model: binder.flow,
+                    makeContentView: { state, event in
+                        
+                        PaymentProviderPickerFlowView(
+                            state: state,
+                            event: event,
+                            contentView: {
+                                
+                                PaymentProviderPickerContentView(
+                                    content: binder.content, 
+                                    factory: .init(
+                                        makeOperationPickerView: { operationPicker in
+                                            
+                                            Text("TBD: operationPicker \(String(describing: operationPicker))")
+                                        },
+                                        makeProviderList: { providerList in
+                                            
+                                            RxWrapperView(
+                                                model: providerList,
+                                                makeContentView: { state, event in
+                                                    
+                                                    PrepaymentPickerSuccessView(
+                                                        state: state,
+                                                        event: event,
+                                                        factory: .init(
+                                                            makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
+                                                            makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
+                                                            makeOperatorView: { Text($0.name) },
+                                                            makeSearchView: { Text("TBD: search") }
+                                                        )
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        makeSearchView: { search in
+                                            
+                                            Text("TBD: search \(String(describing: search))")
+                                        }
+                                    )
+                                )
+                            },
+                            destinationView: { destination in
+                                
+                                Text("TBD: destination view \(String(describing: destination))")
+                            }
+                        )
+                    }
+                )
+            }
+
+        case let .taxAndStateServices(taxAndStateServices):
+            Text("TBD: \(String(describing: taxAndStateServices))")
+
+        case let .transport(transport):
+            Text("TBD: \(String(describing: transport))")
+        }
     }
     
     func categoryListView(
@@ -440,6 +529,9 @@ extension RootViewModel.TabType {
             
         case .chat:
             return isSelected ? .ic24ChatActive : .ic24ChatInactive
+            
+        case .market:
+            return isSelected ? .ic24MarketplaceActive : .ic24MarketplaceInactive
         }
     }
 }
@@ -453,9 +545,7 @@ struct RootView_Previews: PreviewProvider {
                 fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
-                mainViewModel: .sample,
-                paymentsModel: .legacy(.sample),
-                chatViewModel: .init(),
+                tabsViewModelFactory: .preview,
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
@@ -486,6 +576,7 @@ private extension RootViewFactory {
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _ in .init { event in }},
             makeIconView: IconDomain.preview,
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -493,7 +584,8 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makeIconView: IconDomain.preview,
+                        makeIconView: IconDomain.preview, 
+                        makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
@@ -510,7 +602,8 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeMarketShowcaseView: { _ in .none }
         )
     }
 }

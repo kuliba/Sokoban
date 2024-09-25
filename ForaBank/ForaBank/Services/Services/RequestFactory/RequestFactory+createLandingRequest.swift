@@ -15,9 +15,18 @@ extension RequestFactory {
         abroadType: AbroadType)
     ) throws -> URLRequest {
         
+        return try createMarketplaceLandingRequest((input.serial, input.abroadType.rawValue))
+    }
+    
+    static func createMarketplaceLandingRequest(
+        _ input: (
+        serial: String,
+        type: String)
+    ) throws -> URLRequest {
+        
         let parameters: [(String, String)] = [
             ("serial", input.serial),
-            ("type", input.abroadType.rawValue)
+            ("type", input.type)
         ]
         let endpoint = Services.Endpoint.createLandingRequest
         let url = try! endpoint.url(
@@ -39,6 +48,7 @@ extension AbroadType {
         case .orderCard:            return "abroadOrderCard"
         case .transfer:             return "abroadTransfer"
         case .sticker:              return "abroadSticker"
+        case .marketShowcase:       return "market_showcase"
             
         case let .control(cardType):
             switch cardType {

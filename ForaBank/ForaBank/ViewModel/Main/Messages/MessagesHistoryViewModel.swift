@@ -102,7 +102,8 @@ class MessagesHistoryViewModel: ObservableObject {
                         
                         guard let notificationData = model.notifications.value.first( where: {$0.id == payload.itemId})  else { return }
                         let notificationDetailViewModel = MessagesHistoryDetailViewModel(notificationData: notificationData)
-                        sheet = .init(sheetType: .item(notificationDetailViewModel))
+                        
+                        sheet = .init(sheetType: .item(notificationDetailViewModel, handleLink: handleLink))
                         
                     default:
                         break
@@ -146,6 +147,20 @@ class MessagesHistoryViewModel: ObservableObject {
         
         return sortedIndexes
     }
+    
+    func handleLink(_ url: URL) {
+        
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+           let idItem = components.queryItems?.first(where: { $0.name == "id" }),
+           let bankId = idItem.value {
+            
+            model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+            
+        } else {
+            
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
 }
 
 extension MessagesHistoryViewModel {
@@ -179,7 +194,7 @@ extension MessagesHistoryViewModel {
         
         enum SheetType {
             
-            case item(MessagesHistoryDetailViewModel)
+            case item(MessagesHistoryDetailViewModel, handleLink: (URL) -> Void)
         }
     }
 }

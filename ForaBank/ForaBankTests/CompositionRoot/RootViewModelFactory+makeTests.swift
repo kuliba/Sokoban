@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.08.2024.
 //
 
+import Combine
 import CombineSchedulers
 @testable import ForaBank
 import XCTest
@@ -13,28 +14,29 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldCallHTTPClient() {
         
-        let (_, httpClient, backgroundScheduler) = makeSUT()
+        let (_, httpClient, backgroundScheduler, _) = makeSUT()
         XCTAssertNoDiff(httpClient.callCount, 0)
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
-        XCTAssertNoDiff(httpClient.callCount, 1)
+        XCTAssertNoDiff(httpClient.callCount, 2)
     }
     
     func test_shouldCallHTTPClientWithGetServiceCategoryList() throws {
         
-        let (_, httpClient, backgroundScheduler) = makeSUT()
+        let (_, httpClient, backgroundScheduler, _) = makeSUT()
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
-        XCTAssertNoDiff(httpClient.requests, [
+        XCTAssertNoDiff(
+            httpClient.requests.first,
             try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: nil)
-        ])
+        )
     }
     
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
-        let (sut, _,_) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
         let initialState = try sut.categoryPickerContent().state
         
@@ -43,24 +45,26 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _, backgroundScheduler) = makeSUT()
+        let (sut, _, backgroundScheduler, bindings) = makeSUT()
         let initialState = try sut.categoryPickerContent().state
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
+        XCTAssertNotNil(bindings)
     }
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
         
-        let (sut, httpClient, backgroundScheduler) = makeSUT()
+        let (sut, httpClient, backgroundScheduler, bindings) = makeSUT()
         
         backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
         httpClient.complete(with: success())
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
+        XCTAssertNotNil(bindings)
     }
     
     // MARK: - Helpers
@@ -73,14 +77,17 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     ) -> (
         sut: SUT,
         httpClient: HTTPClientSpy,
-        backgroundScheduler: TestSchedulerOf<DispatchQueue>
+        backgroundScheduler: TestSchedulerOf<DispatchQueue>,
+        bindings: Set<AnyCancellable>
     ) {
         let httpClient = HTTPClientSpy()
         let backgroundScheduler = DispatchQueue.test
+        var bindings = Set<AnyCancellable>()
         let sut = RootViewModelFactory.make(
             model: .mockWithEmptyExcept(),
             httpClient: httpClient,
             logger: LoggerSpy(),
+            bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
             utilitiesPaymentsFlag: .init(.active(.live)),
@@ -94,7 +101,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         )
         
-        return (sut, httpClient, backgroundScheduler)
+        return (sut, httpClient, backgroundScheduler, bindings)
     }
     
     private func success(
@@ -141,7 +148,7 @@ private extension RootViewModel {
     
     private var personal: PaymentsTransfersPersonal? {
         
-        guard case let .v1(switcher) = paymentsModel,
+        guard case let .v1(switcher) = tabsViewModelFactory.paymentsModel,
               case let .personal(personal) = switcher.state
         else { return nil }
         

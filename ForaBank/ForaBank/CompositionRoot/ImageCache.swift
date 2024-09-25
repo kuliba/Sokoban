@@ -40,7 +40,7 @@ final class ImageCache {
         self.fallback = fallback
         self.scheduler = scheduler
     }
-    
+        
     func image(
         forKey imageKey: ImageKey
     ) -> ImageSubject {

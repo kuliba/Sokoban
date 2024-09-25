@@ -6,6 +6,7 @@
 //
 
 import ActivateSlider
+import Banners
 import Combine
 import FooterComponent
 import ForaTools
@@ -15,6 +16,7 @@ import PaymentSticker
 import SberQR
 import ScrollViewProxy
 import SwiftUI
+import UIPrimitives
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -130,6 +132,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             
+        case let promo as BannerPickerSectionBinderWrapper:
+            makeBannersView(promo.binder)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+            
         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
             MainSectionCurrencyView(viewModel: currencyViewModel)
                 .padding(.bottom, 32)
@@ -238,9 +245,13 @@ struct MainView<NavigationOperationView: View>: View {
                     title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
-        case let .landing(viewModel):
-            LandingWrapperView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.bottom)
+        case let .landing(viewModel, needIgnoringSafeArea):
+            if needIgnoringSafeArea {
+                LandingWrapperView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+            } else {
+                LandingWrapperView(viewModel: viewModel)
+            }
             
         case let .orderSticker(viewModel):
             LandingWrapperView(viewModel: viewModel)
@@ -319,15 +330,80 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
+// MARK: - banners
+
+private extension MainView {
+        
+    func makeBannersView(
+        _ binder: BannersBinder
+    ) -> some View {
+        
+        ComposedBannersView(
+            bannersBinder: binder,
+            factory: .init(
+                makeContentView: {
+                    BannersContentView(
+                        content: binder.content,
+                        factory: .init(
+                            makeBannerSectionView: makeBannerSectionView
+                        ),
+                        config: .init(bannerSectionHeight: 128, spacing: 10)
+                    )
+                }
+            )
+        )
+    }
+
+    
+    typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
+
+    func makeBannerSectionView(
+        binder: BannerPickerSectionBinder
+    ) -> some View {
+        
+        ComposedBannerPickerSectionFlowView(
+            binder: binder,
+            config: .init(spacing: 10),
+            itemView: itemView,
+            makeDestinationView: { Text(String(describing: $0)) }
+        )
+    }
+
+    @ViewBuilder
+    private func itemView(
+        item: BannerPickerSectionState.Item
+    ) -> some View {
+        
+        BannerPickerSectionStateItemView(
+            item: item,
+            config: .iFora,
+            bannerView: { item in
+                
+                let label = viewFactory.makeGeneralIconView(.image(item.imageEndpoint))
+                    .frame(Config.iFora.size)
+                    .cornerRadius(Config.iFora.cornerRadius)
+                
+                Button { viewModel.promoAction(item) } label: { label }
+                    .frame(Config.iFora.size)
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("mainActionBanner")
+            },
+            placeholderView: { PlaceholderView(opacity: 0.5) }
+        )
+    }
+    
+    private typealias Config = BannerPickerSectionStateItemViewConfig
+}
+
 // MARK: - payment provider & service pickers
 
 private extension MainView {
     
     func paymentProviderPicker(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedPaymentProviderPickerFlowView(
+        ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
@@ -535,7 +611,8 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview,
+            makeIconView: IconDomain.preview, 
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
@@ -570,7 +647,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active), 
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -579,7 +656,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {}, 
+        bannersBinder: .preview
     )
     
     static let sampleProducts = MainViewModel(
@@ -599,7 +677,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -608,7 +686,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -628,7 +707,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -637,7 +716,8 @@ extension MainViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
-        onRegister: {}
+        onRegister: {},
+        bannersBinder: .preview
     )
 }
 

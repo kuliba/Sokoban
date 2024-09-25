@@ -209,25 +209,29 @@ final class RootViewModelTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             navigationStateManager: .preview, 
             productNavigationStateManager: .preview,
-            mainViewModel: .init(
-                model,
-                makeProductProfileViewModel: { _,_,_ in nil },
-                navigationStateManager: .preview,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                paymentsTransfersFactory: .preview,
-                updateInfoStatusFlag: .init(.inactive),
-                onRegister: {}
+            tabsViewModelFactory: .init(
+                mainViewModel: .init(
+                    model,
+                    makeProductProfileViewModel: { _,_,_ in nil },
+                    navigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    paymentsTransfersFactory: .preview,
+                    updateInfoStatusFlag: .init(.inactive),
+                    onRegister: {},
+                    bannersBinder: .preview
+                ),
+                paymentsModel: .legacy(.init(
+                    model: model,
+                    makeFlowManager: { _ in .preview },
+                    userAccountNavigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    paymentsTransfersFactory: .preview
+                )),
+                chatViewModel: .init(),
+                marketShowcaseModel: .preview
             ),
-            paymentsModel: .legacy(.init(
-                model: model,
-                makeFlowManager: { _ in .preview },
-                userAccountNavigationStateManager: .preview,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(), 
-                paymentsTransfersFactory: .preview
-            )),
-            chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 
             model,
