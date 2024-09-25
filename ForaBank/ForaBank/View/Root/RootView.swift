@@ -312,6 +312,7 @@ private extension RootView {
                         paymentProviderPickerContentView(
                             content: binder.content,
                             handleFooterEvent: binder.flow.handleFooterEvent(_:),
+                            selectLatest: binder.flow.selectLatest(_:),
                             selectProvider: binder.flow.selectProvider(_:)
                         )
                     },
@@ -327,6 +328,7 @@ private extension RootView {
     func paymentProviderPickerContentView(
         content: PaymentProviderPicker.Content,
         handleFooterEvent: @escaping (FooterEvent) -> Void,
+        selectLatest: @escaping (Latest) -> Void,
         selectProvider: @escaping (PaymentProviderPicker.Provider) -> Void
     ) -> some View {
         
@@ -352,7 +354,10 @@ private extension RootView {
                                             config: .iFora
                                         )
                                     },
-                                    makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
+                                    makeLastPaymentView: { 
+                                        
+                                        makeLatestPaymentView(latest: $0, event: selectLatest)
+                                    },
                                     makeOperatorView: {
                                     
                                         makeOperatorView(provider: $0, event: selectProvider)
@@ -368,6 +373,26 @@ private extension RootView {
                 },
                 makeSearchView: { search in EmptyView() }
             )
+        )
+    }
+    
+    func makeLatestPaymentView(
+        latest: Latest,
+        event: @escaping (Latest) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(latest) },
+            label: {
+
+                LastPaymentLabel(
+                    amount: latest.amount.map { "\($0) ₽" } ?? "",
+                    title: latest.name,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: latest.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
         )
     }
     
@@ -547,6 +572,12 @@ extension PaymentProviderPicker.Flow {
         }
     }
     
+    func selectLatest(
+        _ latest: Latest
+    ) {
+        self.event(.select(.latest(latest)))
+    }
+    
     func selectProvider(
         _ provider: PaymentProviderPicker.Provider
     ) {
@@ -564,6 +595,28 @@ extension Latest: Named {
             
         case let .withPhone(withPhone):
             return withPhone.name ?? String(describing: withPhone)
+        }
+    }
+    
+    var amount: Decimal? {
+        
+        switch self {
+        case let .service(service):
+            return service.amount
+            
+        case let .withPhone(withPhone):
+            return withPhone.amount
+        }
+    }
+    
+    var md5Hash: String? {
+        
+        switch self {
+        case let .service(service):
+            return service.md5Hash
+            
+        case let .withPhone(withPhone):
+            return withPhone.md5Hash
         }
     }
 }
