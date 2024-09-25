@@ -26,7 +26,7 @@ extension PaymentProviderPicker {
     typealias Content = PayHub.PaymentProviderPickerContent<OperationPicker, ProviderList, Search>
     
     typealias OperationPicker = Void
-    typealias Search = Void
+    typealias Search = RegularFieldViewModel
     
     // MARK: - Flow
     

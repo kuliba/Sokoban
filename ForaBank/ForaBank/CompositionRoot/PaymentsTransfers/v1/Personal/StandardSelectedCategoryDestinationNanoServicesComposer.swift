@@ -5,9 +5,11 @@
 //  Created by Igor Malyarov on 20.09.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
+import TextFieldModel
 import UtilityServicePrepaymentCore
 
 final class StandardSelectedCategoryDestinationNanoServicesComposer {
@@ -91,11 +93,24 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
         for category: ServiceCategory
     ) -> PaymentProviderPicker.Content {
         
+        let providerList = makeProviderList(with: payload, for: category.type)
+        let search = payload.category.hasSearch ? makeSearch() : nil
+        let cancellable = search?.$state
+            .map { $0.text ?? "" }
+            .debounce(for: .milliseconds(300), scheduler: scheduler)
+            .sink { [weak providerList] in providerList?.event(.search($0)) }
+        
+        var cancellables = Set<AnyCancellable>()
+        if let cancellable {
+            
+            cancellables.insert(cancellable)
+        }
+        
         return .init(
             operationPicker: (),
-            providerList: makeProviderList(with: payload, for: category.type),
-            search: payload.category.hasSearch ? () : nil,
-            cancellables: []
+            providerList: providerList,
+            search: search,
+            cancellables: cancellables
         )
     }
     
@@ -120,6 +135,21 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
+        )
+    }
+    
+    private func makeSearch() -> RegularFieldViewModel {
+        
+        let placeholderText = "Наименование или ИНН"
+        let searchReducer = TransformingReducer(
+            placeholderText: placeholderText,
+            transform: { $0 }
+        )
+        
+        return .init(
+            initialState: .placeholder(placeholderText),
+            reducer: searchReducer,
+            keyboardType: .default
         )
     }
 }
