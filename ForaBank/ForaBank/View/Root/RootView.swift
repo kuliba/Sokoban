@@ -318,7 +318,7 @@ private extension RootView {
             }
         )
     }
-    
+
     func paymentProviderPickerContentView(
         _ content: PaymentProviderPicker.Content
     ) -> some View {
@@ -326,10 +326,7 @@ private extension RootView {
         PaymentProviderPickerContentView(
             content: content,
             factory: .init(
-                makeOperationPickerView: { operationPicker in
-                    
-                    Text("TBD: operationPicker \(String(describing: operationPicker))")
-                },
+                makeOperationPickerView: { operationPicker in EmptyView() },
                 makeProviderList: { providerList in
                     
                     RxWrapperView(
@@ -343,18 +340,37 @@ private extension RootView {
                                     makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
                                     makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
                                     makeOperatorView: { Text($0.name) },
-                                    makeSearchView: { Text("TBD: search") }
+                                    makeSearchView: {
+                                        
+                                        paymentProviderPickerSearchView(content.search)
+                                    }
                                 )
                             )
                         }
                     )
                 },
-                makeSearchView: { search in
-                    
-                    Text("TBD: search \(String(describing: search))")
-                }
+                makeSearchView: { search in EmptyView() }
             )
         )
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerSearchView(
+        _ search: RegularFieldViewModel?
+    ) -> some View {
+        
+        search.map { search in
+            
+            DefaultCancellableSearchBarView(
+                viewModel: search,
+                textFieldConfig: .black16,
+                cancel: {
+                    
+                    UIApplication.shared.endEditing()
+                    search.setText(to: nil)
+                }
+            )
+        }
     }
     
     func categoryListView(
