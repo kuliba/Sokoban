@@ -13,7 +13,7 @@ struct TabsViewModelFactory {
     let mainViewModel: MainViewModel
     let paymentsModel: RootViewModel.PaymentsModel
     let chatViewModel: ChatViewModel
-    let marketShowcaseModel: MarketShowcaseViewModel
+    let marketShowcaseModel: MarketShowcaseDomain.Binder
     
     func reset() {
         
@@ -24,6 +24,12 @@ struct TabsViewModelFactory {
     }
 }
 
+extension MarketShowcaseDomain.Binder {
+    
+    func reset() {
+        content.event(.resetSelection)
+    }
+}
 extension TabsViewModelFactory {
     
     static let preview: Self = .init(

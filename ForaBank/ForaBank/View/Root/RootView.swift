@@ -103,10 +103,10 @@ struct RootView: View {
     }
     
     private func marketShowcaseViewTab(
-        _ marketShowcaseViewModel: MarketShowcaseViewModel
+        _ marketShowcaseViewModel: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(viewModel.tabsViewModelFactory.marketShowcaseModel).map {
+        rootViewFactory.makeMarketShowcaseContentView(viewModel.tabsViewModelFactory.marketShowcaseModel).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -563,7 +563,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _ in .none }
+            makeMarketShowcaseContentView: { _ in .none }
         )
     }
 }

@@ -8,18 +8,18 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseView<RefreshView>: View
+public struct MarketShowcaseView<RefreshView, Landing>: View
 where RefreshView: View
 {
     
     let state: State
-    let event: (Event) -> Void
+    let event: (Event<Landing>) -> Void
     let config: Config
     let factory: Factory
     
     public init(
         state: State,
-        event: @escaping (Event) -> Void,
+        event: @escaping (Event<Landing>) -> Void,
         config: Config,
         factory: Factory
     ) {
@@ -33,31 +33,31 @@ where RefreshView: View
         
         content()
             .refresh(action: {
-                if state != .inflight {
-                    event(.update)
-                }
+                event(.load)
             })
+            /*.alert(
+                item: state.alert,
+                content: errorAlert(event: event)
+            )*/
     }
     
     @ViewBuilder
     private func content() -> some View {
         
-        switch state {
+        switch state.status {
         case .inflight:
             
             factory.makeRefreshView()
                 .modifier(ViewByCenterModifier(height: config.spinnerHeight))
-            Button(action: { event(.loaded) }, label: { Text("Loaded")})
-            Button(action: { event(.failure(.timeout)) }, label: { Text("Informer")})
-            Button(action: { event(.failure(.error)) }, label: { Text("Alert")})
-
+            Button(action: { event(.loadFailure) }, label: { Text("Informer")})
+            
         case .loaded:
             VStack {
                 Text("Market")
             }
             .frame(maxHeight: .infinity)
             .padding()
-
+            
         case .failure:
             VStack {
                 Text("Failure")
@@ -66,12 +66,33 @@ where RefreshView: View
             .padding()
         }
     }
+    
+    func errorAlert(
+        event: @escaping (Event<Landing>) -> Void
+    ) -> (FailureAlert) -> Alert {
+        
+        return { alert in
+
+            return .init(
+                with: .init(
+                    title: "Ошибка!",
+                    message: alert.message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "OK",
+                        event: .load
+                    )
+                ),
+                event: event
+            )
+        }
+    }
 }
 
 public extension MarketShowcaseView {
     
-    typealias State = MarketShowcaseState
-    typealias Event = MarketShowcaseEvent
+    typealias State = MarketShowcaseContentState<Landing>
+    typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
     typealias Factory = ViewFactory<RefreshView>
 }
@@ -80,10 +101,10 @@ public extension MarketShowcaseView {
     MarketShowcaseView.preview
 }
 
-extension MarketShowcaseView where RefreshView == Text {
+extension MarketShowcaseView where RefreshView == Text, Landing == String {
     
     static let preview = MarketShowcaseView(
-        state: .inflight,
+        state: .init(status: .inflight),
         event: {_ in },
         config: .iFora, 
         factory: .init(makeRefreshView: { Text("Refresh") }))
@@ -102,6 +123,24 @@ private struct ViewByCenterModifier: ViewModifier {
         .position(
             x: UIScreen.main.bounds.width/2,
             y: UIScreen.main.bounds.height/2 - height
+        )
+    }
+}
+
+#warning("move to module")
+extension View {
+    
+    func alert<Item: Identifiable>(
+        item: Item?,
+        content: (Item) -> Alert
+    ) -> some View {
+        
+        alert(
+            item: .init(
+                get: { item },
+                set: { _ in } // managed by action in content
+            ),
+            content: content
         )
     }
 }

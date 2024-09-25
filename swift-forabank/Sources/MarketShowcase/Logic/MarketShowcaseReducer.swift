@@ -10,9 +10,14 @@ import Foundation
 public final class MarketShowcaseReducer {
     
     private let alertLifespan: DispatchTimeInterval
+    private let goToMain: () -> Void
 
-    public init(alertLifespan: DispatchTimeInterval = .milliseconds(400)) {
+    public init(
+        alertLifespan: DispatchTimeInterval = .milliseconds(400),
+        goToMain: @escaping () -> Void
+    ) {
         self.alertLifespan = alertLifespan
+        self.goToMain = goToMain
     }
 }
 
@@ -28,23 +33,29 @@ public extension MarketShowcaseReducer {
         
         switch event {
         case .update:
-            if state != .inflight {
-                state = .inflight
+            if state.status != .inflight {
+                state.status = .inflight
                 effect = .load
             }
             
         case .loaded:
-            state = .loaded
+            state.status = .loaded
             
         case let .failure(kind):
             switch kind {
             case .timeout:
-                state = .failure
+                state.status = .failure
                 effect = .show(.informer)
             case .error:
-                state = .failure
+                state.status = .failure
                 effect = .show(.alert(alertLifespan))
             }
+        case .showAlert:
+            state.alert = .init(message: "Попробуйте позже")
+            
+        case .goToMain:
+            state.alert = nil
+            goToMain()
         }
         return (state, effect)
     }

@@ -9,11 +9,12 @@ import Combine
 import Foundation
 import PayHub
 import SwiftUI
+import MarketShowcase
 
 class RootViewModel: ObservableObject, Resetable {
     
     typealias ShowLoginAction = (RootViewModel.RootActions) -> RootViewModelAction.Cover.ShowLogin
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published private(set) var isTabBarHidden = false
@@ -29,7 +30,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
-
+    
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -65,7 +66,7 @@ class RootViewModel: ObservableObject, Resetable {
         bindAuth()
         bindTabBar()
     }
-
+    
     func reset() {
         
         tabsViewModelFactory.reset()
@@ -202,7 +203,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 tokenIntent: payload.tokenIntent
                             ))
                     ))
-                
+                    
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
                     alert = nil
@@ -425,6 +426,32 @@ class RootViewModel: ObservableObject, Resetable {
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
+    }
+    
+    /*private func bindTabBarMarketShowcase() {
+        
+        tabsViewModelFactory.marketShowcaseModel.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] outside in
+                
+                switch outside {
+                case .main:
+                    self?.rootActions.switchTab(.main)
+                }
+            }
+            .store(in: &bindings)
+    }*/
+}
+
+private extension MarketShowcaseFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = self.status
+        else { return nil }
+        
+        return outside
     }
 }
 

@@ -10,14 +10,11 @@ import Foundation
 public final class MarketShowcaseEffectHandler {
     
     private let makeInformer: () -> Void
-    private let makeAlert: (String) -> Void
 
     public init(
-        makeInformer: @escaping () -> Void,
-        makeAlert: @escaping (String) -> Void
+        makeInformer: @escaping () -> Void
     ) {
         self.makeInformer = makeInformer
-        self.makeAlert = makeAlert
     }
 }
 
@@ -39,8 +36,8 @@ public extension MarketShowcaseEffectHandler {
             case .informer:
                 makeInformer()
             case let .alert(dispatchTimeInterval):
-                DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) { [weak self] in
-                    self?.makeAlert("Попробуйте позже")
+                DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) { 
+                    dispatch(.showAlert)
                 }
             }
         }

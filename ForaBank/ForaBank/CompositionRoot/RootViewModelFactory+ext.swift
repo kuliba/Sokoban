@@ -897,23 +897,21 @@ private extension RootViewModelFactory {
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
         
-        let marketShowcaseReducer = MarketShowcaseReducer()
-        
          let marketShowcaseEffectHandler = MarketShowcaseEffectHandler(
-            makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: "Проверьте подключение к сети", icon: .wifiOff)))},
-            makeAlert: {_ in 
-                
-            })
-        let marketShowcaseModel = MarketShowcaseViewModel(
-            initialState: .inflight,
-            reduce: marketShowcaseReducer.reduce,
-            handleEffect: marketShowcaseEffectHandler.handleEffect)
+            makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: "Проверьте подключение к сети", icon: .wifiOff))) })
+        
+        let marketShowcaseComposerNanoServicesComposer: MarketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
+        let marketShowcaseComposer = MarketShowcaseComposer(
+            nanoServices: marketShowcaseComposerNanoServicesComposer.compose(),
+            scheduler: .main)
+        let marketShowcaseBinder = marketShowcaseComposer.compose()
+        
         
         let tabsViewModelFactory = TabsViewModelFactory(
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
-            marketShowcaseModel: marketShowcaseModel)
+            marketShowcaseModel: marketShowcaseBinder)
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
