@@ -13,14 +13,14 @@ struct TabsViewModel {
     let mainViewModel: MainViewModel
     let paymentsModel: RootViewModel.PaymentsModel
     let chatViewModel: ChatViewModel
-    let marketShowcaseModel: MarketShowcaseDomain.Binder
+    let marketShowcaseBinder: MarketShowcaseDomain.Binder
     
     func reset() {
         
         mainViewModel.reset()
         paymentsModel.reset()
         chatViewModel.reset()
-        marketShowcaseModel.reset()
+        marketShowcaseBinder.reset()
     }
 }
 
@@ -36,5 +36,5 @@ extension TabsViewModel {
         mainViewModel: .sample,
         paymentsModel: .legacy(.sample),
         chatViewModel: .init(),
-        marketShowcaseModel: .preview)
+        marketShowcaseBinder: .preview)
 }

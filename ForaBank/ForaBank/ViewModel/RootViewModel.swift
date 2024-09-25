@@ -431,7 +431,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private func bindTabBarMarketShowcase() {
         
-        tabsViewModel.marketShowcaseModel.flow.$state
+        tabsViewModel.marketShowcaseBinder.flow.$state
             .compactMap(\.outside)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] outside in

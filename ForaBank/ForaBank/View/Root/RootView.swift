@@ -31,7 +31,7 @@ struct RootView: View {
                     
                     mainViewTab(viewModel.tabsViewModel.mainViewModel)
                     paymentsViewTab(viewModel.tabsViewModel.paymentsModel)
-                    marketShowcaseViewTab(viewModel.tabsViewModel.marketShowcaseModel)
+                    marketShowcaseViewTab(viewModel.tabsViewModel.marketShowcaseBinder)
                     chatViewTab(viewModel.tabsViewModel.chatViewModel)
                 }
                 .accentColor(.black)
@@ -105,10 +105,10 @@ struct RootView: View {
     }
     
     private func marketShowcaseViewTab(
-        _ marketShowcaseViewModel: MarketShowcaseDomain.Binder
+        _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(viewModel.tabsViewModel.marketShowcaseModel).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }

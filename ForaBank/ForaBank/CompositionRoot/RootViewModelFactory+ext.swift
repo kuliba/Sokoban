@@ -897,7 +897,7 @@ private extension RootViewModelFactory {
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
-            marketShowcaseModel: marketShowcaseBinder)
+            marketShowcaseBinder: marketShowcaseBinder)
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
