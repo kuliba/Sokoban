@@ -58,7 +58,7 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
             makeFailure: { $0(.init()) },
             makeSuccess: { payload, completion in
                 
-                completion(self.makePickerBinder(with: payload, for: category))
+                completion(self.makePickerBinder(with: payload))
             }
         )
     }
@@ -69,11 +69,10 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makePickerBinder(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for category: ServiceCategory
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.Binder {
         
-        let content = makeContent(with: payload, for: category)
+        let content = makeContent(with: payload)
         let flow = makeFlow(with: payload)
         
         return .init(
@@ -89,11 +88,10 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makeContent(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for category: ServiceCategory
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.Content {
         
-        let providerList = makeProviderList(with: payload, for: category.type)
+        let providerList = makeProviderList(with: payload)
         let search = payload.category.hasSearch ? makeSearch() : nil
         let cancellable = search?.$state
             .map { $0.text ?? "" }
@@ -101,6 +99,7 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
             .sink { [weak providerList] in providerList?.event(.search($0)) }
         
         var cancellables = Set<AnyCancellable>()
+        
         if let cancellable {
             
             cancellables.insert(cancellable)
@@ -115,15 +114,14 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     }
     
     private func makeProviderList(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for categoryType: ServiceCategory.CategoryType
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.ProviderList {
         
         let reducer = PaymentProviderPicker.ProviderListReducer(
             observeLast: observeLast
         )
         let effectHandler = PaymentProviderPicker.ProviderListEffectHandler(
-            microServices: makeMicroServices(categoryType)
+            microServices: makeMicroServices(payload.category.type)
         )
         
         return .init(
