@@ -12,6 +12,7 @@ import PayHubUI
 import RxViewModel
 import SberQR
 import SwiftUI
+import MarketShowcase
 import UtilityServicePrepaymentUI
 
 struct RootView: View {
@@ -107,7 +108,7 @@ struct RootView: View {
         _ marketShowcaseViewModel: MarketShowcaseViewModel
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView("").map {
+        rootViewFactory.makeMarketShowcaseView(viewModel.tabsViewModelFactory.marketShowcaseModel).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -602,7 +603,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _ in MarketShowcaseView() }
+            makeMarketShowcaseView: { _ in .none }
         )
     }
 }

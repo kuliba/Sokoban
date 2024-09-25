@@ -230,7 +230,7 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview
                 )),
                 chatViewModel: .init(),
-                marketShowcaseModel: .init()
+                marketShowcaseModel: .preview
             ),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 
