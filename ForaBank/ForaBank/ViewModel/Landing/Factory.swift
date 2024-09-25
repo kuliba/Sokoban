@@ -223,6 +223,8 @@ private extension Model {
                     return LocalAgentDomain.AbroadOrderCard(landing: codableLanding)
                 case .sticker:
                     return LocalAgentDomain.AbroadSticker(landing: codableLanding)
+                case .marketShowcase:
+                    return LocalAgentDomain.MarketShowcase(landing: codableLanding)
                     
                 case let .control(cardType):
                     switch cardType {

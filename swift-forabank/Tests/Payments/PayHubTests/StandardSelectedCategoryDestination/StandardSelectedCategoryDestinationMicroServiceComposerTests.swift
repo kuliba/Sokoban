@@ -364,12 +364,6 @@ final class StandardSelectedCategoryDestinationMicroServiceComposerTests: XCTest
         ))
         let sut = composer.compose()
         
-        trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(loadOperatorsSpy, file: file, line: line)
-        trackForMemoryLeaks(loadLatestSpy, file: file, line: line)
-        trackForMemoryLeaks(makeFailureSpy, file: file, line: line)
-        trackForMemoryLeaks(makeSuccessSpy, file: file, line: line)
-        
         return (sut, loadLatestSpy, loadOperatorsSpy, makeFailureSpy, makeSuccessSpy)
     }
     

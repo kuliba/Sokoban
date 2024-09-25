@@ -501,6 +501,13 @@
         "identifier" : "OperatorsListBackendV0Tests",
         "name" : "OperatorsListBackendV0Tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MarketShowcaseTests",
+        "name" : "MarketShowcaseTests"
+      }
     }
   ],
   "version" : 1

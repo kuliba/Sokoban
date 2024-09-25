@@ -56,7 +56,7 @@ extension PaymentsTransfersFactory {
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
-    typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel
+    typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel
     
     typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel
     
@@ -82,14 +82,14 @@ extension PaymentsTransfersFactory {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.inactive),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         return .init(
             makeAlertViewModels: .default,
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
@@ -108,13 +108,13 @@ extension PaymentsTransfersFactory.MakeAlertViewModels {
         })
 }
 
-extension PaymentProviderPickerFlowModel {
+extension SegmentedPaymentProviderPickerFlowModel {
     
     static func preview(
         mix: MultiElementArray<SegmentedOperatorProvider>,
         qrCode: QRCode,
         qrMapping: QRMapping
-    ) -> PaymentProviderPickerFlowModel {
+    ) -> SegmentedPaymentProviderPickerFlowModel {
         
         return .init(
             initialState: .init(

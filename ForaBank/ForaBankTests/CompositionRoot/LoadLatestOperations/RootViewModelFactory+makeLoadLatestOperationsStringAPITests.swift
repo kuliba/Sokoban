@@ -203,7 +203,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
         name: String = anyMessage(),
         ord: Int = 1,
         paymentFlow: ServiceCategory.PaymentFlow = .standard,
-        search: Bool = false,
+        hasSearch: Bool = false,
         type: ServiceCategory.CategoryType = .housingAndCommunalService
     ) -> ServiceCategory {
         
@@ -213,7 +213,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
             name: name,
             ord: ord,
             paymentFlow: paymentFlow,
-            search: search,
+            hasSearch: hasSearch,
             type: type
         )
     }
