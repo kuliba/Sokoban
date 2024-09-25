@@ -14,7 +14,7 @@ typealias SelectedCategoryDestination = PayHub.PaymentFlow<MobileBinderStub, QRB
 final class MobileBinderStub {}
 final class QRBinderStub {}
 
-typealias StandardSelectedCategoryDestination = Result<SelectedCategoryStub, FailedPaymentProviderPickerStub>
+typealias StandardSelectedCategoryDestination = Result<PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
 
 final class FailedPaymentProviderPickerStub: Error {}
 

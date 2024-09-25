@@ -389,18 +389,8 @@ extension RootViewModelFactory {
             nanoServices: .init(
                 loadCategories: loadServiceCategories,
                 loadAllLatest: loadAllLatestOperations,
-                loadLatestForCategory: { getLatestPayments([$0.name], $1) },
-                loadOperatorsForCategory: { category, completion in
-                    
-                    // TODO: replace with paginated or just first page
-                    let operators = model.localAgent
-                        .load(type: [CodableServicePaymentOperator].self)?
-                        .filter { $0.type == category.type.name }
-                        .sorted(by: \.name)
-                        .map(PaymentServiceOperator.init(codable:))
-                    
-                    completion(.success(operators ?? [])) }
-            ),
+                loadLatestForCategory: { getLatestPayments([$0.name], $1) }
+            ), 
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
