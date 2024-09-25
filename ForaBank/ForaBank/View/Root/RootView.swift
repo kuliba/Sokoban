@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import InfoComponent
+import FooterComponent
 import PaymentSticker
 import PayHubUI
 import RxViewModel
@@ -308,7 +309,10 @@ private extension RootView {
                     event: event,
                     contentView: {
                         
-                        paymentProviderPickerContentView(binder.content)
+                        paymentProviderPickerContentView(
+                            content: binder.content,
+                            handleFooterEvent: binder.flow.handleFooterEvent(_:)
+                        )
                     },
                     destinationView: { destination in
                         
@@ -318,9 +322,10 @@ private extension RootView {
             }
         )
     }
-
+    
     func paymentProviderPickerContentView(
-        _ content: PaymentProviderPicker.Content
+        content: PaymentProviderPicker.Content,
+        handleFooterEvent: @escaping (FooterEvent) -> Void
     ) -> some View {
         
         PaymentProviderPickerContentView(
@@ -337,7 +342,14 @@ private extension RootView {
                                 state: state,
                                 event: event,
                                 factory: .init(
-                                    makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
+                                    makeFooterView: {
+                                        
+                                        FooterView(
+                                            state: $0 ? .failure(.iFora) : .footer(.iFora),
+                                            event: handleFooterEvent,
+                                            config: .iFora
+                                        )
+                                    },
                                     makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
                                     makeOperatorView: { Text($0.name) },
                                     makeSearchView: {
@@ -353,7 +365,7 @@ private extension RootView {
             )
         )
     }
-    
+
     @ViewBuilder
     func paymentProviderPickerSearchView(
         _ search: RegularFieldViewModel?
@@ -486,6 +498,21 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+extension PaymentProviderPicker.Flow {
+    
+    func handleFooterEvent(
+        _ event: FooterEvent
+    ) {
+        switch event {
+        case .addCompany:
+            self.event(.select(.chat))
+            
+        case .payByInstruction:
+            self.event(.select(.detailPayment))
+        }
     }
 }
 
