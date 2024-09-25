@@ -31,6 +31,7 @@ extension MarketShowcaseDomain{
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
     
     typealias Landing = LandingMapping.Landing
+    
     // MARK: - Flow
     
     typealias FlowState = MarketShowcaseFlowState< Destination, InformerPayload>

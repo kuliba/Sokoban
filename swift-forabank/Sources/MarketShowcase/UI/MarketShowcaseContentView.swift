@@ -1,17 +1,17 @@
 //
-//  MarketShowcaseView.swift
+//  MarketShowcaseContentView.swift
 //  ForaBank
 //
-//  Created by Andryusina Nataly on 24.09.2024.
+//  Created by Andryusina Nataly on 25.09.2024.
 //
 
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseView<RefreshView, Landing>: View
+public struct MarketShowcaseContentView<RefreshView, Landing>: View
 where RefreshView: View
 {
-    
+
     let state: State
     let event: (Event<Landing>) -> Void
     let config: Config
@@ -35,10 +35,6 @@ where RefreshView: View
             .refresh(action: {
                 event(.load)
             })
-            /*.alert(
-                item: state.alert,
-                content: errorAlert(event: event)
-            )*/
     }
     
     @ViewBuilder
@@ -66,30 +62,9 @@ where RefreshView: View
             .padding()
         }
     }
-    
-    func errorAlert(
-        event: @escaping (Event<Landing>) -> Void
-    ) -> (FailureAlert) -> Alert {
-        
-        return { alert in
-
-            return .init(
-                with: .init(
-                    title: "Ошибка!",
-                    message: alert.message,
-                    primaryButton: .init(
-                        type: .default,
-                        title: "OK",
-                        event: .load
-                    )
-                ),
-                event: event
-            )
-        }
-    }
 }
 
-public extension MarketShowcaseView {
+public extension MarketShowcaseContentView {
     
     typealias State = MarketShowcaseContentState<Landing>
     typealias Event = MarketShowcaseContentEvent
@@ -98,12 +73,12 @@ public extension MarketShowcaseView {
 }
 
 #Preview {
-    MarketShowcaseView.preview
+    MarketShowcaseContentView.preview
 }
 
-extension MarketShowcaseView where RefreshView == Text, Landing == String {
+extension MarketShowcaseContentView where RefreshView == Text, Landing == String {
     
-    static let preview = MarketShowcaseView(
+    static let preview = MarketShowcaseContentView(
         state: .init(status: .inflight),
         event: {_ in },
         config: .iFora, 

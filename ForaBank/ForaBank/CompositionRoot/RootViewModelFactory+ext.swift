@@ -886,18 +886,14 @@ private extension RootViewModelFactory {
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
-        
-         let marketShowcaseEffectHandler = MarketShowcaseEffectHandler(
-            makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: "Проверьте подключение к сети", icon: .wifiOff))) })
-        
-        let marketShowcaseComposerNanoServicesComposer: MarketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
+                
+        let marketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
         let marketShowcaseComposer = MarketShowcaseComposer(
             nanoServices: marketShowcaseComposerNanoServicesComposer.compose(),
             scheduler: .main)
         let marketShowcaseBinder = marketShowcaseComposer.compose()
         
-        
-        let tabsViewModelFactory = TabsViewModelFactory(
+        let tabsViewModel = TabsViewModel(
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
@@ -907,7 +903,7 @@ private extension RootViewModelFactory {
             fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
-            tabsViewModelFactory: tabsViewModelFactory,
+            tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
             showLoginAction: showLoginAction

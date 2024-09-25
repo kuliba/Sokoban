@@ -5,7 +5,9 @@
 //  Created by Andryusina Nataly on 25.09.2024.
 //
 
-public struct MarketShowcaseFlowState< Destination, InformerPayload> {
+import Foundation
+
+public struct MarketShowcaseFlowState<Destination, InformerPayload> {
     
     public var isLoading: Bool
     public var status: Status?
@@ -23,7 +25,7 @@ public extension MarketShowcaseFlowState {
     
     enum Status {
         
-        case alert(String)
+        case alert(BackendFailure)
         case destination(Destination)
         case informer(InformerPayload)
         case outside(Outside)
@@ -32,6 +34,18 @@ public extension MarketShowcaseFlowState {
             case main
             case openURL(String)
         }
+    }
+}
+
+public struct BackendFailure: Equatable, Identifiable {
+    
+    public let id: UUID
+
+    let message: String
+    
+    public init(id: UUID = UUID(), message: String) {
+        self.id = id
+        self.message = message
     }
 }
 

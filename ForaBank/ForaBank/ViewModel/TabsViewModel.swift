@@ -1,5 +1,5 @@
 //
-//  TabsViewModelFactory.swift
+//  TabsViewModel.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 23.09.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import MarketShowcase
 
-struct TabsViewModelFactory {
+struct TabsViewModel {
     
     let mainViewModel: MainViewModel
     let paymentsModel: RootViewModel.PaymentsModel
@@ -30,7 +30,7 @@ extension MarketShowcaseDomain.Binder {
         content.event(.resetSelection)
     }
 }
-extension TabsViewModelFactory {
+extension TabsViewModel {
     
     static let preview: Self = .init(
         mainViewModel: .sample,

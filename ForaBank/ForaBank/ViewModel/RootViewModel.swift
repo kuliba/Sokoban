@@ -22,7 +22,7 @@ class RootViewModel: ObservableObject, Resetable {
     @Published var alert: Alert.ViewModel?
     @Published private(set) var link: Link?
     
-    let tabsViewModelFactory: TabsViewModelFactory
+    let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
@@ -41,7 +41,7 @@ class RootViewModel: ObservableObject, Resetable {
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
-        tabsViewModelFactory: TabsViewModelFactory,
+        tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
@@ -51,25 +51,26 @@ class RootViewModel: ObservableObject, Resetable {
         self.navigationStateManager = navigationStateManager
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
-        self.tabsViewModelFactory = tabsViewModelFactory
+        self.tabsViewModel = tabsViewModel
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
         
-        tabsViewModelFactory.mainViewModel.rootActions = rootActions
-        if case let .legacy(paymentsViewModel) = tabsViewModelFactory.paymentsModel {
+        tabsViewModel.mainViewModel.rootActions = rootActions
+        if case let .legacy(paymentsViewModel) = tabsViewModel.paymentsModel {
             paymentsViewModel.rootActions = rootActions
         }
         
         bind()
         bindAuth()
         bindTabBar()
+        bindTabBarMarketShowcase()
     }
     
     func reset() {
         
-        tabsViewModelFactory.reset()
+        tabsViewModel.reset()
     }
     
     func resetLink() {
@@ -145,7 +146,7 @@ class RootViewModel: ObservableObject, Resetable {
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
                         else { return }
                         
-                        self.tabsViewModelFactory.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
                     }
                 }
             }
@@ -414,10 +415,10 @@ class RootViewModel: ObservableObject, Resetable {
     
     private func bindTabBar() {
         
-        let mainViewModelHasDestination = tabsViewModelFactory.mainViewModel.$route
+        let mainViewModelHasDestination = tabsViewModel.mainViewModel.$route
             .map { $0.destination != nil }
         
-        let paymentsViewModelHasDestination = tabsViewModelFactory.paymentsModel.hasDestination
+        let paymentsViewModelHasDestination = tabsViewModel.paymentsModel.hasDestination
         
         mainViewModelHasDestination
             .combineLatest(paymentsViewModelHasDestination)
@@ -428,9 +429,9 @@ class RootViewModel: ObservableObject, Resetable {
             .assign(to: &$isTabBarHidden)
     }
     
-    /*private func bindTabBarMarketShowcase() {
+    private func bindTabBarMarketShowcase() {
         
-        tabsViewModelFactory.marketShowcaseModel.$state
+        tabsViewModel.marketShowcaseModel.flow.$state
             .compactMap(\.outside)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] outside in
@@ -438,10 +439,15 @@ class RootViewModel: ObservableObject, Resetable {
                 switch outside {
                 case .main:
                     self?.rootActions.switchTab(.main)
+                case let .openURL(linkURL):
+                    guard let url = URL(string: linkURL) else {
+                        return
+                    }
+                    MainViewModel.openLinkURL(url)
                 }
             }
             .store(in: &bindings)
-    }*/
+    }
 }
 
 private extension MarketShowcaseFlowState {

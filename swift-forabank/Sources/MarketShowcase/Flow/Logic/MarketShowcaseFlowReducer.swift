@@ -29,7 +29,7 @@ public extension MarketShowcaseFlowReducer {
             case let .timeout(informerPayload):
                 state.status = .informer(informerPayload)
             case let .error(message):
-                state.status = .alert(message)
+                state.status = .alert(.init(message: message))
             }
         case .reset:
             state.status = nil

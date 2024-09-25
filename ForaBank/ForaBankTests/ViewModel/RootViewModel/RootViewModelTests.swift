@@ -209,7 +209,7 @@ final class RootViewModelTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             navigationStateManager: .preview, 
             productNavigationStateManager: .preview,
-            tabsViewModelFactory: .init(
+            tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
                     makeProductProfileViewModel: { _,_,_ in nil },
