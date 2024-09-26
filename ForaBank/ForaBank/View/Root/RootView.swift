@@ -30,10 +30,10 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab(viewModel.tabsViewModelFactory.mainViewModel)
-                    paymentsViewTab(viewModel.tabsViewModelFactory.paymentsModel)
-                    marketShowcaseViewTab(viewModel.tabsViewModelFactory.marketShowcaseModel)
-                    chatViewTab(viewModel.tabsViewModelFactory.chatViewModel)
+                    mainViewTab(viewModel.tabsViewModel.mainViewModel)
+                    paymentsViewTab(viewModel.tabsViewModel.paymentsModel)
+                    marketShowcaseViewTab(viewModel.tabsViewModel.marketShowcaseBinder)
+                    chatViewTab(viewModel.tabsViewModel.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -106,10 +106,10 @@ struct RootView: View {
     }
     
     private func marketShowcaseViewTab(
-        _ marketShowcaseViewModel: MarketShowcaseViewModel
+        _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(viewModel.tabsViewModelFactory.marketShowcaseModel).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -715,7 +715,7 @@ struct RootView_Previews: PreviewProvider {
                 fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
-                tabsViewModelFactory: .preview,
+                tabsViewModel: .preview,
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
