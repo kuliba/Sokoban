@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension RequestFactory {
     
-    static func createGetAuthorizedZoneService(
+    static func createGetAuthorizedZoneClientInformData(
         url: URL
     ) throws -> URLRequest {
         
