@@ -42,18 +42,24 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
         return .init(
             makeMobile: {
                 
-                $0(.init(
+                $0(.success(.init(
                     model: self.model,
                     service: .mobileConnection,
                     scheduler: self.scheduler
-                ))
+                )))
             },
-            makeQR: { $0(QRBinderStub()) },
-            makeStandard: { standardMicroService.makeDestination(category, $0) },
-            makeTax: { $0(TaxBinderStub()) },
-            makeTransport: { $0(TransportBinderStub()) }
+            makeQR: { $0(.success(.init())) },
+            makeStandard: { completion in
+                
+                standardMicroService.makeDestination(category) {
+                    
+                    completion(.success($0))
+                }
+            },
+            makeTax: { $0(.success(.init())) },
+            makeTransport: { $0(.success(.init())) }
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub, SelectedCategoryFailure>
 }

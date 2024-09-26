@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList> {
+public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList, Failure: Error> {
     
     public let showAll: ShowAll
     public let showCategory: ShowCategory
@@ -22,5 +22,7 @@ public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Category, Sele
 public extension CategoryPickerSectionFlowEffectHandlerMicroServices {
     
     typealias ShowAll = ([Category], @escaping (CategoryList) -> Void) -> Void
-    typealias ShowCategory = (Category, @escaping (SelectedCategory) -> Void) -> Void
+
+    typealias ShowCategoryCompletion = (Result<SelectedCategory, Failure>) -> Void
+    typealias ShowCategory = (Category, @escaping ShowCategoryCompletion) -> Void
 }

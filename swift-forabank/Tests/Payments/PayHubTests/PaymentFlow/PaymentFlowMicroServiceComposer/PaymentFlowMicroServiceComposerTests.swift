@@ -32,7 +32,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectFlow(sut, with: .mobile, hasID: .mobile) {
             
-            mobileSpy.complete(with: self.makeMobile())
+            mobileSpy.complete(with: .success(self.makeMobile()))
         }
     }
     
@@ -42,7 +42,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectFlow(sut, with: .qr, hasID: .qr) {
             
-            makeQR.complete(with: self.makeQR())
+            makeQR.complete(with: .success(self.makeQR()))
         }
     }
     
@@ -52,7 +52,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectFlow(sut, with: .standard, hasID: .standard) {
             
-            standardSpy.complete(with: self.makeStandard())
+            standardSpy.complete(with: .success(self.makeStandard()))
         }
     }
     
@@ -62,7 +62,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectFlow(sut, with: .taxAndStateServices, hasID: .taxAndStateServices) {
             
-            makeTax.complete(with: self.makeTax())
+            makeTax.complete(with: .success(self.makeTax()))
         }
     }
     
@@ -72,7 +72,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectFlow(sut, with: .transport, hasID: .transport) {
             
-            makeTransport.complete(with: self.makeTransport())
+            makeTransport.complete(with: .success(self.makeTransport()))
         }
     }
     
@@ -84,7 +84,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectMobile(sut, with: .mobile, is: Mobile.self) {
             
-            mobileSpy.complete(with: self.makeMobile())
+            mobileSpy.complete(with: .success(self.makeMobile()))
         }
     }
     
@@ -94,7 +94,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectQR(sut, with: .qr, is: QR.self) {
             
-            qrSpy.complete(with: self.makeQR())
+            qrSpy.complete(with: .success(self.makeQR()))
         }
     }
     
@@ -104,7 +104,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectStandard(sut, with: .standard, is: Standard.self) {
             
-            standardSpy.complete(with: self.makeStandard())
+            standardSpy.complete(with: .success(self.makeStandard()))
         }
     }
     
@@ -114,7 +114,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectTax(sut, with: .taxAndStateServices, is: Tax.self) {
             
-            makeTax.complete(with: self.makeTax())
+            makeTax.complete(with: .success(self.makeTax()))
         }
     }
     
@@ -124,20 +124,20 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         expectTransport(sut, with: .transport, is: Transport.self) {
             
-            makeTransport.complete(with: self.makeTransport())
+            makeTransport.complete(with: .success(self.makeTransport()))
         }
     }
     
     // MARK: - Helpers
     
-    private typealias Composer = PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Transport>
-    private typealias SUT = PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport>
+    private typealias Composer = PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Transport, Failure>
+    private typealias SUT = PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport, Failure>
     private typealias Flow = SUT.Flow
-    private typealias MakeMobileSpy = Spy<Void, Mobile>
-    private typealias MakeQRSpy = Spy<Void, QR>
-    private typealias MakeStandardSpy = Spy<Void, Standard>
-    private typealias MakeTaxSpy = Spy<Void, Tax>
-    private typealias MakeTransportSpy = Spy<Void, Transport>
+    private typealias MakeMobileSpy = Spy<Void, Result<Mobile, Failure>>
+    private typealias MakeQRSpy = Spy<Void, Result<QR, Failure>>
+    private typealias MakeStandardSpy = Spy<Void, Result<Standard, Failure>>
+    private typealias MakeTaxSpy = Spy<Void, Result<Tax, Failure>>
+    private typealias MakeTransportSpy = Spy<Void, Result<Transport, Failure>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -188,7 +188,7 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
         
         sut.makePaymentFlow(id) {
             
-            flow = $0
+            flow = try? $0.get()
             exp.fulfill()
         }
         
@@ -356,6 +356,18 @@ final class PaymentFlowMicroServiceComposerTests: XCTestCase {
     private func makeTransport(
         _ value: String = anyMessage()
     ) -> Transport {
+        
+        return .init(value: value)
+    }
+    
+    private struct Failure: Error, Equatable {
+        
+        let value: String
+    }
+    
+    private func makeFailure(
+        _ value: String = anyMessage()
+    ) -> Failure {
         
         return .init(value: value)
     }

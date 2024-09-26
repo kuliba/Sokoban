@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public struct PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
+public struct PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport, Failure: Error> {
     
     public let makePaymentFlow: MakePaymentFlow
     
@@ -19,5 +19,5 @@ public struct PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport> {
 public extension PaymentFlowMicroService {
     
     typealias Flow = PaymentFlow<Mobile, QR, Standard, Tax, Transport>
-    typealias MakePaymentFlow = (PaymentFlowID, @escaping (Flow) -> Void) -> Void
+    typealias MakePaymentFlow = (PaymentFlowID, @escaping (Result<Flow, Failure>) -> Void) -> Void
 }

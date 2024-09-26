@@ -7,8 +7,6 @@
 
 import PayHubUI
 
-typealias CategoryPickerSectionBinder = PayHubUI.CategoryPickerSectionBinder<ServiceCategory, SelectedCategoryDestination, CategoryListModelStub>
-
 final class CategoryListModelStub {
     
     let categories: [ServiceCategory]

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport> {
+public struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport, Failure: Error> {
     
     public let makeMobile: MakeMobile
     public let makeQR: MakeQR
@@ -30,7 +30,7 @@ public struct PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, 
 
 public extension PaymentFlowMicroServiceComposerNanoServices {
     
-    typealias Make<T> = (@escaping (T) -> Void) -> Void
+    typealias Make<T> = (@escaping (Result<T, Failure>) -> Void) -> Void
     
     typealias MakeMobile = Make<Mobile>
     typealias MakeQR = Make<QR>

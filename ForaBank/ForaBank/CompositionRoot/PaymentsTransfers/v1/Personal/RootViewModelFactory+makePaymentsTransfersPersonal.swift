@@ -52,7 +52,7 @@ extension RootViewModelFactory {
             model: model,
             scheduler: mainScheduler
         )
-        let categoryPickerComposer = CategoryPickerSectionBinderComposer(
+        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
                 showAll: { $1(CategoryListModelStub(categories: $0)) },
@@ -149,7 +149,7 @@ extension RootViewModelFactory {
         composer: StandardSelectedCategoryDestinationNanoServicesComposer,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (
-        ServiceCategory, @escaping (SelectedCategoryDestination) -> Void
+        ServiceCategory, @escaping (Result<SelectedCategoryDestination, SelectedCategoryFailure>) -> Void
     ) -> Void {
         
         return { category, completion in
