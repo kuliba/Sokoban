@@ -36,11 +36,19 @@ extension Landing {
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
+        case carousel(Carousel)
         case list(List)
         case multi(Multi)
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+    }
+}
+
+public extension Landing.DataView {
+    
+    enum Carousel: Equatable {
+        case base(CarouselBase)
     }
 }
 

@@ -30,6 +30,7 @@ struct InformerData {
         case check
         case close
         case copy
+        case wifiOff
 
         var image: Image {
             
@@ -38,6 +39,7 @@ struct InformerData {
             case .check: return .ic16Check
             case .close: return .ic16Close
             case .copy: return .ic24Copy
+            case .wifiOff: return .ic24WifiOff
             }
         }
     }

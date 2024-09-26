@@ -16,6 +16,7 @@ extension UILanding {
         case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
         case image(UILanding.ImageBlock)
         case imageSvg(UILanding.ImageSvg)
+        case carousel(Carousel)
         case list(List)
         case multi(Multi)
         case pageTitle(UILanding.PageTitle)
@@ -47,6 +48,8 @@ extension UILanding {
                 return verticalSpacing.id.uuidString
             case let .blockHorizontalRectangular(value):
                 return value.id.uuidString
+            case let .carousel(value):
+                return value.id.uuidString
             }
         }
         
@@ -63,6 +66,21 @@ extension UILanding {
                 
             default:
                 return nil
+            }
+        }
+    }
+}
+
+extension UILanding.Component {
+    
+    public enum Carousel: Equatable {
+        
+        case base(UILanding.Carousel.CarouselBase)
+        
+        public var id: UUID {
+            switch self {
+            case let .base(value):
+                return value.id
             }
         }
     }
@@ -167,6 +185,9 @@ extension UILanding.Component {
         case let .verticalSpacing(data):
             return data.imageRequests()
         case .blockHorizontalRectangular:
+            return []
+            
+        case let .carousel(data):
             return []
         }
     }
