@@ -1,15 +1,15 @@
 {
   "configurations" : [
     {
-      "id" : "6D4BFA75-9F2D-43A2-BA5C-7C810EAD9AC7",
-      "name" : "Configuration 1",
+      "id" : "3344A134-911D-4C63-AE7C-D8E1AB12B055",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-    "testTimeoutsEnabled" : true
+
   },
   "testTargets" : [
     {

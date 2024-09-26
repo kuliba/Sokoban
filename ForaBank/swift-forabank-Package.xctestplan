@@ -508,6 +508,13 @@
         "identifier" : "MarketShowcaseTests",
         "name" : "MarketShowcaseTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetAuthorizedZoneServiceTests",
+        "name" : "GetAuthorizedZoneServiceTests"
+      }
     }
   ],
   "version" : 1

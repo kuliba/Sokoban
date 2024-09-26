@@ -6526,7 +6526,7 @@
 		D4BD607F2B97511000909F43 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		D4BD60912B97DF5500909F43 /* NewProductButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductButton.swift; sourceTree = "<group>"; };
 		D4BD60972B98A24E00909F43 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
-		EC22ADF82CA54EA0008BA686 /* GetAuthorizedZoneServiceTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetAuthorizedZoneServiceTests.xctestplan; sourceTree = "<group>"; };
+		EC0B0CE52CA58D49003A3E6F /* GetAuthorizedZoneService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetAuthorizedZoneService.xctestplan; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -10005,7 +10005,7 @@
 				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
 				D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */,
 				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
-				EC22ADF82CA54EA0008BA686 /* GetAuthorizedZoneServiceTests.xctestplan */,
+				EC0B0CE52CA58D49003A3E6F /* GetAuthorizedZoneService.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
