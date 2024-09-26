@@ -578,7 +578,7 @@ private extension UILanding.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: data.size,
+            size: .init(width: data.size.width, height: data.size.height),
             scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })

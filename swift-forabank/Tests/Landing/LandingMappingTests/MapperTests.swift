@@ -510,7 +510,7 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing.main.carouselBase, [
             .init(
                 title: "Название раздела",
-                size: "182х240",
+                size: .init(width: 182, height: 240),
                 scale: "medium",
                 loopedScrolling: true,
                 list: [

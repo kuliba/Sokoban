@@ -631,7 +631,7 @@ private extension Landing.DataView.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: data.size,
+            size: .init(size: data.size),
             scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
