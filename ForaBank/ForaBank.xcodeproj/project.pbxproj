@@ -3118,6 +3118,7 @@
 		D4BD60922B97DF5500909F43 /* NewProductButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60912B97DF5500909F43 /* NewProductButton.swift */; };
 		D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60972B98A24E00909F43 /* StickerView.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
+		ECC7B3D42CA55C45001C75AB /* GetAuthorizedZoneService in Frameworks */ = {isa = PBXBuildFile; productRef = ECC7B3D32CA55C45001C75AB /* GetAuthorizedZoneService */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
 		ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */; };
@@ -6525,6 +6526,7 @@
 		D4BD607F2B97511000909F43 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		D4BD60912B97DF5500909F43 /* NewProductButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductButton.swift; sourceTree = "<group>"; };
 		D4BD60972B98A24E00909F43 /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
+		EC22ADF82CA54EA0008BA686 /* GetAuthorizedZoneServiceTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetAuthorizedZoneServiceTests.xctestplan; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -7083,6 +7085,7 @@
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
 				8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
+				ECC7B3D42CA55C45001C75AB /* GetAuthorizedZoneService in Frameworks */,
 				83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
@@ -10002,6 +10005,7 @@
 				2AF5AC302B6661E500845E7A /* UserAccountNavigationComponent.xctestplan */,
 				D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */,
 				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
+				EC22ADF82CA54EA0008BA686 /* GetAuthorizedZoneServiceTests.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
@@ -18680,6 +18684,7 @@
 				838C095F2C8DD9E700E894AC /* Banners */,
 				2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */,
 				83F775CA2CA2CE0700A05F69 /* MarketShowcase */,
+				ECC7B3D32CA55C45001C75AB /* GetAuthorizedZoneService */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -27793,6 +27798,10 @@
 		D4BD608F2B97512400909F43 /* PinCodeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PinCodeUI;
+		};
+		ECC7B3D32CA55C45001C75AB /* GetAuthorizedZoneService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GetAuthorizedZoneService;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;

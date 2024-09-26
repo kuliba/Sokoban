@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6D4BFA75-9F2D-43A2-BA5C-7C810EAD9AC7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetAuthorizedZoneServiceTests",
+        "name" : "GetAuthorizedZoneServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}
