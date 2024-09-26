@@ -154,12 +154,12 @@ public enum GetInfoRepeatPaymentMapper {
             public let smallDesign: String?
             public let paymentSystemImage: String?
             
-            public enum ProductType: Decodable {
+            public enum ProductType: String, Decodable {
                 
-                case account
-                case card
-                case loan
-                case deposit
+                case account = "ACCOUNT"
+                case card = "CARD"
+                case deposit = "DEPOSIT"
+                case loan = "LOAN"
             }
         }
     }

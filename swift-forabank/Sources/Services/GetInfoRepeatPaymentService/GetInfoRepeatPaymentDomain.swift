@@ -291,15 +291,15 @@ extension GetInfoRepeatPaymentDomain {
         
         public struct ProductTemplate: Equatable {
             
-            let id: Int?
-            let numberMask: String?
-            let customName: String?
-            let currency: String?
-            let type: ProductType?
-            let smallDesign: String?
-            let paymentSystemImage: String?
+            public let id: Int?
+            public let numberMask: String?
+            public let customName: String?
+            public let currency: String?
+            public let type: ProductType?
+            public let smallDesign: String?
+            public let paymentSystemImage: String?
             
-            enum ProductType: Equatable {
+            public enum ProductType: Equatable {
                 
                 case account
                 case card

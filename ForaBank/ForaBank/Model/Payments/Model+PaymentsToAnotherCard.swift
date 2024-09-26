@@ -9,64 +9,30 @@ import Foundation
 
 extension Model {
     
-    func paymentsLocalStepToAnotherCard(_ operation: Payments.Operation,
-                         for stepIndex: Int) async throws -> Payments.Operation.Step {
+    func paymentsLocalStepToAnotherCard(
+        _ operation: Payments.Operation,
+        for stepIndex: Int
+    ) async throws -> Payments.Operation.Step {
         
         let group = Payments.Parameter.Group(id: "ToAnotherCardProductTemplateCroup", type: .regular)
         
         switch stepIndex {
         case 0:
+                       
+            let headerParameter = createHeaderParameter(source: operation.source)
+            let (from, to, amount) = extractOperationDetails(from: operation.source)
+            let (productParameter, product) = try await createProductParameter(operation.source, from, group)
+            let productTemplateParameter = createProductTemplateParameter(to: to, group: group)
+            let amountParameter = createAmountParameter(amount: amount, product: product)
             
-            // Header
-            let headerParameter: Payments.ParameterHeader = parameterHeader(
-                source: operation.source,
-                header: .init(title: "На другую карту")
+            return createOperationStep(
+                parameters: [headerParameter, productParameter, productTemplateParameter, amountParameter], 
+                headerParameterId: headerParameter.id,
+                productParameterId: Payments.Parameter.Identifier.product.rawValue,
+                productTemplateParameterId: Payments.Parameter.Identifier.productTemplate.rawValue,
+                amountParameterId: Payments.Parameter.Identifier.amount.rawValue
             )
-
-            //Product Parameter
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            let filter = ProductData.Filter.generalFrom
-            
-            guard let product = firstProduct(with: filter),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency)
-            else { throw Payments.Error.unableCreateRepresentable(productParameterId) }
-            
-            let productId = productWithSource(source: operation.source, productId: String(product.id))
-            let productParameter = Payments.ParameterProduct
-                .init(value: productId,
-                      title: "Откуда",
-                      filter: filter,
-                      isEditable: true,
-                      group: group)
-            
-            //ProductTemplateParameter
-            let productTemplateParameterId = Payments.Parameter.Identifier.productTemplate.rawValue
-            let validatorValue: Payments.Validation.RulesSystem =
-                .init(rules: [Payments.Validation.LengthLimitsRule(lengthLimits: [16],
-                                                                   actions: [.post: .warning("Должен состоять из 16 цифр")])])
-            let productTemplateParameter = Payments.ParameterProductTemplate
-                .init(value: nil, validator: validatorValue, group: group, isEditable: true)
-            
-            //Amount Parameter
-            let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount
-                .init(value: nil,
-                      title: "",
-                      currencySymbol: currencySymbol,
-                      transferButtonTitle: "Продолжить",
-                      validator: .init(minAmount: 0.01, maxAmount: product.balance),
-                      info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
-            
-            return .init(parameters: [headerParameter, productParameter, productTemplateParameter, amountParameter],
-                         front: .init(visible: [headerParameter.id,
-                                                productParameterId,
-                                                productTemplateParameterId,
-                                                amountParameterId],
-                                      isCompleted: false),
-                         back: .init(stage: .local,
-                                     required: [productParameterId, productTemplateParameterId],
-                                     processed: nil))
-       
+                   
         case 1:
             
             guard let token = token else { throw Payments.Error.notAuthorized }
@@ -131,7 +97,107 @@ extension Model {
         }
     }
     
-//MARK: process remote confirm step
+    // MARK: - CASE 0
+    
+    private func extractOperationDetails(from source: Payments.Operation.Source?) -> (from: String?, to: String?, amount: String?) {
+        
+        if case let .toAnotherCard(from, to, amount) = source {
+            return (String(from), String(to), amount)
+        }
+        
+        return (nil, nil, nil)
+    }
+    
+    private func createHeaderParameter(source: Payments.Operation.Source?) -> Payments.ParameterHeader {
+        
+        parameterHeader(source: source, header: .init(title: "На другую карту"))
+    }
+    
+    private func createProductParameter(
+        _ source: Payments.Operation.Source?,
+        _ from: String?,
+        _ group: Payments.Parameter.Group
+    ) async throws -> (Payments.ParameterProduct, ProductData) {
+        
+        let filter = ProductData.Filter.generalFrom
+        
+        guard let product = firstProduct(with: filter),
+              let currencySymbol = dictionaryCurrencySymbol(for: product.currency)
+        else { throw Payments.Error.unableCreateRepresentable(Payments.Parameter.Identifier.product.rawValue) }
+        
+        let productId: String?
+        if let from = from {
+            productId = productWithSource(source: source, productId: from)
+        } else {
+            productId = productWithSource(source: source, productId: String(product.id))
+        }
+        
+        let productParameter = Payments.ParameterProduct(
+            value: productId,
+            title: "Откуда",
+            filter: filter,
+            isEditable: true,
+            group: group
+        )
+        
+        return (productParameter, product)
+    }
+    
+    private func createProductTemplateParameter(to: String?, group: Payments.Parameter.Group) -> Payments.ParameterProductTemplate {
+
+        let validatorValue: Payments.Validation.RulesSystem = .init(
+            rules: [
+                Payments.Validation.LengthLimitsRule(
+                    lengthLimits: [16],
+                    actions: [.post: .warning("Должен состоять из 16 цифр")])
+            ]
+        )
+        
+        return Payments.ParameterProductTemplate(
+            value: to.map { .templateId($0) },
+            validator: validatorValue,
+            group: group,
+            isEditable: true
+        )
+    }
+    
+    private func createAmountParameter(amount: String?, product: ProductData) -> Payments.ParameterAmount {
+      
+        return Payments.ParameterAmount(
+            value: amount,
+            title: "",
+            currencySymbol: dictionaryCurrencySymbol(for: product.currency) ?? "",
+            transferButtonTitle: "Продолжить",
+            validator: .init(minAmount: 0.01, maxAmount: product.balance),
+            info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo)
+        )
+    }
+    
+    private func createOperationStep(
+        parameters: [any PaymentsParameterRepresentable],
+        headerParameterId: String,
+        productParameterId: String,
+        productTemplateParameterId: String,
+        amountParameterId: String
+    ) -> Payments.Operation.Step {
+        
+        .init(
+            parameters: parameters,
+            front: .init(
+                visible: [headerParameterId,
+                          productParameterId,
+                          productTemplateParameterId,
+                          amountParameterId],
+                isCompleted: false
+            ),
+            back: .init(stage: .local,
+                        required: [productParameterId, productTemplateParameterId],
+                        processed: nil)
+        )
+    }
+    
+    //MARK: process remote confirm step
+    
     func paymentsProcessRemoteStepToAnotherCard(
         operation: Payments.Operation,
         response: TransferResponseData
@@ -178,7 +244,8 @@ extension Model {
         return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
     }
     
-//MARK: update depependend parameters
+    //MARK: update depependend parameters
+    
     func paymentsProcessDependencyReducerToAnotherCard(parameterId: Payments.Parameter.ID,
                                                        parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
         
@@ -241,7 +308,7 @@ extension Model {
         return nil
     }
     
-//MARK: - resets visible items and order
+    //MARK: - resets visible items and order
     
     func paymentsProcessOperationResetVisibleToAnotherCard(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
