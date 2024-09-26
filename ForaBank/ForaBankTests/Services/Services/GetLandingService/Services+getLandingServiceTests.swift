@@ -189,6 +189,20 @@ final class Services_getLandingServiceTests: XCTestCase {
         )
     }
 
+    func test_perform_marketShowcase_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .marketShowcase
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=market_showcase"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
     // MARK: - Helpers
     private func makeSUT(
         file: StaticString = #file,

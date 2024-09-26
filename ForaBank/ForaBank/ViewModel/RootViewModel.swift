@@ -9,11 +9,12 @@ import Combine
 import Foundation
 import PayHub
 import SwiftUI
+import MarketShowcase
 
 class RootViewModel: ObservableObject, Resetable {
     
     typealias ShowLoginAction = (RootViewModel.RootActions) -> RootViewModelAction.Cover.ShowLogin
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published private(set) var isTabBarHidden = false
@@ -21,9 +22,7 @@ class RootViewModel: ObservableObject, Resetable {
     @Published var alert: Alert.ViewModel?
     @Published private(set) var link: Link?
     
-    let mainViewModel: MainViewModel
-    let paymentsModel: PaymentsModel
-    let chatViewModel: ChatViewModel
+    let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
@@ -31,7 +30,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
-
+    
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -42,9 +41,7 @@ class RootViewModel: ObservableObject, Resetable {
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
-        mainViewModel: MainViewModel,
-        paymentsModel: PaymentsModel,
-        chatViewModel: ChatViewModel,
+        tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
@@ -54,29 +51,26 @@ class RootViewModel: ObservableObject, Resetable {
         self.navigationStateManager = navigationStateManager
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
-        self.mainViewModel = mainViewModel
-        self.paymentsModel = paymentsModel
-        self.chatViewModel = chatViewModel
+        self.tabsViewModel = tabsViewModel
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
         
-        mainViewModel.rootActions = rootActions
-        if case let .legacy(paymentsViewModel) = paymentsModel {
+        tabsViewModel.mainViewModel.rootActions = rootActions
+        if case let .legacy(paymentsViewModel) = tabsViewModel.paymentsModel {
             paymentsViewModel.rootActions = rootActions
         }
         
         bind()
         bindAuth()
         bindTabBar()
+        bindTabBarMarketShowcase()
     }
-
+    
     func reset() {
         
-        mainViewModel.reset()
-        paymentsModel.reset()
-        chatViewModel.reset()
+        tabsViewModel.reset()
     }
     
     func resetLink() {
@@ -152,7 +146,7 @@ class RootViewModel: ObservableObject, Resetable {
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
                         else { return }
                         
-                        self.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
                     }
                 }
             }
@@ -210,7 +204,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 tokenIntent: payload.tokenIntent
                             ))
                     ))
-                
+                    
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
                     alert = nil
@@ -421,10 +415,10 @@ class RootViewModel: ObservableObject, Resetable {
     
     private func bindTabBar() {
         
-        let mainViewModelHasDestination = mainViewModel.$route
+        let mainViewModelHasDestination = tabsViewModel.mainViewModel.$route
             .map { $0.destination != nil }
         
-        let paymentsViewModelHasDestination = paymentsModel.hasDestination
+        let paymentsViewModelHasDestination = tabsViewModel.paymentsModel.hasDestination
         
         mainViewModelHasDestination
             .combineLatest(paymentsViewModelHasDestination)
@@ -433,6 +427,35 @@ class RootViewModel: ObservableObject, Resetable {
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
+    }
+    
+    private func bindTabBarMarketShowcase() {
+        
+        tabsViewModel.marketShowcaseBinder.flow.$state
+            .compactMap(\.outside)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] outside in
+                
+                switch outside {
+                case .main:
+                    self?.rootActions.switchTab(.main)
+                    
+                case let .openURL(linkURL):
+                    linkURL.openLink()
+                }
+            }
+            .store(in: &bindings)
+    }
+}
+
+private extension MarketShowcaseFlowState {
+    
+    var outside: Status.Outside? {
+        
+        guard case let .outside(outside) = self.status
+        else { return nil }
+        
+        return outside
     }
 }
 
@@ -500,6 +523,7 @@ extension RootViewModel {
         
         case main
         case payments
+        case market
         case history
         case chat
         
@@ -508,6 +532,7 @@ extension RootViewModel {
             switch self {
             case .main: return "Главный"
             case .payments: return "Платежи"
+            case .market: return "Маркет"
             case .history: return "История"
             case .chat: return "Чат"
             }

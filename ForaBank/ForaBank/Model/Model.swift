@@ -1509,6 +1509,11 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadSticker.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .marketShowcase:
+            return load(type: LocalAgentDomain.MarketShowcase.self)
+                .map(\.landing)
+                .map(UILanding.init)
        
         case let .control(cardType):
             switch cardType {
@@ -1722,6 +1727,11 @@ extension LocalAgentDomain {
     }
 
     struct LimitIndividualBusinessmanMainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct MarketShowcase: Codable {
         
         let landing: Landing
     }

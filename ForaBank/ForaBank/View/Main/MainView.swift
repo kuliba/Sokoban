@@ -379,18 +379,14 @@ private extension MainView {
             config: .iFora,
             bannerView: { item in
                 
-                let label = viewFactory.makeIconView(.image(item.imageEndpoint))
+                let label = viewFactory.makeGeneralIconView(.image(item.imageEndpoint))
                     .frame(Config.iFora.size)
                     .cornerRadius(Config.iFora.cornerRadius)
                 
-                if let url = item.orderURL {
-                    
-                    Button { MainViewModel.openLinkURL(url) } label: { label }
-                        .buttonStyle(PushButtonStyle())
-                        .accessibilityIdentifier("corporateActionBanner")
-                } else {
-                    label
-                }
+                Button { viewModel.promoAction(item) } label: { label }
+                    .frame(Config.iFora.size)
+                    .buttonStyle(PushButtonStyle())
+                    .accessibilityIdentifier("mainActionBanner")
             },
             placeholderView: { PlaceholderView(opacity: 0.5) }
         )
@@ -404,10 +400,10 @@ private extension MainView {
 private extension MainView {
     
     func paymentProviderPicker(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedPaymentProviderPickerFlowView(
+        ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
@@ -615,7 +611,8 @@ extension MainViewFactory {
         
         return .init(
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeIconView: IconDomain.preview,
+            makeIconView: IconDomain.preview, 
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
@@ -650,7 +647,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active), 
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -680,7 +677,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
@@ -710,7 +707,7 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: PaymentProviderPickerFlowModel.preview,
+            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview
         ),

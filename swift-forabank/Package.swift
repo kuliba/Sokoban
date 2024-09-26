@@ -39,6 +39,8 @@ let package = Package(
         .utilityServicePrepayment,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -159,6 +161,9 @@ let package = Package(
         .utilityServicePrepaymentUI,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
+        .marketShowcaseTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -696,6 +701,15 @@ private extension Product {
         name: .banners,
         targets: [
             .banners,
+        ]
+    )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = library(
+        name: .marketShowcase,
+        targets: [
+            .marketShowcase,
         ]
     )
     
@@ -1485,6 +1499,31 @@ private extension Target {
             .sharedConfigs,
         ],
         path: "Sources/\(String.banners)"
+    )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = target(
+        name: .marketShowcase,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.marketShowcase)"
+    )
+    static let marketShowcaseTests = testTarget(
+        name: .marketShowcaseTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .marketShowcase,
+        ],
+        path: "Tests/\(String.marketShowcaseTests)"
     )
 
     // MARK: - Services
@@ -2898,6 +2937,12 @@ private extension Target.Dependency {
     static let banners = byName(
         name: .banners
     )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = byName(
+        name: .marketShowcase
+    )
 
     // MARK: - Services
     
@@ -3189,6 +3234,11 @@ private extension String {
     // MARK: - Banners
     
     static let banners = "Banners"
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = "MarketShowcase"
+    static let marketShowcaseTests = "MarketShowcaseTests"
 
     // MARK: - Services
     

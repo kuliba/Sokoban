@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 10.09.2024.
 //
 
-public final class BannerFlowMicroServiceComposer<Standard, Sticker> {
+public final class BannerFlowMicroServiceComposer<Standard, Sticker, Landing> {
     
     private let nanoServices: NanoServices
     
@@ -14,7 +14,7 @@ public final class BannerFlowMicroServiceComposer<Standard, Sticker> {
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = BannerFlowMicroServiceComposerNanoServices<Standard, Sticker>
+    public typealias NanoServices = BannerFlowMicroServiceComposerNanoServices<Standard, Sticker, Landing>
 }
 
 public extension BannerFlowMicroServiceComposer {
@@ -24,7 +24,7 @@ public extension BannerFlowMicroServiceComposer {
         return .init(makeBannerFlow: makeBannerFlow)
     }
     
-    typealias MicroService = BannerFlowMicroService<Standard, Sticker>
+    typealias MicroService = BannerFlowMicroService<Standard, Sticker, Landing>
 }
 
 private extension BannerFlowMicroServiceComposer {
@@ -42,6 +42,9 @@ private extension BannerFlowMicroServiceComposer {
             
         case .sticker:
             nanoServices.makeSticker { completion(.sticker($0)) }
+            
+        case .landing:
+            nanoServices.makeLanding { completion(.landing($0)) }
         }
     }
 }

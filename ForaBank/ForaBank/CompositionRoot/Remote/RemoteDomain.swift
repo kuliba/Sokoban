@@ -39,11 +39,4 @@ enum RemoteDomain<Payload, Response, MappingError: Error, Failure: Error> {
     ///   - mapResponse: Closure to map the raw response to a `Response`.
     /// - Returns: A configured `Service`.
     typealias MakeService = (@escaping MakeRequest, @escaping MapResponse) -> Service
-    
-    /// Performs batch network requests with an array of payloads.
-    ///
-    /// - Parameters:
-    ///   - payloads: An array of payloads to process.
-    ///   - completion: A closure called with the array of payloads that failed during processing.
-    typealias BatchService = ([Payload], @escaping ([Payload]) -> Void) -> Void
 }
