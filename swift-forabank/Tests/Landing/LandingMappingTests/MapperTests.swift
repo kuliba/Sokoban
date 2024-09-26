@@ -503,6 +503,24 @@ final class MapperTests: XCTestCase {
         ])
     }
 
+    func test_map_carouselBase_deliversCarouselBaseInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselBase.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselBase, [
+            .init(
+                title: "Название раздела",
+                size: .init(width: 182, height: 240),
+                scale: "medium",
+                loopedScrolling: true,
+                list: [
+                    .init(imageLink: "imageLink1", link: "link1", action: nil),
+                    .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
+                    .init(imageLink: "imageLink3", link: nil, action: .init(type: "abroad", target: nil))
+                ])
+        ])
+    }
+
     // MARK: - Helpers
     
     typealias Result = Swift.Result<Landing, LandingMapper.MapperError>
@@ -3119,7 +3137,48 @@ private extension String {
       }
     }
     """
-    
+  
+    static let carouselBase: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "HORIZONTAL_SLIDER_BASE",
+        "data": {
+          "title": "Название раздела",
+          "size": "182х240",
+          "scale": "medium",
+          "loopedScrolling": true,
+          "list": [
+            {
+              "imageLink": "imageLink1",
+              "link": "link1"
+            },
+            {
+              "imageLink": "imageLink2",
+              "action": {
+                "actionType": "LANDING",
+                "target": "abroadSticker"
+              }
+            },
+                {
+                  "imageLink": "imageLink3",
+                  "action": {
+                    "actionType": "abroad"
+                  }
+                }
+          ]
+        }
+      }
+    ],
+    "serial": "33c455e8b1f3d298dbb1d846885c176e"
+    }
+    }
+    """
+
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
 """
@@ -3297,6 +3356,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .blockHorizontalRectangular(blockHorizontalRectangular) = $0 {
                 return blockHorizontalRectangular
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselBase: [Landing.DataView.Carousel.CarouselBase] {
+        
+        compactMap {
+            if case let .carousel(.base(carouselBase)) = $0 {
+                return carouselBase
             } else {
                 return nil
             }

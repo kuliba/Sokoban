@@ -349,6 +349,9 @@ extension LandingView {
                         handleEffect: {_,_ in }),
                     factory: .init(makeIconView: makeIconView),
                     config: config.blockHorizontalRectangular)
+                
+            case let .carousel(.base(model)):
+                EmptyView()
             }
         }
     }
