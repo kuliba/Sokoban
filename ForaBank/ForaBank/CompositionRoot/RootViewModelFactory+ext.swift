@@ -886,27 +886,24 @@ private extension RootViewModelFactory {
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
+                
+        let marketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
+        let marketShowcaseComposer = MarketShowcaseComposer(
+            nanoServices: marketShowcaseComposerNanoServicesComposer.compose(),
+            scheduler: .main)
+        let marketShowcaseBinder = marketShowcaseComposer.compose()
         
-        let marketShowcaseReducer = MarketShowcaseReducer(
-            makeInformer: { model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))}
-        )
-        
-        let marketShowcaseModel = MarketShowcaseViewModel(
-            initialState: .inflight,
-            reduce: marketShowcaseReducer.reduce,
-            handleEffect: MarketShowcaseEffectHandler().handleEffect)
-        
-        let tabsViewModelFactory = TabsViewModelFactory(
+        let tabsViewModel = TabsViewModel(
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
             chatViewModel: chatViewModel,
-            marketShowcaseModel: marketShowcaseModel)
+            marketShowcaseBinder: marketShowcaseBinder)
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
-            tabsViewModelFactory: tabsViewModelFactory,
+            tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
             showLoginAction: showLoginAction
