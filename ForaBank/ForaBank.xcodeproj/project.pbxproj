@@ -2882,6 +2882,9 @@
 		83F775D42CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */; };
 		83F775DC2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DB2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift */; };
 		83F775DE2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */; };
+		83F775E02CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */; };
+		83F775E22CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */; };
+		83F775E42CA53A3600A05F69 /* String+openLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E32CA53A3600A05F69 /* String+openLink.swift */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
 		83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */; };
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
@@ -6309,6 +6312,9 @@
 		83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketShowcaseDomainBinder+preview.swift"; sourceTree = "<group>"; };
 		83F775DB2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseContentWrapperView.swift; sourceTree = "<group>"; };
 		83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseWrapperView.swift; sourceTree = "<group>"; };
+		83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerNanoServicesComposer.swift; sourceTree = "<group>"; };
+		83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerNanoServices.swift; sourceTree = "<group>"; };
+		83F775E32CA53A3600A05F69 /* String+openLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+openLink.swift"; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -15340,6 +15346,7 @@
 				E34B29CF263A08B9A2BA3560 /* Assets */,
 				77C3829427E1F72800B5246E /* Legacy */,
 				2AECBC542BEBB1B3000B0C0E /* DispatchQueue+delay.swift */,
+				83F775E32CA53A3600A05F69 /* String+openLink.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -15835,6 +15842,8 @@
 			isa = PBXGroup;
 			children = (
 				83F775CE2CA44E1500A05F69 /* MarketShowcaseComposer.swift */,
+				83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */,
+				83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */,
 				83F775D02CA473D800A05F69 /* MarketShowcaseDomain.swift */,
 				83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */,
 			);
@@ -20517,6 +20526,7 @@
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
 				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
+				83F775E22CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift in Sources */,
 				C1D66EEA2B07AAA2009E50B1 /* RemoteService+Extension.swift in Sources */,
 				0B2B29252808E833001C6380 /* DocumentInfoViewController.swift in Sources */,
 				77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */,
@@ -21789,6 +21799,7 @@
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				0CA7D0B829F6F20700986C80 /* TemplatesItemViews.swift in Sources */,
 				68CD24A928BE907F002E5D08 /* Model+SbpPay.swift in Sources */,
+				83F775E42CA53A3600A05F69 /* String+openLink.swift in Sources */,
 				841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
 				0BA9FE032833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift in Sources */,
@@ -22065,6 +22076,7 @@
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */,
 				83F775DC2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift in Sources */,
+				83F775E02CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift in Sources */,
 				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				777460E0291E509900D3FF46 /* ContactsSectionViewModel.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,

@@ -8,58 +8,6 @@
 import CombineSchedulers
 import Foundation
 
-final class MarketShowcaseComposerNanoServicesComposer {}
-
-extension MarketShowcaseComposerNanoServicesComposer {
-    
-    func compose() -> NanoServices {
-        
-        return .init(
-            loadLanding: loadLanding,
-            orderCard: orderCard,
-            orderSticker: orderSticker)
-    }
-    
-    typealias NanoServices = MarketShowcaseComposerNanoServices
-}
-
-extension MarketShowcaseComposerNanoServicesComposer {
-    
-    func loadLanding(
-        completion: @escaping (Result<MarketShowcaseDomain.Landing, Error>) -> Void
-    ) {
-        
-    }
-    
-    func orderCard(
-        completion: @escaping (()) -> Void
-    ) {
-        
-    }
-    
-    func orderSticker(
-        completion: @escaping (()) -> Void
-    ) {
-        
-    }
-}
-
-struct MarketShowcaseComposerNanoServices {
-    
-    let loadLanding: LoadLanding
-    let orderCard: OrderCard
-    let orderSticker: OrderSticker
-    
-    typealias LoadLandingCompletion = (Result<MarketShowcaseDomain.Landing, Error>) -> Void
-    typealias LoadLanding = (@escaping LoadLandingCompletion) -> Void
-    
-    typealias OrderCardCompletion = (MarketShowcaseDomain.Destination) -> Void
-    typealias OrderCard = (@escaping OrderCardCompletion) -> Void
-    
-    typealias OrderStickerCompletion = (MarketShowcaseDomain.Destination) -> Void
-    typealias OrderSticker = (@escaping OrderStickerCompletion) -> Void
-}
-
 final class MarketShowcaseComposer {
     
     private let nanoServices: NanoServices

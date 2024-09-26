@@ -439,11 +439,9 @@ class RootViewModel: ObservableObject, Resetable {
                 switch outside {
                 case .main:
                     self?.rootActions.switchTab(.main)
+                    
                 case let .openURL(linkURL):
-                    guard let url = URL(string: linkURL) else {
-                        return
-                    }
-                    MainViewModel.openLinkURL(url)
+                    linkURL.openLink()
                 }
             }
             .store(in: &bindings)

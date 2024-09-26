@@ -15,6 +15,7 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     func test_reduce_destination_shouldStatusToDestination() {
         
         assertState(.destination("destination"), on: .init()) {
+            
             $0.status = .destination("destination")
         }
     }
@@ -27,12 +28,12 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     func test_reduce_failure_timeout_shouldStatusToInformer() {
         
         assertState(.failure(.timeout("timeout")), on: .init()) {
+            
             $0.status = .informer("timeout")
         }
     }
     
-    func test_reduce_failure_timeout_shouldDeliverNoEffect
-    () {
+    func test_reduce_failure_timeout_shouldDeliverNoEffect() {
         
         assert(.failure(.timeout("timeout")), on: .init(), effect: nil)
     }
@@ -40,12 +41,12 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     func test_reduce_failure_error_shouldStateToAlert() {
         
         assertState(.failure(.error("error")), on: .init()) {
+            
             $0.status = .alert(.init(message: "error"))
         }
     }
     
-    func test_reduce_failure_error_shouldDeliverNoEffect
-    () {
+    func test_reduce_failure_error_shouldDeliverNoEffect() {
         
         assert(.failure(.error("error")), on: .init(), effect: nil)
     }
@@ -53,12 +54,12 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     func test_reduce_reset_shouldStateToNil() {
         
         assertState(.reset, on: .init(status:  .destination(""))) {
+            
             $0.status = nil
         }
     }
     
-    func test_reduce_reset_shouldDeliverNoEffect
-    () {
+    func test_reduce_reset_shouldDeliverNoEffect() {
         
         assert(.reset, on: .init(status:  .destination("")), effect: nil)
     }
@@ -66,34 +67,32 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     func test_reduce_select_goToMain_shouldStateToOutsideMain() {
         
         assertState(.select(.goToMain), on: .init()) {
+            
             $0.status = .outside(.main)
         }
     }
     
-    func test_reduce_select_goToMain_shouldDeliverNoEffect
-    () {
+    func test_reduce_select_goToMain_shouldDeliverNoEffect() {
         
         assert(.select(.goToMain), on: .init(), effect: nil)
     }
 
-    func test_reduce_select_orderCard_shouldStateNotChange() {
+    func test_reduce_select_orderCard_shouldNotChangeState() {
         
         assertState(.select(.orderCard), on: .init())
     }
     
-    func test_reduce_select_orderCard_shouldDeliverToOrderCardEffect
-    () {
+    func test_reduce_select_orderCard_shouldDeliverOrderCardEffect() {
         
         assert(.select(.orderCard), on: .init(), effect: .select(.orderCard))
     }
     
-    func test_reduce_select_orderSticker_shouldStateNotChange() {
+    func test_reduce_select_orderSticker_shouldNotChangeState() {
         
         assertState(.select(.orderSticker), on: .init())
     }
     
-    func test_reduce_select_orderSticker_shouldDeliverToOrderStickerEffect
-    () {
+    func test_reduce_select_orderSticker_shouldDeliverOrderStickerEffect() {
         
         assert(.select(.orderSticker), on: .init(), effect: .select(.orderSticker))
     }

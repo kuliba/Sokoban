@@ -9,7 +9,7 @@ import Foundation
 
 extension MarketShowcaseDomain.Binder {
     
-    static let preview = MarketShowcaseDomain.Binder.init(
+    static let preview = MarketShowcaseDomain.Binder(
         content: .init(
             initialState: .init(status: .inflight),
             reduce: { state,_ in  (state, nil)},
