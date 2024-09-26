@@ -212,7 +212,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModelFactory: .init(
                 mainViewModel: .init(
                     model,
-                    makeProductProfileViewModel: { _,_,_ in nil },
+                    makeProductProfileViewModel: { _,_,_,_  in nil },
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     qrViewModelFactory: .preview(),
@@ -231,16 +231,6 @@ final class RootViewModelTests: XCTestCase {
                 )),
                 chatViewModel: .init(),
                 marketShowcaseModel: .preview
-            mainViewModel: .init(
-                model,
-                makeProductProfileViewModel: { _,_,_,_  in nil },
-                navigationStateManager: .preview,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                paymentsTransfersFactory: .preview,
-                updateInfoStatusFlag: .init(.inactive),
-                onRegister: {}, 
-                bannersBinder: .preview
             ),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 
