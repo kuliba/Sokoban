@@ -219,12 +219,7 @@ private extension RootViewFactoryComposer {
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return RepeatButtonView(action: action)
-            
-        } else {
-           return nil
-        }
+        return RepeatButtonView(action: action)
     }
     
     func makeHistoryButtonView(
@@ -235,16 +230,12 @@ private extension RootViewFactoryComposer {
         event: @escaping (ProductProfileFlowEvent.ButtonEvent) -> Void
     ) -> HistoryButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return HistoryButtonView(
-                event: event,
-                isFiltered: isFiltered,
-                isDateFiltered: isDateFiltered,
-                clearOptions: clearAction
-            )
-        } else {
-           return nil
-        }
+        return HistoryButtonView(
+            event: event,
+            isFiltered: isFiltered,
+            isDateFiltered: isDateFiltered,
+            clearOptions: clearAction
+        )
     }
     
     typealias Completed = AnywayCompleted
