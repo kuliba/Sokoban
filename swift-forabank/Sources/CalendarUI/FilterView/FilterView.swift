@@ -99,10 +99,10 @@ public struct FilterView<ButtonsView: View>: View {
                     case let .selectPeriod(period):
                         switch period {
                         case .week:
-                            filterEvent(.selectedDates((.startOfWeek ?? Date())..<Date(), period))
+                            filterEvent(.selectedDates((Date.firstDayWeek())..<Date(), period))
                             
                         case .month:
-                            filterEvent(.selectedDates((.startOfMonth)..<(Date()), period))
+                            filterEvent(.selectedDates(Date().firstDayOfMonth()..<(Date()), period))
                             
                         case .dates:
                             break

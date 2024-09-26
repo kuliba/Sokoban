@@ -97,7 +97,7 @@ struct ProductProfileView: View {
                                                     return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil)
                                                 }, {
                                                     
-                                                    self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: nil, upperDate: nil)))
+                                                    self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: Date().firstDayOfMonth(), upperDate: Date())))
                                                     viewModel.filterState.filter.selectedServices = []
                                                     viewModel.filterState.filter.selectedTransaction = nil
                                                     viewModel.filterState.filter.selectedPeriod = .month
@@ -200,7 +200,7 @@ struct ProductProfileView: View {
                     state: .init(
                         date: Date(),
                         range: .init(
-                            startDate: Date.date(Date(), addDays: -31),
+                            startDate: Date.startDayOfCalendar(),
                             endDate: Date()
                         ),
                         monthsData: .generate(startDate: viewModel.calendarDayStart()),
@@ -220,7 +220,10 @@ struct ProductProfileView: View {
                         if let lowerDate = lowerDate,
                            let upperDate = upperDate {
                             
-                            viewModel.filterState.calendar.range = .init(startDate: lowerDate, endDate: upperDate)
+                            viewModel.filterState.calendar.range = .init(
+                                startDate: lowerDate,
+                                endDate: upperDate
+                            )
                             viewModel.filterHistoryRequest(
                                 lowerDate,
                                 upperDate,
@@ -282,7 +285,8 @@ struct ProductProfileView: View {
                                 config: .iFora,
                                 apply: { lowerDate, upperDate in
                                     
-                                    if let lowerDate, let upperDate {
+                                    if let lowerDate = lowerDate,
+                                       let upperDate = upperDate {
                                     
                                         filter.event(.selectedDates(lowerDate..<upperDate, .dates))
                                     }
@@ -462,7 +466,7 @@ struct ProductProfileView: View {
                                         if let transfer = infoPayment.parameterList.last,
                                            let phone = transfer.additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue,
                                            let countryId = transfer.additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
                                                 self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: countryId, amount: nil, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))
@@ -503,7 +507,7 @@ struct ProductProfileView: View {
                                         
                                         if let phone = infoPayment.parameterList.last?.payeeInternal?.phoneNumber,
                                            let amount = infoPayment.parameterList.last?.amount?.description {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
                                                 self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: ForaBank.BankID.foraBankID.digits, amount: amount, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))
@@ -862,4 +866,22 @@ extension OperationDetailFactory {
     static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
             .sampleComplete
     })
+}
+
+extension Date {
+    
+    static func startDayOfCalendar() -> Date {
+        var today = Date.date(Date(), addDays: -31)!
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
+    }
 }

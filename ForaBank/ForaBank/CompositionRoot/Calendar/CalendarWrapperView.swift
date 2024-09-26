@@ -67,7 +67,7 @@ struct CalendarWrapperView: View {
                                 action: {
                                     apply(
                                         state.range?.lowerDate,
-                                        state.range?.upperDate
+                                        state.range?.upperDate?.isToday() ?? false ? Date() : state.range?.upperDate?.endOfDay
                                     )
                                 }
                             )

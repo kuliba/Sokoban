@@ -19,17 +19,10 @@ extension [Month] {
     public static func generate(startDate: Date?) -> Self {
         
         do {
-            if let startDate {
-                MCalendar.startDate = startDate.start(of: .month)
-                
-                return try createDatesRange()
-                    .map(createMonthDate)
-                    .map(createMonthViewData)
-            } else {
-                return try createDatesRange()
-                    .map(createMonthDate)
-                    .map(createMonthViewData)
-            }
+            
+            return try createDatesRange()
+                .map(createMonthDate)
+                .map(createMonthViewData)
         } catch {
             
             return []
@@ -40,8 +33,8 @@ extension [Month] {
 extension [Month] {
     
     static func createDatesRange() throws -> ClosedRange<Int> {
-        let startDate = MCalendar.startDate, endDate = MCalendar.endDate
-        guard startDate <= endDate else { 
+        let startDate = MCalendar().startDate, endDate = MCalendar.endDate
+        guard startDate <= endDate else {
             throw MonthErrors.monthGenerate
         }
 
@@ -50,7 +43,9 @@ extension [Month] {
     }
     
     static func createMonthDate(_ index: Int) -> Date {
-        MCalendar.startDate.adding(index, .month)
+        
+        let date = MCalendar().startDate.adding(index, .month)
+        return date
     }
     
     static func createMonthViewData(_ monthStart: Date) -> Month {
@@ -136,4 +131,25 @@ extension Month {
 
 enum MonthErrors: Error {
     case monthGenerate
+}
+
+extension Date {
+    
+    static func createStartDate(startDate: Date) -> Date {
+        var dateComponents = DateComponents()
+        dateComponents.year = 1992
+        dateComponents.month = 5
+        dateComponents.day = 1
+        dateComponents.timeZone = TimeZone(secondsFromGMT: 0) // Japan Standard Time
+        dateComponents.hour = 0
+        dateComponents.minute = 00
+
+        // Create date from components
+        var userCalendar = Calendar(identifier: .gregorian)
+        userCalendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        let someDateTime = userCalendar.date(from: dateComponents)
+        
+        return someDateTime!
+    }
 }

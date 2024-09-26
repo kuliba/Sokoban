@@ -69,7 +69,7 @@ public struct CalendarView: View {
                         
                         Button {
                             
-                            event(.selectPeriod(period, lowerDate: .startOfWeek ?? Date(), upperDate: Date()))
+                            event(.selectPeriod(period, lowerDate: Date.firstDayWeek(), upperDate: Date()))
                             
                         } label: {
                            
@@ -96,7 +96,7 @@ public struct CalendarView: View {
                         
                         Button {
                             
-                            event(.selectPeriod(period, lowerDate: .startOfMonth, upperDate: Date()))
+                            event(.selectPeriod(period, lowerDate: Date().firstDayOfMonth(), upperDate: Date()))
                         } label: {
                             if state.selectPeriod == .month {
                                 
@@ -276,5 +276,39 @@ public extension CalendarState {
             
             return nil
         }
+    }
+}
+
+extension Calendar {
+    static let gregorian = Calendar(identifier: .gregorian)
+}
+
+extension Date {
+    func startOfWeek(using calendar: Calendar = .gregorian) -> Date {
+        calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: self).date!
+    }
+    func startOfMonth(using calendar: Calendar = .gregorian) -> Date {
+         return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.startOfDay(for: self)))!
+     }
+}
+
+public extension Date {
+    
+    static func firstDayWeek() -> Date {
+        
+        var gregorianUTC = Calendar.current
+        gregorianUTC.timeZone = TimeZone(identifier: "UTC")!
+        return Date().startOfWeek(using: gregorianUTC)
+    }
+    
+    func firstDayOfMonth() -> Date {
+        
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let components = calendar.dateComponents([.year, .month], from: self)
+        
+        print(calendar.date(from: components)!)
+
+        return calendar.date(from: components)!
     }
 }

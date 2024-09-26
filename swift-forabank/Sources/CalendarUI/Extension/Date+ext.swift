@@ -102,7 +102,8 @@ extension DateFormatter {
 
         dateFormatter.timeStyle = DateFormatter.Style.none
         dateFormatter.dateStyle = DateFormatter.Style.long
-
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
         dateFormatter.dateFormat =  "dd.MM.yy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
 

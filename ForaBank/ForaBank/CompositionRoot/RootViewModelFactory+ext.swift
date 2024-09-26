@@ -807,7 +807,7 @@ extension ProductProfileViewModel {
 
                     model.action.send(ModelAction.Statement.List.Request(
                         productId: product.id,
-                        direction: .custom(start: lowerDate.addingTimeInterval(10800), end: upperDate.addingTimeInterval(97199)),
+                        direction: .custom(start: lowerDate, end: upperDate),
                         operationType: .init(rawValue: operationType ?? .avtodorGroupTitle),
                         category: category
                     ))
