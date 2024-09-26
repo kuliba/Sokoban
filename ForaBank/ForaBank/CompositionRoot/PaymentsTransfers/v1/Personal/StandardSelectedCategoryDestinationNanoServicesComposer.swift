@@ -17,6 +17,7 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
     private let loadLatest: LoadLatest
     private let loadOperators: LoadOperators
     private let makeMicroServices: MakeMicroServices
+    private let model: Model
     private let observeLast: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -24,12 +25,14 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
         loadLatest: @escaping LoadLatest,
         loadOperators: @escaping LoadOperators,
         makeMicroServices: @escaping MakeMicroServices,
+        model: Model,
         observeLast: Int = 10,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.loadLatest = loadLatest
         self.loadOperators = loadOperators
         self.makeMicroServices = makeMicroServices
+        self.model = model
         self.observeLast = observeLast
         self.scheduler = scheduler
     }
@@ -167,9 +170,13 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
                     
                     completion(.backendFailure(.connectivity("connectivity failure")))
                 },
-                makeDetailPayment: { completion in
+                makeDetailPayment: {
                     
-                    completion(.payment(()))
+                    $0(.detailPayment(.init(
+                        model: self.model,
+                        service: .requisites,
+                        scheduler: self.scheduler
+                    )))
                 },
                 processProvider: { provider, completion in
                     

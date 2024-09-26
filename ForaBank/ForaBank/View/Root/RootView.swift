@@ -451,8 +451,8 @@ private extension RootView {
         case let .backendFailure(backendFailure):
             Text("TBD: destination view \(String(describing: backendFailure))")
             
-        case let .detailPayment(detailPayment):
-            Text("TBD: destination view \(String(describing: detailPayment))")
+        case let .detailPayment(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
             
         case let .payment(payment):
             Text("TBD: destination view \(String(describing: payment))")

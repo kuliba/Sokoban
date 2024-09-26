@@ -48,7 +48,8 @@ extension RootViewModelFactory {
                     completion(.success($0))
                 }
             },
-            makeMicroServices: microServicesComposer.compose,
+            makeMicroServices: microServicesComposer.compose, 
+            model: model,
             scheduler: mainScheduler
         )
         let categoryPickerComposer = CategoryPickerSectionBinderComposer(

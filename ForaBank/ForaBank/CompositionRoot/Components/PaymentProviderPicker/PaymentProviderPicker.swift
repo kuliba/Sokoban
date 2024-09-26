@@ -33,7 +33,7 @@ extension PaymentProviderPicker {
     typealias FlowReducer = FlowDomain.Reducer
     typealias FlowEffectHandler = FlowDomain.EffectHandler
     
-    typealias DetailPayment = Void
+    typealias DetailPayment = ClosePaymentsViewModelWrapper
     typealias Payment = Void
     typealias Provider = PaymentServiceOperator
     typealias Service = Void
