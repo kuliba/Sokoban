@@ -71,8 +71,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             nanoServices: .init(
                 loadCategories: loadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
-                loadLatestForCategory: { _,_ in },
-                loadOperators: { _,_ in }
+                loadLatestForCategory: { _,_ in }
             ),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate

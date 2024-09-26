@@ -513,6 +513,13 @@
         "identifier" : "OperatorsListBackendV0Tests",
         "name" : "OperatorsListBackendV0Tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "MarketShowcaseTests",
+        "name" : "MarketShowcaseTests"
+      }
     }
   ],
   "version" : 1

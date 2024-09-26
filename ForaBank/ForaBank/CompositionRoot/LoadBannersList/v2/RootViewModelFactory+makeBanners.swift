@@ -31,8 +31,7 @@ extension RootViewModelFactory {
     typealias LoadServiceBannersCompletion = ([BannerPickerSectionItem<BannerCatalogListData>]) -> Void
     typealias LoadServiceBanners = (@escaping LoadServiceCategoriesCompletion) -> Void
     
-    static func makeBanners(
-        model: Model,
+    static func makeBannersForMainView(
         bannerPickerPlaceholderCount: Int,
         nanoServices: BannersNanoServices,
         mainScheduler: AnySchedulerOf<DispatchQueue>,
@@ -154,9 +153,10 @@ extension BannerFlowMicroServiceComposerNanoServicesComposer {
         
         return .init(
             makeStandard: { standardMicroService.makeDestination(banner, $0) },
-            makeSticker: { $0(StickerStub()) }
+            makeSticker: { $0(StickerStub()) }, 
+            makeLanding: { $0(LandingStub()) }
         )
     }
     
-    typealias NanoServices = BannerFlowMicroServiceComposerNanoServices< Result<SelectedBannerStub, Error>, StickerStub>
+    typealias NanoServices = BannerFlowMicroServiceComposerNanoServices< Result<SelectedBannerStub, Error>, StickerStub, LandingStub>
 }

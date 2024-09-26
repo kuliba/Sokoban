@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "F477EE87-95AB-4C84-BEBF-CF323B678360",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MarketShowcaseTests",
+        "name" : "MarketShowcaseTests"
+      }
+    }
+  ],
+  "version" : 1
+}

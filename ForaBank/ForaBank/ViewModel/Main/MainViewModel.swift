@@ -44,7 +44,7 @@ class MainViewModel: ObservableObject, Resetable {
     private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
     }
     
-    private let model: Model
+     let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
@@ -997,6 +997,16 @@ private extension MainViewModel {
 
 extension MainViewModel {
     
+    func promoAction(_ item: BannerCatalogListData) {
+        
+        if let action = item.action {
+            bannerAction(.init(actionData: action))
+        }
+        else if let url = item.orderURL {
+            MainViewModel.openLinkURL(url) 
+        }
+    }
+    
     func openMigTransfer(_ payload: BannerActionMigTransfer) {
         
         if model.onlyCorporateCards,
@@ -1394,7 +1404,7 @@ private extension MainViewModel {
     }
     
     private func bind(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> Set<AnyCancellable> {
         
         let spinner = flowModel.$state
@@ -1421,7 +1431,7 @@ private extension MainViewModel {
     }
     
     func handle(
-        _ outside: PaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
     ) {
         resetDestination()
         rootActions?.spinner.hide()
@@ -1445,7 +1455,7 @@ private extension MainViewModel {
     }
 }
 
-extension PaymentProviderPickerFlowState {
+extension SegmentedPaymentProviderPickerFlowState {
     
     var outside: Status.Outside? {
         
@@ -1651,7 +1661,7 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel, Bool)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         
         var id: Case {

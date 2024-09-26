@@ -30,7 +30,7 @@ struct CodableServiceCategory: Codable {
     let name: String
     let ord: Int
     let paymentFlow: PaymentFlow
-    let search: Bool
+    let hasSearch: Bool
     let type: CategoryType
     
     enum CategoryType: Codable {
@@ -86,7 +86,7 @@ private extension ServiceCategory {
             name: codable.name,
             ord: codable.ord,
             paymentFlow: codable.flow,
-            search: codable.search,
+            hasSearch: codable.hasSearch,
             type: codable.category
         )
     }
@@ -99,7 +99,7 @@ private extension ServiceCategory {
             name: name,
             ord: ord,
             paymentFlow: codablePaymentFlow,
-            search: search,
+            hasSearch: hasSearch,
             type: codableType
         )
     }

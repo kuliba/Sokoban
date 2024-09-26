@@ -20,6 +20,7 @@ import Fetcher
 import LandingUIComponent
 import LandingMapping
 import CodableLanding
+import MarketShowcase
 import CalendarUI
 
 extension RootViewModelFactory {
@@ -314,7 +315,7 @@ extension RootViewModelFactory {
             scheduler: mainScheduler
         )
         
-        let makePaymentProviderPickerFlowModel = makePaymentProviderPickerFlowModel(
+        let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
             httpClient: httpClient,
             log: logger.log(level:category:message:file:line:),
             model: model,
@@ -367,7 +368,7 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         // reusable factory
-        let batchSerialComposer = BatchSerialCachingRemoteLoaderComposer(
+        let batchServiceComposer = SerialCachingRemoteBatchServiceComposer(
             nanoServiceFactory: nanoServiceComposer,
             updateMaker: asyncLocalAgent
         )
@@ -421,7 +422,7 @@ extension RootViewModelFactory {
             getAllLoadedCategories: localServiceCategoryLoader.load,
             getLatestPayments: getLatestPayments
         )
-        let loadLatestOperations = _makeLoadLatestOperations(.all)
+        let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             model: model,
@@ -429,18 +430,17 @@ extension RootViewModelFactory {
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
                 loadCategories: loadServiceCategories,
-                loadAllLatest: loadLatestOperations,
-                loadLatestForCategory: { getLatestPayments([$0.name], $1) },
-                loadOperators: { _, completion in completion(.success([])) }
-            ),
+                loadAllLatest: loadAllLatestOperations,
+                loadLatestForCategory: { getLatestPayments([$0.name], $1) }
+            ), 
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
         
-        let operatorsService = batchSerialComposer.composeServicePaymentProviderService(
+        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService(
             getSerial: { _ in
                 
-                model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                model.localAgent.serial(for: [CodableServicePaymentOperator].self)
             }
         )
         
@@ -453,7 +453,7 @@ extension RootViewModelFactory {
                 
                 // load operators
                 let categories = response.categories
-                let serial = model.localAgent.serial(for: [CodableServicePaymentProvider].self)
+                let serial = model.localAgent.serial(for: [CodableServicePaymentOperator].self)
                 
                 operatorsService(categories.map { .init(serial: serial, category: $0) }) {
                     
@@ -479,8 +479,7 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
                 
-        let loadBannersList = makeBannersBinder(
-            model: model,
+        let loadBannersList = makeLoadBanners(
             httpClient: httpClient,
             infoNetworkLog: infoNetworkLog,
             mainScheduler: mainScheduler,
@@ -501,7 +500,7 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
 
-        let bannersBinder = makeBannersForMainView(
+        let mainViewBannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
                 loadBanners: loadBannersList, 
@@ -518,7 +517,7 @@ extension RootViewModelFactory {
             loadBannersList {
                 
                 paymentsTransfersCorporate.content.bannerPicker.content.event(.loaded($0))
-                bannersBinder.content.bannerPicker.content.event(.loaded($0))
+                mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
 
@@ -528,7 +527,7 @@ extension RootViewModelFactory {
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
-        _ = oneTime
+
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
@@ -547,7 +546,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
-            bannersBinder: bannersBinder
+            bannersBinder: mainViewBannersBinder
         )
     }
     
@@ -939,14 +938,24 @@ private extension RootViewModelFactory {
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
+                
+        let marketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
+        let marketShowcaseComposer = MarketShowcaseComposer(
+            nanoServices: marketShowcaseComposerNanoServicesComposer.compose(),
+            scheduler: .main)
+        let marketShowcaseBinder = marketShowcaseComposer.compose()
+        
+        let tabsViewModel = TabsViewModel(
+            mainViewModel: mainViewModel,
+            paymentsModel: paymentsModel,
+            chatViewModel: chatViewModel,
+            marketShowcaseBinder: marketShowcaseBinder)
         
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
-            mainViewModel: mainViewModel,
-            paymentsModel: paymentsModel,
-            chatViewModel: chatViewModel,
+            tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
             showLoginAction: showLoginAction
