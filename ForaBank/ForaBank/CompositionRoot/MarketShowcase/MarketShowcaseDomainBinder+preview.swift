@@ -11,7 +11,7 @@ extension MarketShowcaseDomain.Binder {
     
     static let preview = MarketShowcaseDomain.Binder(
         content: .init(
-            initialState: .init(status: .inflight),
+            initialState: .init(status: .initiate),
             reduce: { state,_ in  (state, nil)},
             handleEffect: {_,_ in }),
         flow: .init(

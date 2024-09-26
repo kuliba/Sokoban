@@ -11,7 +11,7 @@ import UIPrimitives
 public struct MarketShowcaseContentView<RefreshView, Landing>: View
 where RefreshView: View
 {
-
+    
     let state: State
     let event: (Event<Landing>) -> Void
     let config: Config
@@ -41,6 +41,11 @@ where RefreshView: View
     private func content() -> some View {
         
         switch state.status {
+        case .initiate:
+            Text("Initiate")
+                .frame(maxHeight: .infinity)
+                .padding()
+            
         case .inflight:
             
             factory.makeRefreshView()
@@ -78,9 +83,9 @@ public extension MarketShowcaseContentView {
 extension MarketShowcaseContentView where RefreshView == Text, Landing == String {
     
     static let preview = MarketShowcaseContentView(
-        state: .init(status: .inflight),
+        state: .init(status: .initiate),
         event: {_ in },
-        config: .iFora, 
+        config: .iFora,
         factory: .init(makeRefreshView: { Text("Refresh") }))
 }
 

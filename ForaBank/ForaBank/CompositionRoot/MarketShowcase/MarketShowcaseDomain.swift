@@ -21,6 +21,7 @@ extension MarketShowcaseDomain{
     // MARK: - Content
     
     typealias ContentState = MarketShowcaseContentState<Landing>
+    typealias ContentStatus = MarketShowcaseContentStatus<Landing>
     typealias ContentEvent = MarketShowcaseContentEvent<Landing>
     typealias ContentEffect = MarketShowcaseContentEffect
     

@@ -31,6 +31,7 @@ extension MarketShowcaseContentState: Equatable where Landing: Equatable {}
 
 public enum MarketShowcaseContentStatus<Landing> {
     
+    case initiate
     case inflight
     case loaded(Landing)
     case failure
@@ -40,7 +41,7 @@ public enum MarketShowcaseContentStatus<Landing> {
         switch self {
         case .inflight:
             return true
-        case .loaded, .failure:
+        case .initiate, .failure, .loaded:
             return false
         }
     }

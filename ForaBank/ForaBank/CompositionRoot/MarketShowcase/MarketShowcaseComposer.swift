@@ -28,9 +28,11 @@ extension MarketShowcaseComposer {
     
     func compose() -> MarketShowcaseDomain.Binder {
         
-        let content = makeContent()
+        let content = makeContent(status: .initiate)
         let flow = makeFlow()
         
+        content.event(.load)
+
         return .init(
             content: content,
             flow: flow,
@@ -66,7 +68,9 @@ extension MarketShowcaseComposer {
 
 private extension MarketShowcaseComposer {
     
-    func makeContent() -> MarketShowcaseDomain.Content {
+    func makeContent(
+        status: MarketShowcaseDomain.ContentStatus
+    ) -> MarketShowcaseDomain.Content {
         
         let reducer = MarketShowcaseDomain.ContentReducer()
         let effectHandler = MarketShowcaseDomain.ContentEffectHandler(
@@ -74,7 +78,7 @@ private extension MarketShowcaseComposer {
                 loadLanding: nanoServices.loadLanding
             ))
         return .init(
-            initialState: .init(status: .inflight),
+            initialState: .init(status: status),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect,
             scheduler: scheduler
