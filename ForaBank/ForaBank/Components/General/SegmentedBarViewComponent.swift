@@ -108,7 +108,7 @@ extension SegmentedBarView {
             
             if let selectRange {
                 
-                return "Траты за \("\(DateFormatter.shortDate.string(from: selectRange.lowerBound)) - \(DateFormatter.shortDate.string(from: selectRange.upperBound))")"
+                return "Траты за \("\(DateFormatter.shortDateGTM0.string(from: selectRange.lowerBound)) - \(DateFormatter.shortDateGTM0.string(from: selectRange.upperBound))")"
                 
             } else {
                 

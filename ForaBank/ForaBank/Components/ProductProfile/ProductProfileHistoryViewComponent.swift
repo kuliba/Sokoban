@@ -113,7 +113,7 @@ extension ProductProfileHistoryView {
                                 }
                             }
                             
-                            if payload.filterState?.filter.selectedPeriod != nil {
+                            if payload.filterState?.filter.selectedPeriod != nil, payload.filterState?.filter.selectDates != nil {
                                 
                                 switch payload.filterState?.filter.selectedPeriod {
                                 case .week:
@@ -169,7 +169,8 @@ extension ProductProfileHistoryView {
                             
                             Task { @MainActor [storageData] in
                                 
-                                updateContent(with: update.groups)
+                                updateContent(with: update.groups, content: self.content)
+                                
                                 updateSegmentedBar(
                                     productId: id,
                                     statements: storageData, 
@@ -194,7 +195,8 @@ extension ProductProfileHistoryView {
                     Task.detached(priority: .high) { [self] in
                         
                         var storageStatements: [ProductStatementData] = storage.statements
-                        if let filter = filter() {
+                        if let filter = filter(),
+                           (filter.calendar.selectedRange != nil || filter.filter.selectDates != nil) {
                             
                             if let lowerDate = filter.calendar.range?.lowerDate,
                                let upperDate = filter.calendar.range?.upperDate {
@@ -245,9 +247,6 @@ extension ProductProfileHistoryView {
                                     return item.groupName.contained(in: filter.filter.selectedServices.sorted())
                                 })
                             }
-                        } else {
-                            storageStatements = storageStatements
-                                .filter { Calendar.current.isInMonth($0.dateValue)}
                         }
                         
                         // isMapped = false  это согласованный костыль
@@ -271,7 +270,7 @@ extension ProductProfileHistoryView {
                         
                         await MainActor.run {
                             
-                            updateContent(with: update.groups)
+                            updateContent(with: update.groups, content: .empty(.init()))
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
@@ -358,15 +357,29 @@ extension ProductProfileHistoryView {
             case .loan: return
             }
             
+            var statementFilteredPeriod = statementFilteredOperation
+            
+            if let selectRange {
+                
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter {
+                        $0.dateValue.isBetweenStartDate(selectRange.lowerBound, endDateInclusive: selectRange.upperBound)
+                    }
+                
+            } else {
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter { Calendar.current.isInMonth($0.dateValue)}
+            }
+            
             if isMapped {
                 
-                let dict = statementFilteredOperation
-                            .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[.init($1.groupName), default: 0] += documentAmount
-                                }
-                            }
+                let dict = statementFilteredPeriod
+                    .reduce(into: [ProductStatementMerchantGroup: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[.init($1.groupName), default: 0] += documentAmount
+                        }
+                    }
                 
                 Task { @MainActor in
                     
@@ -381,7 +394,7 @@ extension ProductProfileHistoryView {
                 
             } else {
                 
-                let dict = statementFilteredOperation
+                let dict = statementFilteredPeriod
                     .reduce(into: [ String: Double]()) {
                         if let documentAmount = $1.documentAmount {
                             
@@ -403,7 +416,10 @@ extension ProductProfileHistoryView {
             }
         }
         
-        func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
+        func updateContent(
+            with groups: [HistoryListViewModel.DayGroupViewModel],
+            content: ProductProfileHistoryView.ViewModel.Content
+        ) {
             
             if groups.isEmpty == false {
 
@@ -420,17 +436,20 @@ extension ProductProfileHistoryView {
                    
                     withAnimation {
                         
-                        content = .list(listViewModel)
+                        self.content = .list(listViewModel)
                     }
                 }
                 
             } else {
                 
-                content = .empty(.init())
+                self.content = content
             }
         }
         
-        func updateContent(with state: ProductStatementsUpdateState, storage: ProductStatementsStorage) {
+        func updateContent(
+            with state: ProductStatementsUpdateState,
+            storage: ProductStatementsStorage
+        ) {
             
             withAnimation {
                 
@@ -442,13 +461,19 @@ extension ProductProfileHistoryView {
                         
                         if storage.isHistoryComplete == false {
                             
-                            listViewModel.eldestUpdate = .more(.init(title: "Смотреть еще", style: .gray, action: {[weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())}))
+                            listViewModel.eldestUpdate = .more(.init(
+                                title: "Смотреть еще",
+                                style: .red,
+                                action: { [weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())} )
+                            )
 
                         } else {
                             
                             listViewModel.eldestUpdate = nil
                         }
-
+                    case .loading:
+                        content = .loading
+                        
                     default:
                         content = .empty(.init())
                     }
