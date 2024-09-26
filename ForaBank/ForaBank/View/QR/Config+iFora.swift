@@ -108,7 +108,7 @@ public extension CalendarConfig {
             todayForeground: .mainColorsRed
         ),
         closeImage: .ic24Close,
-        scrollDate: Date()
+        scrollDate: Date().scrollToday
     )
 }
 
@@ -203,5 +203,23 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
             map: PublishingInfo.preview,
             config: .iFora
         )
+    }
+}
+
+extension Date {
+    
+    var scrollToday: Date {
+        var today = Date()
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
     }
 }

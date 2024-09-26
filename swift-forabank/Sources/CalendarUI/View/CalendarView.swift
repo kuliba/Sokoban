@@ -195,8 +195,10 @@ private extension CalendarView {
                 .padding(.bottom, config.monthsPadding.bottom)
                 .background(config.monthsViewBackground)
             }
-            .onAppear() { scrollToDate(reader, animatable: false) }
-            .onChange(of: config.scrollDate) { _ in }
+            .onAppear() {
+            
+                scrollToDate(reader, animatable: true)
+            }
         }
     }
 }
@@ -243,12 +245,18 @@ public extension View {
 // MARK: - Modifiers
 private extension CalendarView {
     
-    func scrollToDate(_ reader: ScrollViewProxy, animatable: Bool) {
+    func scrollToDate(
+        _ reader: ScrollViewProxy,
+        animatable: Bool
+    ) {
         
         guard let date = config.scrollDate else { return }
 
-        let scrollDate = date.start(of: .month)
-        withAnimation(animatable ? .default : nil) { reader.scrollTo(scrollDate, anchor: .center) }
+        let scrollDate = date.firstDayOfMonth()
+        
+        withAnimation(.default) {
+            reader.scrollTo(scrollDate, anchor: .center)
+        }
     }
     
     func onMonthChange(_ date: Date) {
