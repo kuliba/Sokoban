@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "380F6A82-037D-4BA1-904A-09158E9184E5",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

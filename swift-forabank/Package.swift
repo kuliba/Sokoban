@@ -59,7 +59,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
-        .getAuthorizedZoneService,
+        .getClientInformDataServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -200,8 +200,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
-        .getAuthorizedZoneService,
-        .getAuthorizedZoneServiceTests,
+        .getClientInformDataServices,
+        .getClientInformDataServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -837,10 +837,10 @@ private extension Product {
         ]
     )
     
-    static let getAuthorizedZoneService = library(
-        name: .getAuthorizedZoneService,
+    static let getClientInformDataServices = library(
+        name: .getClientInformDataServices,
         targets: [
-            .getAuthorizedZoneService
+            .getClientInformDataServices
         ]
     )
 
@@ -1866,23 +1866,23 @@ private extension Target {
         ]
     )
 
-    static let getAuthorizedZoneService = target(
-        name: .getAuthorizedZoneService,
+    static let getClientInformDataServices = target(
+        name: .getClientInformDataServices,
         dependencies: [
             .remoteServices
         ],
-        path: "Sources/Services/\(String.getAuthorizedZoneService)"
+        path: "Sources/Services/\(String.getClientInformDataServices)"
     )
 
-    static let getAuthorizedZoneServiceTests = testTarget(
-        name: .getAuthorizedZoneServiceTests,
+    static let getClientInformDataServicesTests = testTarget(
+        name: .getClientInformDataServicesTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .getAuthorizedZoneService
+            .getClientInformDataServices
         ],
-        path: "Tests/Services/\(String.getAuthorizedZoneServiceTests)",
+        path: "Tests/Services/\(String.getClientInformDataServicesTests)",
         resources: [
 
         ]
@@ -3043,8 +3043,8 @@ private extension Target.Dependency {
         name: .getProductListByTypeV6Service
     )
     
-    static let getAuthorizedZoneService = byName(
-        name: .getAuthorizedZoneService
+    static let getClientInformDataServices = byName(
+        name: .getClientInformDataServices
     )
     
     // MARK: - Tools
@@ -3330,8 +3330,8 @@ private extension String {
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
     
-    static let getAuthorizedZoneService = "GetAuthorizedZoneService"
-    static let getAuthorizedZoneServiceTests = "GetAuthorizedZoneServiceTests"
+    static let getClientInformDataServices = "GetClientInformDataServices"
+    static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
     // MARK: - Tools
     

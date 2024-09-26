@@ -512,8 +512,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "GetAuthorizedZoneServiceTests",
-        "name" : "GetAuthorizedZoneServiceTests"
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
       }
     }
   ],
