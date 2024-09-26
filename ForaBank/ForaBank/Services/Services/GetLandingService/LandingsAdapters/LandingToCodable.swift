@@ -94,6 +94,9 @@ private extension CodableLanding.DataView {
             
         case let .blockHorizontalRectangular(x):
             self = .blockHorizontalRectangular(.init(data: x))
+            
+        case let .carousel(.base(x)):
+            self = .carousel(.base(.init(data: x)))
         }
     }
 }
@@ -556,5 +559,40 @@ private extension CodableLanding.BlockHorizontalRectangular.Item.Limit {
         data: Landing.BlockHorizontalRectangular.Item.Limit
     ) {
         self.init(id: data.id, title: data.title, md5hash: data.md5hash, text: data.text, maxSum: data.maxSum)
+    }
+}
+
+private extension CodableLanding.CodableCarouselBase {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselBase
+    ) {
+        self.init(
+            title: data.title,
+            size: data.size,
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension CodableLanding.CodableCarouselBase.ListItem {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselBase.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension CodableLanding.CodableCarouselBase.ListItem.Action {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselBase.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
     }
 }

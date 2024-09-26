@@ -151,6 +151,8 @@ private extension Landing.DataView {
             
         case let .list(.horizontalRectangleLimits(x)):
             self = .list(.horizontalRectangleLimits(.init(data: x)))
+        case let .carousel(.base(x)):
+            self = .carousel(.base(.init(data: x)))
         }
     }
 }
@@ -619,5 +621,40 @@ private extension Landing.TextsWithIconHorizontal {
         self.md5hash = data.md5hash
         self.title = data.title
         self.contentCenterAndPull = data.contentCenterAndPull
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselBase {
+    
+    init(
+        data: DecodableLanding.Data.CarouselBaseDecodable
+    ) {
+        self.init(
+            title: data.title,
+            size: data.size,
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselBase.ListItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselBaseDecodable.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselBase.ListItem.Action {
+    
+    init(
+        data: DecodableLanding.Data.CarouselBaseDecodable.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
     }
 }
