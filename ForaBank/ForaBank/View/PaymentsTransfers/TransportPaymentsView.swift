@@ -250,8 +250,7 @@ private extension TransportPaymentsViewModel {
                 model: .emptyMock,
                 closeAction: {}
             )
-        },
-        handleError: { _ in }
+        }
     )
 }
 

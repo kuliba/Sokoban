@@ -206,8 +206,7 @@ final class TransportPaymentsViewModelTests: XCTestCase {
         let sut = TransportPaymentsViewModel(
             operators: operators,
             latestPayments: .sample,
-            makePaymentsViewModel: makePaymentsViewModel,
-            handleError: { _ in }
+            makePaymentsViewModel: makePaymentsViewModel
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

@@ -255,8 +255,7 @@ private extension Model {
     // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
     // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
     func makeTransportPaymentsViewModel(
-        type: PTSectionPaymentsView.ViewModel.PaymentsType,
-        handleError: @escaping (String) -> Void
+        type: PTSectionPaymentsView.ViewModel.PaymentsType
     ) -> TransportPaymentsViewModel? {
         
         guard let anywayOperators = dictionaryAnywayOperators(),
@@ -277,8 +276,7 @@ private extension Model {
         return .init(
             operators: operators,
             latestPayments: latestPayments,
-            makePaymentsViewModel: makePaymentsViewModel(source:),
-            handleError: handleError
+            makePaymentsViewModel: makePaymentsViewModel(source:)
         )
     }
     
@@ -1257,13 +1255,7 @@ private extension PaymentsTransfersViewModel {
     
     private func bindTransport() {
         
-        let transportPaymentsViewModel = model.makeTransportPaymentsViewModel(
-            type: .transport,
-            handleError: { [weak self] in
-                
-                self?.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: $0))
-            }
-        )
+        let transportPaymentsViewModel = model.makeTransportPaymentsViewModel(type: .transport)
         
         if let transportPaymentsViewModel {
             
