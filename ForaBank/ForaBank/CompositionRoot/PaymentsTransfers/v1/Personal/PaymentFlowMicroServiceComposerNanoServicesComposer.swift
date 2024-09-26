@@ -5,16 +5,25 @@
 //  Created by Igor Malyarov on 20.09.2024.
 //
 
+import Combine
+import CombineSchedulers
+import Foundation
 import PayHub
 
 final class PaymentFlowMicroServiceComposerNanoServicesComposer {
     
-    let standardNanoServices: StandardNanoServices
+    private let model: Model
+    private let standardNanoServices: StandardNanoServices
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        standardNanoServices: StandardNanoServices
+        model: Model,
+        standardNanoServices: StandardNanoServices,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.model = model
         self.standardNanoServices = standardNanoServices
+        self.scheduler = scheduler
     }
     
     typealias Operator = PaymentServiceOperator
@@ -31,7 +40,14 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
         let standardMicroService = standardFlowComposer.compose()
         
         return .init(
-            makeMobile: { $0(MobileBinderStub()) },
+            makeMobile: {
+                
+                $0(.init(
+                    model: self.model,
+                    service: .mobileConnection,
+                    scheduler: self.scheduler
+                ))
+            },
             makeQR: { $0(QRBinderStub()) },
             makeStandard: { standardMicroService.makeDestination(category, $0) },
             makeTax: { $0(TaxBinderStub()) },
@@ -39,5 +55,5 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<MobileBinderStub, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub>
 }

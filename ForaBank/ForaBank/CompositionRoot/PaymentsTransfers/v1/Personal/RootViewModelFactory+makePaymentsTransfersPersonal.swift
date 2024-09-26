@@ -56,7 +56,11 @@ extension RootViewModelFactory {
             load: nanoServices.loadCategories,
             microServices: .init(
                 showAll: { $1(CategoryListModelStub(categories: $0)) },
-                showCategory: selectCategory(composer: standardNanoServicesComposer)
+                showCategory: selectCategory(
+                    model: model,
+                    composer: standardNanoServicesComposer,
+                    scheduler: mainScheduler
+                )
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
@@ -141,7 +145,9 @@ extension RootViewModelFactory {
     }
     
     private static func selectCategory(
-        composer: StandardSelectedCategoryDestinationNanoServicesComposer
+        model: Model,
+        composer: StandardSelectedCategoryDestinationNanoServicesComposer,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (
         ServiceCategory, @escaping (SelectedCategoryDestination) -> Void
     ) -> Void {
@@ -150,7 +156,9 @@ extension RootViewModelFactory {
             
             let standardNanoServices = composer.compose(category: category)
             let composer = PaymentFlowMicroServiceComposerNanoServicesComposer(
-                standardNanoServices: standardNanoServices
+                model: model,
+                standardNanoServices: standardNanoServices,
+                scheduler: scheduler
             )
             let nanoServices = composer.compose(category: category)
             let paymentFlowComposer = PaymentFlowMicroServiceComposer(

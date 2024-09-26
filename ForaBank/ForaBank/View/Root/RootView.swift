@@ -273,8 +273,8 @@ private extension RootView {
     ) -> some View {
         
         switch selected {
-        case let .mobile(mobile):
-            Text("TBD: \(String(describing: mobile))")
+        case let .mobile(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
             
         case let .qr(qr):
             Text("TBD: \(String(describing: qr))")
