@@ -118,16 +118,16 @@ extension ProductProfileHistoryView {
                                 switch payload.filterState?.filter.selectedPeriod {
                                 case .week:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
                                     })
                                     
                                 case .month:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
                                     })
                                 case .dates:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
+                                        $0.dateValue.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
                                     })
                                 case .none:
                                     break
@@ -226,17 +226,17 @@ extension ProductProfileHistoryView {
                                 switch filter.filter.selectedPeriod {
                                 case .week:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
                                     })
                                     
                                 case .month:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
                                     })
                                 case .dates:
                                     storageStatements = storageStatements.filter({
                                         
-                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
+                                        $0.dateValue.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
                                     })
                                 }
                             }
