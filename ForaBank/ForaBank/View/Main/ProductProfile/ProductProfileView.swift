@@ -236,7 +236,7 @@ struct ProductProfileView: View {
                 )
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarWithBack(
-                    title: "Выберите период",
+                    title: "Выберите даты или период",
                     dismiss: {
                     viewModel.event(.history(.filter(.dismissCalendar)))
                 })
@@ -295,7 +295,7 @@ struct ProductProfileView: View {
                                 }
                             )
                             .navigationBarWithBack(
-                                title: "Выберите период",
+                                title: "Выберите даты или период",
                                 dismiss: {
                                 viewModel.event(.history(.filter(.dismissCalendar)))
                             })
