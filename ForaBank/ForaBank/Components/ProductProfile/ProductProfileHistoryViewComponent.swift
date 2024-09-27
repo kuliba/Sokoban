@@ -459,7 +459,7 @@ extension ProductProfileHistoryView {
                     case let .list(listViewModel):
                         listViewModel.latestUpdate = nil
                         
-                        if storage.isHistoryComplete == false {
+                        if storage.hasMoreHistoryToShow == false {
                             
                             listViewModel.eldestUpdate = .more(.init(
                                 title: "Смотреть еще",

@@ -262,7 +262,7 @@ extension ProductStatementsStorageTests {
         let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
         
         // when
-        let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete
+        let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).hasMoreHistoryToShow
         
         // then
         XCTAssertTrue(result)
@@ -283,7 +283,7 @@ extension ProductStatementsStorageTests {
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate)
         
         // then
-        XCTAssertFalse(result.isHistoryComplete)
+        XCTAssertFalse(result.hasMoreHistoryToShow)
     }
     
     func testIsHistoryComplete_With_Update_Latest_True() throws {
@@ -298,7 +298,7 @@ extension ProductStatementsStorageTests {
         let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate)
         
         // when
-        let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).isHistoryComplete
+        let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).hasMoreHistoryToShow
         
         // then
         XCTAssertTrue(result)

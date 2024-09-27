@@ -12,12 +12,9 @@ struct ProductStatementsStorage: Codable {
     let period: Period
     let statements: [ProductStatementData]
     let historyLimitDate: Date?
-    var isHistoryComplete: Bool {
+    var hasMoreHistoryToShow: Bool {
         
-        guard let historyLimitDate = historyLimitDate else {
-            return false
-        }
-
+        guard let historyLimitDate else { return false }
         return historyLimitDate >= period.start
     }
     
