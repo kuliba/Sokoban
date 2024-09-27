@@ -36,13 +36,17 @@ private extension FilterEffectHandlerMicroServicesComposer {
         productId: ProductData.ID,
         completion: @escaping MicroServices.ResetPeriodCompletion
     ) {
-        guard let period = model.statements.value[productId]?.period
-        else {
-            return completion(model.calendarDayStart(productId)..<Date())
-        }
-        
-        let range = period.start..<period.end
-        completion(range)
+        DispatchQueue
+            .global(qos: .userInitiated)
+            .asyncAfter(deadline: .now() + .milliseconds(100)) {
+                
+                guard let period = self.model.statements.value[productId]?.period
+                else {
+                    return completion(self.model.calendarDayStart(productId)..<Date())
+                }
+                
+                completion(period.range)
+            }
     }
             
     func updateFilter(
