@@ -28,8 +28,7 @@ public struct ErrorView: View {
                     .foregroundColor(config.iconForeground)
             }
 
-            config.title.text(withConfig: config.titleConfig)
-                .multilineTextAlignment(.center)
+            config.title.text(withConfig: config.titleConfig, alignment: .center)
         }
     }
 }
