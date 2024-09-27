@@ -34,10 +34,10 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
     
     func compose(category: ServiceCategory) -> NanoServices {
         
-        let standardFlowComposer = StandardSelectedCategoryDestinationMicroServiceComposer(
+        let composer = StandardSelectedCategoryDestinationMicroServiceComposer(
             nanoServices: standardNanoServices
         )
-        let standardMicroService = standardFlowComposer.compose()
+        let standardMicroService = composer.compose()
         
         return .init(
             makeMobile: {
@@ -57,9 +57,32 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
                 }
             },
             makeTax: { $0(.success(.init())) },
-            makeTransport: { $0(.success(.init())) }
+            makeTransport: makeTransport
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportBinderStub, SelectedCategoryFailure>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportPaymentsViewModel, SelectedCategoryFailure>
+}
+
+private extension PaymentFlowMicroServiceComposerNanoServicesComposer {
+    
+    typealias TransportCompletion = (Result<TransportPaymentsViewModel, SelectedCategoryFailure>) -> Void
+    
+    func makeTransport(_ completion: @escaping TransportCompletion) {
+        
+        guard let transport = self.makeTransport() else {
+            
+            return completion(.failure(.init(
+                id: .init(),
+                message: "Ошибка создания транспортных платежей"
+            )))
+        }
+        
+        completion(.success(transport))
+    }
+    
+    func makeTransport() -> TransportPaymentsViewModel? {
+        
+        model.makeTransportPaymentsViewModel(type: .transport)
+    }
 }

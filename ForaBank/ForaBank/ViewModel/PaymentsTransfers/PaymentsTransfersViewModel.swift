@@ -249,7 +249,7 @@ extension Model {
     }
 }
 
-private extension Model {
+extension Model {
     
     // TODO: rename `makeTransportPaymentsViewModel`
     // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
