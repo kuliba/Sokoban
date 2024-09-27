@@ -194,11 +194,11 @@ private extension FilterState {
            let upperDate = filter.selectDates?.upperBound,
            filter.selectedPeriod == .dates {
             
-            "\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))"
+            return "\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))"
             
         } else {
             
-            fallback
+           return fallback
         }
     }
 }
