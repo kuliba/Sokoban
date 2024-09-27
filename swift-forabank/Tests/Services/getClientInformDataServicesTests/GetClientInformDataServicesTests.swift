@@ -6,9 +6,9 @@
 //
 
 import XCTest
-import GetAuthorizedZoneService
+import GetClientInformDataServices
 
-final class GetAuthorizedZoneServiceTests: XCTestCase {
+final class getClientInformDataServicesTests: XCTestCase {
 
 
 
