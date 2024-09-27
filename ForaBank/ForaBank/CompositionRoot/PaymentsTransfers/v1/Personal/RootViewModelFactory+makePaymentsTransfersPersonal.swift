@@ -52,7 +52,7 @@ extension RootViewModelFactory {
             model: model,
             scheduler: mainScheduler
         )
-        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
+        let categoryPickerComposer = CategoryPickerSection.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
                 showAll: { $1(CategoryListModelStub(categories: $0)) },

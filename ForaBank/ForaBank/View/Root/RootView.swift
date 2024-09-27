@@ -242,7 +242,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerSection.Binder
     ) -> some View {
         
         ComposedCategoryPickerSectionFlowView(
@@ -255,7 +255,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDomain.Destination
+        destination: CategoryPickerSection.Destination
     ) -> some View {
         
         switch destination {

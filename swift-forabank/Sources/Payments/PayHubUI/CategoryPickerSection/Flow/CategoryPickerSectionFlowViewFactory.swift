@@ -31,7 +31,7 @@ public extension CategoryPickerSectionFlowViewFactory {
     
     typealias MakeContentView = () -> ContentView
     
-    typealias Domain = CategoryPickerSectionDomain<Category, SelectedCategory, CategoryList, Failure>
+    typealias Domain = CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure>
     typealias Destination = Domain.FlowState.Destination
     typealias MakeDestinationView = (Destination) -> DestinationView
 }

@@ -15,7 +15,7 @@ struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel, Destinatio
 where CategoryPickerItemLabel: View,
       DestinationView: View {
     
-    let binder: CategoryPickerSectionDomain.Binder
+    let binder: CategoryPickerSection.Binder
     let config: Config
     let itemLabel: (CategoryPickerSectionState.Item) -> CategoryPickerItemLabel
     let makeDestinationView: MakeDestinationView
@@ -42,7 +42,7 @@ where CategoryPickerItemLabel: View,
 
 extension ComposedCategoryPickerSectionFlowView {
     
-    typealias MakeDestinationView = (CategoryPickerSectionDomain.Destination) -> DestinationView
+    typealias MakeDestinationView = (CategoryPickerSection.Destination) -> DestinationView
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
@@ -75,7 +75,7 @@ private extension ComposedCategoryPickerSectionFlowView {
     }
 }
 
-extension AlertModelOf<CategoryPickerSectionDomain.FlowEvent> {
+extension AlertModelOf<CategoryPickerSection.FlowEvent> {
     
     private static func `default`(
         title: String,

@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionDomain.swift
+//  CategoryPickerSection.swift
 //
 //
 //  Created by Igor Malyarov on 21.08.2024.
@@ -9,9 +9,9 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum CategoryPickerSectionDomain<Category, SelectedCategory, CategoryList, Failure: Error> {}
+public enum CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure: Error> {}
 
-public extension CategoryPickerSectionDomain {
+public extension CategoryPickerSection {
     
     // MARK: - Binder
     

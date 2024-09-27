@@ -9,9 +9,9 @@ import Foundation
 import PayHub
 import PayHubUI
 
-typealias CategoryPickerSectionDomain = PayHubUI.CategoryPickerSectionDomain<ServiceCategory, SelectedCategoryDestination, CategoryListModelStub, SelectedCategoryFailure>
+typealias CategoryPickerSection = PayHubUI.CategoryPickerSection<ServiceCategory, SelectedCategoryDestination, CategoryListModelStub, SelectedCategoryFailure>
 
-extension CategoryPickerSectionDomain {
+extension CategoryPickerSection {
     
     typealias Navigation = FlowState.Navigation
     typealias Destination = FlowState.Destination

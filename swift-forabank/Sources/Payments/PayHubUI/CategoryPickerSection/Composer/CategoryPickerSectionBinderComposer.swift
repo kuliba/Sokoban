@@ -33,7 +33,7 @@ public final class CategoryPickerSectionBinderComposer<Category, SelectedCategor
     public typealias CategoryPickerItem = LoadablePickerState<UUID, Item>.Item
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
     
-    public typealias Domain = CategoryPickerSectionDomain<Category, SelectedCategory, CategoryList, Failure>
+    public typealias Domain = CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure>
     
     public typealias MicroServices = Domain.MicroServices
 }

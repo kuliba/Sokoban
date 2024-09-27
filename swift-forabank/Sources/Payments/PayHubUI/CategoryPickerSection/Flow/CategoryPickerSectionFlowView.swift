@@ -44,7 +44,7 @@ where ContentView: View,
 
 public extension CategoryPickerSectionFlowView {
     
-    typealias Domain = CategoryPickerSectionDomain<Category, SelectedCategory, CategoryList, Failure>
+    typealias Domain = CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure>
     
     typealias State = Domain.FlowState
     typealias Event = Domain.FlowEvent
