@@ -468,16 +468,13 @@ extension ProductProfileHistoryView {
                                 style: .red,
                                 action: { [weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())} )
                             )
-
+                            
                         } else {
                             
                             listViewModel.eldestUpdate = nil
                         }
-                    case .loading:
-                        content = .loading
-                        
                     default:
-                        content = .empty(.init())
+                        break
                     }
                     
                 case let .downloading(downloadingType):
