@@ -13,8 +13,7 @@ struct HistoryEffectHandlerMicroServices {
     struct MakeFilterModelPayload: Equatable {
         
         let productId: ProductData.ID
-        let range: ClosedRange<Date>
-        let selectedServices: Set<String>
+        let state: FilterHistoryState
     }
     
     typealias MakeFilterModelCompletion = (FilterViewModel) -> Void
@@ -42,12 +41,11 @@ extension HistoryEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .filter(productId: productId, range: range, selectServices):
+        case let .filter(productId: productId, state: state):
             
             microServices.makeFilterModel(.init(
                 productId: productId,
-                range: range,
-                selectedServices: selectServices
+                state: state
             )) {
                 dispatch(.receive($0))
             }

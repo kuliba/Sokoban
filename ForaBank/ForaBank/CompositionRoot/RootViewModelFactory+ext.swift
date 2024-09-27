@@ -216,15 +216,16 @@ extension RootViewModelFactory {
                         productId: payload.productId,
                         calendar: .init(
                             date: Date(),
-                            range: .init(range: payload.range),
+                            range: .init(range: payload.state.selectDates ?? (Date().firstDayOfMonth())...Date()),
                             monthsData: .generate(startDate: model.calendarDayStart(payload.productId)),
                             periods: FilterHistoryState.Period.allCases
                         ),
                         filter: .init(
                             title: "Фильтры",
-                            selectDates: payload.range, 
+                            selectDates: payload.state.selectDates,
                             selectedPeriod: .dates,
-                            selectedServices: payload.selectedServices,
+                            selectedTransaction: payload.state.selectedTransaction,
+                            selectedServices: payload.state.selectedServices,
                             periods: FilterHistoryState.Period.allCases,
                             transactionType: FilterHistoryState.TransactionType.allCases,
                             services: services

@@ -65,7 +65,7 @@ final class ProductProfileFlowReducer {
                     state.history,
                     .button(.filter(
                         state.filter.productId,
-                        nil
+                        state.filter.filter
                     )))
                 state.history = history
                 effect = historyEffect.map(Effect.history)
@@ -214,7 +214,7 @@ enum HistoryEvent {
     enum ButtonEvent {
         
         case calendar((Date?, Date?) -> Void)
-        case filter(ProductData.ID, ClosedRange<Date>?)
+        case filter(ProductData.ID, FilterHistoryState)
     }
 }
 

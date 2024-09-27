@@ -35,7 +35,7 @@ public struct FilterState {
     }
 }
 
-public struct FilterHistoryState {
+public struct FilterHistoryState: Equatable {
     
     public let title: String
     
