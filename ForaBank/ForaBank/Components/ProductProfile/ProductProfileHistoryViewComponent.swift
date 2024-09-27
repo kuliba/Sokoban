@@ -331,7 +331,7 @@ extension ProductProfileHistoryView {
         func updateSegmentedBar(
             productId: ProductData.ID,
             statements: [ProductStatementData],
-            selectRange: Range<Date>?,
+            selectRange: ClosedRange<Date>?,
             isMapped: Bool = true
         ) {
             

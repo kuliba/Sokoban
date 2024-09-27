@@ -30,11 +30,11 @@ final class FilterModelReducer {
             switch period {
             case .week:
                 state.filter.selectedPeriod = .week
-                state.filter.selectDates = (.startOfWeek ?? Date())..<Date()
+                state.filter.selectDates = (.startOfWeek ?? Date())...Date()
                 state.status = .loading
             case .month:
                 state.filter.selectedPeriod = .month
-                state.filter.selectDates = (.startOfMonth)..<(Date())
+                state.filter.selectDates = (.startOfMonth)...(Date())
                 state.status = .loading
             case .dates:
                 state.filter.selectedPeriod = .dates

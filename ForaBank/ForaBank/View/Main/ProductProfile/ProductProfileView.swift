@@ -288,7 +288,7 @@ struct ProductProfileView: View {
                                     if let lowerDate = lowerDate,
                                        let upperDate = upperDate {
                                     
-                                        filter.event(.selectedDates(lowerDate..<upperDate, .dates))
+                                        filter.event(.selectedDates(lowerDate...upperDate, .dates))
                                     }
                                     
                                     viewModel.event(.history(.filter(.dismissCalendar)))

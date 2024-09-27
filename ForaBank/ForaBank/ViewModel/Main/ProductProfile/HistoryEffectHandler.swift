@@ -13,7 +13,7 @@ struct HistoryEffectHandlerMicroServices {
     struct MakeFilterModelPayload: Equatable {
         
         let productId: ProductData.ID
-        let range: Range<Date>
+        let range: ClosedRange<Date>
         let selectedServices: Set<String>
     }
     

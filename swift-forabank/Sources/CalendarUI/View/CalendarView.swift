@@ -266,11 +266,11 @@ private extension CalendarView {
 
 public extension CalendarState {
 
-    var selectedRange: Range<Date>? {
+    var selectedRange: ClosedRange<Date>? {
      
         if let lowerDate = range?.lowerDate,
         let upperDate = range?.upperDate {
-            return lowerDate..<upperDate
+            return lowerDate...upperDate
             
         } else {
             

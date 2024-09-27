@@ -46,7 +46,7 @@ extension SegmentedBarView {
             mappedValues: [ProductStatementMerchantGroup: Double],
             productType: ProductType,
             currencyCode: String,
-            selectRange: Range<Date>?,
+            selectRange: ClosedRange<Date>?,
             model: Model
         ) {
             
@@ -67,7 +67,7 @@ extension SegmentedBarView {
             stringValues: [String: Double],
             productType: ProductType,
             currencyCode: String,
-            selectRange: Range<Date>?,
+            selectRange: ClosedRange<Date>?,
             model: Model
         ) {
             
@@ -103,7 +103,7 @@ extension SegmentedBarView {
         
         private static func getTitleLabel(
             productType: ProductType,
-            selectRange: Range<Date>?
+            selectRange: ClosedRange<Date>?
         ) -> String {
             
             if let selectRange {

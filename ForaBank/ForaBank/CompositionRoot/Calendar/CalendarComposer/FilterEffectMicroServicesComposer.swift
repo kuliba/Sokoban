@@ -42,7 +42,7 @@ private extension FilterEffectHandlerMicroServicesComposer {
                 
                 guard let period = self.model.statements.value[productId]?.period
                 else {
-                    return completion(self.model.calendarDayStart(productId)..<Date())
+                    return completion(self.model.calendarDayStart(productId)...Date())
                 }
                 
                 completion(period.range)
@@ -115,7 +115,7 @@ private extension FilterState {
     
     init(
         product: ProductData,
-        range: Range<Date>,
+        range: ClosedRange<Date>,
         selectedPeriod: FilterHistoryState.Period,
         statements: [ProductStatementData]
     ) {

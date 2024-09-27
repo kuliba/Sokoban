@@ -214,7 +214,7 @@ enum HistoryEvent {
     enum ButtonEvent {
         
         case calendar((Date?, Date?) -> Void)
-        case filter(ProductData.ID, Range<Date>?)
+        case filter(ProductData.ID, ClosedRange<Date>?)
     }
 }
 
