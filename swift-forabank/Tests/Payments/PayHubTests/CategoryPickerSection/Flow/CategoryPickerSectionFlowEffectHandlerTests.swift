@@ -14,115 +14,56 @@ final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFl
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, showAll, showCategory) = makeSUT()
+        let (sut, getNavigation) = makeSUT()
         
-        XCTAssertEqual(showAll.callCount, 0)
-        XCTAssertEqual(showCategory.callCount, 0)
+        XCTAssertEqual(getNavigation.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - showAll
+    // MARK: - getNavigation
     
-    func test_showAll_shouldCallShowAllWithEmptyCategoriesOnEmpty() {
+    func test_getNavigation_shouldCallShowAll() {
         
-        let (sut, showAll, _) = makeSUT()
+        let select = makeSelect()
+        let (sut, getNavigation) = makeSUT()
         
-        sut.handleEffect(.showAll([])) { _ in }
+        sut.handleEffect(.select(select)) { _ in }
         
-        XCTAssertEqual(showAll.payloads, [[]])
+        XCTAssertEqual(getNavigation.payloads, [select])
     }
     
-    func test_showAll_shouldCallShowAllWithOneCategoryOnOne() {
+    func test_getNavigation_shouldDeliverCategory() {
         
-        let category = makeCategory()
-        let (sut, showAll, _) = makeSUT()
+        let navigation = makeNavigation()
+        let (sut, getNavigation) = makeSUT()
         
-        sut.handleEffect(.showAll([category])) { _ in }
-        
-        XCTAssertEqual(showAll.payloads, [[category]])
-    }
-    
-    func test_showAll_shouldCallShowAllWithTwoCategoriesOmTwo() {
-        
-        let (category1, category2) = (makeCategory(), makeCategory())
-        let (sut, showAll, _) = makeSUT()
-        
-        sut.handleEffect(.showAll([category1, category2])) { _ in }
-        
-        XCTAssertEqual(showAll.payloads, [[category1, category2]])
-    }
-    
-    func test_showAll_shouldDeliverCategoryList() {
-        
-        let categoryList = makeCategoryList()
-        let (sut, showAll, _) = makeSUT()
-        
-        expect(sut, with: .showAll([]), toDeliver: .receive(.list(categoryList))) {
+        expect(sut, with: .select(makeSelect()), toDeliver: .receive(navigation)) {
             
-            showAll.complete(with: categoryList)
-        }
-    }
-    
-    // MARK: - showCategory
-    
-    func test_showCategory_shouldCallShowAll() {
-        
-        let category = makeCategory()
-        let (sut, _, showCategory) = makeSUT()
-        
-        sut.handleEffect(.showCategory(category)) { _ in }
-        
-        XCTAssertEqual(showCategory.payloads, [category])
-    }
-    
-    func test_showCategory_shouldDeliverCategory() {
-        
-        let model = makeSelectedCategory()
-        let (sut, _, showCategory) = makeSUT()
-        
-        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(.success(model)))) {
-            
-            showCategory.complete(with: .success(model))
-        }
-    }
-    
-    func test_showCategory_shouldDeliverFailureOnFailure() {
-        
-        let failure = makeFailure()
-        let (sut, _, showCategory) = makeSUT()
-        
-        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(.failure(failure)))) {
-            
-            showCategory.complete(with: .failure(failure))
+            getNavigation.complete(with: navigation)
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList, Failure>
-    private typealias ShowAllSpy = Spy<[Category], CategoryList>
-    private typealias ShowCategorySpy = Spy<Category, Result<SelectedCategory, Failure>>
+    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Select, Navigation>
+    private typealias GetNavigationSpy = Spy<Select, Navigation>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        showAll: ShowAllSpy,
-        showCategory: ShowCategorySpy
+        getNavigation: GetNavigationSpy
     ) {
-        let showAll = ShowAllSpy()
-        let showCategory = ShowCategorySpy()
+        let getNavigation = GetNavigationSpy()
         let sut = SUT(microServices: .init(
-            showAll: showAll.process,
-            showCategory: showCategory.process
+            getNavigation: getNavigation.process
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(showAll, file: file, line: line)
-        trackForMemoryLeaks(showCategory, file: file, line: line)
+        trackForMemoryLeaks(getNavigation, file: file, line: line)
         
-        return (sut, showAll, showCategory)
+        return (sut, getNavigation)
     }
     
     private func expect(

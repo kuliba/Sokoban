@@ -5,24 +5,18 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList, Failure: Error> {
+public struct CategoryPickerSectionFlowEffectHandlerMicroServices<Select, Navigation> {
     
-    public let showAll: ShowAll
-    public let showCategory: ShowCategory
+    public let getNavigation: GetNavigation
     
     public init(
-        showAll: @escaping ShowAll,
-        showCategory: @escaping ShowCategory
+        getNavigation: @escaping GetNavigation
     ) {
-        self.showAll = showAll
-        self.showCategory = showCategory
+        self.getNavigation = getNavigation
     }
 }
 
 public extension CategoryPickerSectionFlowEffectHandlerMicroServices {
     
-    typealias ShowAll = ([Category], @escaping (CategoryList) -> Void) -> Void
-
-    typealias ShowCategoryCompletion = (Result<SelectedCategory, Failure>) -> Void
-    typealias ShowCategory = (Category, @escaping ShowCategoryCompletion) -> Void
+    typealias GetNavigation = (Select, @escaping (Navigation) -> Void) -> Void
 }
