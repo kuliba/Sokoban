@@ -142,7 +142,11 @@ extension Model {
                         limitDate: requestProperties.limitDate
                     )
 
-                    storage = Self.reduce(storage: storage, update: update, product: product)
+                    storage = Self.reduce(
+                        storage: storage,
+                        update: update,
+                        product: product
+                    )
 
                 } while continueRequests
                 
@@ -325,8 +329,9 @@ extension Model {
             }
             
         case .eldest:
+            let limitDate = ProductStatementsStorage.historyLimitDate(for: product)
+            
             guard let storage = storage,
-                  let limitDate = ProductStatementsStorage.historyLimitDate(for: product),
                   let period = storage.eldestPeriod(days: days, limitDate: limitDate) else { return nil }
             
             return .init(
@@ -354,7 +359,11 @@ extension Model {
 
 extension Model {
     
-    static func reduce(storage: ProductStatementsStorage?, update: ProductStatementsStorage.Update, product: ProductData ) -> ProductStatementsStorage {
+    static func reduce(
+        storage: ProductStatementsStorage?,
+        update: ProductStatementsStorage.Update,
+        product: ProductData
+    ) -> ProductStatementsStorage {
         
         let historyLimitDate = ProductStatementsStorage.historyLimitDate(for: product)
         if let storage = storage {

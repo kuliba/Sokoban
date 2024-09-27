@@ -15,7 +15,7 @@ struct ProductStatementsStorage: Codable {
     var hasMoreHistoryToShow: Bool {
         
         guard let historyLimitDate else { return false }
-        return historyLimitDate >= period.start
+        return historyLimitDate <= period.start
     }
     
     init(period: Period, statements: [ProductStatementData], historyLimitDate: Date? = nil) {
@@ -76,15 +76,15 @@ extension ProductStatementsStorage {
         return Period(start: startDate, end: endDate)
     }
     
-    static func historyLimitDate(for product: ProductData) -> Date? {
+    static func historyLimitDate(for product: ProductData) -> Date {
         
         product.openDate ?? Self.bankOpenDate
     }
     
-    static let bankOpenDate: Date? = {
+    static let bankOpenDate: Date = {
         
         let components = DateComponents(year: 1992, month: 5, day: 27)
-        return Calendar.current.date(from: components)
+        return Calendar.current.date(from: components)!
         
     }()
 }
