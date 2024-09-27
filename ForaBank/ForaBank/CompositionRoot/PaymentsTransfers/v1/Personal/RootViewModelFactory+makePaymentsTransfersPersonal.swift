@@ -48,14 +48,19 @@ extension RootViewModelFactory {
                     completion(.success($0))
                 }
             },
-            makeMicroServices: microServicesComposer.compose,
+            makeMicroServices: microServicesComposer.compose, 
+            model: model,
             scheduler: mainScheduler
         )
-        let categoryPickerComposer = CategoryPickerSectionBinderComposer(
+        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
                 showAll: { $1(CategoryListModelStub(categories: $0)) },
-                showCategory: selectCategory(composer: standardNanoServicesComposer)
+                showCategory: selectCategory(
+                    model: model,
+                    composer: standardNanoServicesComposer,
+                    scheduler: mainScheduler
+                )
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
@@ -140,16 +145,20 @@ extension RootViewModelFactory {
     }
     
     private static func selectCategory(
-        composer: StandardSelectedCategoryDestinationNanoServicesComposer
+        model: Model,
+        composer: StandardSelectedCategoryDestinationNanoServicesComposer,
+        scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (
-        ServiceCategory, @escaping (SelectedCategoryDestination) -> Void
+        ServiceCategory, @escaping (Result<SelectedCategoryDestination, SelectedCategoryFailure>) -> Void
     ) -> Void {
         
         return { category, completion in
             
             let standardNanoServices = composer.compose(category: category)
             let composer = PaymentFlowMicroServiceComposerNanoServicesComposer(
-                standardNanoServices: standardNanoServices
+                model: model,
+                standardNanoServices: standardNanoServices,
+                scheduler: scheduler
             )
             let nanoServices = composer.compose(category: category)
             let paymentFlowComposer = PaymentFlowMicroServiceComposer(

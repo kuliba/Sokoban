@@ -5,9 +5,11 @@
 //  Created by Igor Malyarov on 20.09.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
+import TextFieldModel
 import UtilityServicePrepaymentCore
 
 final class StandardSelectedCategoryDestinationNanoServicesComposer {
@@ -15,6 +17,7 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
     private let loadLatest: LoadLatest
     private let loadOperators: LoadOperators
     private let makeMicroServices: MakeMicroServices
+    private let model: Model
     private let observeLast: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -22,12 +25,14 @@ final class StandardSelectedCategoryDestinationNanoServicesComposer {
         loadLatest: @escaping LoadLatest,
         loadOperators: @escaping LoadOperators,
         makeMicroServices: @escaping MakeMicroServices,
+        model: Model,
         observeLast: Int = 10,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.loadLatest = loadLatest
         self.loadOperators = loadOperators
         self.makeMicroServices = makeMicroServices
+        self.model = model
         self.observeLast = observeLast
         self.scheduler = scheduler
     }
@@ -56,7 +61,7 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
             makeFailure: { $0(.init()) },
             makeSuccess: { payload, completion in
                 
-                completion(self.makePickerBinder(with: payload, for: category))
+                completion(self.makePickerBinder(with: payload))
             }
         )
     }
@@ -67,11 +72,10 @@ extension StandardSelectedCategoryDestinationNanoServicesComposer {
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makePickerBinder(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for category: ServiceCategory
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.Binder {
         
-        let content = makeContent(with: payload, for: category)
+        let content = makeContent(with: payload)
         let flow = makeFlow(with: payload)
         
         return .init(
@@ -87,28 +91,40 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
 private extension StandardSelectedCategoryDestinationNanoServicesComposer {
     
     func makeContent(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for category: ServiceCategory
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.Content {
+        
+        let providerList = makeProviderList(with: payload)
+        let search = payload.category.hasSearch ? makeSearch() : nil
+        let cancellable = search?.$state
+            .map { $0.text ?? "" }
+            .debounce(for: .milliseconds(300), scheduler: scheduler)
+            .sink { [weak providerList] in providerList?.event(.search($0)) }
+        
+        var cancellables = Set<AnyCancellable>()
+        
+        if let cancellable {
+            
+            cancellables.insert(cancellable)
+        }
         
         return .init(
             operationPicker: (),
-            providerList: makeProviderList(with: payload, for: category.type),
-            search: payload.category.hasSearch ? () : nil,
-            cancellables: []
+            providerList: providerList,
+            search: search,
+            cancellables: cancellables
         )
     }
     
     private func makeProviderList(
-        with payload: StandardNanoServices.MakeSuccessPayload,
-        for categoryType: ServiceCategory.CategoryType
+        with payload: StandardNanoServices.MakeSuccessPayload
     ) -> PaymentProviderPicker.ProviderList {
         
         let reducer = PaymentProviderPicker.ProviderListReducer(
             observeLast: observeLast
         )
         let effectHandler = PaymentProviderPicker.ProviderListEffectHandler(
-            microServices: makeMicroServices(categoryType)
+            microServices: makeMicroServices(payload.category.type)
         )
         
         return .init(
@@ -120,6 +136,21 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
+        )
+    }
+    
+    private func makeSearch() -> RegularFieldViewModel {
+        
+        let placeholderText = "Наименование или ИНН"
+        let searchReducer = TransformingReducer(
+            placeholderText: placeholderText,
+            transform: { $0 }
+        )
+        
+        return .init(
+            initialState: .placeholder(placeholderText),
+            reducer: searchReducer,
+            keyboardType: .default
         )
     }
 }
@@ -139,9 +170,13 @@ private extension StandardSelectedCategoryDestinationNanoServicesComposer {
                     
                     completion(.backendFailure(.connectivity("connectivity failure")))
                 },
-                makeDetailPayment: { completion in
+                makeDetailPayment: {
                     
-                    completion(.payment(()))
+                    $0(.detailPayment(.init(
+                        model: self.model,
+                        service: .requisites,
+                        scheduler: self.scheduler
+                    )))
                 },
                 processProvider: { provider, completion in
                     

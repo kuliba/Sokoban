@@ -16,7 +16,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         assert(makeState(destination: .category(makeSelectedCategory())), event: .dismiss) {
             
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
@@ -35,10 +35,10 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         let category = makeSelectedCategory()
         
-        assert(makeState(isLoading: true, destination: nil), event: .receive(.category(category))) {
+        assert(makeState(isLoading: true, destination: nil), event: .receive(.category(.success(category)))) {
             
             $0.isLoading = false
-            $0.destination = .category(category)
+            $0.navigation = .destination(.category(category))
         }
     }
     
@@ -46,7 +46,27 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         assert(
             makeState(destination: nil),
-            event: .receive(.category(makeSelectedCategory())),
+            event: .receive(.category(.success(makeSelectedCategory()))),
+            delivers: nil
+        )
+    }
+    
+    func test_receive_category_shouldSetIsLoadingToFalseSetNavigationToFailure() {
+        
+        let failure = makeFailure()
+        
+        assert(makeState(isLoading: true, destination: nil), event: .receive(.category(.failure(failure)))) {
+            
+            $0.isLoading = false
+            $0.navigation = .failure(failure)
+        }
+    }
+    
+    func test_receive_category_shouldNotDeliverEffect_failure() {
+        
+        assert(
+            makeState(destination: nil),
+            event: .receive(.category(.failure(makeFailure()))),
             delivers: nil
         )
     }
@@ -58,7 +78,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         assert(makeState(isLoading: true, destination: nil), event: .receive(.list(list))) {
             
             $0.isLoading = false
-            $0.destination = .list(list)
+            $0.navigation = .destination(.list(list))
         }
     }
     
@@ -82,7 +102,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
             event: .select(.category(category))
         ) {
             $0.isLoading = true
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
@@ -104,7 +124,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
             event: .select(.list([]))
         ) {
             $0.isLoading = true
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
@@ -124,7 +144,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
             event: .select(.list([makeCategory()]))
         ) {
             $0.isLoading = true
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
@@ -152,7 +172,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList>
+    private typealias SUT = CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList, Failure>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -173,7 +193,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
         
         return .init(
             isLoading: isLoading,
-            destination: destination
+            navigation: destination.map { .destination($0) }
         )
     }
     

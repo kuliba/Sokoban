@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 31.08.2024.
 //
 
-public final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Transport> {
+public final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Transport, Failure: Error> {
     
     private let nanoServices: NanoServices
     
@@ -14,7 +14,7 @@ public final class PaymentFlowMicroServiceComposer<Mobile, QR, Standard, Tax, Tr
         self.nanoServices = nanoServices
     }
     
-    public typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport>
+    public typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<Mobile, QR, Standard, Tax, Transport, Failure>
 }
 
 public extension PaymentFlowMicroServiceComposer {
@@ -24,7 +24,7 @@ public extension PaymentFlowMicroServiceComposer {
         return .init(makePaymentFlow: makePaymentFlow)
     }
     
-    typealias MicroService = PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport>
+    typealias MicroService = PaymentFlowMicroService<Mobile, QR, Standard, Tax, Transport, Failure>
 }
 
 private extension PaymentFlowMicroServiceComposer {
@@ -33,23 +33,68 @@ private extension PaymentFlowMicroServiceComposer {
     
     func makePaymentFlow(
         type: PaymentFlowID,
-        completion: @escaping (MicroService.Flow) -> Void
+        completion: @escaping (Result<MicroService.Flow, Failure>) -> Void
     ) {
         switch type {
         case .mobile:
-            nanoServices.makeMobile { completion(.mobile($0)) }
+            nanoServices.makeMobile {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(mobile):
+                    completion(.success(.mobile(mobile)))
+                }
+            }
             
         case .qr:
-            nanoServices.makeQR { completion(.qr($0)) }
+            nanoServices.makeQR {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(qr):
+                    completion(.success(.qr(qr)))
+                }
+            }
             
         case .standard:
-            nanoServices.makeStandard { completion(.standard($0)) }
+            nanoServices.makeStandard {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(standard):
+                    completion(.success(.standard(standard)))
+                }
+            }
             
         case .taxAndStateServices:
-            nanoServices.makeTax { completion(.taxAndStateServices($0)) }
+            nanoServices.makeTax {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(tax):
+                    completion(.success(.taxAndStateServices(tax)))
+                }
+            }
             
         case .transport:
-            nanoServices.makeTransport { completion(.transport($0)) }
+            nanoServices.makeTransport {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(transport):
+                    completion(.success(.transport(transport)))
+                }
+            }
         }
     }
 }
