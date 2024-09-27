@@ -156,7 +156,13 @@ extension RootViewModelFactory {
             
             let standardNanoServices = composer.compose(category: category)
             let composer = PaymentFlowMicroServiceComposerNanoServicesComposer(
-                model: model,
+                model: model, 
+                makeQR: RootViewModelFactory.makeMakeQRScannerModel(
+                    model: model,
+                    qrResolverFeatureFlag: .init(.active),
+                    utilitiesPaymentsFlag: .init(.active(.live)),
+                    scheduler: scheduler
+                ),
                 standardNanoServices: standardNanoServices,
                 scheduler: scheduler
             )

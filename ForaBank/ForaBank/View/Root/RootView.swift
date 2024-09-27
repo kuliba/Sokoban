@@ -14,6 +14,7 @@ import RxViewModel
 import SberQR
 import SwiftUI
 import MarketShowcase
+import UIPrimitives
 import UtilityServicePrepaymentUI
 
 struct RootView: View {
@@ -245,12 +246,49 @@ private extension RootView {
         binder: CategoryPickerSection.Binder
     ) -> some View {
         
-        ComposedCategoryPickerSectionFlowView(
-            binder: binder,
-            config: .iFora,
-            itemLabel: itemLabel,
-            makeDestinationView: makeCategoryPickerSectionDestinationView
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                        makeContentView: {
+                            
+                            CategoryPickerSectionContentWrapperView(
+                                model: binder.content,
+                                makeContentView: { state, event in
+                                    
+                                    CategoryPickerSectionContentView(
+                                        state: state,
+                                        event: event,
+                                        config: .iFora,
+                                        itemLabel: itemLabel
+                                    )
+                                }
+                            )
+                        },
+                        makeDestinationView: makeCategoryPickerSectionDestinationView,
+                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                    )
+                )
+            }
         )
+    }
+    
+    func makeCategoryPickerSectionAlert(
+        binder: CategoryPickerSection.Binder
+    ) -> (SelectedCategoryFailure) -> Alert {
+        
+        return { failure in
+            
+            return .init(
+                with: .error(message: failure.message, event: .dismiss),
+                event: { binder.flow.event($0) }
+            )
+        }
     }
     
     @ViewBuilder
@@ -259,12 +297,35 @@ private extension RootView {
     ) -> some View {
         
         switch destination {
-        case let .category(selected):
-            selectedCategoryView(selected)
+        case let .list(list):
+            categoryListView(list)
             
-        case let .list(categoryListModelStub):
-            categoryListView(categoryListModelStub)
+        case let .mobile(mobile):
+            PaymentsView(viewModel: mobile.paymentsViewModel)
+            
+        case let .standard(standard):
+            switch standard {
+            case let .failure(failedPaymentProviderPicker):
+                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                
+            case let .success(binder):
+                paymentProviderPicker(binder)
+            }
+            
+        case let .taxAndStateServices(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+
+        case let .transport(transport):
+            transportPaymentsView(transport)
         }
+    }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionFullScreenCoverView(
+        cover: CategoryPickerSection.FullScreenCover
+    ) -> some View {
+        
+        QRView(viewModel: cover.qr.qrModel)
     }
     
     @ViewBuilder
@@ -627,6 +688,49 @@ private extension RootView {
         Color.blue.opacity(0.1)
     }
 }
+
+private extension AlertModelOf<CategoryPickerSection.FlowEvent> {
+    
+    private static func `default`(
+        title: String,
+        message: String?,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent? = nil
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: secondaryEvent.map {
+                
+                .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: $0
+                )
+            }
+        )
+    }
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .default(
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+            message: message,
+            primaryEvent: event
+        )
+    }
+    
+}
+
 
 extension PaymentProviderPicker.Flow {
     

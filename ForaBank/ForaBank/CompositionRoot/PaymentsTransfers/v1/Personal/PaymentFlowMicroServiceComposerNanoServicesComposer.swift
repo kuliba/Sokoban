@@ -13,15 +13,18 @@ import PayHub
 final class PaymentFlowMicroServiceComposerNanoServicesComposer {
     
     private let model: Model
+    private let makeQR: MakeQRScannerModel
     private let standardNanoServices: StandardNanoServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
+        makeQR: @escaping MakeQRScannerModel,
         standardNanoServices: StandardNanoServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
+        self.makeQR = makeQR
         self.standardNanoServices = standardNanoServices
         self.scheduler = scheduler
     }
@@ -48,7 +51,7 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
                     scheduler: self.scheduler
                 )))
             },
-            makeQR: { $0(.success(.init())) },
+            makeQR: makeQR,
             makeStandard: { completion in
                 
                 standardMicroService.makeDestination(category) {
@@ -57,7 +60,7 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
                 }
             },
             makeTax: {
-
+                
                 $0(.success(.init(
                     model: self.model,
                     category: .taxes,
@@ -68,7 +71,18 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel, SelectedCategoryFailure>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRModel, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel, SelectedCategoryFailure>
+}
+
+private extension PaymentFlowMicroServiceComposerNanoServicesComposer {
+    
+    typealias QRCompletion = (Result<QRModel, SelectedCategoryFailure>) -> Void
+
+    func makeQR(
+        completion: @escaping QRCompletion
+    ) {
+        completion(.success(makeQR()))
+    }
 }
 
 private extension PaymentFlowMicroServiceComposerNanoServicesComposer {
