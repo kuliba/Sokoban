@@ -1024,7 +1024,7 @@ where PrimaryEvent == UtilityServicePaymentFlowEvent,
 
 // MARK: - NavBar
 
-private extension NavigationBarView.ViewModel {
+extension NavigationBarView.ViewModel {
     
     static func with(
         title: String,

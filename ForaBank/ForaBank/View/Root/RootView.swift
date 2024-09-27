@@ -292,7 +292,7 @@ private extension RootView {
             Text("TBD: \(String(describing: taxAndStateServices))")
             
         case let .transport(transport):
-            Text("TBD: \(String(describing: transport))")
+            transportPaymentsView(transport)
         }
     }
     
@@ -413,6 +413,53 @@ private extension RootView {
                 )
                 .contentShape(Rectangle())
             }
+        )
+    }
+        
+    func transportPaymentsView(
+        _ transport: TransportPaymentsViewModel
+    ) -> some View {
+        
+        TransportPaymentsView(viewModel: transport) {
+            MosParkingView(
+                viewModel: .init(
+                    operation: viewModel.model.getMosParkingPickerData
+                ),
+                stateView: { state in
+                    
+                    MosParkingStateView(
+                        state: state,
+                        mapper: DefaultMosParkingPickerDataMapper(
+                            select: transport.selectMosParkingID(id:)
+                        ),
+                        errorView: {
+                            
+                            Text($0.localizedDescription).foregroundColor(.red)
+                        }
+                    )
+                }
+            )
+            // TODO: fix navigation bar
+            // .navigationBar(
+            //     with: .init(
+            //         title: "Московский паркинг",
+            //         rightItems: [
+            //             NavigationBarView.ViewModel.IconItemViewModel(
+            //                 icon: .init("ic40Transport"),
+            //                 style: .large
+            //             )
+            //         ]
+            //     )
+            // )
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBar(
+            with: .with(
+                title: "Транспорт",
+                navLeadingAction: {},//viewModel.dismiss,
+                navTrailingAction: {}//viewModel.openScanner
+            )
         )
     }
     

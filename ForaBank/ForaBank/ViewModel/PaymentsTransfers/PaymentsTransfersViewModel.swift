@@ -219,7 +219,15 @@ extension PaymentsTransfersViewModel {
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
         
-        let (_, data) = try await model.getMosParkingListData()
+        try await model.getMosParkingPickerData()
+    }
+}
+
+extension Model {
+    
+    func getMosParkingPickerData() async throws -> MosParkingPickerData {
+        
+        let (_, data) = try await getMosParkingListData()
         let (state, options, refillID) = try MosParkingDataMapper.map(data: data)
         
         return .init(
@@ -228,10 +236,7 @@ extension PaymentsTransfersViewModel {
             refillID: refillID
         )
     }
-}
 
-extension Model {
-    
     func getMosParkingListData() async throws -> (serial: String, data: [MosParkingData]) {
         
         guard let token else {
