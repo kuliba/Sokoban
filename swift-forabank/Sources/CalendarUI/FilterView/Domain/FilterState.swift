@@ -95,6 +95,11 @@ public extension FilterHistoryState {
     }
 }
 
+public extension FilterHistoryState {
+
+    var isFilterApplied: Bool { selectDates != nil }
+}
+
 extension FilterState {
     
     public static let preview: Self = .init(

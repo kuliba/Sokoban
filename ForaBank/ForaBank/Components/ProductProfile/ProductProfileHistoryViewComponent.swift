@@ -458,8 +458,10 @@ extension ProductProfileHistoryView {
                     switch content {
                     case let .list(listViewModel):
                         listViewModel.latestUpdate = nil
+                        let isFilterApplied = (filter()?.filter.isFilterApplied == false)
                         
-                        if storage.hasMoreHistoryToShow == false {
+                        if storage.hasMoreHistoryToShow,
+                           !isFilterApplied {
                             
                             listViewModel.eldestUpdate = .more(.init(
                                 title: "Смотреть еще",
