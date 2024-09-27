@@ -288,8 +288,8 @@ private extension RootView {
                 paymentProviderPicker(binder)
             }
             
-        case let .taxAndStateServices(taxAndStateServices):
-            Text("TBD: \(String(describing: taxAndStateServices))")
+        case let .taxAndStateServices(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
             
         case let .transport(transport):
             transportPaymentsView(transport)

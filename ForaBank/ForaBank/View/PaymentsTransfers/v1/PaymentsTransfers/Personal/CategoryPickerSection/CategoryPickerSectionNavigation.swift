@@ -17,7 +17,7 @@ extension CategoryPickerSectionDomain {
     typealias Destination = FlowState.Destination
 }
 
-typealias SelectedCategoryDestination = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportPaymentsViewModel>
+typealias SelectedCategoryDestination = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
 
 struct SelectedCategoryFailure: Error, Identifiable {
     
@@ -30,5 +30,3 @@ final class QRBinderStub {}
 typealias StandardSelectedCategoryDestination = Result<PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
 
 final class FailedPaymentProviderPickerStub: Error {}
-
-final class TaxBinderStub {}

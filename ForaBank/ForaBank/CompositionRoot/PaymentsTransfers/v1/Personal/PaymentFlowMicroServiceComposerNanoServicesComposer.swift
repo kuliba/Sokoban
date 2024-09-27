@@ -56,12 +56,19 @@ extension PaymentFlowMicroServiceComposerNanoServicesComposer {
                     completion(.success($0))
                 }
             },
-            makeTax: { $0(.success(.init())) },
+            makeTax: {
+
+                $0(.success(.init(
+                    model: self.model,
+                    category: .taxes,
+                    scheduler: self.scheduler
+                )))
+            },
             makeTransport: makeTransport
         )
     }
     
-    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, TaxBinderStub, TransportPaymentsViewModel, SelectedCategoryFailure>
+    typealias NanoServices = PaymentFlowMicroServiceComposerNanoServices<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel, SelectedCategoryFailure>
 }
 
 private extension PaymentFlowMicroServiceComposerNanoServicesComposer {
