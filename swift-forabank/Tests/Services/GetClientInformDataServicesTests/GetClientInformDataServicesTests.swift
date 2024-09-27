@@ -8,7 +8,7 @@
 import XCTest
 import GetClientInformDataServices
 
-final class getClientInformDataServicesTests: XCTestCase {
+final class GetClientInformDataServicesTests: XCTestCase {
 
 
 
