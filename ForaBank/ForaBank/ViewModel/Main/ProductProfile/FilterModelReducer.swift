@@ -40,7 +40,11 @@ final class FilterModelReducer {
                 state.filter.selectedPeriod = .dates
             }
         case let .selectedTransaction(transactionType):
-            state.filter.selectedTransaction = transactionType
+            if state.filter.selectedTransaction == transactionType {
+                state.filter.selectedTransaction = nil
+            } else {
+                state.filter.selectedTransaction = transactionType
+            }
             
         case let .selectedCategory(service):
             
