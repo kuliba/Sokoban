@@ -169,7 +169,7 @@ extension ProductProfileHistoryView {
                             
                             Task { @MainActor [storageData] in
                                 
-                                updateContent(with: update.groups, content: self.content)
+                                updateContent(with: update.groups)
                                 
                                 updateSegmentedBar(
                                     productId: id,
@@ -270,7 +270,7 @@ extension ProductProfileHistoryView {
                         
                         await MainActor.run {
                             
-                            updateContent(with: update.groups, content: .empty(.init()))
+                            updateContent(with: update.groups)
                             
                             if let state = model.statementsUpdating.value[id] {
                                 
@@ -417,32 +417,32 @@ extension ProductProfileHistoryView {
         }
         
         func updateContent(
-            with groups: [HistoryListViewModel.DayGroupViewModel],
-            content: ProductProfileHistoryView.ViewModel.Content
+            with groups: [HistoryListViewModel.DayGroupViewModel]
         ) {
+            guard !groups.isEmpty else {
+                return content = .empty(.init())
+            }
             
-            if groups.isEmpty == false {
-
-                if case let .list(historyListViewModel) = content {
-
-                    withAnimation {
-                        
-                        historyListViewModel.groups = groups
-                    }
+            if case let .list(historyListViewModel) = content {
+                
+                withAnimation {
                     
-                } else {
-
-                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groups, eldestUpdate: nil)
-                   
-                    withAnimation {
-                        
-                        self.content = .list(listViewModel)
-                    }
+                    historyListViewModel.groups = groups
                 }
                 
             } else {
                 
-                self.content = content
+                let listViewModel = HistoryListViewModel(
+                    expences: nil,
+                    latestUpdate: nil,
+                    groups: groups,
+                    eldestUpdate: nil
+                )
+                
+                withAnimation {
+                    
+                    content = .list(listViewModel)
+                }
             }
         }
         
@@ -458,9 +458,9 @@ extension ProductProfileHistoryView {
                     switch content {
                     case let .list(listViewModel):
                         listViewModel.latestUpdate = nil
-                        let isFilterApplied = (filter()?.filter.isFilterApplied == false)
+                        let isFilterApplied = (filter()?.filter.isFilterApplied == true)
                         
-                        if storage.hasMoreHistoryToShow,
+                        if storage.hasMoreHistoryToShow,    
                            !isFilterApplied {
                             
                             listViewModel.eldestUpdate = .more(.init(

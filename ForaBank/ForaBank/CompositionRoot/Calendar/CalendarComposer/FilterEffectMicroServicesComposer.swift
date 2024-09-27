@@ -61,9 +61,24 @@ private extension FilterEffectHandlerMicroServicesComposer {
         
         cancellable = model.statementsUpdating
             .dropFirst()
-            .debounce(for: 0.3, scheduler: DispatchQueue.global(qos: .userInitiated))
-            .compactMap { $0[payload.productId ] }
-            .sink { state in
+            .compactMap { $0[payload.productId] }
+            .filter { !$0.isDownloadActive }
+            .flatMap { result in
+                
+                switch result {
+                case .downloading, .failed:
+                    return Just(ProductStatementsStorage?.none).eraseToAnyPublisher()
+
+                case .idle:
+                    return self.model.statements
+                        .throttle(for: .milliseconds(300), 
+                                  scheduler: DispatchQueue.main,
+                                  latest: true)
+                        .compactMap { $0[payload.productId] }
+                        .eraseToAnyPublisher()
+                }
+            }
+            .sink { (state: ProductStatementsStorage?) in
                 
                 self.handleStatementResult(payload, state, completion)
             }
@@ -71,36 +86,24 @@ private extension FilterEffectHandlerMicroServicesComposer {
     
     private func handleStatementResult(
         _ payload: FilterEffect.UpdateFilterPayload,
-        _ state: ProductStatementsUpdateState?,
+        _ storage: ProductStatementsStorage?,
         _ completion: @escaping (FilterState?) -> Void
     ) {
+        guard let storage,
+              !storage.statements.isEmpty,
+              let product = model.product(productId: payload.productId)
+        else { return completion(nil) }
         
-        switch state {
-        case .none, .downloading:
-            break
-            
-        case .failed:
-            completion(nil)
-            
-        case .idle:
-            if let product = model.product(productId: payload.productId),
-               let statements = model.statements.value[payload.productId] {
-                
-                let filteredStatements = statements.statements.filter({
-                    payload.range.contains($0.date)
-                })
-                
-                completion(.init(
-                    product: product,
-                    range: payload.range,
-                    selectedPeriod: payload.selectPeriod,
-                    statements: filteredStatements
-                ))
-            } else {
-                
-                completion(nil)
-            }
+        let filteredStatements = storage.statements.filter {
+            payload.range.contains($0.date)
         }
+        
+        completion(.init(
+            product: product,
+            range: payload.range,
+            selectedPeriod: payload.selectPeriod,
+            statements: filteredStatements
+        ))
     }
 }
 
