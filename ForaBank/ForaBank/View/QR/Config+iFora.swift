@@ -152,18 +152,19 @@ public extension FilterConfig {
         ),
         buttonsContainerConfig: .init(
             clearButtonTitle: "Очистить",
-            applyButtonTitle: "Применить"
+            applyButtonTitle: "Применить",
+            disableButtonBackground: .mainColorsGrayLightest
         ),
         optionButtonCloseImage: .ic24Close,
         failureConfig: .init(
-            title: "Мы не смогли загрузить ваши продукты.\nПопробуйте позже.",
+            title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
             titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
             icon: .ic32Search,
             iconForeground: .mainColorsGray,
             backgroundIcon: .mainColorsGrayLightest
         ),
         emptyConfig: .init(
-            title: "В этот период операции отсутствовали",
+            title: "Нет подходящих операций. Попробуйте изменить параметры фильтра",
             titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
             icon: .ic32Search,
             iconForeground: .mainColorsGray,

@@ -24,13 +24,13 @@ public struct FilterWrapperView<ButtonsView: View>: View {
     @ObservedObject private var model: Model
     private let config: Config
     private let calendarViewAction: (CalendarState) -> Void
-    private let buttonsView: () -> ButtonsView
+    private let buttonsView: (Bool) -> ButtonsView
 
     public init(
         model: Model,
         config: Config,
         calendarViewAction: @escaping (CalendarState) -> Void,
-        buttonsView: @escaping () -> ButtonsView
+        buttonsView: @escaping (Bool) -> ButtonsView
     ) {
         self.model = model
         self.calendarViewAction = calendarViewAction
@@ -45,7 +45,9 @@ public struct FilterWrapperView<ButtonsView: View>: View {
             event: model.event(_:),
             config: config,
             calendarViewAction: calendarViewAction,
-            buttonsView: buttonsView
+            buttonsView: { hasFiltered in
+                buttonsView(hasFiltered)
+            }
         )
     }
 }
@@ -58,7 +60,7 @@ public struct FilterView<ButtonsView: View>: View {
     private let filterState: FilterState
     private let filterEvent: (Event) -> Void
     private let config: Config
-    private let buttonsView: () -> ButtonsView
+    private let buttonsView: (Bool) -> ButtonsView
 
     private let calendarViewAction: (CalendarState) -> Void
     
@@ -67,7 +69,7 @@ public struct FilterView<ButtonsView: View>: View {
         event: @escaping (Event) -> Void,
         config: Config,
         calendarViewAction: @escaping (CalendarState) -> Void,
-        buttonsView: @escaping () -> ButtonsView
+        buttonsView: @escaping (Bool) -> ButtonsView
     ) {
         self.filterState = filterState
         self.filterEvent = event
@@ -167,9 +169,18 @@ public struct FilterView<ButtonsView: View>: View {
             }
             Spacer()
             
-            buttonsView()
+            buttonsView(hasFiltered)
         }
         .padding()
+    }
+}
+
+extension FilterView {
+
+    var hasFiltered: Bool {
+        
+        !self.filterState.filter.selectedServices.isEmpty ||
+        self.filterState.filter.selectedTransaction != nil
     }
 }
 
@@ -385,7 +396,8 @@ struct FilterView_Previews: PreviewProvider {
                     ),
                     buttonsContainerConfig: .init(
                         clearButtonTitle: "Очистить",
-                        applyButtonTitle: "Применить"
+                        applyButtonTitle: "Применить",
+                        disableButtonBackground: .gray
                     ),
                     optionButtonCloseImage: .init(systemName: ""),
                     failureConfig: .init(
@@ -404,7 +416,7 @@ struct FilterView_Previews: PreviewProvider {
                     )
                 ),
                 calendarViewAction: {_ in },
-                buttonsView: { Text("Buttons") }
+                buttonsView: { _ in Text("Buttons") }
             )
         }
     }

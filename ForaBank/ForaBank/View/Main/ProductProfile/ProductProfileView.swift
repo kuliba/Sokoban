@@ -250,7 +250,7 @@ struct ProductProfileView: View {
                         config: .iFora
                     ) {
                         viewModel.event(.history(.filter(.period($0))))
-                    } buttonsView: {
+                    } buttonsView: { hasFilter in
                         ButtonsContainer(
                             applyAction: {
                                 
@@ -259,9 +259,11 @@ struct ProductProfileView: View {
                             clearOptionsAction: {
                                 filter.event(.clearOptions)
                             },
+                            isAvailable: hasFilter,
                             config: .init(
                                 clearButtonTitle: "Очистить",
-                                applyButtonTitle: "Применить"
+                                applyButtonTitle: "Применить",
+                                disableButtonBackground: .mainColorsGrayLightest
                             )
                         )
                     }
@@ -871,7 +873,7 @@ extension OperationDetailFactory {
 extension Date {
     
     static func startDayOfCalendar() -> Date {
-        var today = Date.date(Date(), addDays: -31)!
+        var today = Date.date(Date(), addDays: -30)!
         var gregorian = Calendar(identifier: .gregorian)
         gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
         var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
