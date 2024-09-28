@@ -16,31 +16,14 @@ public extension CategoryPickerSection {
     
     // MARK: - Binder
     
-    typealias Binder = PayHub.Binder<CategoryPickerSectionContentDomain<Category>.Content, Flow>
+    typealias Binder = PayHub.Binder<ContentDomain.Content, FlowDomain.Flow>
     typealias BinderComposer = CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList, Failure>
+
+    // MARK: - Content
+    
+    typealias ContentDomain = CategoryPickerSectionContentDomain<Category>
     
     // MARK: - Flow
     
-    typealias Select = CategoryPickerSectionItem<Category, [Category]>
-    
-    typealias FlowState = CategoryPickerSectionFlowState<Navigation>
-    typealias FlowEvent = CategoryPickerSectionFlowEvent<Select, Navigation>
-    typealias FlowEffect = CategoryPickerSectionFlowEffect<Select>
-    
-    typealias Flow = RxViewModel<FlowState, FlowEvent, FlowEffect>
-    
-    typealias FlowReducer = CategoryPickerSectionFlowReducer<Select, Navigation>
-    typealias FlowEffectHandler = CategoryPickerSectionFlowEffectHandler<Select, Navigation>
-    typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Select, Navigation>
-    
-    typealias Navigation = CategoryPickerNavigation<Destination, Failure>
-    typealias Destination = CategoryPickerSectionItem<SelectedCategory, CategoryList>
+    typealias FlowDomain = CategoryPickerSectionFlowDomain<Category, SelectedCategory, CategoryList, Failure>
 }
-
-public enum CategoryPickerNavigation<Destination, Failure> {
-    
-    case destination(Destination)
-    case failure(Failure)
-}
-
-extension CategoryPickerNavigation: Equatable where Destination: Equatable, Failure: Equatable {}

@@ -36,8 +36,9 @@ public final class CategoryPickerSectionBinderComposer<Category, SelectedCategor
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
     
     public typealias Domain = CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure>
+    public typealias FlowDomain = Domain.FlowDomain
     
-    public typealias MicroServices = Domain.MicroServices
+    public typealias MicroServices = FlowDomain.MicroServices
 }
 
 public extension CategoryPickerSectionBinderComposer {
@@ -55,7 +56,7 @@ public extension CategoryPickerSectionBinderComposer {
     
     typealias Binder = Domain.Binder
     typealias Content = ContentDomain.Content
-    typealias Flow = Domain.Flow
+    typealias Flow = FlowDomain.Flow
 }
 
 // MARK: - Content
@@ -86,8 +87,8 @@ private extension CategoryPickerSectionBinderComposer {
     
     func makeFlow() -> Flow {
         
-        let reducer = Domain.FlowReducer()
-        let effectHandler = Domain.FlowEffectHandler(
+        let reducer = FlowDomain.FlowReducer()
+        let effectHandler = FlowDomain.FlowEffectHandler(
             microServices: microServices
         )
         

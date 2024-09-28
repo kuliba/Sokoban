@@ -273,7 +273,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     private typealias Flow = Composer.Flow
     private typealias SUT = Binder<Content, Flow>
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
-    private typealias GetNavigationSpy = Spy<Domain.Select, Domain.Navigation>
+    private typealias GetNavigationSpy = Spy<Domain.FlowDomain.Select, Domain.FlowDomain.Navigation>
     
     private func makeSUT(
         placeholderCount: Int = 6,
