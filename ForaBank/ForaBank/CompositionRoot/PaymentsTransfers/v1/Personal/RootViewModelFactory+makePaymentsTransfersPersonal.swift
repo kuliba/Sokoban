@@ -52,17 +52,24 @@ extension RootViewModelFactory {
             model: model,
             scheduler: mainScheduler
         )
+        
+        let selectCategory = selectCategory(
+            model: model,
+            composer: standardNanoServicesComposer,
+            scheduler: mainScheduler
+        )
         let categoryPickerComposer = CategoryPickerSection.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
                 getNavigation: { payload, completion in
                     
-                    #warning("extract")
-//                    switch payload {
-//                    case let .
-//                    }
-                    
-                    fatalError()
+                    switch payload {
+                    case let .category(category):
+                        selectCategory(category, completion)
+                        
+                    case let .list(list):
+                        completion(.list(.init(categories: list)))
+                    }
                 }
             ),
             placeholderCount: categoryPickerPlaceholderCount,
@@ -152,7 +159,7 @@ extension RootViewModelFactory {
         composer: StandardSelectedCategoryDestinationNanoServicesComposer,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (
-        ServiceCategory, @escaping (Result<SelectedCategoryDestination, SelectedCategoryFailure>) -> Void
+        ServiceCategory, @escaping (CategoryPickerSectionNavigation) -> Void
     ) -> Void {
         
         return { category, completion in
@@ -175,7 +182,16 @@ extension RootViewModelFactory {
             )
             let microService = paymentFlowComposer.compose()
             
-            microService.makePaymentFlow(category.paymentFlowID, completion)
+            microService.makePaymentFlow(category.paymentFlowID) {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(flow):
+                    completion(.paymentFlow(flow))
+                }
+            }
         }
     }
 }

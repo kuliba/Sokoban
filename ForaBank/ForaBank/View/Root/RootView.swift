@@ -293,7 +293,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSection.Destination
+        destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
         switch destination {
@@ -322,39 +322,10 @@ private extension RootView {
     
     @ViewBuilder
     func makeCategoryPickerSectionFullScreenCoverView(
-        cover: CategoryPickerSection.FullScreenCover
+        cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         
         QRView(viewModel: cover.qr.qrModel)
-    }
-    
-    @ViewBuilder
-    func selectedCategoryView(
-        _ selected: SelectedCategoryDestination
-    ) -> some View {
-        
-        switch selected {
-        case let .mobile(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
-            
-        case let .qr(qr):
-            Text("TBD: \(String(describing: qr))")
-            
-        case let .standard(standard):
-            switch standard {
-            case let .failure(failedPaymentProviderPicker):
-                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-                
-            case let .success(binder):
-                paymentProviderPicker(binder)
-            }
-            
-        case let .taxAndStateServices(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
-            
-        case let .transport(transport):
-            transportPaymentsView(transport)
-        }
     }
     
     func paymentProviderPicker(
@@ -691,6 +662,18 @@ private extension RootView {
 
 private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
     
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .default(
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+            message: message,
+            primaryEvent: event
+        )
+    }
+    
     private static func `default`(
         title: String,
         message: String?,
@@ -716,21 +699,7 @@ private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
             }
         )
     }
-    
-    static func error(
-        message: String? = nil,
-        event: PrimaryEvent
-    ) -> Self {
-        
-        .default(
-            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
-            message: message,
-            primaryEvent: event
-        )
-    }
-    
 }
-
 
 extension PaymentProviderPicker.Flow {
     
