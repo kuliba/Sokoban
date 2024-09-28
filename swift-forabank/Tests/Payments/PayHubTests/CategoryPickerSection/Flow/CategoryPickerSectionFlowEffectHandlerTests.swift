@@ -75,22 +75,33 @@ final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFl
         XCTAssertEqual(showCategory.payloads, [category])
     }
     
-    func test_showCategory_shouldDeliverCategoryList() {
+    func test_showCategory_shouldDeliverCategory() {
         
         let model = makeSelectedCategory()
         let (sut, _, showCategory) = makeSUT()
         
-        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(model))) {
+        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(.success(model)))) {
             
-            showCategory.complete(with: model)
+            showCategory.complete(with: .success(model))
+        }
+    }
+    
+    func test_showCategory_shouldDeliverFailureOnFailure() {
+        
+        let failure = makeFailure()
+        let (sut, _, showCategory) = makeSUT()
+        
+        expect(sut, with: .showCategory(makeCategory()), toDeliver: .receive(.category(.failure(failure)))) {
+            
+            showCategory.complete(with: .failure(failure))
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList>
+    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList, Failure>
     private typealias ShowAllSpy = Spy<[Category], CategoryList>
-    private typealias ShowCategorySpy = Spy<Category, SelectedCategory>
+    private typealias ShowCategorySpy = Spy<Category, Result<SelectedCategory, Failure>>
     
     private func makeSUT(
         file: StaticString = #file,

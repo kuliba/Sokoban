@@ -21,7 +21,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[]])
     }
-
+    
     func test_shouldSetContentStatePrefixWithOneElementOnOneElement() {
         
         let element = makeCategoryPickerItemElement()
@@ -30,7 +30,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[element]])
     }
-
+    
     func test_shouldSetContentStatePrefixWithOnePlaceholderOnOnePlaceholder() {
         
         let placeholder = makeCategoryPickerItemPlaceholder()
@@ -39,7 +39,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[placeholder]])
     }
-
+    
     func test_shouldSetContentStatePrefixWithTwoElementsOnTwoElements() {
         
         let element1 = makeCategoryPickerItemElement()
@@ -49,7 +49,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[element1, element2]])
     }
-
+    
     func test_shouldSetContentStatePrefixWithTwoPlaceholdersOnTwoPlaceholders() {
         
         let placeholder1 = makeCategoryPickerItemPlaceholder()
@@ -59,7 +59,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[placeholder1, placeholder2]])
     }
-
+    
     func test_shouldSetContentStatePrefixWithElementAndPlaceholderOnElementAndPlaceholder() {
         
         let element = makeCategoryPickerItemElement()
@@ -79,7 +79,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[]])
     }
-
+    
     func test_shouldSetContentStateSuffixWithOneElementOnOneElement() {
         
         let element = makeCategoryPickerItemElement()
@@ -88,7 +88,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[element]])
     }
-
+    
     func test_shouldSetContentStateSuffixWithOnePlaceholderOnOnePlaceholder() {
         
         let placeholder = makeCategoryPickerItemPlaceholder()
@@ -97,7 +97,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[placeholder]])
     }
-
+    
     func test_shouldSetContentStateSuffixWithTwoElementsOnTwoElements() {
         
         let element1 = makeCategoryPickerItemElement()
@@ -107,7 +107,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[element1, element2]])
     }
-
+    
     func test_shouldSetContentStateSuffixWithTwoPlaceholdersOnTwoPlaceholders() {
         
         let placeholder1 = makeCategoryPickerItemPlaceholder()
@@ -117,7 +117,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [[placeholder1, placeholder2]])
     }
-
+    
     func test_shouldSetContentStateSuffixWithElementAndPlaceholderOnElementAndPlaceholder() {
         
         let element = makeCategoryPickerItemElement()
@@ -134,7 +134,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         let (sut, _,_,_, scheduler) = makeSUT()
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
-        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
         XCTAssertNoDiff(contentSpy.values, [nil])
         XCTAssertNoDiff(flowSpy.values, [nil])
         
@@ -151,7 +151,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         let list = makeCategoryList()
         let (sut, _, showAll, _, scheduler) = makeSUT()
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
-        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
         XCTAssertNoDiff(contentSpy.values, [nil])
         XCTAssertNoDiff(flowSpy.values, [nil])
         
@@ -166,7 +166,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         scheduler.advance()
         
         XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
-        XCTAssertNoDiff(flowSpy.values, [nil, nil, .list(list)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .destination(.list(list))])
     }
     
     func test_shouldChangeFlowNavigationOnContentSelectEvent_showAll_nonEmpty() {
@@ -178,7 +178,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
             .element(.init(.category(category2))),
         ])
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
-        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
         XCTAssertNoDiff(contentSpy.values, [nil])
         XCTAssertNoDiff(flowSpy.values, [nil])
         
@@ -193,7 +193,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         scheduler.advance()
         
         XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
-        XCTAssertNoDiff(flowSpy.values, [nil, nil, .list(list)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .destination(.list(list))])
     }
     
     func test_shouldChangeFlowNavigationOnContentSelectEvent_category() {
@@ -202,7 +202,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         let model = makeSelectedCategory()
         let (sut, _,_, showCategory, scheduler) = makeSUT()
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
-        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
         XCTAssertNoDiff(contentSpy.values, [nil])
         XCTAssertNoDiff(flowSpy.values, [nil])
         
@@ -212,11 +212,34 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         XCTAssertNoDiff(contentSpy.values, [nil, .category(category)])
         XCTAssertNoDiff(flowSpy.values, [nil, nil])
         
-        showCategory.complete(with: model)
+        showCategory.complete(with: .success(model))
         scheduler.advance()
         
         XCTAssertNoDiff(contentSpy.values, [nil, .category(category)])
-        XCTAssertNoDiff(flowSpy.values, [nil, nil, .category(model)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .destination(.category(model))])
+    }
+    
+    func test_shouldChangeFlowNavigationOnContentSelectEvent_failure() {
+        
+        let category = makeCategory()
+        let failure = makeFailure()
+        let (sut, _,_, showCategory, scheduler) = makeSUT()
+        let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
+        XCTAssertNoDiff(contentSpy.values, [nil])
+        XCTAssertNoDiff(flowSpy.values, [nil])
+        
+        sut.content.event(.select(.category(category)))
+        scheduler.advance()
+        
+        XCTAssertNoDiff(contentSpy.values, [nil, .category(category)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil])
+        
+        showCategory.complete(with: .failure(failure))
+        scheduler.advance()
+        
+        XCTAssertNoDiff(contentSpy.values, [nil, .category(category)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .failure(failure)])
     }
     
     func test_shouldResetContentSelectionOnFlowDismissEvent() {
@@ -224,7 +247,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         let list = makeCategoryList()
         let (sut, _, showAll, _, scheduler) = makeSUT()
         let contentSpy = ValueSpy(sut.content.$state.map(\.selected))
-        let flowSpy = ValueSpy(sut.flow.$state.map(\.destination))
+        let flowSpy = ValueSpy(sut.flow.$state.map(\.navigation))
         
         sut.content.event(.select(.showAll))
         scheduler.advance()
@@ -233,24 +256,24 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         scheduler.advance()
         
         XCTAssertNoDiff(contentSpy.values, [nil, .showAll])
-        XCTAssertNoDiff(flowSpy.values, [nil, nil, .list(list)])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .destination(.list(list))])
         
         sut.flow.event(.dismiss)
         scheduler.advance(by: .milliseconds(100))
         
         XCTAssertNoDiff(contentSpy.values, [nil, .showAll, nil])
-        XCTAssertNoDiff(flowSpy.values, [nil, nil, .list(list), nil])
+        XCTAssertNoDiff(flowSpy.values, [nil, nil, .destination(.list(list)), nil])
     }
     
     // MARK: - Helpers
     
-    private typealias Composer = CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList>
+    private typealias Composer = CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList, Failure>
     private typealias Content = Composer.Content
     private typealias Flow = Composer.Flow
     private typealias SUT = Binder<Content, Flow>
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
     private typealias ShowAllSpy = Spy<[Category], CategoryList>
-    private typealias ShowCategorySpy = Spy<Category, SelectedCategory>
+    private typealias ShowCategorySpy = Spy<Category, Result<SelectedCategory, Failure>>
     
     private func makeSUT(
         placeholderCount: Int = 6,
@@ -269,7 +292,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         let showAll = ShowAllSpy()
         let showCategory = ShowCategorySpy()
         let scheduler = DispatchQueue.test
-        let composer = CategoryPickerSectionBinderComposer(
+        let composer = Composer(
             load: load.process(completion:),
             microServices: .init(
                 showAll: showAll.process,
@@ -335,5 +358,17 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
     ) -> Composer.CategoryPickerItem {
         
         return .placeholder(.init())
+    }
+    
+    private struct Failure: Error, Equatable {
+        
+        let value: String
+    }
+    
+    private func makeFailure(
+        _ value: String = anyMessage()
+    ) -> Failure {
+        
+        return .init(value: value)
     }
 }

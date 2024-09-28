@@ -643,7 +643,7 @@ extension PaymentsTransfersPersonal {
     }
 }
 
-private extension CategoryPickerSectionBinder {
+private extension CategoryPickerSectionDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
@@ -653,7 +653,7 @@ private extension CategoryPickerSectionBinder {
 
 private extension CategoryPickerSectionFlowState {
     
-    var hasDestination: Bool { destination != nil }
+    var hasDestination: Bool { navigation != nil }
 }
 
 private extension OperationPickerBinder {

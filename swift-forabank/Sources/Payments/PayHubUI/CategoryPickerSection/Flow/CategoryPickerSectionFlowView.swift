@@ -8,9 +8,10 @@
 import PayHub
 import SwiftUI
 
-public struct CategoryPickerSectionFlowView<ContentView, DestinationView, Category, SelectedCategory, CategoryList>: View
+public struct CategoryPickerSectionFlowView<ContentView, DestinationView, Category, SelectedCategory, Failure, CategoryList>: View
 where ContentView: View,
-      DestinationView: View {
+      DestinationView: View,
+      Failure: Error & Identifiable {
     
     let state: State
     let event: (Event) -> Void
@@ -29,8 +30,12 @@ where ContentView: View,
     public var body: some View {
         
         factory.makeContentView()
+            .alert(
+                item: failure,
+                content: factory.makeAlert
+            )
             .navigationDestination(
-                destination: state.destination,
+                destination: destination,
                 dismiss: { event(.dismiss) },
                 content: factory.makeDestinationView
             )
@@ -39,9 +44,11 @@ where ContentView: View,
 
 public extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSectionFlowState<SelectedCategory, CategoryList>
-    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>
-    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, SelectedCategory, CategoryList>
+    typealias Domain = CategoryPickerSectionDomain<Category, SelectedCategory, CategoryList, Failure>
+    
+    typealias State = Domain.FlowState
+    typealias Event = Domain.FlowEvent
+    typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, SelectedCategory, Failure, CategoryList>
 }
 
 extension CategoryPickerSectionDestination: Identifiable {
@@ -57,5 +64,24 @@ extension CategoryPickerSectionDestination: Identifiable {
     public enum ID: Hashable {
         
         case category, list
+    }
+}
+
+private extension CategoryPickerSectionFlowView {
+    
+    var failure: Failure? {
+        
+        guard case let .failure(failure) = state.navigation
+        else { return nil }
+        
+        return failure
+    }
+    
+    var destination: CategoryPickerSectionDestination<SelectedCategory, CategoryList>? {
+        
+        guard case let .destination(destination) = state.navigation
+        else { return nil }
+        
+        return destination
     }
 }

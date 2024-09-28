@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public enum CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList> {
+public enum CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList, Failure: Error> {
     
     case dismiss
     case receive(Receive)
@@ -16,7 +16,7 @@ public extension CategoryPickerSectionFlowEvent {
     
     enum Receive {
         
-        case category(SelectedCategory)
+        case category(Result<SelectedCategory, Failure>)
         case list(CategoryList)
     }
     
@@ -27,6 +27,6 @@ public extension CategoryPickerSectionFlowEvent {
     }
 }
 
-extension CategoryPickerSectionFlowEvent: Equatable where Category: Equatable, SelectedCategory: Equatable, CategoryList: Equatable {}
-extension CategoryPickerSectionFlowEvent.Receive: Equatable where SelectedCategory: Equatable, CategoryList: Equatable {}
-extension CategoryPickerSectionFlowEvent.Select: Equatable where Category: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionFlowEvent: Equatable where Category: Equatable, SelectedCategory: Equatable, CategoryList: Equatable, Failure: Equatable {}
+extension CategoryPickerSectionFlowEvent.Receive: Equatable where SelectedCategory: Equatable, CategoryList: Equatable, Failure: Equatable {}
+extension CategoryPickerSectionFlowEvent.Select: Equatable where Category: Equatable, CategoryList: Equatable, Failure: Equatable {}

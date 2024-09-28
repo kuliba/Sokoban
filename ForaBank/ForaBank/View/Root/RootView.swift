@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import InfoComponent
+import FooterComponent
 import PaymentSticker
 import PayHubUI
 import RxViewModel
@@ -187,7 +188,7 @@ private extension RootView {
             )
         )
     }
-        
+    
     func makeRestrictionNoticeView() -> some View {
         
         DisableCorCardsView(text: .disableForCorCards)
@@ -216,7 +217,7 @@ private extension RootView {
                 .font(.title3.bold())
         }
     }
-
+    
     func paymentsTransfersPersonalView(
         _ personal: PaymentsTransfersPersonal
     ) -> some View {
@@ -241,7 +242,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionBinder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
         ComposedCategoryPickerSectionFlowView(
@@ -254,7 +255,7 @@ private extension RootView {
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination
+        destination: CategoryPickerSectionDomain.Destination
     ) -> some View {
         
         switch destination {
@@ -272,75 +273,242 @@ private extension RootView {
     ) -> some View {
         
         switch selected {
-        case let .mobile(mobile):
-            Text("TBD: \(String(describing: mobile))")
-
+        case let .mobile(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
         case let .qr(qr):
             Text("TBD: \(String(describing: qr))")
-
+            
         case let .standard(standard):
             switch standard {
             case let .failure(failedPaymentProviderPicker):
                 Text("TBD: \(String(describing: failedPaymentProviderPicker))")
                 
             case let .success(binder):
+                paymentProviderPicker(binder)
+            }
+            
+        case let .taxAndStateServices(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
+        case let .transport(transport):
+            transportPaymentsView(transport)
+        }
+    }
+    
+    func paymentProviderPicker(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: { state, event in
                 
-                RxWrapperView(
-                    model: binder.flow,
-                    makeContentView: { state, event in
+                PaymentProviderPickerFlowView(
+                    state: state,
+                    event: event,
+                    contentView: {
                         
-                        PaymentProviderPickerFlowView(
-                            state: state,
-                            event: event,
-                            contentView: {
-                                
-                                PaymentProviderPickerContentView(
-                                    content: binder.content, 
-                                    factory: .init(
-                                        makeOperationPickerView: { operationPicker in
-                                            
-                                            Text("TBD: operationPicker \(String(describing: operationPicker))")
-                                        },
-                                        makeProviderList: { providerList in
-                                            
-                                            RxWrapperView(
-                                                model: providerList,
-                                                makeContentView: { state, event in
-                                                    
-                                                    PrepaymentPickerSuccessView(
-                                                        state: state,
-                                                        event: event,
-                                                        factory: .init(
-                                                            makeFooterView: { Text("TBD: FooterView \(String(describing: $0))") },
-                                                            makeLastPaymentView: { Text("TBD: Latest \(String(describing: $0))") },
-                                                            makeOperatorView: { Text($0.name) },
-                                                            makeSearchView: { Text("TBD: search") }
-                                                        )
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        makeSearchView: { search in
-                                            
-                                            Text("TBD: search \(String(describing: search))")
-                                        }
-                                    )
-                                )
-                            },
-                            destinationView: { destination in
-                                
-                                Text("TBD: destination view \(String(describing: destination))")
-                            }
-                        )
+                        paymentProviderPickerContentView(binder)
+                    },
+                    destinationView: {
+                        
+                        paymentProviderPickerDestinationView($0)
                     }
                 )
             }
-
-        case let .taxAndStateServices(taxAndStateServices):
-            Text("TBD: \(String(describing: taxAndStateServices))")
-
-        case let .transport(transport):
-            Text("TBD: \(String(describing: transport))")
+        )
+    }
+    
+    func paymentProviderPickerContentView(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        PaymentProviderPickerContentView(
+            content: binder.content,
+            factory: .init(
+                makeOperationPickerView: { _ in EmptyView() },
+                makeProviderList: {
+                    
+                    paymentProviderListView(providerList: $0, binder: binder)
+                },
+                makeSearchView: { _ in EmptyView() }
+            )
+        )
+    }
+    
+    func paymentProviderListView(
+        providerList: PaymentProviderPicker.ProviderList,
+        binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: providerList,
+            makeContentView: { state, event in
+                
+                PrepaymentPickerSuccessView(
+                    state: state,
+                    event: event,
+                    factory: .init(
+                        makeFooterView: {
+                            
+                            FooterView(
+                                state: $0 ? .failure(.iFora) : .footer(.iFora),
+                                event: binder.flow.handleFooterEvent(_:),
+                                config: .iFora
+                            )
+                        },
+                        makeLastPaymentView: {
+                            
+                            makeLatestPaymentView(latest: $0, event: binder.flow.selectLatest(_:))
+                        },
+                        makeOperatorView: {
+                            
+                            makeOperatorView(provider: $0, event: binder.flow.selectProvider(_:))
+                        },
+                        makeSearchView: {
+                            
+                            paymentProviderPickerSearchView(binder.content.search)
+                        }
+                    )
+                )
+            }
+        )
+    }
+    
+    func makeLatestPaymentView(
+        latest: Latest,
+        event: @escaping (Latest) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(latest) },
+            label: {
+                
+                LastPaymentLabel(
+                    amount: latest.amount.map { "\($0) ₽" } ?? "",
+                    title: latest.name,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: latest.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+    }
+    
+    func makeOperatorView(
+        provider: PaymentProviderPicker.Provider,
+        event: @escaping (PaymentProviderPicker.Provider) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(provider) },
+            label: {
+                
+                OperatorLabel(
+                    title: provider.name,
+                    subtitle: provider.inn,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: provider.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+    }
+        
+    func transportPaymentsView(
+        _ transport: TransportPaymentsViewModel
+    ) -> some View {
+        
+        TransportPaymentsView(viewModel: transport) {
+            MosParkingView(
+                viewModel: .init(
+                    operation: viewModel.model.getMosParkingPickerData
+                ),
+                stateView: { state in
+                    
+                    MosParkingStateView(
+                        state: state,
+                        mapper: DefaultMosParkingPickerDataMapper(
+                            select: transport.selectMosParkingID(id:)
+                        ),
+                        errorView: {
+                            
+                            Text($0.localizedDescription).foregroundColor(.red)
+                        }
+                    )
+                }
+            )
+            // TODO: fix navigation bar
+            // .navigationBar(
+            //     with: .init(
+            //         title: "Московский паркинг",
+            //         rightItems: [
+            //             NavigationBarView.ViewModel.IconItemViewModel(
+            //                 icon: .init("ic40Transport"),
+            //                 style: .large
+            //             )
+            //         ]
+            //     )
+            // )
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBar(
+            with: .with(
+                title: "Транспорт",
+                navLeadingAction: {},//viewModel.dismiss,
+                navTrailingAction: {}//viewModel.openScanner
+            )
+        )
+    }
+    
+    func makeIconView(
+        md5Hash: String?
+    ) -> some View {
+        
+        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerSearchView(
+        _ search: PaymentProviderPicker.Search?
+    ) -> some View {
+        
+        search.map { search in
+            
+            DefaultCancellableSearchBarView(
+                viewModel: search,
+                textFieldConfig: .black16,
+                cancel: {
+                    
+                    UIApplication.shared.endEditing()
+                    search.setText(to: nil)
+                }
+            )
+        }
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerDestinationView(
+        _ destination: PaymentProviderPicker.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .backendFailure(backendFailure):
+            Text("TBD: destination view \(String(describing: backendFailure))")
+            
+        case let .detailPayment(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
+        case let .payment(payment):
+            Text("TBD: destination view \(String(describing: payment))")
+            
+        case let .servicePicker(servicePicker):
+            Text("TBD: destination view \(String(describing: servicePicker))")
+            
+        case let .servicesFailure(servicesFailure):
+            Text("TBD: destination view \(String(describing: servicesFailure))")
         }
     }
     
@@ -350,7 +518,7 @@ private extension RootView {
         
         Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
     }
-
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -387,7 +555,7 @@ private extension RootView {
     func makePaymentsTransfersToolbarView(
         binder: PaymentsTransfersPersonalToolbarBinder
     ) -> some View {
-
+        
         ComposedPaymentsTransfersPersonalToolbarView(
             binder: binder,
             factory: .init(
@@ -460,6 +628,33 @@ private extension RootView {
     }
 }
 
+extension PaymentProviderPicker.Flow {
+    
+    func handleFooterEvent(
+        _ event: FooterEvent
+    ) {
+        switch event {
+        case .addCompany:
+            self.event(.select(.chat))
+            
+        case .payByInstruction:
+            self.event(.select(.detailPayment))
+        }
+    }
+    
+    func selectLatest(
+        _ latest: Latest
+    ) {
+        self.event(.select(.latest(latest)))
+    }
+    
+    func selectProvider(
+        _ provider: PaymentProviderPicker.Provider
+    ) {
+        self.event(.select(.provider(provider)))
+    }
+}
+
 extension Latest: Named {
     
     public var name: String {
@@ -470,6 +665,28 @@ extension Latest: Named {
             
         case let .withPhone(withPhone):
             return withPhone.name ?? String(describing: withPhone)
+        }
+    }
+    
+    var amount: Decimal? {
+        
+        switch self {
+        case let .service(service):
+            return service.amount
+            
+        case let .withPhone(withPhone):
+            return withPhone.amount
+        }
+    }
+    
+    var md5Hash: String? {
+        
+        switch self {
+        case let .service(service):
+            return service.md5Hash
+            
+        case let .withPhone(withPhone):
+            return withPhone.md5Hash
         }
     }
 }

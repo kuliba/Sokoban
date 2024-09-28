@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public final class CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList> {
+public final class CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList, Failure: Error> {
     
     public init() {}
 }
@@ -24,20 +24,23 @@ public extension CategoryPickerSectionFlowReducer {
         
         switch event {
         case .dismiss:
-            state.destination = nil
+            state.navigation = nil
             
         case let .receive(receive):
             switch receive {
-            case let .category(category):
-                state.destination = .category(category)
+            case let .category(.failure(failure)):
+                state.navigation = .failure(failure)
+                
+            case let .category(.success(category)):
+                state.navigation = .destination( .category(category))
                 
             case let .list(list):
-                state.destination = .list(list)
+                state.navigation = .destination(.list(list))
             }
             
         case let .select(select):
             state.isLoading = true
-            state.destination = nil
+            state.navigation = nil
 
             switch select {                
             case let .category(category):
@@ -54,7 +57,7 @@ public extension CategoryPickerSectionFlowReducer {
 
 public extension CategoryPickerSectionFlowReducer {
     
-    typealias State = CategoryPickerSectionFlowState<SelectedCategory, CategoryList>
-    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList>
+    typealias State = CategoryPickerSectionFlowState<SelectedCategory, CategoryList, Failure>
+    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList, Failure>
     typealias Effect = CategoryPickerSectionFlowEffect<Category>
 }

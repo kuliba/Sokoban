@@ -44,4 +44,16 @@ class CategoryPickerSectionFlowTests: XCTestCase {
         
         return .init(value: value)
     }
+    
+    struct Failure: Error, Equatable {
+        
+        let value: String
+    }
+    
+    func makeFailure(
+        _ value: String = anyMessage()
+    ) -> Failure {
+        
+        return .init(value: value)
+    }
 }
