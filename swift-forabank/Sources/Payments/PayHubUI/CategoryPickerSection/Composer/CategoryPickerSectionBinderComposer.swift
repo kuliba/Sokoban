@@ -11,7 +11,7 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public final class CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList, Failure: Error> {
+public final class CategoryPickerSectionBinderComposer<Category, Navigation> {
     
     private let load: Load
     private let microServices: MicroServices
@@ -30,13 +30,12 @@ public final class CategoryPickerSectionBinderComposer<Category, SelectedCategor
         self.scheduler = scheduler
     }
     
-    public typealias ContentDomain = CategoryPickerSectionContentDomain<Category>
-    public typealias Item = ContentDomain.Item
-    public typealias CategoryPickerItem = LoadablePickerState<UUID, Item>.Item
-    public typealias Load = (@escaping ([Item]) -> Void) -> Void
-    
-    public typealias Domain = CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure>
+    public typealias Domain = CategoryPickerSection<Category, Navigation>
     public typealias FlowDomain = Domain.FlowDomain
+    public typealias ContentDomain = Domain.ContentDomain
+    
+    public typealias Item = ContentDomain.Item
+    public typealias Load = (@escaping ([Item]) -> Void) -> Void
     
     public typealias MicroServices = FlowDomain.MicroServices
 }
@@ -54,9 +53,8 @@ public extension CategoryPickerSectionBinderComposer {
         return .init(content: content, flow: flow, bind: bind)
     }
     
+    typealias CategoryPickerItem = ContentDomain.State.Item
     typealias Binder = Domain.Binder
-    typealias Content = ContentDomain.Content
-    typealias Flow = FlowDomain.Flow
 }
 
 // MARK: - Content
@@ -66,7 +64,7 @@ private extension CategoryPickerSectionBinderComposer {
     func makeContent(
         prefix: [CategoryPickerItem],
         suffix: [CategoryPickerItem]
-    ) -> Content {
+    ) -> ContentDomain.Content {
         
         let composer = LoadablePickerModelComposer(
             load: load,
@@ -85,7 +83,7 @@ private extension CategoryPickerSectionBinderComposer {
 
 private extension CategoryPickerSectionBinderComposer {
     
-    func makeFlow() -> Flow {
+    func makeFlow() -> FlowDomain.Flow {
         
         let reducer = FlowDomain.FlowReducer()
         let effectHandler = FlowDomain.FlowEffectHandler(
@@ -106,8 +104,8 @@ private extension CategoryPickerSectionBinderComposer {
 private extension CategoryPickerSectionBinderComposer {
     
     func bind(
-        _ content: Content,
-        _ flow: Flow
+        _ content: ContentDomain.Content,
+        _ flow: FlowDomain.Flow
     ) -> Set<AnyCancellable> {
         
         let flowNavigation = flow.$state.map(\.navigation)

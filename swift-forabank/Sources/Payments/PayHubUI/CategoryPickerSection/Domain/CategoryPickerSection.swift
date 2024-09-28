@@ -10,14 +10,14 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum CategoryPickerSection<Category, SelectedCategory, CategoryList, Failure: Error> {}
+public enum CategoryPickerSection<Category, Navigation> {}
 
 public extension CategoryPickerSection {
     
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<ContentDomain.Content, FlowDomain.Flow>
-    typealias BinderComposer = CategoryPickerSectionBinderComposer<Category, SelectedCategory, CategoryList, Failure>
+    typealias BinderComposer = CategoryPickerSectionBinderComposer<Category, Navigation>
 
     // MARK: - Content
     
@@ -25,5 +25,5 @@ public extension CategoryPickerSection {
     
     // MARK: - Flow
     
-    typealias FlowDomain = CategoryPickerSectionFlowDomain<Category, SelectedCategory, CategoryList, Failure>
+    typealias FlowDomain = CategoryPickerSectionFlowDomain<Category, Navigation>
 }

@@ -9,7 +9,7 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum CategoryPickerSectionFlowDomain<Category, SelectedCategory, CategoryList, Failure: Error> {}
+public enum CategoryPickerSectionFlowDomain<Category, Navigation> {}
 
 public extension CategoryPickerSectionFlowDomain {
     
@@ -24,15 +24,4 @@ public extension CategoryPickerSectionFlowDomain {
     typealias FlowReducer = CategoryPickerSectionFlowReducer<Select, Navigation>
     typealias FlowEffectHandler = CategoryPickerSectionFlowEffectHandler<Select, Navigation>
     typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Select, Navigation>
-    
-    typealias Navigation = CategoryPickerNavigation<Destination, Failure>
-    typealias Destination = CategoryPickerSectionItem<SelectedCategory, CategoryList>
 }
-
-public enum CategoryPickerNavigation<Destination, Failure> {
-    
-    case destination(Destination)
-    case failure(Failure)
-}
-
-extension CategoryPickerNavigation: Equatable where Destination: Equatable, Failure: Equatable {}
