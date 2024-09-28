@@ -55,12 +55,15 @@ extension RootViewModelFactory {
         let categoryPickerComposer = CategoryPickerSection.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
-                showAll: { $1(CategoryListModelStub(categories: $0)) },
-                showCategory: selectCategory(
-                    model: model,
-                    composer: standardNanoServicesComposer,
-                    scheduler: mainScheduler
-                )
+                getNavigation: { payload, completion in
+                    
+                    #warning("extract")
+//                    switch payload {
+//                    case let .
+//                    }
+                    
+                    fatalError()
+                }
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
@@ -257,7 +260,6 @@ extension CodableServicePaymentOperator {
     }
 }
 
-#warning("move to call site")
 private extension PaymentServiceOperator {
     
     init(codable: CodableServicePaymentOperator) {

@@ -49,12 +49,20 @@ where ContentView: View,
 
 extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSection.FlowState
-    typealias Event = CategoryPickerSection.FlowEvent
+    typealias State = CategoryPickerSection.FlowDomain.FlowState
+    typealias Event = CategoryPickerSection.FlowDomain.FlowEvent
     typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
 }
 
-private extension CategoryPickerSection.FlowState {
+private extension CategoryPickerSection.FlowDomain.FlowState {
+    
+    var destination: CategoryPickerSection.Destination? {
+        
+        guard case let .destination(destination) = navigation
+        else { return nil }
+        
+        return destination
+    }
     
     var failure: SelectedCategoryFailure? {
         
@@ -66,42 +74,9 @@ private extension CategoryPickerSection.FlowState {
     
     var fullScreenCover: CategoryPickerSection.FullScreenCover? {
         
-        guard case let .destination(.category(.qr(qr))) = navigation
+        guard case let .fullScreenCover(fullScreenCover) = navigation
         else { return nil }
         
-        return .init(id: .init(), qr: qr)
-    }
-    
-    var destination: CategoryPickerSection.Destination? {
-        
-        switch navigation {
-        case .none, .failure:
-            return .none
-            
-        case let .destination(destination):
-            switch destination {
-            case let .category(category):
-                
-                switch category {
-                case let .mobile(mobile):
-                    return .mobile(mobile)
-                    
-                case .qr:
-                    return .none
-                    
-                case let .standard(standard):
-                    return .standard(standard)
-                    
-                case let .taxAndStateServices(taxAndStateServices):
-                    return .taxAndStateServices(taxAndStateServices)
-                    
-                case let .transport(transport):
-                    return .transport(transport)
-                }
-                
-            case let .list(list):
-                return .list(list)
-            }
-        }
+        return fullScreenCover
     }
 }

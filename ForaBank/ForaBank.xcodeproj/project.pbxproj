@@ -542,7 +542,6 @@
 		2A2B91CD2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift */; };
 		2A2B91CF2C7C6F42008F5186 /* ComposedPaymentsTransfersPersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91CE2C7C6F42008F5186 /* ComposedPaymentsTransfersPersonalView.swift */; };
 		2A2B91D62C7C8C19008F5186 /* ComposedCategoryPickerSectionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91D52C7C8C19008F5186 /* ComposedCategoryPickerSectionFlowView.swift */; };
-		2A2B91E02C7CB618008F5186 /* CategoryPickerSectionContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91DF2C7CB618008F5186 /* CategoryPickerSectionContent.swift */; };
 		2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E62C7CBA2E008F5186 /* PlaceholderView.swift */; };
 		2A2B91E92C7CBA54008F5186 /* CategoryPickerSectionStateItemLabelConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E32C7CB981008F5186 /* CategoryPickerSectionStateItemLabelConfig+iFora.swift */; };
 		2A2B91EA2C7CBA54008F5186 /* CategoryPickerSectionContentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iFora.swift */; };
@@ -4023,7 +4022,6 @@
 		2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentsTransfersPersonalView.swift; sourceTree = "<group>"; };
 		2A2B91CE2C7C6F42008F5186 /* ComposedPaymentsTransfersPersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentsTransfersPersonalView.swift; sourceTree = "<group>"; };
 		2A2B91D52C7C8C19008F5186 /* ComposedCategoryPickerSectionFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCategoryPickerSectionFlowView.swift; sourceTree = "<group>"; };
-		2A2B91DF2C7CB618008F5186 /* CategoryPickerSectionContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionContent.swift; sourceTree = "<group>"; };
 		2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A2B91E32C7CB981008F5186 /* CategoryPickerSectionStateItemLabelConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionStateItemLabelConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A2B91E62C7CBA2E008F5186 /* PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderView.swift; sourceTree = "<group>"; };
@@ -8859,17 +8857,8 @@
 				2AD8243C2C87249F0007B8DF /* CategoryPickerSection.swift */,
 				2A387E8C2CA687DD002450B1 /* CategoryPickerSectionFlowView.swift */,
 				2A387E8B2CA687DD002450B1 /* CategoryPickerSectionFlowViewFactory.swift */,
-				2A2B91DE2C7CB608008F5186 /* Content */,
 			);
 			path = CategoryPickerSection;
-			sourceTree = "<group>";
-		};
-		2A2B91DE2C7CB608008F5186 /* Content */ = {
-			isa = PBXGroup;
-			children = (
-				2A2B91DF2C7CB618008F5186 /* CategoryPickerSectionContent.swift */,
-			);
-			path = Content;
 			sourceTree = "<group>";
 		};
 		2A2B91E52C7CBA17008F5186 /* EXTRACT_TO_DESIGN_SYSTEM */ = {
@@ -20516,7 +20505,6 @@
 				2ABB63122C640B6300541DE7 /* TextInputConfig+iFora.swift in Sources */,
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */,
-				2A2B91E02C7CB618008F5186 /* CategoryPickerSectionContent.swift in Sources */,
 				2AA3A9322BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift in Sources */,
 				6806FAAC27E9424D00EA005A /* CircleSegmentedBarView.swift in Sources */,
 				0BB24A9926EFE71C00DDA4F6 /* GetPaymentCountriesListSaved.swift in Sources */,

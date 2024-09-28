@@ -9,11 +9,13 @@ import Foundation
 import PayHub
 import PayHubUI
 
-typealias CategoryPickerSection = PayHubUI.CategoryPickerSection<ServiceCategory, SelectedCategoryDestination, CategoryListModelStub, SelectedCategoryFailure>
+typealias CategoryPickerSection = PayHubUI.CategoryPickerSection<ServiceCategory, CategoryPickerSectionNavigation>
 
-extension CategoryPickerSection {
+enum CategoryPickerSectionNavigation {
     
-    typealias Navigation = FlowState.Navigation
+    case destination(CategoryPickerSection.Destination)
+    case failure(SelectedCategoryFailure)
+    case fullScreenCover(CategoryPickerSection.FullScreenCover)
 }
 
 extension CategoryPickerSection {

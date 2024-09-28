@@ -257,7 +257,7 @@ private extension RootView {
                         makeAlert: makeCategoryPickerSectionAlert(binder: binder),
                         makeContentView: {
                             
-                            CategoryPickerSectionContentWrapperView(
+                            RxWrapperView(
                                 model: binder.content,
                                 makeContentView: { state, event in
                                     
@@ -653,7 +653,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSectionState.Item
+        item: CategoryPickerSection.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -689,7 +689,7 @@ private extension RootView {
     }
 }
 
-private extension AlertModelOf<CategoryPickerSection.FlowEvent> {
+private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
     
     private static func `default`(
         title: String,
