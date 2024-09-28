@@ -29,7 +29,9 @@ public final class CategoryPickerSectionBinderComposer<Category, SelectedCategor
         self.placeholderCount = placeholderCount
         self.scheduler = scheduler
     }
-    public typealias Item = CategoryPickerSectionItem<Category>
+    
+    public typealias ContentDomain = CategoryPickerSectionContentDomain<Category>
+    public typealias Item = ContentDomain.Item
     public typealias CategoryPickerItem = LoadablePickerState<UUID, Item>.Item
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
     
@@ -52,7 +54,7 @@ public extension CategoryPickerSectionBinderComposer {
     }
     
     typealias Binder = Domain.Binder
-    typealias Content = Domain.Content
+    typealias Content = ContentDomain.Content
     typealias Flow = Domain.Flow
 }
 
@@ -107,25 +109,25 @@ private extension CategoryPickerSectionBinderComposer {
         _ flow: Flow
     ) -> Set<AnyCancellable> {
         
-        let flowDestination = flow.$state.map(\.navigation)
-        let dismiss = flowDestination
-            .combineLatest(flowDestination.dropFirst())
+        let flowNavigation = flow.$state.map(\.navigation)
+        let dismiss = flowNavigation
+            .combineLatest(flowNavigation.dropFirst())
             .filter { $0.0 != nil && $0.1 == nil }
             .debounce(for: .milliseconds(100), scheduler: scheduler)
             .sink { _ in content.event(.select(nil)) }
         
         let select = content.$state
-            .sink { state in
+            .sink {
                 
-                switch state.selected {
+                switch $0.selected {
                 case .none:
                     break
                     
                 case let .category(category):
                     flow.event(.select(.category(category)))
                     
-                case .showAll:
-                    let categories: [Category] = state.items.compactMap {
+                case .list:
+                    let categories: [Category] = $0.items.compactMap {
                         
                         guard case let .element(element) = $0,
                               case let .category(category) = element.element
