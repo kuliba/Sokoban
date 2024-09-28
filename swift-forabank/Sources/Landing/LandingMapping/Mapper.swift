@@ -153,6 +153,8 @@ private extension Landing.DataView {
             self = .list(.horizontalRectangleLimits(.init(data: x)))
         case let .carousel(.base(x)):
             self = .carousel(.base(.init(data: x)))
+        case let .carousel(.withTabs(x)):
+            self = .carousel(.withTabs(.init(data: x)))
         }
     }
 }
@@ -654,6 +656,52 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem.Action {
     
     init(
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(size: data.size),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            tabs: data.tabs.map { .init(data: $0) })
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.TabItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.TabItem
+    ) {
+        self.init(
+            name: data.name,
+            list: data.list.map { .init(data: $0) } )
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
     }
