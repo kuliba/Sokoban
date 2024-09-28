@@ -155,7 +155,7 @@ private extension CalendarWrapperView {
             config.title.text(withConfig: config.titleConfig)
                 .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
                 .padding(.horizontal, 16)
-                .background(isActive ? config.background : Color.gray.opacity(0.4))
+                .background(isActive ? config.background : Color.gray.opacity(0.7))
                 .font(.system(size: 18))
                 .clipShape(.rect(cornerRadius: 12))
         }
