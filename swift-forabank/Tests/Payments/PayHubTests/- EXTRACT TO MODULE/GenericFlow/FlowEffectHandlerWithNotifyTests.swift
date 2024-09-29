@@ -1,5 +1,5 @@
 //
-//  FlowEffectHandlerTests.swift
+//  FlowEffectHandlerWithNotifyTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class FlowEffectHandlerTests: FlowTests {
+final class FlowEffectHandlerWithNotifyTests: FlowTests {
     
     // MARK: - init
     
@@ -29,7 +29,26 @@ final class FlowEffectHandlerTests: FlowTests {
         
         sut.handleEffect(.select(select)) { _ in }
         
-        XCTAssertEqual(getNavigation.payloads, [select])
+        XCTAssertEqual(getNavigation.payloads.map(\.0), [select])
+    }
+    
+    func test_getNavigation_shouldDeliverEventViaNotify() throws {
+        
+        let (select, navigation) = (makeSelect(), makeNavigation())
+        let (sut, getNavigation) = makeSUT()
+        var events = [SUT.Event]()
+        sut.handleEffect(.select(makeSelect())) { events.append($0)}
+        let notify = try XCTUnwrap(getNavigation.payloads.map(\.1).first)
+        
+        notify(.dismiss)
+        notify(.receive(navigation))
+        notify(.select(select))
+        
+        XCTAssertEqual(events, [
+            .dismiss,
+            .receive(navigation),
+            .select(select)
+        ])
     }
     
     func test_getNavigation_shouldDeliverNavigation() {
@@ -46,7 +65,8 @@ final class FlowEffectHandlerTests: FlowTests {
     // MARK: - Helpers
     
     private typealias SUT = FlowEffectHandler<Select, Navigation>
-    private typealias GetNavigationSpy = Spy<Select, Navigation>
+    private typealias Notify = SUT.MicroServices.Notify
+    private typealias GetNavigationSpy = Spy<(Select, Notify), Navigation>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -57,7 +77,10 @@ final class FlowEffectHandlerTests: FlowTests {
     ) {
         let getNavigation = GetNavigationSpy()
         let sut = SUT(microServices: .init(
-            getNavigation: getNavigation.process
+            getNavigation: {
+                
+                getNavigation.process(($0, $1), completion: $2)
+            }
         ))
         
         trackForMemoryLeaks(sut, file: file, line: line)

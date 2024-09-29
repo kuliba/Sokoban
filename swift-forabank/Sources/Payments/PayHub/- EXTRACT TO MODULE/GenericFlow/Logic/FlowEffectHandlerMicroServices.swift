@@ -18,5 +18,18 @@ public struct FlowEffectHandlerMicroServices<Select, Navigation> {
 
 public extension FlowEffectHandlerMicroServices {
     
-    typealias GetNavigation = (Select, @escaping (Navigation) -> Void) -> Void
+    typealias Event = FlowEvent<Select, Navigation>
+    typealias Notify = (Event) -> Void
+    typealias GetNavigation = (Select, @escaping Notify, @escaping (Navigation) -> Void) -> Void
+}
+
+public extension FlowEffectHandlerMicroServices {
+    
+    typealias GetNavigationWithoutNotify = (Select, @escaping (Navigation) -> Void) -> Void
+    
+    init(
+        getNavigation: @escaping GetNavigationWithoutNotify
+    ) {
+        self.getNavigation = { getNavigation($0, $2) }
+    }
 }

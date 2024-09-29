@@ -26,7 +26,10 @@ public extension FlowEffectHandler {
     ) {
         switch effect {
         case let .select(select):
-            microServices.getNavigation(select) { dispatch(.receive($0)) }
+            microServices.getNavigation(select, dispatch) {
+                
+                dispatch(.receive($0))
+            }
         }
     }
 }
