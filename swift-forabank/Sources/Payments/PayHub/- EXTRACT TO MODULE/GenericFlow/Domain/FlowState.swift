@@ -14,7 +14,7 @@ public struct FlowState<Navigation> {
         isLoading: Bool = false,
         navigation: Navigation? = nil
     ) {
-        self.isLoading = false
+        self.isLoading = isLoading
         self.navigation = navigation
     }
 }

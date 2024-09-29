@@ -17,12 +17,10 @@ public extension FlowDomain {
     typealias Event = FlowEvent<Select, Navigation>
     typealias Effect = FlowEffect<Select>
     
-    typealias Flow = RxViewModel<State, Event, Effect>
-    
     typealias Reducer = FlowReducer<Select, Navigation>
     typealias EffectHandler = FlowEffectHandler<Select, Navigation>
     typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
     
-#warning("implement")
-    // typealias Composer = FlowComposer<Select, Navigation>
+    typealias Flow = RxViewModel<State, Event, Effect>
+    typealias Composer = FlowComposer<Select, Navigation>
 }
