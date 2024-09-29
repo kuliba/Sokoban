@@ -13,14 +13,13 @@ public extension ResponseMapper {
     static func mapGetAuthorizedZoneClientInformDataResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<GetAuthorizedZoneClientInformDataResponse> {
+    ) -> MappingResult<GetAuthorizedZoneClientInformDataListResponse> {
         
-        map(data, httpURLResponse, mapOrThrow: GetAuthorizedZoneClientInformDataResponse.init)
+        map(data, httpURLResponse, mapOrThrow: GetAuthorizedZoneClientInformDataListResponse.init)
     }
-
 }
 
-private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
+private extension ResponseMapper.GetAuthorizedZoneClientInformDataListResponse {
     
     init(_ data: ResponseMapper._Data) throws {
         
@@ -41,7 +40,6 @@ private extension ResponseMapper.Authorized {
             svg_image: authorizedData.svg_image,
             text: authorizedData.text
         )
-           
     }
 }
 
