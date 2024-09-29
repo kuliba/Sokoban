@@ -520,6 +520,13 @@
         "identifier" : "MarketShowcaseTests",
         "name" : "MarketShowcaseTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
+      }
     }
   ],
   "version" : 1
