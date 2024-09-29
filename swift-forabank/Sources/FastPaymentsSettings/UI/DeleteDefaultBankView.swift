@@ -38,6 +38,7 @@ struct DeleteDefaultBankView: View {
             config.buttonIcon
                 .resizable()
                 .frame(width: 24, height: 24, alignment: .center)
+                .onTapGesture(perform: action)
         }
         .padding(.leading, 17)
         .padding(.trailing, 20)
