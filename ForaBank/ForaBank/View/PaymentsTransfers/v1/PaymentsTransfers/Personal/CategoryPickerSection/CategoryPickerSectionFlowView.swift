@@ -17,16 +17,6 @@ where ContentView: View,
     let event: (Event) -> Void
     let factory: Factory
     
-    init(
-        state: State,
-        event: @escaping (Event) -> Void,
-        factory: Factory
-    ) {
-        self.state = state
-        self.event = event
-        self.factory = factory
-    }
-    
     var body: some View {
         
         factory.makeContentView()
