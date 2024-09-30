@@ -77,12 +77,15 @@ extension UILanding.Component {
         
         case base(UILanding.Carousel.CarouselBase)
         case withTabs(UILanding.Carousel.CarouselWithTabs)
+        case withDots(UILanding.Carousel.CarouselWithDots)
 
         public var id: UUID {
             switch self {
             case let .base(value):
                 return value.id
             case let .withTabs(value):
+                return value.id
+            case let .withDots(value):
                 return value.id
             }
         }

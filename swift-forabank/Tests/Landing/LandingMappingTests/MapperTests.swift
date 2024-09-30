@@ -547,6 +547,24 @@ final class MapperTests: XCTestCase {
                 ])
         ])
     }
+    
+    func test_map_carouselWithDots_deliversCarouselWithDotsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselWithDots.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithDots, [
+            .init(
+                title: nil,
+                size: .init(width: 344, height: 240),
+                scale: "medium",
+                loopedScrolling: true,
+                list: [
+                    .init(imageLink: "imageLink1", link: "link1", action: nil),
+                    .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
+                    .init(imageLink: "imageLink3", link: nil, action: nil)
+                ])
+        ])
+    }
 
     // MARK: - Helpers
     
@@ -3254,6 +3272,44 @@ private extension String {
       }
     }
     """
+    
+    static let carouselWithDots: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "HORIZONTAL_SLIDER_WITH_DOTS",
+        "data": {
+          "size": "344х240",
+          "scale": "medium",
+          "loopedScrolling": true,
+          "list": [
+            {
+              "imageLink": "imageLink1",
+              "link": "link1"
+            },
+            {
+              "imageLink": "imageLink2",
+              "action": {
+                "actionType": "LANDING",
+                "target": "abroadSticker"
+              }
+            },
+            {
+              "imageLink": "imageLink3"
+            }
+          ]
+        }
+      }
+    ],
+    "serial": ""
+    }
+    }
+    """
+
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
@@ -3454,6 +3510,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .carousel(.withTabs(carouselWithTabs)) = $0 {
                 return carouselWithTabs
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselWithDots: [Landing.DataView.Carousel.CarouselWithDots] {
+        
+        compactMap {
+            if case let .carousel(.withDots(carouselWithDots)) = $0 {
+                return carouselWithDots
             } else {
                 return nil
             }

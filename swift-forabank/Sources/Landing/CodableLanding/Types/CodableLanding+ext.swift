@@ -30,6 +30,7 @@ public extension CodableLanding {
         
         case base(CodableCarouselBase)
         case withTabs(CodableCarouselWithTabs)
+        case withDots(CodableCarouselWithDots)
     }
 }
 
