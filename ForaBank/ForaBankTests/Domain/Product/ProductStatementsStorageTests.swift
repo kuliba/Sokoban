@@ -276,12 +276,12 @@ extension ProductStatementsStorageTests {
         
         let period = Period(start: startDate, end: endDate)
         
-        let limitDate = Date.date(year: 2022, month: 3, day: 10, calendar: calendar)!
+        let limitDate = Date.date(year: 2022, month: 5, day: 9, calendar: calendar)!
         let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .eldest, limitDate: limitDate)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate)
-        
+        print("@@@1 result=\(result)")
         // then
         XCTAssertFalse(result.hasMoreHistoryToShow)
     }
@@ -294,14 +294,14 @@ extension ProductStatementsStorageTests {
         
         let period = Period(start: startDate, end: endDate)
         
-        let limitDate = Date.date(year: 2022, month: 5, day: 10, calendar: calendar)!
+        let limitDate = Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!
         let update = ProductStatementsStorage.Update(period: period, statements: [], direction: .latest, limitDate: limitDate)
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).hasMoreHistoryToShow
-        
+        print("@@@2 result=\(result)")
         // then
-        XCTAssertTrue(result)
+        XCTAssertTrue(result) //
     }
 }
 
