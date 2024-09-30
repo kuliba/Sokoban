@@ -651,11 +651,6 @@ private extension CategoryPickerSection.Binder {
     }
 }
 
-private extension CategoryPickerSectionFlowState {
-    
-    var hasDestination: Bool { navigation != nil }
-}
-
 private extension OperationPickerBinder {
     
     var hasDestination: AnyPublisher<Bool, Never> {

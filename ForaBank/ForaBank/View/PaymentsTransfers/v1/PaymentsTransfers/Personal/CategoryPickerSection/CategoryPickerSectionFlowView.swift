@@ -39,14 +39,14 @@ where ContentView: View,
 
 extension CategoryPickerSectionFlowView {
     
-    typealias State = CategoryPickerSection.FlowDomain.FlowState
-    typealias Event = CategoryPickerSection.FlowDomain.FlowEvent
+    typealias State = CategoryPickerSection.FlowDomain.State
+    typealias Event = CategoryPickerSection.FlowDomain.Event
     typealias Factory = CategoryPickerSectionFlowViewFactory<ContentView, DestinationView, FullScreenCoverView>
 }
 
 // MARK: - UI mapping
 
-private extension CategoryPickerSection.FlowDomain.FlowState {
+private extension CategoryPickerSection.FlowDomain.State {
     
     var destination: CategoryPickerSectionNavigation.Destination? {
         

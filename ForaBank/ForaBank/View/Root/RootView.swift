@@ -660,7 +660,7 @@ private extension RootView {
     }
 }
 
-private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
+private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,
