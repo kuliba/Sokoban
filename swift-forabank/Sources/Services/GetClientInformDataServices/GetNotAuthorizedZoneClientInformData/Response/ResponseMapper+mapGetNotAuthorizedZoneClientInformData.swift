@@ -32,16 +32,15 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
 
 private extension ResponseMapper.NotAuthorized {
     
-    init(_ notAuthorizedData: ResponseMapper._Data._NotAuthorized) {
+    init(_ data: ResponseMapper._Data._NotAuthorized) {
         
         self.init(
-            authBlocking: notAuthorizedData.authBlocking,
-            title: notAuthorizedData.title,
-            text: notAuthorizedData.text,
-            update: .init(notAuthorizedData.update)
+            authBlocking: data.authBlocking,
+            title: data.title,
+            text: data.text,
+            update: data.update.map { .init($0) }
         )
     }
-
 }
 
 private extension ResponseMapper.NotAuthorized.Update {
@@ -64,15 +63,16 @@ private extension ResponseMapper {
         let serial: String
         let notAuthorized: [_NotAuthorized]
         
-        public struct _NotAuthorized: Decodable {
+        struct _NotAuthorized: Decodable {
 
             let authBlocking: Bool
             let title: String
             let text: String
-            let update: _Update
+            let update: _Update?
         }
         
-        public struct _Update: Decodable {
+        struct _Update: Decodable {
+            
             let action: String
             let platform: String
             let version: String

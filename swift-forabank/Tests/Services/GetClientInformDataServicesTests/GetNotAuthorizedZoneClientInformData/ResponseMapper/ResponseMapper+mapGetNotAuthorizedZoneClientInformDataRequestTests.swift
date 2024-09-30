@@ -132,7 +132,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
             .init(
                 authBlocking: true,
                 title: "Ой сломалось",
-                text: "Мы уже знаем о проблеме и работаем над её исправлением. Попробуйте зайти позже, а пока можете посмотреть наши продукты https://link_click.",
+                text: "Мы уже знаем о проблеме и работаем над её исправлением. Попробуйте зайти позже, а пока можете посмотреть наши продукты",
                 update: nil
             ),
             .init(
@@ -143,7 +143,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
                     action: "optional",
                     platform: "Android",
                     version: "7.12.15",
-                    link: "https://forabank.ru/reserve_fora.apk"
+                    link: "blahblah"
                 )
             )
         ],
@@ -217,27 +217,26 @@ private extension String {
     "statusCode": 0,
     "errorMessage": null,
     "data": {
-      "serial": "",
-      "notAuthorized": [
-        {
-          "authBlocking": true,
-          "title": "Ой сломалось",
-          "text": "Мы уже знаем о проблеме и работаем над её исправлением. Попробуйте зайти позже, а пока можете посмотреть наши продукты https://link_click."
-        },
-        {
-          "authBlocking": false,
-          "title": "Внимание!",
-          "text": "Вышло новое обновление! Обновитесь скорее!",
-          "update": {
-            "action": "optional",
-            "platform": "Android",
-            "version": "7.12.15",
-            "link": "https://forabank.ru/reserve_fora.apk"
-          }
-        }
-      ]
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": true,
+                "title": "Ой сломалось",
+                "text": "Мы уже знаем о проблеме и работаем над её исправлением. Попробуйте зайти позже, а пока можете посмотреть наши продукты"
+            },
+            {
+                "authBlocking": false,
+                "title": "Внимание!",
+                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "update": {
+                    "action": "optional",
+                    "platform": "Android",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
     }
-  }
 }
 """
 }
