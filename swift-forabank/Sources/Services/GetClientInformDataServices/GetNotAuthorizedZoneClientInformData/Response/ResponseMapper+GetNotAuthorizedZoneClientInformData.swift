@@ -19,17 +19,21 @@ extension ResponseMapper {
         let authBlocking: Bool
         let title: String
         let text: String
-        let update: Update
+        let update: Update?
         
         public init(
             authBlocking: Bool,
             title: String,
             text: String,
-            update: Update
+            update: Update?
         ) {
             self.authBlocking = authBlocking
             self.title = title
             self.text = text
+            guard let update = update else {
+                self.update = nil
+                return
+            }
             self.update = update
         }
         
