@@ -3523,11 +3523,11 @@ extension Array where Element == Landing.DataView {
     var spacing: [Landing.Spacing] {
         
         compactMap {
-            if case let .spacing(indents) = $0 {
-                return indents
-            } else {
-                return nil
-            }
+            
+            guard case let .spacing(indents) = $0 
+            else { return nil }
+            
+            return indents
         }
     }
     
