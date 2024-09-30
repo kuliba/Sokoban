@@ -64,7 +64,7 @@ private extension ResponseMapper {
         let serial: String
         let notAuthorized: [_NotAuthorized]
         
-        struct _NotAuthorized: Decodable {
+        public struct _NotAuthorized: Decodable {
 
             let authBlocking: Bool
             let title: String
@@ -72,7 +72,7 @@ private extension ResponseMapper {
             let update: _Update
         }
         
-        struct _Update: Decodable {
+        public struct _Update: Decodable {
             let action: String
             let platform: String
             let version: String

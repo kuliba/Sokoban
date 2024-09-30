@@ -44,7 +44,7 @@ extension ResponseMapper {
             let version: String
             let link: String
             
-            init(
+            public init(
                 action: String,
                 platform: String,
                 version: String,
