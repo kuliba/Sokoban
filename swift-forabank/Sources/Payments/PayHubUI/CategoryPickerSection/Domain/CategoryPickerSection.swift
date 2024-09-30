@@ -25,5 +25,5 @@ public extension CategoryPickerSection {
     
     // MARK: - Flow
     
-    typealias FlowDomain = CategoryPickerSectionFlowDomain<Category, Navigation>
+    typealias FlowDomain = PayHubUI.FlowDomain<CategoryPickerSectionItem<Category, [Category]>, Navigation>
 }
