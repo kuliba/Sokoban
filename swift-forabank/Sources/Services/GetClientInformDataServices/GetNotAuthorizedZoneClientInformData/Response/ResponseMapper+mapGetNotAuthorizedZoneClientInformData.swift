@@ -17,7 +17,6 @@ public extension ResponseMapper {
         
         map(data, httpURLResponse, mapOrThrow: GetNotAuthorizedZoneClientInformDataResponse.init)
     }
-
 }
 
 private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
@@ -66,6 +65,7 @@ private extension ResponseMapper {
         let notAuthorized: [_NotAuthorized]
         
         struct _NotAuthorized: Decodable {
+
             let authBlocking: Bool
             let title: String
             let text: String

@@ -34,6 +34,7 @@ extension ResponseMapper {
         }
         
         public struct Update: Equatable {
+            
             let action: String
             let platform: String
             let version: String
