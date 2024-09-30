@@ -122,7 +122,7 @@ class InternetTVSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        self.model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
+        self.model.action.send(ModelAction.Products.Update.Total.All())
         view.window?.rootViewController?.dismiss(animated: true)
         operatorsViewModel?.closeAction()
         NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)

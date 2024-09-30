@@ -261,18 +261,6 @@ extension Model {
         }
     }
     
-    func handleDepositsInfoAllRequest() {
-        
-        guard let depositsProducts = products.value[.deposit], depositsProducts.isEmpty == false else {
-            return
-        }
-        
-        for deposit in depositsProducts {
-            
-            action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
-        }
-    }
-    
     func handleDepositsInfoSingleRequest(_ payload: ModelAction.Deposits.Info.Single.Request) {
         
         guard let token = token else {

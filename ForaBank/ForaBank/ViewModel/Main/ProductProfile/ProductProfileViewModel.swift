@@ -538,6 +538,7 @@ private extension ProductProfileViewModel {
         
         action
             .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
                 case _ as ProductProfileViewModelAction.PullToRefresh:
@@ -1651,7 +1652,7 @@ private extension ProductProfileViewModel {
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
                     
-                    model.action.send(ModelAction.Products.Update.Total.All(isCalledOnAuth: false))
+                    model.action.send(ModelAction.Products.Update.Total.All())
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)

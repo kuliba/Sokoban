@@ -278,10 +278,7 @@ extension ModelAction {
             
             enum Total {
                 
-                struct All: Action {
-                    
-                    let isCalledOnAuth: Bool
-                }
+                struct All: Action {}
             }
 
             struct ForProductType: Action {
@@ -498,7 +495,7 @@ extension Model {
         productsFastUpdating.value.remove(product.id)
     }
 
-    func handleProductsUpdateTotalAll(isCalledOnAuth: Bool) {
+    func handleProductsUpdateTotalAll() {
         
         guard self.productsUpdating.value.isEmpty == true else {
             return
@@ -523,9 +520,7 @@ extension Model {
                     queue.delay(
                         for: .seconds((1 + index) * interval),
                         execute: {
-                            self.updateProduct(command, 
-                                               productType: productType,
-                                               isCalledOnAuth: isCalledOnAuth)
+                            self.updateProduct(command, productType: productType)
                         })
                   
                 }
@@ -550,7 +545,7 @@ extension Model {
             self.productsUpdating.value.append(payload.productType)
 
             let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: payload.productType)
-            updateProduct(command, productType: payload.productType, isCalledOnAuth: false)
+            updateProduct(command, productType: payload.productType)
         }
     }
     
@@ -560,10 +555,10 @@ extension Model {
         isCalledOnAuth: Bool
     ) {
         if let getProductsV6 {
-            getProducts_V6(getProductsV6, command, productType, isCalledOnAuth)
+            getProducts_V6(getProductsV6, command, productType)
             
         } else {
-            getProductsV5(command, productType, isCalledOnAuth)
+            getProductsV5(command, productType)
         }
     }
     
@@ -613,12 +608,9 @@ extension Model {
                     self.handleServerCommandCachingError(error: error, command: command)
                 }
                 
-                // update additional products data, without launching when the app starts on the main screen
-                if !isCalledOnAuth {
+                // update additional products data
                     
                     switch productType {
-                    case .deposit:
-                        self.action.send(ModelAction.Deposits.Info.All())
                         
                     case .loan:
                         self.action.send(ModelAction.Loans.Update.All())
@@ -626,7 +618,6 @@ extension Model {
                     default:
                         break
                     }
-                }
             }
             else {
                 // updating status
@@ -640,19 +631,17 @@ extension Model {
     func getProducts_V6(
         _ getProductsV6: Services.GetProductListByTypeV6,
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ productType: ProductType,
-        _ isCalledOnAuth: Bool
+        _ productType: ProductType
     ) {
         getProductsV6(productType) { response in
-            self.handleGetProductListByTypeResponse(productType, command, response, isCalledOnAuth)
+            self.handleGetProductListByTypeResponse(productType, command, response)
         }
     }
     
     func handleGetProductListByTypeResponse(
         _ productType: ProductType,
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ response: Services.GetProductsResponse?,
-        _ isCalledOnAuth: Bool
+        _ response: Services.GetProductsResponse?
     ) {
         switch response {
         case .none:
@@ -669,10 +658,7 @@ extension Model {
             
             loadImages(result.productList)
             productsCacheStore(command, updatedProducts)
-            
-            if !isCalledOnAuth {
-                additionalUpdateIfNeed(productType: productType)
-            }
+            additionalUpdateIfNeed(productType: productType)
         }
     }
 
@@ -733,9 +719,7 @@ extension Model {
         productType: ProductType
     ) {
         switch productType {
-        case .deposit:
-            action.send(ModelAction.Deposits.Info.All())
-            
+        
         case .loan:
             action.send(ModelAction.Loans.Update.All())
             
