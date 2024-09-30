@@ -47,6 +47,18 @@ extension InfoComponent.InfoConfig {
     )
 }
 
+extension UserAccountConfig {
+    
+    static let iFora: Self = .init(
+        fpsConfig: .init(
+            title: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            )
+        )
+    )
+}
+
 extension ProductSelectComponent.ProductSelectConfig {
     
     static let iFora: Self = .init(

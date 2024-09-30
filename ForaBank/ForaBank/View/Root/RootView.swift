@@ -139,7 +139,10 @@ struct RootView: View {
             
         case .userAccount(let viewModel):
             NavigationView {
-                UserAccountView(viewModel: viewModel)
+                UserAccountView(
+                    viewModel: viewModel,
+                    config: .iFora
+                )
             }
             
         case let .payments(paymentsViewModel):
@@ -806,7 +809,7 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:)
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -819,7 +822,7 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeUserAccountView: UserAccountView.init(viewModel:config:),
             makeMarketShowcaseView: { _ in .none }
         )
     }

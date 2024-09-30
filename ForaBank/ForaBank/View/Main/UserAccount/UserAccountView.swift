@@ -17,6 +17,7 @@ import UIPrimitives
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
+    let config: UserAccountConfig
     
     var body: some View {
         
@@ -287,15 +288,23 @@ struct UserAccountView: View {
     private func fpsDestinationView(
         fpsDestination: UserAccountRoute.FPSDestination
     ) -> some View {
-        
+         
+        let title = "Введите код из сообщения"
+
         ZStack {
             
             switch fpsDestination {
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
-                OTPInputWrapperView(viewModel: timedOTPInputViewModel)
-                    .navigationBar(with: .fastPayments(
-                        action: { viewModel.event(.dismiss(.fpsDestination)) }
-                    ))
+                OTPInputWrapperView(
+                    viewModel: timedOTPInputViewModel,
+                    headerView: {
+                        
+                        title.text(withConfig: config.fpsConfig.title)
+                    }
+                )
+                .navigationBar(with: .fastPayments(
+                    action: { viewModel.event(.dismiss(.fpsDestination)) }
+                ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
@@ -369,14 +378,10 @@ private extension UserAccountRoute {
     }
 }
 
-private struct OTPInputWrapperView: View {
+private struct OTPInputWrapperView<HeaderView: View>: View {
     
-    @ObservedObject private var viewModel: TimedOTPInputViewModel
-    
-    init(viewModel: TimedOTPInputViewModel) {
-        
-        self.viewModel = viewModel
-    }
+    @ObservedObject var viewModel: TimedOTPInputViewModel
+    let headerView: () -> HeaderView
     
     var body: some View {
         
@@ -389,7 +394,8 @@ private struct OTPInputWrapperView: View {
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
                 event: viewModel.event(_:),
-                config: .iFora
+                config: .iFora,
+                headerView: headerView
             )
             
         case .validOTP:
@@ -438,7 +444,10 @@ struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        UserAccountView(viewModel: .sample)
+        UserAccountView(
+            viewModel: .sample,
+            config: .preview
+        )
     }
 }
 
