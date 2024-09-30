@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CalendarUI
 
 final class HistoryReducer {}
 
@@ -34,11 +35,10 @@ extension HistoryReducer {
                     calendarState: nil
                 )
                 
-            case let .filter(productId, range):
+            case let .filter(productId, state):
                 effect = .filter(
                     productId: productId,
-                    range: range ?? (.startOfMonth)..<Date(),
-                    selectServices: .init(state?.categories ?? [])
+                    state: state
                 )
             }
         case let .receive(filterModel):
@@ -49,7 +49,7 @@ extension HistoryReducer {
                 buttonAction: .filter,
                 showSheet: .filter(filterModel),
                 categories: state?.categories ?? [],
-                applyAction: {lowerDate,upperDate in
+                applyAction: { lowerDate,upperDate in
                     
                 },
                 calendarState: nil
@@ -106,5 +106,8 @@ extension HistoryReducer {
 
 enum HistoryEffect {
     
-    case filter(productId: ProductData.ID, range: Range<Date>, selectServices: Set<String>)
+    case filter(
+        productId: ProductData.ID,
+        state: FilterHistoryState
+    )
 }

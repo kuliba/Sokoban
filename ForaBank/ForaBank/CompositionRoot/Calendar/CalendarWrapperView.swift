@@ -52,6 +52,7 @@ struct CalendarWrapperView: View {
                                     ),
                                     background: .buttonSecondary
                                 ),
+                                isActive: true,
                                 action: { event(.dismiss) }
                             )
                             
@@ -63,9 +64,13 @@ struct CalendarWrapperView: View {
                                         textColor: .white
                                     ),
                                     background: .buttonPrimary
-                                ),
+                                ), 
+                                isActive: (state.range?.lowerDate != nil && state.range?.upperDate != nil),
                                 action: {
-                                    apply(state.range?.lowerDate, state.range?.upperDate)
+                                    apply(
+                                        state.range?.lowerDate,
+                                        state.range?.upperDate?.isToday() ?? false ? Date() : state.range?.upperDate?.endOfDay
+                                    )
                                 }
                             )
                         }
@@ -95,13 +100,9 @@ private extension CalendarWrapperView {
                         periods: state.periods
                     )
                 case let .selectPeriod(period, lowerDate, upperDate):
-                    self.state = .init(
-                        date: state.date,
-                        range: .init(startDate: lowerDate, endDate: upperDate),
-                        monthsData: state.monthsData,
-                        selectPeriod: period,
-                        periods: state.periods
-                    )
+                    state.range = .init(startDate: lowerDate, endDate: upperDate)
+                    state.selectPeriod = period
+                        
                 case .selectCustomPeriod:
                     self.state = .init(
                         date: state.date,
@@ -145,6 +146,7 @@ private extension CalendarWrapperView {
     
     func simpleButtonView(
         config: SimpleButtonConfig,
+        isActive: Bool,
         action: @escaping () -> Void
     ) -> some View {
         
@@ -153,10 +155,11 @@ private extension CalendarWrapperView {
             config.title.text(withConfig: config.titleConfig)
                 .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
                 .padding(.horizontal, 16)
-                .background(config.background)
+                .background(isActive ? config.background : Color.gray.opacity(0.7))
                 .font(.system(size: 18))
                 .clipShape(.rect(cornerRadius: 12))
         }
+        .allowsHitTesting(isActive)
     }
 }
 

@@ -67,7 +67,6 @@ struct PlaceHolderFilterView: View {
                 }
                 .cornerRadius(16)
             }
-            .padding()
         }
     }
 }

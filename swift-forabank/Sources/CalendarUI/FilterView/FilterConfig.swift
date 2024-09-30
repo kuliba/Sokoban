@@ -46,6 +46,7 @@ public struct FilterConfig {
     
     public struct OptionConfig {
         
+        let font: Font
         let selectBackgroundColor: Color
         let notSelectedBackgroundColor: Color
         
@@ -53,11 +54,13 @@ public struct FilterConfig {
         let notSelectForegroundColor: Color
         
         public init(
+            font: Font,
             selectBackgroundColor: Color,
             notSelectedBackgroundColor: Color,
             selectForegroundColor: Color,
             notSelectForegroundColor: Color
         ) {
+            self.font = font
             self.selectBackgroundColor = selectBackgroundColor
             self.notSelectedBackgroundColor = notSelectedBackgroundColor
             self.selectForegroundColor = selectForegroundColor

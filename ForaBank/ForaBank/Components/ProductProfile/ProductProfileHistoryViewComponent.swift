@@ -113,21 +113,21 @@ extension ProductProfileHistoryView {
                                 }
                             }
                             
-                            if payload.filterState?.filter.selectedPeriod != nil {
+                            if payload.filterState?.filter.selectedPeriod != nil, payload.filterState?.filter.selectDates != nil {
                                 
                                 switch payload.filterState?.filter.selectedPeriod {
                                 case .week:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
                                     })
                                     
                                 case .month:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
                                     })
                                 case .dates:
                                     storageData = storageData.filter({
-                                        $0.date.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
+                                        $0.dateValue.isBetweenStartDate(payload.period.lowerDate ?? Date(), endDateInclusive: payload.period.upperDate ?? Date())
                                     })
                                 case .none:
                                     break
@@ -146,7 +146,7 @@ extension ProductProfileHistoryView {
                                let upperDate = payload.period.upperDate {
                                 
                                 storageData = storageData.filter({
-                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
+                                    $0.dateValue.localDate().isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
                                 })
                             }
                             
@@ -170,9 +170,11 @@ extension ProductProfileHistoryView {
                             Task { @MainActor [storageData] in
                                 
                                 updateContent(with: update.groups)
+                                
                                 updateSegmentedBar(
                                     productId: id,
-                                    statements: storageData
+                                    statements: storageData, 
+                                    selectRange: filter?.filter.selectDates ?? filter?.calendar.selectedRange
                                 )
                             }
                         }
@@ -193,13 +195,16 @@ extension ProductProfileHistoryView {
                     Task.detached(priority: .high) { [self] in
                         
                         var storageStatements: [ProductStatementData] = storage.statements
-                        if let filter = filter() {
+                        if let filter = filter(),
+                           (filter.calendar.selectedRange != nil || filter.filter.selectDates != nil) {
                             
                             if let lowerDate = filter.calendar.range?.lowerDate,
                                let upperDate = filter.calendar.range?.upperDate {
                                 
                                 storageStatements = storage.statements.filter({
-                                    $0.tranDate?.isBetweenStartDate(lowerDate, endDateInclusive: upperDate) ?? false
+                                    
+                                    print($0.dateValue.localDate())
+                                    return $0.dateValue.localDate().isBetweenStartDate(lowerDate, endDateInclusive: upperDate)
                                 })
                             }
                             if filter.filter.selectedTransaction != nil {
@@ -223,17 +228,17 @@ extension ProductProfileHistoryView {
                                 switch filter.filter.selectedPeriod {
                                 case .week:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
+                                        $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())
                                     })
                                     
                                 case .month:
                                     storageStatements = storageStatements.filter({
-                                        $0.date.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
+                                        $0.dateValue.isBetweenStartDate(Date(), endDateInclusive: Date().start(of: .month))
                                     })
                                 case .dates:
                                     storageStatements = storageStatements.filter({
                                         
-                                        $0.date.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
+                                        $0.dateValue.isBetweenStartDate(filter.filter.selectDates?.lowerBound ?? Date(), endDateInclusive: filter.filter.selectDates?.upperBound ?? Date())
                                     })
                                 }
                             }
@@ -250,6 +255,7 @@ extension ProductProfileHistoryView {
                         updateSegmentedBar(
                             productId: id,
                             statements: storageStatements,
+                            selectRange: filter()?.filter.selectDates ?? filter()?.calendar.selectedRange,
                             isMapped: false
                         )
                         
@@ -327,6 +333,7 @@ extension ProductProfileHistoryView {
         func updateSegmentedBar(
             productId: ProductData.ID,
             statements: [ProductStatementData],
+            selectRange: ClosedRange<Date>?,
             isMapped: Bool = true
         ) {
             
@@ -352,19 +359,29 @@ extension ProductProfileHistoryView {
             case .loan: return
             }
             
-            let statementFilteredPeriod = statementFilteredOperation
-                .filter { Calendar.current.dateComponents([.year, .month], from: $0.dateValue)
-                    == Calendar.current.dateComponents([.year, .month], from: Date()) }
+            var statementFilteredPeriod = statementFilteredOperation
+            
+            if let selectRange {
+                
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter {
+                        $0.dateValue.isBetweenStartDate(selectRange.lowerBound, endDateInclusive: selectRange.upperBound)
+                    }
+                
+            } else {
+                statementFilteredPeriod = statementFilteredPeriod
+                    .filter { Calendar.current.isInMonth($0.dateValue)}
+            }
             
             if isMapped {
                 
                 let dict = statementFilteredPeriod
-                            .reduce(into: [ ProductStatementMerchantGroup: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[.init($1.groupName), default: 0] += documentAmount
-                                }
-                            }
+                    .reduce(into: [ProductStatementMerchantGroup: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[.init($1.groupName), default: 0] += documentAmount
+                        }
+                    }
                 
                 Task { @MainActor in
                     
@@ -372,6 +389,7 @@ extension ProductProfileHistoryView {
                         mappedValues: dict,
                         productType: product.productType,
                         currencyCode: product.currency,
+                        selectRange: selectRange,
                         model: model
                     )
                 }
@@ -379,18 +397,20 @@ extension ProductProfileHistoryView {
             } else {
                 
                 let dict = statementFilteredPeriod
-                            .reduce(into: [ String: Double]()) {
-                                if let documentAmount = $1.documentAmount {
-                                    
-                                    $0[$1.groupName, default: 0] += documentAmount
-                                }
-                            }
+                    .reduce(into: [ String: Double]()) {
+                        if let documentAmount = $1.documentAmount {
+                            
+                            $0[$1.groupName, default: 0] += documentAmount
+                        }
+                    }
+                
                 Task { @MainActor in
                     
                     segmentBarViewModel = .init(
                         stringValues: dict,
                         productType: product.productType,
                         currencyCode: product.currency,
+                        selectRange: selectRange,
                         model: model
                     )
                 }
@@ -398,34 +418,40 @@ extension ProductProfileHistoryView {
             }
         }
         
-        func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
+        func updateContent(
+            with groups: [HistoryListViewModel.DayGroupViewModel]
+        ) {
+            guard !groups.isEmpty else {
+                return content = .empty(.init())
+            }
             
-            if groups.isEmpty == false {
-
-                if case let .list(historyListViewModel) = content {
-
-                    withAnimation {
-                        
-                        historyListViewModel.groups = groups
-                    }
+            if case let .list(historyListViewModel) = content {
+                
+                withAnimation {
                     
-                } else {
-
-                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groups, eldestUpdate: nil)
-                   
-                    withAnimation {
-                        
-                        content = .list(listViewModel)
-                    }
+                    historyListViewModel.groups = groups
                 }
                 
             } else {
                 
-                content = .empty(.init())
+                let listViewModel = HistoryListViewModel(
+                    expences: nil,
+                    latestUpdate: nil,
+                    groups: groups,
+                    eldestUpdate: nil
+                )
+                
+                withAnimation {
+                    
+                    content = .list(listViewModel)
+                }
             }
         }
         
-        func updateContent(with state: ProductStatementsUpdateState, storage: ProductStatementsStorage) {
+        func updateContent(
+            with state: ProductStatementsUpdateState,
+            storage: ProductStatementsStorage
+        ) {
             
             withAnimation {
                 
@@ -434,18 +460,23 @@ extension ProductProfileHistoryView {
                     switch content {
                     case let .list(listViewModel):
                         listViewModel.latestUpdate = nil
+                        let isFilterApplied = (filter()?.filter.isFilterApplied == true)
                         
-                        if storage.isHistoryComplete == false {
+                        if storage.hasMoreHistoryToShow,    
+                           !isFilterApplied {
                             
-                            listViewModel.eldestUpdate = .more(.init(title: "Смотреть еще", style: .gray, action: {[weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())}))
-
+                            listViewModel.eldestUpdate = .more(.init(
+                                title: "Смотреть еще",
+                                style: .red,
+                                action: { [weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())} )
+                            )
+                            
                         } else {
                             
                             listViewModel.eldestUpdate = nil
                         }
-
                     default:
-                        content = .empty(.init())
+                        break
                     }
                     
                 case let .downloading(downloadingType):
@@ -487,6 +518,18 @@ extension ProductProfileHistoryView {
                 }
             }
         }
+    }
+}
+
+extension Calendar {
+ 
+    func isInMonth(
+        _ date: Date,
+        of currentDate: Date = .init()
+    ) -> Bool {
+        
+        dateComponents([.year, .month], from: date)
+            == dateComponents([.year, .month], from: currentDate)
     }
 }
 
@@ -598,6 +641,22 @@ enum ProductProfileHistoryViewModelAction {
 
 //MARK: - Types
 
+extension ProductProfileHistoryView.ViewModel.Content {
+    
+    var amounts: [Double]? {
+        guard case let .list(list) = self else { return nil }
+        return list.expences?.amounts
+    }
+}
+
+extension ProductProfileViewModel {
+
+    var amounts: [Double]? {
+     
+        history?.content.amounts
+    }
+}
+
 extension ProductProfileHistoryView.ViewModel {
     
     struct HeaderViewModel {
@@ -632,7 +691,12 @@ extension ProductProfileHistoryView.ViewModel {
         @Published var groups: [DayGroupViewModel]
         @Published var eldestUpdate: EldestUpdateState?
         
-        init(expences: MonthExpencesViewModel?, latestUpdate: LatestUpdateState?, groups: [DayGroupViewModel], eldestUpdate: EldestUpdateState?) {
+        init(
+            expences: MonthExpencesViewModel?,
+            latestUpdate: LatestUpdateState?,
+            groups: [DayGroupViewModel],
+            eldestUpdate: EldestUpdateState?
+        ) {
             
             self.expences = expences
             self.latestUpdate = latestUpdate

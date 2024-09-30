@@ -281,7 +281,9 @@ private extension DayView {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .aspectRatio(1.0, contentMode: .fit)
             .onAppear(perform: onAppear)
-            .onTapGesture(perform: onSelection)
+            .onTapGesture {
+                onSelection()
+            }
             .opacity(isFuture() ? 0.2 : 1)
             
     }

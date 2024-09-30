@@ -11,16 +11,18 @@ public struct ButtonsContainer: View {
     
     let applyAction: () -> Void
     let clearOptionsAction: () -> Void
-    
+    let isAvailable: Bool
     let config: Config
     
     public init(
         applyAction: @escaping () -> Void,
         clearOptionsAction: @escaping () -> Void,
+        isAvailable: Bool,
         config: Config
     ) {
         self.applyAction = applyAction
         self.clearOptionsAction = clearOptionsAction
+        self.isAvailable = isAvailable
         self.config = config
     }
     
@@ -31,18 +33,21 @@ public struct ButtonsContainer: View {
             BottomButton(
                 title: config.clearButtonTitle,
                 action: clearOptionsAction,
+                isAvailable: true,
                 config: .init(
-                    background: .gray.opacity(0.2),
+                    background: config.disableButtonBackground,
                     foreground: .black
                 ))
             
             BottomButton(
                 title: config.applyButtonTitle,
-                action: applyAction,
+                action: applyAction, 
+                isAvailable: isAvailable,
                 config: .init(
-                    background: config.applyButtonColors?.bgColor ?? .red,
-                    foreground: config.applyButtonColors?.fgColor ?? .white
+                    background: isAvailable ? .red : config.disableButtonBackground,
+                    foreground: isAvailable ? .white : .black
                 ))
+            .allowsHitTesting(isAvailable)
         }
     }
     
@@ -51,15 +56,18 @@ public struct ButtonsContainer: View {
         let clearButtonTitle: String
         let applyButtonTitle: String
         let applyButtonColors: ApplyButtonColor?
+        let disableButtonBackground: Color
         
         public init(
             clearButtonTitle: String,
             applyButtonTitle: String,
-            applyButtonColors: ApplyButtonColor? = nil
+            applyButtonColors: ApplyButtonColor? = nil,
+            disableButtonBackground: Color
         ) {
             self.clearButtonTitle = clearButtonTitle
             self.applyButtonTitle = applyButtonTitle
             self.applyButtonColors = applyButtonColors
+            self.disableButtonBackground = disableButtonBackground
         }
         
         public struct ApplyButtonColor {
@@ -75,6 +83,7 @@ public struct ButtonsContainer: View {
         
         let title: String
         let action: () -> Void
+        let isAvailable: Bool
         let config: Config
         
         var body: some View {

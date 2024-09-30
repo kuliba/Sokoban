@@ -75,8 +75,8 @@ extension Date {
     
     var startOfDay: Date {
         
-         return Calendar.current.startOfDay(for: self)
-     }
+        return Calendar.current.startOfDay(for: self)
+    }
     
     static func getStartOfCurrentMonth(for date: Date) -> Date {
         

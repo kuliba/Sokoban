@@ -210,6 +210,7 @@ final class RootViewModelTests: XCTestCase {
             navigationStateManager: .preview, 
             productNavigationStateManager: .preview,
             tabsViewModel: .init(
+            tabsViewModelFactory: .init(
                 mainViewModel: .init(
                     model,
                     makeProductProfileViewModel: { _,_,_,_  in nil },
@@ -230,7 +231,7 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview
                 )),
                 chatViewModel: .init(),
-                marketShowcaseBinder: .preview
+                marketShowcaseModel: .preview
             ),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 

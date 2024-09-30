@@ -14,15 +14,18 @@ public enum FilterEffect: Equatable {
     
     public struct UpdateFilterPayload: Equatable {
 
-        public let range: Range<Date>
+        public let range: ClosedRange<Date>
         public let productId: Int
+        public let selectPeriod: FilterHistoryState.Period
         
         public init(
-            range: Range<Date>,
-            productId: Int
+            range: ClosedRange<Date>,
+            productId: Int,
+            selectPeriod: FilterHistoryState.Period
         ) {
             self.range = range
             self.productId = productId
+            self.selectPeriod = selectPeriod
         }
     }
 }

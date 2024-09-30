@@ -43,7 +43,7 @@ final class FilterModelEffectHandler {
 
 struct FilterModelEffectHandlerMicroServices {
     
-    typealias ResetPeriodCompletion = (Range<Date>) -> Void
+    typealias ResetPeriodCompletion = (ClosedRange<Date>) -> Void
     typealias ResetPeriod = (ProductData.ID, @escaping ResetPeriodCompletion) -> Void
     
     //TODO: replace `FilterState` with Result

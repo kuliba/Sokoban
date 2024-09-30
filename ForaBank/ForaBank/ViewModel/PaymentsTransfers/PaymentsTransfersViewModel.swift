@@ -2079,7 +2079,8 @@ extension FilterState {
             ),
             filter: .init(
                 title: "Фильтры",
-                selectDates: nil,
+                selectDates: nil, 
+                selectedPeriod: .dates,
                 periods: FilterHistoryState.Period.allCases,
                 transactionType: [],
                 services: []

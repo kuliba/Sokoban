@@ -35,11 +35,11 @@ public struct FilterState {
     }
 }
 
-public struct FilterHistoryState {
+public struct FilterHistoryState: Equatable {
     
     public let title: String
     
-    public var selectDates: Range<Date>?
+    public var selectDates: ClosedRange<Date>?
     public var selectedPeriod: Period
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
@@ -50,8 +50,8 @@ public struct FilterHistoryState {
         
     public init(
         title: String,
-        selectDates: Range<Date>?,
-        selectedPeriod: Period = .month,
+        selectDates: ClosedRange<Date>?,
+        selectedPeriod: Period,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
         periods: [Period],
@@ -95,6 +95,11 @@ public extension FilterHistoryState {
     }
 }
 
+public extension FilterHistoryState {
+
+    var isFilterApplied: Bool { selectDates != nil }
+}
+
 extension FilterState {
     
     public static let preview: Self = .init(
@@ -109,7 +114,8 @@ extension FilterHistoryState {
 
     static let preview: Self = .init(
         title: "Фильтры",
-        selectDates: (.distantPast)..<(.distantFuture),
+        selectDates: (.distantPast)...(.distantFuture),
+        selectedPeriod: .month,
         periods: [],
         transactionType: [],
         services: []

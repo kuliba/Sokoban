@@ -544,10 +544,22 @@ private extension ProductProfileViewModel {
         $filterState
             .sink { state in
 
+                if let lowerDate = state.calendar.range?.lowerDate,
+                   let upperDate = state.calendar.range?.upperDate {
+                    
+                    self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
+                        filterState: state,
+                        period: (
+                            lowerDate,
+                            upperDate
+                        ))
+                    )
+                }
+                
                 if let period = state.filter.selectDates {
                 
-                    let lowerDate = period.lowerBound.addingTimeInterval(10800)
-                    let upperDate = period.upperBound.addingTimeInterval(97199)
+                    let lowerDate = period.lowerBound
+                    let upperDate = period.upperBound
                     self.history?.action.send(ProductProfileHistoryViewModelAction.Filter(
                         filterState: state, 
                         period: (
@@ -3180,7 +3192,7 @@ extension ProductProfileViewModel {
     func calendarDayStart() -> Date {
         
         if product.productType == .card {
-            return Calendar.current.date(from: .init(calendar: .current, year: 1992, month: 5, day: 27))!
+            return Calendar.current.date(from: .init(calendar: .current, year: 2024, month: 8, day: 27))!
         } else {
             return model.product(productId: product.activeProductId)?.openDate ?? Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         }

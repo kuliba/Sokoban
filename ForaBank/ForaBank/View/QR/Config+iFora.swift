@@ -108,7 +108,7 @@ public extension CalendarConfig {
             todayForeground: .mainColorsRed
         ),
         closeImage: .ic24Close,
-        scrollDate: Date()
+        scrollDate: Date().scrollToday
     )
 }
 
@@ -144,6 +144,7 @@ public extension FilterConfig {
             )
         ),
         optionConfig: .init(
+            font: .textBodyMR14200(),
             selectBackgroundColor: .mainColorsBlackMedium,
             notSelectedBackgroundColor: .mainColorsGrayLightest,
             selectForegroundColor: .textWhite,
@@ -151,18 +152,19 @@ public extension FilterConfig {
         ),
         buttonsContainerConfig: .init(
             clearButtonTitle: "Очистить",
-            applyButtonTitle: "Применить"
+            applyButtonTitle: "Применить",
+            disableButtonBackground: .mainColorsGrayLightest
         ),
         optionButtonCloseImage: .ic24Close,
         failureConfig: .init(
-            title: "Мы не смогли загрузить ваши продукты.\nПопробуйте позже.",
+            title: "Мы не смогли загрузить данные.\nПопробуйте позже.",
             titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
             icon: .ic32Search,
             iconForeground: .mainColorsGray,
             backgroundIcon: .mainColorsGrayLightest
         ),
         emptyConfig: .init(
-            title: "В этот период операции отсутствовали",
+            title: "Нет подходящих операций. Попробуйте изменить параметры фильтра",
             titleConfig: .init(textFont: .textH4R16240(), textColor: .textPlaceholder),
             icon: .ic32Search,
             iconForeground: .mainColorsGray,
@@ -202,5 +204,23 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
             map: PublishingInfo.preview,
             config: .iFora
         )
+    }
+}
+
+extension Date {
+    
+    var scrollToday: Date {
+        var today = Date()
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
     }
 }

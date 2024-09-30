@@ -69,7 +69,7 @@ public struct CalendarView: View {
                         
                         Button {
                             
-                            event(.selectPeriod(period, lowerDate: .startOfWeek ?? Date(), upperDate: Date()))
+                            event(.selectPeriod(period, lowerDate: Date.firstDayWeek(), upperDate: Date()))
                             
                         } label: {
                            
@@ -96,7 +96,7 @@ public struct CalendarView: View {
                         
                         Button {
                             
-                            event(.selectPeriod(period, lowerDate: .startOfMonth, upperDate: Date()))
+                            event(.selectPeriod(period, lowerDate: Date().firstDayOfMonth(), upperDate: Date()))
                         } label: {
                             if state.selectPeriod == .month {
                                 
@@ -117,9 +117,6 @@ public struct CalendarView: View {
                                     .background(Capsule().foregroundColor(Color.gray.opacity(0.1)))
                             }
                         }
-//                        .onAppear {
-//                            event(.selectPeriod(period, lowerDate: Calendar.current.date(byAdding: .day, value: -31, to: Date())!, upperDate: Date()))
-//                        }
                         
                     case .dates:
                         
@@ -198,8 +195,10 @@ private extension CalendarView {
                 .padding(.bottom, config.monthsPadding.bottom)
                 .background(config.monthsViewBackground)
             }
-            .onAppear() { scrollToDate(reader, animatable: false) }
-            .onChange(of: config.scrollDate) { _ in }
+            .onAppear() {
+            
+                scrollToDate(reader, animatable: true)
+            }
         }
     }
 }
@@ -246,15 +245,70 @@ public extension View {
 // MARK: - Modifiers
 private extension CalendarView {
     
-    func scrollToDate(_ reader: ScrollViewProxy, animatable: Bool) {
+    func scrollToDate(
+        _ reader: ScrollViewProxy,
+        animatable: Bool
+    ) {
         
         guard let date = config.scrollDate else { return }
 
-        let scrollDate = date.start(of: .month)
-        withAnimation(animatable ? .default : nil) { reader.scrollTo(scrollDate, anchor: .center) }
+        let scrollDate = date.firstDayOfMonth()
+        
+        withAnimation(.default) {
+            reader.scrollTo(scrollDate, anchor: .center)
+        }
     }
     
     func onMonthChange(_ date: Date) {
         config.onMonthChange(date)
+    }
+}
+
+public extension CalendarState {
+
+    var selectedRange: ClosedRange<Date>? {
+     
+        if let lowerDate = range?.lowerDate,
+        let upperDate = range?.upperDate {
+            return lowerDate...upperDate
+            
+        } else {
+            
+            return nil
+        }
+    }
+}
+
+extension Calendar {
+    static let gregorian = Calendar(identifier: .gregorian)
+}
+
+extension Date {
+    func startOfWeek(using calendar: Calendar = .gregorian) -> Date {
+        calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: self).date!
+    }
+    func startOfMonth(using calendar: Calendar = .gregorian) -> Date {
+         return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.startOfDay(for: self)))!
+     }
+}
+
+public extension Date {
+    
+    static func firstDayWeek() -> Date {
+        
+        var gregorianUTC = Calendar.current
+        gregorianUTC.timeZone = TimeZone(identifier: "UTC")!
+        return Date().startOfWeek(using: gregorianUTC)
+    }
+    
+    func firstDayOfMonth() -> Date {
+        
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let components = calendar.dateComponents([.year, .month], from: self)
+        
+        print(calendar.date(from: components)!)
+
+        return calendar.date(from: components)!
     }
 }

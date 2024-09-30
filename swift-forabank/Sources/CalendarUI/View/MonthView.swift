@@ -185,3 +185,19 @@ public struct WeekdaysView: View {
         content()
     }
 }
+
+public extension Date {
+    
+    var startOfDay: Date {
+        let components = DateComponents(hour: 00, minute: 00, second: 00)
+        let startDay = Calendar.current.date(byAdding: components, to: self)
+        return startDay!
+    }
+    
+    var endOfDay: Date {
+          var components = DateComponents()
+          components.day = 1
+          components.second = -1
+          return Calendar.current.date(byAdding: components, to: startOfDay)!
+      }
+}

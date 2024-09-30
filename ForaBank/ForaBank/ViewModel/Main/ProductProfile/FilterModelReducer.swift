@@ -29,14 +29,22 @@ final class FilterModelReducer {
         case let .selectedPeriod(period):
             switch period {
             case .week:
-                state.filter.selectDates = (.startOfWeek ?? Date())..<Date()
+                state.filter.selectedPeriod = .week
+                state.filter.selectDates = (.startOfWeek ?? Date())...Date()
+                state.status = .loading
             case .month:
-                state.filter.selectDates = (.startOfMonth)..<(Date())
+                state.filter.selectedPeriod = .month
+                state.filter.selectDates = (.startOfMonth)...(Date())
+                state.status = .loading
             case .dates:
-                break
+                state.filter.selectedPeriod = .dates
             }
         case let .selectedTransaction(transactionType):
-            state.filter.selectedTransaction = transactionType
+            if state.filter.selectedTransaction == transactionType {
+                state.filter.selectedTransaction = nil
+            } else {
+                state.filter.selectedTransaction = transactionType
+            }
             
         case let .selectedCategory(service):
             
@@ -47,18 +55,23 @@ final class FilterModelReducer {
                 state.filter.selectedServices.insert(service)
             }
             
-        case let .selectedDates(range):
+        case let .selectedDates(range, period):
             
-            if state.filter.selectDates != range {
+            if let range,
+                state.filter.selectDates != range {
                 
-            state.filter.selectDates = range
-            state.filter.selectedPeriod = .dates
-            
+                state.filter.selectDates = range
+                state.filter.selectedPeriod = period
+                
                 state.status = .loading
                 effect = .updateFilter(.init(
-                    range: range.lowerBound.addingTimeInterval(10800)..<range.upperBound.addingTimeInterval(97199),
-                    productId: state.productId
+                    range: range,
+                    productId: state.productId,
+                    selectPeriod: period
                 ))
+            } else {
+                state.filter.selectedPeriod = .dates
+                state.filter.selectDates = nil
             }
             
         case .updateFilter(nil):
@@ -76,10 +89,9 @@ final class FilterModelReducer {
             state = newState
 
         case .clearOptions:
+            state.calendar.range = .init()
             state.filter.selectedServices = []
-            state.filter.selectedPeriod = .month
             state.filter.selectedTransaction = nil
-            effect = .resetPeriod(state.productId)
         }
         
         return (state, effect)
