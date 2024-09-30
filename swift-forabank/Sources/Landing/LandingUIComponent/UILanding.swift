@@ -29,6 +29,7 @@ public struct UILanding: Equatable {
 
 public extension UILanding {
     
+    struct Carousel{}
     struct List{}
     struct Multi{}
 }

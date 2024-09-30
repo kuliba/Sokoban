@@ -508,6 +508,13 @@
         "identifier" : "MarketShowcaseTests",
         "name" : "MarketShowcaseTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
+      }
     }
   ],
   "version" : 1

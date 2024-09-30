@@ -5,10 +5,9 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public enum CategoryPickerSectionFlowEffect<Category> {
+public enum CategoryPickerSectionFlowEffect<Select> {
     
-    case showAll([Category])
-    case showCategory(Category)
+    case select(Select)
 }
 
-extension CategoryPickerSectionFlowEffect: Equatable where Category: Equatable {}
+extension CategoryPickerSectionFlowEffect: Equatable where Select: Equatable {}
