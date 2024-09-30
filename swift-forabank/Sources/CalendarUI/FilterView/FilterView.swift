@@ -111,6 +111,8 @@ public struct FilterView<ButtonsView: View>: View {
                         }
                         
                         filterEvent(.selectedPeriod(period))
+                    case .resetPeriod:
+                        filterEvent(.selectedDates(nil, .dates))
                     }
                 },
                 config: .init(
@@ -216,6 +218,7 @@ private extension FilterView {
         
         case calendar
         case clearOptions
+        case resetPeriod
         case selectPeriod(FilterHistoryState.Period)
     }
     
@@ -252,7 +255,7 @@ private extension FilterView {
                                state.filter.selectDates?.upperBound != nil,
                                state.filter.selectedPeriod == .dates {
                                 
-                                Button { event(.clearOptions) } label: {
+                                Button { event(.resetPeriod) } label: {
                                     
                                     config.closeImage
                                 }
