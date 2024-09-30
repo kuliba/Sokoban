@@ -21,7 +21,7 @@ struct SpacingView: View {
     var body: some View {
         
         Rectangle()
-            .frame(height: model.sizeDp)
+            .frame(height: model.heightDp)
             .foregroundColor( config.backgroundColor(model.backgroundColor))
             .accessibilityIdentifier("Spacing")
     }
@@ -33,17 +33,17 @@ struct SpacingView_Previews: PreviewProvider {
         VStack{
             
             SpacingView(
-                model: .init(backgroundColor: .black, sizeDp: 32),
+                model: .init(backgroundColor: .black, heightDp:32),
                 config: .defaultValue)
             .border(.yellow)
             
             SpacingView(
-                model: .init(backgroundColor: .white, sizeDp: 64),
+                model: .init(backgroundColor: .white, heightDp:64),
                 config: .defaultValue)
             .border(.green)
             
             SpacingView(
-                model: .init(backgroundColor: .white, sizeDp: 10),
+                model: .init(backgroundColor: .white, heightDp:10),
                 config: .defaultValue)
             .border(.red)
         }

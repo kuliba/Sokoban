@@ -15,16 +15,16 @@ public extension UILanding {
         
         let id: UUID
         let backgroundColor: BackgroundColorType
-        let sizeDp: CGFloat
+        let heightDp: CGFloat
         
         public init(
             id: UUID = UUID(),
             backgroundColor: BackgroundColorType,
-            sizeDp: CGFloat
+            heightDp: CGFloat
         ) {
             self.id = id
             self.backgroundColor = backgroundColor
-            self.sizeDp = sizeDp
+            self.heightDp = heightDp
         }
     }
 }

@@ -122,7 +122,7 @@ private extension UILanding.Spacing {
     ) {
         self.init(
             backgroundColor: .init(rawValue: data.backgroundColor) ?? .black,
-            sizeDp: data.sizeDp)
+            heightDp: data.heightDp)
     }
 }
 

@@ -12,11 +12,11 @@ public extension CodableLanding {
     struct Spacing: Equatable, Codable {
         
         public let backgroundColor: String
-        public let sizeDp: CGFloat
+        public let heightDp: CGFloat
         
-        public init(backgroundColor: String, sizeDp: CGFloat) {
+        public init(backgroundColor: String, heightDp: CGFloat) {
             self.backgroundColor = backgroundColor
-            self.sizeDp = sizeDp
+            self.heightDp = heightDp
         }
     }
 }

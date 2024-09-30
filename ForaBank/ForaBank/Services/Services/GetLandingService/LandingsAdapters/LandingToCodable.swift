@@ -125,7 +125,7 @@ private extension CodableLanding.Spacing {
     ) {
         self.init(
             backgroundColor: data.backgroundColor,
-            sizeDp: data.sizeDp)
+            heightDp: data.heightDp)
     }
 }
 

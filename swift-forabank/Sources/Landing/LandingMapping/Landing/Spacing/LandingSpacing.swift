@@ -12,6 +12,6 @@ public extension Landing {
     struct Spacing: Equatable {
         
         public let backgroundColor: String
-        public let sizeDp: CGFloat
+        public let heightDp: CGFloat
     }
 }
