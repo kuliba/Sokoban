@@ -281,7 +281,7 @@ extension ProductStatementsStorageTests {
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate)
-        print("@@@1 result=\(result)")
+        
         // then
         XCTAssertFalse(result.hasMoreHistoryToShow)
     }
@@ -299,9 +299,9 @@ extension ProductStatementsStorageTests {
         
         // when
         let result = ProductStatementsStorage(with: update, historyLimitDate: limitDate).hasMoreHistoryToShow
-        print("@@@2 result=\(result)")
+        
         // then
-        XCTAssertTrue(result) //
+        XCTAssertTrue(result)
     }
 }
 
