@@ -148,7 +148,9 @@ private extension Landing.DataView {
             
         case let .verticalSpacing(data):
             self = .verticalSpacing(.init(data: data))
-            
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
         case let .list(.horizontalRectangleLimits(data)):
             self = .list(.horizontalRectangleLimits(.init(data: data)))
         case let .carousel(.base(data)):
@@ -170,6 +172,18 @@ private extension Landing.VerticalSpacing {
         self.init(
             backgroundColor: .init(data.backgroundColor),
             type: .init(data.type))
+    }
+}
+
+private extension Landing.Spacing {
+    
+    init(
+        data: DecodableLanding.Data.Spacing
+    ) {
+        
+        self.init(
+            backgroundColor: data.backgroundColor,
+            sizeDp: data.sizeDp)
     }
 }
 

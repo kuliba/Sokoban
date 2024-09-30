@@ -42,6 +42,7 @@ extension Landing {
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+        case spacing(Spacing)
     }
 }
 

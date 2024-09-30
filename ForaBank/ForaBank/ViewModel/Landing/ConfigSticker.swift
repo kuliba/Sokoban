@@ -29,6 +29,7 @@ extension UILanding.Component.Config {
         image: .stickerDefault,
         imageSvg: .stickerDefault,
         verticalSpacing: .stickerDefault,
+        spacing: .default,
         blockHorizontalRectangular: .stickerDefault,
         offsetForDisplayHeader: 100
     )

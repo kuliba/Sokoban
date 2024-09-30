@@ -250,6 +250,8 @@ extension LandingView {
                 
             case let .verticalSpacing(model):
                 VerticalSpacingView(model: model, config: config.verticalSpacing)
+            case let .spacing(model):
+                SpacingView(model: model, config: config.spacing)
                 
             case let .image(model):
                 ImageView(model: .init(data: model, images: images), config: config.image)
