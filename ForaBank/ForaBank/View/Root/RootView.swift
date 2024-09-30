@@ -14,6 +14,7 @@ import RxViewModel
 import SberQR
 import SwiftUI
 import MarketShowcase
+import UIPrimitives
 import UtilityServicePrepaymentUI
 
 struct RootView: View {
@@ -242,42 +243,65 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerSection.Binder
     ) -> some View {
         
-        ComposedCategoryPickerSectionFlowView(
-            binder: binder,
-            config: .iFora,
-            itemLabel: itemLabel,
-            makeDestinationView: makeCategoryPickerSectionDestinationView
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                        makeContentView: {
+                            
+                            RxWrapperView(
+                                model: binder.content,
+                                makeContentView: { state, event in
+                                    
+                                    CategoryPickerSectionContentView(
+                                        state: state,
+                                        event: event,
+                                        config: .iFora,
+                                        itemLabel: itemLabel
+                                    )
+                                }
+                            )
+                        },
+                        makeDestinationView: makeCategoryPickerSectionDestinationView,
+                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                    )
+                )
+            }
         )
     }
     
-    @ViewBuilder
-    func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDomain.Destination
-    ) -> some View {
+    func makeCategoryPickerSectionAlert(
+        binder: CategoryPickerSection.Binder
+    ) -> (SelectedCategoryFailure) -> Alert {
         
-        switch destination {
-        case let .category(selected):
-            selectedCategoryView(selected)
+        return { failure in
             
-        case let .list(categoryListModelStub):
-            categoryListView(categoryListModelStub)
+            return .init(
+                with: .error(message: failure.message, event: .dismiss),
+                event: { binder.flow.event($0) }
+            )
         }
     }
     
     @ViewBuilder
-    func selectedCategoryView(
-        _ selected: SelectedCategoryDestination
+    func makeCategoryPickerSectionDestinationView(
+        destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
-        switch selected {
-        case let .mobile(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
+        switch destination {
+        case let .list(list):
+            categoryListView(list)
             
-        case let .qr(qr):
-            Text("TBD: \(String(describing: qr))")
+        case let .mobile(mobile):
+            PaymentsView(viewModel: mobile.paymentsViewModel)
             
         case let .standard(standard):
             switch standard {
@@ -290,10 +314,18 @@ private extension RootView {
             
         case let .taxAndStateServices(wrapper):
             PaymentsView(viewModel: wrapper.paymentsViewModel)
-            
+
         case let .transport(transport):
             transportPaymentsView(transport)
         }
+    }
+    
+    @ViewBuilder
+    func makeCategoryPickerSectionFullScreenCoverView(
+        cover: CategoryPickerSectionNavigation.FullScreenCover
+    ) -> some View {
+        
+        QRView(viewModel: cover.qr.qrModel)
     }
     
     func paymentProviderPicker(
@@ -592,7 +624,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSectionState.Item
+        item: CategoryPickerSection.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -625,6 +657,47 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .default(
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+            message: message,
+            primaryEvent: event
+        )
+    }
+    
+    private static func `default`(
+        title: String,
+        message: String?,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent? = nil
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: secondaryEvent.map {
+                
+                .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: $0
+                )
+            }
+        )
     }
 }
 

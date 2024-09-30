@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public final class CategoryPickerSectionFlowEffectHandler<Category, SelectedCategory, CategoryList, Failure: Error> {
+public final class CategoryPickerSectionFlowEffectHandler<Select, Navigation> {
     
     private let microServices: MicroServices
     
@@ -15,7 +15,7 @@ public final class CategoryPickerSectionFlowEffectHandler<Category, SelectedCate
         self.microServices = microServices
     }
     
-    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Category, SelectedCategory, CategoryList, Failure>
+    public typealias MicroServices = CategoryPickerSectionFlowEffectHandlerMicroServices<Select, Navigation>
 }
 
 public extension CategoryPickerSectionFlowEffectHandler {
@@ -25,11 +25,8 @@ public extension CategoryPickerSectionFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .showAll(categories):
-            microServices.showAll(categories) { dispatch(.receive(.list($0))) }
-            
-        case let .showCategory(category):
-            microServices.showCategory(category) { dispatch(.receive(.category($0))) }
+        case let .select(select):
+            microServices.getNavigation(select) { dispatch(.receive($0)) }
         }
     }
 }
@@ -38,6 +35,6 @@ public extension CategoryPickerSectionFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CategoryPickerSectionFlowEvent<Category, SelectedCategory, CategoryList, Failure>
-    typealias Effect = CategoryPickerSectionFlowEffect<Category>
+    typealias Event = CategoryPickerSectionFlowEvent<Select, Navigation>
+    typealias Effect = CategoryPickerSectionFlowEffect<Select>
 }

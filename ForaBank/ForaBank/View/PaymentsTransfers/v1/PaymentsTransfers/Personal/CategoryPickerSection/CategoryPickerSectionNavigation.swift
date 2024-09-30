@@ -2,30 +2,29 @@
 //  CategoryPickerSectionNavigation.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 03.09.2024.
+//  Created by Igor Malyarov on 28.09.2024.
 //
 
 import Foundation
 import PayHub
-import PayHubUI
 
-typealias CategoryPickerSectionDomain = PayHubUI.CategoryPickerSectionDomain<ServiceCategory, SelectedCategoryDestination, CategoryListModelStub, SelectedCategoryFailure>
-
-extension CategoryPickerSectionDomain {
+enum CategoryPickerSectionNavigation {
     
-    typealias Navigation = FlowState.Navigation
-    typealias Destination = FlowState.Destination
+    case failure(SelectedCategoryFailure)
+    case list(CategoryListModelStub)
+    case paymentFlow(PaymentFlow)
+    case qrFlow(QRFlow)
+    
+    typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, QRModel, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
+    
+    typealias QRFlow = Void
 }
-
-typealias SelectedCategoryDestination = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, QRBinderStub, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
 
 struct SelectedCategoryFailure: Error, Identifiable {
     
     let id: UUID
     let message: String
 }
-
-final class QRBinderStub {}
 
 typealias StandardSelectedCategoryDestination = Result<PaymentProviderPicker.Binder, FailedPaymentProviderPickerStub>
 

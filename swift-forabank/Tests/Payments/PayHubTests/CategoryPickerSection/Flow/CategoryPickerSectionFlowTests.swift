@@ -9,50 +9,26 @@ import XCTest
 
 class CategoryPickerSectionFlowTests: XCTestCase {
     
-    struct Category: Equatable {
+    struct Select: Equatable {
         
         let value: String
     }
     
-    func makeCategory(
+    func makeSelect(
         _ value: String = anyMessage()
-    ) -> Category {
+    ) -> Select {
         
         return .init(value: value)
     }
     
-    struct SelectedCategory: Equatable {
+    struct Navigation: Equatable {
         
         let value: String
     }
     
-    func makeSelectedCategory(
+    func makeNavigation(
         _ value: String = anyMessage()
-    ) -> SelectedCategory {
-        
-        return .init(value: value)
-    }
-    
-    struct CategoryList: Equatable {
-        
-        let value: String
-    }
-    
-    func makeCategoryList(
-        _ value: String = anyMessage()
-    ) -> CategoryList {
-        
-        return .init(value: value)
-    }
-    
-    struct Failure: Error, Equatable {
-        
-        let value: String
-    }
-    
-    func makeFailure(
-        _ value: String = anyMessage()
-    ) -> Failure {
+    ) -> Navigation {
         
         return .init(value: value)
     }

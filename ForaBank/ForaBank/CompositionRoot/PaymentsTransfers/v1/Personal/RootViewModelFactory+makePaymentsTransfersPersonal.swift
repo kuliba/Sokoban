@@ -52,15 +52,25 @@ extension RootViewModelFactory {
             model: model,
             scheduler: mainScheduler
         )
-        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
+        
+        let selectCategory = selectCategory(
+            model: model,
+            composer: standardNanoServicesComposer,
+            scheduler: mainScheduler
+        )
+        let categoryPickerComposer = CategoryPickerSection.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: .init(
-                showAll: { $1(CategoryListModelStub(categories: $0)) },
-                showCategory: selectCategory(
-                    model: model,
-                    composer: standardNanoServicesComposer,
-                    scheduler: mainScheduler
-                )
+                getNavigation: { payload, completion in
+                    
+                    switch payload {
+                    case let .category(category):
+                        selectCategory(category, completion)
+                        
+                    case let .list(list):
+                        completion(.list(.init(categories: list)))
+                    }
+                }
             ),
             placeholderCount: categoryPickerPlaceholderCount,
             scheduler: mainScheduler
@@ -149,14 +159,20 @@ extension RootViewModelFactory {
         composer: StandardSelectedCategoryDestinationNanoServicesComposer,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> (
-        ServiceCategory, @escaping (Result<SelectedCategoryDestination, SelectedCategoryFailure>) -> Void
+        ServiceCategory, @escaping (CategoryPickerSectionNavigation) -> Void
     ) -> Void {
         
         return { category, completion in
             
             let standardNanoServices = composer.compose(category: category)
             let composer = PaymentFlowMicroServiceComposerNanoServicesComposer(
-                model: model,
+                model: model, 
+                makeQR: RootViewModelFactory.makeMakeQRScannerModel(
+                    model: model,
+                    qrResolverFeatureFlag: .init(.active),
+                    utilitiesPaymentsFlag: .init(.active(.live)),
+                    scheduler: scheduler
+                ),
                 standardNanoServices: standardNanoServices,
                 scheduler: scheduler
             )
@@ -166,7 +182,16 @@ extension RootViewModelFactory {
             )
             let microService = paymentFlowComposer.compose()
             
-            microService.makePaymentFlow(category.paymentFlowID, completion)
+            microService.makePaymentFlow(category.paymentFlowID) {
+                
+                switch $0 {
+                case let .failure(failure):
+                    completion(.failure(failure))
+                    
+                case let .success(flow):
+                    completion(.paymentFlow(flow))
+                }
+            }
         }
     }
 }
@@ -251,7 +276,6 @@ extension CodableServicePaymentOperator {
     }
 }
 
-#warning("move to call site")
 private extension PaymentServiceOperator {
     
     init(codable: CodableServicePaymentOperator) {
