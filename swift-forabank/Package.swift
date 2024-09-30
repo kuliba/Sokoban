@@ -59,6 +59,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getClientInformDataServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -199,6 +200,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getClientInformDataServices,
+        .getClientInformDataServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -835,6 +838,14 @@ private extension Product {
         ]
     )
     
+    static let getClientInformDataServices = library(
+        name: .getClientInformDataServices,
+        targets: [
+            .getClientInformDataServices
+        ]
+    )
+
+    
     // MARK: - Tools
     
     static let foraTools = library(
@@ -844,6 +855,8 @@ private extension Product {
         ]
     )
 }
+
+// MARK: - Target
 
 private extension Target {
     
@@ -1851,6 +1864,28 @@ private extension Target {
             .copy("Responses/GetProductListByType_Card_Response.json"),
             .copy("Responses/GetProductListByType_Deposit_Response.json"),
             .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+
+    static let getClientInformDataServices = target(
+        name: .getClientInformDataServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getClientInformDataServices)"
+    )
+
+    static let getClientInformDataServicesTests = testTarget(
+        name: .getClientInformDataServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getClientInformDataServices
+        ],
+        path: "Tests/Services/\(String.getClientInformDataServicesTests)",
+        resources: [
+
         ]
     )
     
@@ -3010,6 +3045,10 @@ private extension Target.Dependency {
         name: .getProductListByTypeV6Service
     )
     
+    static let getClientInformDataServices = byName(
+        name: .getClientInformDataServices
+    )
+    
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -3292,6 +3331,9 @@ private extension String {
     
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
+    
+    static let getClientInformDataServices = "GetClientInformDataServices"
+    static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
     // MARK: - Tools
     
