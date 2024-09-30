@@ -410,7 +410,7 @@ extension RootViewModelFactory {
             decorated.load {
                 
                 let categories = (try? $0.get()) ?? []
-                completion(categories.map { .category($0)})
+                completion(categories.map { .category($0) })
             }
         }
         
@@ -987,7 +987,7 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
+extension Array where Element == CategoryPickerSection.ContentDomain.Item {
     
     var categories: [ServiceCategory] {
         
@@ -997,7 +997,7 @@ extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
             case let .category(category):
                 return category
                 
-            case .showAll:
+            case .list:
                 return .none
             }
         }

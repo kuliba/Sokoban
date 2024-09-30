@@ -49,6 +49,8 @@ public extension Landing.DataView {
     
     enum Carousel: Equatable {
         case base(CarouselBase)
+        case withTabs(CarouselWithTabs)
+        case withDots(CarouselWithDots)
     }
 }
 

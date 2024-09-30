@@ -14,16 +14,16 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_dismiss_shouldResetDestination() {
         
-        assert(makeState(destination: .category(makeSelectedCategory())), event: .dismiss) {
+        assert(makeState(navigation: makeNavigation()), event: .dismiss) {
             
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
     func test_dismiss_shouldNotNotDeliverEffect() {
         
         assert(
-            makeState(destination: .category(makeSelectedCategory())),
+            makeState(navigation: makeNavigation()),
             event: .dismiss,
             delivers: nil
         )
@@ -31,128 +31,55 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - receive
     
-    func test_receive_category_shouldSetIsLoadingToFalseSetDestinationToCategory() {
+    func test_receive_shouldSetIsLoadingToFalseSetDestinationToCategory() {
         
-        let category = makeSelectedCategory()
+        let navigation = makeNavigation()
         
-        assert(makeState(isLoading: true, destination: nil), event: .receive(.category(category))) {
+        assert(makeState(isLoading: true, navigation: nil), event: .receive(navigation)) {
             
             $0.isLoading = false
-            $0.destination = .category(category)
+            $0.navigation = navigation
         }
     }
     
-    func test_receive_category_shouldNotDeliverEffect() {
+    func test_receive_shouldNotDeliverEffect() {
         
         assert(
-            makeState(destination: nil),
-            event: .receive(.category(makeSelectedCategory())),
-            delivers: nil
-        )
-    }
-    
-    func test_receive_list_shouldSetIsLoadingToFalseSetDestinationToCategory() {
-        
-        let list = makeCategoryList()
-        
-        assert(makeState(isLoading: true, destination: nil), event: .receive(.list(list))) {
-            
-            $0.isLoading = false
-            $0.destination = .list(list)
-        }
-    }
-    
-    func test_receive_list_shouldNotDeliverEffect() {
-        
-        assert(
-            makeState(destination: nil),
-            event: .receive(.list(makeCategoryList())),
+            makeState(navigation: nil),
+            event: .receive(makeNavigation()),
             delivers: nil
         )
     }
     
     // MARK: - select
     
-    func test_select_category_shouldSetIsLoadingToTrueResetDestination() {
+    func test_select_shouldSetIsLoadingToTrueResetDestination() {
         
-        let category = makeCategory()
+        let select = makeSelect()
         
         assert(
-            makeState(isLoading: true, destination: .category(makeSelectedCategory())),
-            event: .select(.category(category))
+            makeState(isLoading: true, navigation: makeNavigation()),
+            event: .select(select)
         ) {
             $0.isLoading = true
-            $0.destination = nil
+            $0.navigation = nil
         }
     }
     
-    func test_select_category_shouldDeliverEffect() {
+    func test_select_shouldDeliverEffect() {
         
-        let category = makeCategory()
-        
-        assert(
-            makeState(),
-            event: .select(.category(category)),
-            delivers: .showCategory(category)
-        )
-    }
-    
-    func test_select_list_shouldSetIsLoadingToTrueResetDestination_empty() {
+        let select = makeSelect()
         
         assert(
-            makeState(isLoading: true, destination: .category(makeSelectedCategory())),
-            event: .select(.list([]))
-        ) {
-            $0.isLoading = true
-            $0.destination = nil
-        }
-    }
-    
-    func test_select_list_shouldDeliverEffect_empty() {
-        
-        assert(
-            makeState(),
-            event: .select(.list([])),
-            delivers: .showAll([])
-        )
-    }
-    
-    func test_select_list_shouldSetIsLoadingToTrueResetDestination_nonEmpty() {
-        
-        assert(
-            makeState(destination: .category(makeSelectedCategory())),
-            event: .select(.list([makeCategory()]))
-        ) {
-            $0.isLoading = true
-            $0.destination = nil
-        }
-    }
-    
-    func test_select_list_shouldDeliverEffect_one() {
-        
-        let category = makeCategory()
-        
-        assert(
-            makeState(),
-            event: .select(.list([category])),
-            delivers: .showAll([category])
-        )
-    }
-    
-    func test_select_list_shouldDeliverEffect_two() {
-        
-        let (category1, category2) = (makeCategory(), makeCategory())
-        
-        assert(
-            makeState(),
-            event: .select(.list([category1, category2])),
-            delivers: .showAll([category1, category2])
+            makeState(isLoading: true, navigation: makeNavigation()),
+            event: .select(select),
+            delivers: .select(select)
         )
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowReducer<Category, SelectedCategory, CategoryList>
+    private typealias SUT = CategoryPickerSectionFlowReducer<Select, Navigation>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -168,13 +95,10 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     private func makeState(
         isLoading: Bool = false,
-        destination: SUT.State.Destination? = nil
+        navigation: Navigation? = nil
     ) -> SUT.State {
         
-        return .init(
-            isLoading: isLoading,
-            destination: destination
-        )
+        return .init(isLoading: isLoading, navigation: navigation)
     }
     
     @discardableResult
