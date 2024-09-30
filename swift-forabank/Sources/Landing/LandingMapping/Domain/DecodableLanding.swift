@@ -183,6 +183,10 @@ extension DecodableLanding.Data {
                 let data = try container.decode(CarouselWithTabsDecodable.self, forKey: .data)
                 self = .carousel(.withTabs(data))
                 
+            case .carouselWithDots:
+                let data = try container.decode(CarouselWithDotsDecodable.self, forKey: .data)
+                self = .carousel(.withDots(data))
+                
             default:
                 // не смогли распарсить - нет такого type
                 self = .noValid("нет такого типа")
