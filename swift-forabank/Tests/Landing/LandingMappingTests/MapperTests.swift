@@ -276,7 +276,7 @@ final class MapperTests: XCTestCase {
         
         let landing = try XCTUnwrap(map())
         
-        XCTAssertNoDiff(landing.main.spacing, [
+        XCTAssertNoDiff(landing.main.verticalSpacing, [
             .init(backgroundColor: "w", type: "b")
         ])
     }
@@ -563,6 +563,16 @@ final class MapperTests: XCTestCase {
                     .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
                     .init(imageLink: "imageLink3", link: nil, action: nil)
                 ])
+        ])
+    }
+
+    func test_map_spacing_deliversSpacingInMain() throws {
+
+        let landing = try XCTUnwrap(map(data: Data(String.spacing.utf8)))
+
+        XCTAssertNoDiff(landing.main.spacing, [
+            .init(backgroundColor: "w", sizeDp: 10.0),
+            .init(backgroundColor: "b", sizeDp: 80.5),
         ])
     }
 
@@ -3310,6 +3320,33 @@ private extension String {
     }
     """
 
+    static let spacing: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "w",
+                "sizeDp": 10
+            }
+        },
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "b",
+                "sizeDp": 80.5
+            }
+        },
+    ],
+    "serial": ""
+    }
+    }
+    """
+
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
@@ -3472,10 +3509,21 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var spacing: [Landing.VerticalSpacing] {
+    var verticalSpacing: [Landing.VerticalSpacing] {
         
         compactMap {
             if case let .verticalSpacing(indents) = $0 {
+                return indents
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var spacing: [Landing.Spacing] {
+        
+        compactMap {
+            if case let .spacing(indents) = $0 {
                 return indents
             } else {
                 return nil

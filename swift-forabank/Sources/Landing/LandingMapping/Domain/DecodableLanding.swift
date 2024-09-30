@@ -168,6 +168,9 @@ extension DecodableLanding.Data {
             case .verticalSpacing:
                 let data = try container.decode(VerticalSpacing.self, forKey: .data)
                 self = .verticalSpacing(data)
+            case .spacing:
+                let data = try container.decode(Spacing.self, forKey: .data)
+                self = .spacing(data)
                 
             case .listHorizontalRectangleLimits:
                 let data = try container.decode(ListHorizontalRectangleLimits.self, forKey: .data)
