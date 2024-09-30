@@ -289,6 +289,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .defaultValue,
+        spacing: .defaultValue,
         blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100)
 }
@@ -578,6 +579,17 @@ extension UILanding.VerticalSpacing.Config {
             white: .white /*Text/White*/)
     )
 }
+
+extension UILanding.Spacing.Config {
+    
+    static let defaultValue: Self = .init(
+        background: .init(
+            black: .black,
+            gray: .grayLightest,
+            white: .white)
+    )
+}
+
 // MARK: - MarkersText Model
 extension UILanding.Multi.MarkersText {
     

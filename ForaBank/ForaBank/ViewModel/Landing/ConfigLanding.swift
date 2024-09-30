@@ -30,6 +30,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .default,
+        spacing: .default,
         blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100
     )
@@ -43,6 +44,17 @@ extension UILanding.VerticalSpacing.Config {
             small: 4,
             negativeOffset: -60
         ),
+        background: .init(
+            black: .mainColorsBlack,
+            gray: .mainColorsGrayLightest,
+            white: .textWhite
+        )
+    )
+}
+
+extension UILanding.Spacing.Config {
+    
+    static let `default`: Self = .init(
         background: .init(
             black: .mainColorsBlack,
             gray: .mainColorsGrayLightest,

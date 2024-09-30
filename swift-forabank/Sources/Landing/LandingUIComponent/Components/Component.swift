@@ -22,7 +22,8 @@ extension UILanding {
         case pageTitle(UILanding.PageTitle)
         case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
         case verticalSpacing(UILanding.VerticalSpacing)
-        
+        case spacing(UILanding.Spacing)
+
         var id: String {
             switch self {
             case let .list(list):
@@ -46,6 +47,8 @@ extension UILanding {
                 return imageSvg.md5hash.rawValue
             case let .verticalSpacing(verticalSpacing):
                 return verticalSpacing.id.uuidString
+            case let .spacing(spacing):
+                return spacing.id.uuidString
             case let .blockHorizontalRectangular(value):
                 return value.id.uuidString
             case let .carousel(value):
@@ -189,6 +192,8 @@ extension UILanding.Component {
         case let .imageSvg(data):
             return data.imageRequests()
         case let .verticalSpacing(data):
+            return data.imageRequests()
+        case let .spacing(data):
             return data.imageRequests()
         case .blockHorizontalRectangular:
             return []
