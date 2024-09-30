@@ -130,10 +130,16 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
     static let authorized: Self = .init(
         list: [
             .init(
-                category: "some category",
-                title: "alert title",
-                svg_image: "ic24Smile.svg",
-                text: "hello this is an alert to inform you about tests"
+                category: "Техннические работы",
+                title: "Перерыв на обед",
+                svg_image: "svg",
+                text: "С 01:00 по 03:00 11.11.2023 возможны технические работы. Задержки с переводами за границу"
+            ),
+            .init(
+                category: "Информационные",
+                title: "Приятного аппетита",
+                svg_image: "svg",
+                text: "Специальное предложение для тех кто любит поострей. Вклад в аргентинских песо - 300% годовых. Открыть https://link_click."
             )
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
@@ -211,7 +217,7 @@ private extension String {
       {
         "category": "Техннические работы",
         "title": "Перерыв на обед",
-        "svg_image": "beautifulLandscape.svg",
+        "svg_image": "svg",
         "text": "С 01:00 по 03:00 11.11.2023 возможны технические работы. Задержки с переводами за границу"
       },
       {
