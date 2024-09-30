@@ -45,13 +45,21 @@ extension DecodableLanding.Data {
         case pageTitle = "PAGE_TITLE"
         case textWithIconHorizontal = "TEXTS_WITH_ICON_HORIZONTAL"
         case verticalSpacing = "VERTICAL_SPACING"
+        case carouselBase = "HORIZONTAL_SLIDER_BASE"
+        case carouselWithTabs = "HORIZONTAL_SLIDER_WITH_TABS"
     }
 
     // TODO: ListHorizontalRectangleImage -> List.Horizontal.RectangleImage
     enum DataView: Decodable, Equatable {
         
+        case carousel(Carousel)
         case list(List)
         case multi(Multi)
+        
+        enum Carousel: Decodable, Equatable  {
+            case base(CarouselBaseDecodable)
+            case withTabs(CarouselWithTabsDecodable)
+        }
 
         enum List: Decodable, Equatable  {
             case horizontalRectangleImage(ListHorizontalRectangleImage)
@@ -164,7 +172,15 @@ extension DecodableLanding.Data {
             case .blockHorizontalRectangular:
                 let data = try container.decode(BlockHorizontalRectangular.self, forKey: .data)
                 self = .blockHorizontalRectangular(data)
-
+                
+            case .carouselBase:
+                let data = try container.decode(CarouselBaseDecodable.self, forKey: .data)
+                self = .carousel(.base(data))
+                
+            case .carouselWithTabs:
+                let data = try container.decode(CarouselWithTabsDecodable.self, forKey: .data)
+                self = .carousel(.withTabs(data))
+                
             default:
                 // не смогли распарсить - нет такого type
                 self = .noValid("нет такого типа")

@@ -34,10 +34,7 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
         category: Category,
         completion: @escaping MicroService.MakeDestinationCompletion
     ) {
-        nanoServices.loadOperators { [weak self] in
-            
-            self?.handle($0, category, completion)
-        }
+        nanoServices.loadOperators { self.handle($0, category, completion) }
     }
     
     func handle(
@@ -53,9 +50,9 @@ private extension StandardSelectedCategoryDestinationMicroServiceComposer {
             if operators.isEmpty {
                 nanoServices.makeFailure { completion(.failure($0)) }
             } else {
-                nanoServices.loadLatest { [weak self] in
+                nanoServices.loadLatest {
                 
-                    self?.nanoServices.makeSuccess(.init(
+                    self.nanoServices.makeSuccess(.init(
                         category: category,
                         latest: (try? $0.get()) ?? [],
                         operators: operators

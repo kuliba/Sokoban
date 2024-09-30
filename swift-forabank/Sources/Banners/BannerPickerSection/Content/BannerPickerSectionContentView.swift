@@ -40,13 +40,11 @@ where ItemView: View,
                 .foregroundColor(.red)
                 .frame(maxHeight: .infinity)
         } else {
-            VStack(spacing: config.spacing) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 20) {
-                        
-                        ForEach(state.suffix, content: itemView)
-                            .animation(.easeInOut, value: state)
-                    }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: config.spacing) {
+                    
+                    ForEach(state.suffix, content: itemView)
+                        .animation(.easeInOut, value: state)
                 }
             }
         }

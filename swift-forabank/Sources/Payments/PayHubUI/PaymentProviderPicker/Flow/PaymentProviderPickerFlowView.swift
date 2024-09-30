@@ -8,16 +8,28 @@
 import PayHub
 import SwiftUI
 
-struct PaymentProviderPickerFlowView<ContentView, DestinationView, DetailPayment, Latest, Payment, Provider, Service, ServicesFailure>: View
+public struct PaymentProviderPickerFlowView<ContentView, DestinationView, DetailPayment, Latest, Payment, Provider, Service, ServicesFailure>: View
 where ContentView: View,
       DestinationView: View {
     
-    let state: State
-    let event: (Event) -> Void
-    let contentView: () -> ContentView
-    let destinationView: (Destination) -> DestinationView
+    private let state: State
+    private let event: (Event) -> Void
+    private let contentView: () -> ContentView
+    private let destinationView: (Destination) -> DestinationView
     
-    var body: some View {
+    public init(
+        state: State, 
+        event: @escaping (Event) -> Void,
+        contentView: @escaping () -> ContentView,
+        destinationView: @escaping (Destination) -> DestinationView
+    ) {
+        self.state = state
+        self.event = event
+        self.contentView = contentView
+        self.destinationView = destinationView
+    }
+    
+    public var body: some View {
         
         contentView()
             .alert(item: backendFailure, content: alert)
@@ -29,7 +41,7 @@ where ContentView: View,
     }
 }
 
-extension PaymentProviderPickerFlowView {
+public extension PaymentProviderPickerFlowView {
     
     typealias State = PaymentProviderPickerFlowState<Destination>
 #warning("could be improved and use less generics if scope just flow events, for example Latest is not used; and Provider too(?)")
@@ -167,7 +179,7 @@ struct PaymentProviderPickerFlowDemoView: View {
         let id = UUID()
         let model: Model
         
-        typealias Model = PaymentProviderPickerFlow<PreviewDetailPayment, PreviewLatest, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicePicker, PreviewServicesFailure>
+        typealias Model = PaymentProviderPickerFlowDomain<PreviewDetailPayment, PreviewLatest, PreviewPayment, PreviewPaymentProvider, PreviewService, PreviewServicePicker, PreviewServicesFailure>.Flow
     }
     
     enum ServicesResponse: String, CaseIterable {

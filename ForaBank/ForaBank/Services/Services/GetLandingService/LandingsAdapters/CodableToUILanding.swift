@@ -91,6 +91,11 @@ private extension UILanding.Component {
             
         case let .blockHorizontalRectangular(x):
             self = .blockHorizontalRectangular(.init(data: x))
+            
+        case let .carousel(.base(x)):
+            self = .carousel(.base(.init(data: x)))
+        case let .carousel(.withTabs(x)):
+            self = .carousel(.withTabs(.init(data: x)))
         }
     }
 }
@@ -565,5 +570,86 @@ private extension UILanding.BlockHorizontalRectangular.Item.Limit {
         data: LocalAgentDomain.Landing.BlockHorizontalRectangular.Item.Limit
     ) {
         self.init(id: data.id, title: data.title, md5hash: data.md5hash, text: data.text, maxSum: data.maxSum)
+    }
+}
+
+private extension UILanding.Carousel.CarouselBase {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselBase
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(width: data.size.width, height: data.size.height),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.Carousel.CarouselBase.ListItem {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselBase.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension UILanding.Carousel.CarouselBase.ListItem.Action {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselBase.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithTabs {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselWithTabs
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(width: data.size.width, height: data.size.height),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            tabs: data.tabs.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithTabs.TabItem {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselWithTabs.TabItem
+    ) {
+        self.init(
+            name: data.name,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithTabs.ListItem {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselWithTabs.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithTabs.ListItem.Action {
+    
+    init(
+        data: LocalAgentDomain.Landing.CodableCarouselWithTabs.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
     }
 }

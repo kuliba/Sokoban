@@ -14,6 +14,7 @@ struct MessageTextView: UIViewRepresentable {
     var font: UIFont? = UIFont(name: "Inter-Regular", size: 14)
     var textColor: UIColor = .black
     var linkColor: UIColor = .systemBlue
+    let onLinkTap: (URL) -> Void
     
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
@@ -29,12 +30,33 @@ struct MessageTextView: UIViewRepresentable {
         textView.isUserInteractionEnabled = true
         textView.dataDetectorTypes = [.address, .link, .phoneNumber]
         textView.textContainerInset = .zero
-
+        
+        textView.delegate = context.coordinator
+        
         return textView
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.text = text
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UITextViewDelegate {
+        
+        var parent: MessageTextView
+        
+        init(_ parent: MessageTextView) {
+            self.parent = parent
+        }
+        
+        func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+          
+            parent.onLinkTap(URL)
+            return false
+        }
     }
     
     static func calculatedHeight(for text: String, width: CGFloat, font: UIFont? = UIFont(name: "Inter-Regular", size: 14)) -> CGFloat {
@@ -48,7 +70,7 @@ struct MessageTextView: UIViewRepresentable {
         
         let attributedString = NSMutableAttributedString(string: text)
         let mutableParagraphStyle = NSMutableParagraphStyle()
-
+        
         mutableParagraphStyle.lineSpacing = 20
         let stringLength = text.count
         attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: mutableParagraphStyle, range: NSMakeRange(0, stringLength))

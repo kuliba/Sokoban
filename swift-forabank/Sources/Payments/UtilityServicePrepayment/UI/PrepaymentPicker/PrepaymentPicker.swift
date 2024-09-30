@@ -39,7 +39,7 @@ where LastPayment: Identifiable,
                 .frame(maxHeight: .infinity)
             
         case let .success(success):
-            list(success)
+            PrepaymentPickerSuccessView(state: success, event: event, factory: factory)
         }
     }
 }
@@ -50,80 +50,6 @@ public extension PrepaymentPicker {
     typealias Event = PrepaymentPickerEvent<Operator>
     
     typealias Factory = PrepaymentPickerFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
-}
-
-private extension PrepaymentPicker {
-    
-    typealias PickerSuccess = PrepaymentPickerSuccess<LastPayment, Operator>
-    
-    func list(
-        _ success: PickerSuccess
-    ) -> some View {
-        
-        VStack(spacing: 16) {
-            
-            factory.makeSearchView()
-                .padding(.horizontal, 16)
-            
-            Divider()
-            
-            ScrollView(.vertical, showsIndicators: false) {
-                
-                VStack(spacing: 16) {
-                    
-                    if success.searchText.isEmpty {
-                     
-                        _lastPaymentsView(success.lastPayments)
-                    }
-                    
-                    _operatorsView(success.operators)
-                    factory.makeFooterView(false)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
-        .padding(.top, 12)
-        .padding(.bottom, 20)
-    }
-    
-    @ViewBuilder
-    func _lastPaymentsView(
-        _ lastPayments: [LastPayment]
-    ) -> some View {
-        
-        if !lastPayments.isEmpty {
-            
-            ScrollView(.horizontal) {
-                
-                LazyHStack {
-                    
-                    ForEach(lastPayments, content: factory.makeLastPaymentView)
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func _operatorsView(
-        _ operators: [Operator]
-    ) -> some View {
-        
-        if !operators.isEmpty {
-            
-            LazyVStack(alignment: .leading, spacing: 13) {
-                
-                ForEach(operators, content: _operatorView)
-            }
-        }
-    }
-    
-    func _operatorView(
-        operator: Operator
-    ) -> some View {
-        
-        factory.makeOperatorView(`operator`)
-            .onAppear { event(.didScrollTo(`operator`.id)) }
-    }
 }
 
 struct ComposedOperatorsView_Previews: PreviewProvider {

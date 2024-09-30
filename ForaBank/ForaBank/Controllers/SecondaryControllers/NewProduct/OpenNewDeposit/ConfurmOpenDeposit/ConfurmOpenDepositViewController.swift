@@ -520,9 +520,25 @@
                         vc.modalPresentationStyle = .fullScreen
                         
                         self.present(vc, animated: true, completion: nil)
+                        
                     } else {
-                        self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                       
+                        self.handleError(model: model)
                     }
+                }
+            }
+        }
+        
+       private func handleError(model: MakeDepositDecodableModel) {
+           
+            let errorMessage = model.errorMessage ?? ""
+            let isSpecialCase = errorMessage.contains("Открытие вклада уже выполняется") ||
+                                (model.statusCode == 102 && errorMessage.contains("код 3100"))
+            
+            showAlert(with: "Ошибка", and: errorMessage) {
+                
+                if isSpecialCase {
+                    self.navigationController?.popToRootViewController(animated: true)
                 }
             }
         }

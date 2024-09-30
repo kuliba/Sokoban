@@ -43,7 +43,7 @@ where CategoryIcon: View,
             case let .category(category):
                 categoryView(category)
                 
-            case .showAll:
+            case .list:
                 config.showAll.render()
             }
             
@@ -55,7 +55,8 @@ where CategoryIcon: View,
 
 public extension CategoryPickerSectionStateItemLabel {
     
-    typealias Item = CategoryPickerSectionState<ServiceCategory>.Item
+    typealias Domain = CategoryPickerSectionContentDomain<ServiceCategory>
+    typealias Item = Domain.State.Item
     typealias Config = CategoryPickerSectionStateItemLabelConfig
 }
 

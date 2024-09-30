@@ -645,7 +645,8 @@ extension Model {
         Task {
             
             do {
-                let data = try await Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient()).process("").get()
+                let get = Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient())
+                let data = try await get.process((serial, "housingAndCommunalService")).get()
                 
                 if !data.isEmpty {
                     

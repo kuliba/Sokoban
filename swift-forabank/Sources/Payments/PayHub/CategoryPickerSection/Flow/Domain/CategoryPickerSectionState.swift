@@ -5,23 +5,18 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public struct CategoryPickerSectionFlowState<SelectedCategory, CategoryList> {
+public struct CategoryPickerSectionFlowState<Navigation> {
     
     public var isLoading: Bool
-    public var destination: Destination?
+    public var navigation: Navigation?
     
     public init(
         isLoading: Bool = false,
-        destination: Destination? = nil
+        navigation: Navigation? = nil
     ) {
         self.isLoading = false
-        self.destination = destination
+        self.navigation = navigation
     }
 }
 
-public extension CategoryPickerSectionFlowState {
-    
-    typealias Destination = CategoryPickerSectionDestination<SelectedCategory, CategoryList>
-}
-
-extension CategoryPickerSectionFlowState: Equatable where SelectedCategory: Equatable, CategoryList: Equatable {}
+extension CategoryPickerSectionFlowState: Equatable where Navigation: Equatable {}

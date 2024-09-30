@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makePaymentProviderPickerFlowModel.swift
+//  RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 04.08.2024.
@@ -13,14 +13,14 @@ extension RootViewModelFactory {
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
-    static func makePaymentProviderPickerFlowModel(
+    static func makeSegmentedPaymentProviderPickerFlowModel(
         httpClient: HTTPClient,
         log: @escaping Log,
         model: Model,
         pageSize: Int = 50,
         flag: StubbedFeatureFlag.Option,
         scheduler: AnySchedulerOf<DispatchQueue>
-    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> PaymentProviderPickerFlowModel {
+    ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
             httpClient: httpClient,
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         
-        let pickerFlowComposer = PaymentProviderPickerFlowModelComposer(
+        let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
             makeServicePickerFlowModel: servicePickerComposer.compose,
             model: model,
             scheduler: scheduler

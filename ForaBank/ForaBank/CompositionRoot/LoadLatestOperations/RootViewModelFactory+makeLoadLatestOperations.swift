@@ -7,8 +7,12 @@
 
 import Foundation
 import RemoteServices
+import PayHubUI
 
 extension RootViewModelFactory {
+    
+    typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
+    typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
     static func makeLoadLatestOperations(
         getAllLoadedCategories: @escaping (@escaping ([ServiceCategory]) -> Void) -> Void,
@@ -32,6 +36,9 @@ extension RootViewModelFactory {
     
     typealias LatestPaymentServiceCategoryName = String
     
+    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSection.ContentDomain.Item]) -> Void
+    typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
+
     @available(*, deprecated, message: "Use RootViewModelFactory.makeLoadLatestOperations with strong `getLatestPayments` API after hard-code for `isOutsidePayments` and `isPhonePayments` deprecation")
     static func makeLoadLatestOperations(
         getAllLoadedCategories: @escaping (@escaping ([ServiceCategory]) -> Void) -> Void,
@@ -58,7 +65,7 @@ extension RootViewModelFactory {
     }
 }
 
-extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse.Category {
+extension RemoteServices.ResponseMapper.ServiceCategory {
     
     var latestPaymentsCategoryName: String? {
         

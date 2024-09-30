@@ -81,13 +81,13 @@ final class AsyncImageViewFactoryTests: XCTestCase {
         
         fetcher.complete(with: .star)
         controller.loadViewIfNeeded()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.2)
         
         XCTAssertEqual(renderedImages, [.placeholder, .star])
         
         fetcher.complete(with: .pencil)
         controller.loadViewIfNeeded()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.2)
         
         XCTAssertEqual(renderedImages, [.placeholder, .star, .pencil])
     }

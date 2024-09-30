@@ -55,6 +55,7 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
             
             switch action.type {
             case .landing:
+                let action = try? container.decodeIfPresent(BannerActionLanding.self, forKey: .action)
                 self.action = action
                 
             case .openDeposit:
@@ -321,7 +322,7 @@ class BannerActionLanding: BannerAction {
     required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        target = try container.decode(String.self, forKey: .target)
+        target = try container.decodeIfPresent(String.self, forKey: .target) ?? ""
         
         try super.init(from: decoder)
     }

@@ -30,6 +30,7 @@ let package = Package(
         .anywayPayment,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV3,
+        .operatorsListBackendV0,
         .serviceCategoriesBackendV0,
         .paymentTemplateBackendV3,
         .payHub,
@@ -38,6 +39,8 @@ let package = Package(
         .utilityServicePrepayment,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -56,6 +59,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getClientInformDataServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -140,6 +144,8 @@ let package = Package(
         .latestPaymentsBackendV2Tests,
         .latestPaymentsBackendV3,
         .latestPaymentsBackendV3Tests,
+        .operatorsListBackendV0,
+        .operatorsListBackendV0Tests,
         .serviceCategoriesBackendV0,
         .serviceCategoriesBackendV0Tests,
         .paymentTemplateBackendV3,
@@ -156,6 +162,9 @@ let package = Package(
         .utilityServicePrepaymentUI,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
+        .marketShowcaseTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -191,6 +200,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getClientInformDataServices,
+        .getClientInformDataServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -635,6 +646,13 @@ private extension Product {
         ]
     )
     
+    static let operatorsListBackendV0 = library(
+        name: .operatorsListBackendV0,
+        targets: [
+            .operatorsListBackendV0,
+        ]
+    )
+    
     static let serviceCategoriesBackendV0 = library(
         name: .serviceCategoriesBackendV0,
         targets: [
@@ -685,6 +703,15 @@ private extension Product {
         name: .banners,
         targets: [
             .banners,
+        ]
+    )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = library(
+        name: .marketShowcase,
+        targets: [
+            .marketShowcase,
         ]
     )
     
@@ -810,6 +837,14 @@ private extension Product {
         ]
     )
     
+    static let getClientInformDataServices = library(
+        name: .getClientInformDataServices,
+        targets: [
+            .getClientInformDataServices
+        ]
+    )
+
+    
     // MARK: - Tools
     
     static let foraTools = library(
@@ -819,6 +854,8 @@ private extension Product {
         ]
     )
 }
+
+// MARK: - Target
 
 private extension Target {
     
@@ -1275,6 +1312,30 @@ private extension Target {
         ]
     )
     
+    static let operatorsListBackendV0 = target(
+        name: .operatorsListBackendV0,
+        dependencies: [
+            // internal modules
+            .foraTools,
+            .remoteServices,
+        ],
+        path: "Sources/Payments/OperatorsList/Backend/V0"
+    )
+    static let operatorsListBackendV0Tests = testTarget(
+        name: .operatorsListBackendV0Tests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .operatorsListBackendV0,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/OperatorsList/Backend/V0",
+        resources: [
+            .copy("Resources/getOperatorsListByParam.json")
+        ]
+    )
+    
     static let serviceCategoriesBackendV0 = target(
         name: .serviceCategoriesBackendV0,
         dependencies: [
@@ -1450,6 +1511,31 @@ private extension Target {
             .sharedConfigs,
         ],
         path: "Sources/\(String.banners)"
+    )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = target(
+        name: .marketShowcase,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.marketShowcase)"
+    )
+    static let marketShowcaseTests = testTarget(
+        name: .marketShowcaseTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .marketShowcase,
+        ],
+        path: "Tests/\(String.marketShowcaseTests)"
     )
 
     // MARK: - Services
@@ -1777,6 +1863,28 @@ private extension Target {
             .copy("Responses/GetProductListByType_Card_Response.json"),
             .copy("Responses/GetProductListByType_Deposit_Response.json"),
             .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+
+    static let getClientInformDataServices = target(
+        name: .getClientInformDataServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getClientInformDataServices)"
+    )
+
+    static let getClientInformDataServicesTests = testTarget(
+        name: .getClientInformDataServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getClientInformDataServices
+        ],
+        path: "Tests/Services/\(String.getClientInformDataServicesTests)",
+        resources: [
+
         ]
     )
     
@@ -2524,18 +2632,9 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
-            .cvvPin,
+            .foraTools,
             .genericRemoteService,
-            .getProcessingSessionCodeService,
-            .getInfoRepeatPaymentService,
             .rxViewModel,
-            .transferPublicKey,
-            .textFieldDomain,
-            .textFieldModel,
-            .anywayPaymentBackend,
-            .anywayPaymentCore,
-            .anywayPaymentDomain,
-            .utilityPayment,
         ]
     )
     
@@ -2834,6 +2933,10 @@ private extension Target.Dependency {
         name: .latestPaymentsBackendV3
     )
     
+    static let operatorsListBackendV0 = byName(
+        name: .operatorsListBackendV0
+    )
+    
     static let serviceCategoriesBackendV0 = byName(
         name: .serviceCategoriesBackendV0
     )
@@ -2866,6 +2969,12 @@ private extension Target.Dependency {
     
     static let banners = byName(
         name: .banners
+    )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = byName(
+        name: .marketShowcase
     )
 
     // MARK: - Services
@@ -2932,6 +3041,10 @@ private extension Target.Dependency {
     
     static let getProductListByTypeV6Service = byName(
         name: .getProductListByTypeV6Service
+    )
+    
+    static let getClientInformDataServices = byName(
+        name: .getClientInformDataServices
     )
     
     // MARK: - Tools
@@ -3131,6 +3244,9 @@ private extension String {
     static let latestPaymentsBackendV3 = "LatestPaymentsBackendV3"
     static let latestPaymentsBackendV3Tests = "LatestPaymentsBackendV3Tests"
     
+    static let operatorsListBackendV0 = "OperatorsListBackendV0"
+    static let operatorsListBackendV0Tests = "OperatorsListBackendV0Tests"
+    
     static let serviceCategoriesBackendV0 = "ServiceCategoriesBackendV0"
     static let serviceCategoriesBackendV0Tests = "ServiceCategoriesBackendV0Tests"
     
@@ -3155,6 +3271,11 @@ private extension String {
     // MARK: - Banners
     
     static let banners = "Banners"
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = "MarketShowcase"
+    static let marketShowcaseTests = "MarketShowcaseTests"
 
     // MARK: - Services
     
@@ -3208,6 +3329,9 @@ private extension String {
     
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
+    
+    static let getClientInformDataServices = "GetClientInformDataServices"
+    static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
     // MARK: - Tools
     

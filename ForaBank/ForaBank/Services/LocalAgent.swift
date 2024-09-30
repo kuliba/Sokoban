@@ -95,34 +95,12 @@ class LocalAgent: LocalAgentProtocol {
     func serial<T>(for type: T.Type) -> String? {
         
         let fileName = fileName(for: type)
+        let data = try? Data(contentsOf: fileURL(with: fileName))
+        
+        guard data != nil else { return nil }
         
         return serials[fileName]
     }
-}
-
-// MARK: - update
-
-extension LocalAgent {
-    
-    func update<T: Codable>(
-        with newData: T,
-        serial: String?,
-        using reduce: (T, T) -> (T, Bool)
-    ) throws {
-        
-        lock.lock()
-        defer { lock.unlock() }
-        
-        let existing = try load(type: T.self).get(orThrow: LoadError())
-        let (updated, hasChanges) = reduce(existing, newData)
-        
-        if hasChanges {
-    
-            try store(updated, serial: serial)
-        }
-    }
-    
-    struct LoadError: Error {}
 }
 
 //MARK: - Internal Helpers

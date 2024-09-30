@@ -1,0 +1,56 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "e484a0fa6826200868cb821394efa1ef",
+        "operatorList": [
+            {
+                "type": "housingAndCommunalService",
+                "atributeList": [
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ООО  ИЛЬИНСКОЕ ЖКХ",
+                        "customerId": "17651",
+                        "serviceList": [],
+                        "inn": "3704561992"
+                    },
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ООО МЕТАЛЛЭНЕРГОФИНАНС",
+                        "customerId": "21121",
+                        "serviceList": [],
+                        "inn": "4217039402"
+                    },
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ТОВАРИЩЕСТВО СОБСТВЕННИКОВ НЕДВИЖИМОСТИ ЧИСТОПОЛЬСКАЯ 61 А",
+                        "customerId": "12604",
+                        "serviceList": [],
+                        "inn": "1657251193"
+                    },
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ООО СЕРВИССТРОЙЭКСПЛУАТАЦИЯ",
+                        "customerId": "16399",
+                        "serviceList": [],
+                        "inn": "7725412685"
+                    },
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ТСЖ ОЛИМП",
+                        "customerId": "5823",
+                        "serviceList": [],
+                        "inn": "7729398632"
+                    },
+                    {
+                        "md5hash": "1efeda3c9130101d4d88113853b03bb5",
+                        "juridicalName": "ДОНУК",
+                        "customerId": null,
+                        "serviceList": [],
+                        "inn": "6165216570"
+                    }
+                ]
+            }
+        ]
+    }
+}

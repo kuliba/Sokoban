@@ -37,3 +37,13 @@ extension Spy where Payload == Void {
         process((), completion: completion)
     }
 }
+
+extension Spy where Response == Void {
+    
+    func process(
+        payload: Payload,
+        completion: @escaping () -> Void
+    ) {
+        process(payload) { completion() }
+    }
+}

@@ -13,6 +13,7 @@ enum IconDomain {
         
         case svg(String)
         case md5Hash(MD5Hash)
+        case image(String)
     }
     
     typealias MakeIconView = (Icon?) -> IconView

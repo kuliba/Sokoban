@@ -8,7 +8,7 @@
 import Foundation
 
 enum AbroadType: Equatable {
-    case orderCard, transfer, sticker
+    case orderCard, transfer, sticker, marketShowcase
     case control(CardType)
     case limit(CardType)
 }

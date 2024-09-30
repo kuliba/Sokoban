@@ -1,0 +1,70 @@
+//
+//  SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 16.09.2024.
+//
+
+import OperatorsListBackendV0
+import RemoteServices
+
+extension SerialCachingRemoteBatchServiceComposer {
+    
+    typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
+    typealias RemoteProvider = RemoteServices.ResponseMapper.ServicePaymentProvider
+    typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
+    
+    func composeServicePaymentOperatorService(
+        getSerial: @escaping (GetOperatorsListByParamPayload) -> String?
+    ) -> ServicePaymentProviderBatchService {
+        
+        let composed = self.compose(
+            getSerial: getSerial,
+            makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
+            toModel: [CodableServicePaymentOperator].init(providers:)
+        )
+        
+        return { payloads, completion in
+            
+            let withStandard = payloads.filter(\.hasStandardFlow)
+            
+            guard !withStandard.isEmpty else { return completion([]) }
+            
+            composed(withStandard, completion)
+        }
+    }
+}
+
+extension ForaBank.RequestFactory.GetOperatorsListByParamPayload {
+    
+    var hasStandardFlow: Bool {
+        
+        category.paymentFlow == .standard
+    }
+}
+
+struct CodableServicePaymentOperator: Codable, Identifiable {
+    
+    let id: String
+    let inn: String
+    let md5Hash: String?
+    let name: String
+    let type: String
+}
+
+extension Array where Element == CodableServicePaymentOperator {
+    
+    init(providers: [RemoteServices.ResponseMapper.ServicePaymentProvider]) {
+        
+        self = providers.map(\.codable)
+    }
+}
+
+private extension RemoteServices.ResponseMapper.ServicePaymentProvider {
+    
+    var codable: CodableServicePaymentOperator {
+        
+        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
+    }
+}

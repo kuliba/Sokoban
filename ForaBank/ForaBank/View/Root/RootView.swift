@@ -7,10 +7,15 @@
 
 import ActivateSlider
 import InfoComponent
+import FooterComponent
 import PaymentSticker
 import PayHubUI
+import RxViewModel
 import SberQR
 import SwiftUI
+import MarketShowcase
+import UIPrimitives
+import UtilityServicePrepaymentUI
 
 struct RootView: View {
     
@@ -26,9 +31,10 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    mainViewTab(viewModel.mainViewModel)
-                    paymentsViewTab(viewModel.paymentsModel)
-                    chatViewTab(viewModel.chatViewModel)
+                    mainViewTab(viewModel.tabsViewModel.mainViewModel)
+                    paymentsViewTab(viewModel.tabsViewModel.paymentsModel)
+                    marketShowcaseViewTab(viewModel.tabsViewModel.marketShowcaseBinder)
+                    chatViewTab(viewModel.tabsViewModel.chatViewModel)
                 }
                 .accentColor(.black)
                 .tabBar(isHidden: .init(
@@ -100,6 +106,19 @@ struct RootView: View {
             .accessibilityIdentifier("tabBarChatButton")
     }
     
+    private func marketShowcaseViewTab(
+        _ marketShowcaseBinder: MarketShowcaseDomain.Binder
+    ) -> some View {
+        
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder).map {
+            $0
+            .taggedTabItem(.market, selected: viewModel.selected)
+        }
+        .taggedTabItem(.market, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
+        .accessibilityIdentifier("tabBarMarketButton")
+    }
+    
     @ViewBuilder
     private func destinationView(
         link: RootViewModel.Link
@@ -115,6 +134,7 @@ struct RootView: View {
         case .me2me(let requestMeToMeModel):
             //FIXME: looks like NavigationView required
             MeToMeRequestView(viewModel: requestMeToMeModel)
+                .ignoresSafeArea()
             //FIXME: looks like zIndex not needed
                 .zIndex(.greatestFiniteMagnitude)
             
@@ -153,32 +173,21 @@ private extension RootView {
         
         ComposedPaymentsTransfersCorporateView(
             corporate: corporate,
-            makeContentView: {
-                
-                PaymentsTransfersCorporateContentView(
-                    content: corporate,
-                    factory: .init(
-                        makeBannerSectionView: makeBannerSectionView,
-                        makeRestrictionNoticeView: makeRestrictionNoticeView,
-                        makeToolbarView: makePaymentsTransfersCorporateToolbarView,
-                        makeTransfersSectionView: makeTransfersSectionView
-                    ),
-                    config: .iFora
-                )
-            }
+            factory: .init(
+                makeContentView: {
+                    PaymentsTransfersCorporateContentView(
+                        content: corporate.content,
+                        factory: .init(
+                            makeBannerSectionView: makeBannerSectionView,
+                            makeRestrictionNoticeView: makeRestrictionNoticeView,
+                            makeToolbarView: makePaymentsTransfersCorporateToolbarView,
+                            makeTransfersSectionView: makeTransfersSectionView
+                        ),
+                        config: .iFora
+                    )
+                }
+            )
         )
-    }
-    
-    func makeBannerSectionView() -> some View {
-        
-        ZStack {
-            
-            Color.orange.opacity(0.5)
-            
-            Text("Banners")
-                .foregroundColor(.white)
-                .font(.title3.bold())
-        }
     }
     
     func makeRestrictionNoticeView() -> some View {
@@ -209,7 +218,7 @@ private extension RootView {
                 .font(.title3.bold())
         }
     }
-
+    
     func paymentsTransfersPersonalView(
         _ personal: PaymentsTransfersPersonal
     ) -> some View {
@@ -234,36 +243,305 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionBinder
+        binder: CategoryPickerSection.Binder
     ) -> some View {
         
-        ComposedCategoryPickerSectionFlowView(
-            binder: binder,
-            config: .iFora,
-            itemLabel: itemLabel,
-            makeDestinationView: makeCategoryPickerSectionDestinationView
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                        makeContentView: {
+                            
+                            RxWrapperView(
+                                model: binder.content,
+                                makeContentView: { state, event in
+                                    
+                                    CategoryPickerSectionContentView(
+                                        state: state,
+                                        event: event,
+                                        config: .iFora,
+                                        itemLabel: itemLabel
+                                    )
+                                }
+                            )
+                        },
+                        makeDestinationView: makeCategoryPickerSectionDestinationView,
+                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                    )
+                )
+            }
         )
+    }
+    
+    func makeCategoryPickerSectionAlert(
+        binder: CategoryPickerSection.Binder
+    ) -> (SelectedCategoryFailure) -> Alert {
+        
+        return { failure in
+            
+            return .init(
+                with: .error(message: failure.message, event: .dismiss),
+                event: { binder.flow.event($0) }
+            )
+        }
     }
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDestination
+        destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
         switch destination {
-        case let .category(selected):
-            selectedCategoryView(selected)
+        case let .list(list):
+            categoryListView(list)
             
-        case let .list(categoryListModelStub):
-            categoryListView(categoryListModelStub)
+        case let .mobile(mobile):
+            PaymentsView(viewModel: mobile.paymentsViewModel)
+            
+        case let .standard(standard):
+            switch standard {
+            case let .failure(failedPaymentProviderPicker):
+                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                
+            case let .success(binder):
+                paymentProviderPicker(binder)
+            }
+            
+        case let .taxAndStateServices(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+
+        case let .transport(transport):
+            transportPaymentsView(transport)
         }
     }
     
-    func selectedCategoryView(
-        _ selected: SelectedCategoryDestination
+    @ViewBuilder
+    func makeCategoryPickerSectionFullScreenCoverView(
+        cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: selected))")
+        QRView(viewModel: cover.qr.qrModel)
+    }
+    
+    func paymentProviderPicker(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: { state, event in
+                
+                PaymentProviderPickerFlowView(
+                    state: state,
+                    event: event,
+                    contentView: {
+                        
+                        paymentProviderPickerContentView(binder)
+                    },
+                    destinationView: {
+                        
+                        paymentProviderPickerDestinationView($0)
+                    }
+                )
+            }
+        )
+    }
+    
+    func paymentProviderPickerContentView(
+        _ binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        PaymentProviderPickerContentView(
+            content: binder.content,
+            factory: .init(
+                makeOperationPickerView: { _ in EmptyView() },
+                makeProviderList: {
+                    
+                    paymentProviderListView(providerList: $0, binder: binder)
+                },
+                makeSearchView: { _ in EmptyView() }
+            )
+        )
+    }
+    
+    func paymentProviderListView(
+        providerList: PaymentProviderPicker.ProviderList,
+        binder: PaymentProviderPicker.Binder
+    ) -> some View {
+        
+        RxWrapperView(
+            model: providerList,
+            makeContentView: { state, event in
+                
+                PrepaymentPickerSuccessView(
+                    state: state,
+                    event: event,
+                    factory: .init(
+                        makeFooterView: {
+                            
+                            FooterView(
+                                state: $0 ? .failure(.iFora) : .footer(.iFora),
+                                event: binder.flow.handleFooterEvent(_:),
+                                config: .iFora
+                            )
+                        },
+                        makeLastPaymentView: {
+                            
+                            makeLatestPaymentView(latest: $0, event: binder.flow.selectLatest(_:))
+                        },
+                        makeOperatorView: {
+                            
+                            makeOperatorView(provider: $0, event: binder.flow.selectProvider(_:))
+                        },
+                        makeSearchView: {
+                            
+                            paymentProviderPickerSearchView(binder.content.search)
+                        }
+                    )
+                )
+            }
+        )
+    }
+    
+    func makeLatestPaymentView(
+        latest: Latest,
+        event: @escaping (Latest) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(latest) },
+            label: {
+                
+                LastPaymentLabel(
+                    amount: latest.amount.map { "\($0) ₽" } ?? "",
+                    title: latest.name,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: latest.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+    }
+    
+    func makeOperatorView(
+        provider: PaymentProviderPicker.Provider,
+        event: @escaping (PaymentProviderPicker.Provider) -> Void
+    ) -> some View {
+        
+        Button(
+            action: { event(provider) },
+            label: {
+                
+                OperatorLabel(
+                    title: provider.name,
+                    subtitle: provider.inn,
+                    config: .iFora,
+                    iconView: makeIconView(md5Hash: provider.md5Hash)
+                )
+                .contentShape(Rectangle())
+            }
+        )
+    }
+        
+    func transportPaymentsView(
+        _ transport: TransportPaymentsViewModel
+    ) -> some View {
+        
+        TransportPaymentsView(viewModel: transport) {
+            MosParkingView(
+                viewModel: .init(
+                    operation: viewModel.model.getMosParkingPickerData
+                ),
+                stateView: { state in
+                    
+                    MosParkingStateView(
+                        state: state,
+                        mapper: DefaultMosParkingPickerDataMapper(
+                            select: transport.selectMosParkingID(id:)
+                        ),
+                        errorView: {
+                            
+                            Text($0.localizedDescription).foregroundColor(.red)
+                        }
+                    )
+                }
+            )
+            // TODO: fix navigation bar
+            // .navigationBar(
+            //     with: .init(
+            //         title: "Московский паркинг",
+            //         rightItems: [
+            //             NavigationBarView.ViewModel.IconItemViewModel(
+            //                 icon: .init("ic40Transport"),
+            //                 style: .large
+            //             )
+            //         ]
+            //     )
+            // )
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBar(
+            with: .with(
+                title: "Транспорт",
+                navLeadingAction: {},//viewModel.dismiss,
+                navTrailingAction: {}//viewModel.openScanner
+            )
+        )
+    }
+    
+    func makeIconView(
+        md5Hash: String?
+    ) -> some View {
+        
+        rootViewFactory.makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerSearchView(
+        _ search: PaymentProviderPicker.Search?
+    ) -> some View {
+        
+        search.map { search in
+            
+            DefaultCancellableSearchBarView(
+                viewModel: search,
+                textFieldConfig: .black16,
+                cancel: {
+                    
+                    UIApplication.shared.endEditing()
+                    search.setText(to: nil)
+                }
+            )
+        }
+    }
+    
+    @ViewBuilder
+    func paymentProviderPickerDestinationView(
+        _ destination: PaymentProviderPicker.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .backendFailure(backendFailure):
+            Text("TBD: destination view \(String(describing: backendFailure))")
+            
+        case let .detailPayment(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
+        case let .payment(payment):
+            Text("TBD: destination view \(String(describing: payment))")
+            
+        case let .servicePicker(servicePicker):
+            Text("TBD: destination view \(String(describing: servicePicker))")
+            
+        case let .servicesFailure(servicesFailure):
+            Text("TBD: destination view \(String(describing: servicesFailure))")
+        }
     }
     
     func categoryListView(
@@ -272,7 +550,7 @@ private extension RootView {
         
         Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
     }
-
+    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -309,7 +587,7 @@ private extension RootView {
     func makePaymentsTransfersToolbarView(
         binder: PaymentsTransfersPersonalToolbarBinder
     ) -> some View {
-
+        
         ComposedPaymentsTransfersPersonalToolbarView(
             binder: binder,
             factory: .init(
@@ -346,7 +624,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSectionState.Item
+        item: CategoryPickerSection.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -382,6 +660,74 @@ private extension RootView {
     }
 }
 
+private extension AlertModelOf<CategoryPickerSection.FlowDomain.FlowEvent> {
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .default(
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+            message: message,
+            primaryEvent: event
+        )
+    }
+    
+    private static func `default`(
+        title: String,
+        message: String?,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent? = nil
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: secondaryEvent.map {
+                
+                .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: $0
+                )
+            }
+        )
+    }
+}
+
+extension PaymentProviderPicker.Flow {
+    
+    func handleFooterEvent(
+        _ event: FooterEvent
+    ) {
+        switch event {
+        case .addCompany:
+            self.event(.select(.chat))
+            
+        case .payByInstruction:
+            self.event(.select(.detailPayment))
+        }
+    }
+    
+    func selectLatest(
+        _ latest: Latest
+    ) {
+        self.event(.select(.latest(latest)))
+    }
+    
+    func selectProvider(
+        _ provider: PaymentProviderPicker.Provider
+    ) {
+        self.event(.select(.provider(provider)))
+    }
+}
+
 extension Latest: Named {
     
     public var name: String {
@@ -392,6 +738,28 @@ extension Latest: Named {
             
         case let .withPhone(withPhone):
             return withPhone.name ?? String(describing: withPhone)
+        }
+    }
+    
+    var amount: Decimal? {
+        
+        switch self {
+        case let .service(service):
+            return service.amount
+            
+        case let .withPhone(withPhone):
+            return withPhone.amount
+        }
+    }
+    
+    var md5Hash: String? {
+        
+        switch self {
+        case let .service(service):
+            return service.md5Hash
+            
+        case let .withPhone(withPhone):
+            return withPhone.md5Hash
         }
     }
 }
@@ -451,6 +819,9 @@ extension RootViewModel.TabType {
             
         case .chat:
             return isSelected ? .ic24ChatActive : .ic24ChatInactive
+            
+        case .market:
+            return isSelected ? .ic24MarketplaceActive : .ic24MarketplaceInactive
         }
     }
 }
@@ -464,9 +835,7 @@ struct RootView_Previews: PreviewProvider {
                 fastPaymentsFactory: .legacy,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
-                mainViewModel: .sample,
-                paymentsModel: .legacy(.sample),
-                chatViewModel: .init(),
+                tabsViewModel: .preview,
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
@@ -497,6 +866,7 @@ private extension RootViewFactory {
             makeAnywayPaymentFactory: { _ in fatalError() },
             makeHistoryButtonView: { _ in .init { event in }},
             makeIconView: IconDomain.preview,
+            makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
@@ -504,7 +874,8 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makeIconView: IconDomain.preview,
+                        makeIconView: IconDomain.preview, 
+                        makeGeneralIconView: IconDomain.preview,
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
@@ -521,7 +892,8 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeMarketShowcaseView: { _ in .none }
         )
     }
 }

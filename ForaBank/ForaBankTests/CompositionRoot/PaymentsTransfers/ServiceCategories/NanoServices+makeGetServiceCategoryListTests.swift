@@ -16,7 +16,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
         let (sut, httpClient) = makeSUT()
         let exp = expectation(description: "wait for HTTPClient")
         
-        sut { _ in exp.fulfill() }
+        sut(nil) { _ in exp.fulfill() }
         httpClient.complete(with: .success((anyData(), anyHTTPURLResponse())))
         
         wait(for: [exp], timeout: 0.1)
@@ -27,7 +27,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
         let (sut, httpClient) = makeSUT()
         let request = try createRequest()
         
-        sut { _ in }
+        sut(nil) { _ in }
         
         XCTAssertNoDiff(httpClient.requests, [request])
     }
@@ -157,13 +157,15 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
     }
     
     private func createRequest(
+        serial: String? = nil
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetServiceCategoryListRequest()
+        try RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
     private func expect(
         _ sut: SUT,
+        with serial: String? = nil,
         toDeliver expectedResult: NanoServices.GetServiceCategoryListResult,
         on action: () -> Void,
         file: StaticString = #file,
@@ -171,7 +173,7 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut {
+        sut(serial) {
             XCTAssertNoDiff($0, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
             
             exp.fulfill()
@@ -186,14 +188,14 @@ final class NanoServices_makeGetServiceCategoryListTests: XCTestCase {
 private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     
     static let one: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: .mobile,
                 md5Hash: "c16ee4f2d0b7cea6f8b92193bccce4d7",
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
-                search: false,
+                hasSearch: false,
                 type: .mobile
             )
         ],
@@ -201,14 +203,14 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
     )
     
     static let valid: Self = .init(
-        categoryGroupList: [
+        list: [
             .init(
                 latestPaymentsCategory: nil,
                 md5Hash: "2d777a4bb3f53d495026b4884bbedde4",
                 name: "Оплата по QR",
                 ord: 10,
                 paymentFlow: .qr,
-                search: false,
+                hasSearch: false,
                 type: .qr
             ),
             .init(
@@ -217,7 +219,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Мобильная связь",
                 ord: 20,
                 paymentFlow: .mobile,
-                search: false,
+                hasSearch: false,
                 type: .mobile
             ),
             .init(
@@ -226,7 +228,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Услуги ЖКХ",
                 ord: 30,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .housingAndCommunalService
             ),
             .init(
@@ -235,7 +237,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Интернет, ТВ",
                 ord: 40,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .internet
             ),
             .init(
@@ -244,7 +246,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Транспорт",
                 ord: 50,
                 paymentFlow: .transport,
-                search: false,
+                hasSearch: false,
                 type: .transport
             ),
             .init(
@@ -253,7 +255,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Налоги и госуслуги",
                 ord: 60,
                 paymentFlow: .taxAndStateServices,
-                search: false,
+                hasSearch: false,
                 type: .taxAndStateService
             ),
             .init(
@@ -262,7 +264,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Охранные системы",
                 ord: 70,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .security
             ),
             .init(
@@ -271,7 +273,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Электронный кошелек",
                 ord: 80,
                 paymentFlow: .standard,
-                search: false,
+                hasSearch: false,
                 type: .digitalWallets
             ),
             .init(
@@ -280,7 +282,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Погашение кредита ",
                 ord: 90,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .repaymentLoansAndAccounts
             ),
             .init(
@@ -289,7 +291,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Развлечения (игры и соц.сети)",
                 ord: 100,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .socialAndGames
             ),
             .init(
@@ -298,7 +300,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Сетевой маркетинг",
                 ord: 110,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .networkMarketing
             ),
             .init(
@@ -307,7 +309,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Образование",
                 ord: 120,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .education
             ),
             .init(
@@ -316,7 +318,7 @@ private extension RemoteServices.ResponseMapper.GetServiceCategoryListResponse {
                 name: "Благотворительность",
                 ord: 130,
                 paymentFlow: .standard,
-                search: true,
+                hasSearch: true,
                 type: .charity
             ),
         ],

@@ -12,6 +12,7 @@ struct MessagesHistoryDetailView: View {
     let model: MessagesHistoryDetailViewModel
     let maxHight = UIScreen.main.bounds.height - 400
     @State var textHeight: CGFloat = 0
+    let handleLink: (URL) -> Void
     
     var body: some View {
         
@@ -32,18 +33,15 @@ struct MessagesHistoryDetailView: View {
                 .foregroundColor(.mainColorsBlack)
                 .accessibilityIdentifier("MessageHistoryDetailTitle")
             
-            MessageTextView(text: model.content)
-                .frame(height: MessageTextView.calculatedHeight(for: model.content, width: UIScreen.main.bounds.width), alignment: .center)
-                .padding(.horizontal, 10)
-                .padding(.bottom, 100)
-                .accessibilityIdentifier("MessageHistoryDetailText")
-            
+            MessageTextView(text: model.content, onLinkTap: { url in
+                
+                handleLink(url)
+            })
+            .frame(height: MessageTextView.calculatedHeight(for: model.content, width: UIScreen.main.bounds.width), alignment: .center)
+            .padding(.horizontal, 10)
+            .padding(.bottom, 100)
+            .accessibilityIdentifier("MessageHistoryDetailText")
         }.padding(.vertical, 25)
-    }
-    
-    internal init(model: MessagesHistoryDetailViewModel) {
-        
-        self.model = model
     }
 }
 

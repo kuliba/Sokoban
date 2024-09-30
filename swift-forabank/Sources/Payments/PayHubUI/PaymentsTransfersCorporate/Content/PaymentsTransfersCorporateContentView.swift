@@ -7,13 +7,14 @@
 
 import SwiftUI
 
-public struct PaymentsTransfersCorporateContentView<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>: View
+public struct PaymentsTransfersCorporateContentView<BannerPicker, BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>: View
 where BannerSectionView: View,
       RestrictionNoticeView: View,
       ToolbarView: ToolbarContent,
       TransfersSectionView: View {
     
-    let content: Content
+    @ObservedObject private var content: Content
+    
     let factory: Factory
     let config: Config
     
@@ -38,7 +39,7 @@ where BannerSectionView: View,
                 config.header.render()
                     .padding(.top, config.headerTopPadding)
                 
-                factory.makeBannerSectionView()
+                factory.makeBannerSectionView(content.bannerPicker)
                     .frame(height: config.bannerSectionHeight)
                 
                 config.title.render()
@@ -55,8 +56,8 @@ where BannerSectionView: View,
 
 public extension PaymentsTransfersCorporateContentView {
     
-    typealias Content = PaymentsTransfersCorporateContent
-    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>
+    typealias Content = PaymentsTransfersCorporateContent<BannerPicker>
+    typealias Factory = PaymentsTransfersCorporateContentViewFactory<BannerPicker, BannerSectionView, RestrictionNoticeView, ToolbarView, TransfersSectionView>
     typealias Config = PaymentsTransfersCorporateContentViewConfig
 }
 
@@ -66,9 +67,9 @@ public extension PaymentsTransfersCorporateContentView {
     NavigationView {
         
         PaymentsTransfersCorporateContentView(
-            content: .init(),
+            content: .preview,
             factory: .init(
-                makeBannerSectionView: {
+                makeBannerSectionView: { (bannerPicker: PreviewBannerPicker) in
                     
                     ZStack {
                         
@@ -115,3 +116,17 @@ public extension PaymentsTransfersCorporateContentView {
     }
     .navigationViewStyle(.stack)
 }
+
+private extension PaymentsTransfersCorporateContent
+where BannerPicker == PreviewBannerPicker {
+    
+    static var preview: PaymentsTransfersCorporateContent {
+        
+        return .init(
+            bannerPicker: .init(),
+            reload: {}
+        )
+    }
+}
+
+private final class PreviewBannerPicker {}

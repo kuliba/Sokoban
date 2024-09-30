@@ -9,31 +9,19 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public struct GetServiceCategoryListResponse: Equatable {
-        
-        public let categoryGroupList: [Category]
-        public let serial: String
-        
-        public init(
-            categoryGroupList: [Category],
-            serial: String
-        ) {
-            self.categoryGroupList = categoryGroupList
-            self.serial = serial
-        }
-    }
+    public typealias GetServiceCategoryListResponse = SerialStamped<String, ServiceCategory>
 }
 
-extension ResponseMapper.GetServiceCategoryListResponse {
+extension ResponseMapper {
     
-    public struct Category: Equatable {
+    public struct ServiceCategory: Equatable {
         
         public let latestPaymentsCategory: LatestPaymentsCategory?
         public let md5Hash: String
         public let name: String
         public let ord: Int
         public let paymentFlow: PaymentFlow
-        public let search: Bool
+        public let hasSearch: Bool
         public let type: CategoryType
         
         public init(
@@ -42,7 +30,7 @@ extension ResponseMapper.GetServiceCategoryListResponse {
             name: String,
             ord: Int,
             paymentFlow: PaymentFlow,
-            search: Bool,
+            hasSearch: Bool,
             type: CategoryType
         ) {
             self.latestPaymentsCategory = latestPaymentsCategory
@@ -50,7 +38,7 @@ extension ResponseMapper.GetServiceCategoryListResponse {
             self.name = name
             self.ord = ord
             self.paymentFlow = paymentFlow
-            self.search = search
+            self.hasSearch = hasSearch
             self.type = type
         }
         
@@ -67,15 +55,15 @@ extension ResponseMapper.GetServiceCategoryListResponse {
             case repaymentLoansAndAccounts
             case security
             case socialAndGames
-            case transport
             case taxAndStateService
+            case transport
         }
         
         public enum LatestPaymentsCategory: Equatable {
             
             case charity
-            case education
             case digitalWallets
+            case education
             case internet
             case mobile
             case networkMarketing

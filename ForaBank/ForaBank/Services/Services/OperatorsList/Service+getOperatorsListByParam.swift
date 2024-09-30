@@ -13,7 +13,7 @@ import RemoteServices
 extension Services {
     
     typealias GetOperatorListResult = Swift.Result<[OperatorsListComponents.SberOperator], RemoteServices.ResponseMapper.MappingError>
-    typealias GetOperatorListService = RemoteServiceOf<String, GetOperatorListResult>
+    typealias GetOperatorListService = RemoteServiceOf<(String?, String), GetOperatorListResult>
     
     static func getOperatorsListByParam(
         httpClient: HTTPClient
