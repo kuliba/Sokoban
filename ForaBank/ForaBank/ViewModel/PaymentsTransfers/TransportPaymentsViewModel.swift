@@ -188,7 +188,8 @@ extension TransportPaymentsViewModel {
             .servicePayment(
                 puref: Purefs.iForaMosParking,
                 additionalList: .none,
-                amount: 0
+                amount: 0, 
+                productId: nil
             )
         )
         
@@ -209,7 +210,8 @@ private extension Payments.Operation.Source {
         self = .servicePayment(
             puref: itemDidTapped.latestPayment.puref,
             additionalList: itemDidTapped.latestPayment.additionalList,
-            amount: itemDidTapped.latestPayment.amount
+            amount: itemDidTapped.latestPayment.amount,
+            productId: nil
         )
     }
     
@@ -222,7 +224,8 @@ private extension Payments.Operation.Source {
         .servicePayment(
             puref: puref,
             additionalList: additionalList,
-            amount: amount
+            amount: amount, 
+            productId: nil
         )
     }
 }

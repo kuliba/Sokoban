@@ -232,6 +232,7 @@ extension Payments.Operation {
         case qr
         
         case sfp(phone: String, bankId: BankData.ID, amount: String?, productId: ProductData.ID?)
+        case toAnotherCard(from: ProductData.ID, to: ProductData.ID, amount: String?)
         
         case direct(phone: String? = nil, countryId: CountryData.ID, serviceData: PaymentServiceData? = nil)
                 
@@ -244,7 +245,7 @@ extension Payments.Operation {
         case c2b(URL)
         case c2bSubscribe(URL)
         
-        case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
+        case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double, productId: ProductData.ID?)
         
         case avtodor
         
@@ -265,6 +266,8 @@ extension Payments.Operation {
             case let .latestPayment(latestPaymentId): return "latest payment: \(latestPaymentId)"
             case .qr: return "qr"
             case let .sfp(phone: phone, bankId: bankId, amount: amount, productId: productId): return "sfp: \(phone), bankId: \(bankId), amount: \(amount ?? "nil")"
+            case let .toAnotherCard(from: from, to: to, amount: amount):
+                return "toAnotherCard:"
             case let .direct(phone: phone, countryId: countryId, serviceData: serviceData): return "direct: \(phone ?? "nil"), countryId: \(countryId), lastPaymentName: \(String(describing: serviceData?.lastPaymentName))"
             case let .return(operationId: operationId, transferNumber: number, amount: amount, productId: productId): return "operationId: \(operationId), transferNumber: \(number), amount: \(amount), productId: \(productId)"
             case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
@@ -272,15 +275,16 @@ extension Payments.Operation {
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2b(url): return "c2b payment url: \(url.absoluteURL)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
-            case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
+            case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount, productId: productId): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount), productId: \(String(describing: productId))"
             case .avtodor: return "Fake/Combined Avtodor"
             case .gibdd: return "GIBDD Fines"
             case let .mobile(phone: phone, amount: amount, productId: productId):
-                return "mobile: \(phone), \(amount)"
+                return "mobile: \(String(describing: phone)), \(String(describing: amount))"
             case let .repeatPaymentRequisites(accountNumber: accountNumber, bankId: bankId, inn: inn, kpp: kpp, amount: amount, productId: productId, comment: comment):
                 return "repeatPaymentRequisites"
             case let .taxes(parameterData: parameterData):
-                return "Texes \(parameterData)"
+                return "Texes \(String(describing: parameterData))"
+           
             }
         }
     }

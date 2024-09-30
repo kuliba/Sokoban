@@ -464,12 +464,15 @@ struct ProductProfileView: View {
                                         }
                                         
                                     case .insideBank:
-                                        
+                                     
                                         if let transfer = infoPayment.parameterList.last,
-                                           let phone = transfer.additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue,
-                                           let countryId = transfer.additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue {
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
-                                                self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: countryId, amount: nil, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
+                                           let from = transfer.payer?.cardId,
+                                           let amount = transfer.amount,
+                                           let to = infoPayment.productTemplate?.id {
+                                         
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.viewModel.link = .payment(.init(source: .toAnotherCard(from: from, to: to, amount: String(amount)), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))
                                             }
@@ -489,7 +492,8 @@ struct ProductProfileView: View {
                                                 self.viewModel.link = .payment(.init(source: .servicePayment(
                                                     puref: puref,
                                                     additionalList: additionalList,
-                                                    amount: amount
+                                                    amount: amount, 
+                                                    productId: transfer.payer?.cardId
                                                 ), model: Model.shared, closeAction: {
                                                     self.viewModel.link = nil
                                                 }))

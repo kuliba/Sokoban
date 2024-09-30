@@ -328,6 +328,7 @@ extension Model {
         switch source {
         case let .mock(mock): return mock.service
         case .sfp: return .sfp
+        case .toAnotherCard: return .toAnotherCard
         case .requisites: return .requisites
         case .c2b: return .c2b
         case .c2bSubscribe: return .c2b
@@ -396,7 +397,7 @@ extension Model {
                 throw Payments.Error.unsupported
             }
             
-        case .servicePayment(let operatorCode, _, _):
+        case .servicePayment(let operatorCode, _, _, _):
             guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
                 throw Payments.Error.missingValueForParameter(operatorCode)
             }
