@@ -192,7 +192,12 @@ extension Model {
         
         if let serviceData = serviceData {
             
-            return serviceData.additionalList.first(where: { $0.fieldName == parameterId } ).map(\.fieldValue)
+            if parameterId == Payments.Parameter.Identifier.amount.rawValue {
+                return String(serviceData.amount)
+             
+            } else {
+                return serviceData.additionalList.first(where: { $0.fieldName == parameterId } ).map(\.fieldValue)
+            }
             
         } else {
             
@@ -292,6 +297,7 @@ extension Model {
             }
             
         case Payments.Parameter.Identifier.amount.rawValue:
+            
             guard !parameters.contains(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }),
                 let amountParameter = try? parameters.parameter(forIdentifier: .amount, as: Payments.ParameterAmount.self),
                   let productParameter = try? parameters.parameter(forIdentifier: .product, as: Payments.ParameterProduct.self),
@@ -333,7 +339,6 @@ extension Model {
             
             let updatedAmountParameter = amountParameter
                 .update(currencySymbol: currencySymbol, maxAmount: maxAmount)
-                .updated(value: operation.source?.abroadAmountValue())
             
             return updatedAmountParameter
             
@@ -832,7 +837,7 @@ extension Model {
         var (country, optionID): (String?, String?)
 
         switch operation.source {
-        case let .direct(_, countryId: countryId,_):
+        case let .direct(_, countryId: countryId, _):
             country = countryId.description
             
         case let .latestPayment(latestPaymentId):
