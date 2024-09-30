@@ -93,7 +93,9 @@ private extension UILanding.Component {
             
         case let .verticalSpacing(data):
             self = .verticalSpacing(.init(data: data))
-            
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
         case let .blockHorizontalRectangular(data):
             self = .blockHorizontalRectangular(.init(data: data))
             
@@ -115,6 +117,18 @@ private extension UILanding.VerticalSpacing {
         self.init(
             backgroundColor: .init(rawValue: data.backgroundColor.rawValue) ?? .black,
             spacingType: .init(rawValue: data.type.rawValue) ?? .small
+        )
+    }
+}
+
+private extension UILanding.Spacing {
+    
+    init(
+        data: Landing.Spacing
+    ) {
+        self.init(
+            backgroundColor: .init(rawValue: data.backgroundColor) ?? .black,
+            heightDp: data.heightDp
         )
     }
 }
