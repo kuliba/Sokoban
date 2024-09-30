@@ -47,6 +47,7 @@ extension DecodableLanding.Data {
         case verticalSpacing = "VERTICAL_SPACING"
         case carouselBase = "HORIZONTAL_SLIDER_BASE"
         case carouselWithTabs = "HORIZONTAL_SLIDER_WITH_TABS"
+        case carouselWithDots = "HORIZONTAL_SLIDER_WITH_DOTS"
     }
 
     // TODO: ListHorizontalRectangleImage -> List.Horizontal.RectangleImage
@@ -59,6 +60,7 @@ extension DecodableLanding.Data {
         enum Carousel: Decodable, Equatable  {
             case base(CarouselBaseDecodable)
             case withTabs(CarouselWithTabsDecodable)
+            case withDots(CarouselWithDotsDecodable)
         }
 
         enum List: Decodable, Equatable  {

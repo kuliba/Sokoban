@@ -43,64 +43,66 @@ private extension UILanding.Component {
     ) {
         switch data {
             
-        case let .iconWithTwoTextLines(x):
-            self = .iconWithTwoTextLines(.init(data: x))
+        case let .iconWithTwoTextLines(data):
+            self = .iconWithTwoTextLines(.init(data: data))
             
-        case let .list(.horizontalRectangleImage(x)):
-            self = .list(.horizontalRectangleImage(.init(data: x)))
+        case let .list(.horizontalRectangleImage(data)):
+            self = .list(.horizontalRectangleImage(.init(data: data)))
             
-        case let .list(.horizontalRectangleLimits(x)):
-            self = .list(.horizontalRectangleLimits(.init(list: .init(data: x), limitsLoadingStatus: .inflight(.loadingSVCardLimits))))
+        case let .list(.horizontalRectangleLimits(data)):
+            self = .list(.horizontalRectangleLimits(.init(list: .init(data: data), limitsLoadingStatus: .inflight(.loadingSVCardLimits))))
             
-        case let .list(.horizontalRoundImage(x)):
-            self = .list(.horizontalRoundImage(.init(data: x)))
+        case let .list(.horizontalRoundImage(data)):
+            self = .list(.horizontalRoundImage(.init(data: data)))
             
-        case let .list(.verticalRoundImage(x)):
-            self = .list(.verticalRoundImage(.init(data: x)))
+        case let .list(.verticalRoundImage(data)):
+            self = .list(.verticalRoundImage(.init(data: data)))
             
-        case let .multi(.lineHeader(x)):
-            self = .multi(.lineHeader(.init(data: x)))
+        case let .multi(.lineHeader(data)):
+            self = .multi(.lineHeader(.init(data: data)))
             
-        case let .multi(.markersText(x)):
-            self = .multi(.markersText(.init(data: x)))
+        case let .multi(.markersText(data)):
+            self = .multi(.markersText(.init(data: data)))
             
-        case let .multi(.text(x)):
-            self = .multi(.texts(.init(data: x)))
+        case let .multi(.text(data)):
+            self = .multi(.texts(.init(data: data)))
             
-        case let .multi(.textsWithIconsHorizontalArray(x)):
-            self = .multi(.textsWithIconsHorizontal(.init(data: x)))
+        case let .multi(.textsWithIconsHorizontalArray(data)):
+            self = .multi(.textsWithIconsHorizontal(.init(data: data)))
             
-        case let .pageTitle(x):
-            self = .pageTitle(.init(data: x))
+        case let .pageTitle(data):
+            self = .pageTitle(.init(data: data))
             
-        case let .textsWithIconHorizontal(x):
-            self = .textWithIconHorizontal(.init(data: x))
+        case let .textsWithIconHorizontal(data):
+            self = .textWithIconHorizontal(.init(data: data))
             
-        case let .multi(.buttons(x)):
-            self = .multi(.buttons(.init(data: x)))
+        case let .multi(.buttons(data)):
+            self = .multi(.buttons(.init(data: data)))
             
-        case let .multi(.typeButtons(x)):
-            self = .multi(.typeButtons(.init(data: x)))
+        case let .multi(.typeButtons(data)):
+            self = .multi(.typeButtons(.init(data: data)))
             
-        case let .image(x):
-            self = .image(.init(data: x))
+        case let .image(data):
+            self = .image(.init(data: data))
             
-        case let .imageSvg(x):
-            self = .imageSvg(.init(data: x))
+        case let .imageSvg(data):
+            self = .imageSvg(.init(data: data))
             
-        case let .list(.dropDownTexts(x)):
-            self = .list(.dropDownTexts(.init(data: x)))
+        case let .list(.dropDownTexts(data)):
+            self = .list(.dropDownTexts(.init(data: data)))
             
-        case let .verticalSpacing(x):
-            self = .verticalSpacing(.init(data: x))
+        case let .verticalSpacing(data):
+            self = .verticalSpacing(.init(data: data))
             
-        case let .blockHorizontalRectangular(x):
-            self = .blockHorizontalRectangular(.init(data: x))
+        case let .blockHorizontalRectangular(data):
+            self = .blockHorizontalRectangular(.init(data: data))
             
-        case let .carousel(.base(x)):
-            self = .carousel(.base(.init(data: x)))
-        case let .carousel(.withTabs(x)):
-            self = .carousel(.withTabs(.init(data: x)))
+        case let .carousel(.base(data)):
+            self = .carousel(.base(.init(data: data)))
+        case let .carousel(.withTabs(data)):
+            self = .carousel(.withTabs(.init(data: data)))
+        case let .carousel(.withDots(data)):
+            self = .carousel(.withDots(.init(data: data)))
         }
     }
 }
@@ -652,6 +654,41 @@ private extension UILanding.Carousel.CarouselWithTabs.ListItem.Action {
     
     init(
         data: Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithDots {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithDots
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(width: data.size.width, height: data.size.height),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithDots.ListItem {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithDots.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension UILanding.Carousel.CarouselWithDots.ListItem.Action {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithDots.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
     }
