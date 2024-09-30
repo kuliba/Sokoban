@@ -352,6 +352,9 @@ extension LandingView {
                 
             case let .carousel(.base(model)):
                 EmptyView()
+                
+            case let .carousel(.withTabs(model)):
+                EmptyView()
             }
         }
     }
