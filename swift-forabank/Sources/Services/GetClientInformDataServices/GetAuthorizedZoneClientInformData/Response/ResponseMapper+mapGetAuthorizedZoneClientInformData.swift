@@ -13,13 +13,13 @@ public extension ResponseMapper {
     static func mapGetAuthorizedZoneClientInformDataResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<GetAuthorizedZoneClientInformDataListResponse> {
+    ) -> MappingResult<GetAuthorizedZoneClientInformDataResponse> {
         
-        map(data, httpURLResponse, mapOrThrow: GetAuthorizedZoneClientInformDataListResponse.init)
+        map(data, httpURLResponse, mapOrThrow: GetAuthorizedZoneClientInformDataResponse.init)
     }
 }
 
-private extension ResponseMapper.GetAuthorizedZoneClientInformDataListResponse {
+private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
     
     init(_ data: ResponseMapper._Data) throws {
         
