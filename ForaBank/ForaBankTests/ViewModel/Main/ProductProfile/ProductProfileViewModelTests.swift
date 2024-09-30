@@ -964,7 +964,15 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.historyState)
         
-        sut.event(.history(.button(.filter(0, nil))))
+        sut.event(.history(.button(.filter(0, 
+            .init(
+                title: "",
+                selectDates: nil,
+                selectedPeriod: .dates,
+                periods: [],
+                transactionType: [],
+                services: []
+            )))))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
