@@ -9,7 +9,7 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public typealias GetAuthorizedZoneClientInformDataListResponse = SerialStamped<String, Authorized>
+    public typealias GetAuthorizedZoneClientInformDataResponse = SerialStamped<String, Authorized>
 }
 
 extension ResponseMapper {
