@@ -520,6 +520,33 @@ final class MapperTests: XCTestCase {
                 ])
         ])
     }
+    
+    func test_map_carouselWithTabs_deliversCarouselWithTabsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [
+            .init(
+                title: "Название раздела",
+                size: .init(width: 182, height: 124),
+                scale: "medium",
+                loopedScrolling: true,
+                tabs: [
+                    .init(
+                        name: "Вкладка 1",
+                        list: [
+                            .init(imageLink: "imageLink1", link: "", action: nil)
+                        ]
+                    ),
+                    .init(
+                        name: "Вкладка 2",
+                        list: [
+                            .init(imageLink: "imageLink21", link: "", action: nil),
+                            .init(imageLink: "imageLink22", link: nil, action: .init(type: "LANDING", target: "abroadSticker"))
+                        ])
+                ])
+        ])
+    }
 
     // MARK: - Helpers
     
@@ -3178,6 +3205,55 @@ private extension String {
     }
     }
     """
+    
+    static let carouselWithTabs: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [],
+        "main": [
+          {
+            "type": "HORIZONTAL_SLIDER_WITH_TABS",
+            "data": {
+              "title": "Название раздела",
+              "size": "182х124",
+              "scale": "medium",
+              "loopedScrolling": true,
+              "tabs": [
+                {
+                  "name": "Вкладка 1",
+                  "list": [
+                    {
+                      "imageLink": "imageLink1",
+                      "link": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Вкладка 2",
+                  "list": [
+                    {
+                      "imageLink": "imageLink21",
+                      "link": ""
+                    },
+                    {
+                      "imageLink": "imageLink22",
+                      "action": {
+                        "actionType": "LANDING",
+                        "target": "abroadSticker"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "serial": ""
+      }
+    }
+    """
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
@@ -3367,6 +3443,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .carousel(.base(carouselBase)) = $0 {
                 return carouselBase
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselWithTabs: [Landing.DataView.Carousel.CarouselWithTabs] {
+        
+        compactMap {
+            if case let .carousel(.withTabs(carouselWithTabs)) = $0 {
+                return carouselWithTabs
             } else {
                 return nil
             }

@@ -97,6 +97,8 @@ private extension CodableLanding.DataView {
             
         case let .carousel(.base(x)):
             self = .carousel(.base(.init(data: x)))
+        case let .carousel(.withTabs(x)):
+            self = .carousel(.withTabs(.init(data: x)))
         }
     }
 }
@@ -592,6 +594,52 @@ private extension CodableLanding.CodableCarouselBase.ListItem.Action {
     
     init(
         data: Landing.DataView.Carousel.CarouselBase.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension CodableLanding.CodableCarouselWithTabs {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithTabs
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(width: data.size.width, height: data.size.height),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            tabs: data.tabs.map { .init(data: $0) })
+    }
+}
+
+private extension CodableLanding.CodableCarouselWithTabs.TabItem {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithTabs.TabItem
+    ) {
+        self.init(
+            name: data.name,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension CodableLanding.CodableCarouselWithTabs.ListItem {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithTabs.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink,
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension CodableLanding.CodableCarouselWithTabs.ListItem.Action {
+    
+    init(
+        data: Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
     }
