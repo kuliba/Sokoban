@@ -75,7 +75,8 @@ extension DeleteDefaultBankConfig {
         titleConfig: .init(textFont: .system(size: 16), textColor: .black),
         description: "Вы можете удалить любой банк ранее установленный по умолчанию",
         descriptionConfig: .init(textFont: .system(size: 12), textColor: .white),
-        icon: .init(systemName: "building.columns"),
-        buttonIcon: .init(systemName: "xmark.circle")
+        iconConfig: .init(icon: .init(systemName: "building.columns"), foreground: .black),
+        buttonConfig: .init(icon: .init(systemName: "xmark.circle"), foreground: .gray),
+        backgroundView: .red
     )
 }

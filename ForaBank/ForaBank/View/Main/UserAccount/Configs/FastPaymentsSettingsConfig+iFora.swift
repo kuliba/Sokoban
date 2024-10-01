@@ -32,8 +32,9 @@ extension DeleteDefaultBankConfig {
         titleConfig: .init(textFont: .textH4M16240(), textColor: .textSecondary),
         description: "Вы можете удалить любой банк ранее установленный по умолчанию",
         descriptionConfig: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
-        icon: .ic24Bank,
-        buttonIcon: .ic24CircleClose
+        iconConfig: .init(icon: .ic24Bank, foreground: .textPlaceholder),
+        buttonConfig: .init(icon: .ic24CircleClose, foreground: .textPlaceholder),
+        backgroundView: .mainColorsGrayLightest
     )
 }
 extension BankDefaultConfig {
