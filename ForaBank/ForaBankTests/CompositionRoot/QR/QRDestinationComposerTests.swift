@@ -10,14 +10,29 @@ import Combine
 final class QRDestinationComposer {
     
     private let makePayments: MakePayments
+    private let makeQRFailure: MakeQRFailure
     
     init(
-        makePayments: @escaping MakePayments
+        makePayments: @escaping MakePayments,
+        makeQRFailure: @escaping MakeQRFailure
     ) {
         self.makePayments = makePayments
+        self.makeQRFailure = makeQRFailure
+    }
+}
+
+extension QRDestinationComposer {
+
+    typealias MakePayments = (Source, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    
+    struct MakeQRFailurePayload {
+        
+        let qrCode: QRCode
+        let chatAction: () -> Void
+        let makeDetailPayment: (QRCode) -> Void
     }
     
-    typealias MakePayments = (Source, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
     
     struct Source: Equatable {
         
@@ -72,6 +87,17 @@ extension QRDestinationComposer {
                 )))
             }
             
+        case let .failure(qr):
+            let payload = MakeQRFailurePayload(
+                qrCode: qr,
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment($0)) }
+            )
+            makeQRFailure(payload) {
+                
+                completion(.failure($0))
+            }
+            
         default:
             fatalError()
         }
@@ -80,14 +106,22 @@ extension QRDestinationComposer {
     enum NotifyEvent: Equatable {
         
         case contactAbroad(Payments.Operation.Source)
+        case detailPayment(QRCode)
         case dismiss
+        case outside(Outside)
         case scanQR
+        
+        enum Outside: Equatable {
+            
+            case chat
+        }
     }
     
     enum QRDestination {
         
         case c2bSubscribe(Node<ClosePaymentsViewModelWrapper>)
         case c2b(Node<ClosePaymentsViewModelWrapper>)
+        case failure(QRFailedViewModel)
     }
     
     typealias Notify = (NotifyEvent) -> Void
@@ -135,9 +169,10 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, makeQRFailure) = makeSUT()
         
         XCTAssertEqual(makePayments.callCount, 0)
+        XCTAssertEqual(makeQRFailure.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -146,7 +181,7 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldCallMakeC2BSubscribeWithURL() {
         
         let url = anyURL()
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         sut.compose(result: .c2bSubscribeURL(url), notify: { _ in }) { _ in }
         
@@ -155,7 +190,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverC2BSubscribeOnC2BSubscribeURL() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .c2bSubscribe, on: {
             
@@ -165,7 +200,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverDismissEventOnC2BSubscribeClose() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -178,7 +213,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverScanQREventOnC2BSubscribeScanQRCode() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -192,7 +227,7 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldDeliverContactAbroadEventOnC2BSubscribeContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -208,7 +243,7 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldCallMakeC2BWithURL() {
         
         let url = anyURL()
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         sut.compose(result: .c2bURL(url), notify: { _ in }) { _ in }
         
@@ -217,7 +252,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverC2BOnC2BURL() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(sut, with: .c2bURL(anyURL()), toDeliver: .c2b, on: {
             
@@ -227,7 +262,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverDismissEventOnC2BClose() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -240,7 +275,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverScanQREventOnC2BScanQRCode() {
         
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -254,7 +289,7 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldDeliverContactAbroadEventOnC2BContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (sut, makePayments) = makeSUT()
+        let (sut, makePayments, _) = makeSUT()
         
         expect(
             sut,
@@ -265,27 +300,67 @@ final class QRDestinationComposerTests: XCTestCase {
         )
     }
     
+    // MARK: - failure
+    
+    func test_shouldCallMakeQRFailureWithQR() {
+        
+        let qr = makeQR()
+        let (sut, _, makeQRFailure) = makeSUT()
+        
+        sut.compose(result: .failure(qr), notify: { _ in }) { _ in }
+        
+        XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [qr])
+    }
+    
+    func test_shouldCallMakeQRFailureWithChatAction() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.chatAction)?()
+        
+        XCTAssertNoDiff(events, [.outside(.chat)])
+    }
+    
+    func test_shouldCallMakeQRFailureWithDetailPaymentAction() {
+        
+        let qr = makeQR()
+        let (sut, _, makeQRFailure) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.makeDetailPayment)?(qr)
+        
+        XCTAssertNoDiff(events, [.detailPayment(qr)])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRDestinationComposer
     private typealias MakePaymentsSpy = Spy<SUT.Source, ClosePaymentsViewModelWrapper, Never>
+    private typealias MakeQRFailure = Spy<SUT.MakeQRFailurePayload, QRFailedViewModel, Never>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        makePaymentsSpy: MakePaymentsSpy
+        makePaymentsSpy: MakePaymentsSpy,
+        makeQRFailure: MakeQRFailure
     ) {
         let makePaymentsSpy = MakePaymentsSpy()
+        let makeQRFailure = MakeQRFailure()
         let sut = SUT(
-            makePayments: makePaymentsSpy.process(_:completion:)
+            makePayments: makePaymentsSpy.process(_:completion:),
+            makeQRFailure: makeQRFailure.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(makePaymentsSpy, file: file, line: line)
+        trackForMemoryLeaks(makeQRFailure, file: file, line: line)
         
-        return (sut, makePaymentsSpy)
+        return (sut, makePaymentsSpy, makeQRFailure)
     }
     
     private func makePaymentsModel(
@@ -308,6 +383,14 @@ final class QRDestinationComposerTests: XCTestCase {
             category: category,
             scheduler: scheduler
         ))
+    }
+    
+    private func makeQR(
+        original: String = anyMessage(),
+        rawData: [String: String] = [anyMessage(): anyMessage()]
+    ) -> QRCode {
+        
+        return .init(original: original, rawData: rawData)
     }
     
     private func expect(
@@ -414,11 +497,14 @@ private extension QRDestinationComposer.QRDestination {
         c2bModel?.action.send(action)
     }
     
+    // MARK: - equatable
+    
     var equatable: EquatableQRDestination {
         
         switch self {
         case .c2bSubscribe: return .c2bSubscribe
-        case .c2b: return .c2b
+        case .c2b:          return .c2b
+        case .failure:      return .failure
         }
     }
 }
@@ -427,5 +513,5 @@ private enum EquatableQRDestination: Equatable {
     
     case c2bSubscribe
     case c2b
+    case failure
 }
-
