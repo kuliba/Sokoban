@@ -21,18 +21,15 @@ final class TransportPaymentsViewModel: ObservableObject {
     typealias HandleError = (String) -> Void
     
     private let makePaymentsViewModel: MakePaymentsViewModel
-    private let handleError: HandleError
     
     init(
         operators: [OperatorGroupData.OperatorData],
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
-        makePaymentsViewModel: @escaping MakePaymentsViewModel,
-        handleError: @escaping HandleError
+        makePaymentsViewModel: @escaping MakePaymentsViewModel
     ) {
         self.operators = operators
         self.latestPayments = latestPayments
         self.makePaymentsViewModel = makePaymentsViewModel
-        self.handleError = handleError
         
         latestPayments.action
             .compactMap { $0 as? PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped }
@@ -62,21 +59,11 @@ extension TransportPaymentsViewModel {
     
     func select(track: Track) {
         
-        do {
-            let link = try destination(for: track)
+        let link = destination(for: track)
+        
+        DispatchQueue.main.async { [weak self] in
             
-            DispatchQueue.main.async { [weak self] in
-                
-                self?.destination = link
-            }
-        } catch {
-            switch track {
-            case let .puref(puref):
-                handleError("Ошибка создания платежа для оператора \(puref)")
-                
-            case let .source(source):
-                handleError("Ошибка создания платежа для \(source)")
-            }
+            self?.destination = link
         }
     }
     
@@ -88,7 +75,7 @@ extension TransportPaymentsViewModel {
     
     func destination(
         for track: Track
-    ) throws -> Destination {
+    ) -> Destination {
         
         switch track {
         case let .puref(puref):

@@ -209,7 +209,7 @@ final class RootViewModelTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             navigationStateManager: .preview, 
             productNavigationStateManager: .preview,
-            tabsViewModelFactory: .init(
+            tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
                     makeProductProfileViewModel: { _,_,_ in nil },
@@ -230,7 +230,7 @@ final class RootViewModelTests: XCTestCase {
                     paymentsTransfersFactory: .preview
                 )),
                 chatViewModel: .init(),
-                marketShowcaseModel: .preview
+                marketShowcaseBinder: .preview
             ),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary, 

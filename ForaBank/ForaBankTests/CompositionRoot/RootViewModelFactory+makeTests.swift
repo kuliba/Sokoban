@@ -131,7 +131,7 @@ private extension RootViewModel {
     func categoryPickerContent(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> CategoryPickerSectionContent {
+    ) throws -> CategoryPickerSection.ContentDomain.Content {
         
         let v1 = try personal(file: file, line: line)
         
@@ -148,7 +148,7 @@ private extension RootViewModel {
     
     private var personal: PaymentsTransfersPersonal? {
         
-        guard case let .v1(switcher) = tabsViewModelFactory.paymentsModel,
+        guard case let .v1(switcher) = tabsViewModel.paymentsModel,
               case let .personal(personal) = switcher.state
         else { return nil }
         

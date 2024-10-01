@@ -296,19 +296,28 @@ private extension RootViewFactoryComposer {
     }
     
     func makeMarketShowcaseView(
-        viewModel: MarketShowcaseViewModel
-    ) -> MarketShowcaseWrapperView<SpinnerRefreshView>? {
+        viewModel: MarketShowcaseDomain.Binder
+    ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
+        
             .init(
-                model: viewModel,
+                model: viewModel.flow,
                 makeContentView: {
-                    MarketShowcaseView(
+                    MarketShowcaseFlowView(
                         state: $0,
-                        event: $1,
-                        config: .iFora,
-                        factory: .init(
-                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
-                    )
+                        event: $1) {
+                            MarketShowcaseContentWrapperView(
+                                model: viewModel.content,
+                                makeContentView: {
+                                    MarketShowcaseContentView(
+                                        state: $0,
+                                        event: $1,
+                                        config: .iFora,
+                                        factory: .init(
+                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
+                                    )
+                                })
+                        }
                 })
         : nil
     }

@@ -15,11 +15,23 @@ extension CodableLanding {
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
+        case carousel(Carousel)
         case list(List)
         case multi(Multi)
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+        case spacing(Spacing)
+    }
+}
+
+public extension CodableLanding {
+    
+    enum Carousel: Equatable, Codable {
+        
+        case base(CodableCarouselBase)
+        case withTabs(CodableCarouselWithTabs)
+        case withDots(CodableCarouselWithDots)
     }
 }
 
