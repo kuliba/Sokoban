@@ -49,6 +49,22 @@ public extension BankDefaultReducer {
 
 private extension BankDefaultReducer {
     
+    func prepareDeleteDefaultBank(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        guard let details = state.activeDetails,
+              details.bankDefaultResponse.bankDefault == .offEnabled,
+              details.bankDefaultResponse.requestLimitMessage == nil,
+              state.status == .setBankDefault
+        else { return (state, nil) }
+        
+        var state = state
+        state.status = .inflight
+        
+        return (state, .prepareDeleteDefaultBank)
+    }
+    
     func prepareSetBankDefault(
         _ state: State
     ) -> (State, Effect?) {
