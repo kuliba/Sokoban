@@ -106,7 +106,9 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
         let spy = MakeNavigationSpy()
         let scheduler = DispatchQueue.test
         let composer = Composer(
-            makeNavigation: spy.process(_:completion:),
+            microServices: .init(
+                getNavigation: spy.process(_:completion:)
+            ),
             scheduler: scheduler.eraseToAnyScheduler()
         )
         let sut = composer.compose(elements: elements)
