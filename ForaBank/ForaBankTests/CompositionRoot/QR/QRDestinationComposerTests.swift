@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
+import Combine
+
 final class QRDestinationComposer {
     
     private let makeC2BSubscribe: MakeC2BSubscribe
@@ -27,11 +29,13 @@ extension QRDestinationComposer {
     ) {
         switch result {
         case let .c2bSubscribeURL(url):
-            makeC2BSubscribe(url) {
+            makeC2BSubscribe(url) { [weak self] in
+                
+                guard let self else { return }
                 
                 completion(.c2bSubscribe(.init(
                     model: $0,
-                    cancellable: $0.$isClosed.sink { if $0 { notify(.dismiss) }}
+                    cancellables: self.bindC2BSubscribe($0, with: notify)
                 )))
             }
             
@@ -42,7 +46,9 @@ extension QRDestinationComposer {
     
     enum NotifyEvent: Equatable {
         
+        case contactAbroad(Payments.Operation.Source)
         case dismiss
+        case scanQR
     }
     
     enum QRDestination {
@@ -50,9 +56,31 @@ extension QRDestinationComposer {
         case c2bSubscribe(Node<ClosePaymentsViewModelWrapper>)
     }
     
-    
     typealias Notify = (NotifyEvent) -> Void
     typealias QRDestinationCompletion = (QRDestination) -> Void
+}
+
+private extension QRDestinationComposer {
+    
+    func bindC2BSubscribe(
+        _ wrapper: ClosePaymentsViewModelWrapper,
+        with notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let close = wrapper.$isClosed
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = wrapper.paymentsViewModel.action
+            .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
+            .sink { _ in notify(.scanQR) }
+        
+        let contactAbroad = wrapper.paymentsViewModel.action
+            .compactMap { $0 as? PaymentsViewModelAction.ContactAbroad }
+            .map(\.source)
+            .sink { notify(.contactAbroad($0)) }
+        
+        return [close, scanQR, contactAbroad]
+    }
 }
 
 import CombineSchedulers
@@ -85,10 +113,9 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverC2BSubscribeOnC2BSubscribeURL() {
         
-        let url = anyURL()
         let (sut, makeC2BSubscribe) = makeSUT()
         
-        expect(sut, with: .c2bSubscribeURL(url), toDeliver: .c2bSubscribe, on: {
+        expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .c2bSubscribe, on: {
             
             makeC2BSubscribe.complete(with: makeC2BSubscribeResult())
         })
@@ -96,23 +123,39 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldDeliverDismissEventOnC2BSubscribeClose() {
         
-        let url = anyURL()
         let (sut, makeC2BSubscribe) = makeSUT()
-        var events = [SUT.NotifyEvent]()
-        let exp = expectation(description: "wait for completion")
         
-        sut.compose(
-            result: .c2bSubscribeURL(url),
-            notify: { events.append($0) }
-        ) {
-            $0.c2bSubscribeModel?.closeAction()
-            exp.fulfill()
-        }
+        expect(
+            sut,
+            event: .dismiss,
+            for: { $0.c2bSubscribeModel?.closeAction() },
+            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+        )
+    }
+    
+    func test_shouldDeliverScanQREventOnC2BSubscribeScanQRCode() {
         
-        makeC2BSubscribe.complete(with: makeC2BSubscribeResult())
+        let (sut, makeC2BSubscribe) = makeSUT()
         
-        wait(for: [exp], timeout: 1)
-        XCTAssertNoDiff(events, [.dismiss])
+        expect(
+            sut,
+            event: .scanQR,
+            for: { $0.c2bSubscribeScanQR() },
+            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+        )
+    }
+    
+    func test_shouldDeliverContactAbroadEventOnC2BSubscribeContactAbroad() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, makeC2BSubscribe) = makeSUT()
+        
+        expect(
+            sut,
+            event: .contactAbroad(source),
+            for: { $0.c2bSubscribeContactAbroad(source: source) },
+            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+        )
     }
     
     // MARK: - Helpers
@@ -182,6 +225,32 @@ final class QRDestinationComposerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
+    
+    private func expect(
+        _ sut: SUT,
+        event expectedEvent: SUT.NotifyEvent,
+        for destinationAction: @escaping (SUT.QRDestination) -> Void,
+        on action: () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedEvent: SUT.NotifyEvent?
+        let exp = expectation(description: "wait for completion")
+        
+        sut.compose(
+            result: .c2bSubscribeURL(anyURL()),
+            notify: { receivedEvent = $0 }
+        ) {
+            destinationAction($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(receivedEvent, expectedEvent, "Expected \(expectedEvent), but got \(String(describing: receivedEvent)) instead.", file: file, line: line)
+    }
 }
 
 private enum EquatableQRDestination: Equatable {
@@ -202,6 +271,17 @@ private extension QRDestinationComposer.QRDestination {
     var c2bSubscribeModel: PaymentsViewModel? {
         
         return c2bSubscribe?.paymentsViewModel
+    }
+    
+    func c2bSubscribeScanQR() {
+        
+        c2bSubscribeModel?.action.send(PaymentsViewModelAction.ScanQrCode())
+    }
+    
+    func c2bSubscribeContactAbroad(source: Payments.Operation.Source) {
+        
+        let action = PaymentsViewModelAction.ContactAbroad(source: source)
+        c2bSubscribeModel?.action.send(action)
     }
     
     var equatable: EquatableQRDestination {
