@@ -571,8 +571,8 @@ final class MapperTests: XCTestCase {
         let landing = try XCTUnwrap(map(data: Data(String.spacing.utf8)))
 
         XCTAssertNoDiff(landing.main.spacing, [
-            .init(backgroundColor: "w", heightDp:10.0),
-            .init(backgroundColor: "b", heightDp:80.5),
+            .init(backgroundColor: "w", heightDp: 10.0),
+            .init(backgroundColor: "b", heightDp: 80.5),
         ])
     }
 
@@ -3331,14 +3331,14 @@ private extension String {
             "type": "SPACING",
             "data": {
                 "backgroundColor": "w",
-                "sizeDp": 10
+                "sizeDp": "10"
             }
         },
         {
             "type": "SPACING",
             "data": {
                 "backgroundColor": "b",
-                "sizeDp": 80.5
+                "sizeDp": "80.5"
             }
         },
     ],
