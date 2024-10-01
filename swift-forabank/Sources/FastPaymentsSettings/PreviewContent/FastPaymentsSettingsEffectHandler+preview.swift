@@ -23,7 +23,8 @@ extension FastPaymentsSettingsEffectHandler {
             handleConsentListEffect: consentListEffectHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getC2BSub: { $0(.success(.control)) },
-            getSettings: { $0(.success(.active())) },
+            getSettings: { $0(.success(.active())) }, 
+            prepareDeleteDefaultBank: { $0(.success(())) },
             prepareSetBankDefault: { $0(.success(())) },
             updateProduct: { _, completion in completion(.success(())) }
         )
