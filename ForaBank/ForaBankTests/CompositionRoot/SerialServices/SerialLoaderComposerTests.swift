@@ -103,7 +103,7 @@ final class SerialLoaderComposerTests: XCTestCase {
         )
         // let interactiveScheduler = DispatchQueue.test
         // let backgroundScheduler = DispatchQueue.test
-        let localComposer = LocalLoaderComposer(
+        let asyncLocalAgent = LocalAgentAsyncWrapper(
             agent: agent,
             // interactiveScheduler: interactiveScheduler.eraseToAnyScheduler(),
             interactiveScheduler: .immediate,
@@ -118,14 +118,14 @@ final class SerialLoaderComposerTests: XCTestCase {
         )
         
         let sut = SUT(
-            localComposer: localComposer,
+            asyncLocalAgent: asyncLocalAgent,
             nanoServiceComposer: nanoServiceComposer
         )
         
         trackForMemoryLeaks(agent, file: file, line: line)
         // trackForMemoryLeaks(interactiveScheduler, file: file, line: line)
         // trackForMemoryLeaks(backgroundScheduler, file: file, line: line)
-        trackForMemoryLeaks(localComposer, file: file, line: line)
+        trackForMemoryLeaks(asyncLocalAgent, file: file, line: line)
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(logger, file: file, line: line)
         trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)

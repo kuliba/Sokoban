@@ -9,6 +9,7 @@ import ActivateSlider
 import AnywayPaymentDomain
 import SberQR
 import SwiftUI
+import MarketShowcase
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -20,6 +21,8 @@ typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTr
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 
+typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder) -> MarketShowcaseWrapperView?
+
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
@@ -28,12 +31,14 @@ struct RootViewFactory {
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makeHistoryButtonView: MakeHistoryButtonView
     let makeIconView: MakeIconView
+    let makeGeneralIconView: MakeIconView
     let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeReturnButtonView: MakeRepeatButtonView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
+    let makeMarketShowcaseView: MakeMarketShowcaseView
 }
 
 extension RootViewFactory {
@@ -57,6 +62,7 @@ extension RootViewFactory {
         return .init(
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makeIconView: makeIconView,
+            makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,

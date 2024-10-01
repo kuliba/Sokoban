@@ -7,16 +7,17 @@
 
 import Foundation
 import ForaTools
+import CombineSchedulers
+import Banners
 
 extension RootViewModelFactory {
     
-    static func makeBannersBinder(
-        model: Model,
+    static func makeLoadBanners(
         httpClient: HTTPClient,
         infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
-    ) -> (binder: BannersBinder, loader: LoadBanners) {
+    ) -> LoadBanners {
         
         let localBannerListLoader = ServiceItemsLoader.default
         let getBannerList = NanoServices.makeGetBannerCatalogListV2(
@@ -53,16 +54,18 @@ extension RootViewModelFactory {
             }
         }
         
-        let banners = makeBanners(
-            model: model,
-            bannerPickerPlaceholderCount: 6,
-            nanoServices: .init(
-                loadBanners: loadBannersList
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
-                
-        return (banners, loadBannersList)
+        return loadBannersList
     }
+}
+
+extension BannersBinder {
+    
+    static let preview: BannersBinder = RootViewModelFactory.makeBannersForMainView(
+        bannerPickerPlaceholderCount: 1,
+        nanoServices: .init(
+            loadBanners: {_ in },
+            loadLandingByType: {_, _ in }
+        ),
+        mainScheduler: .main,
+        backgroundScheduler: .global())
 }

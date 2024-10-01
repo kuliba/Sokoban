@@ -50,7 +50,8 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     
     private typealias SUT = PaymentsTransfersPersonal
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
-    private typealias LoadCategoriesSpy = Spy<Void, [CategoryPickerSectionItem<ServiceCategory>], Never>
+    private typealias ContentDomain = ForaBank.CategoryPickerSection.ContentDomain
+    private typealias LoadCategoriesSpy = Spy<Void, [ContentDomain.Item], Never>
 
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,
@@ -71,8 +72,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             nanoServices: .init(
                 loadCategories: loadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
-                loadLatestForCategory: { _,_ in },
-                loadOperators: { _,_ in }
+                loadLatestForCategory: { _,_ in }
             ),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate

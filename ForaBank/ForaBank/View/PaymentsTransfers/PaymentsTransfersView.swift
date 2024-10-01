@@ -496,10 +496,10 @@ extension PaymentsTransfersView {
 private extension PaymentsTransfersView {
     
     func paymentProviderPicker(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        ComposedPaymentProviderPickerFlowView(
+        ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
@@ -1024,7 +1024,7 @@ where PrimaryEvent == UtilityServicePaymentFlowEvent,
 
 // MARK: - NavBar
 
-private extension NavigationBarView.ViewModel {
+extension NavigationBarView.ViewModel {
     
     static func with(
         title: String,

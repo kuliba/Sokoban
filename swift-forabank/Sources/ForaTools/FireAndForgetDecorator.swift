@@ -72,7 +72,26 @@ public extension FireAndForgetDecorator {
     }
 }
 
-extension FireAndForgetDecorator where Payload == Void {
+public extension FireAndForgetDecorator
+where Payload == Void,
+      Failure == Never {
+    
+    convenience init(
+        decoratee: @escaping (@escaping (Response) -> Void) -> Void,
+        decoration: @escaping Decoration
+    ) {
+        self.init(
+            decoratee: { _, completion in
+                
+                decoratee { completion(.success($0)) }
+            },
+            decoration: decoration
+        )
+    }
+}
+
+public extension FireAndForgetDecorator
+where Payload == Void {
     
     convenience init(
         decoratee: @escaping (@escaping DecorateeCompletion) -> Void,

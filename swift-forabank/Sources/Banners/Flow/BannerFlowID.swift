@@ -9,4 +9,5 @@ public enum BannerFlowID: Hashable {
     
     case standard
     case sticker
+    case landing
 }

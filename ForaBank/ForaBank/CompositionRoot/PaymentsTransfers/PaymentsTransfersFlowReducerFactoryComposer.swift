@@ -183,7 +183,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let placeholderText = "Наименование или ИНН"
         let searchReducer = TransformingReducer(
             placeholderText: placeholderText,
-            transform: { $0}
+            transform: { $0 }
         )
         let searchModel = RegularFieldViewModel(
             initialState: .placeholder(placeholderText),
@@ -192,8 +192,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         )
         let binder = UtilityPrepaymentBinder(
             model: viewModel,
-            searchModel: searchModel,
-            scheduler: scheduler
+            searchModel: searchModel
         )
         
         return .init(content: binder, navTitle: settings.navTitle)

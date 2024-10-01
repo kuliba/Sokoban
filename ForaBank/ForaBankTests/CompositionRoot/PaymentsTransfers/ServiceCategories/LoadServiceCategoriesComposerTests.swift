@@ -238,7 +238,7 @@ private extension ServiceCategory {
         name: "Мобильная связь",
         ord: 20,
         paymentFlow: .mobile,
-        search: false,
+        hasSearch: false,
         type: .mobile
     )
 }

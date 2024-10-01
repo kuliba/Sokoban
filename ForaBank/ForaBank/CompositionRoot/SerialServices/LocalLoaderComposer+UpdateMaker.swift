@@ -1,11 +1,11 @@
 //
-//  LocalLoaderComposer+UpdateMaker.swift
+//  LocalAgentAsyncWrapper+UpdateMaker.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
 //
 
-extension LocalLoaderComposer: UpdateMaker {
+extension LocalAgentAsyncWrapper: UpdateMaker {
     
     func makeUpdate<T, Model: Codable>(
         toModel: @escaping ToModel<T, Model>,

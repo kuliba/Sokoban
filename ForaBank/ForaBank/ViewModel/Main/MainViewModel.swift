@@ -43,7 +43,7 @@ class MainViewModel: ObservableObject, Resetable {
     private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
     }
     
-    private let model: Model
+     let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
@@ -52,6 +52,8 @@ class MainViewModel: ObservableObject, Resetable {
     private let onRegister: () -> Void
     private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    
+    let bannersBinder: BannersBinder
     
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -66,12 +68,13 @@ class MainViewModel: ObservableObject, Resetable {
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
+        bannersBinder: BannersBinder,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
+        self.sections = Self.getSections(model, bannersBinder, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
         self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -81,6 +84,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
+        self.bannersBinder = bannersBinder
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -91,6 +95,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private static func getSections(
         _ model: Model,
+        _ binder: BannersBinder,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
@@ -102,6 +107,7 @@ class MainViewModel: ObservableObject, Resetable {
             ),
             MainSectionFastOperationView.ViewModel(),
             MainSectionPromoView.ViewModel(model),
+        //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
@@ -558,32 +564,11 @@ private extension MainViewModel {
                 promo.action
                     .receive(on: scheduler)
                     .sink { [unowned self] action in
-                        
+                      
                         switch action {
                         case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
-                            switch payload.actionData {
-                            case let payload as BannerActionDepositOpen:
-                                guard let depositId = Int(payload.depositProductId),
-                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
-                                    
-                                    return
-                                }
-                                route.destination = .openDeposit(openDepositViewModel)
-                                
-                            case _ as BannerActionDepositsList:
-                                route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.Link())
-                                }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
-                                
-                            case let payload as BannerActionMigTransfer:
-                                openMigTransfer(payload)
-                                
-                            case let payload as BannerActionContactTransfer:
-                                openContactTransfer(payload)
-                                
-                            default:
-                                handleLandingAction(.sticker)
-                            }
+                            
+                            bannerAction(payload)
                         default:
                             break
                         }
@@ -731,6 +716,40 @@ private extension MainViewModel {
             .map(\.external)
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
+    }
+    
+    func bannerAction(_ payload: MainSectionViewModelAction.PromoAction.ButtonTapped) {
+        
+        switch payload.actionData {
+        case let payload as BannerActionDepositOpen:
+            guard let depositId = Int(payload.depositProductId),
+                  let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard) else {
+                
+                return
+            }
+            route.destination = .openDeposit(openDepositViewModel)
+            
+        case _ as BannerActionDepositsList:
+            route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                self?.action.send(MainViewModelAction.Close.Link())
+            }, makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard))
+            
+        case let payload as BannerActionMigTransfer:
+            openMigTransfer(payload)
+            
+        case let payload as BannerActionContactTransfer:
+            openContactTransfer(payload)
+            
+        case let payload as BannerActionLanding:
+            if payload.target == .abroadSticker {
+                handleLandingAction(.sticker)
+            } else {
+                handleLandingAction(payload.target)
+            }
+            
+        default:
+            break
+        }
     }
     
     func openCurrencyWallet( _ code: Currency, _ operation: CurrencySwapView.ViewModel.CurrencyOperation) {
@@ -975,6 +994,16 @@ private extension MainViewModel {
 // MARK: Banner Action
 
 extension MainViewModel {
+    
+    func promoAction(_ item: BannerCatalogListData) {
+        
+        if let action = item.action {
+            bannerAction(.init(actionData: action))
+        }
+        else if let url = item.orderURL {
+            MainViewModel.openLinkURL(url) 
+        }
+    }
     
     func openMigTransfer(_ payload: BannerActionMigTransfer) {
         
@@ -1373,7 +1402,7 @@ private extension MainViewModel {
     }
     
     private func bind(
-        _ flowModel: PaymentProviderPickerFlowModel
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> Set<AnyCancellable> {
         
         let spinner = flowModel.$state
@@ -1400,7 +1429,7 @@ private extension MainViewModel {
     }
     
     func handle(
-        _ outside: PaymentProviderPickerFlowState.Status.Outside
+        _ outside: SegmentedPaymentProviderPickerFlowState.Status.Outside
     ) {
         resetDestination()
         rootActions?.spinner.hide()
@@ -1424,7 +1453,7 @@ private extension MainViewModel {
     }
 }
 
-extension PaymentProviderPickerFlowState {
+extension SegmentedPaymentProviderPickerFlowState {
     
     var outside: Status.Outside? {
         
@@ -1627,10 +1656,10 @@ extension MainViewModel {
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
-        case landing(LandingWrapperViewModel)
+        case landing(LandingWrapperViewModel, Bool)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case paymentProviderPicker(Node<PaymentProviderPickerFlowModel>)
+        case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         
         var id: Case {
@@ -1750,9 +1779,14 @@ extension MainViewModel {
         )
         
         UIApplication.shared.endEditing()
-        route.destination = .landing(viewModel)
+        route.destination = .landing(viewModel, true)
     }
     
+    func handleLandingAction(_ abroadType: String) {
+        
+        // TODO: add data from bannersBinder
+    }
+
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
         
         switch event {
@@ -1763,6 +1797,25 @@ extension MainViewModel {
         }
     }
     
+    private func landingAction(for event: LandingEvent.Card) -> () -> Void {
+        
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+            
+        case .order:
+            return {}
+            
+        case let .openUrl(link):
+            return {
+                
+                if let url = URL(string: link) {
+                    MainViewModel.openLinkURL(url)
+                }
+            }
+        }
+    }
+        
     private func handleCloseLinkAction() {
         
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
@@ -1877,4 +1930,9 @@ extension Array where Element == MainSectionViewModel {
     var stickerViewModel: ProductCarouselView.StickerViewModel? {
         productsSection?.productCarouselViewModel.stickerViewModel
     }
+}
+
+extension String {
+    
+    static let abroadSticker: Self = "abroadSticker"
 }

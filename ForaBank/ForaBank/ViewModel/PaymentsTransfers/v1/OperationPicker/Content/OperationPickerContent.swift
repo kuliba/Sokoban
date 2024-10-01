@@ -14,6 +14,17 @@ import RxViewModel
 
 typealias Latest = RemoteServices.ResponseMapper.LatestPayment
 
+extension Latest: Identifiable {
+    
+    public var id: Int {
+        
+        switch self {
+        case let .service(service):     return service.date
+        case let .withPhone(withPhone): return withPhone.date
+        }
+    }
+}
+
 typealias OperationPickerState = PayHubUI.OperationPickerState<Latest>
 typealias OperationPickerEvent = PayHubUI.OperationPickerEvent<Latest>
 typealias OperationPickerEffect = PayHubUI.OperationPickerEffect

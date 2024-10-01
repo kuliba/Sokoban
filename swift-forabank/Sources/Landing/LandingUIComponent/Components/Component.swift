@@ -16,12 +16,14 @@ extension UILanding {
         case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
         case image(UILanding.ImageBlock)
         case imageSvg(UILanding.ImageSvg)
+        case carousel(Carousel)
         case list(List)
         case multi(Multi)
         case pageTitle(UILanding.PageTitle)
         case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
         case verticalSpacing(UILanding.VerticalSpacing)
-        
+        case spacing(UILanding.Spacing)
+
         var id: String {
             switch self {
             case let .list(list):
@@ -45,7 +47,11 @@ extension UILanding {
                 return imageSvg.md5hash.rawValue
             case let .verticalSpacing(verticalSpacing):
                 return verticalSpacing.id.uuidString
+            case let .spacing(spacing):
+                return spacing.id.uuidString
             case let .blockHorizontalRectangular(value):
+                return value.id.uuidString
+            case let .carousel(value):
                 return value.id.uuidString
             }
         }
@@ -63,6 +69,27 @@ extension UILanding {
                 
             default:
                 return nil
+            }
+        }
+    }
+}
+
+extension UILanding.Component {
+    
+    public enum Carousel: Equatable {
+        
+        case base(UILanding.Carousel.CarouselBase)
+        case withTabs(UILanding.Carousel.CarouselWithTabs)
+        case withDots(UILanding.Carousel.CarouselWithDots)
+
+        public var id: UUID {
+            switch self {
+            case let .base(value):
+                return value.id
+            case let .withTabs(value):
+                return value.id
+            case let .withDots(value):
+                return value.id
             }
         }
     }
@@ -166,7 +193,12 @@ extension UILanding.Component {
             return data.imageRequests()
         case let .verticalSpacing(data):
             return data.imageRequests()
+        case let .spacing(data):
+            return data.imageRequests()
         case .blockHorizontalRectangular:
+            return []
+            
+        case let .carousel(data):
             return []
         }
     }

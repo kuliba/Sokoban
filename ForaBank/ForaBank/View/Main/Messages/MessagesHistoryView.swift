@@ -74,8 +74,8 @@ struct MessagesHistoryView: View {
         .bottomSheet(item: $viewModel.sheet) { sheet in
             
             switch sheet.sheetType {
-            case let .item(model):
-                MessagesHistoryDetailView(model: model)
+            case let .item(model, handleLink):
+                MessagesHistoryDetailView(model: model, handleLink: handleLink)
             }
         }
         .onAppear {

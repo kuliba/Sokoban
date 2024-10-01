@@ -37,7 +37,7 @@ extension RootView {
             config: .iFora,
             bannerView: { item in
                 
-                let label = rootViewFactory.makeIconView(.image(item.imageEndpoint))
+                let label = rootViewFactory.makeGeneralIconView(.image(item.imageEndpoint))
                     .frame(Config.iFora.size)
                     .cornerRadius(Config.iFora.cornerRadius)
                 

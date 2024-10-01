@@ -39,6 +39,8 @@ let package = Package(
         .utilityServicePrepayment,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
         // Services
         .cardStatementAPI,
         .svCardLimitAPI,
@@ -57,6 +59,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getClientInformDataServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -159,6 +162,9 @@ let package = Package(
         .utilityServicePrepaymentUI,
         // Banners
         .banners,
+        // MarketShowcase
+        .marketShowcase,
+        .marketShowcaseTests,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -194,6 +200,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getClientInformDataServices,
+        .getClientInformDataServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -698,6 +706,15 @@ private extension Product {
         ]
     )
     
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = library(
+        name: .marketShowcase,
+        targets: [
+            .marketShowcase,
+        ]
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -820,6 +837,14 @@ private extension Product {
         ]
     )
     
+    static let getClientInformDataServices = library(
+        name: .getClientInformDataServices,
+        targets: [
+            .getClientInformDataServices
+        ]
+    )
+
+    
     // MARK: - Tools
     
     static let foraTools = library(
@@ -829,6 +854,8 @@ private extension Product {
         ]
     )
 }
+
+// MARK: - Target
 
 private extension Target {
     
@@ -1485,6 +1512,31 @@ private extension Target {
         ],
         path: "Sources/\(String.banners)"
     )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = target(
+        name: .marketShowcase,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.marketShowcase)"
+    )
+    static let marketShowcaseTests = testTarget(
+        name: .marketShowcaseTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .marketShowcase,
+        ],
+        path: "Tests/\(String.marketShowcaseTests)"
+    )
 
     // MARK: - Services
     
@@ -1811,6 +1863,28 @@ private extension Target {
             .copy("Responses/GetProductListByType_Card_Response.json"),
             .copy("Responses/GetProductListByType_Deposit_Response.json"),
             .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
+
+    static let getClientInformDataServices = target(
+        name: .getClientInformDataServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getClientInformDataServices)"
+    )
+
+    static let getClientInformDataServicesTests = testTarget(
+        name: .getClientInformDataServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getClientInformDataServices
+        ],
+        path: "Tests/Services/\(String.getClientInformDataServicesTests)",
+        resources: [
+
         ]
     )
     
@@ -2896,6 +2970,12 @@ private extension Target.Dependency {
     static let banners = byName(
         name: .banners
     )
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = byName(
+        name: .marketShowcase
+    )
 
     // MARK: - Services
     
@@ -2961,6 +3041,10 @@ private extension Target.Dependency {
     
     static let getProductListByTypeV6Service = byName(
         name: .getProductListByTypeV6Service
+    )
+    
+    static let getClientInformDataServices = byName(
+        name: .getClientInformDataServices
     )
     
     // MARK: - Tools
@@ -3187,6 +3271,11 @@ private extension String {
     // MARK: - Banners
     
     static let banners = "Banners"
+    
+    // MARK: - MarketShowcase
+    
+    static let marketShowcase = "MarketShowcase"
+    static let marketShowcaseTests = "MarketShowcaseTests"
 
     // MARK: - Services
     
@@ -3240,6 +3329,9 @@ private extension String {
     
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
+    
+    static let getClientInformDataServices = "GetClientInformDataServices"
+    static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
     // MARK: - Tools
     
