@@ -55,6 +55,14 @@ extension FastPaymentsSettingsEffectHandler {
             mapError: ServiceFailure.init(error:),
             log: log
         )
+        #warning("replace request")
+        let prepareDeleteDefaultBank = NanoServices.adaptedLoggingFetch(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            httpClient: httpClient,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:),
+            log: log
+        )
         
         let prepareSetBankDefault = NanoServices.adaptedLoggingFetch(
             createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
@@ -80,6 +88,7 @@ extension FastPaymentsSettingsEffectHandler {
             handleContractEffect: contractEffectHandler.handleEffect(_:_:),
             getC2BSub: getC2BSub,
             getSettings: facade.getSettings(),
+            prepareDeleteDefaultBank: prepareDeleteDefaultBank,
             prepareSetBankDefault: prepareSetBankDefault,
             updateProduct: updateProduct
         )
