@@ -31,7 +31,7 @@ extension MarketShowcaseComposer {
         let content = makeContent(status: .initiate)
         let flow = makeFlow()
         
-        content.event(.load)
+      //  content.event(.load) 
 
         return .init(
             content: content,
@@ -76,7 +76,9 @@ private extension MarketShowcaseComposer {
         let effectHandler = MarketShowcaseDomain.ContentEffectHandler(
             microServices: .init(
                 loadLanding: nanoServices.loadLanding
-            ))
+            ), 
+            landingType: AbroadType.marketShowcase.rawValue
+        )
         return .init(
             initialState: .init(status: status),
             reduce: reducer.reduce(_:_:),
