@@ -9,20 +9,37 @@ import Combine
 
 final class QRDestinationComposer {
     
-    private let makeC2BSubscribe: MakeC2BSubscribe
-    private let makeC2B: MakeC2B
+    private let makePayments: MakePayments
     
     init(
-        makeC2BSubscribe: @escaping MakeC2BSubscribe,
-        makeC2B: @escaping MakeC2B
+        makePayments: @escaping MakePayments
     ) {
-        self.makeC2BSubscribe = makeC2BSubscribe
-        self.makeC2B = makeC2B
+        self.makePayments = makePayments
     }
     
-    typealias MakePaymentsWrapper = (URL, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
-    typealias MakeC2BSubscribe = MakePaymentsWrapper
-    typealias MakeC2B = MakePaymentsWrapper
+    typealias MakePayments = (Source, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    
+    struct Source: Equatable {
+        
+        let url: URL
+        let type: SourceType
+        
+        enum SourceType: Equatable {
+            
+            case c2bSubscribe
+            case c2b
+        }
+        
+        static func c2bSubscribe(_ url: URL) -> Self {
+            
+            return .init(url: url, type: .c2bSubscribe)
+        }
+        
+        static func c2b(_ url: URL) -> Self {
+            
+            return .init(url: url, type: .c2b)
+        }
+    }
 }
 
 extension QRDestinationComposer {
@@ -34,7 +51,7 @@ extension QRDestinationComposer {
     ) {
         switch result {
         case let .c2bSubscribeURL(url):
-            makeC2BSubscribe(url) { [weak self] in
+            makePayments(.c2bSubscribe(url)) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -45,7 +62,7 @@ extension QRDestinationComposer {
             }
             
         case let .c2bURL(url):
-            makeC2B(url) { [weak self] in
+            makePayments(.c2b(url)) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -118,9 +135,9 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
-        XCTAssertEqual(makeC2BSubscribe.callCount, 0)
+        XCTAssertEqual(makePayments.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -129,60 +146,60 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldCallMakeC2BSubscribeWithURL() {
         
         let url = anyURL()
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         sut.compose(result: .c2bSubscribeURL(url), notify: { _ in }) { _ in }
         
-        XCTAssertNoDiff(makeC2BSubscribe.payloads, [url])
+        XCTAssertNoDiff(makePayments.payloads, [.c2bSubscribe(url)])
     }
     
     func test_shouldDeliverC2BSubscribeOnC2BSubscribeURL() {
         
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .c2bSubscribe, on: {
             
-            makeC2BSubscribe.complete(with: makeC2BSubscribeResult())
+            makePayments.complete(with: makePaymentsResult())
         })
     }
     
     func test_shouldDeliverDismissEventOnC2BSubscribeClose() {
         
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .dismiss,
             for: { $0.c2bSubscribeModel?.closeAction() },
-            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
     func test_shouldDeliverScanQREventOnC2BSubscribeScanQRCode() {
         
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .scanQR,
             for: { $0.c2bSubscribeScanQR() },
-            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
     func test_shouldDeliverContactAbroadEventOnC2BSubscribeContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (sut, makeC2BSubscribe, _) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .contactAbroad(source),
             for: { $0.c2bSubscribeContactAbroad(source: source) },
-            on: { makeC2BSubscribe.complete(with: makeC2BSubscribeResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
@@ -191,93 +208,87 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldCallMakeC2BWithURL() {
         
         let url = anyURL()
-        let (sut, _, makeC2B) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         sut.compose(result: .c2bURL(url), notify: { _ in }) { _ in }
         
-        XCTAssertNoDiff(makeC2B.payloads, [url])
+        XCTAssertNoDiff(makePayments.payloads, [.c2b(url)])
     }
     
     func test_shouldDeliverC2BOnC2BURL() {
         
-        let (sut, _, makeC2B) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(sut, with: .c2bURL(anyURL()), toDeliver: .c2b, on: {
             
-            makeC2B.complete(with: makeC2BResult())
+            makePayments.complete(with: makePaymentsResult())
         })
     }
     
     func test_shouldDeliverDismissEventOnC2BClose() {
         
-        let (sut, _, makeC2B) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bURL(anyURL()),
             delivers: .dismiss,
             for: { $0.c2bModel?.closeAction() },
-            on: { makeC2B.complete(with: makeC2BResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
     func test_shouldDeliverScanQREventOnC2BScanQRCode() {
         
-        let (sut, _, makeC2B) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bURL(anyURL()),
             delivers: .scanQR,
             for: { $0.c2bScanQR() },
-            on: { makeC2B.complete(with: makeC2BResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
     func test_shouldDeliverContactAbroadEventOnC2BContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (sut, _, makeC2B) = makeSUT()
+        let (sut, makePayments) = makeSUT()
         
         expect(
             sut,
             result: .c2bURL(anyURL()),
             delivers: .contactAbroad(source),
             for: { $0.c2bContactAbroad(source: source) },
-            on: { makeC2B.complete(with: makeC2BResult()) }
+            on: { makePayments.complete(with: makePaymentsResult()) }
         )
     }
     
     // MARK: - Helpers
     
     private typealias SUT = QRDestinationComposer
-    private typealias MakeWrapperSpy = Spy<URL, ClosePaymentsViewModelWrapper, Never>
-    private typealias MakeC2BSubscribeSpy = MakeWrapperSpy
-    private typealias MakeC2BSpy = MakeWrapperSpy
+    private typealias MakePaymentsSpy = Spy<SUT.Source, ClosePaymentsViewModelWrapper, Never>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        makeC2BSubscribe: MakeC2BSubscribeSpy,
-        makeC2B: MakeC2BSpy
+        makePaymentsSpy: MakePaymentsSpy
     ) {
-        let makeC2BSubscribe = MakeC2BSubscribeSpy()
-        let makeC2B = MakeC2BSpy()
+        let makePaymentsSpy = MakePaymentsSpy()
         let sut = SUT(
-            makeC2BSubscribe: makeC2BSubscribe.process(_:completion:),
-            makeC2B: makeC2B.process(_:completion:)
+            makePayments: makePaymentsSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(makeC2BSubscribe, file: file, line: line)
-        trackForMemoryLeaks(makeC2B, file: file, line: line)
+        trackForMemoryLeaks(makePaymentsSpy, file: file, line: line)
         
-        return (sut, makeC2BSubscribe, makeC2B)
+        return (sut, makePaymentsSpy)
     }
     
-    private func makeC2BSubscribeModel(
+    private func makePaymentsModel(
         model: Model = .mockWithEmptyExcept(),
         category: Payments.Category = .fast,
         scheduler: AnySchedulerOf<DispatchQueue> = .immediate
@@ -286,30 +297,17 @@ final class QRDestinationComposerTests: XCTestCase {
         return .init(model: model, category: category, scheduler: scheduler)
     }
     
-    private func makeC2BSubscribeResult(
+    private func makePaymentsResult(
         model: Model = .mockWithEmptyExcept(),
         category: Payments.Category = .fast,
         scheduler: AnySchedulerOf<DispatchQueue> = .immediate
     ) -> Result<ClosePaymentsViewModelWrapper, Never> {
         
-        return .success(makeC2BSubscribeModel(
+        return .success(makePaymentsModel(
             model: model,
             category: category,
             scheduler: scheduler
         ))
-    }
-    
-    private func makeC2BResult(
-        model: Model = .mockWithEmptyExcept(),
-        category: Payments.Category = .fast,
-        scheduler: AnySchedulerOf<DispatchQueue> = .immediate
-    ) -> Result<ClosePaymentsViewModelWrapper, Never> {
-        
-        return makeC2BSubscribeResult(
-            model: model,
-            category: category,
-            scheduler: scheduler
-        )
     }
     
     private func expect(
