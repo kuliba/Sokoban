@@ -551,8 +551,7 @@ extension Model {
     
     func updateProduct(
         _ command: ServerCommands.ProductController.GetProductListByType,
-        productType: ProductType,
-        isCalledOnAuth: Bool
+        productType: ProductType
     ) {
         if let getProductsV6 {
             getProducts_V6(getProductsV6, command, productType)
@@ -564,8 +563,7 @@ extension Model {
     
     func getProductsV5(
         _ command: ServerCommands.ProductController.GetProductListByType,
-        _ productType: ProductType,
-        _ isCalledOnAuth: Bool
+        _ productType: ProductType
     ) {
         
         getProducts(productType) { response in
