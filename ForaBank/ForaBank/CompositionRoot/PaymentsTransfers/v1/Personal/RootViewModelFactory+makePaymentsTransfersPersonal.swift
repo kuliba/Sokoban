@@ -29,7 +29,8 @@ extension RootViewModelFactory {
             nanoServices: nanoServices,
             pageSize: pageSize,
             placeholderCount: categoryPickerPlaceholderCount,
-            scheduler: mainScheduler
+            mainScheduler: mainScheduler,
+            backgroundScheduler: backgroundScheduler
         )
         
         // MARK: - OperationPicker

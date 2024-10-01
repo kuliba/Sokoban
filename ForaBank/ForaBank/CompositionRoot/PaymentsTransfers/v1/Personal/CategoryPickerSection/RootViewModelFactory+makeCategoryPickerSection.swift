@@ -16,15 +16,15 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices,
         pageSize: Int,
         placeholderCount: Int,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        mainScheduler: AnySchedulerOf<DispatchQueue>,
+        backgroundScheduler: AnySchedulerOf<DispatchQueue>
     ) -> CategoryPickerSection.Binder{
         
         let microServicesComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: pageSize,
             nanoServices: .init(loadOperators: { payload, completion in
                 
-#warning("inject this?")
-                DispatchQueue.global(qos: .userInitiated).async {
+                backgroundScheduler.schedule {
                     
                     model.loadOperators(payload, completion)
                 }
@@ -34,24 +34,27 @@ extension RootViewModelFactory {
             loadLatest: nanoServices.loadLatestForCategory,
             loadOperators: { category, completion in
                 
-                model.loadOperators(.init(
-                    afterOperatorID: nil,
-                    for: category.type,
-                    searchText: "",
-                    pageSize: pageSize
-                )) {
-                    completion(.success($0))
+                backgroundScheduler.schedule {
+                    
+                    model.loadOperators(.init(
+                        afterOperatorID: nil,
+                        for: category.type,
+                        searchText: "",
+                        pageSize: pageSize
+                    )) {
+                        completion(.success($0))
+                    }
                 }
             },
             makeMicroServices: microServicesComposer.compose,
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let selectCategory = selectCategory(
             model: model,
             composer: standardNanoServicesComposer,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let categoryPickerComposer = CategoryPickerSection.BinderComposer(
             load: nanoServices.loadCategories,
@@ -68,7 +71,7 @@ extension RootViewModelFactory {
                 }
             ),
             placeholderCount: placeholderCount,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         return categoryPickerComposer.compose(
