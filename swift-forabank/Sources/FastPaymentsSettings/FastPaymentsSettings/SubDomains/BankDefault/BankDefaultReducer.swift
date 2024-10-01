@@ -22,6 +22,9 @@ public extension BankDefaultReducer {
         var effect: Effect?
         
         switch event {
+        case .deleteDefaultBank:
+            //TODO: add action
+            break
         case .prepareSetBankDefault:
             (state, effect) = prepareSetBankDefault(state)
             

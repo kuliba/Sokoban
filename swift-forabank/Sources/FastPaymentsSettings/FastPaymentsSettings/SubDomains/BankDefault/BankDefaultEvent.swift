@@ -6,7 +6,8 @@
 //
 
 public enum BankDefaultEvent: Equatable {
-    
+
+    case deleteDefaultBank
     case prepareSetBankDefault
     case setBankDefault
     case setBankDefaultResult(SetBankDefaultResult)
