@@ -276,7 +276,7 @@ final class MapperTests: XCTestCase {
         
         let landing = try XCTUnwrap(map())
         
-        XCTAssertNoDiff(landing.main.spacing, [
+        XCTAssertNoDiff(landing.main.verticalSpacing, [
             .init(backgroundColor: "w", type: "b")
         ])
     }
@@ -545,6 +545,34 @@ final class MapperTests: XCTestCase {
                             .init(imageLink: "imageLink22", link: nil, action: .init(type: "LANDING", target: "abroadSticker"))
                         ])
                 ])
+        ])
+    }
+    
+    func test_map_carouselWithDots_deliversCarouselWithDotsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselWithDots.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithDots, [
+            .init(
+                title: nil,
+                size: .init(width: 344, height: 240),
+                scale: "medium",
+                loopedScrolling: true,
+                list: [
+                    .init(imageLink: "imageLink1", link: "link1", action: nil),
+                    .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
+                    .init(imageLink: "imageLink3", link: nil, action: nil)
+                ])
+        ])
+    }
+
+    func test_map_spacing_deliversSpacingInMain() throws {
+
+        let landing = try XCTUnwrap(map(data: Data(String.spacing.utf8)))
+
+        XCTAssertNoDiff(landing.main.spacing, [
+            .init(backgroundColor: "w", heightDp:10.0),
+            .init(backgroundColor: "b", heightDp:80.5),
         ])
     }
 
@@ -3254,6 +3282,71 @@ private extension String {
       }
     }
     """
+    
+    static let carouselWithDots: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "HORIZONTAL_SLIDER_WITH_DOTS",
+        "data": {
+          "size": "344х240",
+          "scale": "medium",
+          "loopedScrolling": true,
+          "list": [
+            {
+              "imageLink": "imageLink1",
+              "link": "link1"
+            },
+            {
+              "imageLink": "imageLink2",
+              "action": {
+                "actionType": "LANDING",
+                "target": "abroadSticker"
+              }
+            },
+            {
+              "imageLink": "imageLink3"
+            }
+          ]
+        }
+      }
+    ],
+    "serial": ""
+    }
+    }
+    """
+
+    static let spacing: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "w",
+                "sizeDp": 10
+            }
+        },
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "b",
+                "sizeDp": 80.5
+            }
+        },
+    ],
+    "serial": ""
+    }
+    }
+    """
+
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
@@ -3416,7 +3509,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var spacing: [Landing.VerticalSpacing] {
+    var verticalSpacing: [Landing.VerticalSpacing] {
         
         compactMap {
             if case let .verticalSpacing(indents) = $0 {
@@ -3424,6 +3517,17 @@ extension Array where Element == Landing.DataView {
             } else {
                 return nil
             }
+        }
+    }
+    
+    var spacing: [Landing.Spacing] {
+        
+        compactMap {
+            
+            guard case let .spacing(indents) = $0 
+            else { return nil }
+            
+            return indents
         }
     }
     
@@ -3454,6 +3558,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .carousel(.withTabs(carouselWithTabs)) = $0 {
                 return carouselWithTabs
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselWithDots: [Landing.DataView.Carousel.CarouselWithDots] {
+        
+        compactMap {
+            if case let .carousel(.withDots(carouselWithDots)) = $0 {
+                return carouselWithDots
             } else {
                 return nil
             }

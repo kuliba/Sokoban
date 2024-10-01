@@ -1,16 +1,16 @@
 //
-//  CategoryPickerSectionFlowReducer.swift
+//  FlowReducer.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public final class CategoryPickerSectionFlowReducer<Select, Navigation> {
+public final class FlowReducer<Select, Navigation> {
     
     public init() {}
 }
 
-public extension CategoryPickerSectionFlowReducer {
+public extension FlowReducer {
     
     func reduce(
         _ state: State,
@@ -39,9 +39,9 @@ public extension CategoryPickerSectionFlowReducer {
     }
 }
 
-public extension CategoryPickerSectionFlowReducer {
+public extension FlowReducer {
     
-    typealias State = CategoryPickerSectionFlowState<Navigation>
-    typealias Event = CategoryPickerSectionFlowEvent<Select, Navigation>
-    typealias Effect = CategoryPickerSectionFlowEffect<Select>
+    typealias State = FlowState<Navigation>
+    typealias Event = FlowEvent<Select, Navigation>
+    typealias Effect = FlowEffect<Select>
 }

@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionFlowEffectHandlerTests.swift
+//  FlowEffectHandlerTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFlowTests {
+final class FlowEffectHandlerTests: FlowTests {
     
     // MARK: - init
     
@@ -22,7 +22,7 @@ final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFl
     
     // MARK: - getNavigation
     
-    func test_getNavigation_shouldCallShowAll() {
+    func test_getNavigation_shouldCallGetNavigationWithSelect() {
         
         let select = makeSelect()
         let (sut, getNavigation) = makeSUT()
@@ -32,7 +32,7 @@ final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFl
         XCTAssertEqual(getNavigation.payloads, [select])
     }
     
-    func test_getNavigation_shouldDeliverCategory() {
+    func test_getNavigation_shouldDeliverNavigation() {
         
         let navigation = makeNavigation()
         let (sut, getNavigation) = makeSUT()
@@ -45,7 +45,7 @@ final class CategoryPickerSectionFlowEffectHandlerTests: CategoryPickerSectionFl
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowEffectHandler<Select, Navigation>
+    private typealias SUT = FlowEffectHandler<Select, Navigation>
     private typealias GetNavigationSpy = Spy<Select, Navigation>
     
     private func makeSUT(

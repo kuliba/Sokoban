@@ -1,11 +1,11 @@
 //
-//  CategoryPickerSectionState.swift
+//  FlowState.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
-public struct CategoryPickerSectionFlowState<Navigation> {
+public struct FlowState<Navigation> {
     
     public var isLoading: Bool
     public var navigation: Navigation?
@@ -14,9 +14,14 @@ public struct CategoryPickerSectionFlowState<Navigation> {
         isLoading: Bool = false,
         navigation: Navigation? = nil
     ) {
-        self.isLoading = false
+        self.isLoading = isLoading
         self.navigation = navigation
     }
 }
 
-extension CategoryPickerSectionFlowState: Equatable where Navigation: Equatable {}
+public extension FlowState {
+    
+    var hasDestination: Bool { navigation != nil }
+}
+
+extension FlowState: Equatable where Navigation: Equatable {}

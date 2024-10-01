@@ -47,6 +47,8 @@ extension DecodableLanding.Data {
         case verticalSpacing = "VERTICAL_SPACING"
         case carouselBase = "HORIZONTAL_SLIDER_BASE"
         case carouselWithTabs = "HORIZONTAL_SLIDER_WITH_TABS"
+        case carouselWithDots = "HORIZONTAL_SLIDER_WITH_DOTS"
+        case spacing = "SPACING"
     }
 
     // TODO: ListHorizontalRectangleImage -> List.Horizontal.RectangleImage
@@ -59,6 +61,7 @@ extension DecodableLanding.Data {
         enum Carousel: Decodable, Equatable  {
             case base(CarouselBaseDecodable)
             case withTabs(CarouselWithTabsDecodable)
+            case withDots(CarouselWithDotsDecodable)
         }
 
         enum List: Decodable, Equatable  {
@@ -87,6 +90,7 @@ extension DecodableLanding.Data {
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+        case spacing(Spacing)
         
         init(from decoder: Decoder) throws {
             
@@ -164,6 +168,9 @@ extension DecodableLanding.Data {
             case .verticalSpacing:
                 let data = try container.decode(VerticalSpacing.self, forKey: .data)
                 self = .verticalSpacing(data)
+            case .spacing:
+                let data = try container.decode(Spacing.self, forKey: .data)
+                self = .spacing(data)
                 
             case .listHorizontalRectangleLimits:
                 let data = try container.decode(ListHorizontalRectangleLimits.self, forKey: .data)
@@ -180,6 +187,14 @@ extension DecodableLanding.Data {
             case .carouselWithTabs:
                 let data = try container.decode(CarouselWithTabsDecodable.self, forKey: .data)
                 self = .carousel(.withTabs(data))
+                
+            case .carouselWithDots:
+                let data = try container.decode(CarouselWithDotsDecodable.self, forKey: .data)
+                self = .carousel(.withDots(data))
+                
+            case .spacing:
+                let data = try container.decode(Spacing.self, forKey: .data)
+                self = .spacing(data)
                 
             default:
                 // не смогли распарсить - нет такого type

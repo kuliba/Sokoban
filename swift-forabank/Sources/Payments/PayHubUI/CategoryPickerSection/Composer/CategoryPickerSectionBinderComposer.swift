@@ -85,17 +85,12 @@ private extension CategoryPickerSectionBinderComposer {
     
     func makeFlow() -> FlowDomain.Flow {
         
-        let reducer = FlowDomain.FlowReducer()
-        let effectHandler = FlowDomain.FlowEffectHandler(
-            microServices: microServices
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+        let composer = FlowDomain.Composer(
+            microServices: microServices, 
             scheduler: scheduler
         )
+        
+        return composer.compose()
     }
 }
 

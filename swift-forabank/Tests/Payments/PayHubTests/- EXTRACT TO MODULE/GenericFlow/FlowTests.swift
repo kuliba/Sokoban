@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionFlowTests.swift
+//  FlowTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class CategoryPickerSectionFlowTests: XCTestCase {
+class FlowTests: XCTestCase {
     
     struct Select: Equatable {
         

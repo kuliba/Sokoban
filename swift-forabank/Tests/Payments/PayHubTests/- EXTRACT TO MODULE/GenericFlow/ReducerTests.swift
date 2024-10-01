@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionFlowReducerTests.swift
+//  FlowReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTests {
+final class FlowReducerTests: FlowTests {
     
     // MARK: - dismiss
     
@@ -33,7 +33,6 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     func test_receive_shouldSetIsLoadingToFalseSetDestinationToCategory() {
         
-        let select = makeSelect()
         let navigation = makeNavigation()
         
         assert(makeState(isLoading: true, navigation: nil), event: .receive(navigation)) {
@@ -80,7 +79,7 @@ final class CategoryPickerSectionFlowReducerTests: CategoryPickerSectionFlowTest
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionFlowReducer<Select, Navigation>
+    private typealias SUT = FlowReducer<Select, Navigation>
     
     private func makeSUT(
         file: StaticString = #file,
