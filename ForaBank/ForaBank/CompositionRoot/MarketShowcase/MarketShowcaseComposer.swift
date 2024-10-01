@@ -31,8 +31,6 @@ extension MarketShowcaseComposer {
         let content = makeContent(status: .initiate)
         let flow = makeFlow()
         
-      //  content.event(.load) 
-
         return .init(
             content: content,
             flow: flow,

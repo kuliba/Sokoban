@@ -114,6 +114,7 @@ struct RootView: View {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
+        .onFirstAppear { marketShowcaseBinder.content.event(.load) }
         .taggedTabItem(.market, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
