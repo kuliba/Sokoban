@@ -850,7 +850,7 @@ struct ProductProfileHistoryView: View {
     
     var body: some View {
         
-        VStack {
+        LazyVStack {
             
             HeaderView(
                 viewModel: viewModel.header,
