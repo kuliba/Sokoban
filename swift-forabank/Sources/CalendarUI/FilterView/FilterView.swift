@@ -182,7 +182,8 @@ extension FilterView {
     var hasFiltered: Bool {
         
         !self.filterState.filter.selectedServices.isEmpty ||
-        self.filterState.filter.selectedTransaction != nil
+        self.filterState.filter.selectedTransaction != nil ||
+        self.filterState.filter.selectDates != nil
     }
 }
 
