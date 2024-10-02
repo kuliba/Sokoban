@@ -24,10 +24,11 @@ extension MarketShowcaseDomain{
     typealias ContentStatus = MarketShowcaseContentStatus<Landing>
     typealias ContentEvent = MarketShowcaseContentEvent<Landing>
     typealias ContentEffect = MarketShowcaseContentEffect
+    typealias ContentError = LandingMapper.MapperError
     
     typealias ContentReducer = MarketShowcaseContentReducer<Landing>
-    typealias ContentEffectHandler = MarketShowcaseContentEffectHandler<Landing>
-    typealias ContentMicroService = MarketShowcaseContentEffectHandlerMicroServices<Landing>
+    typealias ContentEffectHandler = MarketShowcaseContentEffectHandler<Landing, ContentError>
+    typealias ContentMicroService = MarketShowcaseContentEffectHandlerMicroServices<Landing, ContentError>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
     
