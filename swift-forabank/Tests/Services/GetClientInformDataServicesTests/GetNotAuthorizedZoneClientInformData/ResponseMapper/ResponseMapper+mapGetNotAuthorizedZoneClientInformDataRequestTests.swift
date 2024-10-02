@@ -12,52 +12,42 @@ import XCTest
 final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
-        
-        let emptyData: Data = .empty
-        
+
         XCTAssertNoDiff(
-            map(emptyData),
-            .failure(.invalid(statusCode: 200, data: emptyData))
+            map(.empty),
+            .failure(.invalid(statusCode: 200, data: .empty))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnInvalidData() {
-        
-        let invalidData: Data = .invalidData
-        
+
         XCTAssertNoDiff(
-            map(invalidData),
-            .failure(.invalid(statusCode: 200, data: invalidData))
+            map(.invalidData),
+            .failure(.invalid(statusCode: 200, data: .invalidData))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyJSON() {
-        
-        let emptyJSON: Data = .emptyJSON
-        
+
         XCTAssertNoDiff(
-            map(emptyJSON),
-            .failure(.invalid(statusCode: 200, data: emptyJSON))
+            map(.emptyJSON),
+            .failure(.invalid(statusCode: 200, data: .emptyJSON))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyDataResponse() {
-        
-        let emptyDataResponse: Data = .emptyDataResponse
-        
+
         XCTAssertNoDiff(
-            map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            map(.emptyDataResponse),
+            .failure(.invalid(statusCode: 200, data: .emptyDataResponse))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnNullServerResponse() {
         
-        let nullServerResponse: Data = .nullServerResponse
-        
         XCTAssertNoDiff(
             map(.nullServerResponse),
-            .failure(.invalid(statusCode: 200, data: nullServerResponse))
+            .failure(.invalid(statusCode: 200, data: .nullServerResponse))
         )
     }
     
@@ -477,13 +467,13 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
+                "authBlocking": true,
                 "title": "",
-                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             }
@@ -500,13 +490,13 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
-                "title": "",
+                "authBlocking": true,
+                "title": "TITLE",
                 "text": "",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             }
@@ -523,13 +513,13 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
-                "title": "",
-                "text": "",
+                "authBlocking": true,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
                     "action": "",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             }
@@ -546,13 +536,13 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
-                "title": "",
-                "text": "",
+                "authBlocking": true,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
-                    "action": "",
+                    "action": "ACTION",
                     "platform": "",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             }
@@ -569,12 +559,12 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
-                "title": "",
-                "text": "",
+                "authBlocking": true,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
-                    "action": "",
-                    "platform": "",
+                    "action": "ACTION",
+                    "platform": "iOS",
                     "version": "",
                     "link": "LINK"
                 }
@@ -592,13 +582,13 @@ private extension String {
         "serial": "1bebd140bc2660211fbba306105479ae",
         "notAuthorized": [
             {
-                "authBlocking": false,
-                "title": "",
-                "text": "",
+                "authBlocking": true,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
-                    "action": "",
-                    "platform": "",
-                    "version": "",
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "VERSION",
                     "link": ""
                 }
             }
@@ -780,10 +770,10 @@ private extension String {
                 "title": "TITLE",
                 "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             },
             {
@@ -791,10 +781,10 @@ private extension String {
                 "title": "TITLE",
                 "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             }
         ]
@@ -814,21 +804,21 @@ private extension String {
                 "title": null,
                 "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             },
             {
                 "authBlocking": false,
                 "title": "TITLE",
-                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "LINK"
+                    "version": "VERSION",
+                    "link": "LINK"     
                 }
             }
         ]
@@ -848,9 +838,9 @@ private extension String {
                 "title": "TITLE",
                 "text": null,
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             },
@@ -859,9 +849,9 @@ private extension String {
                 "title": "TITLE",
                 "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
+                    "version": "VERSION",
                     "link": "LINK"
                 }
             }

@@ -62,9 +62,7 @@ private extension ResponseMapper.NotAuthorized.Update {
               let platform = updateData.platform,
               let version = updateData.version,
               let link = updateData.link
-        else {
-            return nil
-        }
+        else { return nil }
         
         self.init(
             action: action,
