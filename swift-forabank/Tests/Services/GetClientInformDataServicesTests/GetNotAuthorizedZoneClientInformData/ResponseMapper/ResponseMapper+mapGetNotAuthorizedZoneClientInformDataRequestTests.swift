@@ -111,21 +111,100 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
 
     func test_map_withNilTitle_shouldOmitItem() throws {
         
-        let mapped = try mapped(.withNilTitle)
+        let mapped = try mapResult(.withNilTitle)
         
         XCTAssert(mapped.list.isEmpty)
     }
     
+    func test_map_shouldOmitItemWithNilauthBlocking() throws {
+        
+        let mapped = try mapResult(.withNilAuthBlockingInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.authBlocking), [true])
+    }
+    
     func test_map_shouldOmitItemWithNilTitle() throws {
         
-        let mapped = try mapped(.withNilTitleInOne)
+        let mapped = try mapResult(.withNilTitleInOne)
         
         XCTAssertNoDiff(mapped.list.map(\.title), ["TITLE"])
+    }
+    
+    func test_map_shouldOmitItemWithNilText() throws {
+        
+        let mapped = try mapResult(.withNilTextInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.text), ["TEXT"])
+    }
+        
+    func test_map_shouldOmitItemWithNilUpdate() throws {
+        
+        let mapped = try mapResult(.withNilUpdateInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
+                action: "optional",
+                platform: "iOS",
+                version: "7.12.15",
+                link: "blahblah"
+            )
+        ])
+    }
+    
+    func test_map_shouldOmitItemWithNilAction() throws {
+        
+        let mapped = try mapResult(.withNilActionInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
+                action: "ACTION",
+                platform: "iOS",
+                version: "7.12.15",
+                link: "blahblah"
+            )
+        ])
+    }
+    
+    func test_map_shouldOmitItemWithNilPlatform() throws {
+        
+        let mapped = try mapResult(.withNilPlatformInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
+                action: "ACTION",
+                platform: "iOS",
+                version: "7.12.15",
+                link: "blahblah"
+            )
+        ])
+    }
+    
+    func test_map_shouldOmitItemWithNilVersion() throws {
+        
+        let mapped = try mapResult(.withNilVersionInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
+                action: "ACTION",
+                platform: "iOS",
+                version: "VERSION",
+                link: "blahblah"
+            )
+        ])
+    }
+
+    func test_map_shouldOmitItemWithNilLink() throws {
+        
+        let mapped = try mapResult(.withNilLinkInOne)
+        
+        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
+                action: "ACTION",
+                platform: "iOS",
+                version: "VERSION",
+                link: "LINK"
+            )
+        ])
     }
 
     func test_map_withEmptyTitle_shouldDeliverValidTitle() throws {
         
-        let mapped = try mapped(.withEmptyTitle)
+        let mapped = try mapResult(.withEmptyTitle)
         
         XCTAssertNoDiff(mapped.list.first?.title, "")
     }
@@ -148,7 +227,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse(data, httpURLResponse)
     }
     
-    private func mapped(
+    private func mapResult(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) throws -> Response {
@@ -209,7 +288,14 @@ private extension Data {
     static let notAuthorized: Data = String.notAuthorized.json
     static let withEmptyTitle: Data = String.withEmptyTitle.json
     static let withNilTitle: Data = String.withNilTitle.json
+    static let withNilAuthBlockingInOne: Data = String.withNilAuthBlockingInOne.json
     static let withNilTitleInOne: Data = String.withNilTitleInOne.json
+    static let withNilTextInOne: Data = String.withNilTextInOne.json
+    static let withNilUpdateInOne: Data = String.withNilUpdateInOne.json
+    static let withNilActionInOne: Data = String.withNilActionInOne.json
+    static let withNilPlatformInOne: Data = String.withNilPlatformInOne.json
+    static let withNilVersionInOne: Data = String.withNilVersionInOne.json
+    static let withNilLinkInOne: Data = String.withNilLinkInOne.json
 }
 
 private extension String {
@@ -356,6 +442,40 @@ private extension String {
     }
 }
 """
+
+    static let withNilAuthBlockingInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": null,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": true,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
     
     static let withNilTitleInOne = """
 {
@@ -384,6 +504,205 @@ private extension String {
                     "platform": "iOS",
                     "version": "7.12.15",
                     "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilTextInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilUpdateInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": null
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilActionInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": null,
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilPlatformInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": null,
+                    "platform": null,
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilVersionInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": null,
+                    "platform": null,
+                    "version": null,
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "VERSION",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilLinkInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": null,
+                "update": {
+                    "action": null,
+                    "platform": null,
+                    "version": null,
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "TEXT",
+                "update": {
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             }
         ]
