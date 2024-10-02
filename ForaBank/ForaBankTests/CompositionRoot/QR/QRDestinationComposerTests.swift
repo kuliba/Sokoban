@@ -172,11 +172,13 @@ extension QRDestinationComposer {
                 makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
                 
             case let .none(qr):
-                makeDetailPayments(qr) {
+                makeDetailPayments(qr) { [weak self] in
+                    
+                    guard let self else { return }
                     
                     completion(.detailPayments(.init(
                         model: $0,
-                        cancellables: []
+                        cancellables: bindPayments($0, with: notify)
                     )))
                 }
                 
@@ -327,7 +329,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .dismiss,
-            for: { $0.c2bSubscribeModel?.closeAction() },
+            for: { $0.c2bSubscribe?.closeAction() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -340,7 +342,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2bSubscribeScanQR() },
+            for: { $0.c2bSubscribe?.scanQR() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -354,7 +356,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .contactAbroad(source),
-            for: { $0.c2bSubscribeContactAbroad(source: source) },
+            for: { $0.c2bSubscribe?.contactAbroad(source: source) },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -389,7 +391,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .dismiss,
-            for: { $0.c2bModel?.closeAction() },
+            for: { $0.c2b?.closeAction() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -402,7 +404,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2bScanQR() },
+            for: { $0.c2b?.scanQR() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -416,7 +418,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .contactAbroad(source),
-            for: { $0.c2bContactAbroad(source: source) },
+            for: { $0.c2b?.contactAbroad(source: source) },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -614,7 +616,7 @@ final class QRDestinationComposerTests: XCTestCase {
     }
     
     // MARK: - mapped: multiple
-
+    
     func test_shouldCallMakeOperatorSearchOnMultiple() {
         
         let (multiple, qr, qrMapping) = makeMultiple()
@@ -655,13 +657,52 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldDeliverOperatorSearchOnNone() {
         
         let (sut, _,_,_,_,_, makeDetailPayments) = makeSUT()
-
+        
         expect(sut, with: .mapped(.none(makeQR())), toDeliver: .detailPayments, on: {
             
             makeDetailPayments.complete(with: makePaymentsSuccess())
         })
     }
-
+    
+    func test_shouldDeliverDismissEventOnDetailPaymentsClose() {
+        
+        let (sut, _,_,_,_,_, makeDetailPayments) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.none(makeQR())),
+            delivers: .dismiss,
+            for: { $0.detailPayments?.closeAction() },
+            on: { makeDetailPayments.complete(with: makePaymentsSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverScanQREventOnDetailPaymentsScanQRCode() {
+        
+        let (sut, _,_,_,_,_, makeDetailPayments) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.none(makeQR())),
+            delivers: .scanQR,
+            for: { $0.detailPayments?.scanQR() },
+            on: { makeDetailPayments.complete(with: makePaymentsSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverContactAbroadEventOnDetailPaymentsContactAbroad() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, _,_,_,_,_, makeDetailPayments) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.none(makeQR())),
+            delivers: .contactAbroad(source),
+            for: { $0.detailPayments?.contactAbroad(source: source) },
+            on: { makeDetailPayments.complete(with: makePaymentsSuccess()) }
+        )
+    }
     
     // MARK: - Helpers
     
@@ -817,9 +858,9 @@ final class QRDestinationComposerTests: XCTestCase {
     }
     
     private func makeMultipleOperators(
-    first: SegmentedOperatorData? = nil,
-    second: SegmentedOperatorData? = nil,
-    tail: SegmentedOperatorData...
+        first: SegmentedOperatorData? = nil,
+        second: SegmentedOperatorData? = nil,
+        tail: SegmentedOperatorData...
     ) -> MultiElementArray<SegmentedOperatorData> {
         
         return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
@@ -910,6 +951,25 @@ final class QRDestinationComposerTests: XCTestCase {
     }
 }
 
+private extension ClosePaymentsViewModelWrapper {
+    
+    func closeAction() {
+        
+        paymentsViewModel.closeAction()
+    }
+    
+    func scanQR() {
+        
+        paymentsViewModel.action.send(PaymentsViewModelAction.ScanQrCode())
+    }
+    
+    func contactAbroad(source: Payments.Operation.Source) {
+        
+        let action = PaymentsViewModelAction.ContactAbroad(source: source)
+        paymentsViewModel.action.send(action)
+    }
+}
+
 private extension QRDestinationComposer.QRDestination {
     
     // MARK: - c2bSubscribe
@@ -922,22 +982,6 @@ private extension QRDestinationComposer.QRDestination {
         return c2bSubscribe.model
     }
     
-    var c2bSubscribeModel: PaymentsViewModel? {
-        
-        return c2bSubscribe?.paymentsViewModel
-    }
-    
-    func c2bSubscribeScanQR() {
-        
-        c2bSubscribeModel?.action.send(PaymentsViewModelAction.ScanQrCode())
-    }
-    
-    func c2bSubscribeContactAbroad(source: Payments.Operation.Source) {
-        
-        let action = PaymentsViewModelAction.ContactAbroad(source: source)
-        c2bSubscribeModel?.action.send(action)
-    }
-    
     // MARK: - c2b
     
     var c2b: ClosePaymentsViewModelWrapper? {
@@ -948,20 +992,14 @@ private extension QRDestinationComposer.QRDestination {
         return c2b.model
     }
     
-    var c2bModel: PaymentsViewModel? {
-        
-        return c2b?.paymentsViewModel
-    }
+    // MARK: - detailPayments
     
-    func c2bScanQR() {
+    var detailPayments: ClosePaymentsViewModelWrapper? {
         
-        c2bModel?.action.send(PaymentsViewModelAction.ScanQrCode())
-    }
-    
-    func c2bContactAbroad(source: Payments.Operation.Source) {
+        guard case let .detailPayments(detailPayments) = self
+        else { return nil }
         
-        let action = PaymentsViewModelAction.ContactAbroad(source: source)
-        c2bModel?.action.send(action)
+        return detailPayments.model
     }
     
     // MARK: - providerPicker
