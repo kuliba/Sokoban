@@ -99,7 +99,7 @@ private extension FilterEffectHandlerMicroServicesComposer {
         else { return completion(nil) }
         
         let filteredStatements = storage.statements.filter {
-            payload.range.contains($0.date)
+            payload.range.contains($0.dateValue)
         }
         
         completion(.init(
