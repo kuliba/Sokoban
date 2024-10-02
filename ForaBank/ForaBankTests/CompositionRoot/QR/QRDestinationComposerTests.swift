@@ -188,7 +188,7 @@ extension QRDestinationComposer {
                 }
                 
             case let .provider(payload):
-                makeServicePicker(payload) { _ in }
+                makeServicePicker(payload) { completion(.servicePicker) }
                 
             default:
                 fatalError()
@@ -222,6 +222,7 @@ extension QRDestinationComposer {
         case failure(QRFailedViewModel)
         case operatorSearch(OperatorSearch)
         case providerPicker(Node<ProviderPicker>)
+        case servicePicker
         
         typealias PaymentsNode = Node<ClosePaymentsViewModelWrapper>
     }
@@ -725,6 +726,17 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makeServicePicker.payloads, [payload])
     }
     
+    func test_shouldDeliverServicePickerOnProvider() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+
+        expect(sut, with: .mapped(.provider(payload)), toDeliver: .servicePicker, on: {
+            
+            makeServicePicker.complete(with: .success(()))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRDestinationComposer
@@ -1087,6 +1099,7 @@ private extension QRDestinationComposer.QRDestination {
         case .failure:        return .failure
         case .operatorSearch: return .operatorSearch
         case .providerPicker: return .providerPicker
+        case .servicePicker:  return .servicePicker
         }
     }
 }
@@ -1099,4 +1112,5 @@ private enum EquatableQRDestination: Equatable {
     case failure
     case operatorSearch
     case providerPicker
+    case servicePicker
 }
