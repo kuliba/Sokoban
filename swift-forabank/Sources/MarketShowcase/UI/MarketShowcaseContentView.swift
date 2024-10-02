@@ -8,7 +8,7 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseContentView<RefreshView, LandingViewModel, LandingView, Landing>: View
+public struct MarketShowcaseContentView<RefreshView, LandingView, Landing>: View
 where RefreshView: View,
       LandingView: View
 {
@@ -47,12 +47,8 @@ where RefreshView: View,
             case .initiate, .inflight, .failure:
                 EmptyView()
                 
-            case .loaded:
-                VStack {
-                    Text("Market")
-                }
-                .frame(maxHeight: .infinity)
-                .padding()
+            case let .loaded(landing):
+                factory.makeLandingView(landing)
             }
             
             if case .inflight = state.status {
@@ -68,7 +64,7 @@ public extension MarketShowcaseContentView {
     typealias State = MarketShowcaseContentState<Landing>
     typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
-    typealias Factory = ViewFactory<RefreshView, LandingViewModel, LandingView>
+    typealias Factory = ViewFactory<RefreshView, Landing, LandingView>
 }
 
 #Preview {
@@ -77,7 +73,6 @@ public extension MarketShowcaseContentView {
 
 extension MarketShowcaseContentView
 where RefreshView == Text,
-      LandingViewModel == String,
       LandingView == Text,
       Landing == String {
     

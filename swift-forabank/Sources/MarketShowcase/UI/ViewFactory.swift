@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ViewFactory<RefreshView, LandingViewModel, LandingView>
+public struct ViewFactory<RefreshView, Landing, LandingView>
 where RefreshView: View,
       LandingView: View
 {
@@ -27,5 +27,5 @@ where RefreshView: View,
 public extension ViewFactory {
     
     typealias MakeRefreshView = () -> RefreshView
-    typealias MakeLandingView = (LandingViewModel) -> LandingView
+    typealias MakeLandingView = (Landing) -> LandingView
 }

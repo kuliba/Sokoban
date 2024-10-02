@@ -99,6 +99,24 @@ extension Model {
             landingActions: landingActions
         )
     }
+    
+    func landingViewModelFactory(
+        result: Landing,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent) -> Void
+    ) -> LandingWrapperViewModel {
+        
+        return LandingWrapperViewModel(
+            initialState: .success(.init(result)),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            limitsViewModel: nil,
+            scheduler: .main,
+            config: config,
+            landingActions: landingActions
+        )
+    }
 }
 
 private extension Model {

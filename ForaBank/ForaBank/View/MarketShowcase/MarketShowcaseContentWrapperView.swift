@@ -9,4 +9,4 @@ import MarketShowcase
 import RxViewModel
 import LandingUIComponent
 
-typealias MarketShowcaseContentWrapperView = RxWrapperView<MarketShowcaseContentView<SpinnerRefreshView, LandingWrapperViewModel, LandingWrapperView, MarketShowcaseDomain.Landing>, MarketShowcaseContentState<MarketShowcaseDomain.Landing>, MarketShowcaseContentEvent<MarketShowcaseDomain.Landing>, MarketShowcaseContentEffect>
+typealias MarketShowcaseContentWrapperView = RxWrapperView<MarketShowcaseContentView<SpinnerRefreshView, LandingWrapperView, MarketShowcaseDomain.Landing>, MarketShowcaseContentState<MarketShowcaseDomain.Landing>, MarketShowcaseContentEvent<MarketShowcaseDomain.Landing>, MarketShowcaseContentEffect>
