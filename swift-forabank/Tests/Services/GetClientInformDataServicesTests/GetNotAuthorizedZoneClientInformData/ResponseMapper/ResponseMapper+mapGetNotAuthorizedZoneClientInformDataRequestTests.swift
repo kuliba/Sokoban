@@ -111,21 +111,21 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
 
     func test_map_withNilTitle_shouldOmitItem() throws {
         
-        let mapped = try map(.withNilTitle).get()
+        let mapped = try mapped(.withNilTitle)
         
         XCTAssert(mapped.list.isEmpty)
     }
     
     func test_map_shouldOmitItemWithNilTitle() throws {
         
-        let mapped = try map(.withNilTitleInOne).get()
+        let mapped = try mapped(.withNilTitleInOne)
         
         XCTAssertNoDiff(mapped.list.map(\.title), ["TITLE"])
     }
 
     func test_map_withEmptyTitle_shouldDeliverValidTitle() throws {
         
-        let mapped = try map(.withEmptyTitle).get()
+        let mapped = try mapped(.withEmptyTitle)
         
         XCTAssertNoDiff(mapped.list.first?.title, "")
     }
@@ -148,6 +148,14 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse(data, httpURLResponse)
     }
     
+    private func mapped(
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
+    ) throws -> Response {
+
+        try ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse(data, httpURLResponse).get()
+    }
+
     private func assert(
         _ data: Data,
         _ response: Response,
