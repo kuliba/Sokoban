@@ -96,6 +96,17 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
         
         assert(.select(.orderSticker), on: .init(), effect: .select(.orderSticker))
     }
+    
+    func test_reduce_select_landing_shouldNotChangeState() {
+        
+        assertState(.select(.landing("landing")), on: .init())
+    }
+    
+    func test_reduce_select_landing_shouldDeliverLandingEffect() {
+        
+        let landingType = "landingType"
+        assert(.select(.landing(landingType)), on: .init(), effect: .select(.landing(landingType)))
+    }
 
     // MARK: - Helpers
     
