@@ -33,6 +33,9 @@ public extension MarketShowcaseFlowEffectHandler {
                 
             case .orderSticker:
                 microServices.orderSticker { dispatch(.destination($0)) }
+                
+            case let .landing(type):
+                microServices.showLanding(type) { dispatch(.destination($0)) }
             }
         }
     }
