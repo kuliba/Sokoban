@@ -22,17 +22,6 @@ final class QRDestinationComposer {
 }
 
 extension QRDestinationComposer {
-
-    typealias MakePayments = (Source, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
-    
-    struct MakeQRFailurePayload {
-        
-        let qrCode: QRCode
-        let chatAction: () -> Void
-        let makeDetailPayment: (QRCode) -> Void
-    }
-    
-    typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
     
     struct Source: Equatable {
         
@@ -55,6 +44,17 @@ extension QRDestinationComposer {
             return .init(url: url, type: .c2b)
         }
     }
+    
+    typealias MakePayments = (Source, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    
+    struct MakeQRFailurePayload {
+        
+        let qrCode: QRCode
+        let chatAction: () -> Void
+        let makeDetailPayment: (QRCode) -> Void
+    }
+    
+    typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
 }
 
 extension QRDestinationComposer {
@@ -72,7 +72,7 @@ extension QRDestinationComposer {
                 
                 completion(.c2bSubscribe(.init(
                     model: $0,
-                    cancellables: self.bindC2BSubscribe($0, with: notify)
+                    cancellables: self.bindPayments($0, with: notify)
                 )))
             }
             
@@ -83,7 +83,7 @@ extension QRDestinationComposer {
                 
                 completion(.c2b(.init(
                     model: $0,
-                    cancellables: self.bindC2B($0, with: notify)
+                    cancellables: self.bindPayments($0, with: notify)
                 )))
             }
             
@@ -130,15 +130,7 @@ extension QRDestinationComposer {
 
 private extension QRDestinationComposer {
     
-    func bindC2B(
-        _ wrapper: ClosePaymentsViewModelWrapper,
-        with notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
-        
-        return bindC2BSubscribe(wrapper, with: notify)
-    }
-    
-    func bindC2BSubscribe(
+    func bindPayments(
         _ wrapper: ClosePaymentsViewModelWrapper,
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
