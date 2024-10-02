@@ -49,7 +49,7 @@ extension MarketShowcaseComposer {
                             flow?.event(.select(.orderSticker))
                             
                         case let .landingType(type):
-                            fatalError("unknown landing \(type)")
+                            flow?.event(.select(.landing(type)))
                         }
                     }
                 
@@ -91,7 +91,11 @@ private extension MarketShowcaseComposer {
         let effectHandler = MarketShowcaseDomain.FlowEffectHandler(
             microServices: .init(
                 orderCard: nanoServices.orderCard,
-                orderSticker: nanoServices.orderSticker
+                orderSticker: nanoServices.orderSticker,
+                showLanding: { type,_ in self.nanoServices.loadLanding(type) {_ in
+                    
+                    let _ = print("load landing \(type)")
+                }}
             ))
         return .init(
             initialState: .init(),
