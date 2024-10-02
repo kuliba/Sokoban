@@ -119,6 +119,7 @@ struct ProductProfileView: View {
                                         }
                                     }
                                 )
+                                .padding(.horizontal, 20)
                             }
                         }
                     }
@@ -814,7 +815,7 @@ extension ProductProfileViewModel {
         product: .sample,
         buttons: .sample,
         detail: .sample,
-        history: .sampleHistory,
+        history: nil,
         fastPaymentsFactory: .legacy,
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
@@ -836,7 +837,7 @@ extension ProductProfileViewModel {
         product: .sample,
         buttons: .sample,
         detail: .sample,
-        history: .sampleHistory,
+        history: nil,
         fastPaymentsFactory: .legacy,
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,

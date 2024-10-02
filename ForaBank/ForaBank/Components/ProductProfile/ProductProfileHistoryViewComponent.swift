@@ -877,21 +877,20 @@ struct ProductProfileHistoryView: View {
                     .padding(.top, 20)
                 
             case let .list(listViewModel):
-                VStack(spacing: 64) {
+                
+                if let segmentedVM = viewModel.segmentBarViewModel {
                     
-                    if let segmentedVM = viewModel.segmentBarViewModel {
-                        
-                        SegmentedBarView(viewModel: segmentedVM)
-                            .padding(.vertical, 5)
-                    }
-                    ListView(viewModel: listViewModel)
+                    SegmentedBarView(viewModel: segmentedVM)
+                        .padding(.vertical, 5)
+                        .padding(.bottom, 64)
                 }
+                
+                ListView(viewModel: listViewModel)
                 
             case .loading:
                 LoadingView()
             }
-            
-        }.padding(.horizontal, 20)
+        }
     }
 }
 
@@ -973,7 +972,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            LazyVStack {
+            Group {
                 
                 //TODO: expences view
                 
@@ -1105,7 +1104,7 @@ extension ProductProfileHistoryView {
         
         var body: some View {
             
-            VStack( spacing: 20){
+            VStack(spacing: 20){
                 
                 ForEach(0..<3) { _ in
                     
@@ -1150,14 +1149,14 @@ extension ProductProfileHistoryView {
                         RoundedRectangle(cornerRadius: 4)
                             .foregroundColor(color)
                             .frame(width: 72, height: 20)
-                        
-                        Spacer()
                     }
                 }
                 .padding(.vertical, 8)
                 .frame(height: 56)
             }
             .shimmering()
+            .frame(height: 112)
+            .clipped()
         }
     }
     
