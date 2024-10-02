@@ -16,6 +16,7 @@ import SberQR
 import SwiftUI
 import UIPrimitives
 import MarketShowcase
+import LandingUIComponent
 
 final class RootViewFactoryComposer {
     
@@ -314,7 +315,11 @@ private extension RootViewFactoryComposer {
                                         event: $1,
                                         config: .iFora,
                                         factory: .init(
-                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
+                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+                                            makeLandingView: {
+                                                LandingWrapperView(viewModel: $0)
+                                            }
+                                        )
                                     )
                                 })
                         }
