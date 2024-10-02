@@ -23,10 +23,12 @@ public struct LandingMapper {
         return dataToLanding(data)
     }
     
-    public enum MapperError: Error {
+    public enum MapperError: Error, Equatable {
         
         case notOkStatus
         case mapError
+        case serverError(String)
+        case connectivityError
     }
     
     private static func dataToLanding(_ data: Data) -> Result {
@@ -180,10 +182,9 @@ private extension Landing.Spacing {
     init(
         data: DecodableLanding.Data.Spacing
     ) {
-        
         self.init(
             backgroundColor: data.backgroundColor,
-            heightDp: data.heightDp)
+            heightDp: CGFloat(Double(data.heightDp) ?? 0))
     }
 }
 

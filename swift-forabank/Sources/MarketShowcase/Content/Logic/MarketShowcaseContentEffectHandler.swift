@@ -5,17 +5,20 @@
 //  Created by Andryusina Nataly on 25.09.2024.
 //
 
-public final class MarketShowcaseContentEffectHandler<Landing> {
+public final class MarketShowcaseContentEffectHandler<Landing, Failure: Error> {
     
     private let microServices: MicroServices
+    private let landingType: String
     
     public init(
-        microServices: MicroServices
+        microServices: MicroServices,
+        landingType: String
     ) {
         self.microServices = microServices
+        self.landingType = landingType
     }
     
-    public typealias MicroServices = MarketShowcaseContentEffectHandlerMicroServices<Landing>
+    public typealias MicroServices = MarketShowcaseContentEffectHandlerMicroServices<Landing, Failure>
 }
 
 public extension MarketShowcaseContentEffectHandler {
@@ -27,7 +30,7 @@ public extension MarketShowcaseContentEffectHandler {
         switch effect {
             
         case .load:
-            microServices.loadLanding {
+            microServices.loadLanding(landingType) {
                 switch $0 {
                     
                 case .failure:

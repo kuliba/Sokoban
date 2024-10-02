@@ -2684,6 +2684,7 @@
 		832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D522BC9570200221360 /* BottomSheetReducer.swift */; };
 		832F83112BB8292600C97BBD /* CarouselComponentConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F83102BB8292600C97BBD /* CarouselComponentConfig+iFora.swift */; };
 		832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */; };
+		833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */; };
 		833286D02C91BF4700B6FA3F /* RootView+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootView+banners.swift */; };
 		833286D32C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */; };
 		8333238A2BB404F7007C135F /* MD5Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833323892BB404F7007C135F /* MD5Hash.swift */; };
@@ -2888,7 +2889,6 @@
 		83F775D42CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */; };
 		83F775DC2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DB2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift */; };
 		83F775DE2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */; };
-		83F775E02CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */; };
 		83F775E22CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */; };
 		83F775E42CA53A3600A05F69 /* String+openLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E32CA53A3600A05F69 /* String+openLink.swift */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
@@ -6131,6 +6131,7 @@
 		832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductNavigationStateEffectHandler.swift; sourceTree = "<group>"; };
 		832F2D522BC9570200221360 /* BottomSheetReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetReducer.swift; sourceTree = "<group>"; };
 		832F83102BB8292600C97BBD /* CarouselComponentConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarouselComponentConfig+iFora.swift"; sourceTree = "<group>"; };
+		833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerTests.swift; sourceTree = "<group>"; };
 		833286CF2C91BF4700B6FA3F /* RootView+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootView+banners.swift"; sourceTree = "<group>"; };
 		833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateContent.swift; sourceTree = "<group>"; };
 		833323892BB404F7007C135F /* MD5Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MD5Hash.swift; sourceTree = "<group>"; };
@@ -6325,7 +6326,6 @@
 		83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketShowcaseDomainBinder+preview.swift"; sourceTree = "<group>"; };
 		83F775DB2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseContentWrapperView.swift; sourceTree = "<group>"; };
 		83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseWrapperView.swift; sourceTree = "<group>"; };
-		83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerNanoServicesComposer.swift; sourceTree = "<group>"; };
 		83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerNanoServices.swift; sourceTree = "<group>"; };
 		83F775E32CA53A3600A05F69 /* String+openLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+openLink.swift"; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
@@ -10742,6 +10742,7 @@
 		2A7688D42AF3A72000045293 /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
+				833245DE2CAC56DC001AFF9D /* MarketShowcase */,
 				839331A22C90312700D15379 /* LoadBannersList */,
 				2A0439C42BB405F40063B7AB /* AnywayPayment */,
 				2A7688D52AF3A73600045293 /* CVVPIN */,
@@ -15458,6 +15459,14 @@
 			path = Carousel;
 			sourceTree = "<group>";
 		};
+		833245DE2CAC56DC001AFF9D /* MarketShowcase */ = {
+			isa = PBXGroup;
+			children = (
+				833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */,
+			);
+			path = MarketShowcase;
+			sourceTree = "<group>";
+		};
 		833370B72B6D2BC600B424E8 /* ProductProfile */ = {
 			isa = PBXGroup;
 			children = (
@@ -15864,7 +15873,6 @@
 			isa = PBXGroup;
 			children = (
 				83F775CE2CA44E1500A05F69 /* MarketShowcaseComposer.swift */,
-				83F775DF2CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift */,
 				83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */,
 				83F775D02CA473D800A05F69 /* MarketShowcaseDomain.swift */,
 				83F775D32CA4763800A05F69 /* MarketShowcaseDomainBinder+preview.swift */,
@@ -22102,7 +22110,6 @@
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */,
 				83F775DC2CA47B5300A05F69 /* MarketShowcaseContentWrapperView.swift in Sources */,
-				83F775E02CA536FB00A05F69 /* MarketShowcaseComposerNanoServicesComposer.swift in Sources */,
 				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				777460E0291E509900D3FF46 /* ContactsSectionViewModel.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
@@ -22330,6 +22337,7 @@
 				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
+				833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
 				2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */,
