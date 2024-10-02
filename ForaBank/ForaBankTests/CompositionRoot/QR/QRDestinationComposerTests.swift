@@ -49,9 +49,9 @@ extension QRDestinationComposer {
     
     struct MakeQRFailurePayload {
         
-        let qrCode: QRCode
+        let qrCode: QRCode?
         let chatAction: () -> Void
-        let makeDetailPayment: (QRCode) -> Void
+        let makeDetailPayment: (QRCode?) -> Void
     }
     
     typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
@@ -93,9 +93,20 @@ extension QRDestinationComposer {
                 chatAction: { notify(.outside(.chat)) },
                 makeDetailPayment: { notify(.detailPayment($0)) }
             )
-            makeQRFailure(payload) {
+            makeQRFailure(payload) { completion(.failure($0)) }
+            
+        case let .mapped(mapped):
+            switch mapped {
+            case .missingINN:
+                let payload = MakeQRFailurePayload(
+                    qrCode: nil,
+                    chatAction: { notify(.outside(.chat)) },
+                    makeDetailPayment: { _ in notify(.detailPayment(nil)) }
+                )
+                makeQRFailure(payload) { completion(.failure($0)) }
                 
-                completion(.failure($0))
+            default:
+                fatalError()
             }
             
         default:
@@ -106,7 +117,7 @@ extension QRDestinationComposer {
     enum NotifyEvent: Equatable {
         
         case contactAbroad(Payments.Operation.Source)
-        case detailPayment(QRCode)
+        case detailPayment(QRCode?)
         case dismiss
         case outside(Outside)
         case scanQR
@@ -294,7 +305,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     // MARK: - failure
     
-    func test_shouldCallMakeQRFailureWithQR() {
+    func test_shouldCallMakeQRFailureWithQROnFailure() {
         
         let qr = makeQR()
         let (sut, _, makeQRFailure) = makeSUT()
@@ -304,7 +315,7 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [qr])
     }
     
-    func test_shouldCallMakeQRFailureWithChatAction() {
+    func test_shouldCallMakeQRFailureWithChatActionOnFailure() {
         
         let (sut, _, makeQRFailure) = makeSUT()
         var events = [SUT.NotifyEvent]()
@@ -315,7 +326,7 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(events, [.outside(.chat)])
     }
     
-    func test_shouldCallMakeQRFailureWithDetailPaymentAction() {
+    func test_shouldCallMakeQRFailureWithDetailPaymentActionOnFailure() {
         
         let qr = makeQR()
         let (sut, _, makeQRFailure) = makeSUT()
@@ -325,6 +336,59 @@ final class QRDestinationComposerTests: XCTestCase {
         makeQRFailure.payloads.first.map(\.makeDetailPayment)?(qr)
         
         XCTAssertNoDiff(events, [.detailPayment(qr)])
+    }
+    
+    func test_shouldDeliverFailureOnFailure() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        
+        expect(sut, with: .failure(makeQR()), toDeliver: .failure, on: {
+            
+            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
+        })
+    }
+    
+    // MARK: - mapped: missingINN
+    
+    func test_shouldCallMakeQRFailureOnMissingINN() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        
+        sut.compose(result: .mapped(.missingINN), notify: { _ in }) { _ in }
+        
+        XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [nil])
+    }
+    
+    func test_shouldCallMakeQRFailureWithChatActionOnMissingINN() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.chatAction)?()
+        
+        XCTAssertNoDiff(events, [.outside(.chat)])
+    }
+    
+    func test_shouldCallMakeQRFailureWithDetailPaymentActionOnMissingINN() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.makeDetailPayment)?(nil)
+        
+        XCTAssertNoDiff(events, [.detailPayment(nil)])
+    }
+    
+    func test_shouldDeliverFailureOnMissingINN() {
+        
+        let (sut, _, makeQRFailure) = makeSUT()
+        
+        expect(sut, with: .mapped(.missingINN), toDeliver: .failure, on: {
+            
+            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
+        })
     }
     
     // MARK: - Helpers
@@ -383,6 +447,15 @@ final class QRDestinationComposerTests: XCTestCase {
     ) -> QRCode {
         
         return .init(original: original, rawData: rawData)
+    }
+    
+    private func makeQRFailedViewModel(
+        model: Model = .mockWithEmptyExcept(),
+        addCompanyAction: @escaping () -> Void = {},
+        requisitsAction: @escaping () -> Void = {}
+    ) -> QRFailedViewModel {
+        
+        return .init(model: model, addCompanyAction: addCompanyAction, requisitsAction: requisitsAction)
     }
     
     private func expect(
