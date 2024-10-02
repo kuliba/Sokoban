@@ -78,7 +78,8 @@ extension QRDestinationComposer {
         let qrMapping: QRMapping
     }
     
-    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (()) -> Void) -> Void
+    typealias ProviderPicker = SegmentedPaymentProviderPickerFlowModel
+    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (ProviderPicker) -> Void) -> Void
 }
 
 extension QRDestinationComposer {
@@ -134,7 +135,15 @@ extension QRDestinationComposer {
                     qr: qr,
                     qrMapping: qrMapping
                 )
-                makeProviderPicker(payload) { completion(.providerPicker) }
+                makeProviderPicker(payload) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    completion(.providerPicker(.init(
+                        model: $0,
+                        cancellables: self.bindProviderPicker($0, with: notify)
+                    )))
+                }
                 
             default:
                 fatalError()
@@ -150,6 +159,7 @@ extension QRDestinationComposer {
         case contactAbroad(Payments.Operation.Source)
         case detailPayment(QRCode?)
         case dismiss
+        case isLoading(Bool)
         case outside(Outside)
         case scanQR
         
@@ -164,7 +174,7 @@ extension QRDestinationComposer {
         case c2bSubscribe(Node<ClosePaymentsViewModelWrapper>)
         case c2b(Node<ClosePaymentsViewModelWrapper>)
         case failure(QRFailedViewModel)
-        case providerPicker
+        case providerPicker(Node<ProviderPicker>)
     }
     
     typealias Notify = (NotifyEvent) -> Void
@@ -191,6 +201,18 @@ private extension QRDestinationComposer {
             .sink { notify(.contactAbroad($0)) }
         
         return [close, scanQR, contactAbroad]
+    }
+    
+    func bindProviderPicker(
+        _ picker: ProviderPicker,
+        with notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let isLoading = picker.$state
+            .map(\.isLoading)
+            .sink { notify(.isLoading($0)) }
+        
+        return [isLoading]
     }
 }
 
@@ -446,8 +468,34 @@ final class QRDestinationComposerTests: XCTestCase {
         
         expect(sut, with: makeMappedMixed(), toDeliver: .providerPicker, on: {
             
-            makeProviderPicker.complete(with: .success(()))
+            makeProviderPicker.complete(with: makeProviderPickerSuccess())
         })
+    }
+    
+    func test_shouldDeliverIsLoadingTrueEventOnProviderPickerStateChange() {
+        
+        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: makeMappedMixed(),
+            delivers: .isLoading(true),
+            for: { $0.providerPickerSetIsLoading(to: true) },
+            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverIsLoadingFalseEventOnProviderPickerStateChange() {
+        
+        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: makeMappedMixed(),
+            delivers: .isLoading(false),
+            for: { $0.providerPickerSetIsLoading(to: false) },
+            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+        )
     }
     
     // MARK: - Helpers
@@ -456,7 +504,7 @@ final class QRDestinationComposerTests: XCTestCase {
     private typealias MakePaymentsSpy = Spy<SUT.Source, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailure = Spy<SUT.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQR = Spy<SUT.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
-    private typealias MakeProviderPicker = Spy<SUT.MakeProviderPickerPayload, Void, Never>
+    private typealias MakeProviderPicker = Spy<SUT.MakeProviderPickerPayload, SUT.ProviderPicker, Never>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -570,6 +618,18 @@ final class QRDestinationComposerTests: XCTestCase {
         return .mapped(.mixed(makeMixedOperators(), makeQR(), makeQRMapping()))
     }
     
+    private func makeProviderPicker() -> SUT.ProviderPicker {
+        
+        let (mix, qrCode, qrMapping) = makeMixed()
+        return .preview(mix: mix, qrCode: qrCode, qrMapping: qrMapping)
+    }
+
+    private func makeProviderPickerSuccess(
+    ) -> Result<SUT.ProviderPicker, Never> {
+        
+        return .success(makeProviderPicker())
+    }
+
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
@@ -673,6 +733,21 @@ private extension QRDestinationComposer.QRDestination {
         
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
         c2bModel?.action.send(action)
+    }
+    
+    // MARK: - providerPicker
+    
+    var providerPicker: SegmentedPaymentProviderPickerFlowModel? {
+        
+        guard case let .providerPicker(providerPicker) = self
+        else { return nil }
+        
+        return providerPicker.model
+    }
+    
+    func providerPickerSetIsLoading(to isLoading: Bool) {
+        
+        providerPicker?.event(.isLoading(isLoading))
     }
     
     // MARK: - equatable
