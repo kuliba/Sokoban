@@ -23,8 +23,10 @@ final class FilterModelReducer {
         var effect: Effect?
         
         switch event {
-        case let .resetPeriod(range):
+        case let .resetPeriod(range, category):
             state.filter.selectDates = range
+            state.filter.selectedPeriod = .dates
+            state.filter.services = category
     
         case let .selectedPeriod(period):
             switch period {
@@ -92,7 +94,7 @@ final class FilterModelReducer {
             state.calendar.range = .init()
             state.filter.selectedServices = []
             state.filter.selectDates = nil
-            state.filter.selectedPeriod = .dates
+            effect = .resetPeriod(state.productId)
             state.filter.selectedTransaction = nil
         }
         

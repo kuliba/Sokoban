@@ -9,7 +9,7 @@ import Foundation
 
 public enum FilterEvent {
 
-    case resetPeriod(ClosedRange<Date>)
+    case resetPeriod(ClosedRange<Date>, [String])
     case selectedPeriod(FilterHistoryState.Period)
     case selectedTransaction(FilterHistoryState.TransactionType?)
     case selectedCategory(String)

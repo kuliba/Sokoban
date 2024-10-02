@@ -30,7 +30,7 @@ final class FilterModelEffectHandler {
         switch effect {
         case let .resetPeriod(productId):
             microServices.resetPeriod(productId) {
-                dispatch(.resetPeriod($0))
+                dispatch(.resetPeriod($0, $1))
             }
             
         case let .updateFilter(range):
@@ -43,7 +43,7 @@ final class FilterModelEffectHandler {
 
 struct FilterModelEffectHandlerMicroServices {
     
-    typealias ResetPeriodCompletion = (ClosedRange<Date>) -> Void
+    typealias ResetPeriodCompletion = (ClosedRange<Date>, [String]) -> Void
     typealias ResetPeriod = (ProductData.ID, @escaping ResetPeriodCompletion) -> Void
     
     //TODO: replace `FilterState` with Result

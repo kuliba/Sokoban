@@ -40,12 +40,19 @@ private extension FilterEffectHandlerMicroServicesComposer {
             .global(qos: .userInitiated)
             .asyncAfter(deadline: .now() + .milliseconds(100)) {
                 
-                guard let period = self.model.statements.value[productId]?.period
+                guard let statement = self.model.statements.value[productId]
                 else {
-                    return completion(self.model.calendarDayStart(productId)...Date())
+                    return completion(self.model.calendarDayStart(productId)...Date(), [])
                 }
                 
-                completion(period.range)
+                let period = statement.period
+                let filteredStatements = statement.statements.filter {
+                    period.range.contains($0.dateValue)
+                }
+                let services = Array(Set(filteredStatements.compactMap { $0.groupName }))
+
+                
+                completion(period.range, services)
             }
     }
             
