@@ -91,6 +91,8 @@ final class FilterModelReducer {
         case .clearOptions:
             state.calendar.range = .init()
             state.filter.selectedServices = []
+            state.filter.selectDates = nil
+            state.filter.selectedPeriod = .dates
             state.filter.selectedTransaction = nil
         }
         
