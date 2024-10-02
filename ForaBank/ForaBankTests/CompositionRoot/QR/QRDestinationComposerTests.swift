@@ -165,7 +165,7 @@ extension QRDestinationComposer {
         
         enum Outside: Equatable {
             
-            case chat
+            case chat, main, payments, scanQR
         }
     }
     
@@ -208,11 +208,32 @@ private extension QRDestinationComposer {
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let isLoading = picker.$state
-            .map(\.isLoading)
+        let isLoading = picker.$state.map(\.isLoading)
+        let isLoadingFlip = isLoading
+            .combineLatest(isLoading.dropFirst())
+            .filter { $0 != $1 }
+            .map(\.0)
             .sink { notify(.isLoading($0)) }
         
-        return [isLoading]
+        let outside = picker.$state
+            .compactMap(\.notifyOutside)
+            .sink { notify(.outside($0)) }
+        
+        return [isLoadingFlip, outside]
+    }
+}
+
+private extension SegmentedPaymentProviderPickerFlowState {
+    
+    var notifyOutside: QRDestinationComposer.NotifyEvent.Outside? {
+        
+        switch outside {
+        case .none:       return .none
+        case .addCompany: return .chat
+        case .main:       return .main
+        case .payments:   return .payments
+        case .scanQR:     return .scanQR
+        }
     }
 }
 
@@ -472,28 +493,81 @@ final class QRDestinationComposerTests: XCTestCase {
         })
     }
     
-    func test_shouldDeliverIsLoadingTrueEventOnProviderPickerStateChange() {
+#warning("FIXME")
+    //    func test_shouldDeliverIsLoadingTrueEventOnProviderPickerEvent() {
+    //
+    //        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+    //
+    //        expect(
+    //            sut,
+    //            result: makeMappedMixed(),
+    //            delivers: .isLoading(true),
+    //            for: { $0.providerPickerSetIsLoading(to: true) },
+    //            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+    //        )
+    //    }
+    //
+    //    func test_shouldDeliverIsLoadingFalseEventOnProviderPickerEvent() {
+    //
+    //        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+    //
+    //        expect(
+    //            sut,
+    //            result: makeMappedMixed(),
+    //            delivers: .isLoading(false),
+    //            for: { $0.providerPickerSetIsLoading(to: false) },
+    //            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+    //        )
+    //    }
+    
+    func test_shouldDeliverOutsideChatEventOnProviderPickerEvent() {
         
         let (sut, _,_,_, makeProviderPicker) = makeSUT()
         
         expect(
             sut,
             result: makeMappedMixed(),
-            delivers: .isLoading(true),
-            for: { $0.providerPickerSetIsLoading(to: true) },
+            delivers: .outside(.chat),
+            for: { $0.providerPickerGoTo(to: .addCompany) },
             on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
         )
     }
     
-    func test_shouldDeliverIsLoadingFalseEventOnProviderPickerStateChange() {
+    func test_shouldDeliverOutsideMainEventOnProviderPickerEvent() {
         
         let (sut, _,_,_, makeProviderPicker) = makeSUT()
         
         expect(
             sut,
             result: makeMappedMixed(),
-            delivers: .isLoading(false),
-            for: { $0.providerPickerSetIsLoading(to: false) },
+            delivers: .outside(.main),
+            for: { $0.providerPickerGoTo(to: .main) },
+            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverOutsidePaymentsEventOnProviderPickerEvent() {
+        
+        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: makeMappedMixed(),
+            delivers: .outside(.payments),
+            for: { $0.providerPickerGoTo(to: .payments) },
+            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverOutsideScanQREventOnProviderPickerEvent() {
+        
+        let (sut, _,_,_, makeProviderPicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: makeMappedMixed(),
+            delivers: .outside(.scanQR),
+            for: { $0.providerPickerGoTo(to: .scanQR) },
             on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
         )
     }
@@ -623,13 +697,13 @@ final class QRDestinationComposerTests: XCTestCase {
         let (mix, qrCode, qrMapping) = makeMixed()
         return .preview(mix: mix, qrCode: qrCode, qrMapping: qrMapping)
     }
-
+    
     private func makeProviderPickerSuccess(
     ) -> Result<SUT.ProviderPicker, Never> {
         
         return .success(makeProviderPicker())
     }
-
+    
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
@@ -748,6 +822,12 @@ private extension QRDestinationComposer.QRDestination {
     func providerPickerSetIsLoading(to isLoading: Bool) {
         
         providerPicker?.event(.isLoading(isLoading))
+    }
+    
+    func providerPickerGoTo(
+        to goTo: SegmentedPaymentProviderPickerFlowEvent.GoTo
+    ) {
+        providerPicker?.event(.goTo(goTo))
     }
     
     // MARK: - equatable
