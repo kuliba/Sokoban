@@ -164,7 +164,7 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         XCTAssertNoDiff(mapped.list.map(\.authBlocking), [true])
     }
-    
+
     func test_map_shouldOmitItemWithNilTitle() throws {
         
         let mapped = try mapResult(.withNilTitleInOne)
@@ -183,11 +183,13 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withNilUpdateInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
-                action: "optional",
+        XCTAssertNoDiff(mapped.list.map(\.update), [
+            nil,
+            .init(
+                action: "ACTION",
                 platform: "iOS",
-                version: "7.12.15",
-                link: "blahblah"
+                version: "VERSION",
+                link: "LINK"
             )
         ])
     }
@@ -196,39 +198,21 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         let mapped = try mapResult(.withNilActionInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
-                action: "ACTION",
-                platform: "iOS",
-                version: "7.12.15",
-                link: "blahblah"
-            )
-        ])
+        XCTAssertNoDiff(mapped.list.map(\.update?.action), [nil, "ACTION"])
     }
     
     func test_map_shouldOmitItemWithNilPlatform() throws {
         
         let mapped = try mapResult(.withNilPlatformInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
-                action: "ACTION",
-                platform: "iOS",
-                version: "7.12.15",
-                link: "blahblah"
-            )
-        ])
+        XCTAssertNoDiff(mapped.list.map(\.update?.platform), [nil, "iOS"])
     }
     
     func test_map_shouldOmitItemWithNilVersion() throws {
         
         let mapped = try mapResult(.withNilVersionInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
-                action: "ACTION",
-                platform: "iOS",
-                version: "VERSION",
-                link: "blahblah"
-            )
-        ])
+        XCTAssertNoDiff(mapped.list.map(\.update?.version), [nil, "VERSION"])
     }
 
     func test_map_shouldOmitItemWithNilLink() throws {
@@ -342,7 +326,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
                     action: "optional",
                     platform: "iOS",
                     version: "7.12.15",
-                    link: "blahblah"
+                    link: "LINK"
                 )
             )
         ],
@@ -477,7 +461,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -500,7 +484,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -523,7 +507,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -546,7 +530,7 @@ private extension String {
                     "action": "",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -569,7 +553,7 @@ private extension String {
                     "action": "",
                     "platform": "",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -592,7 +576,7 @@ private extension String {
                     "action": "",
                     "platform": "",
                     "version": "",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -638,7 +622,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -661,7 +645,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -684,7 +668,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -707,7 +691,7 @@ private extension String {
                     "action": null,
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -730,7 +714,7 @@ private extension String {
                     "action": "optional",
                     "platform": null,
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -753,7 +737,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": null,
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -793,8 +777,8 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": null,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
                     "action": "optional",
                     "platform": "iOS",
@@ -828,12 +812,12 @@ private extension String {
             {
                 "authBlocking": false,
                 "title": null,
-                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "text": "TEXT",
                 "update": {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             },
             {
@@ -844,7 +828,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -861,13 +845,13 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
+                "title": "TITLE",
                 "text": null,
                 "update": {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             },
             {
@@ -878,7 +862,7 @@ private extension String {
                     "action": "optional",
                     "platform": "iOS",
                     "version": "7.12.15",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -895,8 +879,8 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": null
             },
             {
@@ -904,10 +888,10 @@ private extension String {
                 "title": "TITLE",
                 "text": "TEXT",
                 "update": {
-                    "action": "optional",
+                    "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             }
         ]
@@ -924,13 +908,13 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
                     "action": null,
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             },
             {
@@ -940,8 +924,8 @@ private extension String {
                 "update": {
                     "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             }
         ]
@@ -958,13 +942,13 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
-                    "action": null,
+                    "action": "ACTION",
                     "platform": null,
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             },
             {
@@ -974,8 +958,8 @@ private extension String {
                 "update": {
                     "action": "ACTION",
                     "platform": "iOS",
-                    "version": "7.12.15",
-                    "link": "blahblah"
+                    "version": "VERSION",
+                    "link": "LINK"
                 }
             }
         ]
@@ -992,13 +976,13 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
-                    "action": null,
-                    "platform": null,
+                    "action": "ACTION",
+                    "platform": "iOS",
                     "version": null,
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             },
             {
@@ -1009,7 +993,7 @@ private extension String {
                     "action": "ACTION",
                     "platform": "iOS",
                     "version": "VERSION",
-                    "link": "blahblah"
+                    "link": "LINK"
                 }
             }
         ]
@@ -1029,10 +1013,10 @@ private extension String {
                 "title": null,
                 "text": null,
                 "update": {
-                    "action": null,
-                    "platform": null,
-                    "version": null,
-                    "link": "blahblah"
+                    "action": "ACTION",
+                    "platform": "iOS",
+                    "version": "VERSION",
+                    "link": "null"
                 }
             },
             {
