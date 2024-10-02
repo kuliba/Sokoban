@@ -86,15 +86,50 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyList() {
-        
-        let emptyDataResponse: Data = .emptyListResponse
-        
+                
         XCTAssertNoDiff(
-            map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            map(.emptyListResponse),
+            .failure(.invalid(statusCode: 200, data: .emptyListResponse))
+        )
+    }
+
+    func test_map_shouldDeliverInvalidFailureWithNoSerial() {
+       
+        XCTAssertNoDiff(
+            map(.nullSerialResponse),
+            .failure(.invalid(statusCode: 200, data: .nullSerialResponse))
         )
     }
     
+    func test_map_shouldDeliverInvalidFailureWithNoNotAuthorizedList() {
+        
+        XCTAssertNoDiff(
+            map(.nullNotAuthorizedListResponse),
+            .failure(.invalid(statusCode: 200, data: .nullNotAuthorizedListResponse))
+        )
+    }
+
+    func test_map_withNilTitle_shouldOmitItem() throws {
+        
+        let mapped = try map(.withNilTitle).get()
+        
+        XCTAssert(mapped.list.isEmpty)
+    }
+    
+    func test_map_shouldOmitItemWithNilTitle() throws {
+        
+        let mapped = try map(.withNilTitleInOne).get()
+        
+        XCTAssertNoDiff(mapped.list.map(\.title), ["TITLE"])
+    }
+
+    func test_map_withEmptyTitle_shouldDeliverValidTitle() throws {
+        
+        let mapped = try map(.withEmptyTitle).get()
+        
+        XCTAssertNoDiff(mapped.list.first?.title, "")
+    }
+
     func test_map_shouldDeliverResponseWithNotAuthorized() throws {
         
         try assert(.notAuthorized, .notAuthorized)
@@ -141,7 +176,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
                 text: "Вышло новое обновление! Обновитесь скорее!",
                 update: .init(
                     action: "optional",
-                    platform: "Android",
+                    platform: "iOS",
                     version: "7.12.15",
                     link: "blahblah"
                 )
@@ -149,6 +184,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
         ],
         serial: "1bebd140bc2660211fbba306105479ae"
     )
+
 }
 
 private extension Data {
@@ -159,8 +195,13 @@ private extension Data {
     static let emptyDataResponse: Data = String.emptyDataResponse.json
     static let emptyListResponse: Data = String.emptyList.json
     static let nullServerResponse: Data = String.nullServerResponse.json
+    static let nullSerialResponse: Data = String.nullSerial.json
+    static let nullNotAuthorizedListResponse: Data = String.nullNotAuthorizedList.json
     static let serverError: Data = String.serverError.json
     static let notAuthorized: Data = String.notAuthorized.json
+    static let withEmptyTitle: Data = String.withEmptyTitle.json
+    static let withNilTitle: Data = String.withNilTitle.json
+    static let withNilTitleInOne: Data = String.withNilTitleInOne.json
 }
 
 private extension String {
@@ -211,6 +252,28 @@ private extension String {
   }
 }
 """
+    
+    static let nullSerial = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": null,
+        "notAuthorized": []
+    }
+}
+"""
+    
+    static let nullNotAuthorizedList = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": null
+    }
+}
+"""
 
     static let notAuthorized = """
 {
@@ -230,7 +293,87 @@ private extension String {
                 "text": "Вышло новое обновление! Обновитесь скорее!",
                 "update": {
                     "action": "optional",
-                    "platform": "Android",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+
+    static let withEmptyTitle = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilTitle = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withNilTitleInOne = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": null,
+                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            },
+            {
+                "authBlocking": false,
+                "title": "TITLE",
+                "text": "Вышло новое обновление! Обновитесь скорее!",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
                     "version": "7.12.15",
                     "link": "blahblah"
                 }
