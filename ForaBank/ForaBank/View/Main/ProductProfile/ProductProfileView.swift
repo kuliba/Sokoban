@@ -97,12 +97,22 @@ struct ProductProfileView: View {
                                                     return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil)
                                                 }, {
                                                     
-                                                    self.viewModel.history?.action.send(ProductProfileHistoryViewModelAction.Filter(filterState: viewModel.filterState, period: (lowerDate: Date().firstDayOfMonth(), upperDate: Date())))
                                                     viewModel.filterState.filter.selectedServices = []
                                                     viewModel.filterState.filter.selectedTransaction = nil
                                                     viewModel.filterState.filter.selectedPeriod = .month
                                                     viewModel.filterState.filter.selectDates = nil
-                                                    viewModel.filterState.calendar.range = .init()
+                                                    viewModel.filterState.calendar.range = nil
+                                                    
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                                        self.viewModel.history?.action.send(
+                                                            ProductProfileHistoryViewModelAction.Filter(
+                                                                filterState: viewModel.filterState,
+                                                                period: (
+                                                                    lowerDate: .distantPast,
+                                                                    upperDate: Date()
+                                                                ))
+                                                        )   
+                                                    }
                                                 })
                                         } else {
                                             return nil
