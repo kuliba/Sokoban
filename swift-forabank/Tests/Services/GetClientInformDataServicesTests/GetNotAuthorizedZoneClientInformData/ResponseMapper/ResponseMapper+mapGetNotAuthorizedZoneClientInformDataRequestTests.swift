@@ -208,6 +208,41 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         
         XCTAssertNoDiff(mapped.list.first?.title, "")
     }
+    
+    func test_map_withEmptyText_shouldDeliverValidText() throws {
+        
+        let mapped = try mapResult(.withEmptyText)
+        
+        XCTAssertNoDiff(mapped.list.first?.text, "")
+    }
+    
+    func test_map_withEmptyAction_shouldDeliverValidAction() throws {
+        
+        let mapped = try mapResult(.withEmptyAction)
+        
+        XCTAssertNoDiff(mapped.list.first?.update?.action, "")
+    }
+    
+    func test_map_withEmptyPlatform_shouldDeliverValidPlatform() throws {
+        
+        let mapped = try mapResult(.withEmptyPlatform)
+
+        XCTAssertNoDiff(mapped.list.first?.update?.platform, "")
+    }
+    
+    func test_map_withEmptyVersion_shouldDeliverValidVersion() throws {
+        
+        let mapped = try mapResult(.withEmptyVersion)
+
+        XCTAssertNoDiff(mapped.list.first?.update?.version, "")
+    }
+    
+    func test_map_withEmptyLink_shouldDeliverValidLink() throws {
+        
+        let mapped = try mapResult(.withEmptyLink)
+
+        XCTAssertNoDiff(mapped.list.first?.update?.link, "")
+    }
 
     func test_map_shouldDeliverResponseWithNotAuthorized() throws {
         
@@ -287,6 +322,11 @@ private extension Data {
     static let serverError: Data = String.serverError.json
     static let notAuthorized: Data = String.notAuthorized.json
     static let withEmptyTitle: Data = String.withEmptyTitle.json
+    static let withEmptyText: Data = String.withEmptyText.json
+    static let withEmptyAction: Data = String.withEmptyAction.json
+    static let withEmptyPlatform: Data = String.withEmptyPlatform.json
+    static let withEmptyVersion: Data = String.withEmptyVersion.json
+    static let withEmptyLink: Data = String.withEmptyLink.json
     static let withNilTitle: Data = String.withNilTitle.json
     static let withNilAuthBlockingInOne: Data = String.withNilAuthBlockingInOne.json
     static let withNilTitleInOne: Data = String.withNilTitleInOne.json
@@ -413,6 +453,121 @@ private extension String {
                     "platform": "iOS",
                     "version": "7.12.15",
                     "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+
+    static let withEmptyText = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "",
+                "update": {
+                    "action": "optional",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withEmptyAction = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "",
+                "update": {
+                    "action": "",
+                    "platform": "iOS",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+    
+    static let withEmptyPlatform = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "",
+                "update": {
+                    "action": "",
+                    "platform": "",
+                    "version": "7.12.15",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+
+    static let withEmptyVersion = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "",
+                "update": {
+                    "action": "",
+                    "platform": "",
+                    "version": "",
+                    "link": "blahblah"
+                }
+            }
+        ]
+    }
+}
+"""
+
+    static let withEmptyLink = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "1bebd140bc2660211fbba306105479ae",
+        "notAuthorized": [
+            {
+                "authBlocking": false,
+                "title": "",
+                "text": "",
+                "update": {
+                    "action": "",
+                    "platform": "",
+                    "version": "",
+                    "link": ""
                 }
             }
         ]

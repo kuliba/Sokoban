@@ -60,7 +60,6 @@ private extension ResponseMapper.NotAuthorized.Update {
 
         guard let action = updateData.action,
               let platform = updateData.platform,
-              platform == "iOS",
               let version = updateData.version,
               let link = updateData.link
         else {
