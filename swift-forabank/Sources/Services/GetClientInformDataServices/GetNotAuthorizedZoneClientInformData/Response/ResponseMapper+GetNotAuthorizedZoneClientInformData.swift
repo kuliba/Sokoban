@@ -16,16 +16,16 @@ extension ResponseMapper {
     
     public struct NotAuthorized: Equatable {
         
-        let authBlocking: Bool
-        let title: String
-        let text: String
-        let update: Update
+        public let authBlocking: Bool
+        public let title: String
+        public let text: String
+        public let update: Update?
         
         public init(
             authBlocking: Bool,
             title: String,
             text: String,
-            update: Update
+            update: Update?
         ) {
             self.authBlocking = authBlocking
             self.title = title
@@ -35,12 +35,12 @@ extension ResponseMapper {
         
         public struct Update: Equatable {
             
-            let action: String
-            let platform: String
-            let version: String
-            let link: String
+            public let action: String
+            public let platform: String
+            public let version: String
+            public let link: String
             
-            init(
+            public init(
                 action: String,
                 platform: String,
                 version: String,

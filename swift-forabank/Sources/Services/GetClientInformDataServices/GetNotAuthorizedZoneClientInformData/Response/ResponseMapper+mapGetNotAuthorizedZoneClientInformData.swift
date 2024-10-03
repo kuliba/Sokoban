@@ -15,44 +15,60 @@ public extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<GetNotAuthorizedZoneClientInformDataResponse> {
         
-        map(data, httpURLResponse, mapOrThrow: GetNotAuthorizedZoneClientInformDataResponse.init)
+        map(data, httpURLResponse, mapOrThrow: ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse.init(data:))
     }
 }
 
 private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
     
-    init(_ data: ResponseMapper._Data) throws {
+    init(data: ResponseMapper._Data) throws {
         
+        guard let notAuthorized = data.notAuthorized,
+              let serial = data.serial 
+        else { throw ResponseFailure() }
+
         self.init(
-            list: data.notAuthorized.map(ResponseMapper.NotAuthorized.init),
-            serial: data.serial
+            list: notAuthorized.compactMap(ResponseMapper.NotAuthorized.init),
+            serial: serial
         )
     }
+    
+    struct ResponseFailure: Error {}
 }
 
 private extension ResponseMapper.NotAuthorized {
     
-    init(_ notAuthorizedData: ResponseMapper._Data._NotAuthorized) {
+    init?(_ data: ResponseMapper._Data._NotAuthorized) {
+        
+        guard let authBlocking = data.authBlocking,
+              let title = data.title,
+              let text = data.text 
+        else { return nil }
         
         self.init(
-            authBlocking: notAuthorizedData.authBlocking,
-            title: notAuthorizedData.title,
-            text: notAuthorizedData.text,
-            update: .init(notAuthorizedData.update)
+            authBlocking: authBlocking,
+            title: title,
+            text: text,
+            update: data.update.flatMap { .init($0) }
         )
     }
-
 }
 
 private extension ResponseMapper.NotAuthorized.Update {
     
-    init(_ updateData: ResponseMapper._Data._Update) {
+    init?(_ updateData: ResponseMapper._Data._Update) {
+
+        guard let action = updateData.action,
+              let platform = updateData.platform,
+              let version = updateData.version,
+              let link = updateData.link
+        else { return nil }
         
         self.init(
-            action: updateData.action,
-            platform: updateData.platform,
-            version: updateData.version,
-            link: updateData.link
+            action: action,
+            platform: platform,
+            version: version,
+            link: link
         )
     }
 }
@@ -61,22 +77,23 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let serial: String
-        let notAuthorized: [_NotAuthorized]
+        let serial: String?
+        let notAuthorized: [_NotAuthorized]?
         
         struct _NotAuthorized: Decodable {
 
-            let authBlocking: Bool
-            let title: String
-            let text: String
-            let update: _Update
+            let authBlocking: Bool?
+            let title: String?
+            let text: String?
+            let update: _Update?
         }
         
         struct _Update: Decodable {
-            let action: String
-            let platform: String
-            let version: String
-            let link: String
+            
+            let action: String?
+            let platform: String?
+            let version: String?
+            let link: String?
         }
     }
 }
