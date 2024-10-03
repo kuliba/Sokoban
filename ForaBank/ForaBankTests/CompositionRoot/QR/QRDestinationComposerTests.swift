@@ -142,17 +142,12 @@ extension QRDestinationComposer {
     
     enum QRDestination {
         
-        case c2bSubscribe(PaymentsNode)
-        case c2b(PaymentsNode)
-        case detailPayments(PaymentsNode)
         case failure(QRFailedViewModel)
         case internetTV(InternetTVDetailsViewModel)
         case operatorSearch(OperatorSearch)
-        case payments(PaymentsNode)
+        case payments(Node<ClosePaymentsViewModelWrapper>)
         case providerPicker(Node<ProviderPicker>)
         case servicePicker(Node<AnywayServicePickerFlowModel>)
-        
-        typealias PaymentsNode = Node<ClosePaymentsViewModelWrapper>
     }
     
     typealias QRDestinationCompletion = (QRDestination) -> Void
@@ -167,16 +162,10 @@ private extension QRDestinationComposer {
     ) {
         switch result {
         case let .c2bSubscribeURL(url):
-            handle(.source(.c2bSubscribe(url)), with: notify) {
-                
-                completion(.c2bSubscribe($0))
-            }
+            handle(.source(.c2bSubscribe(url)), with: notify, and: completion)
             
         case let .c2bURL(url):
-            handle(.source(.c2b(url)), with: notify) {
-                
-                completion(.c2b($0))
-            }
+            handle(.source(.c2b(url)), with: notify, and: completion)
             
         case let .failure(qrCode):
             let payload = MakeQRFailureWithQRPayload(
@@ -235,10 +224,7 @@ private extension QRDestinationComposer {
             makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
             
         case let .none(qrCode):
-            handle(.qrCode(qrCode), with: notify) {
-                
-                completion(.detailPayments($0))
-            }
+            handle(.qrCode(qrCode), with: notify, and: completion)
             
         case let .provider(payload):
             makeServicePicker(payload) { [weak self] in
@@ -255,26 +241,23 @@ private extension QRDestinationComposer {
             makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
             
         case let .source(source):
-            handle(.operationSource(source), with: notify) {
-                
-                completion(.payments($0))
-            }
+            handle(.operationSource(source), with: notify, and: completion)
         }
     }
     
     func handle(
         _ payload: MakePaymentsPayload,
         with notify: @escaping Notify,
-        and completion: @escaping (QRDestination.PaymentsNode) -> Void
+        and completion: @escaping (QRDestination) -> Void
     ) {
         makePayments(payload) { [weak self] in
             
             guard let self else { return }
             
-            completion(.init(
+            completion(.payments(.init(
                 model: $0,
                 cancellables: self.bind($0, with: notify)
-            ))
+            )))
         }
     }
     
@@ -410,11 +393,11 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makePayments.payloads, [.source(.c2bSubscribe(url))])
     }
     
-    func test_c2bSubscribe_shouldDeliverC2BSubscribe() {
+    func test_c2bSubscribe_shouldDeliverPayments() {
         
         let (sut, _, makePayments, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .c2bSubscribe, on: {
+        expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .payments, on: {
             
             makePayments.complete(with: makePaymentsSuccess())
         })
@@ -428,7 +411,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .dismiss,
-            for: { $0.c2bSubscribe?.closeAction() },
+            for: { $0.payments?.closeAction() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -441,7 +424,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2bSubscribe?.scanQRCode() },
+            for: { $0.payments?.scanQRCode() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -455,7 +438,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .contactAbroad(source),
-            for: { $0.c2bSubscribe?.contactAbroad(source: source) },
+            for: { $0.payments?.contactAbroad(source: source) },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -472,11 +455,11 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makePayments.payloads, [.source(.c2b(url))])
     }
     
-    func test_c2b_shouldDeliverC2B() {
+    func test_c2b_shouldDeliverPayments() {
         
         let (sut, _, makePayments, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .c2bURL(anyURL()), toDeliver: .c2b, on: {
+        expect(sut, with: .c2bURL(anyURL()), toDeliver: .payments, on: {
             
             makePayments.complete(with: makePaymentsSuccess())
         })
@@ -490,7 +473,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .dismiss,
-            for: { $0.c2b?.closeAction() },
+            for: { $0.payments?.closeAction() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -503,7 +486,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2b?.scanQRCode() },
+            for: { $0.payments?.scanQRCode() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -517,7 +500,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .contactAbroad(source),
-            for: { $0.c2b?.contactAbroad(source: source) },
+            for: { $0.payments?.contactAbroad(source: source) },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -753,11 +736,11 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makePayments.payloads, [.qrCode(qrCode)])
     }
     
-    func test_mapped_none_shouldDeliverDetailPayments() {
+    func test_mapped_none_shouldDeliverPayments() {
         
         let (sut, _, makePayments, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .mapped(.none(makeQR())), toDeliver: .detailPayments, on: {
+        expect(sut, with: .mapped(.none(makeQR())), toDeliver: .payments, on: {
             
             makePayments.complete(with: makePaymentsSuccess())
         })
@@ -771,7 +754,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .mapped(.none(makeQR())),
             delivers: .dismiss,
-            for: { $0.detailPayments?.closeAction() },
+            for: { $0.payments?.closeAction() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -784,7 +767,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .mapped(.none(makeQR())),
             delivers: .scanQR,
-            for: { $0.detailPayments?.scanQRCode() },
+            for: { $0.payments?.scanQRCode() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -798,7 +781,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .mapped(.none(makeQR())),
             delivers: .contactAbroad(source),
-            for: { $0.detailPayments?.contactAbroad(source: source) },
+            for: { $0.payments?.contactAbroad(source: source) },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -1419,36 +1402,6 @@ private extension ClosePaymentsViewModelWrapper {
 
 private extension QRDestinationComposer.QRDestination {
     
-    // MARK: - c2bSubscribe
-    
-    var c2bSubscribe: ClosePaymentsViewModelWrapper? {
-        
-        guard case let .c2bSubscribe(c2bSubscribe) = self
-        else { return nil }
-        
-        return c2bSubscribe.model
-    }
-    
-    // MARK: - c2b
-    
-    var c2b: ClosePaymentsViewModelWrapper? {
-        
-        guard case let .c2b(c2b) = self
-        else { return nil }
-        
-        return c2b.model
-    }
-    
-    // MARK: - detailPayments
-    
-    var detailPayments: ClosePaymentsViewModelWrapper? {
-        
-        guard case let .detailPayments(detailPayments) = self
-        else { return nil }
-        
-        return detailPayments.model
-    }
-    
     // MARK: - payments
     
     var payments: ClosePaymentsViewModelWrapper? {
@@ -1495,9 +1448,6 @@ private extension QRDestinationComposer.QRDestination {
     var equatable: EquatableQRDestination {
         
         switch self {
-        case .c2bSubscribe:   return .c2bSubscribe
-        case .c2b:            return .c2b
-        case .detailPayments: return .detailPayments
         case .failure:        return .failure
         case .internetTV:     return .internetTV
         case .operatorSearch: return .operatorSearch
@@ -1510,9 +1460,6 @@ private extension QRDestinationComposer.QRDestination {
 
 private enum EquatableQRDestination: Equatable {
     
-    case c2bSubscribe
-    case c2b
-    case detailPayments
     case failure
     case internetTV
     case operatorSearch
