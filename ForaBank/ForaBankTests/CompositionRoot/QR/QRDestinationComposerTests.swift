@@ -46,27 +46,27 @@ extension QRDestinationComposer {
         case operationSource(Payments.Operation.Source)
         case qrCode(QRCode)
         case source(Source)
-    }
-
-    struct Source: Equatable {
         
-        let url: URL
-        let type: SourceType
-        
-        enum SourceType: Equatable {
+        struct Source: Equatable {
             
-            case c2bSubscribe
-            case c2b
-        }
-        
-        static func c2bSubscribe(_ url: URL) -> Self {
+            let url: URL
+            let type: SourceType
             
-            return .init(url: url, type: .c2bSubscribe)
-        }
-        
-        static func c2b(_ url: URL) -> Self {
+            enum SourceType: Equatable {
+                
+                case c2bSubscribe
+                case c2b
+            }
             
-            return .init(url: url, type: .c2b)
+            static func c2bSubscribe(_ url: URL) -> Self {
+                
+                return .init(url: url, type: .c2bSubscribe)
+            }
+            
+            static func c2b(_ url: URL) -> Self {
+                
+                return .init(url: url, type: .c2b)
+            }
         }
     }
     
@@ -138,6 +138,8 @@ extension QRDestinationComposer {
         }
     }
     
+    typealias Notify = (NotifyEvent) -> Void
+    
     enum QRDestination {
         
         case c2bSubscribe(PaymentsNode)
@@ -153,7 +155,6 @@ extension QRDestinationComposer {
         typealias PaymentsNode = Node<ClosePaymentsViewModelWrapper>
     }
     
-    typealias Notify = (NotifyEvent) -> Void
     typealias QRDestinationCompletion = (QRDestination) -> Void
 }
 
