@@ -1,5 +1,5 @@
 //
-//  QRDestinationComposerTests.swift
+//  QRNavigationComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 01.10.2024.
@@ -8,7 +8,7 @@
 import Combine
 import ForaTools
 
-final class QRDestinationComposer {
+final class QRNavigationComposer {
     
     private let makeInternetTV: MakeInternetTV
     private let makePayments: MakePayments
@@ -37,7 +37,7 @@ final class QRDestinationComposer {
     }
 }
 
-extension QRDestinationComposer {
+extension QRNavigationComposer {
     
     typealias MakeInternetTV = ((QRCode, QRMapping), @escaping (InternetTVDetailsViewModel) -> Void) -> Void
     
@@ -113,12 +113,12 @@ extension QRDestinationComposer {
     typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
 }
 
-extension QRDestinationComposer {
+extension QRNavigationComposer {
     
     func compose(
         result: QRModelResult,
         notify: @escaping Notify,
-        completion: @escaping QRDestinationCompletion
+        completion: @escaping QRNavigationCompletion
     ) {
         handle(result: result, with: notify, and: completion)
     }
@@ -140,7 +140,7 @@ extension QRDestinationComposer {
     
     typealias Notify = (NotifyEvent) -> Void
     
-    enum QRDestination {
+    enum QRNavigation {
         
         case failure(QRFailedViewModel)
         case internetTV(InternetTVDetailsViewModel)
@@ -150,15 +150,15 @@ extension QRDestinationComposer {
         case servicePicker(Node<AnywayServicePickerFlowModel>)
     }
     
-    typealias QRDestinationCompletion = (QRDestination) -> Void
+    typealias QRNavigationCompletion = (QRNavigation) -> Void
 }
 
-private extension QRDestinationComposer {
+private extension QRNavigationComposer {
     
     func handle(
         result: QRModelResult,
         with notify: @escaping Notify,
-        and completion: @escaping QRDestinationCompletion
+        and completion: @escaping QRNavigationCompletion
     ) {
         switch result {
         case let .c2bSubscribeURL(url):
@@ -193,7 +193,7 @@ private extension QRDestinationComposer {
     func handle(
         mapped: QRModelResult.Mapped,
         with notify: @escaping Notify,
-        and completion: @escaping QRDestinationCompletion
+        and completion: @escaping QRNavigationCompletion
     ) {
         switch mapped {
         case .missingINN:
@@ -248,7 +248,7 @@ private extension QRDestinationComposer {
     func handle(
         _ payload: MakePaymentsPayload,
         with notify: @escaping Notify,
-        and completion: @escaping (QRDestination) -> Void
+        and completion: @escaping (QRNavigation) -> Void
     ) {
         makePayments(payload) { [weak self] in
             
@@ -333,7 +333,7 @@ private extension QRDestinationComposer {
 
 private extension SegmentedPaymentProviderPickerFlowState {
     
-    var notifyOutside: QRDestinationComposer.NotifyEvent.Outside? {
+    var notifyOutside: QRNavigationComposer.NotifyEvent.Outside? {
         
         switch outside {
         case .none:       return .none
@@ -347,7 +347,7 @@ private extension SegmentedPaymentProviderPickerFlowState {
 
 private extension AnywayServicePickerFlowState {
     
-    var notifyOutside: QRDestinationComposer.NotifyEvent.Outside? {
+    var notifyOutside: QRNavigationComposer.NotifyEvent.Outside? {
         
         switch outside {
         case .none:       return .none
@@ -363,7 +363,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class QRDestinationComposerTests: XCTestCase {
+final class QRNavigationComposerTests: XCTestCase {
     
     // MARK: - init
     
@@ -1060,7 +1060,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRDestinationComposer
+    private typealias SUT = QRNavigationComposer
     private typealias MakeInternetTV = Spy<(QRCode, QRMapping), InternetTVDetailsViewModel, Never>
     private typealias MakePaymentsSpy = Spy<SUT.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailure = Spy<SUT.MakeQRFailurePayload, QRFailedViewModel, Never>
@@ -1331,7 +1331,7 @@ final class QRDestinationComposerTests: XCTestCase {
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
-        toDeliver expectedResult: EquatableQRDestination,
+        toDeliver expectedResult: EquatableQRNavigation,
         notify: @escaping SUT.Notify = { _ in },
         on action: () -> Void = {},
         file: StaticString = #file,
@@ -1355,7 +1355,7 @@ final class QRDestinationComposerTests: XCTestCase {
         _ sut: SUT,
         result: QRModelResult,
         delivers expectedEvent: SUT.NotifyEvent,
-        for destinationAction: @escaping (SUT.QRDestination) -> Void,
+        for destinationAction: @escaping (SUT.QRNavigation) -> Void,
         on action: () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
@@ -1400,7 +1400,7 @@ private extension ClosePaymentsViewModelWrapper {
 
 // MARK: - DSL
 
-private extension QRDestinationComposer.QRDestination {
+private extension QRNavigationComposer.QRNavigation {
     
     // MARK: - payments
     
@@ -1445,7 +1445,7 @@ private extension QRDestinationComposer.QRDestination {
     
     // MARK: - equatable
     
-    var equatable: EquatableQRDestination {
+    var equatable: EquatableQRNavigation {
         
         switch self {
         case .failure:        return .failure
@@ -1458,7 +1458,7 @@ private extension QRDestinationComposer.QRDestination {
     }
 }
 
-private enum EquatableQRDestination: Equatable {
+private enum EquatableQRNavigation: Equatable {
     
     case failure
     case internetTV

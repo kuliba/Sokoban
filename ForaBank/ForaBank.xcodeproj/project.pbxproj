@@ -538,7 +538,7 @@
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A29666C2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */; };
-		2A29666E2CABE0CA0030EC0B /* QRDestinationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666D2CABE0CA0030EC0B /* QRDestinationComposerTests.swift */; };
+		2A29666E2CABE0CA0030EC0B /* QRNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
 		2A2B91CD2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift */; };
@@ -4023,7 +4023,7 @@
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A29666B2CABB4420030EC0B /* RootViewModelFactory+makeCategoryPickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCategoryPickerSection.swift"; sourceTree = "<group>"; };
-		2A29666D2CABE0CA0030EC0B /* QRDestinationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDestinationComposerTests.swift; sourceTree = "<group>"; };
+		2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerTests.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A2B91CC2C7C45B1008F5186 /* ComposedPaymentsTransfersPersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedPaymentsTransfersPersonalView.swift; sourceTree = "<group>"; };
@@ -12014,7 +12014,7 @@
 			children = (
 				2ACFD65F2C5CCAB7003F08AE /* OperatorProviderLoadResultTests.swift */,
 				2A3624B22C5FC0F800174C50 /* SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift */,
-				2A29666D2CABE0CA0030EC0B /* QRDestinationComposerTests.swift */,
+				2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -22565,7 +22565,7 @@
 				83B614832B0390E7002EE299 /* ContactsAgent+ContactsListTests.swift in Sources */,
 				2A92EA6F2C67358B001452E7 /* TemplatesListFlowModelComposerTests.swift in Sources */,
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
-				2A29666E2CABE0CA0030EC0B /* QRDestinationComposerTests.swift in Sources */,
+				2A29666E2CABE0CA0030EC0B /* QRNavigationComposerTests.swift in Sources */,
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
 				843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */,
