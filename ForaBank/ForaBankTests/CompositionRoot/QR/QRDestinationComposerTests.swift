@@ -155,74 +155,7 @@ extension QRDestinationComposer {
             makeQRFailureWithQR(payload) { completion(.failure($0)) }
             
         case let .mapped(mapped):
-            switch mapped {
-            case .missingINN:
-                let payload = MakeQRFailurePayload(
-                    chatAction: { notify(.outside(.chat)) },
-                    makeDetailPayment: { notify(.detailPayment(nil)) }
-                )
-                makeQRFailure(payload) { completion(.failure($0)) }
-                
-            case let .mixed(mixed, qrCode, qrMapping):
-                let payload = MakeProviderPickerPayload(
-                    mixed: mixed,
-                    qrCode: qrCode,
-                    qrMapping: qrMapping
-                )
-                makeProviderPicker(payload) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    completion(.providerPicker(.init(
-                        model: $0,
-                        cancellables: self.bindProviderPicker($0, with: notify)
-                    )))
-                }
-                
-            case let .multiple(multiple, qrCode, qrMapping):
-                let payload = MakeOperatorSearchPayload(
-                    multiple: multiple,
-                    qrCode: qrCode,
-                    qrMapping: qrMapping
-                )
-                makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
-                
-            case let .none(qrCode):
-                makeDetailPayments(qrCode) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    completion(.detailPayments(.init(
-                        model: $0,
-                        cancellables: bindPayments($0, with: notify)
-                    )))
-                }
-                
-            case let .provider(payload):
-                makeServicePicker(payload) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    completion(.servicePicker(.init(
-                        model: $0,
-                        cancellables: self.bind($0, with: notify)
-                    )))
-                }
-                
-            case let .single(_, qrCode, qrMapping):
-                makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
-                
-            case let .source(source):
-                makeSourcePayments(source) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    completion(.payments(.init(
-                        model: $0,
-                        cancellables: self.bindPayments($0, with: notify)
-                    )))
-                }
-            }
+            compose(mapped: mapped, notify: notify, completion: completion)
             
         case let .sberQR(url):
             fatalError(String(describing: url))
@@ -274,6 +207,82 @@ extension QRDestinationComposer {
 }
 
 private extension QRDestinationComposer {
+    
+    func compose(
+        mapped: QRModelResult.Mapped,
+        notify: @escaping Notify,
+        completion: @escaping QRDestinationCompletion
+    ) {
+        switch mapped {
+        case .missingINN:
+            #warning("same as in url case")
+            let payload = MakeQRFailurePayload(
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment(nil)) }
+            )
+            makeQRFailure(payload) { completion(.failure($0)) }
+            
+        case let .mixed(mixed, qrCode, qrMapping):
+            let payload = MakeProviderPickerPayload(
+                mixed: mixed,
+                qrCode: qrCode,
+                qrMapping: qrMapping
+            )
+            makeProviderPicker(payload) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.providerPicker(.init(
+                    model: $0,
+                    cancellables: self.bindProviderPicker($0, with: notify)
+                )))
+            }
+            
+        case let .multiple(multiple, qrCode, qrMapping):
+            let payload = MakeOperatorSearchPayload(
+                multiple: multiple,
+                qrCode: qrCode,
+                qrMapping: qrMapping
+            )
+            makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
+            
+        case let .none(qrCode):
+            makeDetailPayments(qrCode) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.detailPayments(.init(
+                    model: $0,
+                    cancellables: bindPayments($0, with: notify)
+                )))
+            }
+            
+        case let .provider(payload):
+            makeServicePicker(payload) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.servicePicker(.init(
+                    model: $0,
+                    cancellables: self.bind($0, with: notify)
+                )))
+            }
+            
+        case let .single(_, qrCode, qrMapping):
+            makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
+            
+        case let .source(source):
+            makeSourcePayments(source) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.payments(.init(
+                    model: $0,
+                    cancellables: self.bindPayments($0, with: notify)
+                )))
+            }
+        }
+    }
     
     func bindPayments(
         _ wrapper: ClosePaymentsViewModelWrapper,
