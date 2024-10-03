@@ -63,6 +63,7 @@ private extension ResponseMapper {
         let authorized: [_Authorized]?
 
         struct _Authorized: Decodable {
+
             let category: String?
             let title: String?
             let svgImage: String?

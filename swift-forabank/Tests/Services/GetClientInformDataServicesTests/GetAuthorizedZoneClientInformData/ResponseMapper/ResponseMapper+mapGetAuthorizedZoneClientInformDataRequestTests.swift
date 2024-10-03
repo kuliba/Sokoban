@@ -101,84 +101,84 @@ final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCT
 
     func test_map_withNilCategory_shouldOmitItem() throws {
         
-        let mapped = try mapResult(.withNilCategory)
+        let mapped = try getMapResult(.withNilCategory)
         
         XCTAssert(mapped.list.isEmpty)
     }
 
     func test_map_withNilTitle_shouldOmitItem() throws {
         
-        let mapped = try mapResult(.withNilTitle)
+        let mapped = try getMapResult(.withNilTitle)
         
         XCTAssert(mapped.list.isEmpty)
     }
     
     func test_map_withNilImage_shouldOmitItem() throws {
         
-        let mapped = try mapResult(.withNilImage)
+        let mapped = try getMapResult(.withNilImage)
         
         XCTAssert(mapped.list.isEmpty)
     }
 
     func test_map_withNilText_shouldOmitItem() throws {
         
-        let mapped = try mapResult(.withNilText)
+        let mapped = try getMapResult(.withNilText)
         
         XCTAssert(mapped.list.isEmpty)
     }
 
     func test_map_withEmptyCategory_shouldDeliverValidCategory() throws {
         
-        let mapped = try mapResult(.withEmptyCategory)
+        let mapped = try getMapResult(.withEmptyCategory)
         
         XCTAssertNoDiff(mapped.list.first?.category, "")
     }
 
     func test_map_withEmptyTitle_shouldDeliverValidTitle() throws {
         
-        let mapped = try mapResult(.withEmptyTitle)
+        let mapped = try getMapResult(.withEmptyTitle)
         
         XCTAssertNoDiff(mapped.list.first?.title, "")
     }
 
     func test_map_withEmptyImage_shouldDeliverValidImage() throws {
         
-        let mapped = try mapResult(.withEmptyImage)
+        let mapped = try getMapResult(.withEmptyImage)
         
         XCTAssertNoDiff(mapped.list.first?.svgImage, "")
     }
     
     func test_map_withEmptyText_shouldDeliverValidText() throws {
         
-        let mapped = try mapResult(.withEmptyText)
+        let mapped = try getMapResult(.withEmptyText)
         
         XCTAssertNoDiff(mapped.list.first?.text, "")
     }
 
     func test_map_shouldOmitItemWithNilCategory() throws {
         
-        let mapped = try mapResult(.withNilCategoryInOne)
+        let mapped = try getMapResult(.withNilCategoryInOne)
         
         XCTAssertNoDiff(mapped.list.first?.category, "CATEGORY")
     }
     
     func test_map_shouldOmitItemWithNilTitle() throws {
         
-        let mapped = try mapResult(.withNilTitleInOne)
+        let mapped = try getMapResult(.withNilTitleInOne)
         
         XCTAssertNoDiff(mapped.list.first?.title, "TITLE")
     }
     
     func test_map_shouldOmitItemWithNilImage() throws {
         
-        let mapped = try mapResult(.withNilImageInOne)
+        let mapped = try getMapResult(.withNilImageInOne)
         
         XCTAssertNoDiff(mapped.list.first?.svgImage, "SVG")
     }
     
     func test_map_shouldOmitItemWithNilText() throws {
         
-        let mapped = try mapResult(.withNilTextInOne)
+        let mapped = try getMapResult(.withNilTextInOne)
         
         XCTAssertNoDiff(mapped.list.first?.text, "TEXT")
     }
@@ -201,7 +201,7 @@ final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCT
         ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse(data, httpURLResponse)
     }
     
-    private func mapResult(
+    private func getMapResult(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) throws -> Response {
