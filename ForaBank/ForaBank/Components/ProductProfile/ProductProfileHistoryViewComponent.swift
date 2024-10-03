@@ -310,39 +310,23 @@ extension ProductProfileHistoryView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] images in
                     
-                    guard !images.isEmpty,
-                          case let .list(historyListViewModel) = content
-                    else { return }
-                    
-                    let operations = historyListViewModel.groups.flatMap(\.operations)
-                    let groups = historyListViewModel.groups.map {
-                        
-                        HistoryListViewModel.DayGroupViewModel(
-                            id: $0.id,
-                            title: $0.title,
-                            operations: $0.operations.map {
-                                
-                                if $0.image == nil {
-                                    return $0
-                                } else {
-                                    return .init(
-                                        statement: $0.statement,
-                                        title: $0.title,
-                                        image: images[$0.statement.imageId]?.image,
-                                        subtitle: $0.subtitle,
-                                        amount: $0.amount,
-                                        amountStatusImage: $0.amountStatusImage,
-                                        action: $0.action
-                                    )
-                                }
-                            })
+                    guard images.isEmpty == false, case .list(let historyListViewModel) = content else {
+                        return
                     }
                     
-                    withAnimation {
+                    let operations = historyListViewModel.groups.flatMap{ $0.operations }
+                    for operation in operations {
                         
-                        historyListViewModel.groups = groups
+                        guard operation.image == nil else {
+                            continue
+                        }
+                        
+                        withAnimation {
+                            
+                            operation.image = images[operation.statement.imageId]?.image
+                        }
                     }
-                    
+     
                 }.store(in: &bindings)
         }
         
@@ -553,18 +537,7 @@ extension Calendar {
 
 extension ProductProfileHistoryView.ViewModel {
     
-    func reduce(
-        content: Content,
-        statements: [ProductStatementData],
-        images: [String: ImageData],
-        model: Model,
-        shortDateFormatter: DateFormatter = .historyShortDateFormatter,
-        fullDateFormatter: DateFormatter = .historyFullDateFormatter,
-        action: (ProductStatementData.ID) -> () -> Void
-    ) async -> (
-        groups: [HistoryListViewModel.DayGroupViewModel],
-        downloadImagesIds: [String]
-    ) {
+    func reduce(content: Content, statements: [ProductStatementData], images: [String: ImageData], model: Model, shortDateFormatter: DateFormatter = .historyShortDateFormatter, fullDateFormatter: DateFormatter = .historyFullDateFormatter, action: (ProductStatementData.ID) -> () -> Void) async -> (groups: [HistoryListViewModel.DayGroupViewModel], downloadImagesIds: [String]) {
         
         switch content {
         case .list(let historyListViewModel):
@@ -610,16 +583,7 @@ extension ProductProfileHistoryView.ViewModel {
         return (groupsResult, operationsUpdateResult.downloadImagesIds)
     }
     
-    func reduce(
-        operations: [HistoryListViewModel.DayGroupViewModel.Operation],
-        statements: [ProductStatementData],
-        images: [String: ImageData],
-        model: Model,
-        action: (ProductStatementData.ID) -> () -> Void
-    ) async -> (
-        operations: [HistoryListViewModel.DayGroupViewModel.Operation],
-        downloadImagesIds: [String]
-    ) {
+    func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
         var updatedOperations = [HistoryListViewModel.DayGroupViewModel.Operation]()
         var downloadImagesIds = [String]()
@@ -628,22 +592,23 @@ extension ProductProfileHistoryView.ViewModel {
         for (_, statementsGroup) in groupedStatements {
             
             if let latestStatement = statementsGroup.max(by: {
-                return $0.dateValue > $1.dateValue
-            }) {
-               
-                let imageId = latestStatement.md5hash
-
-                let operation = HistoryListViewModel.DayGroupViewModel.Operation(
-                    statement: latestStatement,
-                    model: model,
-                    image: images[imageId]?.image,
-                    action: action(latestStatement.id)
-                )
                 
+                if let lhsTranDate = $0.tranDate, let rhsTranDate = $1.tranDate {
+                    return lhsTranDate > rhsTranDate
+                    
+                } else {
+                    return $0.date > $1.date
+                }
+            }) {
+                
+                let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: latestStatement, model: model, action: action(latestStatement.id))
                 updatedOperations.append(operation)
                 
-                if images[imageId] == nil {
+                let imageId = latestStatement.md5hash
+                if let imageData = images[imageId] {
+                    operation.image = imageData.image
                     
+                } else {
                     downloadImagesIds.append(imageId)
                 }
             }
@@ -781,26 +746,18 @@ extension ProductProfileHistoryView.ViewModel {
                 self.operations = operations
             }
             
-            struct Operation: Identifiable {
+            class Operation: Identifiable, ObservableObject {
                 
                 var id: Int { statement.id }
                 let statement: StatementBasicData
                 let title: String
-                private(set) var image: Image?
+                @Published var image: Image?
                 let subtitle: String
                 let amount: Amount?
                 let amountStatusImage: Image?
                 let action: () -> Void
                 
-                internal init(
-                    statement: StatementBasicData,
-                    title: String,
-                    image: Image?,
-                    subtitle: String,
-                    amount: Amount?,
-                    amountStatusImage: Image?,
-                    action: @escaping () -> Void = {}
-                ) {
+                internal init(statement: StatementBasicData, title: String, image: Image?, subtitle: String, amount: Amount?, amountStatusImage: Image?, action: @escaping () -> Void = {}) {
                     
                     self.statement = statement
                     self.title = title
@@ -811,16 +768,11 @@ extension ProductProfileHistoryView.ViewModel {
                     self.action = action
                 }
                 
-                init(
-                    statement: ProductStatementData,
-                    model: Model,
-                    image: Image?,
-                    action: @escaping () -> Void
-                ) {
+                init(statement: ProductStatementData, model: Model, action: @escaping () -> Void) {
                     
                     self.statement = StatementBasicData(statement: statement)
                     self.title = statement.merchant
-                    self.image = image ?? statement.svgImage?.image
+                    self.image = statement.svgImage?.image
                     self.subtitle = statement.groupName
                     if statement.operationType != .open {
                         
@@ -1085,7 +1037,7 @@ extension ProductProfileHistoryView {
     
     struct OperationView: View {
         
-        let viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel.Operation
+        @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel.Operation
         
         var body: some View {
             
