@@ -123,58 +123,7 @@ extension QRDestinationComposer {
         notify: @escaping Notify,
         completion: @escaping QRDestinationCompletion
     ) {
-        switch result {
-        case let .c2bSubscribeURL(url):
-            makePayments(.c2bSubscribe(url)) { [weak self] in
-                
-                guard let self else { return }
-                
-                completion(.c2bSubscribe(.init(
-                    model: $0,
-                    cancellables: self.bindPayments($0, with: notify)
-                )))
-            }
-            
-        case let .c2bURL(url):
-            makePayments(.c2b(url)) { [weak self] in
-                
-                guard let self else { return }
-                
-                completion(.c2b(.init(
-                    model: $0,
-                    cancellables: self.bindPayments($0, with: notify)
-                )))
-            }
-            
-        case let .failure(qrCode):
-            let payload = MakeQRFailureWithQRPayload(
-                qrCode: qrCode,
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment($0)) }
-            )
-            makeQRFailureWithQR(payload) { completion(.failure($0)) }
-            
-        case let .mapped(mapped):
-            compose(mapped: mapped, notify: notify, completion: completion)
-            
-        case let .sberQR(url):
-            #warning("unimplemented")
-            fatalError(String(describing: url))
-            
-        case .url(_):
-            let payload = MakeQRFailurePayload(
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment(nil)) }
-            )
-            makeQRFailure(payload) { completion(.failure($0)) }
-            
-        case .unknown:
-            let payload = MakeQRFailurePayload(
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment(nil)) }
-            )
-            makeQRFailure(payload) { completion(.failure($0)) }
-        }
+        handle(result: result, with: notify, and: completion)
     }
     
     enum NotifyEvent: Equatable {
@@ -213,10 +162,69 @@ extension QRDestinationComposer {
 
 private extension QRDestinationComposer {
     
-    func compose(
+    func handle(
+        result: QRModelResult,
+        with notify: @escaping Notify,
+        and completion: @escaping QRDestinationCompletion
+    ) {
+        switch result {
+        case let .c2bSubscribeURL(url):
+            makePayments(.c2bSubscribe(url)) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.c2bSubscribe(.init(
+                    model: $0,
+                    cancellables: self.bind($0, with: notify)
+                )))
+            }
+            
+        case let .c2bURL(url):
+            makePayments(.c2b(url)) { [weak self] in
+                
+                guard let self else { return }
+                
+                completion(.c2b(.init(
+                    model: $0,
+                    cancellables: self.bind($0, with: notify)
+                )))
+            }
+            
+        case let .failure(qrCode):
+            let payload = MakeQRFailureWithQRPayload(
+                qrCode: qrCode,
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment($0)) }
+            )
+            makeQRFailureWithQR(payload) { completion(.failure($0)) }
+            
+        case let .mapped(mapped):
+            handle(mapped: mapped, with: notify, and: completion)
+            
+        case let .sberQR(url):
+#warning("unimplemented")
+            fatalError(String(describing: url))
+            
+        case .url(_):
+            let payload = MakeQRFailurePayload(
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment(nil)) }
+            )
+            makeQRFailure(payload) { completion(.failure($0)) }
+            
+        case .unknown:
+            let payload = MakeQRFailurePayload(
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment(nil)) }
+            )
+            makeQRFailure(payload) { completion(.failure($0)) }
+        }
+    }
+    
+    func handle(
         mapped: QRModelResult.Mapped,
-        notify: @escaping Notify,
-        completion: @escaping QRDestinationCompletion
+        with notify: @escaping Notify,
+        and completion: @escaping QRDestinationCompletion
     ) {
         switch mapped {
         case .missingINN:
@@ -239,7 +247,7 @@ private extension QRDestinationComposer {
                 
                 completion(.providerPicker(.init(
                     model: $0,
-                    cancellables: self.bindProviderPicker($0, with: notify)
+                    cancellables: self.bind($0, with: notify)
                 )))
             }
             
@@ -258,7 +266,7 @@ private extension QRDestinationComposer {
                 
                 completion(.detailPayments(.init(
                     model: $0,
-                    cancellables: bindPayments($0, with: notify)
+                    cancellables: bind($0, with: notify)
                 )))
             }
             
@@ -283,13 +291,13 @@ private extension QRDestinationComposer {
                 
                 completion(.payments(.init(
                     model: $0,
-                    cancellables: self.bindPayments($0, with: notify)
+                    cancellables: self.bind($0, with: notify)
                 )))
             }
         }
     }
     
-    func bindPayments(
+    func bind(
         _ wrapper: ClosePaymentsViewModelWrapper,
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
@@ -309,7 +317,7 @@ private extension QRDestinationComposer {
         return [close, scanQR, contactAbroad]
     }
     
-    func bindProviderPicker(
+    func bind(
         _ picker: ProviderPicker,
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
