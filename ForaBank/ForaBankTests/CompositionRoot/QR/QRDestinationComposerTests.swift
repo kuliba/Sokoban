@@ -194,18 +194,10 @@ private extension QRDestinationComposer {
             fatalError(String(describing: url))
             
         case .url(_):
-            let payload = MakeQRFailurePayload(
-                chat: { notify(.outside(.chat)) },
-                detailPayment: { notify(.detailPayment(nil)) }
-            )
-            makeQRFailure(payload) { completion(.failure($0)) }
+            makeQRFailure(with: notify) { completion(.failure($0)) }
             
         case .unknown:
-            let payload = MakeQRFailurePayload(
-                chat: { notify(.outside(.chat)) },
-                detailPayment: { notify(.detailPayment(nil)) }
-            )
-            makeQRFailure(payload) { completion(.failure($0)) }
+            makeQRFailure(with: notify) { completion(.failure($0)) }
         }
     }
     
@@ -216,12 +208,7 @@ private extension QRDestinationComposer {
     ) {
         switch mapped {
         case .missingINN:
-#warning("same as in url and unknown cases")
-            let payload = MakeQRFailurePayload(
-                chat: { notify(.outside(.chat)) },
-                detailPayment: { notify(.detailPayment(nil)) }
-            )
-            makeQRFailure(payload) { completion(.failure($0)) }
+            makeQRFailure(with: notify) { completion(.failure($0)) }
             
         case let .mixed(mixed, qrCode, qrMapping):
             let payload = MakeProviderPickerPayload(
@@ -289,6 +276,17 @@ private extension QRDestinationComposer {
                 cancellables: self.bind($0, with: notify)
             ))
         }
+    }
+    
+    func makeQRFailure(
+        with notify: @escaping Notify,
+        completion: @escaping (QRFailedViewModel) -> Void
+    ) {
+        let payload = MakeQRFailurePayload(
+            chat: { notify(.outside(.chat)) },
+            detailPayment: { notify(.detailPayment(nil)) }
+        )
+        makeQRFailure(payload) { completion($0) }
     }
     
     func bind(
