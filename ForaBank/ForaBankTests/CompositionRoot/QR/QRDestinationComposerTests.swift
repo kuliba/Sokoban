@@ -73,8 +73,8 @@ extension QRDestinationComposer {
     
     struct MakeQRFailurePayload {
         
-        let chatAction: () -> Void
-        let makeDetailPayment: () -> Void
+        let chat: () -> Void
+        let detailPayment: () -> Void
     }
     
     typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
@@ -82,8 +82,8 @@ extension QRDestinationComposer {
     struct MakeQRFailureWithQRPayload {
         
         let qrCode: QRCode
-        let chatAction: () -> Void
-        let makeDetailPayment: (QRCode) -> Void
+        let chat: () -> Void
+        let detailPayment: (QRCode) -> Void
     }
     
     typealias MakeQRFailureWithQR = (MakeQRFailureWithQRPayload, @escaping (QRFailedViewModel) -> Void) -> Void
@@ -193,8 +193,8 @@ private extension QRDestinationComposer {
         case let .failure(qrCode):
             let payload = MakeQRFailureWithQRPayload(
                 qrCode: qrCode,
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment($0)) }
+                chat: { notify(.outside(.chat)) },
+                detailPayment: { notify(.detailPayment($0)) }
             )
             makeQRFailureWithQR(payload) { completion(.failure($0)) }
             
@@ -207,15 +207,15 @@ private extension QRDestinationComposer {
             
         case .url(_):
             let payload = MakeQRFailurePayload(
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment(nil)) }
+                chat: { notify(.outside(.chat)) },
+                detailPayment: { notify(.detailPayment(nil)) }
             )
             makeQRFailure(payload) { completion(.failure($0)) }
             
         case .unknown:
             let payload = MakeQRFailurePayload(
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment(nil)) }
+                chat: { notify(.outside(.chat)) },
+                detailPayment: { notify(.detailPayment(nil)) }
             )
             makeQRFailure(payload) { completion(.failure($0)) }
         }
@@ -230,8 +230,8 @@ private extension QRDestinationComposer {
         case .missingINN:
 #warning("same as in url and unknown cases")
             let payload = MakeQRFailurePayload(
-                chatAction: { notify(.outside(.chat)) },
-                makeDetailPayment: { notify(.detailPayment(nil)) }
+                chat: { notify(.outside(.chat)) },
+                detailPayment: { notify(.detailPayment(nil)) }
             )
             makeQRFailure(payload) { completion(.failure($0)) }
             
@@ -560,7 +560,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.chatAction)?()
+        makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
     }
@@ -572,7 +572,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.makeDetailPayment)?(qrCode)
+        makeQRFailure.payloads.first.map(\.detailPayment)?(qrCode)
         
         XCTAssertNoDiff(events, [.detailPayment(qrCode)])
     }
@@ -604,7 +604,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.chatAction)?()
+        makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
     }
@@ -615,7 +615,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
+        makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
     }
@@ -1026,7 +1026,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.chatAction)?()
+        makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
     }
@@ -1037,7 +1037,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
+        makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
     }
@@ -1069,7 +1069,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.chatAction)?()
+        makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
     }
@@ -1080,7 +1080,7 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
+        makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
     }
