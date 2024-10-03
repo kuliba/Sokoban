@@ -167,25 +167,15 @@ private extension QRDestinationComposer {
     ) {
         switch result {
         case let .c2bSubscribeURL(url):
-            makePayments(.source(.c2bSubscribe(url))) { [weak self] in
+            handle(.source(.c2bSubscribe(url)), with: notify) {
                 
-                guard let self else { return }
-                
-                completion(.c2bSubscribe(.init(
-                    model: $0,
-                    cancellables: self.bind($0, with: notify)
-                )))
+                completion(.c2bSubscribe($0))
             }
             
         case let .c2bURL(url):
-            makePayments(.source(.c2b(url))) { [weak self] in
+            handle(.source(.c2b(url)), with: notify) {
                 
-                guard let self else { return }
-                
-                completion(.c2b(.init(
-                    model: $0,
-                    cancellables: self.bind($0, with: notify)
-                )))
+                completion(.c2b($0))
             }
             
         case let .failure(qrCode):
@@ -258,14 +248,9 @@ private extension QRDestinationComposer {
             makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
             
         case let .none(qrCode):
-            makePayments(.qrCode(qrCode)) { [weak self] in
+            handle(.qrCode(qrCode), with: notify) {
                 
-                guard let self else { return }
-                
-                completion(.detailPayments(.init(
-                    model: $0,
-                    cancellables: bind($0, with: notify)
-                )))
+                completion(.detailPayments($0))
             }
             
         case let .provider(payload):
@@ -283,15 +268,26 @@ private extension QRDestinationComposer {
             makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
             
         case let .source(source):
-            makePayments(.operationSource(source)) { [weak self] in
+            handle(.operationSource(source), with: notify) {
                 
-                guard let self else { return }
-                
-                completion(.payments(.init(
-                    model: $0,
-                    cancellables: self.bind($0, with: notify)
-                )))
+                completion(.payments($0))
             }
+        }
+    }
+    
+    func handle(
+        _ payload: MakePaymentsPayload,
+        with notify: @escaping Notify,
+        and completion: @escaping (QRDestination.PaymentsNode) -> Void
+    ) {
+        makePayments(payload) { [weak self] in
+            
+            guard let self else { return }
+            
+            completion(.init(
+                model: $0,
+                cancellables: self.bind($0, with: notify)
+            ))
         }
     }
     
