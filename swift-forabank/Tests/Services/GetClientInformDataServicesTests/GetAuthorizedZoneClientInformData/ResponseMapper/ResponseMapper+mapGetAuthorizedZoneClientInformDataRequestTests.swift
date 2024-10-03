@@ -12,52 +12,42 @@ import XCTest
 final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
-        
-        let emptyData: Data = .empty
-        
+    
         XCTAssertNoDiff(
-            map(emptyData),
-            .failure(.invalid(statusCode: 200, data: emptyData))
+            map(.empty),
+            .failure(.invalid(statusCode: 200, data: .empty))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnInvalidData() {
-        
-        let invalidData: Data = .invalidData
-        
+
         XCTAssertNoDiff(
-            map(invalidData),
-            .failure(.invalid(statusCode: 200, data: invalidData))
+            map(.invalidData),
+            .failure(.invalid(statusCode: 200, data: .invalidData))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyJSON() {
-        
-        let emptyJSON: Data = .emptyJSON
-        
+
         XCTAssertNoDiff(
-            map(emptyJSON),
-            .failure(.invalid(statusCode: 200, data: emptyJSON))
+            map(.emptyJSON),
+            .failure(.invalid(statusCode: 200, data: .emptyJSON))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyDataResponse() {
-        
-        let emptyDataResponse: Data = .emptyDataResponse
-        
+
         XCTAssertNoDiff(
-            map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            map(.emptyDataResponse),
+            .failure(.invalid(statusCode: 200, data: .emptyDataResponse))
         )
     }
     
     func test_map_shouldDeliverInvalidFailureOnNullServerResponse() {
-        
-        let nullServerResponse: Data = .nullServerResponse
-        
+
         XCTAssertNoDiff(
             map(.nullServerResponse),
-            .failure(.invalid(statusCode: 200, data: nullServerResponse))
+            .failure(.invalid(statusCode: 200, data: .nullServerResponse))
         )
     }
     
@@ -86,12 +76,10 @@ final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCT
     }
     
     func test_map_shouldDeliverInvalidFailureOnEmptyList() {
-        
-        let emptyDataResponse: Data = .emptyListResponse
-        
+
         XCTAssertNoDiff(
-            map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            map(.emptyListResponse),
+            .failure(.invalid(statusCode: 200, data: .emptyListResponse))
         )
     }
     
