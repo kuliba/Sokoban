@@ -8,8 +8,9 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseContentView<RefreshView, Landing>: View
-where RefreshView: View
+public struct MarketShowcaseContentView<RefreshView, LandingView, Landing>: View
+where RefreshView: View,
+      LandingView: View
 {
     
     let state: State
@@ -39,31 +40,21 @@ where RefreshView: View
     
     @ViewBuilder
     private func content() -> some View {
-        
-        switch state.status {
-        case .initiate:
-            Text("Initiate")
-                .frame(maxHeight: .infinity)
-                .padding()
+       
+        ZStack {
             
-        case .inflight:
-            
-            factory.makeRefreshView()
-                .modifier(ViewByCenterModifier(height: config.spinnerHeight))
-            
-        case .loaded:
-            VStack {
-                Text("Market")
+            switch state.status {
+            case .initiate, .inflight, .failure:
+                EmptyView()
+                
+            case let .loaded(landing):
+                factory.makeLandingView(landing)
             }
-            .frame(maxHeight: .infinity)
-            .padding()
             
-        case .failure:
-            VStack {
-                Text("Failure")
+            if case .inflight = state.status {
+                factory.makeRefreshView()
+                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             }
-            .frame(maxHeight: .infinity)
-            .padding()
         }
     }
 }
@@ -73,20 +64,26 @@ public extension MarketShowcaseContentView {
     typealias State = MarketShowcaseContentState<Landing>
     typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
-    typealias Factory = ViewFactory<RefreshView>
+    typealias Factory = ViewFactory<RefreshView, Landing, LandingView>
 }
 
 #Preview {
     MarketShowcaseContentView.preview
 }
 
-extension MarketShowcaseContentView where RefreshView == Text, Landing == String {
+extension MarketShowcaseContentView
+where RefreshView == Text,
+      LandingView == Text,
+      Landing == String {
     
     static let preview = MarketShowcaseContentView(
         state: .init(status: .initiate),
         event: {_ in },
         config: .iFora,
-        factory: .init(makeRefreshView: { Text("Refresh") }))
+        factory: .init(
+            makeRefreshView: { Text("Refresh") },
+            makeLandingView: { Text($0) }
+        ))
 }
 
 private struct ViewByCenterModifier: ViewModifier {
