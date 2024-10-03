@@ -88,7 +88,7 @@ extension QRDestinationComposer {
     struct MakeProviderPickerPayload: Equatable {
         
         let mixed: MultiElementArray<SegmentedOperatorProvider>
-        let qr: QRCode
+        let qrCode: QRCode
         let qrMapping: QRMapping
     }
     
@@ -98,7 +98,7 @@ extension QRDestinationComposer {
     struct MakeOperatorSearchPayload: Equatable {
         
         let multiple: MultiElementArray<SegmentedOperatorData>
-        let qr: QRCode
+        let qrCode: QRCode
         let qrMapping: QRMapping
     }
     
@@ -141,9 +141,9 @@ extension QRDestinationComposer {
                 )))
             }
             
-        case let .failure(qr):
+        case let .failure(qrCode):
             let payload = MakeQRFailureWithQRPayload(
-                qrCode: qr,
+                qrCode: qrCode,
                 chatAction: { notify(.outside(.chat)) },
                 makeDetailPayment: { notify(.detailPayment($0)) }
             )
@@ -158,10 +158,10 @@ extension QRDestinationComposer {
                 )
                 makeQRFailure(payload) { completion(.failure($0)) }
                 
-            case let .mixed(mixed, qr, qrMapping):
+            case let .mixed(mixed, qrCode, qrMapping):
                 let payload = MakeProviderPickerPayload(
                     mixed: mixed,
-                    qr: qr,
+                    qrCode: qrCode,
                     qrMapping: qrMapping
                 )
                 makeProviderPicker(payload) { [weak self] in
@@ -174,16 +174,16 @@ extension QRDestinationComposer {
                     )))
                 }
                 
-            case let .multiple(multiple, qr, qrMapping):
+            case let .multiple(multiple, qrCode, qrMapping):
                 let payload = MakeOperatorSearchPayload(
                     multiple: multiple,
-                    qr: qr,
+                    qrCode: qrCode,
                     qrMapping: qrMapping
                 )
                 makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
                 
-            case let .none(qr):
-                makeDetailPayments(qr) { [weak self] in
+            case let .none(qrCode):
+                makeDetailPayments(qrCode) { [weak self] in
                     
                     guard let self else { return }
                     
@@ -203,6 +203,9 @@ extension QRDestinationComposer {
                         cancellables: self.bind($0, with: notify)
                     )))
                 }
+                
+            case let .single(`operator`, qrCode, qrMapping):
+                makeInternetTV((qrCode, qrMapping)) { _ in }
                 
             default:
                 fatalError()
@@ -401,7 +404,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bSubscribeURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2bSubscribe?.scanQR() },
+            for: { $0.c2bSubscribe?.scanQRCode() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -463,7 +466,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .c2bURL(anyURL()),
             delivers: .scanQR,
-            for: { $0.c2b?.scanQR() },
+            for: { $0.c2b?.scanQRCode() },
             on: { makePayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -486,12 +489,12 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldCallMakeQRFailureWithQROnFailure() {
         
-        let qr = makeQR()
+        let qrCode = makeQR()
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         
-        sut.compose(result: .failure(qr), notify: { _ in }) { _ in }
+        sut.compose(result: .failure(qrCode), notify: { _ in }) { _ in }
         
-        XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [qr])
+        XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [qrCode])
     }
     
     func test_shouldCallMakeQRFailureWithChatActionOnFailure() {
@@ -507,14 +510,14 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldCallMakeQRFailureWithDetailPaymentActionOnFailure() {
         
-        let qr = makeQR()
+        let qrCode = makeQR()
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
-        makeQRFailure.payloads.first.map(\.makeDetailPayment)?(qr)
+        makeQRFailure.payloads.first.map(\.makeDetailPayment)?(qrCode)
         
-        XCTAssertNoDiff(events, [.detailPayment(qr)])
+        XCTAssertNoDiff(events, [.detailPayment(qrCode)])
     }
     
     func test_shouldDeliverFailureOnFailure() {
@@ -574,14 +577,14 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldCallMakeProviderPickerWithPayloadOnMixed() {
         
-        let (mixed, qr, qrMapping) = makeMixed()
-        let result: QRModelResult = .mapped(.mixed(mixed, qr, qrMapping))
+        let (mixed, qrCode, qrMapping) = makeMixed()
+        let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
         let (sut, _,_,_,_, makeProviderPicker, _,_,_) = makeSUT()
         
         sut.compose(result: result, notify: { _ in }, completion: { _ in })
         
         XCTAssertNoDiff(makeProviderPicker.payloads, [
-            .init(mixed: mixed, qr: qr, qrMapping: qrMapping)
+            .init(mixed: mixed, qrCode: qrCode, qrMapping: qrMapping)
         ])
     }
     
@@ -678,14 +681,14 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldCallMakeOperatorSearchOnMultiple() {
         
-        let (multiple, qr, qrMapping) = makeMultiple()
-        let result: QRModelResult = .mapped(.multiple(multiple, qr, qrMapping))
+        let (multiple, qrCode, qrMapping) = makeMultiple()
+        let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
         let (sut, _,_,_,_,_, makeOperatorSearch, _,_) = makeSUT()
         
         sut.compose(result: result, notify: { _ in }, completion: { _ in })
         
         XCTAssertNoDiff(makeOperatorSearch.payloads, [
-            .init(multiple: multiple, qr: qr, qrMapping: qrMapping)
+            .init(multiple: multiple, qrCode: qrCode, qrMapping: qrMapping)
         ])
     }
     
@@ -705,12 +708,12 @@ final class QRDestinationComposerTests: XCTestCase {
     
     func test_shouldCallMakeDetailPaymentsWithQROnNone() {
         
-        let qr = makeQR()
+        let qrCode = makeQR()
         let (sut, _,_,_,_,_,_, makeDetailPayments, _) = makeSUT()
         
-        sut.compose(result: .mapped(.none(qr)), notify: { _ in }, completion: { _ in })
+        sut.compose(result: .mapped(.none(qrCode)), notify: { _ in }, completion: { _ in })
         
-        XCTAssertNoDiff(makeDetailPayments.payloads, [qr])
+        XCTAssertNoDiff(makeDetailPayments.payloads, [qrCode])
     }
     
     func test_shouldDeliverOperatorSearchOnNone() {
@@ -744,7 +747,7 @@ final class QRDestinationComposerTests: XCTestCase {
             sut,
             result: .mapped(.none(makeQR())),
             delivers: .scanQR,
-            for: { $0.detailPayments?.scanQR() },
+            for: { $0.detailPayments?.scanQRCode() },
             on: { makeDetailPayments.complete(with: makePaymentsSuccess()) }
         )
     }
@@ -870,6 +873,17 @@ final class QRDestinationComposerTests: XCTestCase {
     }
     
     // MARK: - mapped: single
+    
+    func test_shouldCallMakeInternetTVWithPayloadOnProvider() {
+        
+        let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
+        let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
+        
+        sut.compose(result: .mapped(.single(makeSegmentedOperatorData(), qrCode, qrMapping)), notify: { _ in }, completion: { _ in })
+        
+        XCTAssertNoDiff(makeInternetTV.payloads.map(\.0), [qrCode])
+        XCTAssertNoDiff(makeInternetTV.payloads.map(\.1), [qrMapping])
+    }
     
     // MARK: - Helpers
     
@@ -1001,7 +1015,7 @@ final class QRDestinationComposerTests: XCTestCase {
     }
     
     private func makeMixed(
-    ) -> (mixed: MultiElementArray<SegmentedOperatorProvider>, qr: QRCode, qrMapping: QRMapping) {
+    ) -> (mixed: MultiElementArray<SegmentedOperatorProvider>, qrCode: QRCode, qrMapping: QRMapping) {
         
         return (makeMixedOperators(), makeQR(), makeQRMapping())
     }
@@ -1024,15 +1038,15 @@ final class QRDestinationComposerTests: XCTestCase {
     }
     
     private func makeMultiple(
-    ) -> (multiple: MultiElementArray<SegmentedOperatorData>, qr: QRCode, qrMapping: QRMapping) {
+    ) -> (multiple: MultiElementArray<SegmentedOperatorData>, qrCode: QRCode, qrMapping: QRMapping) {
         
         return (makeMultipleOperators(), makeQR(), makeQRMapping())
     }
     
     private func makeMappedMultiple() -> QRModelResult {
         
-        let (multiple, qr, qrMapping) = makeMultiple()
-        return.mapped(.multiple(multiple, qr, qrMapping))
+        let (multiple, qrCode, qrMapping) = makeMultiple()
+        return.mapped(.multiple(multiple, qrCode, qrMapping))
     }
     
     private func makeMultipleOperators(
@@ -1189,7 +1203,7 @@ private extension ClosePaymentsViewModelWrapper {
         paymentsViewModel.closeAction()
     }
     
-    func scanQR() {
+    func scanQRCode() {
         
         paymentsViewModel.action.send(PaymentsViewModelAction.ScanQrCode())
     }
