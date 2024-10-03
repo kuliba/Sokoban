@@ -73,15 +73,6 @@ private extension ResponseMapper {
                 case category, title, text
                 case svgImage = "svg_image"
             }
-
-            init(from decoder: any Decoder) throws {
-                
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.category = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.category)
-                self.title = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.title)
-                self.svgImage = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.svgImage)
-                self.text = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.text)
-            }
         }
     }
 }

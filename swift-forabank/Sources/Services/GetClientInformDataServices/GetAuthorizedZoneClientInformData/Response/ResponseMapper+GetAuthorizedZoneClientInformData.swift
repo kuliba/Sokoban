@@ -32,10 +32,5 @@ extension ResponseMapper {
             self.svgImage = svgImage
             self.text = text
         }
-        
-        enum CodingKeys: String, CodingKey {
-            case category, title, text
-            case svgImage = "svg_image"
-        }
     }
 }
