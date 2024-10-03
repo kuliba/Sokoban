@@ -160,8 +160,10 @@ extension QRNavigationComposer {
         case operatorSearch(OperatorSearch)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case providerPicker(Node<ProviderPicker>)
-        case sberQRFailure(ErrorMessage)
+        case sberQR(SberQRResult)
         case servicePicker(Node<AnywayServicePickerFlowModel>)
+        
+        typealias SberQRResult = Result<Void, ErrorMessage>
     }
     
     typealias QRNavigationCompletion = (QRNavigation) -> Void
@@ -197,10 +199,10 @@ private extension QRNavigationComposer {
                 
                 switch $0 {
                 case let .failure(error):
-                    completion(.sberQRFailure(error))
+                    completion(.sberQR(.failure(error)))
                     
                 case let .success(sberQR):
-                    fatalError(String(describing: sberQR))
+                    completion(.sberQR(.success(sberQR)))
                 }
             }
             
@@ -1016,9 +1018,19 @@ final class QRNavigationComposerTests: XCTestCase {
         let error = makeErrorMessage()
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
-        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQRFailure(error), notify: { _ in }) {
+        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQR(.failure(error)), notify: { _ in }) {
             
             makeSberQR.complete(with: .failure(error))
+        }
+    }
+    
+    func test_sberQR_shouldDeliverSberQROnMakeSberQR() {
+        
+        let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
+        
+        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQR(.success), notify: { _ in }) {
+            
+            makeSberQR.complete(with: .success(()))
         }
     }
     
@@ -1517,8 +1529,11 @@ private extension QRNavigationComposer.QRNavigation {
         case .payments:       return .payments
         case .providerPicker: return .providerPicker
 
-        case let .sberQRFailure(error):
-            return .sberQRFailure(error)
+        case let .sberQR(.failure(error)):
+            return .sberQR(.failure(error))
+            
+        case .sberQR(.success):
+            return .sberQR(.success)
 
         case .servicePicker:  return .servicePicker
         }
@@ -1532,6 +1547,12 @@ private enum EquatableQRNavigation: Equatable {
     case operatorSearch
     case payments
     case providerPicker
-    case sberQRFailure(QRNavigationComposer.ErrorMessage)
+    case sberQR(SberQRResult)
     case servicePicker
+    
+    enum SberQRResult: Equatable {
+        
+        case failure(QRNavigationComposer.ErrorMessage)
+        case success
+    }
 }
