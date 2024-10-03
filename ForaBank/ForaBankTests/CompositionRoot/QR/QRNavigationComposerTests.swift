@@ -113,7 +113,14 @@ extension QRNavigationComposer {
     typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (OperatorSearch) -> Void) -> Void
     
     typealias SberQR = Void
-    typealias MakeSberQR = (URL, @escaping (SberQR) -> Void) -> Void
+    
+    struct ErrorMessage: Error, Equatable {
+    
+        let title: String
+        let message: String
+    }
+    
+    typealias MakeSberQR = (URL, @escaping (Result<SberQR, ErrorMessage>) -> Void) -> Void
     
     typealias ServicePicker = AnywayServicePickerFlowModel
     typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
@@ -153,6 +160,7 @@ extension QRNavigationComposer {
         case operatorSearch(OperatorSearch)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case providerPicker(Node<ProviderPicker>)
+        case sberQRFailure(ErrorMessage)
         case servicePicker(Node<AnywayServicePickerFlowModel>)
     }
     
@@ -185,9 +193,15 @@ private extension QRNavigationComposer {
             handle(mapped: mapped, with: notify, and: completion)
             
         case let .sberQR(url):
-            makeSberQR(url) { _ in
-#warning("unimplemented")
-                fatalError(String(describing: url))
+            makeSberQR(url) {
+                
+                switch $0 {
+                case let .failure(error):
+                    completion(.sberQRFailure(error))
+                    
+                case let .success(sberQR):
+                    fatalError(String(describing: sberQR))
+                }
             }
             
         case .url(_):
@@ -997,6 +1011,17 @@ final class QRNavigationComposerTests: XCTestCase {
         XCTAssertEqual(makeSberQR.payloads, [url])
     }
     
+    func test_sberQR_shouldDeliverSberQRFailureOnMakeSberQRFailure() {
+        
+        let error = makeErrorMessage()
+        let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
+        
+        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQRFailure(error), notify: { _ in }) {
+            
+            makeSberQR.complete(with: .failure(error))
+        }
+    }
+    
     // MARK: - url
     
     func test_url_shouldCallMakeQRFailure() {
@@ -1092,7 +1117,7 @@ final class QRNavigationComposerTests: XCTestCase {
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
     private typealias MakeProviderPickerSpy = Spy<SUT.MakeProviderPickerPayload, SUT.ProviderPicker, Never>
     private typealias MakeOperatorSearchSpy = Spy<SUT.MakeOperatorSearchPayload, SUT.OperatorSearch, Never>
-    private typealias MakeSberQRSpy = Spy<URL, Void, Never>
+    private typealias MakeSberQRSpy = Spy<URL, Void, SUT.ErrorMessage>
     private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, SUT.ServicePicker, Never>
     
     private func makeSUT(
@@ -1358,6 +1383,14 @@ final class QRNavigationComposerTests: XCTestCase {
         return .success(.init(model: .mockWithEmptyExcept(), closeAction: {}))
     }
     
+    private func makeErrorMessage(
+        title: String = anyMessage(),
+        message: String = anyMessage()
+    ) -> SUT.ErrorMessage {
+        
+        return .init(title: title, message: message)
+    }
+    
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
@@ -1483,6 +1516,10 @@ private extension QRNavigationComposer.QRNavigation {
         case .operatorSearch: return .operatorSearch
         case .payments:       return .payments
         case .providerPicker: return .providerPicker
+
+        case let .sberQRFailure(error):
+            return .sberQRFailure(error)
+
         case .servicePicker:  return .servicePicker
         }
     }
@@ -1495,5 +1532,6 @@ private enum EquatableQRNavigation: Equatable {
     case operatorSearch
     case payments
     case providerPicker
+    case sberQRFailure(QRNavigationComposer.ErrorMessage)
     case servicePicker
 }
