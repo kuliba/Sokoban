@@ -158,6 +158,7 @@ extension QRDestinationComposer {
             compose(mapped: mapped, notify: notify, completion: completion)
             
         case let .sberQR(url):
+            #warning("unimplemented")
             fatalError(String(describing: url))
             
         case .url(_):
@@ -167,8 +168,12 @@ extension QRDestinationComposer {
             )
             makeQRFailure(payload) { completion(.failure($0)) }
             
-        default:
-            fatalError()
+        case .unknown:
+            let payload = MakeQRFailurePayload(
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment(nil)) }
+            )
+            makeQRFailure(payload) { completion(.failure($0)) }
         }
     }
     
@@ -215,7 +220,7 @@ private extension QRDestinationComposer {
     ) {
         switch mapped {
         case .missingINN:
-#warning("same as in url case")
+#warning("same as in url and unknown cases")
             let payload = MakeQRFailurePayload(
                 chatAction: { notify(.outside(.chat)) },
                 makeDetailPayment: { notify(.detailPayment(nil)) }
@@ -1001,7 +1006,7 @@ final class QRDestinationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .mapped(.missingINN), toDeliver: .failure, on: {
+        expect(sut, with: .url(anyURL()), toDeliver: .failure, on: {
             
             makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
         })
@@ -1024,6 +1029,49 @@ final class QRDestinationComposerTests: XCTestCase {
         var events = [SUT.NotifyEvent]()
         
         sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
+        
+        XCTAssertNoDiff(events, [.detailPayment(nil)])
+    }
+    
+    // MARK: - unknown
+    
+    func test_unknown_shouldCallMakeQRFailure() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        
+        sut.compose(result: .unknown, notify: { _ in }) { _ in }
+        
+        XCTAssertEqual(makeQRFailure.payloads.count, 1)
+    }
+    
+    func test_unknown_shouldDeliverFailure() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        
+        expect(sut, with: .unknown, toDeliver: .failure, on: {
+            
+            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
+        })
+    }
+    
+    func test_unknown_shouldNotifyWithOutsideChatOnChatAction() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.chatAction)?()
+        
+        XCTAssertNoDiff(events, [.outside(.chat)])
+    }
+    
+    func test_unknown_shouldNotifyWithWithDetailPaymentAction() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
         makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
