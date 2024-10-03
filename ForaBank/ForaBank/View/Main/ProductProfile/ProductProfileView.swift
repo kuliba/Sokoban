@@ -94,7 +94,8 @@ struct ProductProfileView: View {
                                                 },{
                                                     viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
                                                 },{
-                                                    return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil)
+                                                    return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil) && viewModel.filterState.filter.selectedTransaction == nil &&
+                                                    viewModel.filterState.filter.selectedServices.isEmpty
                                                 }, {
                                                     
                                                     viewModel.filterState.filter.selectedServices = []
