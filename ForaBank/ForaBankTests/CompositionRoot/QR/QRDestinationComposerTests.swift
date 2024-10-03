@@ -224,6 +224,16 @@ extension QRDestinationComposer {
                 }
             }
             
+        case let .sberQR(url):
+            fatalError(String(describing: url))
+            
+        case .url(_):
+            let payload = MakeQRFailurePayload(
+                chatAction: { notify(.outside(.chat)) },
+                makeDetailPayment: { notify(.detailPayment(nil)) }
+            )
+            makeQRFailure(payload) { completion(.failure($0)) }
+            
         default:
             fatalError()
         }
@@ -903,13 +913,13 @@ final class QRDestinationComposerTests: XCTestCase {
     func test_shouldDeliverInternetTOnSingle() {
         
         let (sut, makeInternetTV, _,_,_,_,_,_,_,_) = makeSUT()
-
+        
         expect(sut, with: makeMappedSingle(), toDeliver: .internetTV, on: {
             
             makeInternetTV.complete(with: makeInternetTVSuccess())
         })
     }
-
+    
     // MARK: - mapped: source
     
     func test_shouldCallMakeSourcePaymentsWithPayloadOnSource() {
@@ -965,6 +975,49 @@ final class QRDestinationComposerTests: XCTestCase {
             for: { $0.payments?.contactAbroad(source: source) },
             on: { makeSourcePayments.complete(with: makePaymentsSuccess()) }
         )
+    }
+    
+    // MARK: - url
+    
+    func test_url_shouldCallMakeQRFailure() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        
+        sut.compose(result: .url(anyURL()), notify: { _ in }) { _ in }
+        
+        XCTAssertEqual(makeQRFailure.payloads.count, 1)
+    }
+    
+    func test_url_shouldDeliverFailure() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        
+        expect(sut, with: .mapped(.missingINN), toDeliver: .failure, on: {
+            
+            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
+        })
+    }
+    
+    func test_url_shouldNotifyWithOutsideChatOnChatAction() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.chatAction)?()
+        
+        XCTAssertNoDiff(events, [.outside(.chat)])
+    }
+    
+    func test_url_shouldNotifyWithWithDetailPaymentAction() {
+        
+        let (sut, _,_, makeQRFailure, _,_,_,_,_,_) = makeSUT()
+        var events = [SUT.NotifyEvent]()
+        
+        sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
+        makeQRFailure.payloads.first.map(\.makeDetailPayment)?()
+        
+        XCTAssertNoDiff(events, [.detailPayment(nil)])
     }
     
     // MARK: - Helpers
@@ -1246,7 +1299,7 @@ final class QRDestinationComposerTests: XCTestCase {
         
         return .success(.init(model: .mockWithEmptyExcept(), closeAction: {}))
     }
-
+    
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
