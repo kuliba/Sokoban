@@ -16,10 +16,10 @@ extension ResponseMapper {
     
     public struct Authorized: Equatable {
         
-        let category: String
-        let title: String
-        let svg_image: String
-        let text: String
+        public let category: String
+        public let title: String
+        public let svg_image: String
+        public let text: String
         
         public init(
             category: String,

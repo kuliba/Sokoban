@@ -23,22 +23,34 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
     
     init(_ data: ResponseMapper._Data) throws {
         
+        guard let authorized = data.authorized,
+              let serial = data.serial
+        else { throw ResponseFailure() }
+
         self.init(
-            list: data.authorized.map(ResponseMapper.Authorized.init),
-            serial: data.serial
+            list: authorized.compactMap(ResponseMapper.Authorized.init),
+            serial: serial
         )
     }
+    
+    struct ResponseFailure: Error {}
 }
 
 private extension ResponseMapper.Authorized {
     
-    init(_ authorizedData: ResponseMapper._Data._Authorized) {
+    init?(_ authorizedData: ResponseMapper._Data._Authorized) {
+        
+        guard let category = authorizedData.category,
+              let title = authorizedData.title,
+              let svg_image = authorizedData.svg_image,
+              let text = authorizedData.text
+        else { return nil }
         
         self.init(
-            category: authorizedData.category,
-            title: authorizedData.title,
-            svg_image: authorizedData.svg_image,
-            text: authorizedData.text
+            category: category,
+            title: title,
+            svg_image: svg_image,
+            text: text
         )
     }
 }
@@ -46,15 +58,15 @@ private extension ResponseMapper.Authorized {
 private extension ResponseMapper {
     
     struct _Data: Decodable {
-        
-        let serial: String
-        let authorized: [_Authorized]
+
+        let serial: String?
+        let authorized: [_Authorized]?
 
         struct _Authorized: Decodable {
-            let category: String
-            let title: String
-            let svg_image: String
-            let text: String
+            let category: String?
+            let title: String?
+            let svg_image: String?
+            let text: String?
         }
     }
 }
