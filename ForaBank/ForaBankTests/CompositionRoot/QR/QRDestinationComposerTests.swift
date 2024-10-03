@@ -204,8 +204,8 @@ extension QRDestinationComposer {
                     )))
                 }
                 
-            case let .single(`operator`, qrCode, qrMapping):
-                makeInternetTV((qrCode, qrMapping)) { _ in }
+            case let .single(_, qrCode, qrMapping):
+                makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
                 
             default:
                 fatalError()
@@ -874,7 +874,7 @@ final class QRDestinationComposerTests: XCTestCase {
     
     // MARK: - mapped: single
     
-    func test_shouldCallMakeInternetTVWithPayloadOnProvider() {
+    func test_shouldCallMakeInternetTVWithPayloadOnSingle() {
         
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
@@ -885,6 +885,16 @@ final class QRDestinationComposerTests: XCTestCase {
         XCTAssertNoDiff(makeInternetTV.payloads.map(\.1), [qrMapping])
     }
     
+    func test_shouldDeliverInternetTOnSingle() {
+        
+        let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
+
+        expect(sut, with: makeMappedSingle(), toDeliver: .internetTV, on: {
+            
+            makeInternetTV.complete(with: makeInternetTVSuccess())
+        })
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = QRDestinationComposer
@@ -1046,7 +1056,7 @@ final class QRDestinationComposerTests: XCTestCase {
     private func makeMappedMultiple() -> QRModelResult {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        return.mapped(.multiple(multiple, qrCode, qrMapping))
+        return .mapped(.multiple(multiple, qrCode, qrMapping))
     }
     
     private func makeMultipleOperators(
@@ -1145,6 +1155,21 @@ final class QRDestinationComposerTests: XCTestCase {
         )
     }
     
+    private func makeMappedSingle(
+        `operator`: SegmentedOperatorData? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> QRModelResult {
+        
+        return .mapped(.single(`operator` ?? makeSegmentedOperatorData(), qrCode ?? makeQR(), qrMapping ?? makeQRMapping()))
+    }
+    
+    private func makeInternetTVSuccess(
+    ) -> Result<InternetTVDetailsViewModel, Never> {
+        
+        return .success(.init(model: .mockWithEmptyExcept(), closeAction: {}))
+    }
+
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
