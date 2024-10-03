@@ -42,14 +42,14 @@ private extension ResponseMapper.Authorized {
         
         guard let category = authorizedData.category,
               let title = authorizedData.title,
-              let svg_image = authorizedData.svg_image,
+              let svgImage = authorizedData.svgImage,
               let text = authorizedData.text
         else { return nil }
         
         self.init(
             category: category,
             title: title,
-            svg_image: svg_image,
+            svgImage: svgImage,
             text: text
         )
     }
@@ -65,8 +65,22 @@ private extension ResponseMapper {
         struct _Authorized: Decodable {
             let category: String?
             let title: String?
-            let svg_image: String?
+            let svgImage: String?
             let text: String?
+            
+            enum CodingKeys: String, CodingKey {
+                case category, title, text
+                case svgImage = "svg_image"
+            }
+
+            init(from decoder: any Decoder) throws {
+                
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.category = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.category)
+                self.title = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.title)
+                self.svgImage = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.svgImage)
+                self.text = try container.decodeIfPresent(String.self, forKey: _Authorized.CodingKeys.text)
+            }
         }
     }
 }

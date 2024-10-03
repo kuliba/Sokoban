@@ -145,7 +145,7 @@ final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCT
         
         let mapped = try mapResult(.withEmptyImage)
         
-        XCTAssertNoDiff(mapped.list.first?.svg_image, "")
+        XCTAssertNoDiff(mapped.list.first?.svgImage, "")
     }
     
     func test_map_withEmptyText_shouldDeliverValidText() throws {
@@ -173,7 +173,7 @@ final class ResponseMapper_mapGetAuthorizedZoneClientInformDataRequestTests: XCT
         
         let mapped = try mapResult(.withNilImageInOne)
         
-        XCTAssertNoDiff(mapped.list.first?.svg_image, "SVG")
+        XCTAssertNoDiff(mapped.list.first?.svgImage, "SVG")
     }
     
     func test_map_shouldOmitItemWithNilText() throws {
@@ -228,13 +228,13 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
             .init(
                 category: "Техннические работы",
                 title: "Перерыв на обед",
-                svg_image: "svg",
+                svgImage: "svg",
                 text: "С 01:00 по 03:00 11.11.2023 возможны технические работы. Задержки с переводами за границу"
             ),
             .init(
                 category: "Информационные",
                 title: "Приятного аппетита",
-                svg_image: "svg",
+                svgImage: "svg",
                 text: "Специальное предложение для тех кто любит поострей. Вклад в аргентинских песо - 300% годовых. Открыть https://link_click."
             )
         ],

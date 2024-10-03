@@ -18,19 +18,24 @@ extension ResponseMapper {
         
         public let category: String
         public let title: String
-        public let svg_image: String
+        public let svgImage: String
         public let text: String
         
         public init(
             category: String,
             title: String,
-            svg_image: String,
+            svgImage: String,
             text: String
         ) {
             self.category = category
             self.title = title
-            self.svg_image = svg_image
+            self.svgImage = svgImage
             self.text = text
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case category, title, text
+            case svgImage = "svg_image"
         }
     }
 }
