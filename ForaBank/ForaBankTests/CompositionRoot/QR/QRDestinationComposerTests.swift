@@ -50,7 +50,7 @@ extension QRDestinationComposer {
     enum MakePaymentsPayload: Equatable {
         
         case operationSource(Payments.Operation.Source)
-        case qr(QRCode)
+        case qrCode(QRCode)
         case source(Source)
     }
 
@@ -115,7 +115,7 @@ extension QRDestinationComposer {
     typealias OperatorSearch = QRSearchOperatorViewModel
     typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (OperatorSearch) -> Void) -> Void
     
-    typealias MakeDetailPayments = (QRCode, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    typealias MakeDetailPayments = (MakePaymentsPayload, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
     
     typealias ServicePicker = AnywayServicePickerFlowModel
     typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
@@ -267,7 +267,7 @@ private extension QRDestinationComposer {
             makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
             
         case let .none(qrCode):
-            makeDetailPayments(qrCode) { [weak self] in
+            makeDetailPayments(.qrCode(qrCode)) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -767,7 +767,7 @@ final class QRDestinationComposerTests: XCTestCase {
         
         sut.compose(result: .mapped(.none(qrCode)), notify: { _ in }, completion: { _ in })
         
-        XCTAssertNoDiff(makeDetailPayments.payloads, [qrCode])
+        XCTAssertNoDiff(makeDetailPayments.payloads, [.qrCode(qrCode)])
     }
     
     func test_mapped_none_shouldDeliverDetailPayments() {
@@ -1097,7 +1097,7 @@ final class QRDestinationComposerTests: XCTestCase {
     private typealias SUT = QRDestinationComposer
     private typealias MakeInternetTV = Spy<(QRCode, QRMapping), InternetTVDetailsViewModel, Never>
     private typealias MakePaymentsSpy = Spy<SUT.Source, ClosePaymentsViewModelWrapper, Never>
-    private typealias MakeDetailPaymentsSpy = Spy<QRCode, ClosePaymentsViewModelWrapper, Never>
+    private typealias MakeDetailPaymentsSpy = Spy<SUT.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeSourcePaymentsSpy = Spy<SUT.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailure = Spy<SUT.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQR = Spy<SUT.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
