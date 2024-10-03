@@ -102,7 +102,8 @@ extension QRDestinationComposer {
     
     typealias MakeDetailPayments = (QRCode, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
     
-    typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (()) -> Void) -> Void
+    typealias ServicePicker = AnywayServicePickerFlowModel
+    typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
 }
 
 extension QRDestinationComposer {
@@ -188,7 +189,15 @@ extension QRDestinationComposer {
                 }
                 
             case let .provider(payload):
-                makeServicePicker(payload) { completion(.servicePicker) }
+                makeServicePicker(payload) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    completion(.servicePicker(.init(
+                        model: $0,
+                        cancellables: self.bind($0, with: notify)
+                    )))
+                }
                 
             default:
                 fatalError()
@@ -222,7 +231,7 @@ extension QRDestinationComposer {
         case failure(QRFailedViewModel)
         case operatorSearch(OperatorSearch)
         case providerPicker(Node<ProviderPicker>)
-        case servicePicker
+        case servicePicker(Node<AnywayServicePickerFlowModel>)
         
         typealias PaymentsNode = Node<ClosePaymentsViewModelWrapper>
     }
@@ -271,9 +280,42 @@ private extension QRDestinationComposer {
         
         return [isLoadingFlip, outside]
     }
+    
+    func bind(
+        _ flow: AnywayServicePickerFlowModel,
+        with notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let isLoading = flow.$state.map(\.isLoading)
+        let isLoadingFlip = isLoading
+            .combineLatest(isLoading.dropFirst())
+            .filter { $0 != $1 }
+            .map(\.0)
+            .sink { notify(.isLoading($0)) }
+        
+        let outside = flow.$state
+            .compactMap(\.notifyOutside)
+            .sink { notify(.outside($0)) }
+        
+        return [isLoadingFlip, outside]
+    }
 }
 
 private extension SegmentedPaymentProviderPickerFlowState {
+    
+    var notifyOutside: QRDestinationComposer.NotifyEvent.Outside? {
+        
+        switch outside {
+        case .none:       return .none
+        case .addCompany: return .chat
+        case .main:       return .main
+        case .payments:   return .payments
+        case .scanQR:     return .scanQR
+        }
+    }
+}
+
+private extension AnywayServicePickerFlowState {
     
     var notifyOutside: QRDestinationComposer.NotifyEvent.Outside? {
         
@@ -730,11 +772,94 @@ final class QRDestinationComposerTests: XCTestCase {
         
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
-
+        
         expect(sut, with: .mapped(.provider(payload)), toDeliver: .servicePicker, on: {
             
-            makeServicePicker.complete(with: .success(()))
+            makeServicePicker.complete(with: makeServicePickerSuccess())
         })
+    }
+    
+#warning("FIXME")
+    //    func test_shouldDeliverIsLoadingTrueEventOnServicePickerEvent() {
+    //
+    //        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+    //
+    //        expect(
+    //            sut,
+    //            result: makeMappedMixed(),
+    //            delivers: .isLoading(true),
+    //            for: { $0.providerPickerSetIsLoading(to: true) },
+    //            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+    //        )
+    //    }
+    //
+    //    func test_shouldDeliverIsLoadingFalseEventOnServicePickerEvent() {
+    //
+    //        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+    //
+    //        expect(
+    //            sut,
+    //            result: makeMappedMixed(),
+    //            delivers: .isLoading(false),
+    //            for: { $0.providerPickerSetIsLoading(to: false) },
+    //            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+    //        )
+    //    }
+    
+    func test_shouldDeliverOutsideChatEventOnServicePickerEvent() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.provider(payload)),
+            delivers: .outside(.chat),
+            for: { $0.servicePicker?.event(.goTo(.addCompany)) },
+            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverOutsideMainEventOnServicePickerEvent() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.provider(payload)),
+            delivers: .outside(.main),
+            for: { $0.servicePicker?.event(.goTo(.main)) },
+            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverOutsidePaymentsEventOnServicePickerEvent() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.provider(payload)),
+            delivers: .outside(.payments),
+            for: { $0.servicePicker?.event(.goTo(.payments)) },
+            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+        )
+    }
+    
+    func test_shouldDeliverOutsideScanQREventOnServicePickerEvent() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, _,_,_,_,_,_, makeServicePicker) = makeSUT()
+        
+        expect(
+            sut,
+            result: .mapped(.provider(payload)),
+            delivers: .outside(.scanQR),
+            for: { $0.servicePicker?.event(.goTo(.scanQR)) },
+            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+        )
     }
     
     // MARK: - Helpers
@@ -746,7 +871,7 @@ final class QRDestinationComposerTests: XCTestCase {
     private typealias MakeProviderPicker = Spy<SUT.MakeProviderPickerPayload, SUT.ProviderPicker, Never>
     private typealias MakeOperatorSearch = Spy<SUT.MakeOperatorSearchPayload, SUT.OperatorSearch, Never>
     private typealias MakeDetailPaymentsSpy = Spy<QRCode, ClosePaymentsViewModelWrapper, Never>
-    private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, Void, Never>
+    private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, SUT.ServicePicker, Never>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -965,6 +1090,31 @@ final class QRDestinationComposerTests: XCTestCase {
         return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
     }
     
+    private func makeServicePickerSuccess(
+    ) -> Result<SUT.ServicePicker, Never> {
+        
+        return .success(makeServicePicker())
+    }
+    
+    private func makeServicePicker(
+    ) -> SUT.ServicePicker {
+        
+        return .init(
+            initialState: .init(
+                content: .init(
+                    initialState: .init(payload: .preview),
+                    reduce: { state, _ in (state, nil) },
+                    handleEffect: { _,_ in }
+                )
+            ),
+            factory: .init(
+                makeAnywayFlowModel: { _ in fatalError() },
+                makePayByInstructionsViewModel: { _ in fatalError() }
+            ),
+            scheduler: .immediate
+        )
+    }
+    
     private func expect(
         _ sut: SUT? = nil,
         with payload: QRModelResult,
@@ -1035,6 +1185,8 @@ private extension ClosePaymentsViewModelWrapper {
     }
 }
 
+// MARK: - DSL
+
 private extension QRDestinationComposer.QRDestination {
     
     // MARK: - c2bSubscribe
@@ -1086,6 +1238,16 @@ private extension QRDestinationComposer.QRDestination {
         to goTo: SegmentedPaymentProviderPickerFlowEvent.GoTo
     ) {
         providerPicker?.event(.goTo(goTo))
+    }
+    
+    // MARK: - servicePicker
+    
+    var servicePicker: AnywayServicePickerFlowModel? {
+        
+        guard case let .servicePicker(servicePicker) = self
+        else { return nil }
+        
+        return servicePicker.model
     }
     
     // MARK: - equatable
