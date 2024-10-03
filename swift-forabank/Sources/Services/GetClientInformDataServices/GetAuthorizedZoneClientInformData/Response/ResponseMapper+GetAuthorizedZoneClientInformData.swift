@@ -9,12 +9,12 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public typealias GetAuthorizedZoneClientInformDataResponse = SerialStamped<String, Authorized>
+    public typealias GetAuthorizedZoneClientInformDataResponse = SerialStamped<String, GetAuthorizedZoneClientInformData>
 }
 
 extension ResponseMapper {
     
-    public struct Authorized: Equatable {
+    public struct GetAuthorizedZoneClientInformData: Equatable {
         
         public let category: String
         public let title: String

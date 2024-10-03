@@ -28,7 +28,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
         else { throw ResponseFailure() }
 
         self.init(
-            list: notAuthorized.compactMap(ResponseMapper.NotAuthorized.init),
+            list: notAuthorized.compactMap(ResponseMapper.GetNotAuthorizedZoneClientInformData.init),
             serial: serial
         )
     }
@@ -36,7 +36,7 @@ private extension ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {
     struct ResponseFailure: Error {}
 }
 
-private extension ResponseMapper.NotAuthorized {
+private extension ResponseMapper.GetNotAuthorizedZoneClientInformData {
     
     init?(_ data: ResponseMapper._Data._NotAuthorized) {
         
@@ -54,7 +54,7 @@ private extension ResponseMapper.NotAuthorized {
     }
 }
 
-private extension ResponseMapper.NotAuthorized.Update {
+private extension ResponseMapper.GetNotAuthorizedZoneClientInformData.Update {
     
     init?(_ updateData: ResponseMapper._Data._Update) {
 

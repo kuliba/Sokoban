@@ -28,7 +28,7 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
         else { throw ResponseFailure() }
 
         self.init(
-            list: authorized.compactMap(ResponseMapper.Authorized.init),
+            list: authorized.compactMap(ResponseMapper.GetAuthorizedZoneClientInformData.init),
             serial: serial
         )
     }
@@ -36,7 +36,7 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformDataResponse {
     struct ResponseFailure: Error {}
 }
 
-private extension ResponseMapper.Authorized {
+private extension ResponseMapper.GetAuthorizedZoneClientInformData {
     
     init?(_ authorizedData: ResponseMapper._Data._Authorized) {
         
