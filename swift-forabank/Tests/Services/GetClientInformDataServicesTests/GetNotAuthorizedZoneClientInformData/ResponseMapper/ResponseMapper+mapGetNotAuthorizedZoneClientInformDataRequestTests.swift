@@ -169,12 +169,11 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         XCTAssertNoDiff(mapped.list.map(\.text), ["TEXT"])
     }
         
-    func test_map_shouldOmitItemWithNilUpdate() throws {
+    func test_map_shouldAllowOptionalUpdate() throws {
         
         let mapped = try mapResult(.withNilUpdateInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [
-            nil,
+        XCTAssertNoDiff(mapped.list.map(\.update), [ nil,
             .init(
                 action: "ACTION",
                 platform: "iOS",
@@ -184,38 +183,32 @@ final class ResponseMapper_mapGetNotAuthorizedZoneClientInformDataRequestTests: 
         ])
     }
     
-    func test_map_shouldOmitItemWithNilAction() throws {
+    func test_map_shouldHandleOptionalActionInUpdate() throws {
         
         let mapped = try mapResult(.withNilActionInOne)
         
         XCTAssertNoDiff(mapped.list.map(\.update?.action), [nil, "ACTION"])
     }
     
-    func test_map_shouldOmitItemWithNilPlatform() throws {
+    func test_map_shouldHandleOptionalPlatformInUpdate() throws {
         
         let mapped = try mapResult(.withNilPlatformInOne)
         
         XCTAssertNoDiff(mapped.list.map(\.update?.platform), [nil, "iOS"])
     }
     
-    func test_map_shouldOmitItemWithNilVersion() throws {
+    func test_map_shouldHandleOptionalVersionInUpdate() throws {
         
         let mapped = try mapResult(.withNilVersionInOne)
         
         XCTAssertNoDiff(mapped.list.map(\.update?.version), [nil, "VERSION"])
     }
 
-    func test_map_shouldOmitItemWithNilLink() throws {
+    func test_map_shouldHandleOptionalLinkInUpdate() throws {
         
         let mapped = try mapResult(.withNilLinkInOne)
         
-        XCTAssertNoDiff(mapped.list.map(\.update), [.init(
-                action: "ACTION",
-                platform: "iOS",
-                version: "VERSION",
-                link: "LINK"
-            )
-        ])
+        XCTAssertNoDiff(mapped.list.map(\.update?.link), [nil, "LINK"])
     }
 
     func test_map_withEmptyTitle_shouldDeliverValidTitle() throws {
@@ -1000,13 +993,13 @@ private extension String {
         "notAuthorized": [
             {
                 "authBlocking": false,
-                "title": null,
-                "text": null,
+                "title": "TITLE",
+                "text": "TEXT",
                 "update": {
                     "action": "ACTION",
                     "platform": "iOS",
                     "version": "VERSION",
-                    "link": "null"
+                    "link": null
                 }
             },
             {
