@@ -22,7 +22,6 @@ extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
         switch state.link {
-            // case let .fastPaymentSettings(.new(fpsRoute)):
         case .fastPaymentSettings(.new):
             
             switch event {
