@@ -40,7 +40,7 @@ public struct FilterHistoryState: Equatable {
     public let title: String
     
     public var selectDates: ClosedRange<Date>?
-    public var selectedPeriod: Period
+    public var selectedPeriod: Period?
     public var selectedTransaction: TransactionType?
     public var selectedServices: Set<String>
     
@@ -51,7 +51,7 @@ public struct FilterHistoryState: Equatable {
     public init(
         title: String,
         selectDates: ClosedRange<Date>?,
-        selectedPeriod: Period,
+        selectedPeriod: Period?,
         selectedTransaction: TransactionType? = nil,
         selectedServices: Set<String> = [],
         periods: [Period],

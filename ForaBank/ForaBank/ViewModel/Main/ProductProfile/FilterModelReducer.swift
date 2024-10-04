@@ -72,7 +72,7 @@ final class FilterModelReducer {
                     selectPeriod: period
                 ))
             } else {
-                state.filter.selectedPeriod = .dates
+                state.filter.selectedPeriod = period
                 state.filter.selectDates = nil
             }
             

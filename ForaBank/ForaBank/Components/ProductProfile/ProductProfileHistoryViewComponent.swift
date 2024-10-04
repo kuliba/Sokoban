@@ -223,9 +223,10 @@ extension ProductProfileHistoryView {
                                 }
                             }
 
-                            if filter.filter.selectDates != nil {
+                            if filter.filter.selectDates != nil,
+                                let selectPeriod = filter.filter.selectedPeriod {
                                 
-                                switch filter.filter.selectedPeriod {
+                                switch selectPeriod {
                                 case .week:
                                     storageStatements = storageStatements.filter({
                                         $0.dateValue.isBetweenStartDate(.startOfWeek ?? Date(), endDateInclusive: Date())

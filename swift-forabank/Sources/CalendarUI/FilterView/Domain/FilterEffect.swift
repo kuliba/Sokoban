@@ -16,12 +16,12 @@ public enum FilterEffect: Equatable {
 
         public let range: ClosedRange<Date>
         public let productId: Int
-        public let selectPeriod: FilterHistoryState.Period
+        public let selectPeriod: FilterHistoryState.Period?
         
         public init(
             range: ClosedRange<Date>,
             productId: Int,
-            selectPeriod: FilterHistoryState.Period
+            selectPeriod: FilterHistoryState.Period?
         ) {
             self.range = range
             self.productId = productId

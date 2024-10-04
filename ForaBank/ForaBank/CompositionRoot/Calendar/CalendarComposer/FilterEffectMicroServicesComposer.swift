@@ -123,7 +123,7 @@ private extension FilterState {
     init(
         product: ProductData,
         range: ClosedRange<Date>,
-        selectedPeriod: FilterHistoryState.Period,
+        selectedPeriod: FilterHistoryState.Period?,
         statements: [ProductStatementData]
     ) {
         let services = Array(Set(statements.compactMap { $0.groupName }))
