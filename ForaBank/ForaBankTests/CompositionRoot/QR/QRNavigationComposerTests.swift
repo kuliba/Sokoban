@@ -120,7 +120,9 @@ extension QRNavigationComposer {
         let message: String
     }
     
-    typealias MakeSberQR = (URL, @escaping (Result<SberQR, ErrorMessage>) -> Void) -> Void
+    typealias SberPay = (SberQRConfirmPaymentState) -> Void
+    typealias MakeSberQRPayload = (URL, SberPay)
+    typealias MakeSberQR = (MakeSberQRPayload, @escaping (Result<SberQR, ErrorMessage>) -> Void) -> Void
     
     typealias ServicePicker = AnywayServicePickerFlowModel
     typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
@@ -143,6 +145,7 @@ extension QRNavigationComposer {
         case dismiss
         case isLoading(Bool)
         case outside(Outside)
+        case sberPay(SberQRConfirmPaymentState)
         case scanQR
         
         enum Outside: Equatable {
@@ -195,7 +198,7 @@ private extension QRNavigationComposer {
             handle(mapped: mapped, with: notify, and: completion)
             
         case let .sberQR(url):
-            makeSberQR(url) {
+            makeSberQR((url, { notify(.sberPay($0)) })) {
                 
                 switch $0 {
                 case let .failure(error):
@@ -569,7 +572,11 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
+        sut.compose(
+            result: .failure(makeQR()), 
+            notify: { events.append($0) },
+            completion: { _ in }
+        )
         makeQRFailure.payloads.first.map(\.detailPayment)?(qrCode)
         
         XCTAssertNoDiff(events, [.detailPayment(qrCode)])
@@ -924,7 +931,13 @@ final class QRNavigationComposerTests: XCTestCase {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .mapped(.single(makeSegmentedOperatorData(), qrCode, qrMapping)), notify: { _ in }, completion: { _ in })
+        sut.compose(
+            result: .mapped(.single(
+                makeSegmentedOperatorData(), qrCode, qrMapping
+            )),
+            notify: { _ in },
+            completion: { _ in }
+        )
         
         XCTAssertNoDiff(makeInternetTV.payloads.map(\.0), [qrCode])
         XCTAssertNoDiff(makeInternetTV.payloads.map(\.1), [qrMapping])
@@ -946,7 +959,11 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .mapped(.source(.avtodor)), notify: { _ in }, completion: { _ in })
+        sut.compose(
+            result: .mapped(.source(.avtodor)),
+            notify: { _ in },
+            completion: { _ in }
+        )
         
         XCTAssertNoDiff(makePayments.payloads, [.operationSource(.avtodor)])
     }
@@ -1003,14 +1020,30 @@ final class QRNavigationComposerTests: XCTestCase {
     
     // MARK: - sberQR
     
-    func test_sberQR_shouldCallMakeSberQRWithPayload() {
+    func test_sberQR_shouldCallMakeSberQRWithURLInPayload() {
         
         let url = anyURL()
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
         sut.compose(result: .sberQR(url), notify: { _ in }) { _ in }
         
-        XCTAssertEqual(makeSberQR.payloads, [url])
+        XCTAssertEqual(makeSberQR.payloads.map(\.0), [url])
+    }
+    
+    func test_sberQR_shouldCallMakeSberQRWithNotifyInPayload() {
+        
+        let sberState = makeSberQRConfirmPaymentState()
+        let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
+        var receivedEvents = [SUT.NotifyEvent]()
+        
+        sut.compose(
+            result: .sberQR(anyURL()),
+            notify: { receivedEvents.append($0) },
+            completion: { _ in }
+        )
+        makeSberQR.payloads.map(\.1).first?(sberState)
+        
+        XCTAssertNoDiff(receivedEvents, [.sberPay(sberState)])
     }
     
     func test_sberQR_shouldDeliverSberQRFailureOnMakeSberQRFailure() {
@@ -1129,7 +1162,7 @@ final class QRNavigationComposerTests: XCTestCase {
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
     private typealias MakeProviderPickerSpy = Spy<SUT.MakeProviderPickerPayload, SUT.ProviderPicker, Never>
     private typealias MakeOperatorSearchSpy = Spy<SUT.MakeOperatorSearchPayload, SUT.OperatorSearch, Never>
-    private typealias MakeSberQRSpy = Spy<URL, Void, SUT.ErrorMessage>
+    private typealias MakeSberQRSpy = Spy<SUT.MakeSberQRPayload, Void, SUT.ErrorMessage>
     private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, SUT.ServicePicker, Never>
     
     private func makeSUT(
@@ -1401,6 +1434,12 @@ final class QRNavigationComposerTests: XCTestCase {
     ) -> SUT.ErrorMessage {
         
         return .init(title: title, message: message)
+    }
+    
+    private func makeSberQRConfirmPaymentState(
+    ) -> SberQRConfirmPaymentState {
+        
+        return .init(confirm: .editableAmount(.preview))
     }
     
     private func expect(
