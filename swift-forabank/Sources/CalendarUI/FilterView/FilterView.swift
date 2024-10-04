@@ -112,7 +112,7 @@ public struct FilterView<ButtonsView: View>: View {
                         
                         filterEvent(.selectedPeriod(period))
                     case .resetPeriod:
-                        filterEvent(.selectedDates(nil, .dates))
+                        filterEvent(.selectedDates(nil, nil))
                     }
                 },
                 config: .init(
@@ -181,9 +181,8 @@ extension FilterView {
 
     var hasFiltered: Bool {
         
-        !self.filterState.filter.selectedServices.isEmpty ||
-        self.filterState.filter.selectedTransaction != nil ||
-        self.filterState.filter.selectDates != nil
+        return (self.filterState.filter.selectDates != nil &&
+                self.filterState.filter.selectedPeriod != nil)
     }
 }
 
@@ -194,8 +193,7 @@ private extension FilterState {
     ) -> String {
         
         if let lowerDate = filter.selectDates?.lowerBound,
-           let upperDate = filter.selectDates?.upperBound,
-           filter.selectedPeriod == .dates {
+           let upperDate = filter.selectDates?.upperBound{
             
             return "\(DateFormatter.shortDate.string(from: lowerDate)) - \(DateFormatter.shortDate.string(from: upperDate))"
             
@@ -253,8 +251,7 @@ private extension FilterView {
                             }
                             
                             if state.filter.selectDates?.lowerBound != nil,
-                               state.filter.selectDates?.upperBound != nil,
-                               state.filter.selectedPeriod == .dates {
+                               state.filter.selectDates?.upperBound != nil {
                                 
                                 Button { event(.resetPeriod) } label: {
                                     
