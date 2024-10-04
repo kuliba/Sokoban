@@ -1024,7 +1024,7 @@ final class QRNavigationComposerTests: XCTestCase {
         }
     }
     
-    func test_sberQR_shouldDeliverSberQROnMakeSberQR() {
+    func test_sberQR_shouldDeliverSberQROnMakeSberQRSuccess() {
         
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
