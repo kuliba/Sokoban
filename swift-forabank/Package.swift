@@ -77,6 +77,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .plainClientInformBottomSheet,
         // UI Components
         .carouselComponent,
         .paymentComponents,
@@ -245,6 +246,8 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .plainClientInformBottomSheet,
+        .plainClientInformBottomSheetTests,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -542,6 +545,13 @@ private extension Product {
         ]
     )
     
+    static let plainClientInformBottomSheet = library(
+        name: .plainClientInformBottomSheet,
+        targets: [
+            .plainClientInformBottomSheet
+        ]
+    )
+
     // MARK: - UI Components
     
     static let carouselComponent = library(
@@ -2295,6 +2305,22 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
+    static let plainClientInformBottomSheet = target(
+        name: .plainClientInformBottomSheet,
+        dependencies: [
+            .rxViewModel
+        ],
+        path: "Sources/UI/\(String.plainClientInformBottomSheet)"
+    )
+    
+    static let plainClientInformBottomSheetTests = testTarget(
+        name: .plainClientInformBottomSheetTests,
+        dependencies: [
+            .plainClientInformBottomSheet
+        ],
+        path: "Tests/UI/\(String.plainClientInformBottomSheetTests)"
+    )
+    
     // MARK: - UI Components
     
     static let amountComponent = target(
@@ -2821,6 +2847,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
     
+    static let plainClientInformBottomSheet = byName(
+        name: .plainClientInformBottomSheet
+    )
+
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -3166,6 +3196,9 @@ private extension String {
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
+    static let plainClientInformBottomSheet = "PlainClientInformBottomSheet"
+    static let plainClientInformBottomSheetTests = "PlainClientInformBottomSheetTests"
+
     // MARK: - UI Components
     
     static let amountComponent = "AmountComponent"
