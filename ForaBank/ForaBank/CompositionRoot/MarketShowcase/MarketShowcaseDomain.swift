@@ -20,15 +20,15 @@ extension MarketShowcaseDomain{
     
     // MARK: - Content
     
-    typealias ContentState = MarketShowcaseContentState<Landing>
-    typealias ContentStatus = MarketShowcaseContentStatus<Landing>
-    typealias ContentEvent = MarketShowcaseContentEvent<Landing>
+    typealias ContentState = MarketShowcaseContentState<Landing, InformerPayload>
+    typealias ContentStatus = MarketShowcaseContentStatus<Landing, InformerPayload>
+    typealias ContentEvent = MarketShowcaseContentEvent<Landing, InformerPayload>
     typealias ContentEffect = MarketShowcaseContentEffect
-    typealias ContentError = LandingMapper.MapperError
+    typealias ContentError = MarketShowcase.BackendFailure< InformerPayload>
     
-    typealias ContentReducer = MarketShowcaseContentReducer<Landing>
-    typealias ContentEffectHandler = MarketShowcaseContentEffectHandler<Landing, ContentError>
-    typealias ContentMicroService = MarketShowcaseContentEffectHandlerMicroServices<Landing, ContentError>
+    typealias ContentReducer = MarketShowcaseContentReducer<Landing, InformerPayload>
+    typealias ContentEffectHandler = MarketShowcaseContentEffectHandler<Landing, InformerPayload>
+    typealias ContentMicroService = MarketShowcaseContentEffectHandlerMicroServices<Landing, InformerPayload>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
     
@@ -47,5 +47,5 @@ extension MarketShowcaseDomain{
     typealias Flow = RxViewModel<FlowState, FlowEvent, FlowEffect>
     
     typealias Destination = Void
-    typealias InformerPayload = Void
+    typealias InformerPayload = InformerData
 }

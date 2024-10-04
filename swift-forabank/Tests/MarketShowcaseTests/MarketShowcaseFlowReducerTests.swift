@@ -40,9 +40,9 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     
     func test_reduce_failure_error_shouldStateToAlert() {
         
-        assertState(.failure(.error("error")), on: .init()) {
+        assertState(.failure(.error("message")), on: .init()) {
             
-            $0.status = .alert(.init(message: "error"))
+            $0.status = .alert(.init(message: "message"))
         }
     }
     

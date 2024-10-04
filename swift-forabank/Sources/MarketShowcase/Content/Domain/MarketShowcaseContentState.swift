@@ -5,14 +5,14 @@
 //  Created by Andryusina Nataly on 25.09.2024.
 //
 
-public struct MarketShowcaseContentState<Landing> {
+public struct MarketShowcaseContentState<Landing, InformerPayload> {
     
     public var selection: Selection?
-    public var status: MarketShowcaseContentStatus<Landing>
+    public var status: MarketShowcaseContentStatus<Landing, InformerPayload>
 
     public init(
         selection: Selection? = nil,
-        status: MarketShowcaseContentStatus<Landing>
+        status: MarketShowcaseContentStatus<Landing, InformerPayload>
     ) {
         self.selection = selection
         self.status = status
@@ -27,14 +27,14 @@ public extension MarketShowcaseContentState {
     }
 }
 
-extension MarketShowcaseContentState: Equatable where Landing: Equatable {}
+extension MarketShowcaseContentState: Equatable where Landing: Equatable, InformerPayload: Equatable {}
 
-public enum MarketShowcaseContentStatus<Landing> {
+public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
     
     case initiate
     case inflight
     case loaded(Landing)
-    case failure
+    case failure(Kind)
     
     var isLoading: Bool {
         
@@ -45,6 +45,13 @@ public enum MarketShowcaseContentStatus<Landing> {
             return false
         }
     }
+    
+    public enum Kind {
+        case alert(String)
+        case informer(InformerPayload)
+    }
 }
 
-extension MarketShowcaseContentStatus: Equatable where Landing: Equatable {}
+extension MarketShowcaseContentStatus: Equatable where Landing: Equatable, InformerPayload: Equatable {}
+
+extension MarketShowcaseContentStatus.Kind: Equatable where InformerPayload: Equatable {}

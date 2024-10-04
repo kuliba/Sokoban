@@ -61,18 +61,32 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
         assert(.loaded("old"), on: .init(status: .loaded("new")), effect: nil)
     }
     
-    func test_reduce_loadFailure_stateInflight_shouldStatusToFailure() {
+    func test_reduce_failureAlert_stateInflight_shouldStatusToFailure() {
         
-        assertState(.loadFailure, on: .init(status: .failure)) {
+        assertState(.failure(.alert("alert")), on: .init(status: .inflight)) {
             
-            $0.status = .failure
+            $0.status = .failure(.alert("alert"))
         }
     }
     
-    func test_reduce_loadFailure_stateInflight_shouldDeliverNoEffect() {
+    func test_reduce_failureAlert_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.loadFailure, on: .init(status: .failure), effect: nil)
+        assert(.failure(.alert("alert")), on: .init(status: .inflight), effect: nil)
     }
+    
+    func test_reduce_failureInformer_stateInflight_shouldStatusToFailure() {
+        
+        assertState(.failure(.informer("informer")), on: .init(status: .inflight)) {
+            
+            $0.status = .failure(.informer("informer"))
+        }
+    }
+    
+    func test_reduce_failureInformer_stateInflight_shouldDeliverNoEffect() {
+        
+        assert(.failure(.alert("alert")), on: .init(status: .inflight), effect: nil)
+    }
+
     
     func test_reduce_selectLandingType_shouldSelectionToLanding() {
         
@@ -97,12 +111,12 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     
     func test_reduce_reset_shouldDeliverNoEffect() {
         
-        assert(.loadFailure, on: .init(selection: .landingType(""), status: .inflight), effect: nil)
+        assert(.resetSelection, on: .init(selection: .landingType(""), status: .inflight), effect: nil)
     }
 
     // MARK: - Helpers
     
-    private typealias SUT = MarketShowcaseContentReducer<String>
+    private typealias SUT = MarketShowcaseContentReducer<String, String>
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
