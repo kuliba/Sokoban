@@ -23,7 +23,7 @@ public final class FastPaymentsSettingsEffectHandler {
         handleContractEffect: @escaping HandleContractEffect,
         getC2BSub: @escaping GetC2BSub,
         getSettings: @escaping GetSettings,
-        prepareDeleteDefaultBank: PrepareDeleteDefaultBank,
+        prepareDeleteDefaultBank: @escaping PrepareDeleteDefaultBank,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         updateProduct: @escaping UpdateProduct
     ) {
@@ -31,7 +31,7 @@ public final class FastPaymentsSettingsEffectHandler {
         self.handleContractEffect = handleContractEffect
         self.getC2BSub = getC2BSub
         self.getSettings = getSettings
-        self.prepareDeleteDefaultBank = prepareSetBankDefault
+        self.prepareDeleteDefaultBank = prepareDeleteDefaultBank
         self.prepareSetBankDefault = prepareSetBankDefault
         self.updateProduct = updateProduct
     }
