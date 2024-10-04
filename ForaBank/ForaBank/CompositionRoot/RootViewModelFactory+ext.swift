@@ -210,19 +210,20 @@ extension RootViewModelFactory {
                 let filterEffectHandler = FilterModelEffectHandler(
                     microServices: composer.compose()
                 )
-                let services = model.historyCategories(productId: payload.productId)
+                let firstDay = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+                let services = model.historyCategories(range: payload.state.selectDates ?? firstDay...Date(), productId: payload.productId)
                 let viewModel = FilterViewModel(
                     initialState: .init(
                         productId: payload.productId,
                         calendar: .init(
                             date: Date(),
-                            range: .init(range: payload.state.selectDates ?? (Date().firstDayOfMonth())...Date()),
+                            range: .init(range: payload.state.selectDates ?? firstDay...Date()),
                             monthsData: .generate(startDate: model.calendarDayStart(payload.productId)),
                             periods: FilterHistoryState.Period.allCases
                         ),
                         filter: .init(
                             title: "Фильтры",
-                            selectDates: payload.state.selectDates,
+                            selectDates: payload.state.selectDates ?? firstDay...Date(),
                             selectedPeriod: .dates,
                             selectedTransaction: payload.state.selectedTransaction,
                             selectedServices: payload.state.selectedServices,

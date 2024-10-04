@@ -176,12 +176,6 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
-    //MARK: remove
-    func historyCategories() -> [String] {
-            
-        model.historyCategories(productId: self.product.activeProductId)
-    }
-    
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -3235,9 +3229,15 @@ extension ProductData {
 extension Model {
     
     func historyCategories(
+        range: ClosedRange<Date>,
         productId: ProductData.ID
     ) -> [String] {
                 
-        Array(Set(statements.value[productId]?.statements.map(\.groupName) ?? []))
+        if let statements = statements.value[productId]?.statements.filter({ range.contains($0.dateValue)} ) {
+            
+            return Array(Set(statements.map(\.groupName)))
+        } else {
+            return []
+        }
     }
 }
