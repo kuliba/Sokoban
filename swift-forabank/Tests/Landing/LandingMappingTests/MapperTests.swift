@@ -548,6 +548,25 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_carouselWithTabsWithError_notDeliversCarouselWithTabsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [])
+    }
+    
+    func test_map_carouselWithTabsWithError_deliversMultilineHeaderMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiLineHeaders, [
+            .init(
+                backgroundColor: "WHITE",
+                regularTextList: ["Наши"],
+                boldTextList: ["продукты"])
+        ])
+    }
+
     func test_map_carouselWithDots_deliversCarouselWithDotsInMain() throws {
         
         let landing = try XCTUnwrap(map(data: Data(String.carouselWithDots.utf8)))
@@ -3347,6 +3366,49 @@ private extension String {
     }
     """
 
+    static let errorCarouselWithTabs = """
+    {
+        "statusCode": 0,
+        "errorMessage": null,
+        "data": {
+            "serial": "8a343d9b6664f9f4fdc45f05bbdc284c",
+            "main": [
+        {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                    "backgroundColor": "WHITE",
+                    "regularTextList": ["Наши"],
+                    "boldTextList": ["продукты"]
+                }
+            },
+        {
+            "type": "HORIZONTAL_SLIDER_WITH_TABS",
+            "data": {
+                "title": "Название раздела",
+                "size": "182х124",
+                "scale": "medium",
+                "loopedScrolling": null,
+                "tabs": [{
+                    "name": "Вкладка 1",
+                    "list": [{
+                        "imageLink": "dict/getProductCatalogImage?image=/products/banners/yandex_364×248.png",
+                    }, {
+                        "link": ""
+                    }]
+                }, {
+                    "name": "Вкладка 2",
+                    "list": [ {
+                        "action": {
+                            "actionType": "LANDING",
+                            "target": "abroadSticker"
+                        }
+                    }]
+                }]
+            }
+        }]
+        }
+    }
+    """
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
