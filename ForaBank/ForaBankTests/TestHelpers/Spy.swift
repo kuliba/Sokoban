@@ -31,6 +31,23 @@ final class Spy<Payload, Success, Failure: Error> {
     }
 }
 
+extension Spy {
+    
+    func complete(
+        with failure: Failure,
+        at index: Int = 0
+    ) {
+        messages[index].completion(.failure(failure))
+    }
+    
+    func complete(
+        with success: Success,
+        at index: Int = 0
+    ) {
+        messages[index].completion(.success(success))
+    }
+}
+
 extension Spy where Payload == Void {
     
     func process(completion: @escaping Completion) {
