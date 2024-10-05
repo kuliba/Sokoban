@@ -424,7 +424,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let url = anyURL()
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .c2bSubscribeURL(url), notify: { _ in }) { _ in }
+        sut.compose(result: .c2bSubscribeURL(url))
         
         XCTAssertNoDiff(makePayments.payloads, [.source(.c2bSubscribe(url))])
     }
@@ -486,7 +486,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let url = anyURL()
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .c2bURL(url), notify: { _ in }) { _ in }
+        sut.compose(result: .c2bURL(url))
         
         XCTAssertNoDiff(makePayments.payloads, [.source(.c2b(url))])
     }
@@ -548,7 +548,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let qrCode = makeQR()
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         
-        sut.compose(result: .failure(qrCode), notify: { _ in }) { _ in }
+        sut.compose(result: .failure(qrCode))
         
         XCTAssertNoDiff(makeQRFailure.payloads.map(\.qrCode), [qrCode])
     }
@@ -596,7 +596,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .mapped(.missingINN), notify: { _ in }) { _ in }
+        sut.compose(result: .mapped(.missingINN))
         
         XCTAssertEqual(makeQRFailure.payloads.count, 1)
     }
@@ -641,7 +641,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
         let (sut, _,_,_,_, makeProviderPicker, _,_,_) = makeSUT()
         
-        sut.compose(result: result, notify: { _ in }, completion: { _ in })
+        sut.compose(result: result)
         
         XCTAssertNoDiff(makeProviderPicker.payloads, [
             .init(mixed: mixed, qrCode: qrCode, qrMapping: qrMapping)
@@ -745,7 +745,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
         let (sut, _,_,_,_,_, makeOperatorSearch, _,_) = makeSUT()
         
-        sut.compose(result: result, notify: { _ in }, completion: { _ in })
+        sut.compose(result: result)
         
         XCTAssertNoDiff(makeOperatorSearch.payloads, [
             .init(multiple: multiple, qrCode: qrCode, qrMapping: qrMapping)
@@ -771,7 +771,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let qrCode = makeQR()
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .mapped(.none(qrCode)), notify: { _ in }, completion: { _ in })
+        sut.compose(result: .mapped(.none(qrCode)))
         
         XCTAssertNoDiff(makePayments.payloads, [.qrCode(qrCode)])
     }
@@ -833,7 +833,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, _,_,_,_,_,_,_, makeServicePicker) = makeSUT()
         
-        sut.compose(result: .mapped(.provider(payload)), notify: { _ in }, completion: { _ in })
+        sut.compose(result: .mapped(.provider(payload)))
         
         XCTAssertNoDiff(makeServicePicker.payloads, [payload])
     }
@@ -1033,7 +1033,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let url = anyURL()
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
-        sut.compose(result: .sberQR(url), notify: { _ in }) { _ in }
+        sut.compose(result: .sberQR(url))
         
         XCTAssertEqual(makeSberQR.payloads.map(\.0), [url])
     }
@@ -1083,7 +1083,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .url(anyURL()), notify: { _ in }) { _ in }
+        sut.compose(result: .url(anyURL()))
         
         XCTAssertEqual(makeQRFailure.payloads.count, 1)
     }
@@ -1126,7 +1126,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        sut.compose(result: .unknown, notify: { _ in }) { _ in }
+        sut.compose(result: .unknown)
         
         XCTAssertEqual(makeQRFailure.payloads.count, 1)
     }
@@ -1533,12 +1533,17 @@ private extension ClosePaymentsViewModelWrapper {
 
 private extension QRNavigationComposer {
     
+    func compose(result: QRModelResult) {
+        
+        compose(payload: .qrResult(result), notify: { _ in }, completion: { _ in })
+    }
+    
     func compose(
         result: QRModelResult,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
     ) {
-        self.compose(payload: .qrResult(result), notify: notify, completion: completion)
+        compose(payload: .qrResult(result), notify: notify, completion: completion)
     }
 }
 
