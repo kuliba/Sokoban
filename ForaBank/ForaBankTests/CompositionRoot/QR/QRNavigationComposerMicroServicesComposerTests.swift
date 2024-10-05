@@ -102,115 +102,91 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     
     // MARK: - makeInternetTV
     
-    func test_composed_makeInternetTV_shouldSetQRData() {
+    func test_composed_makeInternetTV_shouldCompleteAndSetQRData() {
         
         let payload = makeMakeInternetTVPayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makeInternetTV(payload) {
+        expect { completion in
             
-            XCTAssertNoDiff($0.qrData, payload.0.rawData)
-            exp.fulfill()
+            composed.makeInternetTV(payload) {
+            
+                XCTAssertNoDiff($0.qrData, payload.0.rawData)
+                completion()
+            }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - makePayments
     
-    func test_composed_makePayments_shouldDeliverPaymentsWithOperationSource() {
+    func test_composed_makePayments_shouldCompleteWithOperationSource() {
         
         let payload = makeMakePaymentsOperationSourcePayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makePayments(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makePayments(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
-    func test_composed_makePayments_shouldDeliverPaymentsWithQRCode() {
+    func test_composed_makePayments_shouldCompleteWithQRCode() {
         
         let payload = makeMakePaymentsQRCodePayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makePayments(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makePayments(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
-    func test_composed_makePayments_shouldDeliverPaymentsWithC2BSource() {
+    func test_composed_makePayments_shouldCompleteWithC2BSource() {
         
         let payload = makeMakePaymentsC2BSourcePayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makePayments(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makePayments(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
-    func test_composed_makePayments_shouldDeliverPaymentsWithC2BSubscribeSource() {
+    func test_composed_makePayments_shouldCompleteWithC2BSubscribeSource() {
         
         let payload = makeMakePaymentsC2BSubscribeSourcePayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makePayments(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makePayments(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - makeQRFailure
     
-    func test_composed_makeQRFailure_shouldDeliverQRFailure() {
+    func test_composed_makeQRFailure_shouldComplete() {
         
         let payload = makeMakeQRFailurePayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makeQRFailure(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makeQRFailure(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - makeQRFailureWithQR
     
-    func test_composed_makeQRFailureWithQR_shouldDeliverQRFailure() {
+    func test_composed_makeQRFailureWithQR_shouldComplete() {
         
         let payload = makeMakeQRFailureWithQRPayload()
         let composed = makeSUT().compose()
-        let exp = expectation(description: "wait for completion")
         
-        composed.makeQRFailureWithQR(payload) { _ in
+        expect { completion in
             
-            // not really clear what else to test here
-            exp.fulfill()
+            composed.makeQRFailureWithQR(payload) { _ in completion() }
         }
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - Helpers
@@ -296,5 +272,16 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     ) -> SUT.MicroServices.MakeQRFailureWithQRPayload {
         
         return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
+    }
+    
+    private func expect(
+        toComplete function: @escaping (@escaping () -> Void) -> Void,
+        timeout: TimeInterval = 1
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        function { exp.fulfill() }
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
