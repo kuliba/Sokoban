@@ -7,6 +7,7 @@
 
 import Combine
 import ForaTools
+import SberQR
 
 final class QRNavigationComposer {
     
@@ -433,10 +434,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .c2bSubscribeURL(anyURL()), toDeliver: .payments, on: {
-            
-            makePayments.complete(with: makePaymentsSuccess())
-        })
+        expect(
+            sut,
+            with: .c2bSubscribeURL(anyURL()),
+            toDeliver: .payments,
+            on: { makePayments.complete(with: makePaymentsSuccess()) }
+        )
     }
     
     func test_c2bSubscribe_shouldDeliverDismissEventOnC2BSubscribeClose() {
@@ -495,10 +498,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .c2bURL(anyURL()), toDeliver: .payments, on: {
-            
-            makePayments.complete(with: makePaymentsSuccess())
-        })
+        expect(
+            sut,
+            with: .c2bURL(anyURL()),
+            toDeliver: .payments,
+            on: { makePayments.complete(with: makePaymentsSuccess()) }
+        )
     }
     
     func test_c2b_shouldDeliverDismissEventOnC2BClose() {
@@ -557,10 +562,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         
-        expect(sut, with: .failure(makeQR()), toDeliver: .failure, on: {
-            
-            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
-        })
+        expect(
+            sut,
+            with: .failure(makeQR()),
+            toDeliver: .failure,
+            on: { makeQRFailure.complete(with: .success(makeQRFailed())) }
+        )
     }
     
     func test_failure_shouldDeliverOutsideChatEventOnFailureChatAction() {
@@ -568,7 +575,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .failure(makeQR()), notify: { events.append($0) }) { _ in }
+        sut.compose(result: .failure(makeQR()), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
@@ -580,11 +587,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_,_, makeQRFailure, _,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(
-            result: .failure(makeQR()),
-            notify: { events.append($0) },
-            completion: { _ in }
-        )
+        sut.compose(result: .failure(makeQR()), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.detailPayment)?(qrCode)
         
         XCTAssertNoDiff(events, [.detailPayment(qrCode)])
@@ -605,10 +608,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .mapped(.missingINN), toDeliver: .failure, on: {
-            
-            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
-        })
+        expect(
+            sut,
+            with: .mapped(.missingINN),
+            toDeliver: .failure,
+            on: { makeQRFailure.complete(with: .success(makeQRFailed())) }
+        )
     }
     
     func test_missingINN_shouldDeliverOutsideChatEventOnFailureChatAction() {
@@ -616,7 +621,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
+        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
@@ -627,7 +632,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) }) { _ in }
+        sut.compose(result: .mapped(.missingINN), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
@@ -652,10 +657,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_,_,_, makeProviderPicker, _,_,_) = makeSUT()
         
-        expect(sut, with: makeMappedMixed(), toDeliver: .providerPicker, on: {
-            
-            makeProviderPicker.complete(with: makeProviderPickerSuccess())
-        })
+        expect(
+            sut,
+            with: makeMappedMixed(),
+            toDeliver: .providerPicker,
+            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+        )
     }
     
 #warning("FIXME")
@@ -756,10 +763,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_,_,_,_, makeOperatorSearch, _,_) = makeSUT()
         
-        expect(sut, with: makeMappedMultiple(), toDeliver: .operatorSearch, on: {
-            
-            makeOperatorSearch.complete(with: makeOperatorSearchSuccess())
-        })
+        expect(
+            sut,
+            with: makeMappedMultiple(),
+            toDeliver: .operatorSearch,
+            on: { makeOperatorSearch.complete(with: makeOperatorSearchSuccess()) }
+        )
     }
     
     // TODO: add tests for wrapper as in c2bSubscribe
@@ -780,10 +789,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .mapped(.none(makeQR())), toDeliver: .payments, on: {
-            
-            makePayments.complete(with: makePaymentsSuccess())
-        })
+        expect(
+            sut,
+            with: .mapped(.none(makeQR())),
+            toDeliver: .payments,
+            on: { makePayments.complete(with: makePaymentsSuccess()) }
+        )
     }
     
     func test_mapped_none_shouldDeliverDismissEventOnDetailPaymentsClose() {
@@ -843,10 +854,12 @@ final class QRNavigationComposerTests: XCTestCase {
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, _,_,_,_,_,_,_, makeServicePicker) = makeSUT()
         
-        expect(sut, with: .mapped(.provider(payload)), toDeliver: .servicePicker, on: {
-            
-            makeServicePicker.complete(with: makeServicePickerSuccess())
-        })
+        expect(
+            sut,
+            with: .mapped(.provider(payload)),
+            toDeliver: .servicePicker,
+            on: { makeServicePicker.complete(with: makeServicePickerSuccess()) }
+        )
     }
     
 #warning("FIXME")
@@ -939,13 +952,9 @@ final class QRNavigationComposerTests: XCTestCase {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
         
-        sut.compose(
-            result: .mapped(.single(
-                makeSegmentedOperatorData(), qrCode, qrMapping
-            )),
-            notify: { _ in },
-            completion: { _ in }
-        )
+        sut.compose(result: .mapped(.single(
+            makeSegmentedOperatorData(), qrCode, qrMapping
+        )))
         
         XCTAssertNoDiff(makeInternetTV.payloads.map(\.0), [qrCode])
         XCTAssertNoDiff(makeInternetTV.payloads.map(\.1), [qrMapping])
@@ -955,10 +964,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, makeInternetTV, _,_,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: makeMappedSingle(), toDeliver: .internetTV, on: {
-            
-            makeInternetTV.complete(with: makeInternetTVSuccess())
-        })
+        expect(
+            sut,
+            with: makeMappedSingle(),
+            toDeliver: .internetTV,
+            on: { makeInternetTV.complete(with: makeInternetTVSuccess()) }
+        )
     }
     
     // MARK: - mapped: source
@@ -967,11 +978,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        sut.compose(
-            result: .mapped(.source(.avtodor)),
-            notify: { _ in },
-            completion: { _ in }
-        )
+        sut.compose(result: .mapped(.source(.avtodor)))
         
         XCTAssertNoDiff(makePayments.payloads, [.operationSource(.avtodor)])
     }
@@ -980,10 +987,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _, makePayments, _,_,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .mapped(.source(.avtodor)), toDeliver: .payments, on: {
-            
-            makePayments.complete(with: makePaymentsSuccess())
-        })
+        expect(
+            sut,
+            with: .mapped(.source(.avtodor)),
+            toDeliver: .payments,
+            on: { makePayments.complete(with: makePaymentsSuccess()) }
+        )
     }
     
     func test_mapped_source_shouldDeliverDismissEventOnSourcePaymentsClose() {
@@ -1046,8 +1055,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         sut.compose(
             result: .sberQR(anyURL()),
-            notify: { receivedEvents.append($0) },
-            completion: { _ in }
+            notify: { receivedEvents.append($0) }
         )
         makeSberQR.payloads.map(\.1).first?(sberState)
         
@@ -1059,20 +1067,24 @@ final class QRNavigationComposerTests: XCTestCase {
         let error = makeErrorMessage()
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
-        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQR(.failure(error)), notify: { _ in }) {
-            
-            makeSberQR.complete(with: .failure(error))
-        }
+        expect(
+            sut,
+            with: .sberQR(anyURL()),
+            toDeliver: .sberQR(.failure(error)),
+            on: { makeSberQR.complete(with: .failure(error)) }
+        )
     }
     
     func test_sberQR_shouldDeliverSberQROnMakeSberQRSuccess() {
         
         let (sut, _,_,_,_,_,_, makeSberQR, _) = makeSUT()
         
-        expect(sut, with: .sberQR(anyURL()), toDeliver: .sberQR(.success), notify: { _ in }) {
-            
-            makeSberQR.complete(with: .success(self.makeSberQR()))
-        }
+        expect(
+            sut,
+            with: .sberQR(anyURL()),
+            toDeliver: .sberQR(.success),
+            on: { makeSberQR.complete(with: .success(self.makeSberQR())) }
+        )
     }
     
     // TODO: - add tests for associated type of `sberQR` case, otherwise nothing support the need of `SberQRConfirmPaymentViewModel`
@@ -1092,10 +1104,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .url(anyURL()), toDeliver: .failure, on: {
-            
-            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
-        })
+        expect(
+            sut, 
+            with: .url(anyURL()),
+            toDeliver: .failure,
+            on: { makeQRFailure.complete(with: .success(makeQRFailed())) }
+        )
     }
     
     func test_url_shouldNotifyWithOutsideChatOnChatAction() {
@@ -1103,7 +1117,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
+        sut.compose(result: .url(anyURL()), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
@@ -1114,7 +1128,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .url(anyURL()), notify: { events.append($0) }) { _ in }
+        sut.compose(result: .url(anyURL()), notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
@@ -1135,10 +1149,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         
-        expect(sut, with: .unknown, toDeliver: .failure, on: {
-            
-            makeQRFailure.complete(with: .success(makeQRFailedViewModel()))
-        })
+        expect(
+            sut,
+            with: .unknown,
+            toDeliver: .failure,
+            on: { makeQRFailure.complete(with: .success(makeQRFailed())) }
+        )
     }
     
     func test_unknown_shouldNotifyWithOutsideChatOnChatAction() {
@@ -1146,7 +1162,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
+        sut.compose(result: .unknown, notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events, [.outside(.chat)])
@@ -1157,7 +1173,7 @@ final class QRNavigationComposerTests: XCTestCase {
         let (sut, _,_, makeQRFailure, _,_,_,_,_) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(result: .unknown, notify: { events.append($0) }) { _ in }
+        sut.compose(result: .unknown, notify: { events.append($0) })
         makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events, [.detailPayment(nil)])
@@ -1251,7 +1267,7 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(original: original, rawData: rawData)
     }
     
-    private func makeQRFailedViewModel(
+    private func makeQRFailed(
         model: Model = .mockWithEmptyExcept(),
         addCompanyAction: @escaping () -> Void = {},
         requisitsAction: @escaping () -> Void = {}
@@ -1540,6 +1556,13 @@ private extension QRNavigationComposer {
     
     func compose(
         result: QRModelResult,
+        notify: @escaping Notify
+    ) {
+        compose(payload: .qrResult(result), notify: notify, completion: { _ in })
+    }
+    
+    func compose(
+        result: QRModelResult,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
     ) {
@@ -1574,7 +1597,7 @@ private extension QRNavigationComposer.QRNavigation {
     ) {
         providerPicker?.event(.goTo(goTo))
     }
-        
+    
     // MARK: - servicePicker
     
     var servicePicker: AnywayServicePickerFlowModel? {
