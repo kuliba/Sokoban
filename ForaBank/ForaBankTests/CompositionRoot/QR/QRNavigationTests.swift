@@ -23,13 +23,19 @@ class QRNavigationTests: XCTestCase {
     func makeMakeOperatorSearchPayload(
         multiple: MultiElementArray<SegmentedOperatorData>? = nil,
         qrCode: QRCode? = nil,
-        qrMapping: QRMapping? = nil
+        qrMapping: QRMapping? = nil,
+        chat: @escaping () -> Void = {},
+        detailPayment: @escaping () -> Void = {},
+        dismiss: @escaping () -> Void = {}
     ) -> QRNavigationComposerMicroServices.MakeOperatorSearchPayload {
         
         return .init(
             multiple: multiple ?? makeMultipleOperators(),
             qrCode: qrCode ?? makeQR(),
-            qrMapping: qrMapping ?? makeQRMapping()
+            qrMapping: qrMapping ?? makeQRMapping(),
+            chat: chat,
+            detailPayment: detailPayment,
+            dismiss: dismiss
         )
     }
     

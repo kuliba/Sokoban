@@ -31,11 +31,14 @@ extension QRNavigationComposerMicroServices {
     
     // MARK: - MakeOperatorSearch
     
-    struct MakeOperatorSearchPayload: Equatable {
+    struct MakeOperatorSearchPayload {
         
         let multiple: MultiElementArray<SegmentedOperatorData>
         let qrCode: QRCode
         let qrMapping: QRMapping
+        let chat: () -> Void
+        let detailPayment: () -> Void
+        let dismiss: () -> Void
     }
     
     typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (QRNavigation.OperatorSearch) -> Void) -> Void

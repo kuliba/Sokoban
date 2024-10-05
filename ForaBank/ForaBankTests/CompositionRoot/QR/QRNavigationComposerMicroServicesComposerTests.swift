@@ -34,7 +34,7 @@ extension QRNavigationComposerMicroServicesComposer {
         
         return .init(
             makeInternetTV: makeInternetTV,
-            makeOperatorSearch: { _,_ in },
+            makeOperatorSearch: makeOperatorSearch,
             makePayments: makePayments,
             makeProviderPicker: { _,_ in },
             makeQRFailure: makeQRFailure,
@@ -55,6 +55,41 @@ private extension QRNavigationComposerMicroServicesComposer {
         completion: @escaping (InternetTVDetailsViewModel) -> Void
     ) {
         completion(.init(model: model, qrCode: payload.0, mapping: payload.1))
+    }
+    
+    func makeOperatorSearch(
+        payload: MicroServices.MakeOperatorSearchPayload,
+        completion: @escaping (QRNavigation.OperatorSearch) -> Void
+    ) {
+#warning("need to wrap as ClosePaymentsViewModelWrapper wraps PaymentsViewModel")
+        
+        let navigationBarViewModel = NavigationBarView.ViewModel(
+            title: "Все регионы",
+            titleButton: .init(
+                icon: .ic24ChevronDown,
+                action: { [weak self] in
+                    
+                    self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                }
+            ),
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: payload.dismiss
+                )
+            ]
+        )
+        
+        let operatorsViewModel = QRSearchOperatorViewModel(
+            searchBar: .nameOrTaxCode(),
+            navigationBar: navigationBarViewModel, model: self.model,
+            operators: payload.multiple.elements.map(\.origin),
+            addCompanyAction: payload.chat,
+            requisitesAction: payload.detailPayment,
+            qrCode: payload.qrCode
+        )
+        
+        completion(operatorsViewModel)
     }
     
     func makePayments(
@@ -144,6 +179,21 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
             }
         }
     }
+    
+    // MARK: - makeOperatorSearch
+    
+    func test_composed_makeOperatorSearch_shouldComplete() {
+        
+        let payload = makeMakeOperatorSearchPayload()
+        let composed = makeSUT().sut.compose()
+        
+        expect { completion in
+            
+            composed.makeOperatorSearch(payload) { _ in completion() }
+        }
+    }
+    
+    // TODO: - improve tests for makeOperatorSearch
     
     // MARK: - makePayments
     

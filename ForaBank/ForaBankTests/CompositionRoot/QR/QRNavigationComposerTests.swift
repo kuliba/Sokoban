@@ -367,9 +367,12 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         sut.compose(with: result)
         
-        XCTAssertNoDiff(microServices.makeOperatorSearch.payloads, [
-            .init(multiple: multiple, qrCode: qrCode, qrMapping: qrMapping)
-        ])
+        let payloads = microServices.makeOperatorSearch.payloads
+        XCTAssertNoDiff(payloads.map(\.multiple), [multiple])
+        XCTAssertNoDiff(payloads.map(\.qrCode), [qrCode])
+        XCTAssertNoDiff(payloads.map(\.qrMapping), [qrMapping])
+        
+        // TODO: - add tests for chat/detailPayment/dismiss actions in payload
     }
     
     func test_mapped_multiple_shouldDeliverOperatorSearch() {
