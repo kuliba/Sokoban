@@ -600,6 +600,9 @@
 		2A319BA92BCD58BC009333ED /* AnywayElement.Parameter+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BA82BCD58BC009333ED /* AnywayElement.Parameter+preview.swift */; };
 		2A319BAB2BCD5C4C009333ED /* AnywayElement.Field+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BAA2BCD5C4C009333ED /* AnywayElement.Field+preview.swift */; };
 		2A326DA52C00A3C6005B25E7 /* AnywayPaymentElementConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A326DA42C00A3C6005B25E7 /* AnywayPaymentElementConfig+iFora.swift */; };
+		2A3345922CB13FB600EBF33E /* QRNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345912CB13FB600EBF33E /* QRNavigation.swift */; };
+		2A3345942CB1401500EBF33E /* QRNavigationComposerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */; };
+		2A3345962CB1420B00EBF33E /* QRNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -4085,6 +4088,9 @@
 		2A319BA82BCD58BC009333ED /* AnywayElement.Parameter+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElement.Parameter+preview.swift"; sourceTree = "<group>"; };
 		2A319BAA2BCD5C4C009333ED /* AnywayElement.Field+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElement.Field+preview.swift"; sourceTree = "<group>"; };
 		2A326DA42C00A3C6005B25E7 /* AnywayPaymentElementConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A3345912CB13FB600EBF33E /* QRNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigation.swift; sourceTree = "<group>"; };
+		2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServices.swift; sourceTree = "<group>"; };
+		2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposer.swift; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -9143,6 +9149,16 @@
 			path = TextFieldMock;
 			sourceTree = "<group>";
 		};
+		2A3345902CB13FAA00EBF33E /* QRNavigation */ = {
+			isa = PBXGroup;
+			children = (
+				2A3345912CB13FB600EBF33E /* QRNavigation.swift */,
+				2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */,
+				2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */,
+			);
+			path = QRNavigation;
+			sourceTree = "<group>";
+		};
 		2A3599A62ADA7F3C00820369 /* Infra */ = {
 			isa = PBXGroup;
 			children = (
@@ -10699,6 +10715,7 @@
 				2A3624B02C5FB93200174C50 /* RootViewModelFactory+makePaymentProviderPickerFlowModel.swift */,
 				2A3624B82C609CBE00174C50 /* RootViewModelFactory+makeProviderServicePickerFlowModel.swift */,
 				2A3624BA2C609F9600174C50 /* RootViewModelFactory+makeAnywayServicePickerFlowModelComposer.swift */,
+				2A3345902CB13FAA00EBF33E /* QRNavigation */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -20300,6 +20317,7 @@
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				839331992C8F17DC00D15379 /* BannerPickerSectionBinder.swift in Sources */,
 				2AC067E62BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift in Sources */,
+				2A3345942CB1401500EBF33E /* QRNavigationComposerMicroServices.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				2A1F083C2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				5066506D2857C1950039A745 /* OpenAccountProductData.swift in Sources */,
@@ -20632,6 +20650,7 @@
 				503F074B28252D3B00E84A77 /* DepositCapitalizationView.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
 				2AC2FB0E2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift in Sources */,
+				2A3345922CB13FB600EBF33E /* QRNavigation.swift in Sources */,
 				77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */,
 				C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */,
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
@@ -21271,6 +21290,7 @@
 				2A550C5E2C52C3EE00B3F72A /* ServicePaymentFlowStateWrapperView.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
 				C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */,
+				2A3345962CB1420B00EBF33E /* QRNavigationComposer.swift in Sources */,
 				835D0DF92BEAA63D00FFE90B /* SliderConfig+ext.swift in Sources */,
 				2A3624692C5E6B3300174C50 /* SegmentedPaymentProviderPickerFlowView.swift in Sources */,
 				2A7CA2162C91D9CE00B900E9 /* CodableServiceCategory.swift in Sources */,

@@ -5,402 +5,10 @@
 //  Created by Igor Malyarov on 01.10.2024.
 //
 
-import Combine
-import ForaTools
-import SberQR
-
-enum QRNavigation {
-    
-    case failure(QRFailedViewModel)
-    case internetTV(InternetTVDetailsViewModel)
-    case operatorSearch(OperatorSearch)
-    case payments(Node<ClosePaymentsViewModelWrapper>)
-    case paymentComplete(PaymentCompleteResult)
-    case providerPicker(Node<ProviderPicker>)
-    case sberQR(SberQRResult)
-    case servicePicker(Node<AnywayServicePickerFlowModel>)
-    
-    typealias OperatorSearch = QRSearchOperatorViewModel
-    typealias PaymentCompleteResult = Result<PaymentComplete, ErrorMessage>
-    typealias ProviderPicker = SegmentedPaymentProviderPickerFlowModel
-    typealias SberQRResult = Result<SberQR, ErrorMessage>
-    
-    typealias PaymentComplete = PaymentsSuccessViewModel
-    typealias SberQR = SberQRConfirmPaymentViewModel
-    
-    struct ErrorMessage: Error, Equatable {
-        
-        let title: String
-        let message: String
-    }
-}
-
-struct QRNavigationComposerMicroServices {
-    
-    let makeInternetTV: MakeInternetTV
-    let makePayments: MakePayments
-    let makeQRFailure: MakeQRFailure
-    let makeQRFailureWithQR: MakeQRFailureWithQR
-    let makePaymentComplete: MakePaymentComplete
-    let makeProviderPicker: MakeProviderPicker
-    let makeOperatorSearch: MakeOperatorSearch
-    let makeSberQR: MakeSberQR
-    let makeServicePicker: MakeServicePicker
-}
-
-extension QRNavigationComposerMicroServices {
-    
-    typealias MakeInternetTV = ((QRCode, QRMapping), @escaping (InternetTVDetailsViewModel) -> Void) -> Void
-    
-    enum MakePaymentsPayload: Equatable {
-        
-        case operationSource(Payments.Operation.Source)
-        case qrCode(QRCode)
-        case source(Source)
-        
-        struct Source: Equatable {
-            
-            let url: URL
-            let type: SourceType
-            
-            enum SourceType: Equatable {
-                
-                case c2bSubscribe
-                case c2b
-            }
-            
-            static func c2bSubscribe(_ url: URL) -> Self {
-                
-                return .init(url: url, type: .c2bSubscribe)
-            }
-            
-            static func c2b(_ url: URL) -> Self {
-                
-                return .init(url: url, type: .c2b)
-            }
-        }
-    }
-    
-    typealias MakePayments = (MakePaymentsPayload, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
-    
-    struct MakeQRFailurePayload {
-        
-        let chat: () -> Void
-        let detailPayment: () -> Void
-    }
-    
-    typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
-    
-    struct MakeQRFailureWithQRPayload {
-        
-        let qrCode: QRCode
-        let chat: () -> Void
-        let detailPayment: (QRCode) -> Void
-    }
-    
-    typealias MakeQRFailureWithQR = (MakeQRFailureWithQRPayload, @escaping (QRFailedViewModel) -> Void) -> Void
-    
-    typealias MakePaymentComplete = ((URL, SberQRConfirmPaymentState), @escaping (Result<QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>) -> Void) -> Void
-    
-    struct MakeProviderPickerPayload: Equatable {
-        
-        let mixed: MultiElementArray<SegmentedOperatorProvider>
-        let qrCode: QRCode
-        let qrMapping: QRMapping
-    }
-    
-    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (QRNavigation.ProviderPicker) -> Void) -> Void
-    
-    struct MakeOperatorSearchPayload: Equatable {
-        
-        let multiple: MultiElementArray<SegmentedOperatorData>
-        let qrCode: QRCode
-        let qrMapping: QRMapping
-    }
-    
-    typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (QRNavigation.OperatorSearch) -> Void) -> Void
-    
-    typealias SberPay = (SberQRConfirmPaymentState) -> Void
-    typealias MakeSberQRPayload = (URL, SberPay)
-    typealias MakeSberQR = (MakeSberQRPayload, @escaping (Result<QRNavigation.SberQR, QRNavigation.ErrorMessage>) -> Void) -> Void
-    
-    typealias ServicePicker = AnywayServicePickerFlowModel
-    typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
-}
-
-final class QRNavigationComposer {
-    
-    private let microServices: MicroServices
-    
-    init(microServices: MicroServices) {
-        
-        self.microServices = microServices
-    }
-    
-    typealias MicroServices = QRNavigationComposerMicroServices
-}
-
-extension QRNavigationComposer {
-    
-    func compose(
-        payload: Payload,
-        notify: @escaping Notify,
-        completion: @escaping QRNavigationCompletion
-    ) {
-        switch payload {
-        case let .qrResult(result):
-            handle(result: result, with: notify, and: completion)
-            
-        case let .sberPay(url, state):
-            microServices.makePaymentComplete((url, state)) {
-                completion(.paymentComplete($0))
-            }
-        }
-    }
-    
-    enum Payload: Equatable {
-        
-        case qrResult(QRModelResult)
-        case sberPay(URL, SberQRConfirmPaymentState)
-    }
-    
-    enum NotifyEvent: Equatable {
-        
-        case contactAbroad(Payments.Operation.Source)
-        case detailPayment(QRCode?)
-        case dismiss
-        case isLoading(Bool)
-        case outside(Outside)
-        case sberPay(SberQRConfirmPaymentState)
-        case scanQR
-        
-        enum Outside: Equatable {
-            
-            case chat, main, payments, scanQR
-        }
-    }
-    
-    typealias Notify = (NotifyEvent) -> Void
-    
-    typealias QRNavigationCompletion = (QRNavigation) -> Void
-}
-
-private extension QRNavigationComposer {
-    
-    func handle(
-        result: QRModelResult,
-        with notify: @escaping Notify,
-        and completion: @escaping QRNavigationCompletion
-    ) {
-        switch result {
-        case let .c2bSubscribeURL(url):
-            handle(.source(.c2bSubscribe(url)), with: notify, and: completion)
-            
-        case let .c2bURL(url):
-            handle(.source(.c2b(url)), with: notify, and: completion)
-            
-        case let .failure(qrCode):
-            let payload = MicroServices.MakeQRFailureWithQRPayload(
-                qrCode: qrCode,
-                chat: { notify(.outside(.chat)) },
-                detailPayment: { notify(.detailPayment($0)) }
-            )
-            microServices.makeQRFailureWithQR(payload) { completion(.failure($0)) }
-            
-        case let .mapped(mapped):
-            handle(mapped: mapped, with: notify, and: completion)
-            
-        case let .sberQR(url):
-            microServices.makeSberQR((url, { notify(.sberPay($0)) })) {
-                
-                switch $0 {
-                case let .failure(error):
-                    completion(.sberQR(.failure(error)))
-                    
-                case let .success(sberQR):
-                    completion(.sberQR(.success(sberQR)))
-                }
-            }
-            
-        case .url(_):
-            makeQRFailure(with: notify) { completion(.failure($0)) }
-            
-        case .unknown:
-            makeQRFailure(with: notify) { completion(.failure($0)) }
-        }
-    }
-    
-    func handle(
-        mapped: QRModelResult.Mapped,
-        with notify: @escaping Notify,
-        and completion: @escaping QRNavigationCompletion
-    ) {
-        switch mapped {
-        case .missingINN:
-            makeQRFailure(with: notify) { completion(.failure($0)) }
-            
-        case let .mixed(mixed, qrCode, qrMapping):
-            let payload = MicroServices.MakeProviderPickerPayload(
-                mixed: mixed,
-                qrCode: qrCode,
-                qrMapping: qrMapping
-            )
-            microServices.makeProviderPicker(payload) { [weak self] in
-                
-                guard let self else { return }
-                
-                completion(.providerPicker(.init(
-                    model: $0,
-                    cancellables: self.bind($0, with: notify)
-                )))
-            }
-            
-        case let .multiple(multiple, qrCode, qrMapping):
-            let payload = MicroServices.MakeOperatorSearchPayload(
-                multiple: multiple,
-                qrCode: qrCode,
-                qrMapping: qrMapping
-            )
-            microServices.makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
-            
-        case let .none(qrCode):
-            handle(.qrCode(qrCode), with: notify, and: completion)
-            
-        case let .provider(payload):
-            microServices.makeServicePicker(payload) { [weak self] in
-                
-                guard let self else { return }
-                
-                completion(.servicePicker(.init(
-                    model: $0,
-                    cancellables: self.bind($0, with: notify)
-                )))
-            }
-            
-        case let .single(_, qrCode, qrMapping):
-            microServices.makeInternetTV((qrCode, qrMapping)) { completion(.internetTV($0)) }
-            
-        case let .source(source):
-            handle(.operationSource(source), with: notify, and: completion)
-        }
-    }
-    
-    func handle(
-        _ payload: MicroServices.MakePaymentsPayload,
-        with notify: @escaping Notify,
-        and completion: @escaping (QRNavigation) -> Void
-    ) {
-        microServices.makePayments(payload) { [weak self] in
-            
-            guard let self else { return }
-            
-            completion(.payments(.init(
-                model: $0,
-                cancellables: self.bind($0, with: notify)
-            )))
-        }
-    }
-    
-    func makeQRFailure(
-        with notify: @escaping Notify,
-        completion: @escaping (QRFailedViewModel) -> Void
-    ) {
-        let payload = MicroServices.MakeQRFailurePayload(
-            chat: { notify(.outside(.chat)) },
-            detailPayment: { notify(.detailPayment(nil)) }
-        )
-        microServices.makeQRFailure(payload) { completion($0) }
-    }
-    
-    func bind(
-        _ wrapper: ClosePaymentsViewModelWrapper,
-        with notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
-        
-        let close = wrapper.$isClosed
-            .sink { if $0 { notify(.dismiss) }}
-        
-        let scanQR = wrapper.paymentsViewModel.action
-            .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
-            .sink { _ in notify(.scanQR) }
-        
-        let contactAbroad = wrapper.paymentsViewModel.action
-            .compactMap { $0 as? PaymentsViewModelAction.ContactAbroad }
-            .map(\.source)
-            .sink { notify(.contactAbroad($0)) }
-        
-        return [close, scanQR, contactAbroad]
-    }
-    
-    func bind(
-        _ picker: QRNavigation.ProviderPicker,
-        with notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
-        
-        let isLoading = picker.$state.map(\.isLoading)
-        let isLoadingFlip = isLoading
-            .combineLatest(isLoading.dropFirst())
-            .filter { $0 != $1 }
-            .map(\.0)
-            .sink { notify(.isLoading($0)) }
-        
-        let outside = picker.$state
-            .compactMap(\.notifyOutside)
-            .sink { notify(.outside($0)) }
-        
-        return [isLoadingFlip, outside]
-    }
-    
-    func bind(
-        _ flow: AnywayServicePickerFlowModel,
-        with notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
-        
-        let isLoading = flow.$state.map(\.isLoading)
-        let isLoadingFlip = isLoading
-            .combineLatest(isLoading.dropFirst())
-            .filter { $0 != $1 }
-            .map(\.0)
-            .sink { notify(.isLoading($0)) }
-        
-        let outside = flow.$state
-            .compactMap(\.notifyOutside)
-            .sink { notify(.outside($0)) }
-        
-        return [isLoadingFlip, outside]
-    }
-}
-
-private extension SegmentedPaymentProviderPickerFlowState {
-    
-    var notifyOutside: QRNavigationComposer.NotifyEvent.Outside? {
-        
-        switch outside {
-        case .none:       return .none
-        case .addCompany: return .chat
-        case .main:       return .main
-        case .payments:   return .payments
-        case .scanQR:     return .scanQR
-        }
-    }
-}
-
-private extension AnywayServicePickerFlowState {
-    
-    var notifyOutside: QRNavigationComposer.NotifyEvent.Outside? {
-        
-        switch outside {
-        case .none:       return .none
-        case .addCompany: return .chat
-        case .main:       return .main
-        case .payments:   return .payments
-        case .scanQR:     return .scanQR
-        }
-    }
-}
-
 import CombineSchedulers
 @testable import ForaBank
+import ForaTools
+import SberQR
 import XCTest
 
 final class QRNavigationComposerTests: XCTestCase {
@@ -415,6 +23,7 @@ final class QRNavigationComposerTests: XCTestCase {
         XCTAssertEqual(microServices.makePayments.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailure.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailureWithQR.callCount, 0)
+        XCTAssertEqual(microServices.makePaymentComplete.callCount, 0)
         XCTAssertEqual(microServices.makeProviderPicker.callCount, 0)
         XCTAssertEqual(microServices.makeOperatorSearch.callCount, 0)
         XCTAssertEqual(microServices.makeSberQR.callCount, 0)
@@ -742,7 +351,7 @@ final class QRNavigationComposerTests: XCTestCase {
         expect(
             sut,
             with: makeMappedMixed(),
-            delivers: .outside(.scanQR),
+            delivers: .scanQR,
             for: { $0.providerPickerGoTo(to: .scanQR) },
             on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
@@ -935,7 +544,7 @@ final class QRNavigationComposerTests: XCTestCase {
         )
     }
     
-    func test_mapped_provider_shouldDeliverOutsideScanQREventOnServicePickerEvent() {
+    func test_mapped_provider_shouldDeliverScanQRNotifyEventOnServicePickerEvent() {
         
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, microServices) = makeSUT()
@@ -943,7 +552,7 @@ final class QRNavigationComposerTests: XCTestCase {
         expect(
             sut,
             with: .mapped(.provider(payload)),
-            delivers: .outside(.scanQR),
+            delivers: .scanQR,
             for: { $0.servicePicker?.event(.goTo(.scanQR)) },
             on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
@@ -1224,11 +833,11 @@ final class QRNavigationComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposer
-    private typealias MakeInternetTVSpy = Spy<(QRCode, QRMapping), InternetTVDetailsViewModel, Never>
+    private typealias MakeInternetTVSpy = Spy<SUT.MicroServices.MakeInternetTVPayload, InternetTVDetailsViewModel, Never>
     private typealias MakePaymentsSpy = Spy<SUT.MicroServices.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailureSpy = Spy<SUT.MicroServices.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MicroServices.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
-    private typealias MakePaymentCompleteSpy = Spy<(URL, SberQRConfirmPaymentState), QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
+    private typealias MakePaymentCompleteSpy = Spy<SUT.MicroServices.MakePaymentCompletePayload, QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
     private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
     private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
     private typealias MakeSberQRSpy = Spy<SUT.MicroServices.MakeSberQRPayload, SberQRConfirmPaymentViewModel, QRNavigation.ErrorMessage>

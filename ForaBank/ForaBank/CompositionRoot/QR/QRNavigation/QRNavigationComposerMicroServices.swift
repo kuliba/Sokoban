@@ -1,0 +1,126 @@
+//
+//  QRNavigationComposerMicroServices.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 05.10.2024.
+//
+
+import ForaTools
+import Foundation
+import SberQR
+
+struct QRNavigationComposerMicroServices {
+    
+    let makeInternetTV: MakeInternetTV
+    let makePayments: MakePayments
+    let makeQRFailure: MakeQRFailure
+    let makeQRFailureWithQR: MakeQRFailureWithQR
+    let makePaymentComplete: MakePaymentComplete
+    let makeProviderPicker: MakeProviderPicker
+    let makeOperatorSearch: MakeOperatorSearch
+    let makeSberQR: MakeSberQR
+    let makeServicePicker: MakeServicePicker
+}
+
+extension QRNavigationComposerMicroServices {
+    
+    // MARK: - MakeInternetTV
+    
+    typealias MakeInternetTVPayload = (QRCode, QRMapping)
+    typealias MakeInternetTV = (MakeInternetTVPayload, @escaping (InternetTVDetailsViewModel) -> Void) -> Void
+    
+    // MARK: - MakePayments
+    
+    enum MakePaymentsPayload: Equatable {
+        
+        case operationSource(Payments.Operation.Source)
+        case qrCode(QRCode)
+        case source(Source)
+    }
+    
+    typealias MakePayments = (MakePaymentsPayload, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    
+    // MARK: - MakeQRFailure
+    
+    struct MakeQRFailurePayload {
+        
+        let chat: () -> Void
+        let detailPayment: () -> Void
+    }
+    
+    typealias MakeQRFailure = (MakeQRFailurePayload, @escaping (QRFailedViewModel) -> Void) -> Void
+    
+    // MARK: - MakeQRFailureWithQR
+    
+    struct MakeQRFailureWithQRPayload {
+        
+        let qrCode: QRCode
+        let chat: () -> Void
+        let detailPayment: (QRCode) -> Void
+    }
+    
+    typealias MakeQRFailureWithQR = (MakeQRFailureWithQRPayload, @escaping (QRFailedViewModel) -> Void) -> Void
+    
+    // MARK: - MakePaymentComplete
+    
+    typealias MakePaymentCompletePayload = (URL, SberQRConfirmPaymentState)
+    typealias MakePaymentComplete = (MakePaymentCompletePayload, @escaping (Result<QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>) -> Void) -> Void
+    
+    // MARK: - MakeProviderPicker
+    
+    struct MakeProviderPickerPayload: Equatable {
+        
+        let mixed: MultiElementArray<SegmentedOperatorProvider>
+        let qrCode: QRCode
+        let qrMapping: QRMapping
+    }
+    
+    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (QRNavigation.ProviderPicker) -> Void) -> Void
+    
+    // MARK: - MakeOperatorSearch
+    
+    struct MakeOperatorSearchPayload: Equatable {
+        
+        let multiple: MultiElementArray<SegmentedOperatorData>
+        let qrCode: QRCode
+        let qrMapping: QRMapping
+    }
+    
+    typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (QRNavigation.OperatorSearch) -> Void) -> Void
+    
+    // MARK: - MakeSberQR
+    
+    typealias SberPay = (SberQRConfirmPaymentState) -> Void
+    typealias MakeSberQRPayload = (URL, SberPay)
+    typealias MakeSberQR = (MakeSberQRPayload, @escaping (Result<QRNavigation.SberQR, QRNavigation.ErrorMessage>) -> Void) -> Void
+    
+    // MARK: - MakeServicePicker
+    
+    typealias ServicePicker = AnywayServicePickerFlowModel
+    typealias MakeServicePicker = (PaymentProviderServicePickerPayload, @escaping (ServicePicker) -> Void) -> Void
+}
+
+extension QRNavigationComposerMicroServices.MakePaymentsPayload {
+    
+    struct Source: Equatable {
+        
+        let url: URL
+        let type: SourceType
+        
+        enum SourceType: Equatable {
+            
+            case c2bSubscribe
+            case c2b
+        }
+        
+        static func c2bSubscribe(_ url: URL) -> Self {
+            
+            return .init(url: url, type: .c2bSubscribe)
+        }
+        
+        static func c2b(_ url: URL) -> Self {
+            
+            return .init(url: url, type: .c2b)
+        }
+    }
+}
