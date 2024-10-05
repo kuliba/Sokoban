@@ -29,8 +29,8 @@ extension QRNavigationComposerMicroServicesComposer {
         return .init(
             makeInternetTV: makeInternetTV,
             makePayments: makePayments,
-            makeQRFailure: { _,_ in },
-            makeQRFailureWithQR: { _,_ in },
+            makeQRFailure: makeQRFailure,
+            makeQRFailureWithQR: makeQRFailureWithQR,
             makePaymentComplete: { _,_ in },
             makeProviderPicker: { _,_ in },
             makeOperatorSearch: { _,_ in },
@@ -71,6 +71,20 @@ private extension QRNavigationComposerMicroServicesComposer {
                 completion(.init(model: model, source: .c2bSubscribe(source.url), scheduler: scheduler))
             }
         }
+    }
+    
+    func makeQRFailure(
+        payload: MicroServices.MakeQRFailurePayload,
+        completion: @escaping (QRFailedViewModel) -> Void
+    ) {
+        completion(.init(model: model, addCompanyAction: payload.chat, requisitsAction: payload.detailPayment))
+    }
+    
+    func makeQRFailureWithQR(
+        payload: MicroServices.MakeQRFailureWithQRPayload,
+        completion: @escaping (QRFailedViewModel) -> Void
+    ) {
+        completion(.init(model: model, addCompanyAction: payload.chat, requisitsAction: { payload.detailPayment(payload.qrCode) }))
     }
 }
 
@@ -165,6 +179,40 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
+    // MARK: - makeQRFailure
+    
+    func test_composed_makeQRFailure_shouldDeliverQRFailure() {
+        
+        let payload = makeMakeQRFailurePayload()
+        let composed = makeSUT().compose()
+        let exp = expectation(description: "wait for completion")
+        
+        composed.makeQRFailure(payload) { _ in
+            
+            // not really clear what else to test here
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    // MARK: - makeQRFailureWithQR
+    
+    func test_composed_makeQRFailureWithQR_shouldDeliverQRFailure() {
+        
+        let payload = makeMakeQRFailureWithQRPayload()
+        let composed = makeSUT().compose()
+        let exp = expectation(description: "wait for completion")
+        
+        composed.makeQRFailureWithQR(payload) { _ in
+            
+            // not really clear what else to test here
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
@@ -231,5 +279,22 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     ) -> SUT.MicroServices.MakePaymentsPayload {
         
         return .source(.c2b(url))
+    }
+    
+    private func makeMakeQRFailurePayload(
+        chat: @escaping () -> Void = {},
+        detailPayment: @escaping () -> Void = {}
+    ) -> SUT.MicroServices.MakeQRFailurePayload {
+        
+        return .init(chat: chat, detailPayment: detailPayment)
+    }
+    
+    private func makeMakeQRFailureWithQRPayload(
+        qrCode: QRCode? = nil,
+        chat: @escaping () -> Void = {},
+        detailPayment: @escaping (QRCode) -> Void = { _ in }
+    ) -> SUT.MicroServices.MakeQRFailureWithQRPayload {
+        
+        return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
     }
 }
