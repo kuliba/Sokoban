@@ -33,7 +33,7 @@ extension QRNavigationComposer {
             handle(result: result, with: notify, and: completion)
             
         case let .sberPay(url, state):
-            microServices.makePaymentComplete((url, state)) {
+            microServices.makeSberPaymentComplete((url, state)) {
                 completion(.paymentComplete($0))
             }
         }

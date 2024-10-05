@@ -23,7 +23,7 @@ final class QRNavigationComposerTests: XCTestCase {
         XCTAssertEqual(microServices.makePayments.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailure.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailureWithQR.callCount, 0)
-        XCTAssertEqual(microServices.makePaymentComplete.callCount, 0)
+        XCTAssertEqual(microServices.makeSberPaymentComplete.callCount, 0)
         XCTAssertEqual(microServices.makeProviderPicker.callCount, 0)
         XCTAssertEqual(microServices.makeOperatorSearch.callCount, 0)
         XCTAssertEqual(microServices.makeSberQR.callCount, 0)
@@ -801,11 +801,11 @@ final class QRNavigationComposerTests: XCTestCase {
         
         sut.compose(url: url, state: state)
         
-        XCTAssertNoDiff(microServices.makePaymentComplete.payloads.map(\.0), [url])
-        XCTAssertNoDiff(microServices.makePaymentComplete.payloads.map(\.1), [state])
+        XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.0), [url])
+        XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.1), [state])
     }
     
-    func test_sberPay_shouldDeliverPaymentCompleteFailureOnMakePaymentCompleteFailure() {
+    func test_sberPay_shouldDeliverPaymentCompleteFailureOnMakeSberPaymentCompleteFailure() {
         
         let error = makeErrorMessage()
         let (sut, microServices) = makeSUT()
@@ -814,11 +814,11 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.failure(error)),
-            on: { microServices.makePaymentComplete.complete(with: error) }
+            on: { microServices.makeSberPaymentComplete.complete(with: error) }
         )
     }
     
-    func test_sberPay_shouldDeliverPaymentCompleteSuccessOnMakePaymentCompleteSuccess() {
+    func test_sberPay_shouldDeliverPaymentCompleteSuccessOnMakeSberPaymentCompleteSuccess() {
         
         let (sut, microServices) = makeSUT()
         
@@ -826,7 +826,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.success),
-            on: { microServices.makePaymentComplete.complete(with: self.makePaymentsComplete()) }
+            on: { microServices.makeSberPaymentComplete.complete(with: self.makePaymentsComplete()) }
         )
     }
     
@@ -834,24 +834,24 @@ final class QRNavigationComposerTests: XCTestCase {
     
     private typealias SUT = QRNavigationComposer
     private typealias MakeInternetTVSpy = Spy<SUT.MicroServices.MakeInternetTVPayload, InternetTVDetailsViewModel, Never>
+    private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
     private typealias MakePaymentsSpy = Spy<SUT.MicroServices.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
+    private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
     private typealias MakeQRFailureSpy = Spy<SUT.MicroServices.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MicroServices.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
-    private typealias MakePaymentCompleteSpy = Spy<SUT.MicroServices.MakePaymentCompletePayload, QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
-    private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
-    private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
+    private typealias MakeSberPaymentCompleteSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
     private typealias MakeSberQRSpy = Spy<SUT.MicroServices.MakeSberQRPayload, SberQRConfirmPaymentViewModel, QRNavigation.ErrorMessage>
     private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, SUT.MicroServices.ServicePicker, Never>
     
     private struct MicroServicesSpy {
         
         let makeInternetTV: MakeInternetTVSpy
+        let makeOperatorSearch: MakeOperatorSearchSpy
         let makePayments: MakePaymentsSpy
+        let makeProviderPicker: MakeProviderPickerSpy
         let makeQRFailure: MakeQRFailureSpy
         let makeQRFailureWithQR: MakeQRFailureWithQRSpy
-        let makePaymentComplete: MakePaymentCompleteSpy
-        let makeProviderPicker: MakeProviderPickerSpy
-        let makeOperatorSearch: MakeOperatorSearchSpy
+        let makeSberPaymentComplete: MakeSberPaymentCompleteSpy
         let makeSberQR: MakeSberQRSpy
         let makeServicePicker: MakeServicePickerSpy
         
@@ -859,12 +859,12 @@ final class QRNavigationComposerTests: XCTestCase {
             
             return .init(
                 makeInternetTV: makeInternetTV.process,
+                makeOperatorSearch: makeOperatorSearch.process,
                 makePayments: makePayments.process,
+                makeProviderPicker: makeProviderPicker.process,
                 makeQRFailure: makeQRFailure.process,
                 makeQRFailureWithQR: makeQRFailureWithQR.process,
-                makePaymentComplete: makePaymentComplete.process,
-                makeProviderPicker: makeProviderPicker.process,
-                makeOperatorSearch: makeOperatorSearch.process,
+                makeSberPaymentComplete: makeSberPaymentComplete.process,
                 makeSberQR: makeSberQR.process,
                 makeServicePicker: makeServicePicker.process
             )
@@ -880,12 +880,12 @@ final class QRNavigationComposerTests: XCTestCase {
     ) {
         let microServicesSpy = MicroServicesSpy(
             makeInternetTV: MakeInternetTVSpy(),
+            makeOperatorSearch: MakeOperatorSearchSpy(),
             makePayments: MakePaymentsSpy(),
+            makeProviderPicker: MakeProviderPickerSpy(),
             makeQRFailure: MakeQRFailureSpy(),
             makeQRFailureWithQR: MakeQRFailureWithQRSpy(),
-            makePaymentComplete: MakePaymentCompleteSpy(),
-            makeProviderPicker: MakeProviderPickerSpy(),
-            makeOperatorSearch: MakeOperatorSearchSpy(),
+            makeSberPaymentComplete: MakeSberPaymentCompleteSpy(),
             makeSberQR: MakeSberQRSpy(),
             makeServicePicker: MakeServicePickerSpy()
         )

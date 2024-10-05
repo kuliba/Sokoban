@@ -25,7 +25,7 @@ final class QRNavigationComposerMicroServicesComposer {
         self.scheduler = scheduler
     }
     
-    typealias CreateSberQRPayment = (MicroServices.MakePaymentCompletePayload, @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void) -> Void
+    typealias CreateSberQRPayment = (MicroServices.MakeSberPaymentCompletePayload, @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void) -> Void
 }
 
 extension QRNavigationComposerMicroServicesComposer {
@@ -34,12 +34,12 @@ extension QRNavigationComposerMicroServicesComposer {
         
         return .init(
             makeInternetTV: makeInternetTV,
+            makeOperatorSearch: { _,_ in },
             makePayments: makePayments,
+            makeProviderPicker: { _,_ in },
             makeQRFailure: makeQRFailure,
             makeQRFailureWithQR: makeQRFailureWithQR,
-            makePaymentComplete: makePaymentComplete,
-            makeProviderPicker: { _,_ in },
-            makeOperatorSearch: { _,_ in },
+            makeSberPaymentComplete: makeSberPaymentComplete,
             makeSberQR: { _,_ in },
             makeServicePicker: { _,_ in }
         )
@@ -93,8 +93,8 @@ private extension QRNavigationComposerMicroServicesComposer {
         completion(.init(model: model, addCompanyAction: payload.chat, requisitsAction: { payload.detailPayment(payload.qrCode) }))
     }
     
-    func makePaymentComplete(
-        payload: MicroServices.MakePaymentCompletePayload,
+    func makeSberPaymentComplete(
+        payload: MicroServices.MakeSberPaymentCompletePayload,
         completion: @escaping (QRNavigation.PaymentCompleteResult) -> Void
     ) {
         createSberQRPayment(payload) { [weak self] in
@@ -217,14 +217,14 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         }
     }
     
-    // MARK: - makePaymentComplete
+    // MARK: - makeSberPaymentComplete
     
     func test_composed_makePaymentComplete_shouldCallCreateSberQRPaymentWithPayload() {
         
         let payload = makeMakePaymentCompletePayload()
         let (sut, createSberQRPayment) = makeSUT()
         
-        sut.compose().makePaymentComplete(payload) { _ in }
+        sut.compose().makeSberPaymentComplete(payload) { _ in }
         
         XCTAssertNoDiff(createSberQRPayment.payloads.map(\.0), [payload.0])
         XCTAssertNoDiff(createSberQRPayment.payloads.map(\.1), [payload.1])
@@ -236,7 +236,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         let (sut, createSberQRPayment) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut.compose().makePaymentComplete(payload) {
+        sut.compose().makeSberPaymentComplete(payload) {
             
             switch $0 {
             case let .failure(receivedFailure):
@@ -259,7 +259,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         let (sut, createSberQRPayment) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
-        sut.compose().makePaymentComplete(payload) {
+        sut.compose().makeSberPaymentComplete(payload) {
             
             switch $0 {
             case .success:
@@ -279,7 +279,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
-    private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakePaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
+    private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -373,7 +373,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     private func makeMakePaymentCompletePayload(
         url: URL = anyURL(),
         state: SberQRConfirmPaymentState? = nil
-    ) -> SUT.MicroServices.MakePaymentCompletePayload {
+    ) -> SUT.MicroServices.MakeSberPaymentCompletePayload {
         
         return (url, state ?? makeSberQRConfirmPaymentState())
     }

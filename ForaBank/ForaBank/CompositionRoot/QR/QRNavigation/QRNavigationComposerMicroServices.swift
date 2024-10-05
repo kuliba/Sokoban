@@ -12,12 +12,12 @@ import SberQR
 struct QRNavigationComposerMicroServices {
     
     let makeInternetTV: MakeInternetTV
+    let makeOperatorSearch: MakeOperatorSearch
     let makePayments: MakePayments
+    let makeProviderPicker: MakeProviderPicker
     let makeQRFailure: MakeQRFailure
     let makeQRFailureWithQR: MakeQRFailureWithQR
-    let makePaymentComplete: MakePaymentComplete
-    let makeProviderPicker: MakeProviderPicker
-    let makeOperatorSearch: MakeOperatorSearch
+    let makeSberPaymentComplete: MakeSberPaymentComplete
     let makeSberQR: MakeSberQR
     let makeServicePicker: MakeServicePicker
 }
@@ -29,6 +29,17 @@ extension QRNavigationComposerMicroServices {
     typealias MakeInternetTVPayload = (QRCode, QRMapping)
     typealias MakeInternetTV = (MakeInternetTVPayload, @escaping (InternetTVDetailsViewModel) -> Void) -> Void
     
+    // MARK: - MakeOperatorSearch
+    
+    struct MakeOperatorSearchPayload: Equatable {
+        
+        let multiple: MultiElementArray<SegmentedOperatorData>
+        let qrCode: QRCode
+        let qrMapping: QRMapping
+    }
+    
+    typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (QRNavigation.OperatorSearch) -> Void) -> Void
+    
     // MARK: - MakePayments
     
     enum MakePaymentsPayload: Equatable {
@@ -39,6 +50,17 @@ extension QRNavigationComposerMicroServices {
     }
     
     typealias MakePayments = (MakePaymentsPayload, @escaping (ClosePaymentsViewModelWrapper) -> Void) -> Void
+    
+    // MARK: - MakeProviderPicker
+    
+    struct MakeProviderPickerPayload: Equatable {
+        
+        let mixed: MultiElementArray<SegmentedOperatorProvider>
+        let qrCode: QRCode
+        let qrMapping: QRMapping
+    }
+    
+    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (QRNavigation.ProviderPicker) -> Void) -> Void
     
     // MARK: - MakeQRFailure
     
@@ -61,32 +83,10 @@ extension QRNavigationComposerMicroServices {
     
     typealias MakeQRFailureWithQR = (MakeQRFailureWithQRPayload, @escaping (QRFailedViewModel) -> Void) -> Void
     
-    // MARK: - MakePaymentComplete
+    // MARK: - MakeSberPaymentComplete
     
-    typealias MakePaymentCompletePayload = (URL, SberQRConfirmPaymentState)
-    typealias MakePaymentComplete = (MakePaymentCompletePayload, @escaping (QRNavigation.PaymentCompleteResult) -> Void) -> Void
-    
-    // MARK: - MakeProviderPicker
-    
-    struct MakeProviderPickerPayload: Equatable {
-        
-        let mixed: MultiElementArray<SegmentedOperatorProvider>
-        let qrCode: QRCode
-        let qrMapping: QRMapping
-    }
-    
-    typealias MakeProviderPicker = (MakeProviderPickerPayload, @escaping (QRNavigation.ProviderPicker) -> Void) -> Void
-    
-    // MARK: - MakeOperatorSearch
-    
-    struct MakeOperatorSearchPayload: Equatable {
-        
-        let multiple: MultiElementArray<SegmentedOperatorData>
-        let qrCode: QRCode
-        let qrMapping: QRMapping
-    }
-    
-    typealias MakeOperatorSearch = (MakeOperatorSearchPayload, @escaping (QRNavigation.OperatorSearch) -> Void) -> Void
+    typealias MakeSberPaymentCompletePayload = (URL, SberQRConfirmPaymentState)
+    typealias MakeSberPaymentComplete = (MakeSberPaymentCompletePayload, @escaping (QRNavigation.PaymentCompleteResult) -> Void) -> Void
     
     // MARK: - MakeSberQR
     
