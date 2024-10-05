@@ -130,12 +130,20 @@ extension QRNavigationComposer {
 
 extension QRNavigationComposer {
     
+    enum Payload: Equatable {
+        
+        case qrResult(QRModelResult)
+    }
+    
     func compose(
-        result: QRModelResult,
+        payload: Payload,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
     ) {
-        handle(result: result, with: notify, and: completion)
+        switch payload {
+        case let .qrResult(result):
+            handle(result: result, with: notify, and: completion)
+        }
     }
     
     enum NotifyEvent: Equatable {
@@ -1522,6 +1530,17 @@ private extension ClosePaymentsViewModelWrapper {
 }
 
 // MARK: - DSL
+
+private extension QRNavigationComposer {
+    
+    func compose(
+        result: QRModelResult,
+        notify: @escaping Notify,
+        completion: @escaping QRNavigationCompletion
+    ) {
+        self.compose(payload: .qrResult(result), notify: notify, completion: completion)
+    }
+}
 
 private extension QRNavigationComposer.QRNavigation {
     
