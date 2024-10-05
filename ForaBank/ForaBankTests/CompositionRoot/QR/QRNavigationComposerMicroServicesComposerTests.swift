@@ -13,19 +13,25 @@ final class QRNavigationComposerMicroServicesComposer {
     
     private let model: Model
     private let createSberQRPayment: CreateSberQRPayment
+    private let makeSegmented: MakeSegmented
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
         createSberQRPayment: @escaping CreateSberQRPayment,
+        makeSegmented: @escaping MakeSegmented,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
         self.createSberQRPayment = createSberQRPayment
+        self.makeSegmented = makeSegmented
         self.scheduler = scheduler
     }
     
     typealias CreateSberQRPayment = (MicroServices.MakeSberPaymentCompletePayload, @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void) -> Void
+    
+    // static RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
+    typealias MakeSegmented = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel
 }
 
 extension QRNavigationComposerMicroServicesComposer {
@@ -36,7 +42,7 @@ extension QRNavigationComposerMicroServicesComposer {
             makeInternetTV: makeInternetTV,
             makeOperatorSearch: makeOperatorSearch,
             makePayments: makePayments,
-            makeProviderPicker: { _,_ in },
+            makeProviderPicker: makeProviderPicker,
             makeQRFailure: makeQRFailure,
             makeQRFailureWithQR: makeQRFailureWithQR,
             makeSberPaymentComplete: makeSberPaymentComplete,
@@ -114,6 +120,13 @@ private extension QRNavigationComposerMicroServicesComposer {
         }
     }
     
+    func makeProviderPicker(
+        payload: MicroServices.MakeProviderPickerPayload,
+        completion: @escaping (SegmentedPaymentProviderPickerFlowModel) -> Void
+    ) {
+        completion(makeSegmented(payload.mixed, payload.qrCode, payload.qrMapping))
+    }
+    
     func makeQRFailure(
         payload: MicroServices.MakeQRFailurePayload,
         completion: @escaping (QRFailedViewModel) -> Void
@@ -148,6 +161,7 @@ private extension QRNavigationComposerMicroServicesComposer {
 }
 
 @testable import ForaBank
+import ForaTools
 import SberQR
 import XCTest
 
@@ -157,7 +171,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, createSberQRPayment) = makeSUT()
+        let (sut, createSberQRPayment, _) = makeSUT()
         
         XCTAssertEqual(createSberQRPayment.callCount, 0)
         XCTAssertNotNil(sut)
@@ -241,6 +255,31 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         }
     }
     
+    // MARK: - makeProviderPicker
+    
+    func test_composed_makeProviderPicker_shouldCallMakeProviderPickerWithPayload() {
+        
+        let payload = makeMakeProviderPickerPayload()
+        let (sut, _, makeProviderPicker) = makeSUT()
+        
+        sut.compose().makeProviderPicker(payload) { _ in }
+        
+        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.0), [payload.mixed])
+        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.1), [payload.qrCode])
+        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.2), [payload.qrMapping])
+    }
+    
+    func test_composed_makeProviderPicker_shouldComplete() {
+        
+        let payload = makeMakeProviderPickerPayload()
+        let composed = makeSUT().sut.compose()
+        
+        expect { completion in
+            
+            composed.makeProviderPicker(payload) { _ in completion() }
+        }
+    }
+    
     // MARK: - makeQRFailure
     
     func test_composed_makeQRFailure_shouldComplete() {
@@ -272,7 +311,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldCallCreateSberQRPaymentWithPayload() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment) = makeSUT()
+        let (sut, createSberQRPayment, _) = makeSUT()
         
         sut.compose().makeSberPaymentComplete(payload) { _ in }
         
@@ -283,7 +322,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldDeliverFailureOnCreateSberQRPaymentFailure() {
         
         let (payload, failure) = (makeMakePaymentCompletePayload(), makeErrorMessage())
-        let (sut, createSberQRPayment) = makeSUT()
+        let (sut, createSberQRPayment, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.compose().makeSberPaymentComplete(payload) {
@@ -306,7 +345,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldPaymentCompleteOnCreateSberQRPaymentSuccess() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment) = makeSUT()
+        let (sut, createSberQRPayment, _) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.compose().makeSberPaymentComplete(payload) {
@@ -330,26 +369,31 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
     private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
+    private typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        createSberQRPayment: CreateSberQRPaymentSpy
+        createSberQRPayment: CreateSberQRPaymentSpy,
+        makeProviderPicker: MakeProviderPickerSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         let createSberQRPayment = CreateSberQRPaymentSpy()
+        let makeProviderPicker = MakeProviderPickerSpy(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())])
         let sut = SUT(
             model: model,
             createSberQRPayment: createSberQRPayment.process(_:completion:),
+            makeSegmented: makeProviderPicker.call,
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(createSberQRPayment, file: file, line: line)
+        trackForMemoryLeaks(makeProviderPicker, file: file, line: line)
         
-        return (sut, createSberQRPayment)
+        return (sut, createSberQRPayment, makeProviderPicker)
     }
     
     private func makeCreateSberQRPaymentResponse(
@@ -400,6 +444,19 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     ) -> SUT.MicroServices.MakeSberPaymentCompletePayload {
         
         return (url, state ?? makeSberQRConfirmPaymentState())
+    }
+    
+    private func makeMakeProviderPickerPayload(
+        mixed: MultiElementArray<SegmentedOperatorProvider>? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> SUT.MicroServices.MakeProviderPickerPayload {
+        
+        return .init(
+            mixed: mixed ?? makeMixedOperators(),
+            qrCode: qrCode ?? makeQR(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
     }
     
     private func makeMakeQRFailurePayload(

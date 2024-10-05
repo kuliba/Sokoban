@@ -39,6 +39,36 @@ class QRNavigationTests: XCTestCase {
         )
     }
     
+    func makeMixed(
+    ) -> (mixed: MultiElementArray<SegmentedOperatorProvider>, qrCode: QRCode, qrMapping: QRMapping) {
+        
+        return (makeMixedOperators(), makeQR(), makeQRMapping())
+    }
+    
+    func makeMixedOperators(
+        _ first: SegmentedOperatorProvider? = nil,
+        _ second: SegmentedOperatorProvider? = nil,
+        _ tail: SegmentedOperatorProvider...
+    ) -> MultiElementArray<SegmentedOperatorProvider> {
+        
+        return .init(first ?? makeSegmentedOperatorProvider(), second ?? makeSegmentedOperatorProvider(), tail)
+    }
+    
+    private func makeSegmentedOperatorProvider(
+    ) -> SegmentedOperatorProvider {
+        
+        return .provider(.init(
+            origin: .init(
+                id: anyMessage(),
+                icon: nil,
+                inn: nil,
+                title: anyMessage(),
+                segment: anyMessage()
+            ),
+            segment: anyMessage()
+        ))
+    }
+    
     func makeMultipleOperators(
         first: SegmentedOperatorData? = nil,
         second: SegmentedOperatorData? = nil,
