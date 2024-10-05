@@ -64,7 +64,7 @@ extension QRNavigationComposerMicroServices {
     // MARK: - MakePaymentComplete
     
     typealias MakePaymentCompletePayload = (URL, SberQRConfirmPaymentState)
-    typealias MakePaymentComplete = (MakePaymentCompletePayload, @escaping (Result<QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>) -> Void) -> Void
+    typealias MakePaymentComplete = (MakePaymentCompletePayload, @escaping (QRNavigation.PaymentCompleteResult) -> Void) -> Void
     
     // MARK: - MakeProviderPicker
     

@@ -7,19 +7,25 @@
 
 import CombineSchedulers
 import Foundation
+import SberQR
 
 final class QRNavigationComposerMicroServicesComposer {
     
     private let model: Model
+    private let createSberQRPayment: CreateSberQRPayment
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         model: Model,
+        createSberQRPayment: @escaping CreateSberQRPayment,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.model = model
+        self.createSberQRPayment = createSberQRPayment
         self.scheduler = scheduler
     }
+    
+    typealias CreateSberQRPayment = (MicroServices.MakePaymentCompletePayload, @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void) -> Void
 }
 
 extension QRNavigationComposerMicroServicesComposer {
@@ -31,7 +37,7 @@ extension QRNavigationComposerMicroServicesComposer {
             makePayments: makePayments,
             makeQRFailure: makeQRFailure,
             makeQRFailureWithQR: makeQRFailureWithQR,
-            makePaymentComplete: { _,_ in },
+            makePaymentComplete: makePaymentComplete,
             makeProviderPicker: { _,_ in },
             makeOperatorSearch: { _,_ in },
             makeSberQR: { _,_ in },
@@ -86,9 +92,28 @@ private extension QRNavigationComposerMicroServicesComposer {
     ) {
         completion(.init(model: model, addCompanyAction: payload.chat, requisitsAction: { payload.detailPayment(payload.qrCode) }))
     }
+    
+    func makePaymentComplete(
+        payload: MicroServices.MakePaymentCompletePayload,
+        completion: @escaping (QRNavigation.PaymentCompleteResult) -> Void
+    ) {
+        createSberQRPayment(payload) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch $0 {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+            case let .success(success):
+                completion(.success(.init(paymentSuccess: success.success, self.model)))
+            }
+        }
+    }
 }
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
@@ -97,7 +122,10 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let sut = makeSUT()
+        let (sut, createSberQRPayment) = makeSUT()
+        
+        XCTAssertEqual(createSberQRPayment.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - makeInternetTV
@@ -105,12 +133,12 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makeInternetTV_shouldCompleteAndSetQRData() {
         
         let payload = makeMakeInternetTVPayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
             composed.makeInternetTV(payload) {
-            
+                
                 XCTAssertNoDiff($0.qrData, payload.0.rawData)
                 completion()
             }
@@ -122,7 +150,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makePayments_shouldCompleteWithOperationSource() {
         
         let payload = makeMakePaymentsOperationSourcePayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -133,7 +161,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makePayments_shouldCompleteWithQRCode() {
         
         let payload = makeMakePaymentsQRCodePayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -144,7 +172,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makePayments_shouldCompleteWithC2BSource() {
         
         let payload = makeMakePaymentsC2BSourcePayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -155,7 +183,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makePayments_shouldCompleteWithC2BSubscribeSource() {
         
         let payload = makeMakePaymentsC2BSubscribeSourcePayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -168,7 +196,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makeQRFailure_shouldComplete() {
         
         let payload = makeMakeQRFailurePayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -181,7 +209,7 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     func test_composed_makeQRFailureWithQR_shouldComplete() {
         
         let payload = makeMakeQRFailureWithQRPayload()
-        let composed = makeSUT().compose()
+        let composed = makeSUT().sut.compose()
         
         expect { completion in
             
@@ -189,21 +217,89 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         }
     }
     
+    // MARK: - makePaymentComplete
+    
+    func test_composed_makePaymentComplete_shouldCallCreateSberQRPaymentWithPayload() {
+        
+        let payload = makeMakePaymentCompletePayload()
+        let (sut, createSberQRPayment) = makeSUT()
+        
+        sut.compose().makePaymentComplete(payload) { _ in }
+        
+        XCTAssertNoDiff(createSberQRPayment.payloads.map(\.0), [payload.0])
+        XCTAssertNoDiff(createSberQRPayment.payloads.map(\.1), [payload.1])
+    }
+    
+    func test_composed_makePaymentComplete_shouldDeliverFailureOnCreateSberQRPaymentFailure() {
+        
+        let (payload, failure) = (makeMakePaymentCompletePayload(), makeErrorMessage())
+        let (sut, createSberQRPayment) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.compose().makePaymentComplete(payload) {
+            
+            switch $0 {
+            case let .failure(receivedFailure):
+                XCTAssertNoDiff(receivedFailure, failure)
+                
+            default:
+                XCTFail("Expected failure \(failure), got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        createSberQRPayment.complete(with: failure)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_composed_makePaymentComplete_shouldPaymentCompleteOnCreateSberQRPaymentSuccess() {
+        
+        let payload = makeMakePaymentCompletePayload()
+        let (sut, createSberQRPayment) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.compose().makePaymentComplete(payload) {
+            
+            switch $0 {
+            case .success:
+                break
+                
+            default:
+                XCTFail("Expected success , got \($0) instead.")
+            }
+            exp.fulfill()
+        }
+        
+        createSberQRPayment.complete(with: makeCreateSberQRPaymentResponse())
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
+    private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakePaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
+    ) -> (
+        sut: SUT,
+        createSberQRPayment: CreateSberQRPaymentSpy
+    ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = SUT(model: model, scheduler: .immediate)
+        let createSberQRPayment = CreateSberQRPaymentSpy()
+        let sut = SUT(
+            model: model,
+            createSberQRPayment: createSberQRPayment.process(_:completion:),
+            scheduler: .immediate
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(createSberQRPayment, file: file, line: line)
         
-        return sut
+        return (sut, createSberQRPayment)
     }
     
     private func makeMakeInternetTVPayload(
@@ -272,6 +368,35 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     ) -> SUT.MicroServices.MakeQRFailureWithQRPayload {
         
         return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
+    }
+    
+    private func makeMakePaymentCompletePayload(
+        url: URL = anyURL(),
+        state: SberQRConfirmPaymentState? = nil
+    ) -> SUT.MicroServices.MakePaymentCompletePayload {
+        
+        return (url, state ?? makeSberQRConfirmPaymentState())
+    }
+    
+    private func makeSberQRConfirmPaymentState(
+    ) -> SberQRConfirmPaymentState {
+        
+        return .init(confirm: .editableAmount(.preview))
+    }
+    
+    private func makeErrorMessage(
+        title: String = anyMessage(),
+        message: String = anyMessage()
+    ) -> QRNavigation.ErrorMessage {
+        
+        return .init(title: title, message: message)
+    }
+    
+    private func makeCreateSberQRPaymentResponse(
+        parameters: [CreateSberQRPaymentResponse.Parameter] = [.dataLong(.init(id: .paymentOperationDetailId, value: .random(in: 1...100)))]
+    ) -> CreateSberQRPaymentResponse {
+        
+        return .init(parameters: parameters)
     }
     
     private func expect(
