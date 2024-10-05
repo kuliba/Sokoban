@@ -1549,24 +1549,37 @@ private extension ClosePaymentsViewModelWrapper {
 
 private extension QRNavigationComposer {
     
-    func compose(result: QRModelResult) {
-        
-        compose(payload: .qrResult(result), notify: { _ in }, completion: { _ in })
+    func compose(
+        result qrResult: QRModelResult
+    ) {
+        compose(
+            payload: .qrResult(qrResult), 
+            notify: { _ in },
+            completion: { _ in }
+        )
     }
     
     func compose(
-        result: QRModelResult,
+        result qrResult: QRModelResult,
         notify: @escaping Notify
     ) {
-        compose(payload: .qrResult(result), notify: notify, completion: { _ in })
+        compose(
+            payload: .qrResult(qrResult),
+            notify: notify, 
+            completion: { _ in }
+        )
     }
     
     func compose(
-        result: QRModelResult,
+        result qrResult: QRModelResult,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
     ) {
-        compose(payload: .qrResult(result), notify: notify, completion: completion)
+        compose(
+            payload: .qrResult(qrResult), 
+            notify: notify,
+            completion: completion
+        )
     }
 }
 
