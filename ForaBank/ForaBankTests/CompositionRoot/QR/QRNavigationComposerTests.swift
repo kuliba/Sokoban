@@ -442,7 +442,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .c2bSubscribeURL(anyURL()),
             toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -455,7 +455,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bSubscribeURL(anyURL()),
             delivers: .dismiss,
             for: { $0.payments?.closeAction() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -468,7 +468,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bSubscribeURL(anyURL()),
             delivers: .scanQR,
             for: { $0.payments?.scanQRCode() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -482,7 +482,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bSubscribeURL(anyURL()),
             delivers: .contactAbroad(source),
             for: { $0.payments?.contactAbroad(source: source) },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -506,7 +506,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .c2bURL(anyURL()),
             toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -519,7 +519,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bURL(anyURL()),
             delivers: .dismiss,
             for: { $0.payments?.closeAction() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -532,7 +532,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bURL(anyURL()),
             delivers: .scanQR,
             for: { $0.payments?.scanQRCode() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -546,7 +546,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .c2bURL(anyURL()),
             delivers: .contactAbroad(source),
             for: { $0.payments?.contactAbroad(source: source) },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -570,7 +570,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .failure(makeQR()),
             toDeliver: .failure,
-            on: { microServices.makeQRFailureWithQR.complete(with: .success(makeQRFailed())) }
+            on: { microServices.makeQRFailureWithQR.complete(with: makeQRFailed()) }
         )
     }
     
@@ -616,7 +616,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .mapped(.missingINN),
             toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: .success(makeQRFailed())) }
+            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
         )
     }
     
@@ -665,7 +665,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: makeMappedMixed(),
             toDeliver: .providerPicker,
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
     }
     
@@ -679,7 +679,7 @@ final class QRNavigationComposerTests: XCTestCase {
     //            result: makeMappedMixed(),
     //            delivers: .isLoading(true),
     //            for: { $0.providerPickerSetIsLoading(to: true) },
-    //            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+    //            on: { makeProviderPicker.complete(with: makeProviderPicker()) }
     //        )
     //    }
     //
@@ -692,7 +692,7 @@ final class QRNavigationComposerTests: XCTestCase {
     //            result: makeMappedMixed(),
     //            delivers: .isLoading(false),
     //            for: { $0.providerPickerSetIsLoading(to: false) },
-    //            on: { makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+    //            on: { makeProviderPicker.complete(with: makeProviderPicker()) }
     //        )
     //    }
     
@@ -705,7 +705,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: makeMappedMixed(),
             delivers: .outside(.chat),
             for: { $0.providerPickerGoTo(to: .addCompany) },
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
     }
     
@@ -718,7 +718,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: makeMappedMixed(),
             delivers: .outside(.main),
             for: { $0.providerPickerGoTo(to: .main) },
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
     }
     
@@ -731,7 +731,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: makeMappedMixed(),
             delivers: .outside(.payments),
             for: { $0.providerPickerGoTo(to: .payments) },
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
     }
     
@@ -744,7 +744,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: makeMappedMixed(),
             delivers: .outside(.scanQR),
             for: { $0.providerPickerGoTo(to: .scanQR) },
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPickerSuccess()) }
+            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
         )
     }
     
@@ -771,7 +771,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: makeMappedMultiple(),
             toDeliver: .operatorSearch,
-            on: { microServices.makeOperatorSearch.complete(with: makeOperatorSearchSuccess()) }
+            on: { microServices.makeOperatorSearch.complete(with: makeOperatorSearch()) }
         )
     }
     
@@ -797,7 +797,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .mapped(.none(makeQR())),
             toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -810,7 +810,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.none(makeQR())),
             delivers: .dismiss,
             for: { $0.payments?.closeAction() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -823,7 +823,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.none(makeQR())),
             delivers: .scanQR,
             for: { $0.payments?.scanQRCode() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -837,7 +837,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.none(makeQR())),
             delivers: .contactAbroad(source),
             for: { $0.payments?.contactAbroad(source: source) },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -862,7 +862,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .mapped(.provider(payload)),
             toDeliver: .servicePicker,
-            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
     }
     
@@ -876,7 +876,7 @@ final class QRNavigationComposerTests: XCTestCase {
     //            result: makeMappedMixed(),
     //            delivers: .isLoading(true),
     //            for: { $0.providerPickerSetIsLoading(to: true) },
-    //            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+    //            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
     //        )
     //    }
     //
@@ -889,7 +889,7 @@ final class QRNavigationComposerTests: XCTestCase {
     //            result: makeMappedMixed(),
     //            delivers: .isLoading(false),
     //            for: { $0.providerPickerSetIsLoading(to: false) },
-    //            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+    //            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
     //        )
     //    }
     
@@ -903,7 +903,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.provider(payload)),
             delivers: .outside(.chat),
             for: { $0.servicePicker?.event(.goTo(.addCompany)) },
-            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
     }
     
@@ -917,7 +917,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.provider(payload)),
             delivers: .outside(.main),
             for: { $0.servicePicker?.event(.goTo(.main)) },
-            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
     }
     
@@ -931,7 +931,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.provider(payload)),
             delivers: .outside(.payments),
             for: { $0.servicePicker?.event(.goTo(.payments)) },
-            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
     }
     
@@ -945,7 +945,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.provider(payload)),
             delivers: .outside(.scanQR),
             for: { $0.servicePicker?.event(.goTo(.scanQR)) },
-            on: { microServices.makeServicePicker.complete(with: makeServicePickerSuccess()) }
+            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
         )
     }
     
@@ -972,7 +972,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: makeMappedSingle(),
             toDeliver: .internetTV,
-            on: { microServices.makeInternetTV.complete(with: makeInternetTVSuccess()) }
+            on: { microServices.makeInternetTV.complete(with: makeInternetTVModel()) }
         )
     }
     
@@ -995,7 +995,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .mapped(.source(.avtodor)),
             toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -1008,7 +1008,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.source(.avtodor)),
             delivers: .dismiss,
             for: { $0.payments?.closeAction() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -1021,7 +1021,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.source(.avtodor)),
             delivers: .scanQR,
             for: { $0.payments?.scanQRCode() },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -1035,7 +1035,7 @@ final class QRNavigationComposerTests: XCTestCase {
             with: .mapped(.source(.avtodor)),
             delivers: .contactAbroad(source),
             for: { $0.payments?.contactAbroad(source: source) },
-            on: { microServices.makePayments.complete(with: makePaymentsSuccess()) }
+            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
         )
     }
     
@@ -1075,7 +1075,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberQR(anyURL()),
             toDeliver: .sberQR(.failure(error)),
-            on: { microServices.makeSberQR.complete(with: .failure(error)) }
+            on: { microServices.makeSberQR.complete(with: error) }
         )
     }
     
@@ -1087,7 +1087,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberQR(anyURL()),
             toDeliver: .sberQR(.success),
-            on: { microServices.makeSberQR.complete(with: .success(self.makeSberQR())) }
+            on: { microServices.makeSberQR.complete(with: self.makeSberQR()) }
         )
     }
     
@@ -1112,7 +1112,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .url(anyURL()),
             toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: .success(makeQRFailed())) }
+            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
         )
     }
     
@@ -1157,7 +1157,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .unknown,
             toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: .success(makeQRFailed())) }
+            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
         )
     }
     
@@ -1205,7 +1205,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.failure(error)),
-            on: { microServices.makePaymentComplete.complete(with: .failure(error)) }
+            on: { microServices.makePaymentComplete.complete(with: error) }
         )
     }
     
@@ -1217,7 +1217,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.success),
-            on: { microServices.makePaymentComplete.complete(with: .success(self.makePaymentsComplete())) }
+            on: { microServices.makePaymentComplete.complete(with: self.makePaymentsComplete()) }
         )
     }
     
@@ -1228,7 +1228,7 @@ final class QRNavigationComposerTests: XCTestCase {
     private typealias MakePaymentsSpy = Spy<SUT.MicroServices.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailureSpy = Spy<SUT.MicroServices.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MicroServices.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
-    private typealias MakePaymentCompleteSpy = Spy<(URL, SberQRConfirmPaymentState), QRNavigation.PaymentCompleteResult, Never>
+    private typealias MakePaymentCompleteSpy = Spy<(URL, SberQRConfirmPaymentState), QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
     private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
     private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
     private typealias MakeSberQRSpy = Spy<SUT.MicroServices.MakeSberQRPayload, SberQRConfirmPaymentViewModel, QRNavigation.ErrorMessage>
@@ -1304,19 +1304,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(model: model, category: category, scheduler: scheduler)
     }
     
-    private func makePaymentsSuccess(
-        model: Model = .mockWithEmptyExcept(),
-        category: Payments.Category = .fast,
-        scheduler: AnySchedulerOf<DispatchQueue> = .immediate
-    ) -> Result<ClosePaymentsViewModelWrapper, Never> {
-        
-        return .success(makePaymentsModel(
-            model: model,
-            category: category,
-            scheduler: scheduler
-        ))
-    }
-    
     private func makeQR(
         original: String = anyMessage(),
         rawData: [String: String] = [anyMessage(): anyMessage()]
@@ -1383,12 +1370,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .preview(mix: mix, qrCode: qrCode, qrMapping: qrMapping)
     }
     
-    private func makeProviderPickerSuccess(
-    ) -> Result<QRNavigation.ProviderPicker, Never> {
-        
-        return .success(makeProviderPicker())
-    }
-    
     private func makeMultiple(
     ) -> (multiple: MultiElementArray<SegmentedOperatorData>, qrCode: QRCode, qrMapping: QRMapping) {
         
@@ -1433,12 +1414,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(city: city, code: code, isGroup: isGroup, logotypeList: logotypeList, name: name, parameterList: parameterList, parentCode: parentCode, region: region, synonymList: synonymList)
     }
     
-    private func makeOperatorSearchSuccess(
-    ) -> Result<QRNavigation.OperatorSearch, Never> {
-        
-        return .success(makeOperatorSearch())
-    }
-    
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
         
         return .init(searchBar: .banks(), navigationBar: .sample, model: .emptyMock, addCompanyAction: {}, requisitesAction: {})
@@ -1472,12 +1447,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
     }
     
-    private func makeServicePickerSuccess(
-    ) -> Result<SUT.MicroServices.ServicePicker, Never> {
-        
-        return .success(makeServicePicker())
-    }
-    
     private func makeServicePicker(
     ) -> SUT.MicroServices.ServicePicker {
         
@@ -1506,10 +1475,10 @@ final class QRNavigationComposerTests: XCTestCase {
         return .mapped(.single(`operator` ?? makeSegmentedOperatorData(), qrCode ?? makeQR(), qrMapping ?? makeQRMapping()))
     }
     
-    private func makeInternetTVSuccess(
-    ) -> Result<InternetTVDetailsViewModel, Never> {
+    private func makeInternetTVModel(
+    ) -> InternetTVDetailsViewModel {
         
-        return .success(.init(model: .mockWithEmptyExcept(), closeAction: {}))
+        return .init(model: .mockWithEmptyExcept(), closeAction: {})
     }
     
     private func makeErrorMessage(
@@ -1717,15 +1686,15 @@ private extension QRNavigation {
         case .internetTV:         return .internetTV
         case .operatorSearch:     return .operatorSearch
         case .payments:           return .payments
-
+            
         case let .paymentComplete(paymentsSuccess):
             return .paymentComplete(paymentsSuccess.result)
-
+            
         case .providerPicker:     return .providerPicker
-
+            
         case let .sberQR(sberQR):
             return .sberQR(sberQR.result)
-
+            
         case .servicePicker:      return .servicePicker
         }
     }
@@ -1759,7 +1728,7 @@ private extension QRNavigation.SberQRResult {
         }
     }
 }
- 
+
 private extension QRNavigation.PaymentCompleteResult {
     
     var result: EquatableQRNavigation.Result {
