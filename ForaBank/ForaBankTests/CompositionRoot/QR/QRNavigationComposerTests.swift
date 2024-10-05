@@ -9,12 +9,36 @@ import Combine
 import ForaTools
 import SberQR
 
+enum QRNavigation {
+    
+    case failure(QRFailedViewModel)
+    case internetTV(InternetTVDetailsViewModel)
+    case operatorSearch(OperatorSearch)
+    case payments(Node<ClosePaymentsViewModelWrapper>)
+    case providerPicker(Node<ProviderPicker>)
+    case sberQR(SberQRResult)
+    case servicePicker(Node<AnywayServicePickerFlowModel>)
+    
+    typealias OperatorSearch = QRSearchOperatorViewModel
+    typealias ProviderPicker = SegmentedPaymentProviderPickerFlowModel
+    typealias SberQRResult = Result<SberQR, ErrorMessage>
+    
+    typealias SberQR = SberQRConfirmPaymentViewModel
+    
+    struct ErrorMessage: Error, Equatable {
+        
+        let title: String
+        let message: String
+    }
+}
+
 struct QRNavigationComposerMicroServices {
     
     let makeInternetTV: MakeInternetTV
     let makePayments: MakePayments
     let makeQRFailure: MakeQRFailure
     let makeQRFailureWithQR: MakeQRFailureWithQR
+    let makePaymentsSuccess: MakePaymentsSuccess
     let makeProviderPicker: MakeProviderPicker
     let makeOperatorSearch: MakeOperatorSearch
     let makeSberQR: MakeSberQR
@@ -73,6 +97,8 @@ extension QRNavigationComposerMicroServices {
     
     typealias MakeQRFailureWithQR = (MakeQRFailureWithQRPayload, @escaping (QRFailedViewModel) -> Void) -> Void
     
+    typealias MakePaymentsSuccess = ((URL, SberQRConfirmPaymentState), @escaping (()) -> Void) -> Void
+    
     struct MakeProviderPickerPayload: Equatable {
         
         let mixed: MultiElementArray<SegmentedOperatorProvider>
@@ -122,12 +148,16 @@ extension QRNavigationComposer {
         switch payload {
         case let .qrResult(result):
             handle(result: result, with: notify, and: completion)
+            
+        case let .sberPay(url, state):
+            microServices.makePaymentsSuccess((url, state)) { _ in }
         }
     }
     
     enum Payload: Equatable {
         
         case qrResult(QRModelResult)
+        case sberPay(URL, SberQRConfirmPaymentState)
     }
     
     enum NotifyEvent: Equatable {
@@ -149,29 +179,6 @@ extension QRNavigationComposer {
     typealias Notify = (NotifyEvent) -> Void
     
     typealias QRNavigationCompletion = (QRNavigation) -> Void
-}
-
-enum QRNavigation {
-    
-    case failure(QRFailedViewModel)
-    case internetTV(InternetTVDetailsViewModel)
-    case operatorSearch(OperatorSearch)
-    case payments(Node<ClosePaymentsViewModelWrapper>)
-    case providerPicker(Node<ProviderPicker>)
-    case sberQR(SberQRResult)
-    case servicePicker(Node<AnywayServicePickerFlowModel>)
-    
-    typealias OperatorSearch = QRSearchOperatorViewModel
-    typealias ProviderPicker = SegmentedPaymentProviderPickerFlowModel
-    typealias SberQRResult = Result<SberQR, ErrorMessage>
-    
-    typealias SberQR = SberQRConfirmPaymentViewModel
-    
-    struct ErrorMessage: Error, Equatable {
-        
-        let title: String
-        let message: String
-    }
 }
 
 private extension QRNavigationComposer {
@@ -1172,6 +1179,19 @@ final class QRNavigationComposerTests: XCTestCase {
         XCTAssertNoDiff(events, [.detailPayment(nil)])
     }
     
+    // MARK: - sberPay
+    
+    func test_sberPay_shouldCallMakePaymentsSuccessWithPayload() {
+        
+        let (url, state) = (anyURL(), makeSberQRConfirmPaymentState())
+        let (sut, microServices) = makeSUT()
+        
+        sut.compose(url: url, state: state)
+        
+        XCTAssertNoDiff(microServices.makePaymentsSuccess.payloads.map(\.0), [url])
+        XCTAssertNoDiff(microServices.makePaymentsSuccess.payloads.map(\.1), [state])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposer
@@ -1179,6 +1199,7 @@ final class QRNavigationComposerTests: XCTestCase {
     private typealias MakePaymentsSpy = Spy<SUT.MicroServices.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
     private typealias MakeQRFailureSpy = Spy<SUT.MicroServices.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MicroServices.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
+    private typealias MakePaymentsSuccessSpy = Spy<(URL, SberQRConfirmPaymentState), Void, Never>
     private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
     private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
     private typealias MakeSberQRSpy = Spy<SUT.MicroServices.MakeSberQRPayload, SberQRConfirmPaymentViewModel, QRNavigation.ErrorMessage>
@@ -1190,10 +1211,26 @@ final class QRNavigationComposerTests: XCTestCase {
         let makePayments: MakePaymentsSpy
         let makeQRFailure: MakeQRFailureSpy
         let makeQRFailureWithQR: MakeQRFailureWithQRSpy
+        let makePaymentsSuccess: MakePaymentsSuccessSpy
         let makeProviderPicker: MakeProviderPickerSpy
         let makeOperatorSearch: MakeOperatorSearchSpy
         let makeSberQR: MakeSberQRSpy
         let makeServicePicker: MakeServicePickerSpy
+        
+        var microServices: SUT.MicroServices {
+            
+            return .init(
+                makeInternetTV: makeInternetTV.process,
+                makePayments: makePayments.process,
+                makeQRFailure: makeQRFailure.process,
+                makeQRFailureWithQR: makeQRFailureWithQR.process,
+                makePaymentsSuccess: makePaymentsSuccess.process,
+                makeProviderPicker: makeProviderPicker.process,
+                makeOperatorSearch: makeOperatorSearch.process,
+                makeSberQR: makeSberQR.process,
+                makeServicePicker: makeServicePicker.process
+            )
+        }
     }
     
     private func makeSUT(
@@ -1203,38 +1240,30 @@ final class QRNavigationComposerTests: XCTestCase {
         sut: SUT,
         microServices: MicroServicesSpy
     ) {
-        let microServices = MicroServicesSpy(
+        let microServicesSpy = MicroServicesSpy(
             makeInternetTV: MakeInternetTVSpy(),
             makePayments: MakePaymentsSpy(),
             makeQRFailure: MakeQRFailureSpy(),
             makeQRFailureWithQR: MakeQRFailureWithQRSpy(),
+            makePaymentsSuccess: MakePaymentsSuccessSpy(),
             makeProviderPicker: MakeProviderPickerSpy(),
             makeOperatorSearch: MakeOperatorSearchSpy(),
             makeSberQR: MakeSberQRSpy(),
             makeServicePicker: MakeServicePickerSpy()
         )
-        let sut = SUT(microServices: .init(
-            makeInternetTV: microServices.makeInternetTV.process,
-            makePayments: microServices.makePayments.process,
-            makeQRFailure: microServices.makeQRFailure.process,
-            makeQRFailureWithQR: microServices.makeQRFailureWithQR.process,
-            makeProviderPicker: microServices.makeProviderPicker.process,
-            makeOperatorSearch: microServices.makeOperatorSearch.process,
-            makeSberQR: microServices.makeSberQR.process,
-            makeServicePicker: microServices.makeServicePicker.process
-        ))
+        let sut = SUT(microServices: microServicesSpy.microServices)
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeInternetTV, file: file, line: line)
-        trackForMemoryLeaks(microServices.makePayments, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeQRFailure, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeQRFailureWithQR, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeProviderPicker, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeOperatorSearch, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeSberQR, file: file, line: line)
-        trackForMemoryLeaks(microServices.makeServicePicker, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeInternetTV, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makePayments, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeQRFailure, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeQRFailureWithQR, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeProviderPicker, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeOperatorSearch, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeSberQR, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeServicePicker, file: file, line: line)
         
-        return (sut, microServices)
+        return (sut, microServicesSpy)
     }
     
     private func makePaymentsModel(
@@ -1554,6 +1583,17 @@ private extension QRNavigationComposer {
     ) {
         compose(
             payload: .qrResult(qrResult),
+            notify: { _ in },
+            completion: { _ in }
+        )
+    }
+    
+    func compose(
+        url: URL,
+        state: SberQRConfirmPaymentState
+    ) {
+        compose(
+            payload: .sberPay(url, state),
             notify: { _ in },
             completion: { _ in }
         )
