@@ -116,7 +116,7 @@ private extension QRNavigationComposerMicroServicesComposer {
 import SberQR
 import XCTest
 
-final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
+final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     // MARK: - init
     
@@ -302,28 +302,19 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         return (sut, createSberQRPayment)
     }
     
+    private func makeCreateSberQRPaymentResponse(
+        parameters: [CreateSberQRPaymentResponse.Parameter] = [.dataLong(.init(id: .paymentOperationDetailId, value: .random(in: 1...100)))]
+    ) -> CreateSberQRPaymentResponse {
+        
+        return .init(parameters: parameters)
+    }
+    
     private func makeMakeInternetTVPayload(
         qrCode: QRCode? = nil,
         qrMapping: QRMapping? = nil
     ) -> SUT.MicroServices.MakeInternetTVPayload {
         
         return (qrCode ?? makeQR(), qrMapping ?? makeQRMapping())
-    }
-    
-    private func makeQR(
-        original: String = anyMessage(),
-        rawData: [String: String] = [anyMessage(): anyMessage()]
-    ) -> QRCode {
-        
-        return .init(original: original, rawData: rawData)
-    }
-    
-    private func makeQRMapping(
-        parameters: [QRParameter] = [],
-        operators: [QROperator] = []
-    ) -> QRMapping {
-        
-        return .init(parameters: parameters, operators: operators)
     }
     
     private func makeMakePaymentsOperationSourcePayload(
@@ -353,6 +344,14 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
         return .source(.c2b(url))
     }
     
+    private func makeMakePaymentCompletePayload(
+        url: URL = anyURL(),
+        state: SberQRConfirmPaymentState? = nil
+    ) -> SUT.MicroServices.MakeSberPaymentCompletePayload {
+        
+        return (url, state ?? makeSberQRConfirmPaymentState())
+    }
+    
     private func makeMakeQRFailurePayload(
         chat: @escaping () -> Void = {},
         detailPayment: @escaping () -> Void = {}
@@ -368,35 +367,6 @@ final class QRNavigationComposerMicroServicesComposerTests: XCTestCase {
     ) -> SUT.MicroServices.MakeQRFailureWithQRPayload {
         
         return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
-    }
-    
-    private func makeMakePaymentCompletePayload(
-        url: URL = anyURL(),
-        state: SberQRConfirmPaymentState? = nil
-    ) -> SUT.MicroServices.MakeSberPaymentCompletePayload {
-        
-        return (url, state ?? makeSberQRConfirmPaymentState())
-    }
-    
-    private func makeSberQRConfirmPaymentState(
-    ) -> SberQRConfirmPaymentState {
-        
-        return .init(confirm: .editableAmount(.preview))
-    }
-    
-    private func makeErrorMessage(
-        title: String = anyMessage(),
-        message: String = anyMessage()
-    ) -> QRNavigation.ErrorMessage {
-        
-        return .init(title: title, message: message)
-    }
-    
-    private func makeCreateSberQRPaymentResponse(
-        parameters: [CreateSberQRPaymentResponse.Parameter] = [.dataLong(.init(id: .paymentOperationDetailId, value: .random(in: 1...100)))]
-    ) -> CreateSberQRPaymentResponse {
-        
-        return .init(parameters: parameters)
     }
     
     private func expect(

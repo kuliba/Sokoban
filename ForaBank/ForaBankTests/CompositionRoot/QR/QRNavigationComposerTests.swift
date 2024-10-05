@@ -11,7 +11,7 @@ import ForaTools
 import SberQR
 import XCTest
 
-final class QRNavigationComposerTests: XCTestCase {
+final class QRNavigationComposerTests: QRNavigationTests {
     
     // MARK: - init
     
@@ -913,14 +913,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(model: model, category: category, scheduler: scheduler)
     }
     
-    private func makeQR(
-        original: String = anyMessage(),
-        rawData: [String: String] = [anyMessage(): anyMessage()]
-    ) -> QRCode {
-        
-        return .init(original: original, rawData: rawData)
-    }
-    
     private func makeQRFailed(
         model: Model = .mockWithEmptyExcept(),
         addCompanyAction: @escaping () -> Void = {},
@@ -954,14 +946,6 @@ final class QRNavigationComposerTests: XCTestCase {
         ))
     }
     
-    private func makeQRMapping(
-        parameters: [QRParameter] = [],
-        operators: [QROperator] = []
-    ) -> QRMapping {
-        
-        return .init(parameters: parameters, operators: operators)
-    }
-    
     private func makeMixed(
     ) -> (mixed: MultiElementArray<SegmentedOperatorProvider>, qrCode: QRCode, qrMapping: QRMapping) {
         
@@ -989,38 +973,6 @@ final class QRNavigationComposerTests: XCTestCase {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
         return .mapped(.multiple(multiple, qrCode, qrMapping))
-    }
-    
-    private func makeMultipleOperators(
-        first: SegmentedOperatorData? = nil,
-        second: SegmentedOperatorData? = nil,
-        tail: SegmentedOperatorData...
-    ) -> MultiElementArray<SegmentedOperatorData> {
-        
-        return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
-    }
-    
-    private func makeSegmentedOperatorData(
-        origin: OperatorGroupData.OperatorData? = nil,
-        segment: String = anyMessage()
-    ) -> SegmentedOperatorData {
-        
-        return .init(origin: origin ?? makeOperatorGroupDataOperatorData(), segment: segment)
-    }
-    
-    private func makeOperatorGroupDataOperatorData(
-        city: String? = nil,
-        code: String = anyMessage(),
-        isGroup: Bool = false,
-        logotypeList: [OperatorGroupData.LogotypeData] = [],
-        name: String = anyMessage(),
-        parameterList: [ParameterData] = [],
-        parentCode: String = anyMessage(),
-        region: String? = nil,
-        synonymList: [String] = []
-    ) -> OperatorGroupData.OperatorData {
-        
-        return .init(city: city, code: code, isGroup: isGroup, logotypeList: logotypeList, name: name, parameterList: parameterList, parentCode: parentCode, region: region, synonymList: synonymList)
     }
     
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
@@ -1088,20 +1040,6 @@ final class QRNavigationComposerTests: XCTestCase {
     ) -> InternetTVDetailsViewModel {
         
         return .init(model: .mockWithEmptyExcept(), closeAction: {})
-    }
-    
-    private func makeErrorMessage(
-        title: String = anyMessage(),
-        message: String = anyMessage()
-    ) -> QRNavigation.ErrorMessage {
-        
-        return .init(title: title, message: message)
-    }
-    
-    private func makeSberQRConfirmPaymentState(
-    ) -> SberQRConfirmPaymentState {
-        
-        return .init(confirm: .editableAmount(.preview))
     }
     
     private func makeSberQR(
