@@ -210,11 +210,11 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, createSberQRPayment, getSberQRData, makeProviderPicker) = makeSUT()
+        let (sut, spies) = makeSUT()
         
-        XCTAssertEqual(createSberQRPayment.callCount, 0)
-        XCTAssertEqual(getSberQRData.callCount, 0)
-        XCTAssertEqual(makeProviderPicker.callCount, 0)
+        XCTAssertEqual(spies.createSberQRPayment.callCount, 0)
+        XCTAssertEqual(spies.getSberQRData.callCount, 0)
+        XCTAssertEqual(spies.makeProviderPicker.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -301,13 +301,13 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makeProviderPicker_shouldCallMakeProviderPickerWithPayload() {
         
         let payload = makeMakeProviderPickerPayload()
-        let (sut, _,_, makeProviderPicker) = makeSUT()
+        let (sut, spies) = makeSUT()
         
         sut.compose().makeProviderPicker(payload) { _ in }
         
-        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.0), [payload.mixed])
-        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.1), [payload.qrCode])
-        XCTAssertNoDiff(makeProviderPicker.payloads.map(\.2), [payload.qrMapping])
+        XCTAssertNoDiff(spies.makeProviderPicker.payloads.map(\.0), [payload.mixed])
+        XCTAssertNoDiff(spies.makeProviderPicker.payloads.map(\.1), [payload.qrCode])
+        XCTAssertNoDiff(spies.makeProviderPicker.payloads.map(\.2), [payload.qrMapping])
     }
     
     func test_composed_makeProviderPicker_shouldComplete() {
@@ -352,58 +352,63 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldCallCreateSberQRPaymentWithPayload() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment, _,_) = makeSUT()
+        let (sut, spies) = makeSUT()
         
         sut.compose().makeSberPaymentComplete(payload) { _ in }
         
-        XCTAssertNoDiff(createSberQRPayment.payloads.map(\.0), [payload.0])
-        XCTAssertNoDiff(createSberQRPayment.payloads.map(\.1), [payload.1])
+        XCTAssertNoDiff(spies.createSberQRPayment.payloads.map(\.0), [payload.0])
+        XCTAssertNoDiff(spies.createSberQRPayment.payloads.map(\.1), [payload.1])
     }
     
     func test_composed_makePaymentComplete_shouldDeliverFailureOnCreateSberQRPaymentFailure() {
         
         let (payload, failure) = (makeMakePaymentCompletePayload(), makeErrorMessage())
-        let (sut, createSberQRPayment, _,_) = makeSUT()
-        let exp = expectation(description: "wait for completion")
+        let (sut, spies) = makeSUT()
         
-        sut.compose().makeSberPaymentComplete(payload) {
-            
-            switch $0 {
-            case let .failure(receivedFailure):
-                XCTAssertNoDiff(receivedFailure, failure)
+        expect(
+            toComplete: { completion in
                 
-            default:
-                XCTFail("Expected failure \(failure), got \($0) instead.")
-            }
-            exp.fulfill()
-        }
-        
-        createSberQRPayment.complete(with: failure)
-        
-        wait(for: [exp], timeout: 1)
+                sut.compose().makeSberPaymentComplete(payload) {
+                    
+                    switch $0 {
+                    case let .failure(receivedFailure):
+                        XCTAssertNoDiff(receivedFailure, failure)
+                        
+                    default:
+                        XCTFail("Expected failure \(failure), got \($0) instead.")
+                    }
+                    completion()
+                }
+            },
+            on: { spies.createSberQRPayment.complete(with: failure) }
+        )
     }
     
     func test_composed_makePaymentComplete_shouldPaymentCompleteOnCreateSberQRPaymentSuccess() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment, _,_) = makeSUT()
-        let exp = expectation(description: "wait for completion")
+        let (sut, spies) = makeSUT()
         
-        sut.compose().makeSberPaymentComplete(payload) {
-            
-            switch $0 {
-            case .success:
-                break
+        expect(
+            toComplete: { completion in
                 
-            default:
-                XCTFail("Expected success , got \($0) instead.")
+                sut.compose().makeSberPaymentComplete(payload) {
+                    
+                    switch $0 {
+                    case .success:
+                        break
+                        
+                    default:
+                        XCTFail("Expected success , got \($0) instead.")
+                    }
+                    completion()
+                }
+            },
+            on: {
+                
+                spies.createSberQRPayment.complete(with: makeCreateSberQRPaymentResponse())
             }
-            exp.fulfill()
-        }
-        
-        createSberQRPayment.complete(with: makeCreateSberQRPaymentResponse())
-        
-        wait(for: [exp], timeout: 1)
+        )
     }
     
     // MARK: - makeSberQR
@@ -411,16 +416,16 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makeSberQR_shouldCallGetSberQRDataWithURL() {
         
         let url = anyURL()
-        let (sut, _, getSberQRData, _) = makeSUT()
+        let (sut, spies) = makeSUT()
         
         sut.compose().makeSberQR((url, { _ in })) { _ in }
         
-        XCTAssertNoDiff(getSberQRData.payloads, [url])
+        XCTAssertNoDiff(spies.getSberQRData.payloads, [url])
     }
     
     func test_composed_makeSberQR_shouldDeliverFailureOnGetSberQRDataFailure() {
         
-        let (sut, _, getSberQRData, _) = makeSUT()
+        let (sut, spies) = makeSUT()
         expect(
             toComplete: { completion in
                 
@@ -437,13 +442,13 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
                     completion()
                 }
             },
-            on: { getSberQRData.complete(with: anyError()) }
+            on: { spies.getSberQRData.complete(with: anyError()) }
         )
     }
     
     func test_composed_makeSberQR_shouldDeliverFailureOnMissingProductGetSberQRDataSuccess() {
         
-        let (sut, _, getSberQRData, _) = makeSUT()
+        let (sut, spies) = makeSUT()
         
         expect(
             toComplete: { completion in
@@ -461,13 +466,13 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
                     completion()
                 }
             },
-            on: { getSberQRData.complete(with: .empty()) }
+            on: { spies.getSberQRData.complete(with: .empty()) }
         )
     }
     
     func test_composed_makeSberQR_shouldDeliverSuccessOnProductAndGetSberQRDataSuccess() {
         
-        let (sut, _, getSberQRData, _) = makeSUT(product: eligible())
+        let (sut, spies) = makeSUT(product: eligible())
         
         expect(
             toComplete: { completion in
@@ -485,7 +490,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
                     completion()
                 }
             },
-            on: { getSberQRData.complete(with: responseWithFixedAmount()) }
+            on: { spies.getSberQRData.complete(with: responseWithFixedAmount()) }
         )
     }
     
@@ -496,39 +501,47 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     private typealias GetSberQRDataSpy = Spy<URL, GetSberQRDataResponse, Error>
     private typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
     
+    private struct Spies {
+        
+        let createSberQRPayment: CreateSberQRPaymentSpy
+        let getSberQRData: GetSberQRDataSpy
+        let makeProviderPicker: MakeProviderPickerSpy
+    }
+    
     private func makeSUT(
         product: ProductData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        createSberQRPayment: CreateSberQRPaymentSpy,
-        getSberQRData: GetSberQRDataSpy,
-        makeProviderPicker: MakeProviderPickerSpy
+        spies: Spies
     ) {
         let model: Model = .mockWithEmptyExcept()
         if let product {
             
             model.products.value.append(element: product, toValueOfKey: product.productType)
         }
-        let createSberQRPayment = CreateSberQRPaymentSpy()
-        let getSberQRData = GetSberQRDataSpy()
-        let makeProviderPicker = MakeProviderPickerSpy(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())])
+        let spies = Spies(
+            createSberQRPayment: .init(),
+            getSberQRData: .init(),
+            makeProviderPicker: .init(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())])
+        )
+        
         let sut = SUT(
             logger: LoggerSpy(),
             model: model,
-            createSberQRPayment: createSberQRPayment.process(_:completion:),
-            getSberQRData: getSberQRData.process(_:completion:),
-            makeSegmented: makeProviderPicker.call,
+            createSberQRPayment: spies.createSberQRPayment.process(_:completion:),
+            getSberQRData: spies.getSberQRData.process(_:completion:),
+            makeSegmented: spies.makeProviderPicker.call,
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(createSberQRPayment, file: file, line: line)
-        trackForMemoryLeaks(getSberQRData, file: file, line: line)
-        trackForMemoryLeaks(makeProviderPicker, file: file, line: line)
+        trackForMemoryLeaks(spies.createSberQRPayment, file: file, line: line)
+        trackForMemoryLeaks(spies.getSberQRData, file: file, line: line)
+        trackForMemoryLeaks(spies.makeProviderPicker, file: file, line: line)
         
-        return (sut, createSberQRPayment, getSberQRData, makeProviderPicker)
+        return (sut, spies)
     }
     
     private func eligible(
