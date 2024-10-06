@@ -663,7 +663,7 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem {
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -709,7 +709,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem {
         data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -744,7 +744,7 @@ private extension Landing.DataView.Carousel.CarouselWithDots.ListItem {
         data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -756,5 +756,12 @@ private extension Landing.DataView.Carousel.CarouselWithDots.ListItem.Action {
         data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
+    }
+}
+
+extension String {
+    
+    func addingPercentEncoding() -> Self {
+        addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
     }
 }

@@ -34,7 +34,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            viewFactory: makeViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -66,7 +66,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            viewFactory: makeViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -92,7 +92,7 @@ extension Model {
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            viewFactory: makeViewFactory(),
             limitsViewModel: limitsViewModel,
             scheduler: .main,
             config: config,
@@ -110,11 +110,18 @@ extension Model {
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            viewFactory: makeViewFactory(),
             limitsViewModel: nil,
             scheduler: .main,
             config: config,
             landingActions: landingActions
+        )
+    }
+    
+    func makeViewFactory() -> ViewFactory {
+        .init(
+            makeIconView: imageCache().makeIconView(for:),
+            makeBannerImageView: generalImageCache().makeIconView(for:)
         )
     }
 }

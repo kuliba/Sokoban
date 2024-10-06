@@ -7,12 +7,22 @@
 
 import UIPrimitives
 
-struct ViewFactory {
+public struct ViewFactory {
 
     let makeIconView: MakeIconView
+    let makeBannerImageView: MakeBannerImageView
+    
+    public init(
+        makeIconView: @escaping MakeIconView,
+        makeBannerImageView: @escaping MakeBannerImageView
+    ) {
+        self.makeIconView = makeIconView
+        self.makeBannerImageView = makeBannerImageView
+    }
 }
 
-extension ViewFactory {
+public extension ViewFactory {
         
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
+    typealias MakeBannerImageView = (String) -> UIPrimitives.AsyncImage
 }

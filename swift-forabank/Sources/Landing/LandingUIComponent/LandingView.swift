@@ -19,7 +19,7 @@ public struct LandingView: View {
     
     private let action: (LandingEvent) -> Void
     private let images: [String: Image]
-    private let makeIconView: MakeIconView
+    private let viewFactory: ViewFactory
     private let makeLimit: MakeLimit
     private var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
     private let cardLimitsInfo: CardLimitsInfo?
@@ -30,7 +30,7 @@ public struct LandingView: View {
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
-        makeIconView: @escaping MakeIconView,
+        viewFactory: ViewFactory,
         makeLimit: @escaping MakeLimit = { _ in nil },
         limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         cardLimitsInfo: CardLimitsInfo?,
@@ -40,7 +40,7 @@ public struct LandingView: View {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
         self.action = action
-        self.makeIconView = makeIconView
+        self.viewFactory = viewFactory
         self.makeLimit = makeLimit
         self.limitsViewModel = limitsViewModel
         self.cardLimitsInfo = cardLimitsInfo
@@ -149,7 +149,7 @@ public struct LandingView: View {
             selectDetail: viewModel.selectDetail,
             action: action,
             orderCard: orderCard,
-            makeIconView: makeIconView,
+            viewFactory: viewFactory,
             makeLimit: makeLimit,
             canOpenDetail: {
                 return viewModel.landing.components(g: $0.groupID.rawValue, v: $0.viewID.rawValue) != []
@@ -212,7 +212,7 @@ extension LandingView {
         let selectDetail: (DetailDestination?) -> Void
         let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
-        let makeIconView: MakeIconView
+        let viewFactory: ViewFactory
         let makeLimit: MakeLimit
         let canOpenDetail: UILanding.CanOpenDetail
         let limitsViewModel: ListHorizontalRectangleLimitsViewModel?
@@ -310,7 +310,7 @@ extension LandingView {
                 if let limitsViewModel {
                     ListHorizontalRectangleLimitsWrappedView(
                         model: limitsViewModel,
-                        factory: .init(makeIconView: makeIconView),
+                        factory: viewFactory,
                         config: config.listHorizontalRectangleLimits)
                 }
                 else {
@@ -320,7 +320,7 @@ extension LandingView {
                             reduce: {state,_ in (state, .none)},
                             handleEffect: {_,_ in }
                         ),
-                        factory: .init(makeIconView: makeIconView),
+                        factory: viewFactory,
                         config: config.listHorizontalRectangleLimits)
                 }
             case let .multi(.typeButtons(model)):
@@ -349,11 +349,18 @@ extension LandingView {
                         ),
                         reduce: BlockHorizontalRectangularReducer(limitIsChanged: limitIsChanged).reduce(_:_:),
                         handleEffect: {_,_ in }),
-                    factory: .init(makeIconView: makeIconView),
+                    factory: viewFactory,
                     config: config.blockHorizontalRectangular)
                 
             case let .carousel(.base(model)):
-                EmptyView()
+                CarouselBaseWrappedView(
+                    model: .init(
+                        initialState: .init(data: model),
+                        reduce: {state,_ in (state, .none)},
+                        handleEffect: {_,_ in }
+                    ),
+                    factory: viewFactory,
+                    config: .default)
                 
             case let .carousel(.withTabs(model)):
                 EmptyView()
@@ -391,10 +398,7 @@ struct LandingUIView_Previews: PreviewProvider {
             ),
             images: .defaultValue,
             action: { _ in },
-            makeIconView: { _ in .init(
-                image: .flag,
-                publisher: Just(.percent).eraseToAnyPublisher()
-            )}, 
+            viewFactory: .default, 
             makeLimit: { _ in nil }, 
             limitsViewModel: nil, 
             cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true),

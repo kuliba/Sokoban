@@ -569,11 +569,18 @@ final class ControlPanelReducerTests: XCTestCase {
         publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
     )}
     
+    let makeBannerImageView: ViewFactory.MakeBannerImageView = { _ in .init(
+        image: .checkImage,
+        publisher: Just(.ic16Check).eraseToAnyPublisher()
+    )}
+    
     private func createLandingWrapperViewModel(_ landing: UILanding = .preview) -> LandingWrapperViewModel {
         .init(initialState: .success(landing),
               imagePublisher: .imagePublisher,
               imageLoader: { _ in },
-              makeIconView: makeIconView,
+              viewFactory: .init(
+                makeIconView: makeIconView,
+                makeBannerImageView: makeBannerImageView),
               limitsViewModel: nil,
               config: .default,
               landingActions: { _ in
