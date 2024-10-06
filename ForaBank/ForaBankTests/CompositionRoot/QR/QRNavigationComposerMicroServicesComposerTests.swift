@@ -16,6 +16,7 @@ final class QRNavigationComposerMicroServicesComposer {
     private let createSberQRPayment: CreateSberQRPayment
     private let getSberQRData: GetSberQRData
     private let makeSegmented: MakeSegmented
+    private let makeServicePicker: MicroServices.MakeServicePicker
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
@@ -23,7 +24,10 @@ final class QRNavigationComposerMicroServicesComposer {
         model: Model,
         createSberQRPayment: @escaping CreateSberQRPayment,
         getSberQRData: @escaping GetSberQRData,
+        // static RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
         makeSegmented: @escaping MakeSegmented,
+        // static RootViewModelFactory.makeProviderServicePickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
+        makeServicePicker: @escaping MicroServices.MakeServicePicker,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.logger = logger
@@ -31,12 +35,14 @@ final class QRNavigationComposerMicroServicesComposer {
         self.createSberQRPayment = createSberQRPayment
         self.getSberQRData = getSberQRData
         self.makeSegmented = makeSegmented
+        self.makeServicePicker = makeServicePicker
         self.scheduler = scheduler
     }
     
+    typealias MicroServices = QRNavigationComposerMicroServices
+    
     typealias CreateSberQRPayment = (MicroServices.MakeSberPaymentCompletePayload, @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void) -> Void
     
-    // static RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
     typealias MakeSegmented = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel
     
     typealias GetSberQRDataCompletion = (Result<GetSberQRDataResponse, Error>) -> Void
@@ -56,11 +62,9 @@ extension QRNavigationComposerMicroServicesComposer {
             makeQRFailureWithQR: makeQRFailureWithQR,
             makeSberPaymentComplete: makeSberPaymentComplete,
             makeSberQR: makeSberQR,
-            makeServicePicker: { _,_ in }
+            makeServicePicker: makeServicePicker
         )
     }
-    
-    typealias MicroServices = QRNavigationComposerMicroServices
 }
 
 private extension QRNavigationComposerMicroServicesComposer {
@@ -494,18 +498,51 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         )
     }
     
+    // MARK: - makeServicePicker
+    
+    func test_composed_makeServicePicker_shouldCallMakeServicePickerWithPayload() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, spies) = makeSUT()
+        
+        sut.compose().makeServicePicker(payload) { _ in }
+        
+        XCTAssertNoDiff(spies.makeServicePicker.payloads, [payload])
+    }
+    
+    func test_composed_makeServicePicker_shouldCompleteWithFlowModel() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let flowModel = makeAnywayServicePickerFlowModel()
+        let (sut, spies) = makeSUT()
+        
+        expect(
+            toComplete: { completion in
+                
+                sut.compose().makeServicePicker(payload) {
+                    
+                    XCTAssert($0 === flowModel)
+                    completion()
+                }
+            },
+            on: { spies.makeServicePicker.complete(with: flowModel) }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
     private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
     private typealias GetSberQRDataSpy = Spy<URL, GetSberQRDataResponse, Error>
     private typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
+    private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, AnywayServicePickerFlowModel, Never>
     
     private struct Spies {
         
         let createSberQRPayment: CreateSberQRPaymentSpy
         let getSberQRData: GetSberQRDataSpy
         let makeProviderPicker: MakeProviderPickerSpy
+        let makeServicePicker: MakeServicePickerSpy
     }
     
     private func makeSUT(
@@ -524,7 +561,8 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         let spies = Spies(
             createSberQRPayment: .init(),
             getSberQRData: .init(),
-            makeProviderPicker: .init(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())])
+            makeProviderPicker: .init(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())]),
+            makeServicePicker: .init()
         )
         
         let sut = SUT(
@@ -532,7 +570,8 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
             model: model,
             createSberQRPayment: spies.createSberQRPayment.process(_:completion:),
             getSberQRData: spies.getSberQRData.process(_:completion:),
-            makeSegmented: spies.makeProviderPicker.call,
+            makeSegmented: spies.makeProviderPicker.call, 
+            makeServicePicker: spies.makeServicePicker.process(_:completion:),
             scheduler: .immediate
         )
         
@@ -540,6 +579,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         trackForMemoryLeaks(spies.createSberQRPayment, file: file, line: line)
         trackForMemoryLeaks(spies.getSberQRData, file: file, line: line)
         trackForMemoryLeaks(spies.makeProviderPicker, file: file, line: line)
+        trackForMemoryLeaks(spies.makeServicePicker, file: file, line: line)
         
         return (sut, spies)
     }
@@ -636,6 +676,13 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     ) -> SUT.MicroServices.MakeQRFailureWithQRPayload {
         
         return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
+    }
+    
+    private func makeAnywayServicePickerFlowModel(
+    ) -> AnywayServicePickerFlowModel {
+        
+        
+        return .preview(payload: makePaymentProviderServicePickerPayload())
     }
     
     private func expect(

@@ -93,6 +93,34 @@ class QRNavigationTests: XCTestCase {
         return .init(city: city, code: code, isGroup: isGroup, logotypeList: logotypeList, name: name, parameterList: parameterList, parentCode: parentCode, region: region, synonymList: synonymList)
     }
     
+    func makePaymentProviderServicePickerPayload(
+        provider: SegmentedProvider? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> PaymentProviderServicePickerPayload {
+        
+        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
+    }
+    
+    func makeSegmentedProvider(
+        origin: UtilityPaymentProvider? = nil,
+        segment: String = anyMessage()
+    ) -> SegmentedProvider {
+        
+        return .init(origin: origin ?? makeUtilityPaymentProvider(), segment: segment)
+    }
+    
+    func makeUtilityPaymentProvider(
+        id: String = anyMessage(),
+        icon: String? = nil,
+        inn: String? = nil,
+        title: String = anyMessage(),
+        segment: String = anyMessage()
+    ) -> UtilityPaymentProvider {
+        
+        return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
+    }
+    
     func makeQR(
         original: String = anyMessage(),
         rawData: [String: String] = [anyMessage(): anyMessage()]

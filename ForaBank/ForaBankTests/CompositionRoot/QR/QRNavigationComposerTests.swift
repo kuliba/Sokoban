@@ -953,34 +953,6 @@ final class QRNavigationComposerTests: QRNavigationTests {
         return .init(searchBar: .banks(), navigationBar: .sample, model: .emptyMock, addCompanyAction: {}, requisitesAction: {})
     }
     
-    private func makePaymentProviderServicePickerPayload(
-        provider: SegmentedProvider? = nil,
-        qrCode: QRCode? = nil,
-        qrMapping: QRMapping? = nil
-    ) -> PaymentProviderServicePickerPayload {
-        
-        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
-    }
-    
-    private func makeSegmentedProvider(
-        origin: UtilityPaymentProvider? = nil,
-        segment: String = anyMessage()
-    ) -> SegmentedProvider {
-        
-        return .init(origin: origin ?? makeUtilityPaymentProvider(), segment: segment)
-    }
-    
-    private func makeUtilityPaymentProvider(
-        id: String = anyMessage(),
-        icon: String? = nil,
-        inn: String? = nil,
-        title: String = anyMessage(),
-        segment: String = anyMessage()
-    ) -> UtilityPaymentProvider {
-        
-        return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
-    }
-    
     private func makeServicePicker(
     ) -> SUT.MicroServices.ServicePicker {
         
