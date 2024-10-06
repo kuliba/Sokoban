@@ -605,6 +605,7 @@
 		2A3345962CB1420B00EBF33E /* QRNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */; };
 		2A3345982CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345972CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift */; };
 		2A33459A2CB19C4A00EBF33E /* QRNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345992CB19C4A00EBF33E /* QRNavigationTests.swift */; };
+		2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -4095,6 +4096,7 @@
 		2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposer.swift; sourceTree = "<group>"; };
 		2A3345972CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServicesComposerTests.swift; sourceTree = "<group>"; };
 		2A3345992CB19C4A00EBF33E /* QRNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationTests.swift; sourceTree = "<group>"; };
+		2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -9159,6 +9161,7 @@
 				2A3345912CB13FB600EBF33E /* QRNavigation.swift */,
 				2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */,
 				2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */,
+				2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */,
 			);
 			path = QRNavigation;
 			sourceTree = "<group>";
@@ -21271,6 +21274,7 @@
 				2A46DCAA2B3EF212001C896C /* FastPaymentsSettingsFlag.swift in Sources */,
 				77CCEA6A28F58DB600C62215 /* OpenDepositDetailViewModel.swift in Sources */,
 				774A8B2A2865FC6F00B81140 /* MyProductsSectionItemViewModel.swift in Sources */,
+				2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */,
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				2A3624B52C5FD5A400174C50 /* ComposedSegmentedPaymentProviderPickerFlowView.swift in Sources */,
