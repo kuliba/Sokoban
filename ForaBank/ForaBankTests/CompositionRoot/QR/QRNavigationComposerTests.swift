@@ -660,7 +660,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         sut.compose(with: .sberQR(url))
         
-        XCTAssertEqual(microServices.makeSberQR.payloads.map(\.0), [url])
+        XCTAssertEqual(microServices.makeSberQR.payloads.map(\.url), [url])
     }
     
     func test_sberQR_shouldCallMakeSberQRWithNotifyInPayload() {

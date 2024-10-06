@@ -11,19 +11,25 @@ import SberQR
 
 final class QRNavigationComposerMicroServicesComposer {
     
+    private let logger: LoggerAgentProtocol
     private let model: Model
     private let createSberQRPayment: CreateSberQRPayment
+    private let getSberQRData: GetSberQRData
     private let makeSegmented: MakeSegmented
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        logger: any LoggerAgentProtocol,
         model: Model,
         createSberQRPayment: @escaping CreateSberQRPayment,
+        getSberQRData: @escaping GetSberQRData,
         makeSegmented: @escaping MakeSegmented,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.logger = logger
         self.model = model
         self.createSberQRPayment = createSberQRPayment
+        self.getSberQRData = getSberQRData
         self.makeSegmented = makeSegmented
         self.scheduler = scheduler
     }
@@ -32,6 +38,9 @@ final class QRNavigationComposerMicroServicesComposer {
     
     // static RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
     typealias MakeSegmented = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel
+    
+    typealias GetSberQRDataCompletion = (Result<GetSberQRDataResponse, Error>) -> Void
+    typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
 }
 
 extension QRNavigationComposerMicroServicesComposer {
@@ -46,7 +55,7 @@ extension QRNavigationComposerMicroServicesComposer {
             makeQRFailure: makeQRFailure,
             makeQRFailureWithQR: makeQRFailureWithQR,
             makeSberPaymentComplete: makeSberPaymentComplete,
-            makeSberQR: { _,_ in },
+            makeSberQR: makeSberQR,
             makeServicePicker: { _,_ in }
         )
     }
@@ -158,6 +167,36 @@ private extension QRNavigationComposerMicroServicesComposer {
             }
         }
     }
+    
+    func makeSberQR(
+        payload: MicroServices.MakeSberQRPayload,
+        completion: @escaping MicroServices.MakeSberQRCompletion
+    ) {
+        getSberQRData(payload.url) { [weak self] in
+            
+            guard let self else { return }
+            
+            let make = RootViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                model: model,
+                logger: logger
+            )
+            
+            do {
+                let sberQR = try make($0.get(), payload.pay)
+                completion(.success(sberQR))
+            } catch {
+                completion(.failure(.techError))
+            }
+        }
+    }
+}
+
+private extension QRNavigation.ErrorMessage {
+    
+    static var techError: Self {
+        
+        return .init(title: "Ошибка", message: "Возникла техническая ошибка")
+    }
 }
 
 @testable import ForaBank
@@ -171,9 +210,11 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, createSberQRPayment, _) = makeSUT()
+        let (sut, createSberQRPayment, getSberQRData, makeProviderPicker) = makeSUT()
         
         XCTAssertEqual(createSberQRPayment.callCount, 0)
+        XCTAssertEqual(getSberQRData.callCount, 0)
+        XCTAssertEqual(makeProviderPicker.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -260,7 +301,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makeProviderPicker_shouldCallMakeProviderPickerWithPayload() {
         
         let payload = makeMakeProviderPickerPayload()
-        let (sut, _, makeProviderPicker) = makeSUT()
+        let (sut, _,_, makeProviderPicker) = makeSUT()
         
         sut.compose().makeProviderPicker(payload) { _ in }
         
@@ -311,7 +352,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldCallCreateSberQRPaymentWithPayload() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment, _) = makeSUT()
+        let (sut, createSberQRPayment, _,_) = makeSUT()
         
         sut.compose().makeSberPaymentComplete(payload) { _ in }
         
@@ -322,7 +363,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldDeliverFailureOnCreateSberQRPaymentFailure() {
         
         let (payload, failure) = (makeMakePaymentCompletePayload(), makeErrorMessage())
-        let (sut, createSberQRPayment, _) = makeSUT()
+        let (sut, createSberQRPayment, _,_) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.compose().makeSberPaymentComplete(payload) {
@@ -345,7 +386,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     func test_composed_makePaymentComplete_shouldPaymentCompleteOnCreateSberQRPaymentSuccess() {
         
         let payload = makeMakePaymentCompletePayload()
-        let (sut, createSberQRPayment, _) = makeSUT()
+        let (sut, createSberQRPayment, _,_) = makeSUT()
         let exp = expectation(description: "wait for completion")
         
         sut.compose().makeSberPaymentComplete(payload) {
@@ -365,35 +406,143 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         wait(for: [exp], timeout: 1)
     }
     
+    // MARK: - makeSberQR
+    
+    func test_composed_makeSberQR_shouldCallGetSberQRDataWithURL() {
+        
+        let url = anyURL()
+        let (sut, _, getSberQRData, _) = makeSUT()
+        
+        sut.compose().makeSberQR((url, { _ in })) { _ in }
+        
+        XCTAssertNoDiff(getSberQRData.payloads, [url])
+    }
+    
+    func test_composed_makeSberQR_shouldDeliverFailureOnGetSberQRDataFailure() {
+        
+        let (sut, _, getSberQRData, _) = makeSUT()
+        expect(
+            toComplete: { completion in
+                
+                sut.compose().makeSberQR((anyURL(), { _ in })) {
+                    
+                    switch $0 {
+                    case .failure:
+                        break
+                        
+                    default:
+                        XCTFail("Expected failure, got \($0) instead.")
+                    }
+                    
+                    completion()
+                }
+            },
+            on: { getSberQRData.complete(with: anyError()) }
+        )
+    }
+    
+    func test_composed_makeSberQR_shouldDeliverFailureOnMissingProductGetSberQRDataSuccess() {
+        
+        let (sut, _, getSberQRData, _) = makeSUT()
+        
+        expect(
+            toComplete: { completion in
+                
+                sut.compose().makeSberQR((anyURL(), { _ in })) {
+                    
+                    switch $0 {
+                    case .failure:
+                        break
+                        
+                    default:
+                        XCTFail("Expected failure, got \($0) instead.")
+                    }
+                    
+                    completion()
+                }
+            },
+            on: { getSberQRData.complete(with: .empty()) }
+        )
+    }
+    
+    func test_composed_makeSberQR_shouldDeliverSuccessOnProductAndGetSberQRDataSuccess() {
+        
+        let (sut, _, getSberQRData, _) = makeSUT(product: eligible())
+        
+        expect(
+            toComplete: { completion in
+                
+                sut.compose().makeSberQR((anyURL(), { _ in })) {
+                    
+                    switch $0 {
+                    case .success:
+                        break
+                        
+                    default:
+                        XCTFail("Expected success, got \($0) instead.")
+                    }
+                    
+                    completion()
+                }
+            },
+            on: { getSberQRData.complete(with: responseWithFixedAmount()) }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposerMicroServicesComposer
     private typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
+    private typealias GetSberQRDataSpy = Spy<URL, GetSberQRDataResponse, Error>
     private typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
     
     private func makeSUT(
+        product: ProductData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         createSberQRPayment: CreateSberQRPaymentSpy,
+        getSberQRData: GetSberQRDataSpy,
         makeProviderPicker: MakeProviderPickerSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
+        if let product {
+            
+            model.products.value.append(element: product, toValueOfKey: product.productType)
+        }
         let createSberQRPayment = CreateSberQRPaymentSpy()
+        let getSberQRData = GetSberQRDataSpy()
         let makeProviderPicker = MakeProviderPickerSpy(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())])
         let sut = SUT(
+            logger: LoggerSpy(),
             model: model,
             createSberQRPayment: createSberQRPayment.process(_:completion:),
+            getSberQRData: getSberQRData.process(_:completion:),
             makeSegmented: makeProviderPicker.call,
             scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(createSberQRPayment, file: file, line: line)
+        trackForMemoryLeaks(getSberQRData, file: file, line: line)
         trackForMemoryLeaks(makeProviderPicker, file: file, line: line)
         
-        return (sut, createSberQRPayment, makeProviderPicker)
+        return (sut, createSberQRPayment, getSberQRData, makeProviderPicker)
+    }
+    
+    private func eligible(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> ProductData {
+        
+        let product = makeAccountProduct(id: .random(in: 1...100))
+        
+        XCTAssert(product.allowDebit, file: file, line: line)
+        XCTAssert(product.isActive, file: file, line: line)
+        XCTAssert(product.isPaymentEligible, file: file, line: line)
+        
+        return product
     }
     
     private func makeCreateSberQRPaymentResponse(
@@ -478,12 +627,115 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
     
     private func expect(
         toComplete function: @escaping (@escaping () -> Void) -> Void,
+        on action: () -> Void = {},
         timeout: TimeInterval = 1
     ) {
         let exp = expectation(description: "wait for completion")
         
         function { exp.fulfill() }
         
+        action()
+        
         wait(for: [exp], timeout: timeout)
+    }
+    
+    // MARK: - GetSberQRDataResponse
+    
+    private func responseWithFixedAmount(
+        qrcID: String = "04a7ae2bee8f4f13ab151c1e6066d304"
+    ) -> GetSberQRDataResponse {
+        
+        .init(
+            qrcID: qrcID,
+            parameters: fixedAmountParameters(),
+            required: [.debitAccount]
+        )
+    }
+    
+    private func amount() -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .amount,
+            value: "220 ₽",
+            title: "Сумма",
+            icon: .init(
+                type: .local,
+                value: "ic24IconMessage"
+            )
+        ))
+    }
+    
+    private func brandName(
+        value: String
+    ) -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .brandName,
+            value: value,
+            title: "Получатель",
+            icon: .init(
+                type: .remote,
+                value: "b6e5b5b8673544184896724799e50384"
+            )
+        ))
+    }
+    
+    private func buttonPay() -> GetSberQRDataResponse.Parameter {
+        
+        .button(.init(
+            id: .buttonPay,
+            value: "Оплатить",
+            color: .red,
+            action: .pay,
+            placement: .bottom
+        ))
+    }
+    
+    private func debitAccount() -> GetSberQRDataResponse.Parameter {
+        
+        .productSelect(.init(
+            id: .debit_account,
+            value: nil,
+            title: "Счет списания",
+            filter: .init(
+                productTypes: [.card, .account],
+                currencies: [.rub],
+                additional: false
+            )
+        ))
+    }
+    
+    private func fixedAmountParameters(
+    ) -> [GetSberQRDataResponse.Parameter] {
+        
+        return [
+            header(),
+            debitAccount(),
+            brandName(value: "сббол енот_QR"),
+            amount(),
+            recipientBank(),
+            buttonPay(),
+        ]
+    }
+    
+    private func header() -> GetSberQRDataResponse.Parameter {
+        
+        .header(.init(
+            id: .title,
+            value: "Оплата по QR-коду"
+        ))
+    }
+    
+    private func recipientBank() -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .recipientBank,
+            value: "Сбербанк",
+            title: "Банк получателя",
+            icon: .init(
+                type: .remote,
+                value: "c37971b7264d55c3c467d2127ed600aa"
+            )
+        ))
     }
 }

@@ -94,8 +94,9 @@ extension QRNavigationComposerMicroServices {
     // MARK: - MakeSberQR
     
     typealias SberPay = (SberQRConfirmPaymentState) -> Void
-    typealias MakeSberQRPayload = (URL, SberPay)
-    typealias MakeSberQR = (MakeSberQRPayload, @escaping (Result<QRNavigation.SberQR, QRNavigation.ErrorMessage>) -> Void) -> Void
+    typealias MakeSberQRPayload = (url: URL, pay: SberPay)
+    typealias MakeSberQRCompletion = (Result<QRNavigation.SberQR, QRNavigation.ErrorMessage>) -> Void
+    typealias MakeSberQR = (MakeSberQRPayload, @escaping MakeSberQRCompletion) -> Void
     
     // MARK: - MakeServicePicker
     
