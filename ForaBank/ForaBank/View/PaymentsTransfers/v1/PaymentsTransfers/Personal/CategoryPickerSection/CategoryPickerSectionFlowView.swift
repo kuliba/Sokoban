@@ -51,7 +51,7 @@ private extension CategoryPickerSection.FlowDomain.State {
     var destination: CategoryPickerSectionNavigation.Destination? {
         
         switch navigation {
-        case .failure, .none, .qrFlow:
+        case .failure, .none, .qrNavigation:
             return nil
             
         case let .list(list):

@@ -8,16 +8,19 @@
 import Foundation
 import PayHub
 
-enum CategoryPickerSectionNavigation {
+typealias CategoryPickerSectionNavigation = SelectedCategoryNavigation<CategoryListModelStub>
+typealias PlainCategoryPickerSectionNavigation = SelectedCategoryNavigation<Never>
+
+enum SelectedCategoryNavigation<List> {
     
     case failure(SelectedCategoryFailure)
-    case list(CategoryListModelStub)
+    case list(List)
     case paymentFlow(PaymentFlow)
-    case qrFlow(QRFlow)
+    case qrNavigation(QRNavigation)
     
     typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, Node<QRModel>, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
     
-    typealias QRFlow = Void
+    typealias QRNavigation = Void
 }
 
 struct SelectedCategoryFailure: Error, Identifiable {
