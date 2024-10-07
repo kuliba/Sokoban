@@ -39,7 +39,7 @@ import XCTest
 final class QRNavigationComposer_extTests: QRNavigationTests {
     
     // MARK: - init
-
+    
     func test_init_shouldNotCallCollaborators() {
         
         let (sut, spies) = makeSUT()
@@ -49,45 +49,38 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         XCTAssertEqual(spies.makeProviderPicker.callCount, 0)
         XCTAssertNotNil(sut)
     }
-
+    
     // MARK: - sberQR
     
-    func test_makeSberQR_shouldDeliverFailureOnFailure() {
+    func test_makeSberQR_shouldDeliverFailureOnGetSberQRDataFailure() {
         
         let (sut, spies) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.compose(
-            payload: .qrResult(.sberQR(anyURL())), 
-            notify: { _ in },
-            completion: {
+        expect(
+            sut,
+            with: .sberQR(anyURL()),
+            assert: {
                 
                 switch $0 {
-                case .sberQR(.failure(.init(title: "Ошибка", message: "Возникла техническая ошибка"))):
-                    break
+                case let .sberQR(.failure(failure)):
+                    XCTAssertNoDiff(failure, .init(title: "Ошибка", message: "Возникла техническая ошибка"))
                     
                 default:
                     XCTFail("Expected failure, got \($0) instead.")
                 }
-                
-                exp.fulfill()
-            }
+            },
+            on: { spies.getSberQRData.complete(with: anyError()) }
         )
-        
-        spies.getSberQRData.complete(with: anyError())
-        
-        wait(for: [exp], timeout: 1)
     }
     
-    func test_makeSberQR_shouldDeliverSberQR() {
+    func test_makeSberQR_shouldDeliverSberQROnProductAndGetSberQRDataSuccess() {
         
         let (sut, spies) = makeSUT(product: eligible())
-        let exp = expectation(description: "wait for completion")
         
-        sut.compose(
-            payload: .qrResult(.sberQR(anyURL())), 
-            notify: { _ in },
-            completion: {
+        expect(
+            sut,
+            with: .sberQR(anyURL()),
+            assert: {
                 
                 switch $0 {
                 case .sberQR(.success):
@@ -96,14 +89,9 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
                 default:
                     XCTFail("Expected success, got \($0) instead.")
                 }
-                
-                exp.fulfill()
-            }
+            },
+            on: { spies.getSberQRData.complete(with: responseWithFixedAmount()) }
         )
-        
-        spies.getSberQRData.complete(with: responseWithFixedAmount())
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - makeServicePicker
@@ -112,7 +100,7 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, spies) = makeSUT()
-
+        
         sut.compose(with: .mapped(.provider(payload)))
         
         XCTAssertNoDiff(spies.makeServicePicker.payloads, [payload])
@@ -122,12 +110,11 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         
         let servicePicker = makeAnywayServicePickerFlowModel()
         let (sut, spies) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.compose(
+        expect(
+            sut,
             with: .mapped(.provider(makePaymentProviderServicePickerPayload())),
-            notify: { _ in },
-            completion: {
+            assert: {
                 
                 switch $0 {
                 case let .servicePicker(node):
@@ -136,20 +123,15 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
                 default:
                     XCTFail("Expected servicePicker, got \($0) instead.")
                 }
-                
-                exp.fulfill()
-            }
+            },
+            on: { spies.makeServicePicker.complete(with: servicePicker) }
         )
-        
-        spies.makeServicePicker.complete(with: servicePicker)
-        
-        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposer
-
+    
     private func makeSUT(
         product: ProductData? = nil,
         file: StaticString = #file,
@@ -186,5 +168,30 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         trackForMemoryLeaks(spies.makeServicePicker, file: file, line: line)
         
         return (sut, spies)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with qrResult: QRModelResult,
+        assert: @escaping (QRNavigation) -> Void,
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.compose(
+            payload: .qrResult(qrResult),
+            notify: { _ in },
+            completion: {
+                
+                assert($0)
+                exp.fulfill()
+            }
+        )
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
     }
 }
