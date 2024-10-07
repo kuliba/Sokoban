@@ -291,6 +291,7 @@ extension UILanding.Component.Config {
         verticalSpacing: .defaultValue,
         spacing: .defaultValue,
         blockHorizontalRectangular: .default,
+        carousel: .default,
         offsetForDisplayHeader: 100)
 }
 
@@ -629,7 +630,18 @@ extension UILanding.Carousel.CarouselBase.Config {
     static let `default`: Self = .init(
         cornerRadius: 12,
         paddings: .init(horizontal: 16, vertical: 8),
-        spacing: 8)
+        spacing: 8,
+        titleFont: .largeTitle
+    )
+}
+
+// MARK: - Carousel Config
+
+extension UILanding.Carousel.Config {
+    
+    static let `default`: Self = .init(
+        base: .default
+    )
 }
 
 // MARK: - BlockHorizontalRectangular 
@@ -791,7 +803,6 @@ extension UILanding.Carousel.CarouselBase {
     static let `default`: Self = .init(
         title: "Страхование",
         size: .init(width: 182, height: 240),
-        scale: "medium",
         loopedScrolling: false,
         list: .default)
 }

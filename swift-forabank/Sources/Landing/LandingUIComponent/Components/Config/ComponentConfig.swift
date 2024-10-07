@@ -30,6 +30,7 @@ extension UILanding.Component {
         public let verticalSpacing: UILanding.VerticalSpacing.Config
         public let spacing: UILanding.Spacing.Config
         public let blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config
+        public let carousel: UILanding.Carousel.Config
 
         let offsetForDisplayHeader: CGFloat
         
@@ -53,6 +54,7 @@ extension UILanding.Component {
             verticalSpacing: UILanding.VerticalSpacing.Config,
             spacing: UILanding.Spacing.Config,
             blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config,
+            carousel: UILanding.Carousel.Config,
             offsetForDisplayHeader: CGFloat
         ) {
             self.listHorizontalRoundImage = listHorizontalRoundImage
@@ -74,6 +76,7 @@ extension UILanding.Component {
             self.verticalSpacing = verticalSpacing
             self.spacing = spacing
             self.blockHorizontalRectangular = blockHorizontalRectangular
+            self.carousel = carousel
             self.offsetForDisplayHeader = offsetForDisplayHeader
         }
     }

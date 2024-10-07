@@ -22,6 +22,7 @@ struct CarouselBaseView: View {
             
             state.data.title.map {
                 Text($0)
+                    .font(config.titleFont)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
@@ -65,8 +66,7 @@ extension CarouselBaseView {
                 
                 VStack(spacing: config.spacing) {
                     factory.makeBannerImageView(item.imageLink)
-                        .frame(width: CGFloat(size.width))
-                        .frame(maxHeight: CGFloat(size.height))
+                        .frame(width: size.width, height: size.height)
                         .cornerRadius(config.cornerRadius)
                         .accessibilityIdentifier("CarouselBaseImage")
                 }

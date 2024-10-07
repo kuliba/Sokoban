@@ -32,6 +32,7 @@ extension UILanding.Component.Config {
         verticalSpacing: .default,
         spacing: .default,
         blockHorizontalRectangular: .default,
+        carousel: .default,
         offsetForDisplayHeader: 100
     )
 }
@@ -529,6 +530,18 @@ extension UILanding.Multi.MarkersText.Config {
             cornerRadius: 12,
             lineTextLeadingPadding: 8,
             textFont: .textBodyMR14200()
+        )
+    )
+}
+
+extension UILanding.Carousel.Config {
+    
+    static let `default`: Self = .init(
+        base: .init(
+            cornerRadius: 12,
+            paddings: .init(horizontal: 16, vertical: 8),
+            spacing: 8,
+            titleFont: .textH2Sb20282()
         )
     )
 }

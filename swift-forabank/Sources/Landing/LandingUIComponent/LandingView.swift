@@ -360,7 +360,7 @@ extension LandingView {
                         handleEffect: {_,_ in }
                     ),
                     factory: viewFactory,
-                    config: .default)
+                    config: config.carousel.base)
                 
             case let .carousel(.withTabs(model)):
                 EmptyView()

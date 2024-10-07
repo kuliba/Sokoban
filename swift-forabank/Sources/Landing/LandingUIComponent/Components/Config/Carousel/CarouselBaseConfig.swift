@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 public extension UILanding.Carousel.CarouselBase {
     
@@ -14,6 +15,7 @@ public extension UILanding.Carousel.CarouselBase {
         let cornerRadius: CGFloat
         let paddings: Paddings
         let spacing: CGFloat
+        let titleFont: Font
         
         public struct Paddings {
             
@@ -29,11 +31,13 @@ public extension UILanding.Carousel.CarouselBase {
         public init(
             cornerRadius: CGFloat,
             paddings: Paddings,
-            spacing: CGFloat
+            spacing: CGFloat,
+            titleFont: Font
         ){
             self.cornerRadius = cornerRadius
             self.paddings = paddings
             self.spacing = spacing
+            self.titleFont = titleFont
         }
     }
 }
