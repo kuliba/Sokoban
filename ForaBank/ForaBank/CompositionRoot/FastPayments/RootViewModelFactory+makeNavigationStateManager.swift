@@ -22,6 +22,7 @@ extension RootViewModelFactory {
     static func makeNavigationStateManager(
         modelEffectHandler: UserAccountModelEffectHandler,
         otpServices: FastPaymentsSettingsOTPServices,
+        otpDeleteBankServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         duration: Int,
@@ -57,6 +58,24 @@ extension RootViewModelFactory {
                         length: length,
                         initiateOTP: otpServices.initiateOTP,
                         submitOTP: otpServices.submitOTP,
+                        scheduler: $1
+                    ),
+                    codeObserver: codeObserver,
+                    scheduler: $1
+                )
+            },
+            makeTimedOTPInputDeleteDefaultBankViewModel: {
+                
+                .init(
+                    viewModel: .default(
+                        initialState: .starting(
+                            phoneNumber: $0,
+                            duration: duration
+                        ),
+                        duration: duration,
+                        length: length,
+                        initiateOTP: otpDeleteBankServices.initiateOTP,
+                        submitOTP: otpDeleteBankServices.submitOTP,
                         scheduler: $1
                     ),
                     codeObserver: codeObserver,
@@ -122,6 +141,77 @@ struct FastPaymentsSettingsOTPServices {
         
         self.init(
             initiateOTP: initiateOTP,
+            submitOTP: submitOTP,
+            prepareSetBankDefault: prepareSetBankDefault
+        )
+        
+        func adaptedLoggingFetch<Output, MappingError: Error, Failure: Error>(
+            _ createRequest: @escaping () throws -> URLRequest,
+            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
+            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) -> NanoServices.VoidFetch<Output, Failure> {
+            
+            NanoServices.adaptedLoggingFetch(
+                createRequest: createRequest,
+                httpClient: httpClient,
+                mapResponse: mapResponse,
+                mapError: mapError,
+                log: log,
+                file: file,
+                line: line
+            )
+        }
+        
+        func adaptedLoggingFetch<Payload, Input, Output, MappingError: Error, Failure: Error>(
+            mapPayload: @escaping (Payload) -> Input,
+            _ createRequest: @escaping (Input) throws -> URLRequest,
+            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
+            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
+            file: StaticString = #file,
+            line: UInt = #line
+        ) -> NanoServices.Fetch<Payload, Output, Failure> {
+            
+            NanoServices.adaptedLoggingFetch(
+                createRequest: { try createRequest(mapPayload($0)) },
+                httpClient: httpClient,
+                mapResponse: mapResponse,
+                mapError: mapError,
+                log: log,
+                file: file,
+                line: line
+            )
+        }
+    }
+}
+
+extension FastPaymentsSettingsOTPServices {
+    
+    init(
+        for httpClient: HTTPClient,
+        _ log: @escaping (String, StaticString, UInt) -> Void
+    ) {
+        typealias ServiceFailure = OTPInputComponent.ServiceFailure
+
+        typealias ForaRequestFactory = ForaBank.RequestFactory
+        typealias FastResponseMapper = RemoteServices.ResponseMapper
+        
+        let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
+            mapPayload: { .init($0.rawValue) },
+            ForaRequestFactory.createMakeDeleteBankDefaultRequest(payload:),
+            FastResponseMapper.mapMakeDeleteBankDefaultResponse(_:_:),
+            mapError: ServiceFailure.init(error:)
+        )
+        
+        let prepareSetBankDefault = adaptedLoggingFetch(
+            ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: FastPaymentsSettings.ServiceFailure.init(error:)
+        )
+        
+        self.init(
+            initiateOTP: { _ in },
             submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault
         )
