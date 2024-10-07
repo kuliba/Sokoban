@@ -106,6 +106,18 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         wait(for: [exp], timeout: 1)
     }
     
+    // MARK: - makeServicePicker
+    
+    func test_makeServicePicker_shouldCallMakeServicePickerWithPayload() {
+        
+        let payload = makePaymentProviderServicePickerPayload()
+        let (sut, spies) = makeSUT()
+
+        sut.compose(with: .mapped(.provider(payload)))
+        
+        XCTAssertNoDiff(spies.makeServicePicker.payloads, [payload])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposer
