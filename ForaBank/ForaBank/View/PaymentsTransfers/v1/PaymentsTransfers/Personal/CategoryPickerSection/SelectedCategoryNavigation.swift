@@ -49,19 +49,19 @@ extension SelectedCategoryNavigation {
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
             case let .mobile(mobile):
-                return .mobile(mobile)
+                return .paymentFlow(.mobile(mobile))
                 
             case .qr:
                 return nil
                 
             case let .standard(standard):
-                return .standard(standard)
+                return .paymentFlow(.standard(standard))
                 
             case let .taxAndStateServices(taxAndStateServices):
-                return .taxAndStateServices(taxAndStateServices)
+                return .paymentFlow(.taxAndStateServices(taxAndStateServices))
                 
             case let .transport(transport):
-                return .transport(transport)
+                return .paymentFlow(.transport(transport))
             }
             
         case let .qrNavigation(qrNavigation):
@@ -99,37 +99,36 @@ extension SelectedCategoryNavigation {
         let qr: QRModel
     }
     
-    enum Destination: Identifiable {
+    enum Destination {
         
         case list(List)
-        case mobile(ClosePaymentsViewModelWrapper)
-        case standard(StandardSelectedCategoryDestination)
-        case taxAndStateServices(ClosePaymentsViewModelWrapper)
-        case transport(TransportPaymentsViewModel)
+        case paymentFlow(PaymentFlowDestination)
         case qrDestination(QRNavigation.Destination)
         
-        var id: ID {
-            
-            switch self {
-            case .list:                return .list
-            case .mobile:              return .mobile
-            case .standard:            return .standard
-            case .taxAndStateServices: return .taxAndStateServices
-            case .transport:           return .transport
+        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<ClosePaymentsViewModelWrapper, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
+    }
+}
 
-            case let .qrDestination(qrDestination):
-                return .qrDestination(qrDestination.id)
-            }
-        }
+extension SelectedCategoryNavigation.Destination: Identifiable {
+    
+    var id: ID {
         
-        enum ID: Hashable {
+        switch self {
+        case .list:
+            return .list
             
-            case list
-            case mobile
-            case standard
-            case taxAndStateServices
-            case transport
-            case qrDestination(QRNavigation.Destination.ID)
+        case let .paymentFlow(paymentFlow):
+            return .paymentFlow(paymentFlow.id)
+            
+        case let .qrDestination(qrDestination):
+            return .qrDestination(qrDestination.id)
         }
+    }
+    
+    enum ID: Hashable {
+        
+        case list
+        case paymentFlow(PaymentFlowDestinationID)
+        case qrDestination(QRNavigation.Destination.ID)
     }
 }

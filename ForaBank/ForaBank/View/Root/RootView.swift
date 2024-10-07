@@ -301,23 +301,26 @@ private extension RootView {
         case let .list(list):
             categoryListView(list)
             
-        case let .mobile(mobile):
-            PaymentsView(viewModel: mobile.paymentsViewModel)
-            
-        case let .standard(standard):
-            switch standard {
-            case let .failure(failedPaymentProviderPicker):
-                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case let .mobile(mobile):
+                PaymentsView(viewModel: mobile.paymentsViewModel)
                 
-            case let .success(binder):
-                paymentProviderPicker(binder)
+            case let .standard(standard):
+                switch standard {
+                case let .failure(failedPaymentProviderPicker):
+                    Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                    
+                case let .success(binder):
+                    paymentProviderPicker(binder)
+                }
+                
+            case let .taxAndStateServices(wrapper):
+                PaymentsView(viewModel: wrapper.paymentsViewModel)
+                
+            case let .transport(transport):
+                transportPaymentsView(transport)
             }
-            
-        case let .taxAndStateServices(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
-
-        case let .transport(transport):
-            transportPaymentsView(transport)
             
         case let .qrDestination(qrDestination):
             qrDestinationView(qrDestination)
