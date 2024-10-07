@@ -155,6 +155,9 @@ private extension UserAccountNavigationFPSReducer {
                 event: .otp(.prepareSetBankDefault),
                 secondaryEvent: .dismiss(.fpsAlert)
             )
+        case let .prepareDeleteDefaultBankSuccess(phoneNumber):
+            state.spinner = nil
+            effect = .navigation(.otp(.prepareDeleteDefaultBank(.init(phoneNumber))))
             
         case let .setBankDefaultFailure(message):
             state.spinner = nil
@@ -162,6 +165,11 @@ private extension UserAccountNavigationFPSReducer {
             state.informer = .failure(message)
             effect = .navigation(.dismissInformer())
 #warning("effect = .fps(.resetStatus)")
+           
+        case let .deleteDefaultBankFailure(message):
+            state.spinner = nil
+            state.informer = .failure(message)
+            state.fpsRoute?.alert = .init(title: "Ошибка", message: message, primaryButton: .init(type: .default, title: "Ok", event: .dismiss(.alert)))
             
         case .setBankDefaultSuccess:
             state.spinner = nil

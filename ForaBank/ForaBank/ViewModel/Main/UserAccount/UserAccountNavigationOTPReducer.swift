@@ -36,6 +36,11 @@ extension UserAccountNavigationOTPReducer {
                 
             case let .prepareSetBankDefaultResponse(response):
                 (state, effect) = update(state, with: response)
+                
+            case let .createDeleteBank(route):
+                state.spinner = nil
+                state.fpsRoute?.destination = .confirmDeleteDefaultBank(route.viewModel, route.cancellable)
+
             }
             
         default:
@@ -76,6 +81,56 @@ private extension UserAccountNavigationOTPReducer {
         case .validOTP:
             state.spinner = nil
             state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.success)))
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduceDeleteBank(
+        _ state: State,
+        _ otpInput: OTPInputStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch otpInput {
+        case let .failure(failure):
+            (state, effect) = reduceDeleteBank(state, failure)
+            
+        case .inflight:
+            state.spinner = .init()
+            
+        case .validOTP:
+            state.spinner = nil
+            state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.success)))
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduceDeleteBank(
+        _ state: State,
+        _ failure: OTPInputComponent.ServiceFailure
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.spinner = nil
+        
+        switch failure {
+        case .connectivityError:
+            state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.connectivityError))))
+            
+        case let .serverError(message):
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
+            if message == tryAgain {
+                state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.incorrectOTP("Банк по умолчанию не удален"))))
+                
+            } else {
+                state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.serverError(message)))))
+            }
         }
         
         return (state, effect)
@@ -140,6 +195,34 @@ private extension UserAccountNavigationOTPReducer {
         switch response {
         case let .success(phoneNumber):
             effect = .navigation(.otp(.create(phoneNumber)))
+            
+        case .connectivityError:
+            state.fpsRoute?.destination = nil
+            state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+            effect = .navigation(.dismissInformer())
+            
+        case let .serverError(message):
+            state.fpsRoute?.destination = nil
+            state.fpsRoute?.alert = .error(message: message, event: .dismiss(.alert))
+        }
+        
+        return (state, effect)
+    }
+    
+    func updateDeleteBank(
+        _ state: State,
+        with response: Event.PrepareSetBankDefaultResponse
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.spinner = nil
+//        state.fpsRoute?.viewModel.event(.resetStatus)
+        
+        switch response {
+        case let .success(phoneNumber):
+            effect = .navigation(.otp(.prepareDeleteDefaultBank(.init(phoneNumber.rawValue))))
             
         case .connectivityError:
             state.fpsRoute?.destination = nil

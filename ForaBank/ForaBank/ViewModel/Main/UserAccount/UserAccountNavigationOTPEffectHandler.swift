@@ -53,6 +53,9 @@ extension UserAccountNavigationOTPEffectHandler {
                     dispatch(.prepareSetBankDefaultResponse(.serverError(message)))
                 }
             }
+            
+        case let .prepareDeleteDefaultBank(phoneNumber):
+            dispatch(makeDeleteBankDestination(phoneNumber, dispatch))
         }
     }
 }

@@ -33,6 +33,9 @@ public extension BankDefaultReducer {
             
         case let .setBankDefaultResult(result):
             state = update(state, with: result)
+            
+        case let .deleteBankDefaultResult(result):
+            state = updateDeleteDefaultBank(state, with: result)
         }
         
         return (state, effect)
@@ -53,11 +56,8 @@ private extension BankDefaultReducer {
         _ state: State
     ) -> (State, Effect?) {
         
-        guard let details = state.activeDetails,
-              details.bankDefaultResponse.bankDefault == .offEnabled,
-              details.bankDefaultResponse.requestLimitMessage == nil,
-              state.status == .setBankDefault
-        else { return (state, nil) }
+//        guard let details = state.activeDetails
+//        else { return (state, nil) }
         
         var state = state
         state.status = .inflight
@@ -116,6 +116,39 @@ private extension BankDefaultReducer {
         case let .incorrectOTP(message):
             var state = state
             state.status = .setBankDefaultFailure(message)
+            return state
+            
+        case .serviceFailure(.connectivityError):
+            var state = state
+            state.status = .connectivityError
+            return state
+            
+        case let .serviceFailure(.serverError(message)):
+            var state = state
+            state.status = .serverError(message)
+            return state
+        }
+    }
+    
+    func updateDeleteDefaultBank(
+        _ state: State,
+        with result: BankDefaultEvent.SetBankDefaultResult
+    ) -> State {
+        
+        guard let details = state.activeDetails
+        else { return state }
+        
+        switch result {
+        case .success:
+            var details = details
+            return .init(
+                settingsResult: .success(.contracted(details)),
+                status: .prepareDeleteDefaultBankSuccess(state.activeDetails?.paymentContract.phoneNumberMasked.rawValue ?? "")
+            )
+            
+        case let .incorrectOTP(message):
+            var state = state
+            state.status = .deleteDefaultBankFailure(message)
             return state
             
         case .serviceFailure(.connectivityError):

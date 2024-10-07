@@ -127,6 +127,14 @@ private extension UserAccountNavigationFPSReducer {
             effect = .dismissInformer
 #warning("effect = .fps(.resetStatus)")
             
+        case let .deleteDefaultBankFailure(message):
+            state.isLoading = false
+            state.destination?.alert = .error(
+                message: message,
+                event: .closeAlert
+            )
+            effect = .dismissInformer
+            
         case .setBankDefaultSuccess:
             state.isLoading = false
             state.destination?.destination = nil
@@ -139,6 +147,9 @@ private extension UserAccountNavigationFPSReducer {
             state.isLoading = false
             state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
             effect = .dismissInformer
+            
+        case .prepareDeleteDefaultBankSuccess:
+            effect = .otp(.prepareSetBankDefault(.init("")))
         }
         
         return (state, effect)

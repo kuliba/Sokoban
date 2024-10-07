@@ -11,6 +11,7 @@ public enum BankDefaultEvent: Equatable {
     case prepareSetBankDefault
     case setBankDefault
     case setBankDefaultResult(SetBankDefaultResult)
+    case deleteBankDefaultResult(SetBankDefaultResult)
 }
 
 public extension BankDefaultEvent {
