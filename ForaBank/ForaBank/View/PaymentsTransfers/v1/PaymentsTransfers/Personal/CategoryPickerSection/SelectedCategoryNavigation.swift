@@ -18,7 +18,13 @@ enum SelectedCategoryNavigation<List> {
     case paymentFlow(PaymentFlow)
     case qrNavigation(QRNavigation)
     
-    typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, Node<QRModel>, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
+    typealias Mobile = ClosePaymentsViewModelWrapper
+    typealias Standard = StandardSelectedCategoryDestination
+    typealias QR = Node<QRModel>
+    typealias Tax = ClosePaymentsViewModelWrapper
+    typealias Transport = TransportPaymentsViewModel
+    
+    typealias PaymentFlow = PayHub.PaymentFlow<Mobile, QR, Standard, Tax, Transport>
     
     typealias QRNavigation = ForaBank.QRNavigation
 }
@@ -105,7 +111,7 @@ extension SelectedCategoryNavigation {
         case paymentFlow(PaymentFlowDestination)
         case qrDestination(QRNavigation.Destination)
         
-        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<ClosePaymentsViewModelWrapper, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
+        typealias PaymentFlowDestination = PayHub.PaymentFlowDestination<Mobile, Standard, Tax, Transport>
     }
 }
 
