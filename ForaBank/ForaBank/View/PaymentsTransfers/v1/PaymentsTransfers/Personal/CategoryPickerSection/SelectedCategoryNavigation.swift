@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionNavigation.swift
+//  SelectedCategoryNavigation.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 28.09.2024.
