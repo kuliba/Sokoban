@@ -40,6 +40,13 @@ class QRNavigationTests: XCTestCase {
         return product
     }
     
+    func makeAnywayServicePickerFlowModel(
+    ) -> AnywayServicePickerFlowModel {
+        
+        
+        return .preview(payload: makePaymentProviderServicePickerPayload())
+    }
+    
     func makeErrorMessage(
         title: String = anyMessage(),
         message: String = anyMessage()

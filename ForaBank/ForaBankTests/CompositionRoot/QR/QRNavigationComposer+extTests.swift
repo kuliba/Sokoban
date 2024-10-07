@@ -118,6 +118,34 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         XCTAssertNoDiff(spies.makeServicePicker.payloads, [payload])
     }
     
+    func test_makeServicePicker_shouldDeliverServicePicker() {
+        
+        let servicePicker = makeAnywayServicePickerFlowModel()
+        let (sut, spies) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.compose(
+            with: .mapped(.provider(makePaymentProviderServicePickerPayload())),
+            notify: { _ in },
+            completion: {
+                
+                switch $0 {
+                case let .servicePicker(node):
+                    XCTAssert(node.model === servicePicker)
+                    
+                default:
+                    XCTFail("Expected servicePicker, got \($0) instead.")
+                }
+                
+                exp.fulfill()
+            }
+        )
+        
+        spies.makeServicePicker.complete(with: servicePicker)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRNavigationComposer

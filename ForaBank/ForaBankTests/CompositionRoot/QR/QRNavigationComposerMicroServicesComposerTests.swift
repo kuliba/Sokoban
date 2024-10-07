@@ -452,13 +452,6 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         return .init(qrCode: qrCode ?? makeQR(), chat: chat, detailPayment: detailPayment)
     }
     
-    private func makeAnywayServicePickerFlowModel(
-    ) -> AnywayServicePickerFlowModel {
-        
-        
-        return .preview(payload: makePaymentProviderServicePickerPayload())
-    }
-    
     private func expect(
         toComplete function: @escaping (@escaping () -> Void) -> Void,
         on action: () -> Void = {},
