@@ -490,7 +490,7 @@ extension RootViewModelFactory {
         let getLandingByType = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map,
-            mapError: LandingMapper.MapperError.init
+            mapError: MarketShowcaseDomain.ContentError.init(error:)
         )
 
         let marketShowcaseComposer = MarketShowcaseComposer(
@@ -962,26 +962,23 @@ extension Array where Element == CategoryPickerSection.ContentDomain.Item {
     }
 }
 
-private extension LandingMapper.MapperError {
+private extension MarketShowcaseDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, LandingMapper.MapperError>
-    
-    init(_ error: RemoteError) {
+
+    init(
+        error: RemoteError
+    ) {
         switch error {
         case .createRequest, .performRequest:
-            self = .connectivityError
+            self = .init(kind: .alert("Попробуйте позже."))
             
         case let .mapResponse(mapResponseError):
             switch mapResponseError {
-           
-            case .notOkStatus:
-                self = .notOkStatus
-            case .mapError:
-                self = .mapError
-            case let .serverError(error):
-                self = .serverError(error)
+            case .notOkStatus, .mapError, .serverError:
+                self = .init(kind: .alert("Попробуйте позже."))
             case .connectivityError:
-                self = .connectivityError
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
             }
         }
     }

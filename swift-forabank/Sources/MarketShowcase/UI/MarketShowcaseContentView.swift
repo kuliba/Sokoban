@@ -8,19 +8,19 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseContentView<RefreshView, LandingView, Landing>: View
+public struct MarketShowcaseContentView<RefreshView, LandingView, Landing, InformerPayload>: View
 where RefreshView: View,
       LandingView: View
 {
     
     let state: State
-    let event: (Event<Landing>) -> Void
+    let event: (Event<Landing, InformerPayload>) -> Void
     let config: Config
     let factory: Factory
     
     public init(
         state: State,
-        event: @escaping (Event<Landing>) -> Void,
+        event: @escaping (Event<Landing, InformerPayload>) -> Void,
         config: Config,
         factory: Factory
     ) {
@@ -61,7 +61,7 @@ where RefreshView: View,
 
 public extension MarketShowcaseContentView {
     
-    typealias State = MarketShowcaseContentState<Landing>
+    typealias State = MarketShowcaseContentState<Landing, InformerPayload>
     typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
     typealias Factory = ViewFactory<RefreshView, Landing, LandingView>
@@ -74,7 +74,9 @@ public extension MarketShowcaseContentView {
 extension MarketShowcaseContentView
 where RefreshView == Text,
       LandingView == Text,
-      Landing == String {
+      Landing == String,
+      InformerPayload == String
+{
     
     static let preview = MarketShowcaseContentView(
         state: .init(status: .initiate),
