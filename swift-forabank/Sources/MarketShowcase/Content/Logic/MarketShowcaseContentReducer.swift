@@ -21,7 +21,6 @@ public extension MarketShowcaseContentReducer {
         var effect: Effect?
         
         switch event {
-            
         case .load:
             
             if !state.status.isLoading {
@@ -33,10 +32,10 @@ public extension MarketShowcaseContentReducer {
             state.status = .loaded(landing)
             
         case let .failure(failure):
-
             switch failure {
             case let .alert(message):
                 state.status = .failure(.alert(message))
+                
             case let .informer(informer):
                 state.status = .failure(.informer(informer))
             }

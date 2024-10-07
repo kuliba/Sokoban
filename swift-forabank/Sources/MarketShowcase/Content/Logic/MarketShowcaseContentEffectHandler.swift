@@ -37,6 +37,7 @@ public extension MarketShowcaseContentEffectHandler {
                     switch backendFailure.kind {
                     case let .alert(message):
                         dispatch(.failure(.alert(message)))
+                        
                     case let .informer(informerPayload):
                         dispatch(.failure(.informer(informerPayload)))
                     }

@@ -34,7 +34,7 @@ public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
     case initiate
     case inflight
     case loaded(Landing)
-    case failure(Kind)
+    case failure(Failure)
     
     var isLoading: Bool {
         
@@ -46,7 +46,8 @@ public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
         }
     }
     
-    public enum Kind {
+    public enum Failure {
+        
         case alert(String)
         case informer(InformerPayload)
     }
@@ -54,4 +55,4 @@ public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
 
 extension MarketShowcaseContentStatus: Equatable where Landing: Equatable, InformerPayload: Equatable {}
 
-extension MarketShowcaseContentStatus.Kind: Equatable where InformerPayload: Equatable {}
+extension MarketShowcaseContentStatus.Failure: Equatable where InformerPayload: Equatable {}
