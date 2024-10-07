@@ -66,9 +66,64 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         }
     }
     
+    func test_getNavigation_shouldCallMakeQRNavigationWithPayloadOnQRResult() {
+        
+        let qrResult: QRModelResult = .c2bURL(anyURL())
+        let (sut, makeQRNavigation) = makeSUT()
+        
+        getNavigation(sut, flow: .qr) {
+            
+            switch $0 {
+            case let .paymentFlow(.qr(qr)):
+                qr.model.event(.qrResult(qrResult))
+                XCTAssertNoDiff(makeQRNavigation.payloads, [qrResult])
+                
+            default:
+                XCTFail("Expected QR, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_getNavigation_shouldDeliverQRNavigationOnQRResult() {
+        
+        var notifications = [CategoryPickerSection.FlowDomain.Event]()
+        let complete = makePaymentComplete()
+        let (sut, makeQRNavigation) = makeSUT()
+        
+        getNavigation(sut, flow: .qr, notify: { notifications.append($0) }) {
+            
+            switch $0 {
+            case let .paymentFlow(.qr(qr)):
+                qr.model.event(.qrResult(.c2bURL(anyURL())))
+                makeQRNavigation.complete(with: .paymentComplete(.success(complete)))
+                
+                XCTAssertEqual(notifications.count, 1)
+                
+                switch notifications.first {
+                case let .receive(.qrNavigation(.paymentComplete(.success(receivedComplete)))):
+                    XCTAssert(receivedComplete === complete)
+                    
+                default:
+                    XCTFail("Expected complete, got \(String(describing: notifications.first)) instead.")
+                }
+                
+            default:
+                XCTFail("Expected QR, got \($0) instead.")
+            }
+        }
+    }
+    
+    private func makePaymentComplete(
+        model: Model = .mockWithEmptyExcept(),
+        sections: [PaymentsSectionViewModel] = []
+    ) -> QRNavigation.PaymentComplete {
+        
+        return .init(model: model, sections: sections)
+    }
+    
     func test_getNavigation_shouldDeliverStandardFailureOnStandardFailure() {
         
-        let sut = makeSUT(standard: .failure(.init()))
+        let sut = makeSUT(standard: .failure(.init())).sut
         
         getNavigation(sut, flow: .standard) {
             
@@ -84,7 +139,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverStandardOnStandard() {
         
-        let sut = makeSUT(standard: .success(makeStandard()))
+        let sut = makeSUT(standard: .success(makeStandard())).sut
         
         getNavigation(sut, flow: .standard) {
             
@@ -114,7 +169,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverFailureOnTransportFailure() {
         
-        let sut = makeSUT(transport: nil)
+        let sut = makeSUT(transport: nil).sut
         
         getNavigation(sut, flow: .transport) {
             
@@ -130,7 +185,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverTransportOnTransportSuccess() {
         
-        let sut = makeSUT(transport: makeTransport())
+        let sut = makeSUT(transport: makeTransport()).sut
         
         getNavigation(sut, flow: .transport) {
             
@@ -189,25 +244,31 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = CategoryPickerSectionMicroServicesComposer
+    private typealias MakeQRNavigationSpy = Spy<QRModelResult, QRNavigation, Never>
     
     private func makeSUT(
+        qrResult: QRModelResult = .unknown,
         standard: StandardSelectedCategoryDestination = .failure(.init()),
         transport: TransportPaymentsViewModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
+    ) -> (
+        sut: SUT,
+        makeQRNavigation: MakeQRNavigationSpy
+    ) {
+        let makeQRNavigation = MakeQRNavigationSpy()
         let sut = SUT(
             nanoServices: .init(
                 makeMobile: makeMobile,
                 makeQR: {
                     
                     return .init(
-                        mapScanResult: { _, completion in completion(.unknown) },
+                        mapScanResult: { _, completion in completion(qrResult) },
                         makeQRModel: QRViewModel.preview,
                         scheduler: .immediate
                     )
                 },
+                makeQRNavigation: makeQRNavigation.process(_:completion:),
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
@@ -216,8 +277,9 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(makeQRNavigation, file: file, line: line)
         
-        return sut
+        return (sut, makeQRNavigation)
     }
     
     private func getNavigation(
@@ -239,7 +301,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         let microServices = sut.compose()
         let exp = expectation(description: "wait for completion")
         

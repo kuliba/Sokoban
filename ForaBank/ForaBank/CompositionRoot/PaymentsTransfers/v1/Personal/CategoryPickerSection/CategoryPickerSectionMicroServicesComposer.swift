@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 30.09.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 
@@ -51,22 +52,29 @@ private extension CategoryPickerSectionMicroServicesComposer {
             case .qr:
                 let qr = nanoServices.makeQR()
                 let cancellable = qr.$state
-                    .sink {
+                    .flatMap {
                         
                         switch $0 {
                         case .none:
-                            break
+                            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
                             
                         case .cancelled:
-                            notify(.dismiss)
-                            
-                        case .inflight:
-                            break
+                            return Just(.dismiss).eraseToAnyPublisher()
                         
+                        case .inflight:
+                            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
+                            
                         case let .qrResult(qrResult):
-                            break
+                            return AnyPublisher { completion in
+                                
+                                self.nanoServices.makeQRNavigation(qrResult) {
+                                    
+                                    completion(.receive(.qrNavigation($0)))
+                                }
+                            }.eraseToAnyPublisher()
                         }
                     }
+                    .sink(receiveValue: notify)
                 
                 completion(.paymentFlow(.qr(.init(
                     model: qr, 
