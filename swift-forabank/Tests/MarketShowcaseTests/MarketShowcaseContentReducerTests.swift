@@ -38,8 +38,10 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     
     func test_reduce_loaded_stateInflight_shouldStatusToLoaded() {
         
-        assertState(.loaded("landing"), on: .init(status: .inflight)) {
-            $0.status = .loaded("landing")
+        let landing = anyMessage()
+
+        assertState(.loaded(landing), on: .init(status: .inflight)) {
+            $0.status = .loaded(landing)
         }
     }
     
@@ -63,42 +65,54 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     
     func test_reduce_failureAlert_stateInflight_shouldStatusToFailure() {
         
-        assertState(.failure(.alert("alert")), on: .init(status: .inflight)) {
+        let alert = anyMessage()
+
+        assertState(.failure(.alert(alert)), on: .init(status: .inflight)) {
             
-            $0.status = .failure(.alert("alert"))
+            $0.status = .failure(.alert(alert))
         }
     }
     
     func test_reduce_failureAlert_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.alert("alert")), on: .init(status: .inflight), effect: nil)
+        let alert = anyMessage()
+
+        assert(.failure(.alert(alert)), on: .init(status: .inflight), effect: nil)
     }
     
     func test_reduce_failureInformer_stateInflight_shouldStatusToFailure() {
         
-        assertState(.failure(.informer("informer")), on: .init(status: .inflight)) {
+        let informer = anyMessage()
+
+        assertState(.failure(.informer(informer)), on: .init(status: .inflight)) {
             
-            $0.status = .failure(.informer("informer"))
+            $0.status = .failure(.informer(informer))
         }
     }
     
     func test_reduce_failureInformer_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.alert("alert")), on: .init(status: .inflight), effect: nil)
+        let alert = anyMessage()
+
+        assert(.failure(.alert(alert)), on: .init(status: .inflight), effect: nil)
     }
 
     
     func test_reduce_selectLandingType_shouldSelectionToLanding() {
         
-        assertState(.selectLandingType("landing"), on: .init(status: .inflight)) {
+        let landing = anyMessage()
+
+        assertState(.selectLandingType(landing), on: .init(status: .inflight)) {
             
-            $0.selection = .landingType("landing")
+            $0.selection = .landingType(landing)
         }
     }
     
     func test_reduce_selectLandingType_shouldDeliverNoEffect() {
         
-        assert(.selectLandingType("landing"), on: .init(status: .inflight), effect: nil)
+        let landing = anyMessage()
+
+        assert(.selectLandingType(landing), on: .init(status: .inflight), effect: nil)
     }
 
     func test_reduce_reset_shouldSelectionToNil() {

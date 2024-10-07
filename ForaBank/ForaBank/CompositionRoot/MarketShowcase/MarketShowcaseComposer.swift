@@ -58,14 +58,14 @@ extension MarketShowcaseComposer {
                     .sink { [weak flow] in
                         
                         switch $0 {
-                            
                         case .initiate, .inflight, .loaded:
                             break
+                            
                         case let .failure(kind):
                             switch kind {
-                                
                             case let .alert(message):
                                 flow?.event(.failure(.error(message)))
+                                
                             case let .informer(informerPayload):
                                 flow?.event(.failure(.timeout(informerPayload)))
                             }

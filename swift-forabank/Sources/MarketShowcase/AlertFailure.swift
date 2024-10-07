@@ -11,7 +11,7 @@ public struct AlertFailure: Identifiable, Equatable {
     
     public var id: String { message }
 
-    let message: String
+    public let message: String
     
     public init(
         message: String

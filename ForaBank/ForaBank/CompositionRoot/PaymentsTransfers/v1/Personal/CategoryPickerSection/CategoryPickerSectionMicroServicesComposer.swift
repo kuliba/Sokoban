@@ -39,6 +39,7 @@ private extension CategoryPickerSectionMicroServicesComposer {
     
     func getNavigation(
         payload: CategoryPickerSection.Select,
+        notify: @escaping (CategoryPickerSection.FlowDomain.Event) -> Void,
         completion: @escaping (CategoryPickerSectionNavigation) -> Void
     ) {
         switch payload {
@@ -48,7 +49,29 @@ private extension CategoryPickerSectionMicroServicesComposer {
                 completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
                 
             case .qr:
-                completion(.paymentFlow(.qr(nanoServices.makeQR())))
+                let qr = nanoServices.makeQR()
+                let cancellable = qr.$state
+                    .sink {
+                        
+                        switch $0 {
+                        case .none:
+                            break
+                            
+                        case .cancelled:
+                            notify(.dismiss)
+                            
+                        case .inflight:
+                            break
+                        
+                        case let .qrResult(qrResult):
+                            break
+                        }
+                    }
+                
+                completion(.paymentFlow(.qr(.init(
+                    model: qr, 
+                    cancellable: cancellable
+                ))))
                 
             case .standard:
                 nanoServices.makeStandard(category) {

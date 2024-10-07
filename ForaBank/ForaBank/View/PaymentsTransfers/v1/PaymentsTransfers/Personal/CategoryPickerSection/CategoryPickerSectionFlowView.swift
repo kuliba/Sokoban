@@ -88,7 +88,7 @@ private extension CategoryPickerSection.FlowDomain.State {
         
         guard case let .paymentFlow(.qr(qr)) = navigation else { return nil }
         
-        return .init(id: .init(), qr: qr)
+        return .init(id: .init(), qr: qr.model)
     }
 }
 

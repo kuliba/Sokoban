@@ -15,7 +15,7 @@ enum CategoryPickerSectionNavigation {
     case paymentFlow(PaymentFlow)
     case qrFlow(QRFlow)
     
-    typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, QRModel, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
+    typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, Node<QRModel>, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
     
     typealias QRFlow = Void
 }

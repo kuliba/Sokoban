@@ -9,11 +9,11 @@ public enum MarketShowcaseContentEvent<Landing, InformerPayload> {
     
     case load
     case loaded(Landing)
-    case failure(FailureKind)
+    case failure(Failure)
     case selectLandingType(String)
     case resetSelection
     
-    public enum FailureKind {
+    public enum Failure {
         case alert(String)
         case informer(InformerPayload)
     }
@@ -21,4 +21,4 @@ public enum MarketShowcaseContentEvent<Landing, InformerPayload> {
 
 extension MarketShowcaseContentEvent: Equatable where Landing: Equatable, InformerPayload: Equatable {}
 
-extension MarketShowcaseContentEvent.FailureKind: Equatable where InformerPayload: Equatable {}
+extension MarketShowcaseContentEvent.Failure: Equatable where InformerPayload: Equatable {}
