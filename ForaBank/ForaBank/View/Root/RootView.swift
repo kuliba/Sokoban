@@ -318,6 +318,9 @@ private extension RootView {
 
         case let .transport(transport):
             transportPaymentsView(transport)
+            
+        case let .qrDestination(qrDestination):
+            qrDestinationView(qrDestination)
         }
     }
     
@@ -494,6 +497,14 @@ private extension RootView {
                 navTrailingAction: {}//viewModel.openScanner
             )
         )
+    }
+    
+    @ViewBuilder
+    func qrDestinationView(
+        _ qrDestination: QRNavigation.Destination
+    ) -> some View {
+        
+        Text("TBD: " + String(describing: qrDestination))
     }
     
     func makeIconView(

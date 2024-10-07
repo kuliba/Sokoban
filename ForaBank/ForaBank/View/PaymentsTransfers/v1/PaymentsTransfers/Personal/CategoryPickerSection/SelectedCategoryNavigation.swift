@@ -20,7 +20,7 @@ enum SelectedCategoryNavigation<List> {
     
     typealias PaymentFlow = PayHub.PaymentFlow<ClosePaymentsViewModelWrapper, Node<QRModel>, StandardSelectedCategoryDestination, ClosePaymentsViewModelWrapper, TransportPaymentsViewModel>
     
-    typealias QRNavigation = Void
+    typealias QRNavigation = ForaBank.QRNavigation
 }
 
 struct SelectedCategoryFailure: Error, Identifiable {
@@ -40,7 +40,7 @@ extension SelectedCategoryNavigation {
     var destination: Destination? {
         
         switch self {
-        case .failure, .qrNavigation:
+        case .failure:
             return nil
             
         case let .list(list):
@@ -63,14 +63,24 @@ extension SelectedCategoryNavigation {
             case let .transport(transport):
                 return .transport(transport)
             }
+            
+        case let .qrNavigation(qrNavigation):
+            return qrNavigation.destination.map { .qrDestination($0) }
         }
     }
     
     var failure: SelectedCategoryFailure? {
         
-        guard case let .failure(failure) = self else { return nil }
-        
-        return failure
+        switch self {
+        case let .failure(failure):
+            return failure
+            
+        case let .qrNavigation(qrNavigation):
+            return qrNavigation.failure
+            
+        default:
+            return nil
+        }
     }
     
     var fullScreenCover: FullScreenCover? {
@@ -96,6 +106,7 @@ extension SelectedCategoryNavigation {
         case standard(StandardSelectedCategoryDestination)
         case taxAndStateServices(ClosePaymentsViewModelWrapper)
         case transport(TransportPaymentsViewModel)
+        case qrDestination(QRNavigation.Destination)
         
         var id: ID {
             
@@ -105,6 +116,9 @@ extension SelectedCategoryNavigation {
             case .standard:            return .standard
             case .taxAndStateServices: return .taxAndStateServices
             case .transport:           return .transport
+
+            case let .qrDestination(qrDestination):
+                return .qrDestination(qrDestination.id)
             }
         }
         
@@ -115,6 +129,7 @@ extension SelectedCategoryNavigation {
             case standard
             case taxAndStateServices
             case transport
+            case qrDestination(QRNavigation.Destination.ID)
         }
     }
 }
