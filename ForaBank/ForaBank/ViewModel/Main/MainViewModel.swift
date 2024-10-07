@@ -845,6 +845,8 @@ private extension MainViewModel {
                     guard let self else { return }
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    resetDestination()
+                    
                     self.action.send(DelayWrappedAction(
                         delayMS: 300,
                         action: MainViewModelAction.Show.Contacts())
