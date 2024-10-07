@@ -59,7 +59,7 @@ extension UserAccountConfig {
         infoVerificationConfig: .init(
             title: "При переводе через СБП отправителю не будет предложен банк по умолчанию для получения переводов",
             titleConfig: .init(textFont: .textBodyMR14200(), textColor: .textSecondary),
-            icon: .ic24SmsColor,
+            icon: Image("smsColor"),
             backgroundColor: .mainColorsGrayLightest
         )
     )
