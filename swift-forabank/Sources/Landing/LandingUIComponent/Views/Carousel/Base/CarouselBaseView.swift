@@ -44,9 +44,38 @@ struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: { /*model.itemAction(item: item)*/ },
+            action: action(item: item),
             size: state.data.size
         )
+    }
+    
+    private func action(
+        item: Item
+    ) -> () -> Void {
+        
+        guard let link = item.link else { return {} }
+        return {
+            event(.card(.openUrl(link)))
+        }
+
+        switch item.action {
+        case .none:
+            
+            guard let link = item.link else { return {} }
+            return { event(.card(.openUrl(link))) }
+            
+        case let .some(action):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return { event(.card(.goToMain)) }
+                case .orderCard: return {}
+                case .goToOrderSticker: return { event( .bannerAction(.landing))}
+                }
+            }
+            
+            return {}
+        }
     }
 }
 
@@ -79,7 +108,7 @@ extension CarouselBaseView {
 extension CarouselBaseView {
     
     typealias State = CarouselBaseState
-    typealias Event = CarouselBaseEvent
+    typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config

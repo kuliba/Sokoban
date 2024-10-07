@@ -356,8 +356,8 @@ extension LandingView {
                 CarouselBaseWrappedView(
                     model: .init(
                         initialState: .init(data: model),
-                        reduce: {state,_ in (state, .none)},
-                        handleEffect: {_,_ in }
+                        reduce: CarouselBaseReducer().reduce,
+                        handleEffect: CarouselEffectHandler(action:  action).handleEffect
                     ),
                     factory: viewFactory,
                     config: config.carousel.base)

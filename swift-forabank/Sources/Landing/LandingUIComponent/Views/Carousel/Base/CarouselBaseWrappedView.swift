@@ -9,7 +9,7 @@ import RxViewModel
 import SwiftUI
 import Tagged
 
-public typealias CarouselBaseViewModel = RxViewModel<CarouselBaseState, CarouselBaseEvent, CarouselBaseEffect>
+public typealias CarouselBaseViewModel = RxViewModel<CarouselBaseState, LandingEvent, CarouselEffect>
 
 struct CarouselBaseWrappedView: View {
     
