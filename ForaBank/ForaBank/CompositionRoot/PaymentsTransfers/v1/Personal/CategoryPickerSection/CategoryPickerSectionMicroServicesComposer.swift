@@ -52,32 +52,11 @@ private extension CategoryPickerSectionMicroServicesComposer {
             case .qr:
                 let qr = nanoServices.makeQR()
                 let cancellable = qr.$state
-                    .flatMap {
-                        
-                        switch $0 {
-                        case .none:
-                            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
-                            
-                        case .cancelled:
-                            return Just(.dismiss).eraseToAnyPublisher()
-                        
-                        case .inflight:
-                            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
-                            
-                        case let .qrResult(qrResult):
-                            return AnyPublisher { completion in
-                                
-                                self.nanoServices.makeQRNavigation(qrResult) {
-                                    
-                                    completion(.receive(.qrNavigation($0)))
-                                }
-                            }.eraseToAnyPublisher()
-                        }
-                    }
+                    .flatMap(notifyPublisher)
                     .sink(receiveValue: notify)
                 
                 completion(.paymentFlow(.qr(.init(
-                    model: qr, 
+                    model: qr,
                     cancellable: cancellable
                 ))))
                 
@@ -91,13 +70,8 @@ private extension CategoryPickerSectionMicroServicesComposer {
                 completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))
                 
             case .transport:
-                guard let transport = nanoServices.makeTransport() else {
-                    
-                    return completion(.failure(.init(
-                        id: .init(),
-                        message: "Ошибка создания транспортных платежей"
-                    )))
-                }
+                guard let transport = nanoServices.makeTransport()
+                else { return completion(.failure(.transport)) }
                 
                 completion(.paymentFlow(.transport(transport)))
             }
@@ -106,4 +80,37 @@ private extension CategoryPickerSectionMicroServicesComposer {
             completion(.list(.init(categories: list)))
         }
     }
+    
+    private func notifyPublisher(
+        result: QRModelWrapperState<QRModelResult>?
+    ) -> AnyPublisher<CategoryPickerSection.FlowDomain.Event, Never> {
+        
+        switch result {
+        case .none:
+            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
+            
+        case .cancelled:
+            return Just(.dismiss).eraseToAnyPublisher()
+            
+        case .inflight:
+            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
+            
+        case let .qrResult(qrResult):
+            return AnyPublisher { completion in
+                
+                self.nanoServices.makeQRNavigation(qrResult) {
+                    
+                    completion(.receive(.qrNavigation($0)))
+                }
+            }.eraseToAnyPublisher()
+        }
+    }
+}
+
+private extension SelectedCategoryFailure {
+    
+    static let transport: Self = .init(
+        id: .init(),
+        message: "Ошибка создания транспортных платежей"
+    )
 }
