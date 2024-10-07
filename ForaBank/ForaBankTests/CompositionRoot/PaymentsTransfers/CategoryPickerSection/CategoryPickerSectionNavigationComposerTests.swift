@@ -41,6 +41,31 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         }
     }
     
+    func test_getNavigation_shouldDeliverQRWithNotifyOnCancel() {
+        
+        var notifications = [CategoryPickerSection.FlowDomain.Event]()
+        
+        getNavigation(flow: .qr, notify: { notifications.append($0) }) {
+            
+            switch $0 {
+            case let .paymentFlow(.qr(qr)):
+                qr.model.event(.cancel)
+                
+                XCTAssertEqual(notifications.count, 1)
+                switch notifications.first {
+                case .dismiss:
+                    break
+                    
+                default:
+                    XCTFail("Expected dismiss event, got \(String(describing: notifications.first)) instead.")
+                }
+                
+            default:
+                XCTFail("Expected QR, got \($0) instead.")
+            }
+        }
+    }
+    
     func test_getNavigation_shouldDeliverStandardFailureOnStandardFailure() {
         
         let sut = makeSUT(standard: .failure(.init()))
@@ -175,7 +200,14 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         let sut = SUT(
             nanoServices: .init(
                 makeMobile: makeMobile,
-                makeQR: { .preview() },
+                makeQR: {
+                    
+                    return .init(
+                        mapScanResult: { _, completion in completion(.unknown) },
+                        makeQRModel: QRViewModel.preview,
+                        scheduler: .immediate
+                    )
+                },
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }

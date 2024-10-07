@@ -115,7 +115,22 @@ extension RootViewModelFactory {
                     completion(.failure(failure))
                     
                 case let .success(flow):
-                    completion(.paymentFlow(flow))
+                    switch flow {
+                    case let .mobile(mobile):
+                        completion(.paymentFlow(.mobile(mobile)))
+                        
+                    case let .qr(qr):
+                        completion(.paymentFlow(.qr(.init(model: qr, cancellables: []))))
+                        
+                    case let .standard(standard):
+                        completion(.paymentFlow(.standard(standard)))
+                        
+                    case let .taxAndStateServices(taxAndStateServices):
+                        completion(.paymentFlow(.taxAndStateServices(taxAndStateServices)))
+
+                    case let .transport(transport):
+                        completion(.paymentFlow(.transport(transport)))
+                    }
                 }
             }
         }
