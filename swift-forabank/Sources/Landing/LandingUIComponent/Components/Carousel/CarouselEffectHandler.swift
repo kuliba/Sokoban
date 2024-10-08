@@ -38,4 +38,3 @@ public extension CarouselEffectHandler {
     typealias Event = LandingEvent
     typealias Dispatch = (Event) -> Void
 }
-    

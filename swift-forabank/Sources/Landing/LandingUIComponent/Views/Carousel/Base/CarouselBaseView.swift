@@ -44,38 +44,9 @@ struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: action(item: item),
+            action: state.action(item: item, event: event),
             size: state.data.size
         )
-    }
-    
-    private func action(
-        item: Item
-    ) -> () -> Void {
-        
-        guard let link = item.link else { return {} }
-        return {
-            event(.card(.openUrl(link)))
-        }
-
-        switch item.action {
-        case .none:
-            
-            guard let link = item.link else { return {} }
-            return { event(.card(.openUrl(link))) }
-            
-        case let .some(action):
-            
-            if let type = LandingActionType(rawValue: action.type) {
-                switch type {
-                case .goToMain: return { event(.card(.goToMain)) }
-                case .orderCard: return {}
-                case .goToOrderSticker: return { event( .bannerAction(.landing))}
-                }
-            }
-            
-            return {}
-        }
     }
 }
 
@@ -87,7 +58,7 @@ extension CarouselBaseView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: UILanding.Carousel.CarouselBase.Size
+        let size: ItemSize
         
         var body: some View {
             
@@ -113,6 +84,7 @@ extension CarouselBaseView {
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config
     typealias Factory = ViewFactory
+    typealias ItemSize = UILanding.Carousel.CarouselBase.Size
 }
 
 struct CarouselBaseView_Previews: PreviewProvider {
