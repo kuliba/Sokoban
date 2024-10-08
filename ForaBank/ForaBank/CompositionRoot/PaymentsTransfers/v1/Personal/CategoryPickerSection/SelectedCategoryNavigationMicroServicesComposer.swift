@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionMicroServicesComposer.swift
+//  SelectedCategoryNavigationMicroServicesComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 30.09.2024.
@@ -8,40 +8,40 @@
 import Combine
 import CombineSchedulers
 import Foundation
+import PayHubUI
 
-final class CategoryPickerSectionMicroServicesComposer {
+final class SelectedCategoryNavigationMicroServicesComposer<List, ListModel> {
     
 #warning("see PaymentFlowMicroServiceComposerNanoServicesComposer")
     private let nanoServices: NanoServices
-    private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    init(
-        nanoServices: NanoServices,
-        scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
+    init(nanoServices: NanoServices) {
+        
         self.nanoServices = nanoServices
-        self.scheduler = scheduler
     }
     
-    typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices
+    typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel>
 }
 
-extension CategoryPickerSectionMicroServicesComposer {
+extension SelectedCategoryNavigationMicroServicesComposer {
     
     func compose() -> MicroServices {
         
         return .init(getNavigation: getNavigation)
     }
     
-    typealias MicroServices = CategoryPickerSection.FlowDomain.MicroServices
+    typealias Select = CategoryPickerSectionItem<ServiceCategory, List>
+    typealias Navigation = SelectedCategoryNavigation<ListModel>
+    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias MicroServices = FlowDomain.MicroServices
 }
 
-private extension CategoryPickerSectionMicroServicesComposer {
+private extension SelectedCategoryNavigationMicroServicesComposer {
     
     func getNavigation(
-        payload: CategoryPickerSection.Select,
-        notify: @escaping (CategoryPickerSection.FlowDomain.Event) -> Void,
-        completion: @escaping (CategoryPickerSectionNavigation) -> Void
+        payload: Select,
+        notify: @escaping (FlowDomain.Event) -> Void,
+        completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
     ) {
         switch payload {
         case let .category(category):
@@ -76,24 +76,24 @@ private extension CategoryPickerSectionMicroServicesComposer {
                 completion(.paymentFlow(.transport(transport)))
             }
             
-        case let .list(list):
-            completion(.list(.init(categories: list)))
+        case let .list(categories):
+            completion(.list(nanoServices.makeList(categories)))
         }
     }
     
     private func notifyPublisher(
         result: QRModelWrapperState<QRModelResult>?
-    ) -> AnyPublisher<CategoryPickerSection.FlowDomain.Event, Never> {
+    ) -> AnyPublisher<FlowDomain.Event, Never> {
         
         switch result {
         case .none:
-            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
+            return Empty<FlowDomain.Event, Never>().eraseToAnyPublisher()
             
         case .cancelled:
             return Just(.dismiss).eraseToAnyPublisher()
             
         case .inflight:
-            return Empty<CategoryPickerSection.FlowDomain.Event, Never>().eraseToAnyPublisher()
+            return Empty<FlowDomain.Event, Never>().eraseToAnyPublisher()
             
         case let .qrResult(qrResult):
             return AnyPublisher { completion in

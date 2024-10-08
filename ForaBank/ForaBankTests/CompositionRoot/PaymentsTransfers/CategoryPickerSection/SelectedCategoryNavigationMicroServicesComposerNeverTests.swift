@@ -1,15 +1,26 @@
 //
-//  CategoryPickerSectionMicroServicesComposerTests.swift
+//  SelectedCategoryNavigationMicroServicesComposerNeverTests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 30.09.2024.
+//  Created by Igor Malyarov on 08.10.2024.
 //
 
 import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
+final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCase {
+    
+    // MARK: - init
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, makeQRNavigation, makeList) = makeSUT()
+        
+        XCTAssertEqual(makeQRNavigation.callCount, 0)
+        XCTAssertEqual(makeList.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
     
     // MARK: - getNavigation
     
@@ -43,7 +54,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverQRWithNotifyOnCancel() {
         
-        var notifications = [CategoryPickerSection.FlowDomain.Event]()
+        var notifications = [SUT.FlowDomain.Event]()
         
         getNavigation(flow: .qr, notify: { notifications.append($0) }) {
             
@@ -69,7 +80,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     func test_getNavigation_shouldCallMakeQRNavigationWithPayloadOnQRResult() {
         
         let qrResult: QRModelResult = .c2bURL(anyURL())
-        let (sut, makeQRNavigation) = makeSUT()
+        let (sut, makeQRNavigation, _) = makeSUT()
         
         getNavigation(sut, flow: .qr) {
             
@@ -86,9 +97,9 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverQRNavigationOnQRResult() {
         
-        var notifications = [CategoryPickerSection.FlowDomain.Event]()
+        var notifications = [SUT.FlowDomain.Event]()
         let complete = makePaymentComplete()
-        let (sut, makeQRNavigation) = makeSUT()
+        let (sut, makeQRNavigation, _) = makeSUT()
         
         getNavigation(sut, flow: .qr, notify: { notifications.append($0) }) {
             
@@ -199,52 +210,11 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         }
     }
     
-    func test_getNavigation_shouldDeliverListOnEmptyList() {
-        
-        getNavigation(with: .list([])) {
-            
-            switch $0 {
-            case .list:
-                break
-                
-            default:
-                XCTFail("Expected list, got \($0) instead.")
-            }
-        }
-    }
-    
-    func test_getNavigation_shouldDeliverListOnListOfOne() {
-        
-        getNavigation(with: .list([makeServiceCategory()])) {
-            
-            switch $0 {
-            case .list:
-                break
-                
-            default:
-                XCTFail("Expected list, got \($0) instead.")
-            }
-        }
-    }
-    
-    func test_getNavigation_shouldDeliverListOnListOfTwo() {
-        
-        getNavigation(with: .list([makeServiceCategory(), makeServiceCategory()])) {
-            
-            switch $0 {
-            case .list:
-                break
-                
-            default:
-                XCTFail("Expected list, got \($0) instead.")
-            }
-        }
-    }
-    
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionMicroServicesComposer
+    private typealias SUT = SelectedCategoryNavigationMicroServicesComposer<Never, Void>
     private typealias MakeQRNavigationSpy = Spy<QRModelResult, QRNavigation, Never>
+    private typealias MakeListSpy = CallSpy<Never, Void>
     
     private func makeSUT(
         qrResult: QRModelResult = .unknown,
@@ -254,11 +224,14 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        makeQRNavigation: MakeQRNavigationSpy
+        makeQRNavigation: MakeQRNavigationSpy,
+        makeList: MakeListSpy
     ) {
         let makeQRNavigation = MakeQRNavigationSpy()
+        let makeList = MakeListSpy()
         let sut = SUT(
             nanoServices: .init(
+                makeList: makeList.call(payload:),
                 makeMobile: makeMobile,
                 makeQR: {
                     
@@ -272,21 +245,21 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
-            ),
-            scheduler: .immediate
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(makeQRNavigation, file: file, line: line)
+        trackForMemoryLeaks(makeList, file: file, line: line)
         
-        return (sut, makeQRNavigation)
+        return (sut, makeQRNavigation, makeList)
     }
     
     private func getNavigation(
         _ sut: SUT? = nil,
         flow: ServiceCategory.PaymentFlow,
-        notify: @escaping (CategoryPickerSection.FlowDomain.Event) -> Void = { _ in },
-        completion: @escaping (CategoryPickerSectionNavigation) -> Void,
+        notify: @escaping (SUT.FlowDomain.Event) -> Void = { _ in },
+        completion: @escaping (SUT.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -295,9 +268,9 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     private func getNavigation(
         _ sut: SUT? = nil,
-        with select: CategoryPickerSection.Select,
-        notify: @escaping (CategoryPickerSection.FlowDomain.Event) -> Void = { _ in },
-        completion: @escaping (CategoryPickerSectionNavigation) -> Void,
+        with select: SUT.Select,
+        notify: @escaping (SUT.FlowDomain.Event) -> Void = { _ in },
+        completion: @escaping (SUT.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -372,14 +345,14 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     private func makeCategorySelect(
         flow: ServiceCategory.PaymentFlow
-    ) -> CategoryPickerSection.Select {
+    ) -> SUT.Select {
         
         return .category(makeServiceCategory(flow: flow))
     }
     
     private func makeCategorySelect(
         _ serviceCategory: ServiceCategory? = nil
-    ) -> CategoryPickerSection.Select {
+    ) -> SUT.Select {
         
         return .category(serviceCategory ?? makeServiceCategory())
     }
