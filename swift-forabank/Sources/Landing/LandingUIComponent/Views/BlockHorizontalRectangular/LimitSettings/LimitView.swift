@@ -56,12 +56,15 @@ where InfoView: View {
                 makeIconView(state.limit.md5Hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(widthAndHeight: config.widthAndHeight)
+                    .accessibilityIdentifier("LimitsIcon")
                 
                 VStack(alignment: .leading, spacing: 0){
                     state.limit.title.text(withConfig: config.title)
                         .frame(height: 18)
+                        .accessibilityIdentifier("LimitsTitle")
                     textField()
                         .frame(height: 24)
+                        .accessibilityIdentifier("LimitsValue")
                 }
             }
             .frame(height: 46)
