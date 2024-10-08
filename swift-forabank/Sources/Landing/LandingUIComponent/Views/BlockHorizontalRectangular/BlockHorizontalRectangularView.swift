@@ -144,7 +144,7 @@ extension BlockHorizontalRectangularView {
                         .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
                         .font(.system(size: 12))
                 },
-                makeIconView: factory.makeIconView)
+                makeIconView: factory.makeImageViewFactory.makeIconView)
             .disabled(!enableEdit)
         }
     }

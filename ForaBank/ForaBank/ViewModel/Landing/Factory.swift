@@ -120,8 +120,14 @@ extension Model {
     
     func makeViewFactory() -> ViewFactory {
         .init(
-            makeIconView: imageCache().makeIconView(for:),
-            makeBannerImageView: generalImageCache().makeIconView(for:)
+            makeImageViewFactory: .init(
+                makeIconView: imageCache().makeIconView(for:),
+                makeBannerImageView: generalImageCache().makeIconView(for:)),
+            makeCarouselViewFactory: .init(
+                makeCarouselBaseView: { EmptyView() },
+                makeCarouselWithDotsView: { EmptyView() },
+                makeCarouselWithTabsView: { EmptyView() }
+            )
         )
     }
 }

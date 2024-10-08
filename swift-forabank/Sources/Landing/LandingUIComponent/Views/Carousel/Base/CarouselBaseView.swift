@@ -11,7 +11,7 @@ import UIPrimitives
 
 struct CarouselBaseView: View {
     
-    let state: State
+    let model: Model
     let event: (Event) -> Void
     let factory: Factory
     let config: Config
@@ -20,7 +20,7 @@ struct CarouselBaseView: View {
             
         VStack(alignment: .leading) {
             
-            state.data.title.map {
+            model.title.map {
                 Text($0)
                     .font(config.title.textFont)
                     .foregroundColor(config.title.textColor)
@@ -31,7 +31,7 @@ struct CarouselBaseView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: config.spacing) {
-                    ForEach(state.data.list, id: \.imageLink, content: itemView)
+                    ForEach(model.list, id: \.imageLink, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
@@ -45,8 +45,8 @@ struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: state.action(item: item, event: event),
-            size: state.data.size
+            action: model.action(item: item, event: event),
+            size: model.size
         )
     }
 }
@@ -66,7 +66,7 @@ extension CarouselBaseView {
             Button(action: action) {
                 
                 VStack(spacing: config.spacing) {
-                    factory.makeBannerImageView(item.imageLink)
+                    factory.makeImageViewFactory.makeBannerImageView(item.imageLink)
                         .frame(width: size.width, height: size.height)
                         .cornerRadius(config.cornerRadius)
                         .accessibilityIdentifier("CarouselBaseImage")
@@ -79,7 +79,7 @@ extension CarouselBaseView {
 
 extension CarouselBaseView {
     
-    typealias State = CarouselBaseState
+    typealias Model = UILanding.Carousel.CarouselBase
     typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
@@ -93,7 +93,7 @@ struct CarouselBaseView_Previews: PreviewProvider {
     static var previews: some View {
         
         CarouselBaseView(
-            state: .init(data: .default),
+            model: .default,
             event: { _ in },
             factory: .default,
             config: .default

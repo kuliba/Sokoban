@@ -353,14 +353,15 @@ extension LandingView {
                     config: config.blockHorizontalRectangular)
                 
             case let .carousel(.base(model)):
-                CarouselBaseWrappedView(
+                /*CarouselBaseWrappedView(
                     model: .init(
                         initialState: .init(data: model),
                         reduce: CarouselBaseReducer().reduce,
                         handleEffect: CarouselEffectHandler(action:  action).handleEffect
                     ),
                     factory: viewFactory,
-                    config: config.carousel.base)
+                    config: config.carousel.base)*/
+                viewFactory.makeCarouselViewFactory.makeCarouselBaseView()
                 
             case let .carousel(.withTabs(model)):
                 EmptyView()

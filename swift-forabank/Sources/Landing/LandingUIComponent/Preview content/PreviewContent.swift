@@ -764,9 +764,9 @@ extension Array where Element == LimitValues {
     ]
 }
 
-// MARK: -
+// MARK: - ImageViewFactory
 
-extension ViewFactory {
+extension ImageViewFactory {
     
     static let `default`: Self = .init(
         makeIconView: {
@@ -793,6 +793,25 @@ extension ViewFactory {
                         
                     )}
         }
+    )
+}
+
+extension CarouselViewFactory {
+    
+    static let `default`: Self = .init(
+        makeCarouselBaseView: { EmptyView() },
+        makeCarouselWithDotsView: { EmptyView() },
+        makeCarouselWithTabsView: { EmptyView() }
+    )
+}
+
+// MARK: - ViewFactory
+
+extension ViewFactory {
+    
+    static let `default`: Self = .init(
+        makeImageViewFactory: .default,
+        makeCarouselViewFactory: .default
     )
 }
 

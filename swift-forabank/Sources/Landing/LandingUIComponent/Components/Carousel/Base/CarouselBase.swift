@@ -76,3 +76,38 @@ extension UILanding.Carousel.CarouselBase {
         return []
     }
 }
+
+extension UILanding.Carousel.CarouselBase {
+    
+    func action(
+        item: Item,
+        event: @escaping (Event) -> Void
+    ) -> Action {
+        
+        switch item.action {
+        case .none:
+            
+            guard let link = item.link else { return {} }
+            return { event(.card(.openUrl(link))) }
+            
+        case let .some(action):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return { event(.card(.goToMain)) }
+                case .orderCard: return {}
+                case .goToOrderSticker: return { event(.bannerAction(.landing)) }
+                }
+            }
+            
+            return {}
+        }
+    }
+}
+
+extension UILanding.Carousel.CarouselBase {
+    
+    typealias Action = () -> Void
+    typealias Event = LandingEvent
+    typealias Item = UILanding.Carousel.CarouselBase.ListItem
+}

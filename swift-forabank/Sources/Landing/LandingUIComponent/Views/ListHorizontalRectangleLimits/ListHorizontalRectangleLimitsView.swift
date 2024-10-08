@@ -201,7 +201,7 @@ extension ListHorizontalRectangleLimitsView {
                                 .frame(widthAndHeight: config.sizes.icon * 2)
                                 .foregroundColor(.white)
                             
-                            factory.makeIconView(item.md5hash)
+                            factory.makeImageViewFactory.makeIconView(item.md5hash)
                                 .aspectRatio(contentMode: .fit)
                                 .frame(widthAndHeight: config.sizes.icon)
                         }
