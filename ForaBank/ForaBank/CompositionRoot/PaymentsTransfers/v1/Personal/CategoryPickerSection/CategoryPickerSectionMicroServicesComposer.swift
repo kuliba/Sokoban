@@ -13,14 +13,11 @@ final class CategoryPickerSectionMicroServicesComposer {
     
 #warning("see PaymentFlowMicroServiceComposerNanoServicesComposer")
     private let nanoServices: NanoServices
-    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        nanoServices: NanoServices,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        nanoServices: NanoServices
     ) {
         self.nanoServices = nanoServices
-        self.scheduler = scheduler
     }
     
     typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices

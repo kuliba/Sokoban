@@ -272,8 +272,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
-            ),
-            scheduler: .immediate
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
