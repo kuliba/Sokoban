@@ -33,7 +33,7 @@ extension QRNavigationComposer {
             handle(result: result, with: notify, and: completion)
             
         case let .sberPay(url, state):
-            microServices.makePaymentComplete((url, state)) {
+            microServices.makeSberPaymentComplete((url, state)) {
                 completion(.paymentComplete($0))
             }
         }
@@ -140,7 +140,10 @@ private extension QRNavigationComposer {
             let payload = MicroServices.MakeOperatorSearchPayload(
                 multiple: multiple,
                 qrCode: qrCode,
-                qrMapping: qrMapping
+                qrMapping: qrMapping,
+                chat: { notify(.outside(.chat)) },
+                detailPayment: { notify(.detailPayment(nil)) },
+                dismiss: { notify(.dismiss) }
             )
             microServices.makeOperatorSearch(payload) { completion(.operatorSearch($0)) }
             
