@@ -27,8 +27,8 @@ struct PaymentsView: View {
                     .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
                         Image("Payments Icon Close") }))
                 
-            case let .operation(operationViewModel):
-                PaymentsOperationView(viewModel: operationViewModel)
+            case let .operation(node):
+                PaymentsOperationView(viewModel: node.model)
                     .zIndex(0)
             case let .linkNotActive(viewModel):
                 PaymentsSuccessView(viewModel: viewModel)
