@@ -33,9 +33,8 @@ public struct CarouselBaseView: View {
         VStack(alignment: .leading) {
             
             model.title.map {
-                Text($0)
-                    .font(config.title.textFont)
-                    .foregroundColor(config.title.textColor)
+                
+                $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
@@ -77,14 +76,12 @@ extension CarouselBaseView {
             
             Button(action: action) {
                 
-                VStack(spacing: config.spacing) {
-                    factory.makeBannerImageView(item.imageLink)
-                        .frame(width: size.width, height: size.height)
-                        .cornerRadius(config.cornerRadius)
-                        .accessibilityIdentifier("CarouselBaseImage")
-                }
-                .fixedSize(horizontal: false, vertical: true)
+                factory.makeBannerImageView(item.imageLink)
+                    .frame(width: size.width, height: size.height)
+                    .cornerRadius(config.cornerRadius)
+                    .accessibilityIdentifier("CarouselBaseImage")
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
