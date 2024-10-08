@@ -603,6 +603,10 @@
 		2A3345922CB13FB600EBF33E /* QRNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345912CB13FB600EBF33E /* QRNavigation.swift */; };
 		2A3345942CB1401500EBF33E /* QRNavigationComposerMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */; };
 		2A3345962CB1420B00EBF33E /* QRNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */; };
+		2A3345982CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345972CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift */; };
+		2A33459A2CB19C4A00EBF33E /* QRNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3345992CB19C4A00EBF33E /* QRNavigationTests.swift */; };
+		2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */; };
+		2A33459E2CB2802500EBF33E /* QRNavigationComposer+extTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -1480,7 +1484,7 @@
 		2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
-		2ACEA7BA2CA82EDA00404DFF /* CategoryPickerSectionNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACEA7B92CA82EDA00404DFF /* CategoryPickerSectionNavigation.swift */; };
+		2ACEA7BA2CA82EDA00404DFF /* SelectedCategoryNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
 		2ACFD6512C5CC700003F08AE /* QRModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6502C5CC700003F08AE /* QRModelWrapper.swift */; };
@@ -4091,6 +4095,10 @@
 		2A3345912CB13FB600EBF33E /* QRNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigation.swift; sourceTree = "<group>"; };
 		2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServices.swift; sourceTree = "<group>"; };
 		2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposer.swift; sourceTree = "<group>"; };
+		2A3345972CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServicesComposerTests.swift; sourceTree = "<group>"; };
+		2A3345992CB19C4A00EBF33E /* QRNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationTests.swift; sourceTree = "<group>"; };
+		2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServicesComposer.swift; sourceTree = "<group>"; };
+		2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRNavigationComposer+extTests.swift"; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -4962,7 +4970,7 @@
 		2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2ACE0AB72B540697007AA2ED /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
-		2ACEA7B92CA82EDA00404DFF /* CategoryPickerSectionNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionNavigation.swift; sourceTree = "<group>"; };
+		2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryNavigation.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
 		2ACFD6502C5CC700003F08AE /* QRModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModelWrapper.swift; sourceTree = "<group>"; };
@@ -8875,7 +8883,7 @@
 			isa = PBXGroup;
 			children = (
 				2AD8243C2C87249F0007B8DF /* CategoryPickerSection.swift */,
-				2ACEA7B92CA82EDA00404DFF /* CategoryPickerSectionNavigation.swift */,
+				2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */,
 				2A387E8C2CA687DD002450B1 /* CategoryPickerSectionFlowView.swift */,
 				2A387E8B2CA687DD002450B1 /* CategoryPickerSectionFlowViewFactory.swift */,
 			);
@@ -9155,6 +9163,7 @@
 				2A3345912CB13FB600EBF33E /* QRNavigation.swift */,
 				2A3345952CB1420B00EBF33E /* QRNavigationComposer.swift */,
 				2A3345932CB1401500EBF33E /* QRNavigationComposerMicroServices.swift */,
+				2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */,
 			);
 			path = QRNavigation;
 			sourceTree = "<group>";
@@ -12036,6 +12045,9 @@
 				2ACFD65F2C5CCAB7003F08AE /* OperatorProviderLoadResultTests.swift */,
 				2A3624B22C5FC0F800174C50 /* SegmentedPaymentProviderPickerFlowModelIntegrationTests.swift */,
 				2A29666D2CABE0CA0030EC0B /* QRNavigationComposerTests.swift */,
+				2A3345972CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift */,
+				2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */,
+				2A3345992CB19C4A00EBF33E /* QRNavigationTests.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -20643,7 +20655,7 @@
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				2A1DE2C82C511EDD0091B99C /* PaymentProviderServicePickerWrapperView.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
-				2ACEA7BA2CA82EDA00404DFF /* CategoryPickerSectionNavigation.swift in Sources */,
+				2ACEA7BA2CA82EDA00404DFF /* SelectedCategoryNavigation.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
 				2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */,
 				2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */,
@@ -21265,6 +21277,7 @@
 				2A46DCAA2B3EF212001C896C /* FastPaymentsSettingsFlag.swift in Sources */,
 				77CCEA6A28F58DB600C62215 /* OpenDepositDetailViewModel.swift in Sources */,
 				774A8B2A2865FC6F00B81140 /* MyProductsSectionItemViewModel.swift in Sources */,
+				2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */,
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				2A3624B52C5FD5A400174C50 /* ComposedSegmentedPaymentProviderPickerFlowView.swift in Sources */,
@@ -22436,6 +22449,7 @@
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
 				2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */,
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
+				2A33459A2CB19C4A00EBF33E /* QRNavigationTests.swift in Sources */,
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
 				2A53FB832AFD62320045F3B0 /* Spy+Fetcher.swift in Sources */,
@@ -22551,6 +22565,7 @@
 				77EC58B2277121CF0054D75C /* TransferGeneralDataTests.swift in Sources */,
 				77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */,
 				2A8A28422A4089D3000D3807 /* OperatorData+test.swift in Sources */,
+				2A3345982CB146E900EBF33E /* QRNavigationComposerMicroServicesComposerTests.swift in Sources */,
 				2AD437672B00A9CD0027286A /* XCTestCase+assert.swift in Sources */,
 				2A3599B22ADA8ECC00820369 /* PublicSecKeyChainStoreTests.swift in Sources */,
 				2A6DC7382AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift in Sources */,
@@ -22675,6 +22690,7 @@
 				2A58FAAB2AD7174E00BD1967 /* RequestFactory+makeChangePINRequestTests.swift in Sources */,
 				2A3F1B1E2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift in Sources */,
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
+				2A33459E2CB2802500EBF33E /* QRNavigationComposer+extTests.swift in Sources */,
 				2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */,
 				2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */,
 				2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */,

@@ -12,7 +12,7 @@ extension View {
     
     @discardableResult
     func simulateOnAppear(
-        timeout: TimeInterval = 0.05
+        timeout: TimeInterval = 0.1
     ) -> UIHostingController<Self> {
         
         let hostingController = UIHostingController(rootView: self)

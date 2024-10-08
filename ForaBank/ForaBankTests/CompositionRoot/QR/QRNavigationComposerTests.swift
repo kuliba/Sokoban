@@ -11,7 +11,7 @@ import ForaTools
 import SberQR
 import XCTest
 
-final class QRNavigationComposerTests: XCTestCase {
+final class QRNavigationComposerTests: QRNavigationTests {
     
     // MARK: - init
     
@@ -23,7 +23,7 @@ final class QRNavigationComposerTests: XCTestCase {
         XCTAssertEqual(microServices.makePayments.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailure.callCount, 0)
         XCTAssertEqual(microServices.makeQRFailureWithQR.callCount, 0)
-        XCTAssertEqual(microServices.makePaymentComplete.callCount, 0)
+        XCTAssertEqual(microServices.makeSberPaymentComplete.callCount, 0)
         XCTAssertEqual(microServices.makeProviderPicker.callCount, 0)
         XCTAssertEqual(microServices.makeOperatorSearch.callCount, 0)
         XCTAssertEqual(microServices.makeSberQR.callCount, 0)
@@ -367,9 +367,12 @@ final class QRNavigationComposerTests: XCTestCase {
         
         sut.compose(with: result)
         
-        XCTAssertNoDiff(microServices.makeOperatorSearch.payloads, [
-            .init(multiple: multiple, qrCode: qrCode, qrMapping: qrMapping)
-        ])
+        let payloads = microServices.makeOperatorSearch.payloads
+        XCTAssertNoDiff(payloads.map(\.multiple), [multiple])
+        XCTAssertNoDiff(payloads.map(\.qrCode), [qrCode])
+        XCTAssertNoDiff(payloads.map(\.qrMapping), [qrMapping])
+        
+        // TODO: - add tests for chat/detailPayment/dismiss actions in payload
     }
     
     func test_mapped_multiple_shouldDeliverOperatorSearch() {
@@ -657,7 +660,7 @@ final class QRNavigationComposerTests: XCTestCase {
         
         sut.compose(with: .sberQR(url))
         
-        XCTAssertEqual(microServices.makeSberQR.payloads.map(\.0), [url])
+        XCTAssertEqual(microServices.makeSberQR.payloads.map(\.url), [url])
     }
     
     func test_sberQR_shouldCallMakeSberQRWithNotifyInPayload() {
@@ -801,11 +804,11 @@ final class QRNavigationComposerTests: XCTestCase {
         
         sut.compose(url: url, state: state)
         
-        XCTAssertNoDiff(microServices.makePaymentComplete.payloads.map(\.0), [url])
-        XCTAssertNoDiff(microServices.makePaymentComplete.payloads.map(\.1), [state])
+        XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.0), [url])
+        XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.1), [state])
     }
     
-    func test_sberPay_shouldDeliverPaymentCompleteFailureOnMakePaymentCompleteFailure() {
+    func test_sberPay_shouldDeliverPaymentCompleteFailureOnMakeSberPaymentCompleteFailure() {
         
         let error = makeErrorMessage()
         let (sut, microServices) = makeSUT()
@@ -814,11 +817,11 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.failure(error)),
-            on: { microServices.makePaymentComplete.complete(with: error) }
+            on: { microServices.makeSberPaymentComplete.complete(with: error) }
         )
     }
     
-    func test_sberPay_shouldDeliverPaymentCompleteSuccessOnMakePaymentCompleteSuccess() {
+    func test_sberPay_shouldDeliverPaymentCompleteSuccessOnMakeSberPaymentCompleteSuccess() {
         
         let (sut, microServices) = makeSUT()
         
@@ -826,7 +829,7 @@ final class QRNavigationComposerTests: XCTestCase {
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
             toDeliver: .paymentComplete(.success),
-            on: { microServices.makePaymentComplete.complete(with: self.makePaymentsComplete()) }
+            on: { microServices.makeSberPaymentComplete.complete(with: self.makePaymentsComplete()) }
         )
     }
     
@@ -834,24 +837,24 @@ final class QRNavigationComposerTests: XCTestCase {
     
     private typealias SUT = QRNavigationComposer
     private typealias MakeInternetTVSpy = Spy<SUT.MicroServices.MakeInternetTVPayload, InternetTVDetailsViewModel, Never>
+    private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
     private typealias MakePaymentsSpy = Spy<SUT.MicroServices.MakePaymentsPayload, ClosePaymentsViewModelWrapper, Never>
+    private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
     private typealias MakeQRFailureSpy = Spy<SUT.MicroServices.MakeQRFailurePayload, QRFailedViewModel, Never>
     private typealias MakeQRFailureWithQRSpy = Spy<SUT.MicroServices.MakeQRFailureWithQRPayload, QRFailedViewModel, Never>
-    private typealias MakePaymentCompleteSpy = Spy<SUT.MicroServices.MakePaymentCompletePayload, QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
-    private typealias MakeProviderPickerSpy = Spy<SUT.MicroServices.MakeProviderPickerPayload, QRNavigation.ProviderPicker, Never>
-    private typealias MakeOperatorSearchSpy = Spy<SUT.MicroServices.MakeOperatorSearchPayload, QRNavigation.OperatorSearch, Never>
+    private typealias MakeSberPaymentCompleteSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, QRNavigation.PaymentComplete, QRNavigation.ErrorMessage>
     private typealias MakeSberQRSpy = Spy<SUT.MicroServices.MakeSberQRPayload, SberQRConfirmPaymentViewModel, QRNavigation.ErrorMessage>
     private typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, SUT.MicroServices.ServicePicker, Never>
     
     private struct MicroServicesSpy {
         
         let makeInternetTV: MakeInternetTVSpy
+        let makeOperatorSearch: MakeOperatorSearchSpy
         let makePayments: MakePaymentsSpy
+        let makeProviderPicker: MakeProviderPickerSpy
         let makeQRFailure: MakeQRFailureSpy
         let makeQRFailureWithQR: MakeQRFailureWithQRSpy
-        let makePaymentComplete: MakePaymentCompleteSpy
-        let makeProviderPicker: MakeProviderPickerSpy
-        let makeOperatorSearch: MakeOperatorSearchSpy
+        let makeSberPaymentComplete: MakeSberPaymentCompleteSpy
         let makeSberQR: MakeSberQRSpy
         let makeServicePicker: MakeServicePickerSpy
         
@@ -859,12 +862,12 @@ final class QRNavigationComposerTests: XCTestCase {
             
             return .init(
                 makeInternetTV: makeInternetTV.process,
+                makeOperatorSearch: makeOperatorSearch.process,
                 makePayments: makePayments.process,
+                makeProviderPicker: makeProviderPicker.process,
                 makeQRFailure: makeQRFailure.process,
                 makeQRFailureWithQR: makeQRFailureWithQR.process,
-                makePaymentComplete: makePaymentComplete.process,
-                makeProviderPicker: makeProviderPicker.process,
-                makeOperatorSearch: makeOperatorSearch.process,
+                makeSberPaymentComplete: makeSberPaymentComplete.process,
                 makeSberQR: makeSberQR.process,
                 makeServicePicker: makeServicePicker.process
             )
@@ -880,12 +883,12 @@ final class QRNavigationComposerTests: XCTestCase {
     ) {
         let microServicesSpy = MicroServicesSpy(
             makeInternetTV: MakeInternetTVSpy(),
+            makeOperatorSearch: MakeOperatorSearchSpy(),
             makePayments: MakePaymentsSpy(),
+            makeProviderPicker: MakeProviderPickerSpy(),
             makeQRFailure: MakeQRFailureSpy(),
             makeQRFailureWithQR: MakeQRFailureWithQRSpy(),
-            makePaymentComplete: MakePaymentCompleteSpy(),
-            makeProviderPicker: MakeProviderPickerSpy(),
-            makeOperatorSearch: MakeOperatorSearchSpy(),
+            makeSberPaymentComplete: MakeSberPaymentCompleteSpy(),
             makeSberQR: MakeSberQRSpy(),
             makeServicePicker: MakeServicePickerSpy()
         )
@@ -913,14 +916,6 @@ final class QRNavigationComposerTests: XCTestCase {
         return .init(model: model, category: category, scheduler: scheduler)
     }
     
-    private func makeQR(
-        original: String = anyMessage(),
-        rawData: [String: String] = [anyMessage(): anyMessage()]
-    ) -> QRCode {
-        
-        return .init(original: original, rawData: rawData)
-    }
-    
     private func makeQRFailed(
         model: Model = .mockWithEmptyExcept(),
         addCompanyAction: @escaping () -> Void = {},
@@ -928,44 +923,6 @@ final class QRNavigationComposerTests: XCTestCase {
     ) -> QRFailedViewModel {
         
         return .init(model: model, addCompanyAction: addCompanyAction, requisitsAction: requisitsAction)
-    }
-    
-    private func makeMixedOperators(
-        _ first: SegmentedOperatorProvider? = nil,
-        _ second: SegmentedOperatorProvider? = nil,
-        _ tail: SegmentedOperatorProvider...
-    ) -> MultiElementArray<SegmentedOperatorProvider> {
-        
-        return .init(first ?? makeSegmentedOperatorProvider(), second ?? makeSegmentedOperatorProvider(), tail)
-    }
-    
-    private func makeSegmentedOperatorProvider(
-    ) -> SegmentedOperatorProvider {
-        
-        return .provider(.init(
-            origin: .init(
-                id: anyMessage(),
-                icon: nil,
-                inn: nil,
-                title: anyMessage(),
-                segment: anyMessage()
-            ),
-            segment: anyMessage()
-        ))
-    }
-    
-    private func makeQRMapping(
-        parameters: [QRParameter] = [],
-        operators: [QROperator] = []
-    ) -> QRMapping {
-        
-        return .init(parameters: parameters, operators: operators)
-    }
-    
-    private func makeMixed(
-    ) -> (mixed: MultiElementArray<SegmentedOperatorProvider>, qrCode: QRCode, qrMapping: QRMapping) {
-        
-        return (makeMixedOperators(), makeQR(), makeQRMapping())
     }
     
     private func makeMappedMixed() -> QRModelResult {
@@ -991,69 +948,9 @@ final class QRNavigationComposerTests: XCTestCase {
         return .mapped(.multiple(multiple, qrCode, qrMapping))
     }
     
-    private func makeMultipleOperators(
-        first: SegmentedOperatorData? = nil,
-        second: SegmentedOperatorData? = nil,
-        tail: SegmentedOperatorData...
-    ) -> MultiElementArray<SegmentedOperatorData> {
-        
-        return .init(first ?? makeSegmentedOperatorData(), second ?? makeSegmentedOperatorData(), tail)
-    }
-    
-    private func makeSegmentedOperatorData(
-        origin: OperatorGroupData.OperatorData? = nil,
-        segment: String = anyMessage()
-    ) -> SegmentedOperatorData {
-        
-        return .init(origin: origin ?? makeOperatorGroupDataOperatorData(), segment: segment)
-    }
-    
-    private func makeOperatorGroupDataOperatorData(
-        city: String? = nil,
-        code: String = anyMessage(),
-        isGroup: Bool = false,
-        logotypeList: [OperatorGroupData.LogotypeData] = [],
-        name: String = anyMessage(),
-        parameterList: [ParameterData] = [],
-        parentCode: String = anyMessage(),
-        region: String? = nil,
-        synonymList: [String] = []
-    ) -> OperatorGroupData.OperatorData {
-        
-        return .init(city: city, code: code, isGroup: isGroup, logotypeList: logotypeList, name: name, parameterList: parameterList, parentCode: parentCode, region: region, synonymList: synonymList)
-    }
-    
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
         
         return .init(searchBar: .banks(), navigationBar: .sample, model: .emptyMock, addCompanyAction: {}, requisitesAction: {})
-    }
-    
-    private func makePaymentProviderServicePickerPayload(
-        provider: SegmentedProvider? = nil,
-        qrCode: QRCode? = nil,
-        qrMapping: QRMapping? = nil
-    ) -> PaymentProviderServicePickerPayload {
-        
-        return .init(provider: provider ?? makeSegmentedProvider(), qrCode: qrCode ?? makeQR(), qrMapping: qrMapping ?? makeQRMapping())
-    }
-    
-    private func makeSegmentedProvider(
-        origin: UtilityPaymentProvider? = nil,
-        segment: String = anyMessage()
-    ) -> SegmentedProvider {
-        
-        return .init(origin: origin ?? makeUtilityPaymentProvider(), segment: segment)
-    }
-    
-    private func makeUtilityPaymentProvider(
-        id: String = anyMessage(),
-        icon: String? = nil,
-        inn: String? = nil,
-        title: String = anyMessage(),
-        segment: String = anyMessage()
-    ) -> UtilityPaymentProvider {
-        
-        return .init(id: id, icon: icon, inn: inn, title: title, segment: segment)
     }
     
     private func makeServicePicker(
@@ -1088,20 +985,6 @@ final class QRNavigationComposerTests: XCTestCase {
     ) -> InternetTVDetailsViewModel {
         
         return .init(model: .mockWithEmptyExcept(), closeAction: {})
-    }
-    
-    private func makeErrorMessage(
-        title: String = anyMessage(),
-        message: String = anyMessage()
-    ) -> QRNavigation.ErrorMessage {
-        
-        return .init(title: title, message: message)
-    }
-    
-    private func makeSberQRConfirmPaymentState(
-    ) -> SberQRConfirmPaymentState {
-        
-        return .init(confirm: .editableAmount(.preview))
     }
     
     private func makeSberQR(
@@ -1200,53 +1083,6 @@ private extension ClosePaymentsViewModelWrapper {
 }
 
 // MARK: - DSL
-
-private extension QRNavigationComposer {
-    
-    func compose(
-        with qrResult: QRModelResult
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: { _ in },
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        url: URL,
-        state: SberQRConfirmPaymentState
-    ) {
-        compose(
-            payload: .sberPay(url, state),
-            notify: { _ in },
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        with qrResult: QRModelResult,
-        notify: @escaping Notify
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: notify,
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        with qrResult: QRModelResult,
-        notify: @escaping Notify,
-        completion: @escaping QRNavigationCompletion
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: notify,
-            completion: completion
-        )
-    }
-}
 
 private extension QRNavigation {
     
