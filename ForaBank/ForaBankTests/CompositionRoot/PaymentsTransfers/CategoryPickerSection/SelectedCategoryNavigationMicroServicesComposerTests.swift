@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionMicroServicesComposerTests.swift
+//  SelectedCategoryNavigationMicroServicesComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 30.09.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
+final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     // MARK: - init
     
@@ -246,7 +246,7 @@ final class CategoryPickerSectionMicroServicesComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = CategoryPickerSectionMicroServicesComposer<List, ListModel>
+    private typealias SUT = SelectedCategoryNavigationMicroServicesComposer<List, ListModel>
     private typealias MakeQRNavigationSpy = Spy<QRModelResult, QRNavigation, Never>
     private typealias MakeListSpy = CallSpy<List, ListModel>
     

@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionMicroServicesComposer.swift
+//  SelectedCategoryNavigationMicroServicesComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 30.09.2024.
@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHubUI
 
-final class CategoryPickerSectionMicroServicesComposer<List, ListModel> {
+final class SelectedCategoryNavigationMicroServicesComposer<List, ListModel> {
     
 #warning("see PaymentFlowMicroServiceComposerNanoServicesComposer")
     private let nanoServices: NanoServices
@@ -23,7 +23,7 @@ final class CategoryPickerSectionMicroServicesComposer<List, ListModel> {
     typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel>
 }
 
-extension CategoryPickerSectionMicroServicesComposer {
+extension SelectedCategoryNavigationMicroServicesComposer {
     
     func compose() -> MicroServices {
         
@@ -36,7 +36,7 @@ extension CategoryPickerSectionMicroServicesComposer {
     typealias MicroServices = FlowDomain.MicroServices
 }
 
-private extension CategoryPickerSectionMicroServicesComposer {
+private extension SelectedCategoryNavigationMicroServicesComposer {
     
     func getNavigation(
         payload: Select,
