@@ -22,13 +22,10 @@ public struct CarouselViewFactory {
         self.makeCarouselWithDotsView = makeCarouselWithDotsView
         self.makeCarouselWithTabsView = makeCarouselWithTabsView
     }
-
 }
 
 public extension CarouselViewFactory {
     
-    typealias Action = (LandingEvent) -> Void
-
     typealias MakeCarouselBaseView = (UILanding.Carousel.CarouselBase) -> CarouselBaseView
     typealias MakeCarouselWithDotsView = () -> EmptyView
     typealias MakeCarouselWithTabsView = () -> EmptyView
