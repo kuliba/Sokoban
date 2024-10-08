@@ -635,12 +635,25 @@ extension UILanding.Carousel.CarouselBase.Config {
     )
 }
 
+// MARK: - CarouselWithDots Config
+
+extension UILanding.Carousel.CarouselWithDots.Config {
+    
+    static let `default`: Self = .init(
+        cornerRadius: 12,
+        paddings: .init(horizontal: 16, vertical: 8),
+        spacing: 8,
+        title: .init(textFont: .largeTitle, textColor: .black)
+    )
+}
+
 // MARK: - Carousel Config
 
 extension UILanding.Carousel.Config {
     
     static let `default`: Self = .init(
-        base: .default
+        base: .default,
+        withDots: .default
     )
 }
 
@@ -796,7 +809,7 @@ extension ViewFactory {
     )
 }
 
-// MARK: - CarouselBase Config
+// MARK: - CarouselBase
 
 extension UILanding.Carousel.CarouselBase {
     
@@ -810,6 +823,32 @@ extension UILanding.Carousel.CarouselBase {
 // MARK: - CarouselBase List
 
 extension Array where Element == UILanding.Carousel.CarouselBase.ListItem {
+    
+    static let `default`: Self =  [
+        .init(imageLink: "dict/getProductCatalogImage?image=/products/banners/yandex_364×480.png",
+              link: "https://market.yandex.ru",
+              action: nil),
+        .init(imageLink: "dict/getProductCatalogImage?image=/products/banners/scooter_688×480.png",
+              link: "https://samokat.ru",
+              action: nil),
+    ]
+}
+
+// MARK: - CarouselWithDots
+
+extension UILanding.Carousel.CarouselWithDots {
+    
+    static let `default`: Self = .init(
+        title: "Страхование",
+        size: .init(width: 182, height: 240),
+        scale: "",
+        loopedScrolling: false,
+        list: .default)
+}
+
+// MARK: - CarouselWithDots List
+
+extension Array where Element == UILanding.Carousel.CarouselWithDots.ListItem {
     
     static let `default`: Self =  [
         .init(imageLink: "dict/getProductCatalogImage?image=/products/banners/yandex_364×480.png",

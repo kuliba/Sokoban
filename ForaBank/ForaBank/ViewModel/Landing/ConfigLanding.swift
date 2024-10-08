@@ -542,6 +542,12 @@ extension UILanding.Carousel.Config {
             paddings: .init(horizontal: 16, vertical: 8),
             spacing: 8,
             title: .init(textFont: .textH2Sb20282(), textColor: .textSecondary)
+        ), 
+        withDots: .init(
+            cornerRadius: 12,
+            paddings: .init(horizontal: 16, vertical: 8),
+            spacing: 8,
+            title: .init(textFont: .textH2Sb20282(), textColor: .textSecondary)
         )
     )
 }
