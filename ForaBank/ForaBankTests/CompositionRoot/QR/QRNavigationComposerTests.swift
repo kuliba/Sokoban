@@ -1084,53 +1084,6 @@ private extension ClosePaymentsViewModelWrapper {
 
 // MARK: - DSL
 
-private extension QRNavigationComposer {
-    
-    func compose(
-        with qrResult: QRModelResult
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: { _ in },
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        url: URL,
-        state: SberQRConfirmPaymentState
-    ) {
-        compose(
-            payload: .sberPay(url, state),
-            notify: { _ in },
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        with qrResult: QRModelResult,
-        notify: @escaping Notify
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: notify,
-            completion: { _ in }
-        )
-    }
-    
-    func compose(
-        with qrResult: QRModelResult,
-        notify: @escaping Notify,
-        completion: @escaping QRNavigationCompletion
-    ) {
-        compose(
-            payload: .qrResult(qrResult),
-            notify: notify,
-            completion: completion
-        )
-    }
-}
-
 private extension QRNavigation {
     
     // MARK: - payments

@@ -12,6 +12,41 @@ import XCTest
 
 class QRNavigationTests: XCTestCase {
     
+    typealias SUT = QRNavigationComposerMicroServicesComposer
+    typealias CreateSberQRPaymentSpy = Spy<SUT.MicroServices.MakeSberPaymentCompletePayload, CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>
+    typealias GetSberQRDataSpy = Spy<URL, GetSberQRDataResponse, Error>
+    typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
+    typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, AnywayServicePickerFlowModel, Never>
+    
+    struct Spies {
+        
+        let createSberQRPayment: CreateSberQRPaymentSpy
+        let getSberQRData: GetSberQRDataSpy
+        let makeProviderPicker: MakeProviderPickerSpy
+        let makeServicePicker: MakeServicePickerSpy
+    }
+    
+    func eligible(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> ProductData {
+        
+        let product = makeAccountProduct(id: .random(in: 1...100))
+        
+        XCTAssert(product.allowDebit, file: file, line: line)
+        XCTAssert(product.isActive, file: file, line: line)
+        XCTAssert(product.isPaymentEligible, file: file, line: line)
+        
+        return product
+    }
+    
+    func makeAnywayServicePickerFlowModel(
+    ) -> AnywayServicePickerFlowModel {
+        
+        
+        return .preview(payload: makePaymentProviderServicePickerPayload())
+    }
+    
     func makeErrorMessage(
         title: String = anyMessage(),
         message: String = anyMessage()
@@ -149,5 +184,154 @@ class QRNavigationTests: XCTestCase {
     ) -> SegmentedOperatorData {
         
         return .init(origin: origin ?? makeOperatorGroupDataOperatorData(), segment: segment)
+    }
+    
+    // MARK: - GetSberQRDataResponse
+    
+    func responseWithFixedAmount(
+        qrcID: String = "04a7ae2bee8f4f13ab151c1e6066d304"
+    ) -> GetSberQRDataResponse {
+        
+        .init(
+            qrcID: qrcID,
+            parameters: fixedAmountParameters(),
+            required: [.debitAccount]
+        )
+    }
+    
+    private func amount() -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .amount,
+            value: "220 ₽",
+            title: "Сумма",
+            icon: .init(
+                type: .local,
+                value: "ic24IconMessage"
+            )
+        ))
+    }
+    
+    private func brandName(
+        value: String
+    ) -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .brandName,
+            value: value,
+            title: "Получатель",
+            icon: .init(
+                type: .remote,
+                value: "b6e5b5b8673544184896724799e50384"
+            )
+        ))
+    }
+    
+    private func buttonPay() -> GetSberQRDataResponse.Parameter {
+        
+        .button(.init(
+            id: .buttonPay,
+            value: "Оплатить",
+            color: .red,
+            action: .pay,
+            placement: .bottom
+        ))
+    }
+    
+    private func debitAccount() -> GetSberQRDataResponse.Parameter {
+        
+        .productSelect(.init(
+            id: .debit_account,
+            value: nil,
+            title: "Счет списания",
+            filter: .init(
+                productTypes: [.card, .account],
+                currencies: [.rub],
+                additional: false
+            )
+        ))
+    }
+    
+    private func fixedAmountParameters(
+    ) -> [GetSberQRDataResponse.Parameter] {
+        
+        return [
+            header(),
+            debitAccount(),
+            brandName(value: "сббол енот_QR"),
+            amount(),
+            recipientBank(),
+            buttonPay(),
+        ]
+    }
+    
+    private func header() -> GetSberQRDataResponse.Parameter {
+        
+        .header(.init(
+            id: .title,
+            value: "Оплата по QR-коду"
+        ))
+    }
+    
+    private func recipientBank() -> GetSberQRDataResponse.Parameter {
+        
+        .info(.init(
+            id: .recipientBank,
+            value: "Сбербанк",
+            title: "Банк получателя",
+            icon: .init(
+                type: .remote,
+                value: "c37971b7264d55c3c467d2127ed600aa"
+            )
+        ))
+    }
+}
+
+// MARK: - DSL
+
+extension QRNavigationComposer {
+    
+    func compose(
+        with qrResult: QRModelResult
+    ) {
+        compose(
+            payload: .qrResult(qrResult),
+            notify: { _ in },
+            completion: { _ in }
+        )
+    }
+    
+    func compose(
+        url: URL,
+        state: SberQRConfirmPaymentState
+    ) {
+        compose(
+            payload: .sberPay(url, state),
+            notify: { _ in },
+            completion: { _ in }
+        )
+    }
+    
+    func compose(
+        with qrResult: QRModelResult,
+        notify: @escaping Notify
+    ) {
+        compose(
+            payload: .qrResult(qrResult),
+            notify: notify,
+            completion: { _ in }
+        )
+    }
+    
+    func compose(
+        with qrResult: QRModelResult,
+        notify: @escaping Notify,
+        completion: @escaping QRNavigationCompletion
+    ) {
+        compose(
+            payload: .qrResult(qrResult),
+            notify: notify,
+            completion: completion
+        )
     }
 }
