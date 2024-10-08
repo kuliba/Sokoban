@@ -221,13 +221,13 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
     // MARK: - Helpers
     
-    private typealias Domain = CategoryPickerSection<Category, Navigation>
+    private typealias Domain = CategoryPicker<Category, All, Navigation>
     private typealias Composer = Domain.BinderComposer
     private typealias Content = Domain.ContentDomain.Content
     private typealias Flow = Domain.FlowDomain.Flow
-    private typealias SUT = Binder<Content, Flow>
+    private typealias SUT = Domain.Binder
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
-    private typealias Select = CategoryPickerSectionItem<Category, [Category]>
+    private typealias Select = CategoryPickerItem<Category, [Category]>
     private typealias GetNavigationSpy = Spy<Select, Navigation>
     
     private func makeSUT(
@@ -246,8 +246,10 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         let getNavigationSpy = GetNavigationSpy()
         let scheduler = DispatchQueue.test
         let composer = Composer(
-            load: load.process(completion:),
-            microServices: .init(getNavigation: getNavigationSpy.process),
+            load: load.process(completion:), 
+            microServices: .init(
+                getNavigation: getNavigationSpy.process
+            ),
             placeholderCount: placeholderCount,
             scheduler: scheduler.eraseToAnyScheduler()
         )
