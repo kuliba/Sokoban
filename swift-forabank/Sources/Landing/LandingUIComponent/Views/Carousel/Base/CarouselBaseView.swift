@@ -22,7 +22,8 @@ struct CarouselBaseView: View {
             
             state.data.title.map {
                 Text($0)
-                    .font(config.titleFont)
+                    .font(config.title.textFont)
+                    .foregroundColor(config.title.textColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }

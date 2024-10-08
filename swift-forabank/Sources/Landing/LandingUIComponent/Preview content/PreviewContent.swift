@@ -631,7 +631,7 @@ extension UILanding.Carousel.CarouselBase.Config {
         cornerRadius: 12,
         paddings: .init(horizontal: 16, vertical: 8),
         spacing: 8,
-        titleFont: .largeTitle
+        title: .init(textFont: .largeTitle, textColor: .black)
     )
 }
 
