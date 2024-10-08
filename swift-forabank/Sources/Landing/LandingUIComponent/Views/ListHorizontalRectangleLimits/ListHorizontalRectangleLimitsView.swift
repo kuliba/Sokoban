@@ -141,7 +141,7 @@ struct ListHorizontalRectangleLimitsView: View {
 extension ListHorizontalRectangleLimitsView {
     
     typealias Event = ListHorizontalRectangleLimitsEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.List.HorizontalRectangleLimits.Config
     typealias Item = UILanding.List.HorizontalRectangleLimits.Item
 }
@@ -201,7 +201,7 @@ extension ListHorizontalRectangleLimitsView {
                                 .frame(widthAndHeight: config.sizes.icon * 2)
                                 .foregroundColor(.white)
                             
-                            factory.makeImageViewFactory.makeIconView(item.md5hash)
+                            factory.makeIconView(item.md5hash)
                                 .aspectRatio(contentMode: .fit)
                                 .frame(widthAndHeight: config.sizes.icon)
                         }

@@ -44,7 +44,7 @@ struct BlockHorizontalRectangularView: View {
 extension BlockHorizontalRectangularView {
     
     typealias Event = BlockHorizontalRectangularEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.BlockHorizontalRectangular.Config
     typealias Item = UILanding.BlockHorizontalRectangular.Item
 }
@@ -144,7 +144,7 @@ extension BlockHorizontalRectangularView {
                         .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
                         .font(.system(size: 12))
                 },
-                makeIconView: factory.makeImageViewFactory.makeIconView)
+                makeIconView: factory.makeIconView)
             .disabled(!enableEdit)
         }
     }

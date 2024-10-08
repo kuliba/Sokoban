@@ -291,7 +291,6 @@ extension UILanding.Component.Config {
         verticalSpacing: .defaultValue,
         spacing: .defaultValue,
         blockHorizontalRectangular: .default,
-        carousel: .default,
         offsetForDisplayHeader: 100)
 }
 
@@ -635,15 +634,6 @@ extension UILanding.Carousel.CarouselBase.Config {
     )
 }
 
-// MARK: - Carousel Config
-
-extension UILanding.Carousel.Config {
-    
-    static let `default`: Self = .init(
-        base: .default
-    )
-}
-
 // MARK: - BlockHorizontalRectangular 
 
 extension UILanding.BlockHorizontalRectangular {
@@ -799,19 +789,9 @@ extension ImageViewFactory {
 extension CarouselViewFactory {
     
     static let `default`: Self = .init(
-        makeCarouselBaseView: { EmptyView() },
+        makeCarouselBaseView: { CarouselBaseView(model: $0, event: { _ in }, factory: .default, config: .default) },
         makeCarouselWithDotsView: { EmptyView() },
         makeCarouselWithTabsView: { EmptyView() }
-    )
-}
-
-// MARK: - ViewFactory
-
-extension ViewFactory {
-    
-    static let `default`: Self = .init(
-        makeImageViewFactory: .default,
-        makeCarouselViewFactory: .default
     )
 }
 

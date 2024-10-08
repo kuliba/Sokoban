@@ -9,14 +9,26 @@ import SwiftUI
 import Combine
 import UIPrimitives
 
-struct CarouselBaseView: View {
+public struct CarouselBaseView: View {
     
     let model: Model
     let event: (Event) -> Void
     let factory: Factory
     let config: Config
+    
+    public init(
+        model: Model,
+        event: @escaping (Event) -> Void,
+        factory: Factory,
+        config: Config
+    ) {
+        self.model = model
+        self.event = event
+        self.factory = factory
+        self.config = config
+    }
 
-    var body: some View {
+    public var body: some View {
             
         VStack(alignment: .leading) {
             
@@ -66,7 +78,7 @@ extension CarouselBaseView {
             Button(action: action) {
                 
                 VStack(spacing: config.spacing) {
-                    factory.makeImageViewFactory.makeBannerImageView(item.imageLink)
+                    factory.makeBannerImageView(item.imageLink)
                         .frame(width: size.width, height: size.height)
                         .cornerRadius(config.cornerRadius)
                         .accessibilityIdentifier("CarouselBaseImage")
@@ -77,14 +89,14 @@ extension CarouselBaseView {
     }
 }
 
-extension CarouselBaseView {
+public extension CarouselBaseView {
     
     typealias Model = UILanding.Carousel.CarouselBase
     typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias ItemSize = UILanding.Carousel.CarouselBase.Size
 }
 
