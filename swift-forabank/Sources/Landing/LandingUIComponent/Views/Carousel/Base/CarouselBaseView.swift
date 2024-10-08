@@ -12,18 +12,18 @@ import UIPrimitives
 public struct CarouselBaseView: View {
     
     let model: Model
-    let event: (Event) -> Void
+    let actions: CarouselActions
     let factory: Factory
     let config: Config
     
     public init(
         model: Model,
-        event: @escaping (Event) -> Void,
+        actions: CarouselActions,
         factory: Factory,
         config: Config
     ) {
         self.model = model
-        self.event = event
+        self.actions = actions
         self.factory = factory
         self.config = config
     }
@@ -56,7 +56,7 @@ public struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: model.action(item: item, event: event),
+            action: model.action(item: item, actions: actions),
             size: model.size
         )
     }
@@ -103,7 +103,7 @@ struct CarouselBaseView_Previews: PreviewProvider {
         
         CarouselBaseView(
             model: .default,
-            event: { _ in },
+            actions: .default,
             factory: .default,
             config: .default
         )

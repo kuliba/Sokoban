@@ -106,12 +106,16 @@ extension Model {
         landingActions: @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel {
         
+        let actions = CarouselActions(
+            openUrl: { landingActions(.card(.openUrl($0))) },
+            goToMain: { landingActions(.card(.goToMain)) })
+        
         return LandingWrapperViewModel(
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             imageViewFactory: makeImageViewFactory(),
-            carouselViewFactory: makeCarouselFactory(landingActions: landingActions),
+            carouselViewFactory: makeCarouselFactory(actions: actions),
             limitsViewModel: nil,
             scheduler: .main,
             config: config,
@@ -120,14 +124,14 @@ extension Model {
     }
     
     func makeCarouselFactory(
-        landingActions: @escaping (LandingEvent) -> Void
+        actions: CarouselActions
     ) -> CarouselViewFactory {
         .init(
             makeCarouselBaseView:  {
                 
                 CarouselBaseView(
                     model: $0,
-                    event: landingActions,
+                    actions: actions,
                     factory: self.makeImageViewFactory(),
                     config: .iFora)
             },

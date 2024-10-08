@@ -789,9 +789,24 @@ extension ImageViewFactory {
 extension CarouselViewFactory {
     
     static let `default`: Self = .init(
-        makeCarouselBaseView: { CarouselBaseView(model: $0, event: { _ in }, factory: .default, config: .default) },
+        makeCarouselBaseView: {
+            CarouselBaseView(
+                model: $0,
+                actions: .default,
+                factory: .default,
+                config: .default
+            )
+        },
         makeCarouselWithDotsView: { EmptyView() },
         makeCarouselWithTabsView: { EmptyView() }
+    )
+}
+
+extension CarouselActions {
+    
+    static let `default`: Self = .init(
+        openUrl: {_ in },
+        goToMain: {}
     )
 }
 

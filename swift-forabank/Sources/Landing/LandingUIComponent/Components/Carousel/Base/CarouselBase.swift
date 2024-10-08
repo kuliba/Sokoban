@@ -81,22 +81,22 @@ extension UILanding.Carousel.CarouselBase {
     
     func action(
         item: Item,
-        event: @escaping (Event) -> Void
+        actions: CarouselActions
     ) -> Action {
         
         switch item.action {
         case .none:
             
             guard let link = item.link else { return {} }
-            return { event(.card(.openUrl(link))) }
+            return { actions.openUrl(link) }
             
         case let .some(action):
             
             if let type = LandingActionType(rawValue: action.type) {
                 switch type {
-                case .goToMain: return { event(.card(.goToMain)) }
+                case .goToMain: return actions.goToMain
                 case .orderCard: return {}
-                case .goToOrderSticker: return { event(.bannerAction(.landing)) }
+                case .goToOrderSticker: return {}
                 }
             }
             
