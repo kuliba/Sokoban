@@ -6,6 +6,7 @@
 //
 
 import CombineSchedulers
+import ForaTools
 import Foundation
 import GenericRemoteService
 import PayHub
@@ -85,7 +86,7 @@ extension RootViewModelFactory {
             pageSize: pageSize,
             mainScheduler: mainScheduler
         )
-
+        
         func makeTax() -> ClosePaymentsViewModelWrapper {
             
             return .init(
@@ -169,6 +170,24 @@ extension RootViewModelFactory {
             }
         }
         
+        func makeSegmented(
+            multi: MultiElementArray<SegmentedOperatorProvider>,
+            qrCode: QRCode,
+            qrMapping: QRMapping
+        ) -> SegmentedPaymentProviderPickerFlowModel {
+            
+            let make = RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(
+                httpClient: httpClient,
+                log: logger.log,
+                model: model,
+                pageSize: pageSize,
+                flag: .live,
+                scheduler: mainScheduler
+            )
+            
+            return make(multi, qrCode, qrMapping)
+        }
+        
         func makeQRNavigation(
             qrResult: QRModelResult,
             notify: @escaping QRNavigationComposer.Notify,
@@ -179,7 +198,7 @@ extension RootViewModelFactory {
                 model: model,
                 createSberQRPayment: createSberQRPayment,
                 getSberQRData: getSberQRData,
-                makeSegmented: { _,_,_ in fatalError() },
+                makeSegmented: makeSegmented,
                 makeServicePicker: { _,_ in fatalError() },
                 scheduler: mainScheduler
             )
@@ -187,7 +206,7 @@ extension RootViewModelFactory {
             let composer = QRNavigationComposer(microServices: microServices)
             
             composer.compose(
-                payload: .qrResult(qrResult), 
+                payload: .qrResult(qrResult),
                 notify: notify,
                 completion: completion)
         }
