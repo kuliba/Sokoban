@@ -15,12 +15,13 @@ struct CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel> {
     let makeTax: MakeTax
     let makeTransport: MakeTransport
     
-    typealias MakeList = (List) -> ListModel
+    typealias MakeList = ([ServiceCategory]) -> ListModel
     typealias MakeMobile = () -> ClosePaymentsViewModelWrapper
     typealias MakeQR = () -> QRModel
     
     typealias MakeQRNavigationCompletion = (QRNavigation) -> Void
-    typealias MakeQRNavigation = (QRModelResult, @escaping MakeQRNavigationCompletion) -> Void
+    typealias Notify = QRNavigationComposer.Notify
+    typealias MakeQRNavigation = (QRModelResult, @escaping Notify, @escaping MakeQRNavigationCompletion) -> Void
     
     typealias MakeStandard = (ServiceCategory, @escaping (StandardSelectedCategoryDestination) -> Void) -> Void
     typealias MakeTax = () -> ClosePaymentsViewModelWrapper

@@ -70,6 +70,20 @@ extension Spy where Failure == Never {
         }
     }
     
+    func process<A, B>(
+        _ a: A,
+        _ b: B,
+        completion: @escaping (Success) -> Void
+    ) where Payload == (A, B) {
+        
+        process((a, b)) {
+            switch $0 {
+            case let .success(success):
+                completion(success)
+            }
+        }
+    }
+    
     func complete(with success: Success, at index: Int = 0) {
         
         complete(with: .success(success), at: index)

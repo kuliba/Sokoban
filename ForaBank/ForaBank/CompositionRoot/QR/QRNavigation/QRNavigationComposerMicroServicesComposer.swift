@@ -196,7 +196,7 @@ private extension QRNavigationComposerMicroServicesComposer {
     }
 }
 
-private extension QRNavigation.ErrorMessage {
+extension QRNavigation.ErrorMessage {
     
     static var techError: Self {
         

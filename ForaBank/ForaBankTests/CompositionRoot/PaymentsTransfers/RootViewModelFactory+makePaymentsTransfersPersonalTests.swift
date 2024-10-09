@@ -56,6 +56,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,
         operationPickerPlaceholderCount: Int = 4,
+        pageSize: Int = 10,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -66,6 +67,8 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let loadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
         let sut = RootViewModelFactory.makePaymentsTransfersPersonal(
+            httpClient: HTTPClientSpy(),
+            logger: LoggerSpy(),
             model: .mockWithEmptyExcept(),
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
@@ -74,6 +77,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
             ),
+            pageSize: pageSize,
             mainScheduler: .immediate,
             backgroundScheduler: .immediate
         )

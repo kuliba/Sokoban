@@ -87,7 +87,7 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
             switch $0 {
             case let .paymentFlow(.qr(qr)):
                 qr.model.event(.qrResult(qrResult))
-                XCTAssertNoDiff(makeQRNavigation.payloads, [qrResult])
+                XCTAssertNoDiff(makeQRNavigation.payloads.map(\.0), [qrResult])
                 
             default:
                 XCTFail("Expected QR, got \($0) instead.")
@@ -213,8 +213,8 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
     // MARK: - Helpers
     
     private typealias SUT = SelectedCategoryNavigationMicroServicesComposer<Never, Void>
-    private typealias MakeQRNavigationSpy = Spy<QRModelResult, QRNavigation, Never>
-    private typealias MakeListSpy = CallSpy<Never, Void>
+    private typealias MakeQRNavigationSpy = Spy<(QRModelResult, SUT.NanoServices.Notify), QRNavigation, Never>
+    private typealias MakeListSpy = CallSpy<[ServiceCategory], Void>
     
     private func makeSUT(
         qrResult: QRModelResult = .unknown,
@@ -230,6 +230,7 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
         let makeQRNavigation = MakeQRNavigationSpy()
         let makeList = MakeListSpy()
         let sut = SUT(
+            model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeList: makeList.call(payload:),
                 makeMobile: makeMobile,
@@ -241,11 +242,12 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
                         scheduler: .immediate
                     )
                 },
-                makeQRNavigation: makeQRNavigation.process(_:completion:),
+                makeQRNavigation: makeQRNavigation.process(_:_:completion:),
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
-            )
+            ),
+            scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -263,7 +265,13 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        getNavigation(sut, with: makeCategorySelect(flow: flow), notify: notify, completion: completion, file: file, line: line)
+        getNavigation(
+            sut, 
+            with: .pickerSelect(makeCategorySelect(flow: flow)),
+            notify: notify,
+            completion: completion,
+            file: file, line: line
+        )
     }
     
     private func getNavigation(
@@ -345,14 +353,14 @@ final class SelectedCategoryNavigationMicroServicesComposerNeverTests: XCTestCas
     
     private func makeCategorySelect(
         flow: ServiceCategory.PaymentFlow
-    ) -> SUT.Select {
+    ) -> SUT.Select.PickerSelect {
         
         return .category(makeServiceCategory(flow: flow))
     }
     
     private func makeCategorySelect(
         _ serviceCategory: ServiceCategory? = nil
-    ) -> SUT.Select {
+    ) -> SUT.Select.PickerSelect {
         
         return .category(serviceCategory ?? makeServiceCategory())
     }

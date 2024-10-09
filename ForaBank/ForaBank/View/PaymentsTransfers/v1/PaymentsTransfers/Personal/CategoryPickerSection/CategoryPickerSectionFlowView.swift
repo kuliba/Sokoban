@@ -26,7 +26,8 @@ where ContentView: View,
             )
             .fullScreenCover(
                 cover: state.fullScreenCover,
-                dismissFullScreenCover: { event(.dismiss) },
+                // full screen cover should not be dismissed by SwiftUI, only programmatically
+                dismissFullScreenCover: {},
                 content: factory.makeFullScreenCoverView
             )
             .navigationDestination(
