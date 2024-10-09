@@ -148,8 +148,14 @@ private extension UserAccountNavigationFPSReducer {
             state.informer = "Ошибка изменения настроек СБП.\nПопробуйте позже."
             effect = .dismissInformer
             
-        case .prepareDeleteDefaultBankSuccess:
-            effect = .otp(.prepareSetBankDefault(.init("")))
+        case .makeDeleteDefaultBankSuccess:
+            state.isLoading = false
+            state.destination?.destination = nil
+            state.informer = "Банк по умолчанию установлен."
+            effect = .dismissInformer
+            
+        case .deleteBankDefault(_):
+            break
         }
         
         return (state, effect)
