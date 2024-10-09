@@ -1,23 +1,25 @@
 //
-//  CarouselBaseView.swift
+//  CarouselWithDotsView.swift
+//  
 //
-//
-//  Created by Andryusina Nataly on 07.10.2024.
+//  Created by Andryusina Nataly on 08.10.2024.
 //
 
 import SwiftUI
 import Combine
 import UIPrimitives
 
-public struct CarouselBaseView: View {
+public struct CarouselWithDotsView: View {
     
-    let model: CarouselBase
+    let model: CarouselWithDots
     let actions: CarouselActions
     let factory: Factory
     let config: Config
     
+    @State private var selection: Int = 0
+    
     public init(
-        model: CarouselBase,
+        model: CarouselWithDots,
         actions: CarouselActions,
         factory: Factory,
         config: Config
@@ -27,26 +29,27 @@ public struct CarouselBaseView: View {
         self.factory = factory
         self.config = config
     }
-
+    
     public var body: some View {
             
         VStack(alignment: .leading) {
             
             model.title.map {
-                
                 $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                
-                HStack(spacing: config.spacing) {
-                    ForEach(model.list, id: \.imageLink, content: itemView)
+            TabView(selection: $selection){
+                ForEach(0..<model.list.count, id: \.self) {
+                    itemView(item: model.list[$0])
                 }
             }
-            .padding(.horizontal, config.paddings.horizontal)
-            .padding(.vertical, config.paddings.vertical)
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(height: CGFloat(model.size.height))
+            
+            pageControl()
+                .frame(maxWidth: .infinity)
         }
     }
     
@@ -60,9 +63,21 @@ public struct CarouselBaseView: View {
             size: model.size
         )
     }
+    
+    private func pageControl() -> some View {
+        
+        HStack {
+            ForEach(0..<model.list.count, id: \.self) { index in
+                Circle()
+                    .frame(widthAndHeight: config.pageControls.widthAndHeight)
+                    .foregroundColor(index == selection ? config.pageControls.active : config.pageControls.inactive )
+                    .onTapGesture(perform: { selection = index })
+            }
+        }
+    }
 }
 
-extension CarouselBaseView {
+extension CarouselWithDotsView {
     
     struct ItemView: View {
         
@@ -77,31 +92,30 @@ extension CarouselBaseView {
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
-                    .frame(width: size.width, height: size.height)
                     .cornerRadius(config.cornerRadius)
-                    .accessibilityIdentifier("CarouselBaseImage")
+                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .accessibilityIdentifier("CarouselWithDotsImage")
             }
-            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
 
-public extension CarouselBaseView {
+public extension CarouselWithDotsView {
     
-    typealias CarouselBase = UILanding.Carousel.CarouselBase
+    typealias CarouselWithDots = UILanding.Carousel.CarouselWithDots
     typealias Event = LandingEvent
     
-    typealias Item = UILanding.Carousel.CarouselBase.ListItem
-    typealias Config = UILanding.Carousel.CarouselBase.Config
+    typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
+    typealias Config = UILanding.Carousel.CarouselWithDots.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselBase.Size
+    typealias ItemSize = UILanding.Carousel.CarouselWithDots.Size
 }
 
-struct CarouselBaseView_Previews: PreviewProvider {
+struct CarouselWithDotsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CarouselBaseView(
+        CarouselWithDotsView(
             model: .default,
             actions: .default,
             factory: .default,
