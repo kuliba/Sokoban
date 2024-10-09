@@ -27,6 +27,6 @@ public struct CarouselViewFactory {
 public extension CarouselViewFactory {
     
     typealias MakeCarouselBaseView = (UILanding.Carousel.CarouselBase) -> CarouselBaseView
-    typealias MakeCarouselWithDotsView = () -> EmptyView
+    typealias MakeCarouselWithDotsView = (UILanding.Carousel.CarouselWithDots) -> CarouselWithDotsView
     typealias MakeCarouselWithTabsView = () -> EmptyView
 }

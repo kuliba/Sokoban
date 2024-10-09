@@ -127,17 +127,34 @@ extension Model {
         actions: CarouselActions
     ) -> CarouselViewFactory {
         .init(
-            makeCarouselBaseView:  {
-                
-                CarouselBaseView(
-                    model: $0,
-                    actions: actions,
-                    factory: self.makeImageViewFactory(),
-                    config: .iFora)
-            },
-            makeCarouselWithDotsView: { EmptyView() },
+            makeCarouselBaseView: { self.makeCarouselBaseView($0, actions) },
+            makeCarouselWithDotsView: { self.makeCarouselWithDotsView($0, actions) },
             makeCarouselWithTabsView: { EmptyView() }
         )
+    }
+    
+    func makeCarouselBaseView(
+        _ carousel: UILanding.Carousel.CarouselBase,
+        _ actions: CarouselActions
+    ) -> CarouselBaseView {
+        
+        CarouselBaseView(
+            model: carousel,
+            actions: actions,
+            factory: makeImageViewFactory(),
+            config: .iFora)
+    }
+    
+    func makeCarouselWithDotsView(
+        _ carousel: UILanding.Carousel.CarouselWithDots,
+        _ actions: CarouselActions
+    ) -> CarouselWithDotsView {
+        
+        CarouselWithDotsView(
+            model: carousel,
+            actions: actions,
+            factory: makeImageViewFactory(),
+            config: .iFora)
     }
     
     func makeImageViewFactory() -> ImageViewFactory {

@@ -9,43 +9,47 @@ import SwiftUI
 import Combine
 import UIPrimitives
 
-struct CarouselWithDotsView: View {
+public struct CarouselWithDotsView: View {
     
-    let state: CarouselState
-    let event: (Event) -> Void
+    let model: CarouselWithDots
+    let actions: CarouselActions
     let factory: Factory
     let config: Config
-
+    
     @State private var selection: Int = 0
     
-    var body: some View {
+    public init(
+        model: CarouselWithDots,
+        actions: CarouselActions,
+        factory: Factory,
+        config: Config
+    ) {
+        self.model = model
+        self.actions = actions
+        self.factory = factory
+        self.config = config
+    }
+    
+    public var body: some View {
             
         VStack(alignment: .leading) {
             
-            state.data.title.map {
-                Text($0)
-                    .font(config.title.textFont)
-                    .foregroundColor(config.title.textColor)
+            model.title.map {
+                $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
             
-            TabView(selection : $selection){
-                ForEach(0..<state.data.list.count, id: \.self){ index in
-                    ItemView(
-                        item: state.data.list[index],
-                        config: config,
-                        factory: factory,
-                        action: { /*model.itemAction(item: item)*/ },
-                        size: state.data.size
-                    )
+            TabView(selection: $selection){
+                ForEach(0..<model.list.count, id: \.self) {
+                    itemView(item: model.list[$0])
                 }
             }
-            .tabViewStyle(.page)
-            .indexViewStyle(
-                .page(backgroundDisplayMode: .always)
-            )
-            .frame(height: CGFloat(state.data.size.height + 100))
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(height: CGFloat(model.size.height))
+            
+            pageControl()
+                .frame(maxWidth: .infinity)
         }
     }
     
@@ -55,9 +59,21 @@ struct CarouselWithDotsView: View {
             item: item,
             config: config,
             factory: factory,
-            action: state.action(item: item, event: event),
-            size: state.data.size
+            action: model.action(item: item, actions: actions),
+            size: model.size
         )
+    }
+    
+    private func pageControl() -> some View {
+        
+        HStack {
+            ForEach(0..<model.list.count, id: \.self) { index in
+                Circle()
+                    .frame(widthAndHeight: config.pageControls.widthAndHeight)
+                    .foregroundColor(index == selection ? config.pageControls.active : config.pageControls.inactive )
+                    .onTapGesture(perform: { selection = index })
+            }
+        }
     }
 }
 
@@ -75,25 +91,23 @@ extension CarouselWithDotsView {
             
             Button(action: action) {
                 
-                VStack(spacing: config.spacing) {
-                    factory.makeBannerImageView(item.imageLink)
-                        .cornerRadius(config.cornerRadius)
-                        .accessibilityIdentifier("CarouselWithDotsImage")
-                }
+                factory.makeBannerImageView(item.imageLink)
+                    .cornerRadius(config.cornerRadius)
+                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .accessibilityIdentifier("CarouselWithDotsImage")
             }
-            .frame(width: CGFloat(size.width), height: CGFloat(size.height))
         }
     }
 }
 
-extension CarouselWithDotsView {
+public extension CarouselWithDotsView {
     
-    typealias CarouselState = CarouselWithDotsState
+    typealias CarouselWithDots = UILanding.Carousel.CarouselWithDots
     typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
     typealias Config = UILanding.Carousel.CarouselWithDots.Config
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias ItemSize = UILanding.Carousel.CarouselWithDots.Size
 }
 
@@ -102,8 +116,8 @@ struct CarouselWithDotsView_Previews: PreviewProvider {
     static var previews: some View {
         
         CarouselWithDotsView(
-            state: .init(data: .default),
-            event: { _ in },
+            model: .default,
+            actions: .default,
             factory: .default,
             config: .default
         )

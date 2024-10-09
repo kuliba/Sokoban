@@ -11,13 +11,13 @@ import UIPrimitives
 
 public struct CarouselBaseView: View {
     
-    let model: Model
+    let model: CarouselBase
     let actions: CarouselActions
     let factory: Factory
     let config: Config
     
     public init(
-        model: Model,
+        model: CarouselBase,
         actions: CarouselActions,
         factory: Factory,
         config: Config
@@ -88,7 +88,7 @@ extension CarouselBaseView {
 
 public extension CarouselBaseView {
     
-    typealias Model = UILanding.Carousel.CarouselBase
+    typealias CarouselBase = UILanding.Carousel.CarouselBase
     typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselBase.ListItem

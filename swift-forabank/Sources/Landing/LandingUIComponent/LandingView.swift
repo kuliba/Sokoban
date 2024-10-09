@@ -369,16 +369,10 @@ extension LandingView {
                 EmptyView()
                 
             case let .carousel(.withDots(model)):
-                CarouselWithDotsWrappedView(
-                    model: .init(
-                        initialState: .init(data: model),
-                        reduce: CarouselWithDotsReducer().reduce,
-                        handleEffect: CarouselEffectHandler(action:  action).handleEffect
-                    ),
-                    factory: viewFactory,
-                    config: config.carousel.withDots)
+                
+                if let carouselViewFactory { carouselViewFactory.makeCarouselWithDotsView(model)
+                }
             }
-
         }
     }
 }

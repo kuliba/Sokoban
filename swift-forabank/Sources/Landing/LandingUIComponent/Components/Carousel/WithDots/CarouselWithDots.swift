@@ -79,3 +79,38 @@ extension UILanding.Carousel.CarouselWithDots {
         return []
     }
 }
+
+extension UILanding.Carousel.CarouselWithDots {
+    
+    func action(
+        item: Item,
+        actions: CarouselActions
+    ) -> Action {
+        
+        switch item.action {
+        case .none:
+            
+            guard let link = item.link else { return {} }
+            return { actions.openUrl(link) }
+            
+        case let .some(action):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return actions.goToMain
+                case .orderCard: return {}
+                case .goToOrderSticker: return {}
+                }
+            }
+            
+            return {}
+        }
+    }
+}
+
+extension UILanding.Carousel.CarouselWithDots {
+    
+    typealias Action = () -> Void
+    typealias Event = LandingEvent
+    typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
+}

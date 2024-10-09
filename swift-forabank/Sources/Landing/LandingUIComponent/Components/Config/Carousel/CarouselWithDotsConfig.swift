@@ -15,9 +15,23 @@ public extension UILanding.Carousel.CarouselWithDots {
         
         let cornerRadius: CGFloat
         let paddings: Paddings
+        let pageControls: PageControls
         let spacing: CGFloat
         let title: TextConfig
         
+        public struct PageControls {
+            
+            let active: Color
+            let inactive: Color
+            let widthAndHeight: CGFloat
+            
+            public init(active: Color, inactive: Color, widthAndHeight: CGFloat) {
+                self.active = active
+                self.inactive = inactive
+                self.widthAndHeight = widthAndHeight
+            }
+        }
+
         public struct Paddings {
             
             let horizontal: CGFloat
@@ -32,11 +46,13 @@ public extension UILanding.Carousel.CarouselWithDots {
         public init(
             cornerRadius: CGFloat,
             paddings: Paddings,
+            pageControls: PageControls,
             spacing: CGFloat,
             title: TextConfig
         ){
             self.cornerRadius = cornerRadius
             self.paddings = paddings
+            self.pageControls = pageControls
             self.spacing = spacing
             self.title = title
         }
