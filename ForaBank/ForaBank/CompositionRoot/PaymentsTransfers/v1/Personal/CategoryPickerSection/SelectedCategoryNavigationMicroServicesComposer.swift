@@ -76,6 +76,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             case .qr:
                 let qr = nanoServices.makeQR()
                 let cancellable = qr.$state
+                    .compactMap { $0 }
                     .flatMap {
                         
                         self.notifyPublisher(
@@ -112,14 +113,11 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     }
     
     private func notifyPublisher(
-        result: QRModelWrapperState<QRModelResult>?,
+        result: QRModelWrapperState<QRModelResult>,
         notify: @escaping (QRNavigationComposer.NotifyEvent) -> Void
     ) -> AnyPublisher<FlowDomain.Event, Never> {
         
-        switch result {
-        case .none:
-            return Empty<FlowDomain.Event, Never>().eraseToAnyPublisher()
-            
+        switch result {            
         case .cancelled:
             return Just(.dismiss).eraseToAnyPublisher()
             
