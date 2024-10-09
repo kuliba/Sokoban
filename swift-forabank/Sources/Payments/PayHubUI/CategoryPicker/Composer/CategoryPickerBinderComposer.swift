@@ -11,7 +11,7 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public final class CategoryPickerBinderComposer<Category, List, Navigation> {
+public final class CategoryPickerBinderComposer<Category, List, QRSelect, Navigation> {
     
     private let load: Load
     private let microServices: MicroServices
@@ -30,7 +30,7 @@ public final class CategoryPickerBinderComposer<Category, List, Navigation> {
         self.scheduler = scheduler
     }
     
-    public typealias Domain = CategoryPicker<Category, List, Navigation>
+    public typealias Domain = CategoryPicker<Category, List, QRSelect, Navigation>
     public typealias ContentDomain = Domain.ContentDomain
     public typealias FlowDomain = Domain.FlowDomain
     
@@ -118,7 +118,7 @@ private extension CategoryPickerBinderComposer {
                     break
                     
                 case let .category(category):
-                    flow.event(.select(.category(category)))
+                    flow.event(.select(.pickerSelect(.category(category))))
                     
                 case .list:
                     let categories: [Category] = $0.items.compactMap {
@@ -129,7 +129,7 @@ private extension CategoryPickerBinderComposer {
                         
                         return category
                     }
-                    flow.event(.select(.list(categories)))
+                    flow.event(.select(.pickerSelect(.list(categories))))
                 }
             }
         

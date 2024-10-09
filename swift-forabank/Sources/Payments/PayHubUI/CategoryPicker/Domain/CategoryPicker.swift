@@ -10,14 +10,14 @@ import PayHub
 import RxViewModel
 
 /// A namespace.
-public enum CategoryPicker<Category, List, Navigation> {}
+public enum CategoryPicker<Category, List, QRSelect, Navigation> {}
 
 public extension CategoryPicker {
     
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<ContentDomain.Content, FlowDomain.Flow>
-    typealias BinderComposer = CategoryPickerBinderComposer<Category, List, Navigation>
+    typealias BinderComposer = CategoryPickerBinderComposer<Category, List, QRSelect, Navigation>
 
     // MARK: - Content
     
@@ -25,6 +25,15 @@ public extension CategoryPicker {
     
     // MARK: - Flow
     
-    typealias Select = CategoryPickerItem<Category, [Category]>
+    enum Select {
+        
+        case pickerSelect(PickerSelect)
+        case qrSelect(QRSelect)
+        
+        public typealias PickerSelect = CategoryPickerItem<Category, [Category]>
+    }
+
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
 }
+
+extension CategoryPicker.Select: Equatable where Category: Equatable, QRSelect: Equatable {}

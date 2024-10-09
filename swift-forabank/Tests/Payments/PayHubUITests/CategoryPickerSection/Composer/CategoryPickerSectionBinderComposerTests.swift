@@ -160,7 +160,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [nil, .list(.init())])
         XCTAssertNoDiff(flowSpy.values, [nil, nil])
-        XCTAssertNoDiff(getNavigationSpy.payloads, [.list([])])
+        XCTAssertNoDiff(getNavigationSpy.payloads, [.pickerSelect(.list([]))])
         
         getNavigationSpy.complete(with: navigation)
         scheduler.advance()
@@ -187,7 +187,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         XCTAssertNoDiff(contentSpy.values, [nil, .list(.init())])
         XCTAssertNoDiff(flowSpy.values, [nil, nil])
-        XCTAssertNoDiff(getNavigationSpy.payloads, [.list([category1, category2])])
+        XCTAssertNoDiff(getNavigationSpy.payloads, [.pickerSelect(.list([category1, category2]))])
         
         getNavigationSpy.complete(with: navigation)
         scheduler.advance()
@@ -221,13 +221,13 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
     // MARK: - Helpers
     
-    private typealias Domain = CategoryPicker<Category, All, Navigation>
+    private typealias Domain = CategoryPicker<Category, All, Never, Navigation>
     private typealias Composer = Domain.BinderComposer
     private typealias Content = Domain.ContentDomain.Content
     private typealias Flow = Domain.FlowDomain.Flow
     private typealias SUT = Domain.Binder
     private typealias LoadSpy = Spy<Void, [Composer.Item]>
-    private typealias Select = CategoryPickerItem<Category, [Category]>
+    private typealias Select = Domain.Select
     private typealias GetNavigationSpy = Spy<Select, Navigation>
     
     private func makeSUT(
