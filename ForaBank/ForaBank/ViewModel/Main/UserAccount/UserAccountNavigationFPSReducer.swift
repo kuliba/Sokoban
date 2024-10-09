@@ -155,9 +155,15 @@ private extension UserAccountNavigationFPSReducer {
                 event: .otp(.prepareSetBankDefault),
                 secondaryEvent: .dismiss(.fpsAlert)
             )
-        case let .prepareDeleteDefaultBankSuccess(phoneNumber):
+        case let .deleteBankDefault(phoneNumber):
             state.spinner = nil
             effect = .navigation(.otp(.prepareDeleteDefaultBank(.init(phoneNumber))))
+            
+        case .makeDeleteDefaultBankSuccess:
+            state.spinner = nil
+            state.fpsRoute?.destination = nil
+            state.informer = .success("Банк по умолчанию удален.")
+            effect = .navigation(.dismissInformer())
             
         case let .setBankDefaultFailure(message):
             state.spinner = nil
