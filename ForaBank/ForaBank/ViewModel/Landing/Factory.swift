@@ -34,7 +34,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            viewFactory: makeViewFactory(),
+            imageViewFactory: makeImageViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -66,7 +66,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            viewFactory: makeViewFactory(),
+            imageViewFactory: makeImageViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -92,7 +92,7 @@ extension Model {
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            viewFactory: makeViewFactory(),
+            imageViewFactory: makeImageViewFactory(),
             limitsViewModel: limitsViewModel,
             scheduler: .main,
             config: config,
@@ -106,11 +106,16 @@ extension Model {
         landingActions: @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel {
         
+        let actions = CarouselActions(
+            openUrl: { landingActions(.card(.openUrl($0))) },
+            goToMain: { landingActions(.card(.goToMain)) })
+        
         return LandingWrapperViewModel(
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            viewFactory: makeViewFactory(),
+            imageViewFactory: makeImageViewFactory(),
+            carouselViewFactory: makeCarouselFactory(actions: actions),
             limitsViewModel: nil,
             scheduler: .main,
             config: config,
@@ -118,7 +123,24 @@ extension Model {
         )
     }
     
-    func makeViewFactory() -> ViewFactory {
+    func makeCarouselFactory(
+        actions: CarouselActions
+    ) -> CarouselViewFactory {
+        .init(
+            makeCarouselBaseView:  {
+                
+                CarouselBaseView(
+                    model: $0,
+                    actions: actions,
+                    factory: self.makeImageViewFactory(),
+                    config: .iFora)
+            },
+            makeCarouselWithDotsView: { EmptyView() },
+            makeCarouselWithTabsView: { EmptyView() }
+        )
+    }
+    
+    func makeImageViewFactory() -> ImageViewFactory {
         .init(
             makeIconView: imageCache().makeIconView(for:),
             makeBannerImageView: generalImageCache().makeIconView(for:)

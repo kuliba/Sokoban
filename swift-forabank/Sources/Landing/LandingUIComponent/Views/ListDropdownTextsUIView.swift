@@ -102,6 +102,7 @@ extension ListDropdownTextsUIView {
                         .foregroundColor(config.colors.itemDescription)
                         .padding(.bottom, config.paddings.itemVertical)
                         .multilineTextAlignment(.leading)
+                        .accessibilityIdentifier("ListDropdownItemText")
                 }
             }
             .padding(.horizontal, config.paddings.itemHorizontal)

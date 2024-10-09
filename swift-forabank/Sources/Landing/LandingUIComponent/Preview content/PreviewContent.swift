@@ -291,7 +291,6 @@ extension UILanding.Component.Config {
         verticalSpacing: .defaultValue,
         spacing: .defaultValue,
         blockHorizontalRectangular: .default,
-        carousel: .default,
         offsetForDisplayHeader: 100)
 }
 
@@ -646,17 +645,6 @@ extension UILanding.Carousel.CarouselWithDots.Config {
         title: .init(textFont: .largeTitle, textColor: .black)
     )
 }
-
-// MARK: - Carousel Config
-
-extension UILanding.Carousel.Config {
-    
-    static let `default`: Self = .init(
-        base: .default,
-        withDots: .default
-    )
-}
-
 // MARK: - BlockHorizontalRectangular 
 
 extension UILanding.BlockHorizontalRectangular {
@@ -777,9 +765,9 @@ extension Array where Element == LimitValues {
     ]
 }
 
-// MARK: -
+// MARK: - ImageViewFactory
 
-extension ViewFactory {
+extension ImageViewFactory {
     
     static let `default`: Self = .init(
         makeIconView: {
@@ -806,6 +794,30 @@ extension ViewFactory {
                         
                     )}
         }
+    )
+}
+
+extension CarouselViewFactory {
+    
+    static let `default`: Self = .init(
+        makeCarouselBaseView: {
+            CarouselBaseView(
+                model: $0,
+                actions: .default,
+                factory: .default,
+                config: .default
+            )
+        },
+        makeCarouselWithDotsView: { EmptyView() },
+        makeCarouselWithTabsView: { EmptyView() }
+    )
+}
+
+extension CarouselActions {
+    
+    static let `default`: Self = .init(
+        openUrl: {_ in },
+        goToMain: {}
     )
 }
 

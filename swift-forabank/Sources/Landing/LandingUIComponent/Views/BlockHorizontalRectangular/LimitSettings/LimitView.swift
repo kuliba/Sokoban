@@ -17,7 +17,7 @@ where InfoView: View {
     let state: State
     let event: (LimitEvent) -> Void
     let infoView: () -> InfoView
-    let makeIconView: ViewFactory.MakeIconView
+    let makeIconView: ImageViewFactory.MakeIconView
 
     let config: LimitConfig
     
@@ -28,7 +28,7 @@ where InfoView: View {
         event: @escaping (LimitEvent) -> Void,
         config: LimitConfig,
         infoView: @escaping () -> InfoView,
-        makeIconView: @escaping ViewFactory.MakeIconView
+        makeIconView: @escaping ImageViewFactory.MakeIconView
     ) {
         let formatter = DecimalFormatter(
             currencySymbol: state.currencySymbol
@@ -56,12 +56,15 @@ where InfoView: View {
                 makeIconView(state.limit.md5Hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(widthAndHeight: config.widthAndHeight)
+                    .accessibilityIdentifier("LimitsIcon")
                 
                 VStack(alignment: .leading, spacing: 0){
                     state.limit.title.text(withConfig: config.title)
                         .frame(height: 18)
+                        .accessibilityIdentifier("LimitsTitle")
                     textField()
                         .frame(height: 24)
+                        .accessibilityIdentifier("LimitsValue")
                 }
             }
             .frame(height: 46)

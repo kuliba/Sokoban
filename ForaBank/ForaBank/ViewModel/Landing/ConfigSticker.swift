@@ -31,7 +31,6 @@ extension UILanding.Component.Config {
         verticalSpacing: .stickerDefault,
         spacing: .default,
         blockHorizontalRectangular: .stickerDefault,
-        carousel: .default,
         offsetForDisplayHeader: 100
     )
 }

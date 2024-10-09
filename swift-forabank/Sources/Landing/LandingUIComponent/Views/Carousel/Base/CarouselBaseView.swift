@@ -9,21 +9,32 @@ import SwiftUI
 import Combine
 import UIPrimitives
 
-struct CarouselBaseView: View {
+public struct CarouselBaseView: View {
     
-    let state: State
-    let event: (Event) -> Void
+    let model: Model
+    let actions: CarouselActions
     let factory: Factory
     let config: Config
+    
+    public init(
+        model: Model,
+        actions: CarouselActions,
+        factory: Factory,
+        config: Config
+    ) {
+        self.model = model
+        self.actions = actions
+        self.factory = factory
+        self.config = config
+    }
 
-    var body: some View {
+    public var body: some View {
             
         VStack(alignment: .leading) {
             
-            state.data.title.map {
-                Text($0)
-                    .font(config.title.textFont)
-                    .foregroundColor(config.title.textColor)
+            model.title.map {
+                
+                $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
@@ -31,7 +42,7 @@ struct CarouselBaseView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: config.spacing) {
-                    ForEach(state.data.list, id: \.imageLink, content: itemView)
+                    ForEach(model.list, id: \.imageLink, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
@@ -45,8 +56,8 @@ struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: state.action(item: item, event: event),
-            size: state.data.size
+            action: model.action(item: item, actions: actions),
+            size: model.size
         )
     }
 }
@@ -65,26 +76,24 @@ extension CarouselBaseView {
             
             Button(action: action) {
                 
-                VStack(spacing: config.spacing) {
-                    factory.makeBannerImageView(item.imageLink)
-                        .frame(width: size.width, height: size.height)
-                        .cornerRadius(config.cornerRadius)
-                        .accessibilityIdentifier("CarouselBaseImage")
-                }
-                .fixedSize(horizontal: false, vertical: true)
+                factory.makeBannerImageView(item.imageLink)
+                    .frame(width: size.width, height: size.height)
+                    .cornerRadius(config.cornerRadius)
+                    .accessibilityIdentifier("CarouselBaseImage")
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
 
-extension CarouselBaseView {
+public extension CarouselBaseView {
     
-    typealias State = CarouselBaseState
+    typealias Model = UILanding.Carousel.CarouselBase
     typealias Event = LandingEvent
     
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias ItemSize = UILanding.Carousel.CarouselBase.Size
 }
 
@@ -93,8 +102,8 @@ struct CarouselBaseView_Previews: PreviewProvider {
     static var previews: some View {
         
         CarouselBaseView(
-            state: .init(data: .default),
-            event: { _ in },
+            model: .default,
+            actions: .default,
             factory: .default,
             config: .default
         )

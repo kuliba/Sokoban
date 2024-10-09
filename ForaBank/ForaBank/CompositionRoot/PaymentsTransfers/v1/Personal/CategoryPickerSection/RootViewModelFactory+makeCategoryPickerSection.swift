@@ -110,28 +110,38 @@ extension RootViewModelFactory {
             
             microService.makePaymentFlow(category.paymentFlowID) {
                 
-                switch $0 {
-                case let .failure(failure):
-                    completion(.failure(failure))
-                    
-                case let .success(flow):
-                    switch flow {
-                    case let .mobile(mobile):
-                        completion(.paymentFlow(.mobile(mobile)))
-                        
-                    case let .qr(qr):
-                        completion(.paymentFlow(.qr(.init(model: qr, cancellables: []))))
-                        
-                    case let .standard(standard):
-                        completion(.paymentFlow(.standard(standard)))
-                        
-                    case let .taxAndStateServices(taxAndStateServices):
-                        completion(.paymentFlow(.taxAndStateServices(taxAndStateServices)))
+                completion(.init(result: $0))
+            }
+        }
+    }
+}
 
-                    case let .transport(transport):
-                        completion(.paymentFlow(.transport(transport)))
-                    }
-                }
+private extension SelectedCategoryNavigation {
+    
+    typealias RawPaymentFlow = PayHub.PaymentFlow<Mobile, QRModel, Standard, Tax, Transport>
+    
+    init(result: Result<RawPaymentFlow, SelectedCategoryFailure>) {
+        
+        switch result {
+        case let .failure(failure):
+            self = .failure(failure)
+            
+        case let .success(flow):
+            switch flow {
+            case let .mobile(mobile):
+                self = .paymentFlow(.mobile(mobile))
+                
+            case let .qr(qr):
+                self = .paymentFlow(.qr(.init(model: qr, cancellables: [])))
+                
+            case let .standard(standard):
+                self = .paymentFlow(.standard(standard))
+                
+            case let .taxAndStateServices(taxAndStateServices):
+                self = .paymentFlow(.taxAndStateServices(taxAndStateServices))
+                
+            case let .transport(transport):
+                self = .paymentFlow(.transport(transport))
             }
         }
     }

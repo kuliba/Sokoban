@@ -1,13 +1,14 @@
 //
-//  ViewFactory.swift
+// ImageViewFactory.swift
 //
 //
-//  Created by Andryusina Nataly on 21.06.2024.
+//  Created by Andryusina Nataly on 08.10.2024.
 //
 
+import Foundation
 import UIPrimitives
 
-public struct ViewFactory {
+public struct ImageViewFactory {
 
     let makeIconView: MakeIconView
     let makeBannerImageView: MakeBannerImageView
@@ -21,7 +22,7 @@ public struct ViewFactory {
     }
 }
 
-public extension ViewFactory {
+public extension ImageViewFactory {
         
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
     typealias MakeBannerImageView = (String) -> UIPrimitives.AsyncImage

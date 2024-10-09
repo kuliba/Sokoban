@@ -85,7 +85,7 @@ extension ControlPanelReducer.MakeViewModels {
             initialState: .success(.preview),
             imagePublisher: .imagePublisher,
             imageLoader: {_ in }, 
-            viewFactory: .init(
+            imageViewFactory: .init(
                 makeIconView: { _ in .init(
                     image: .cardPlaceholder,
                     publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
