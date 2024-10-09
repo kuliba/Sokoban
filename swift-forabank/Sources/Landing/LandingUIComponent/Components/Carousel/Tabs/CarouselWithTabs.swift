@@ -60,23 +60,12 @@ public extension UILanding.Carousel {
             
             let imageLink: String
             let link: String?
-            let action: Action?
+            let action: ItemAction?
             
-            public init(imageLink: String, link: String?, action: Action?) {
+            public init(imageLink: String, link: String?, action: ItemAction?) {
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action
-            }
-                        
-            public struct Action: Equatable {
-                
-                let type: String
-                let target: String?
-                
-                public init(type: String, target: String?) {
-                    self.type = type
-                    self.target = target
-                }
             }
         }
     }
@@ -88,39 +77,4 @@ extension UILanding.Carousel.CarouselWithTabs {
         
         return []
     }
-}
-
-extension UILanding.Carousel.CarouselWithTabs {
-    
-    func action(
-        item: Item,
-        actions: CarouselActions
-    ) -> Action {
-        
-        switch item.action {
-        case .none:
-            
-            guard let link = item.link else { return {} }
-            return { actions.openUrl(link) }
-            
-        case let .some(action):
-            
-            if let type = LandingActionType(rawValue: action.type) {
-                switch type {
-                case .goToMain: return actions.goToMain
-                case .orderCard: return {}
-                case .goToOrderSticker: return {}
-                }
-            }
-            
-            return {}
-        }
-    }
-}
-
-extension UILanding.Carousel.CarouselWithTabs {
-    
-    typealias Action = () -> Void
-    typealias Event = LandingEvent
-    typealias Item = UILanding.Carousel.CarouselWithTabs.ListItem
 }

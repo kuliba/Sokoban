@@ -59,7 +59,11 @@ public struct CarouselWithDotsView: View {
             item: item,
             config: config,
             factory: factory,
-            action: carousel.action(item: item, actions: actions),
+            action: UILanding.Carousel.action(
+                itemAction: item.action,
+                link: item.link,
+                actions: actions
+            ),
             size: carousel.size
         )
     }
