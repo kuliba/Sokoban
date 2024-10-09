@@ -13,7 +13,6 @@ public extension Landing.DataView.Carousel {
         
         public let title: String?
         public let size: Size
-        public let scale: String
         public let loopedScrolling: Bool
         
         public let list: [ListItem]
@@ -21,31 +20,29 @@ public extension Landing.DataView.Carousel {
         public init(
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.list = list
         }
         
         public struct Size: Equatable {
             
-            public let width: Int
-            public let height: Int
+            public let width: CGFloat
+            public let height: CGFloat
             
-            public init(width: Int, height: Int) {
+            public init(width: CGFloat, height: CGFloat) {
                 self.width = width
                 self.height = height
             }
             
-            public init(size: String) {
+            public init(size: String, scale: CGFloat) {
                 let allNumbers = size.allNumbers
-                self.width = !allNumbers.isEmpty ? allNumbers[0] : 0
-                self.height = allNumbers.count > 1 ? allNumbers[1] : 0
+                self.width = CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale
+                self.height = CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale
             }
         }
         

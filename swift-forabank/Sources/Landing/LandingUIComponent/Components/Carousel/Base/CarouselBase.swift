@@ -14,7 +14,6 @@ public extension UILanding.Carousel {
         public let id: UUID
         let title: String?
         let size: Size
-        let scale: String
         let loopedScrolling: Bool
         
         let list: [ListItem]
@@ -23,24 +22,22 @@ public extension UILanding.Carousel {
             id: UUID = UUID(),
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
             self.id = id
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.list = list
         }
         
         public struct Size: Equatable {
             
-            public let width: Int
-            public let height: Int
+            public let width: CGFloat
+            public let height: CGFloat
             
-            public init(width: Int, height: Int) {
+            public init(width: CGFloat, height: CGFloat) {
                 self.width = width
                 self.height = height
             }
@@ -78,4 +75,39 @@ extension UILanding.Carousel.CarouselBase {
         
         return []
     }
+}
+
+extension UILanding.Carousel.CarouselBase {
+    
+    func action(
+        item: Item,
+        actions: CarouselActions
+    ) -> Action {
+        
+        switch item.action {
+        case .none:
+            
+            guard let link = item.link else { return {} }
+            return { actions.openUrl(link) }
+            
+        case let .some(action):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return actions.goToMain
+                case .orderCard: return {}
+                case .goToOrderSticker: return {}
+                }
+            }
+            
+            return {}
+        }
+    }
+}
+
+extension UILanding.Carousel.CarouselBase {
+    
+    typealias Action = () -> Void
+    typealias Event = LandingEvent
+    typealias Item = UILanding.Carousel.CarouselBase.ListItem
 }

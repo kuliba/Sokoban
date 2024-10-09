@@ -532,3 +532,13 @@ extension UILanding.Multi.MarkersText.Config {
         )
     )
 }
+
+extension UILanding.Carousel.CarouselBase.Config {
+    
+    static let iFora: Self =  .init(
+        cornerRadius: 12,
+        paddings: .init(horizontal: 16, vertical: 8),
+        spacing: 8,
+        title: .init(textFont: .textH2Sb20282(), textColor: .textSecondary)
+    )
+}

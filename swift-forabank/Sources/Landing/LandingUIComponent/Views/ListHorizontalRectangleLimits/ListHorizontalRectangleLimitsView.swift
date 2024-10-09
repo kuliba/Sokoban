@@ -142,7 +142,7 @@ struct ListHorizontalRectangleLimitsView: View {
 extension ListHorizontalRectangleLimitsView {
     
     typealias Event = ListHorizontalRectangleLimitsEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.List.HorizontalRectangleLimits.Config
     typealias Item = UILanding.List.HorizontalRectangleLimits.Item
 }

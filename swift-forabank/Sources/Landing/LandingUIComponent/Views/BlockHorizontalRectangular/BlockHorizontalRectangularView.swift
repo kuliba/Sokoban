@@ -44,7 +44,7 @@ struct BlockHorizontalRectangularView: View {
 extension BlockHorizontalRectangularView {
     
     typealias Event = BlockHorizontalRectangularEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.BlockHorizontalRectangular.Config
     typealias Item = UILanding.BlockHorizontalRectangular.Item
 }
