@@ -507,7 +507,76 @@ private extension RootView {
         _ qrDestination: QRNavigation.Destination
     ) -> some View {
         
-        Text("TBD: " + String(describing: qrDestination))
+        switch qrDestination {
+        case let .qrFailedViewModel(qrFailedViewModel):
+            QRFailedView(viewModel: qrFailedViewModel)
+            
+        case let .internetTV(viewModel):
+            InternetTVDetailsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .operatorSearch(viewModel):
+            QRSearchOperatorView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .payments(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
+        case let .paymentComplete(paymentComplete):
+            PaymentsSuccessView(viewModel: paymentComplete)
+            
+        case let .providerPicker(providerPicker):
+            paymentProviderPicker(providerPicker)
+            
+        case let .sberQR(sberQR):
+            rootViewFactory.makeSberQRConfirmPaymentView(sberQR)
+            
+        case let .servicePicker(servicePicker):
+            servicePickerView(servicePicker)
+        }
+    }
+    
+    func paymentProviderPicker(
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
+    ) -> some View {
+        
+        ComposedSegmentedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: { _ in fatalError() }, //makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
+        )
+        //    .navigationBarWithBack(
+        //        title: PaymentsTransfersSectionType.payments.name,
+        //        dismiss: viewModel.dismissPaymentProviderPicker,
+        //        rightItem: .barcodeScanner(
+        //            action: viewModel.dismissPaymentProviderPicker
+        //        )
+        //    )
+    }
+    
+    @ViewBuilder
+    func servicePickerView(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: rootViewFactory.makeIconView
+            )
+        )
+//        .navigationBarWithAsyncIcon(
+//            title: provider.origin.title,
+//            subtitle: provider.origin.inn,
+//            dismiss: viewModel.dismissProviderServicePicker,
+//            icon: viewFactory.iconView(provider.origin.icon),
+//            style: .normal
+//        )
     }
     
     func makeIconView(
@@ -674,6 +743,45 @@ private extension RootView {
         Color.blue.opacity(0.1)
     }
 }
+
+// MARK: - payment flow
+
+private extension RootView {
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = rootViewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                rootViewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
+    }
+}
+
 
 private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
     
