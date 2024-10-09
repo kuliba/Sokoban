@@ -29,7 +29,7 @@ public extension OTPInputState {
     
     enum Status: Equatable {
 
-        case failure(ServiceFailure)
+        case failure(Input, ServiceFailure)
         case input(Input)
         case validOTP
 #warning("idea for better - more readable model:")
