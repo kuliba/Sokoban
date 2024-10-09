@@ -24,7 +24,7 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
         let invalidData: Data = .invalidData
         XCTAssertNoDiff(
             map(invalidData),
-            .failure(.invalid(statusCode: 200, data: .invalidData))
+            .success(.empty)
         )
     }
     
@@ -44,7 +44,7 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: .emptyDataResponse))
+            .success(.empty)
         )
     }
     
@@ -172,7 +172,6 @@ private extension String {
     "errorMessage": "",
     "data": {
       "serial": "d0f7b46028dc52536477c4639198658a",
-      "id": "COLLATERAL_SHOWCASE",
       "products": [
         {
           "theme": "GRAY",

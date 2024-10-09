@@ -10,7 +10,6 @@ import RemoteServices
 extension ResponseMapper {
     public struct CollateralLoanLandingShowCaseModel: Equatable {
         let serial: String?
-        let id: String
         let products: [Product]
         
         struct Product: Equatable {

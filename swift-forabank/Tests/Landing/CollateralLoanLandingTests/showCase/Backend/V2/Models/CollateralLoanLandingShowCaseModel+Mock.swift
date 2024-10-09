@@ -12,13 +12,11 @@ import RemoteServices
 extension ResponseMapper.CollateralLoanLandingShowCaseModel {
     static let mock = Self(
         serial: "serial",
-        id: "id",
         products: [.mock]
     )
     
     static let empty = Self(
         serial: nil,
-        id: "id",
         products: []
     )
 }

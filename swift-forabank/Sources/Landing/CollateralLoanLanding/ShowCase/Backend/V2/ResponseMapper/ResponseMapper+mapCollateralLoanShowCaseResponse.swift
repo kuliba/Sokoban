@@ -8,7 +8,7 @@
 import Foundation
 import RemoteServices
 
-public extension ResponseMapper {    
+public extension ResponseMapper {
     static func mapCollateralLoanShowCaseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
@@ -20,7 +20,7 @@ public extension ResponseMapper {
     }
     
     private static func map(
-        _ data: DTO
+        _ data: _Data
     ) throws -> CollateralLoanLandingShowCaseModel {
         try data.getCollateralLoanLandingShowCaseModel()
     }
@@ -28,17 +28,10 @@ public extension ResponseMapper {
     private struct InvalidResponse: Error {}
 }
 
-private extension ResponseMapper.DTO {
+private extension ResponseMapper._Data {
     func getCollateralLoanLandingShowCaseModel() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel {
-        guard
-            let id = self.data?.id
-        else {
-            throw ResponseMapper.InvalidResponse()
-        }
-        
-        return .init(
+        .init(
             serial: self.data?.serial,
-            id: id,
             products: self.data?.products?.map(\.self.map) ?? []
         )
     }
@@ -97,7 +90,7 @@ private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Ke
 }
 
 private extension ResponseMapper {
-    struct DTO: Codable {
+    struct _Data: Codable {
         let statusCode: Int?
         let errorMessage: String?
         let data: CollateralLoanLandingShowCaseCodable?
@@ -105,7 +98,6 @@ private extension ResponseMapper {
     
     struct CollateralLoanLandingShowCaseCodable: Codable {
         let serial: String?
-        let id: String?
         let products: [Product]?
         
         struct Product: Codable {
