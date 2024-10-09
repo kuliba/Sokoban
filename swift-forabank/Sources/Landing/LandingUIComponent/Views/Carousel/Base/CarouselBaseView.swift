@@ -11,18 +11,18 @@ import UIPrimitives
 
 public struct CarouselBaseView: View {
     
-    let model: CarouselBase
+    let carousel: CarouselBase
     let actions: CarouselActions
     let factory: Factory
     let config: Config
     
     public init(
-        model: CarouselBase,
+        carousel: CarouselBase,
         actions: CarouselActions,
         factory: Factory,
         config: Config
     ) {
-        self.model = model
+        self.carousel = carousel
         self.actions = actions
         self.factory = factory
         self.config = config
@@ -32,7 +32,7 @@ public struct CarouselBaseView: View {
             
         VStack(alignment: .leading) {
             
-            model.title.map {
+            carousel.title.map {
                 
                 $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -42,7 +42,7 @@ public struct CarouselBaseView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: config.spacing) {
-                    ForEach(model.list, id: \.imageLink, content: itemView)
+                    ForEach(carousel.list, id: \.id, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
@@ -56,8 +56,8 @@ public struct CarouselBaseView: View {
             item: item,
             config: config,
             factory: factory,
-            action: model.action(item: item, actions: actions),
-            size: model.size
+            action: carousel.action(item: item, actions: actions),
+            size: carousel.size
         )
     }
 }
@@ -102,7 +102,7 @@ struct CarouselBaseView_Previews: PreviewProvider {
     static var previews: some View {
         
         CarouselBaseView(
-            model: .default,
+            carousel: .default,
             actions: .default,
             factory: .default,
             config: .default

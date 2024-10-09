@@ -45,11 +45,18 @@ public extension UILanding.Carousel {
 
         public struct ListItem: Equatable {
             
+            public let id: UUID
             let imageLink: String
             let link: String?
             let action: Action?
             
-            public init(imageLink: String, link: String?, action: Action?) {
+            public init(
+                id: UUID = UUID(),
+                imageLink: String,
+                link: String?,
+                action: Action?
+            ) {
+                self.id = id
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action

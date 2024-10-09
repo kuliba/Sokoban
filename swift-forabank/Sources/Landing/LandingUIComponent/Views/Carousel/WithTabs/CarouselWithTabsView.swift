@@ -1,25 +1,25 @@
 //
-//  CarouselWithDotsView.swift
-//  
+//  CarouselWithTabsView.swift
 //
-//  Created by Andryusina Nataly on 08.10.2024.
+//
+//  Created by Andryusina Nataly on 09.10.2024.
 //
 
 import SwiftUI
 import Combine
 import UIPrimitives
 
-public struct CarouselWithDotsView: View {
+public struct CarouselWithTabsView: View {
     
-    let carousel: CarouselWithDots
+    let carousel: CarouselWithTabs
     let actions: CarouselActions
     let factory: Factory
     let config: Config
     
-    @State private var selection: Int = 0
+    @State private var selection: String = "0:0"
     
     public init(
-        carousel: CarouselWithDots,
+        carousel: CarouselWithTabs,
         actions: CarouselActions,
         factory: Factory,
         config: Config
@@ -33,23 +33,24 @@ public struct CarouselWithDotsView: View {
     public var body: some View {
             
         VStack(alignment: .leading) {
-            
             carousel.title.map {
                 $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
             
+            categories()
+            
             TabView(selection: $selection){
-                ForEach(0..<carousel.list.count, id: \.self) {
-                    itemView(item: carousel.list[$0])
+                ForEach(0..<carousel.tabs.count, id: \.self) { tabIndex in
+                    ForEach(0..<carousel.tabs[tabIndex].list.count, id: \.self) { itemIndex in
+                        itemView(item: carousel.tabs[tabIndex].list[itemIndex])
+                            .tag("\(tabIndex):\(itemIndex)")
+                    }
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .frame(height: CGFloat(carousel.size.height))
-            
-            pageControl()
-                .frame(maxWidth: .infinity)
         }
     }
     
@@ -64,20 +65,23 @@ public struct CarouselWithDotsView: View {
         )
     }
     
-    private func pageControl() -> some View {
+    private func categories() -> some View {
         
         HStack {
-            ForEach(0..<carousel.list.count, id: \.self) { index in
-                Circle()
-                    .frame(widthAndHeight: config.pageControls.widthAndHeight)
-                    .foregroundColor(index == selection ? config.pageControls.active : config.pageControls.inactive )
-                    .onTapGesture(perform: { selection = index })
+            ForEach(0..<carousel.tabs.count, id: \.self) { index in
+                Capsule()
+                    .fill(index == selection.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
+                    .overlay(
+                        carousel.tabs[index].name.text(withConfig: config.category)
+                    )
+                    .frame(height: 24)
+                    .onTapGesture(perform: { selection = "\(index):0" })
             }
         }
     }
 }
 
-extension CarouselWithDotsView {
+extension CarouselWithTabsView {
     
     struct ItemView: View {
         
@@ -94,32 +98,42 @@ extension CarouselWithDotsView {
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
                     .frame(width: CGFloat(size.width), height: CGFloat(size.height))
-                    .accessibilityIdentifier("CarouselWithDotsImage")
+                    .accessibilityIdentifier("CarouselWithTabsImage")
             }
         }
     }
 }
 
-public extension CarouselWithDotsView {
+public extension CarouselWithTabsView {
     
-    typealias CarouselWithDots = UILanding.Carousel.CarouselWithDots
+    typealias CarouselWithTabs = UILanding.Carousel.CarouselWithTabs
     typealias Event = LandingEvent
     
-    typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
-    typealias Config = UILanding.Carousel.CarouselWithDots.Config
+    typealias Item = UILanding.Carousel.CarouselWithTabs.ListItem
+    typealias Config = UILanding.Carousel.CarouselWithTabs.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselWithDots.Size
+    typealias ItemSize = UILanding.Carousel.CarouselWithTabs.Size
 }
 
-struct CarouselWithDotsView_Previews: PreviewProvider {
+struct CarouselWithTabsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CarouselWithDotsView(
+        CarouselWithTabsView(
             carousel: .default,
             actions: .default,
             factory: .default,
             config: .default
         )
+    }
+}
+
+private extension String {
+    
+    func sectionIndex() -> Int {
+        
+        let info = components(separatedBy: ":")
+        
+        return Int(info.first ?? "0") ?? 0
     }
 }
