@@ -30,7 +30,7 @@ extension SelectedCategoryNavigationMicroServicesComposer {
         return .init(getNavigation: getNavigation)
     }
     
-    typealias Select = CategoryPickerItem<ServiceCategory, List>
+    typealias Select = CategoryPickerSection.Select
     typealias Navigation = SelectedCategoryNavigation<ListModel>
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias MicroServices = FlowDomain.MicroServices
@@ -38,10 +38,28 @@ extension SelectedCategoryNavigationMicroServicesComposer {
 
 private extension SelectedCategoryNavigationMicroServicesComposer {
     
+    typealias Notify = (FlowDomain.Event) -> Void
+    
     func getNavigation(
         payload: Select,
-        notify: @escaping (FlowDomain.Event) -> Void,
+        notify: @escaping Notify,
         completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
+    ) {
+        switch payload {
+        case let .pickerSelect(pickerSelect):
+            getNavigation(pickerSelect: pickerSelect, notify, completion)
+            
+        case let .qrSelect(qrSelect):
+            getNavigation(qrSelect: qrSelect, notify, completion)
+        }
+    }
+    
+    // MARK: - PickerSelect
+    
+    func getNavigation(
+        pickerSelect payload: CategoryPickerSection.Select.PickerSelect,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
     ) {
         switch payload {
         case let .category(category):
@@ -52,7 +70,13 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             case .qr:
                 let qr = nanoServices.makeQR()
                 let cancellable = qr.$state
-                    .flatMap(notifyPublisher)
+                    .flatMap {
+                        
+                        self.notifyPublisher(
+                            result: $0,
+                            notify: { notify(.select(.qrSelect($0))) }
+                        )
+                    }
                     .sink(receiveValue: notify)
                 
                 completion(.paymentFlow(.qr(.init(
@@ -82,7 +106,8 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     }
     
     private func notifyPublisher(
-        result: QRModelWrapperState<QRModelResult>?
+        result: QRModelWrapperState<QRModelResult>?,
+        notify: @escaping (QRNavigationComposer.NotifyEvent) -> Void
     ) -> AnyPublisher<FlowDomain.Event, Never> {
         
         switch result {
@@ -98,12 +123,21 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
         case let .qrResult(qrResult):
             return AnyPublisher { completion in
                 
-                self.nanoServices.makeQRNavigation(qrResult) {
+                self.nanoServices.makeQRNavigation(qrResult, notify) {
                     
                     completion(.receive(.qrNavigation($0)))
                 }
             }.eraseToAnyPublisher()
         }
+    }
+    
+    // MARK: - QRSelect
+    
+    func getNavigation(
+        qrSelect payload: QRNavigationComposer.NotifyEvent,
+        _ notify: @escaping (FlowDomain.Event) -> Void,
+        _ completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
+    ) {
     }
 }
 

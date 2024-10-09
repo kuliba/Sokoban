@@ -87,7 +87,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
             switch $0 {
             case let .paymentFlow(.qr(qr)):
                 qr.model.event(.qrResult(qrResult))
-                XCTAssertNoDiff(makeQRNavigation.payloads, [qrResult])
+                XCTAssertNoDiff(makeQRNavigation.payloads.map(\.0), [qrResult])
                 
             default:
                 XCTFail("Expected QR, got \($0) instead.")
@@ -212,14 +212,14 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldCallMakeListWithPayloadOnList() {
         
-        let payload = makeList()
+        let list = [makeServiceCategory(), makeServiceCategory()]
         let (sut, _, makeList) = makeSUT()
         
-        getNavigation(sut, with: .list(payload)) {
+        getNavigation(sut, with: .pickerSelect(.list(list))) {
             
             switch $0 {
             case .list:
-                XCTAssertNoDiff(makeList.payloads, [payload])
+                XCTAssertNoDiff(makeList.payloads, [list])
                 
             default:
                 XCTFail("Expected list, got \($0) instead.")
@@ -229,10 +229,11 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverListOnList() {
         
+        let list = [makeServiceCategory(), makeServiceCategory()]
         let listModel = makeListModel()
         let (sut, _,_) = makeSUT(listModel: listModel)
         
-        getNavigation(sut, with: .list(self.makeList())) {
+        getNavigation(sut, with: .pickerSelect(.list(list))) {
             
             switch $0 {
             case let .list(list):
@@ -247,8 +248,8 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SelectedCategoryNavigationMicroServicesComposer<List, ListModel>
-    private typealias MakeQRNavigationSpy = Spy<QRModelResult, QRNavigation, Never>
-    private typealias MakeListSpy = CallSpy<List, ListModel>
+    private typealias MakeQRNavigationSpy = Spy<(QRModelResult, SUT.NanoServices.Notify), QRNavigation, Never>
+    private typealias MakeListSpy = CallSpy<[ServiceCategory], ListModel>
     
     private func makeSUT(
         listModel: ListModel? = nil,
@@ -276,7 +277,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
                         scheduler: .immediate
                     )
                 },
-                makeQRNavigation: makeQRNavigation.process(_:completion:),
+                makeQRNavigation: makeQRNavigation.process(_:_:completion:),
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
@@ -298,7 +299,13 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        getNavigation(sut, with: makeCategorySelect(flow: flow), notify: notify, completion: completion, file: file, line: line)
+        getNavigation(
+            sut,
+            with: .pickerSelect(makeCategorySelect(flow: flow)),
+            notify: notify,
+            completion: completion,
+            file: file, line: line
+        )
     }
     
     private func getNavigation(
@@ -380,14 +387,14 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     private func makeCategorySelect(
         flow: ServiceCategory.PaymentFlow
-    ) -> SUT.Select {
+    ) -> SUT.Select.PickerSelect {
         
         return .category(makeServiceCategory(flow: flow))
     }
     
     private func makeCategorySelect(
         _ serviceCategory: ServiceCategory? = nil
-    ) -> SUT.Select {
+    ) -> SUT.Select.PickerSelect {
         
         return .category(serviceCategory ?? makeServiceCategory())
     }
