@@ -1,15 +1,15 @@
 //
-//  CarouselBase.swift
-//  
+//  CarouselWithDots.swift
 //
-//  Created by Andryusina Nataly on 26.09.2024.
+//
+//  Created by Andryusina Nataly on 30.09.2024.
 //
 
 import Foundation
 
 public extension UILanding.Carousel {
     
-    struct CarouselBase: Identifiable, Equatable {
+    struct CarouselWithDots: Identifiable, Equatable {
         
         public let id: UUID
         let title: String?
@@ -72,10 +72,45 @@ public extension UILanding.Carousel {
     }
 }
 
-extension UILanding.Carousel.CarouselBase {
+extension UILanding.Carousel.CarouselWithDots {
     
     func imageRequests() -> [ImageRequest] {
         
         return []
     }
+}
+
+extension UILanding.Carousel.CarouselWithDots {
+    
+    func action(
+        item: Item,
+        actions: CarouselActions
+    ) -> Action {
+        
+        switch item.action {
+        case .none:
+            
+            guard let link = item.link else { return {} }
+            return { actions.openUrl(link) }
+            
+        case let .some(action):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return actions.goToMain
+                case .orderCard: return {}
+                case .goToOrderSticker: return {}
+                }
+            }
+            
+            return {}
+        }
+    }
+}
+
+extension UILanding.Carousel.CarouselWithDots {
+    
+    typealias Action = () -> Void
+    typealias Event = LandingEvent
+    typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
 }

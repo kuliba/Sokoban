@@ -511,7 +511,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 240),
-                scale: "medium",
                 loopedScrolling: true,
                 list: [
                     .init(imageLink: "imageLink1", link: "link1", action: nil),

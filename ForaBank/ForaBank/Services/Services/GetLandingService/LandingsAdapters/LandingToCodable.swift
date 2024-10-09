@@ -587,7 +587,6 @@ private extension CodableLanding.CodableCarouselBase {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
