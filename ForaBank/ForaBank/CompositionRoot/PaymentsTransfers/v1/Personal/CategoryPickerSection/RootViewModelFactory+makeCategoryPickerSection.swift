@@ -188,6 +188,21 @@ extension RootViewModelFactory {
             return make(multi, qrCode, qrMapping)
         }
         
+        func makeServicePicker(
+            payload: PaymentProviderServicePickerPayload,
+            completion: @escaping (AnywayServicePickerFlowModel) -> Void
+        ) {
+            let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
+                httpClient: httpClient,
+                log: logger.log,
+                model: model,
+                flag: .live,
+                scheduler: mainScheduler
+            )
+            
+            completion(servicePickerComposer.compose(payload: payload))
+        }
+        
         func makeQRNavigation(
             qrResult: QRModelResult,
             notify: @escaping QRNavigationComposer.Notify,
@@ -199,7 +214,7 @@ extension RootViewModelFactory {
                 createSberQRPayment: createSberQRPayment,
                 getSberQRData: getSberQRData,
                 makeSegmented: makeSegmented,
-                makeServicePicker: { _,_ in fatalError() },
+                makeServicePicker: makeServicePicker,
                 scheduler: mainScheduler
             )
             let microServices = microServicesComposer.compose()
