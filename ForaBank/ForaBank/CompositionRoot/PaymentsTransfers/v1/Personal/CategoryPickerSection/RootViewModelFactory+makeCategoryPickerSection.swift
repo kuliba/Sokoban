@@ -102,6 +102,7 @@ extension RootViewModelFactory {
         }
         
         let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer<[ServiceCategory], CategoryListModelStub>(
+            model: model,
             nanoServices: .init(
                 makeList: makeList,
                 makeMobile: makeMobile,
@@ -110,7 +111,8 @@ extension RootViewModelFactory {
                 makeStandard: makeStandard,
                 makeTax: makeTax,
                 makeTransport: makeTransport
-            )
+            ),
+            scheduler: mainScheduler
         )
         let microServices = selectedCategoryComposer.compose()
         

@@ -12,12 +12,18 @@ import PayHubUI
 
 final class SelectedCategoryNavigationMicroServicesComposer<List, ListModel> {
     
-#warning("see PaymentFlowMicroServiceComposerNanoServicesComposer")
+    private let model: Model
     private let nanoServices: NanoServices
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    init(nanoServices: NanoServices) {
-        
+    init(
+        model: Model,
+        nanoServices: NanoServices,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.model = model
         self.nanoServices = nanoServices
+        self.scheduler = scheduler
     }
     
     typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel>
@@ -138,6 +144,70 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
         _ notify: @escaping (FlowDomain.Event) -> Void,
         _ completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
     ) {
+        switch payload {
+        case let .contactAbroad(source):
+            completion(.qrNavigation(.payments(.init(
+                model: .init(
+                    model: model,
+                    source: source,
+                    scheduler: scheduler
+                ),
+                cancellables: []
+            ))))
+            
+        case let .detailPayment(qrCode):
+            switch qrCode {
+            case .none:
+                let wrapper = ClosePaymentsViewModelWrapper(
+                    model: model,
+                    service: .requisites,
+                    scheduler: scheduler
+                )
+                completion(.qrNavigation(.payments(.init(
+                    model: wrapper,
+                    cancellable: bind(wrapper, notify: notify)
+                ))))
+                
+            case let .some(qrCode):
+                let wrapper = ClosePaymentsViewModelWrapper(
+                    model: model,
+                    source: .requisites(qrCode: qrCode),
+                    scheduler: scheduler
+                )
+                completion(.qrNavigation(.payments(.init(
+                    model: wrapper,
+                    cancellable: bind(wrapper, notify: notify)
+                ))))
+            }
+            
+        case .dismiss:
+            #warning("completion is not called")
+            notify(.dismiss)
+            
+        case let .isLoading(isLoading):
+            #warning("completion is not called")
+            
+        case let .outside(outside):
+            #warning("completion is not called")
+            
+        case let .sberPay(state):
+            #warning("completion is not called")
+            
+        case .scanQR:
+            #warning("completion is not called")
+            notify(.select(.qrSelect(.scanQR)))
+        }
+    }
+    
+    private func bind(
+        _ wrapper: ClosePaymentsViewModelWrapper,
+        notify: @escaping (FlowDomain.Event) -> Void
+    ) -> AnyCancellable {
+        
+        wrapper.$isClosed
+            .combineLatest(wrapper.$isClosed.dropFirst())
+            .filter { $0.0 == false && $0.1 == true }
+            .sink { _ in notify(.dismiss) }
     }
 }
 

@@ -266,6 +266,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         let makeQRNavigation = MakeQRNavigationSpy()
         let makeList = MakeListSpy(stubs: [listModel ?? makeListModel()])
         let sut = SUT(
+            model: .mockWithEmptyExcept(),
             nanoServices: .init(
                 makeList: makeList.call(payload:),
                 makeMobile: makeMobile,
@@ -281,7 +282,8 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
                 makeStandard: { $1(standard) },
                 makeTax: makeTax,
                 makeTransport: { transport }
-            )
+            ),
+            scheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
