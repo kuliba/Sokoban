@@ -384,6 +384,7 @@ extension RootViewModelFactory {
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
+            httpClient: httpClient,
             logger: logger,
             model: model,
             categoryPickerPlaceholderCount: 6,

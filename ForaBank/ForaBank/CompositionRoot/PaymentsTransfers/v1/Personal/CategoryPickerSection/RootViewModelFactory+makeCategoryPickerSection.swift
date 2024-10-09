@@ -7,11 +7,14 @@
 
 import CombineSchedulers
 import Foundation
+import GenericRemoteService
 import PayHub
+import SberQR
 
 extension RootViewModelFactory {
     
     static func makeCategoryPickerSection(
+        httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model,
         nanoServices: PaymentsTransfersPersonalNanoServices,
@@ -122,6 +125,29 @@ extension RootViewModelFactory {
             suffix: (0..<placeholderCount).map { _ in .placeholder(.init()) }
         )
         
+        func createSberQRPayment(
+            payload: (URL, SberQRConfirmPaymentState),
+            completion: @escaping (Result<CreateSberQRPaymentResponse, QRNavigation.ErrorMessage>) -> Void
+        ){
+            let composer = LoggingRemoteNanoServiceComposer(
+                httpClient: httpClient,
+                logger: logger
+            )
+            let createSberQRPaymentService = composer.compose(
+                createRequest: RequestFactory.createCreateSberQRPaymentRequest,
+                mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
+            )
+            
+            guard let payload = payload.1.makePayload(with: payload.0)
+            else { return completion(.failure(.techError)) }
+            
+            createSberQRPaymentService(payload) {
+                
+                completion($0.mapError { _ in .techError })
+                _ = createSberQRPaymentService
+            }
+        }
+        
         func makeQRNavigation(
             qrResult: QRModelResult,
             notify: @escaping QRNavigationComposer.Notify,
@@ -130,7 +156,7 @@ extension RootViewModelFactory {
             let microServicesComposer = QRNavigationComposerMicroServicesComposer(
                 logger: logger,
                 model: model,
-                createSberQRPayment: { _,_ in fatalError() },
+                createSberQRPayment: createSberQRPayment,
                 getSberQRData: { _,_ in fatalError() },
                 makeSegmented: { _,_,_ in fatalError() },
                 makeServicePicker: { _,_ in fatalError() },
