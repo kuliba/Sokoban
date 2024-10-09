@@ -384,6 +384,8 @@ extension RootViewModelFactory {
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
+            httpClient: httpClient,
+            logger: logger,
             model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
@@ -392,6 +394,7 @@ extension RootViewModelFactory {
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ), 
+            pageSize: 50,
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )

@@ -1,5 +1,5 @@
 //
-//  CategoryPickerSectionBinderComposer.swift
+//  CategoryPickerBinderComposer.swift
 //
 //
 //  Created by Igor Malyarov on 23.08.2024.
@@ -11,7 +11,7 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public final class CategoryPickerSectionBinderComposer<Category, Navigation> {
+public final class CategoryPickerBinderComposer<Category, List, QRSelect, Navigation> {
     
     private let load: Load
     private let microServices: MicroServices
@@ -30,9 +30,9 @@ public final class CategoryPickerSectionBinderComposer<Category, Navigation> {
         self.scheduler = scheduler
     }
     
-    public typealias Domain = CategoryPickerSection<Category, Navigation>
-    public typealias FlowDomain = Domain.FlowDomain
+    public typealias Domain = CategoryPicker<Category, List, QRSelect, Navigation>
     public typealias ContentDomain = Domain.ContentDomain
+    public typealias FlowDomain = Domain.FlowDomain
     
     public typealias Item = ContentDomain.Item
     public typealias Load = (@escaping ([Item]) -> Void) -> Void
@@ -40,7 +40,7 @@ public final class CategoryPickerSectionBinderComposer<Category, Navigation> {
     public typealias MicroServices = FlowDomain.MicroServices
 }
 
-public extension CategoryPickerSectionBinderComposer {
+public extension CategoryPickerBinderComposer {
     
     func compose(
         prefix: [CategoryPickerItem],
@@ -59,7 +59,7 @@ public extension CategoryPickerSectionBinderComposer {
 
 // MARK: - Content
 
-private extension CategoryPickerSectionBinderComposer {
+private extension CategoryPickerBinderComposer {
     
     func makeContent(
         prefix: [CategoryPickerItem],
@@ -81,7 +81,7 @@ private extension CategoryPickerSectionBinderComposer {
 
 // MARK: - Flow
 
-private extension CategoryPickerSectionBinderComposer {
+private extension CategoryPickerBinderComposer {
     
     func makeFlow() -> FlowDomain.Flow {
         
@@ -96,7 +96,7 @@ private extension CategoryPickerSectionBinderComposer {
 
 // MARK: - bind
 
-private extension CategoryPickerSectionBinderComposer {
+private extension CategoryPickerBinderComposer {
     
     func bind(
         _ content: ContentDomain.Content,
@@ -118,7 +118,7 @@ private extension CategoryPickerSectionBinderComposer {
                     break
                     
                 case let .category(category):
-                    flow.event(.select(.category(category)))
+                    flow.event(.select(.pickerSelect(.category(category))))
                     
                 case .list:
                     let categories: [Category] = $0.items.compactMap {
@@ -129,7 +129,7 @@ private extension CategoryPickerSectionBinderComposer {
                         
                         return category
                     }
-                    flow.event(.select(.list(categories)))
+                    flow.event(.select(.pickerSelect(.list(categories))))
                 }
             }
         

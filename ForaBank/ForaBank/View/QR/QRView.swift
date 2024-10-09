@@ -12,6 +12,16 @@ struct QRView: View {
     
     var body: some View {
         
+        NavigationView {
+            
+            zStack
+                .navigationBarHidden(true)
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    var zStack: some View {
+        
         ZStack {
             
             QRScannerView(viewModel: viewModel.scanner)
@@ -79,45 +89,48 @@ struct QRView: View {
                     }
                 }
             }
+            
             Color.clear
-                .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
-                    switch sheet.sheetType {
-                        
-                    case let .imageCapture(imageCapture):
-                        QRImagePickerController(viewModel: imageCapture)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(false)
-                        
-                    case let .choiseDocument(choiseDocument):
-                        QRButtonsView(viewModel: choiseDocument)
-                        
-                    case let .info(infoViewModel) :
-                        QRInfoViewComponent(viewModel: infoViewModel)
-                            .frame(height: 450, alignment: .top)
+                .bottomSheet(
+                    item: $viewModel.bottomSheet,
+                    content: { sheet in
+                        switch sheet.sheetType {
+                            
+                        case let .imageCapture(imageCapture):
+                            QRImagePickerController(viewModel: imageCapture)
+                                .edgesIgnoringSafeArea(.all)
+                                .navigationBarBackButtonHidden(false)
+                            
+                        case let .choiseDocument(choiseDocument):
+                            QRButtonsView(viewModel: choiseDocument)
+                            
+                        case let .info(infoViewModel) :
+                            QRInfoViewComponent(viewModel: infoViewModel)
+                                .frame(height: 450, alignment: .top)
+                                .padding(.horizontal, 30)
+                                .padding(.top, 20)
+                            
+                        case .qRAccessViewComponent(_):
+                            
+                            QRAccessView(viewModel: .init(input: .camera,  closeAction: {
+                                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                            }))
+                            .frame(height: 330)
                             .padding(.horizontal, 30)
-                            .padding(.top, 20)
-                        
-                    case .qRAccessViewComponent(_):
-                        
-                        QRAccessView(viewModel: .init(input: .camera,  closeAction: {
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                        }))
-                        .frame(height: 330)
-                        .padding(.horizontal, 30)
-                        
-                    case .photoAccessViewComponent(_):
-                        QRAccessView(viewModel: .init(input: .photo,  closeAction: {
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-                        }))
-                        .frame(height: 330)
-                        .padding(.horizontal, 30)
-                    }
-                })
+                            
+                        case .photoAccessViewComponent(_):
+                            QRAccessView(viewModel: .init(input: .photo,  closeAction: {
+                                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                            }))
+                            .frame(height: 330)
+                            .padding(.horizontal, 30)
+                        }
+                    })
         }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
-        
+        .alert(
+            item: $viewModel.alert,
+            content: { alertViewModel in Alert(with: alertViewModel) }
+        )
         .sheet(item: $viewModel.sheet) { item in
             
             switch item.sheetType {

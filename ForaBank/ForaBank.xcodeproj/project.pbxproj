@@ -1010,7 +1010,6 @@
 		2A6826C62C9D329500B8057F /* PaymentsTransfersPersonalNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826C52C9D329500B8057F /* PaymentsTransfersPersonalNanoServices.swift */; };
 		2A6826CB2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */; };
 		2A6826CD2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CC2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift */; };
-		2A6826CF2C9D33B700B8057F /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826CE2C9D33B700B8057F /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */; };
 		2A6826D12C9D340600B8057F /* StandardSelectedCategoryDestinationNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6826D02C9D340600B8057F /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */; };
 		2A6889BD2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */; };
 		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
@@ -4511,7 +4510,6 @@
 		2A6826C52C9D329500B8057F /* PaymentsTransfersPersonalNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalNanoServices.swift; sourceTree = "<group>"; };
 		2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersPersonal.swift"; sourceTree = "<group>"; };
 		2A6826CC2C9D338200B8057F /* PaymentsTransfersCorporateNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateNanoServices.swift; sourceTree = "<group>"; };
-		2A6826CE2C9D33B700B8057F /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMicroServiceComposerNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A6826D02C9D340600B8057F /* StandardSelectedCategoryDestinationNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardSelectedCategoryDestinationNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A6889B82C2F481B001FF1F2 /* LatestPayments.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LatestPayments.xctestplan; sourceTree = "<group>"; };
 		2A6889BC2C3030C4001FF1F2 /* AnywayPaymentOutline+LatestServicePaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentOutline+LatestServicePaymentsTests.swift"; sourceTree = "<group>"; };
@@ -10448,7 +10446,6 @@
 			isa = PBXGroup;
 			children = (
 				2A6826CA2C9D331C00B8057F /* RootViewModelFactory+makePaymentsTransfersPersonal.swift */,
-				2A6826CE2C9D33B700B8057F /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift */,
 				2A6A6A322CAADE7E006D6044 /* CategoryPickerSection */,
 				2A6826C52C9D329500B8057F /* PaymentsTransfersPersonalNanoServices.swift */,
 				2ADF317E2CA3536600F1668B /* PaymentServiceOperator.swift */,
@@ -21958,7 +21955,6 @@
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
-				2A6826CF2C9D33B700B8057F /* PaymentFlowMicroServiceComposerNanoServicesComposer.swift in Sources */,
 				2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
