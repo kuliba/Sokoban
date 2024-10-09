@@ -2955,6 +2955,8 @@
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
+		A79AAED92CB670BA00B5ABE0 /* CollateralLoanLanding in Frameworks */ = {isa = PBXBuildFile; productRef = A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */; };
+		A7C41FCA2CB5990600EFE68D /* RequestFactory+CollateralLoanShowCaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanShowCaseRequest.swift */; };
 		C1002AC32A2E1E3300BDA817 /* ThreeBounceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */; };
 		C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */; };
 		C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */ = {isa = PBXBuildFile; productRef = C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */; };
@@ -6403,6 +6405,8 @@
 		A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsView.swift; sourceTree = "<group>"; };
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
+		A79AAED72CB64D3200B5ABE0 /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
+		A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanShowCaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+CollateralLoanShowCaseRequest.swift"; sourceTree = "<group>"; };
 		C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeBounceView.swift; sourceTree = "<group>"; };
 		C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagingSubscriptionViewComponent.swift; sourceTree = "<group>"; };
 		C10423982A735A3700D0AC63 /* Model+C2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+C2B.swift"; sourceTree = "<group>"; };
@@ -7130,6 +7134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */,
+				A79AAED92CB670BA00B5ABE0 /* CollateralLoanLanding in Frameworks */,
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
 				8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */,
 				EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */,
@@ -9903,6 +9908,7 @@
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				A7C41FC82CB598CE00EFE68D /* CollateralLoanLanding */,
 				2A2E3FC22BB2CB4D00730D37 /* AnywayPayment */,
 				C15CB8E52B7EF2BF00718B49 /* OperatorsList */,
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
@@ -10038,6 +10044,7 @@
 				2A566EB92B6816BC00359E05 /* Fetcher.xctestplan */,
 				2A566EB62B6816BC00359E05 /* KeyChainStore.xctestplan */,
 				2A566EA82B6816BB00359E05 /* LandingMapping.xctestplan */,
+				A79AAED72CB64D3200B5ABE0 /* CollateralLoanLanding.xctestplan */,
 				2A566EA92B6816BB00359E05 /* LandingUIComponent.xctestplan */,
 				2A566EC02B6816BD00359E05 /* LinkableText.xctestplan */,
 				2A566EAD2B6816BB00359E05 /* LoadableResourceComponent.xctestplan */,
@@ -16169,6 +16176,14 @@
 			path = detailsForm;
 			sourceTree = "<group>";
 		};
+		A7C41FC82CB598CE00EFE68D /* CollateralLoanLanding */ = {
+			isa = PBXGroup;
+			children = (
+				A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanShowCaseRequest.swift */,
+			);
+			path = CollateralLoanLanding;
+			sourceTree = "<group>";
+		};
 		C10423932A72786C00D0AC63 /* ManagingSubscription */ = {
 			isa = PBXGroup;
 			children = (
@@ -18791,6 +18806,7 @@
 				83F775CA2CA2CE0700A05F69 /* MarketShowcase */,
 				EC5994402CA5B0820050CA05 /* GetClientInformDataServices */,
 				EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */,
+				A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -20538,6 +20554,7 @@
 				2AEF68582AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,
 				2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */,
+				A7C41FCA2CB5990600EFE68D /* RequestFactory+CollateralLoanShowCaseRequest.swift in Sources */,
 				774CA5E1287C7C6000544C17 /* ProductStatementView+Legacy.swift in Sources */,
 				77DD55CE29F157D100756451 /* Decimal+Extensions.swift in Sources */,
 				77D930B62A6AAE4300C47C23 /* KeychainSymmetricKeyProviderAdapter.swift in Sources */,
@@ -27851,6 +27868,10 @@
 		83F775CA2CA2CE0700A05F69 /* MarketShowcase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MarketShowcase;
+		};
+		A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CollateralLoanLanding;
 		};
 		C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */ = {
 			isa = XCSwiftPackageProductDependency;

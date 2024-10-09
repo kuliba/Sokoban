@@ -534,6 +534,13 @@
         "identifier" : "PlainClientInformBottomSheetTests",
         "name" : "PlainClientInformBottomSheetTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingTests",
+        "name" : "CollateralLoanLandingTests"
+      }
     }
   ],
   "version" : 1

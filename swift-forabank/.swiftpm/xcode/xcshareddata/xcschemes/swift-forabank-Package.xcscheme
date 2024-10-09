@@ -966,9 +966,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "GetClientInformDataServices"
-               BuildableName = "GetClientInformDataServices"
-               BlueprintName = "GetClientInformDataServices"
+               BlueprintIdentifier = "PlainClientInformBottomSheet"
+               BuildableName = "PlainClientInformBottomSheet"
+               BlueprintName = "PlainClientInformBottomSheet"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -980,9 +980,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PlainClientInformBottomSheet"
-               BuildableName = "PlainClientInformBottomSheet"
-               BlueprintName = "PlainClientInformBottomSheet"
+               BlueprintIdentifier = "CollateralLoanLanding"
+               BuildableName = "CollateralLoanLanding"
+               BlueprintName = "CollateralLoanLanding"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetClientInformDataServices"
+               BuildableName = "GetClientInformDataServices"
+               BlueprintName = "GetClientInformDataServices"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -1067,6 +1081,16 @@
                BlueprintIdentifier = "MarketShowcaseTests"
                BuildableName = "MarketShowcaseTests"
                BlueprintName = "MarketShowcaseTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CollateralLoanLandingTests"
+               BuildableName = "CollateralLoanLandingTests"
+               BlueprintName = "CollateralLoanLandingTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
