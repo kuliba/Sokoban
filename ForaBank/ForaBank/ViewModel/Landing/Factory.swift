@@ -172,7 +172,7 @@ extension Model {
     func makeImageViewFactory() -> ImageViewFactory {
         .init(
             makeIconView: imageCache().makeIconView(for:),
-            makeBannerImageView: generalImageCache().makeIconView(for:)
+            makeBannerImageView: generalImageCache(.defaultLanding).makeIconView(for:)
         )
     }
 }
@@ -356,4 +356,9 @@ private extension Model {
             httpClient: httpClient,
             withCache: cache)
     }
+}
+
+private extension Image {
+    
+    static let defaultLanding: Image = .init("defaultLanding")
 }
