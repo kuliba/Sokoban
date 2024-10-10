@@ -7,6 +7,7 @@
 
 import PayHub
 import SwiftUI
+import UIPrimitives
 
 struct CategoryPickerSectionFlowView<ContentView, DestinationView, FullScreenCoverView>: View
 where ContentView: View,
@@ -26,13 +27,10 @@ where ContentView: View,
             )
             .fullScreenCover(
                 cover: state.fullScreenCover,
-                // full screen cover should not be dismissed by SwiftUI, only programmatically
-                dismissFullScreenCover: {},
                 content: factory.makeFullScreenCoverView
             )
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.dismiss) },
                 content: factory.makeDestinationView
             )
     }
