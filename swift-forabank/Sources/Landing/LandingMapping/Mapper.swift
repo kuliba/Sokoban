@@ -23,10 +23,12 @@ public struct LandingMapper {
         return dataToLanding(data)
     }
     
-    public enum MapperError: Error {
+    public enum MapperError: Error, Equatable {
         
         case notOkStatus
         case mapError
+        case serverError(String)
+        case connectivityError
     }
     
     private static func dataToLanding(_ data: Data) -> Result {
@@ -98,61 +100,67 @@ private extension Landing.DataView {
         case .noValid:
             return nil
             
-        case let .blockHorizontalRectangular(x):
-            self = .blockHorizontalRectangular(.init(data: x))
+        case let .blockHorizontalRectangular(data):
+            self = .blockHorizontalRectangular(.init(data: data))
             
-        case let .iconWithTwoTextLines(x):
-            self = .iconWithTwoTextLines(.init(data: x))
+        case let .iconWithTwoTextLines(data):
+            self = .iconWithTwoTextLines(.init(data: data))
             
-        case let .list(.horizontalRectangleImage(x)):
-            self = .list(.horizontalRectangleImage(.init(data: x)))
+        case let .list(.horizontalRectangleImage(data)):
+            self = .list(.horizontalRectangleImage(.init(data: data)))
             
-        case let .list(.horizontalRoundImage(x)):
-            self = .list(.horizontalRoundImage(.init(data: x)))
+        case let .list(.horizontalRoundImage(data)):
+            self = .list(.horizontalRoundImage(.init(data: data)))
             
-        case let .list(.verticalRoundImage(x)):
-            self = .list(.verticalRoundImage(.init(data: x)))
+        case let .list(.verticalRoundImage(data)):
+            self = .list(.verticalRoundImage(.init(data: data)))
             
-        case let .multi(.lineHeader(x)):
-            self = .multi(.lineHeader(.init(data: x)))
+        case let .multi(.lineHeader(data)):
+            self = .multi(.lineHeader(.init(data: data)))
             
-        case let .multi(.markersText(x)):
-            self = .multi(.markersText(.init(data: x)))
+        case let .multi(.markersText(data)):
+            self = .multi(.markersText(.init(data: data)))
             
-        case let .multi(.text(x)):
-            self = .multi(.text(.init(data: x)))
+        case let .multi(.text(data)):
+            self = .multi(.text(.init(data: data)))
             
-        case let .multi(.textsWithIconsHorizontalArray(x)):
-            self = .multi(.textsWithIconsHorizontalArray(.init(data: x)))
+        case let .multi(.textsWithIconsHorizontalArray(data)):
+            self = .multi(.textsWithIconsHorizontalArray(.init(data: data)))
             
-        case let .pageTitle(x):
-            self = .pageTitle(.init(data: x))
+        case let .pageTitle(data):
+            self = .pageTitle(.init(data: data))
             
-        case let .textsWithIconHorizontal(x):
-            self = .textsWithIconHorizontal(.init(data: x))
+        case let .textsWithIconHorizontal(data):
+            self = .textsWithIconHorizontal(.init(data: data))
             
-        case let .multi(.buttons(x)):
-            self = .multi(.buttons(.init(data: x)))
+        case let .multi(.buttons(data)):
+            self = .multi(.buttons(.init(data: data)))
             
-        case let .multi(.typeButtons(x)):
-            self = .multi(.typeButtons(.init(data: x)))
+        case let .multi(.typeButtons(data)):
+            self = .multi(.typeButtons(.init(data: data)))
             
-        case let .image(x):
-            self = .image(.init(data: x))
+        case let .image(data):
+            self = .image(.init(data: data))
             
-        case let .imageSvg(x):
-            self = .imageSvg(.init(data: x))
+        case let .imageSvg(data):
+            self = .imageSvg(.init(data: data))
             
-        case let .list(.dropDownTexts(x)):
-            self = .list(.dropDownTexts(.init(data: x)))
+        case let .list(.dropDownTexts(data)):
+            self = .list(.dropDownTexts(.init(data: data)))
             
-        case let .verticalSpacing(x):
-            self = .verticalSpacing(.init(data: x))
-            
-        case let .list(.horizontalRectangleLimits(x)):
-            self = .list(.horizontalRectangleLimits(.init(data: x)))
-        case let .carousel(.base(x)):
-            self = .carousel(.base(.init(data: x)))
+        case let .verticalSpacing(data):
+            self = .verticalSpacing(.init(data: data))
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
+        case let .list(.horizontalRectangleLimits(data)):
+            self = .list(.horizontalRectangleLimits(.init(data: data)))
+        case let .carousel(.base(data)):
+            self = .carousel(.base(.init(data: data)))
+        case let .carousel(.withTabs(data)):
+            self = .carousel(.withTabs(.init(data: data)))
+        case let .carousel(.withDots(data)):
+            self = .carousel(.withDots(.init(data: data)))
         }
     }
 }
@@ -166,6 +174,17 @@ private extension Landing.VerticalSpacing {
         self.init(
             backgroundColor: .init(data.backgroundColor),
             type: .init(data.type))
+    }
+}
+
+private extension Landing.Spacing {
+    
+    init(
+        data: DecodableLanding.Data.Spacing
+    ) {
+        self.init(
+            backgroundColor: data.backgroundColor,
+            heightDp: CGFloat(Double(data.heightDp) ?? 0))
     }
 }
 
@@ -631,8 +650,7 @@ private extension Landing.DataView.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale.scale()),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -644,7 +662,7 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem {
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -656,5 +674,109 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem.Action {
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(size: data.size),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            tabs: data.tabs.map { .init(data: $0) })
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.TabItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.TabItem
+    ) {
+        self.init(
+            name: data.name,
+            list: data.list.map { .init(data: $0) } )
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink.addingPercentEncoding(),
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithDots {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithDotsDecodable
+    ) {
+        self.init(
+            title: data.title,
+            size: .init(size: data.size),
+            scale: data.scale,
+            loopedScrolling: data.loopedScrolling,
+            list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithDots.ListItem {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem
+    ) {
+        self.init(
+            imageLink: data.imageLink.addingPercentEncoding(),
+            link: data.link,
+            action: data.action.map { .init(data: $0)})
+    }
+}
+
+private extension Landing.DataView.Carousel.CarouselWithDots.ListItem.Action {
+    
+    init(
+        data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem.Action
+    ) {
+        self.init(type: data.type, target: data.target)
+    }
+}
+
+extension String {
+    
+    func addingPercentEncoding() -> Self {
+        addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
+    }
+}
+
+private extension String {
+    /*
+     https://shorturl.at/5OdQz
+     */
+    func scale() -> CGFloat {
+        
+        switch self {
+            
+        case "small":   return 0.25
+        case "medium":  return 1
+        case "large":   return 1.25
+        default:        return 1
+        }
     }
 }

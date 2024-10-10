@@ -22,7 +22,7 @@ where ItemLabel: View,
     private let transition: AnyTransition = .opacity.combined(with: .scale)
     
     public init(
-        state: State, 
+        state: State,
         event: @escaping (Event) -> Void,
         config: Config,
         @ViewBuilder itemLabel: @escaping (State.Item) -> ItemLabel
@@ -57,12 +57,13 @@ where ItemLabel: View,
 
 public extension CategoryPickerSectionContentView {
     
-    typealias State = CategoryPickerSectionState<ServiceCategory>
-    typealias Event = CategoryPickerSectionEvent<ServiceCategory>
+    typealias Domain = CategoryPickerSectionContentDomain<ServiceCategory>
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias Config = CategoryPickerSectionContentViewConfig
 }
 
-private extension CategoryPickerSectionState {
+private extension LoadablePickerState {
     
     var isLoadingFailed: Bool {
         
@@ -98,7 +99,7 @@ private extension CategoryPickerSectionContentView {
     
     private func showAll() -> some View {
         
-        itemView(item: .element(.init(.showAll)))
+        itemView(item: .element(.init(.list(.init()))))
             .opacity(state.isLoading ? 0 : 1)
             .transition(transition)
             .animation(.easeInOut, value: state.isLoading)
@@ -164,7 +165,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     }
     
     private static func categoryPickerSectionContentView(
-        _ items: [CategoryPickerSectionState<PreviewServiceCategory>.Item]
+        _ items: [CategoryPickerSectionContentDomain<PreviewServiceCategory>.State.Item]
     ) -> some View {
         
         CategoryPickerSectionContentView(
@@ -180,7 +181,7 @@ struct PreviewServiceCategory: Equatable {
     
 }
 
-extension Array where Element == CategoryPickerSectionState<PreviewServiceCategory>.Item {
+extension Array where Element == CategoryPickerSectionContentDomain<PreviewServiceCategory>.State.Item {
     
     static func placeholders(count: Int) -> Self {
         

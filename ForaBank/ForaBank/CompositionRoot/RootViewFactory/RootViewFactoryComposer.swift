@@ -16,6 +16,7 @@ import SberQR
 import SwiftUI
 import UIPrimitives
 import MarketShowcase
+import LandingUIComponent
 
 final class RootViewFactoryComposer {
     
@@ -299,6 +300,38 @@ private extension RootViewFactoryComposer {
         }
     }
     
+    func makeLandingView(
+        _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
+        _ landing: MarketShowcaseDomain.Landing
+    ) -> LandingWrapperView {
+        
+        let landingViewModel = model.landingViewModelFactory(result: landing, config: .default, landingActions: {
+            
+            // TODO: add case
+            switch $0 {
+                
+            case let .card(action):
+                switch action {
+                    
+                case .goToMain:
+                    flowEvent(.select(.goToMain))
+                case let .openUrl(url):
+                    flowEvent(.select(.openURL(url)))
+                case let .order(cardTarif: cardTarif, cardType: cardType):
+                    flowEvent(.select(.orderCard))
+                }
+            case let .sticker(action): // ???
+                break
+            case let .bannerAction(action): // ???
+                break
+            case .listVerticalRoundImageAction: // ???
+                break
+            }
+        })
+        
+       return LandingWrapperView(viewModel: landingViewModel)
+    }
+    
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseDomain.Binder
     ) -> MarketShowcaseWrapperView? {
@@ -306,19 +339,21 @@ private extension RootViewFactoryComposer {
         
             .init(
                 model: viewModel.flow,
-                makeContentView: {
+                makeContentView: { flowState, flowEvent in
                     MarketShowcaseFlowView(
-                        state: $0,
-                        event: $1) {
+                        state: flowState,
+                        event: flowEvent) {
                             MarketShowcaseContentWrapperView(
                                 model: viewModel.content,
-                                makeContentView: {
+                                makeContentView: { contentState, contentEvent in
                                     MarketShowcaseContentView(
-                                        state: $0,
-                                        event: $1,
+                                        state: contentState,
+                                        event: contentEvent,
                                         config: .iFora,
                                         factory: .init(
-                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
+                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+                                            makeLandingView: { self.makeLandingView(flowEvent, $0) }
+                                        )
                                     )
                                 })
                         }

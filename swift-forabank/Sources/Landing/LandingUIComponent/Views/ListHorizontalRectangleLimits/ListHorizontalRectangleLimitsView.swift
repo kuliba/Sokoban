@@ -79,6 +79,7 @@ struct ListHorizontalRectangleLimitsView: View {
                             }
                             Text("Сохранить")
                                 .padding()
+                                .accessibilityIdentifier("ListHorizontalRectangleLimitsSaveButton")
                         }
                     }
                     .foregroundColor(.white)
@@ -141,7 +142,7 @@ struct ListHorizontalRectangleLimitsView: View {
 extension ListHorizontalRectangleLimitsView {
     
     typealias Event = ListHorizontalRectangleLimitsEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.List.HorizontalRectangleLimits.Config
     typealias Item = UILanding.List.HorizontalRectangleLimits.Item
 }
@@ -210,6 +211,7 @@ extension ListHorizontalRectangleLimitsView {
                             .font(config.fonts.title)
                             .lineLimit(2)
                             .foregroundColor(config.colors.title)
+                            .accessibilityIdentifier("HorizontalRectangleLimitsTitle")
                     }
                     .padding(.horizontal, config.paddings.horizontal)
                     
@@ -237,6 +239,7 @@ extension ListHorizontalRectangleLimitsView {
                 Text(limit.title)
                     .font(config.fonts.subTitle)
                     .foregroundColor(config.colors.subtitle)
+                    .accessibilityIdentifier("HorizontalRectangleLimitsSubtitle")
                 
                 limitView(limitType: limitType, limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
             }
@@ -273,6 +276,7 @@ extension ListHorizontalRectangleLimitsView {
                             .font(config.fonts.limit)
                             .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
+                            .accessibilityIdentifier("HorizontalRectangleLimitsValue")
 
                     default:
                         VStack(alignment: .leading) {
@@ -281,6 +285,7 @@ extension ListHorizontalRectangleLimitsView {
                                 Text(value(limit.value - limit.currentValue) + " " + limit.currency)
                                     .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
+                                    .accessibilityIdentifier("HorizontalRectangleLimitsValue")
                                 circleLimit(
                                     limit: limit,
                                     mainColor: color,
@@ -301,6 +306,7 @@ extension ListHorizontalRectangleLimitsView {
                         .font(config.fonts.limit)
                         .foregroundColor(config.colors.limitNotSet)
                         .frame(height: 24)
+                        .accessibilityIdentifier("HorizontalRectangleLimitsValue")
                 }
             }
         }

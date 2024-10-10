@@ -17,13 +17,13 @@ where InfoView: View {
     
     private let config: Config
     let infoView: () -> InfoView
-    let makeIconView: ViewFactory.MakeIconView
+    let makeIconView: ImageViewFactory.MakeIconView
 
     init(
         viewModel: ViewModel,
         config: Config,
         infoView: @escaping () -> InfoView,
-        makeIconView: @escaping ViewFactory.MakeIconView
+        makeIconView: @escaping ImageViewFactory.MakeIconView
     ) {
         self.viewModel = viewModel
         self.config = config
