@@ -10,6 +10,7 @@ import SwiftUI
 /// Extending SwiftUI API
 extension View {
     
+    /// Alert setter is managed by action in alert content
     func alert<Item: Identifiable>(
         item: Item?,
         content: (Item) -> Alert
@@ -24,6 +25,7 @@ extension View {
         )
     }
     
+    @available(*, deprecated, renamed: "fullScreenCover(cover:dismiss:content:)")
     func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
         cover: FullScreenCover?,
         dismissFullScreenCover: @escaping () -> Void,
@@ -39,6 +41,37 @@ extension View {
         )
     }
     
+    func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
+        cover: FullScreenCover?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (FullScreenCover) -> Content
+    ) -> some View {
+        
+        fullScreenCover(
+            item: .init(
+                get: { cover },
+                set: { if $0 == nil { dismiss() }}
+            ),
+            content: content
+        )
+    }
+    
+    /// - Warning: Use for cases when cover setter is managed programmatically, not by SwiftUI
+    func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
+        cover: FullScreenCover?,
+        @ViewBuilder content: @escaping (FullScreenCover) -> Content
+    ) -> some View {
+        
+        fullScreenCover(
+            item: .init(
+                get: { cover },
+                set: { _ in } // managed programmatically
+            ),
+            content: content
+        )
+    }
+    
+    @available(*, deprecated, renamed: "navigationDestination(destination:dismiss:content:)")
     func navigationDestination<Destination: Identifiable, Content: View>(
         destination: Destination?,
         dismissDestination: @escaping () -> Void,
@@ -54,6 +87,37 @@ extension View {
         )
     }
     
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        destination: Destination?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            item: .init(
+                get: { destination },
+                set: { if $0 == nil { dismiss() }}
+            ),
+            content: content
+        )
+    }
+    
+    /// - Warning: Use for cases when destination setter is managed programmatically, not by SwiftUI
+    func navigationDestination<Destination: Identifiable, Content: View>(
+        destination: Destination?,
+        @ViewBuilder content: @escaping (Destination) -> Content
+    ) -> some View {
+        
+        navigationDestination(
+            item: .init(
+                get: { destination },
+                set: { _ in } // managed programmatically
+            ),
+            content: content
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sheet(modal:dismiss:content:)")
     func sheet<Modal: Identifiable, Content: View>(
         modal: Modal?,
         dismissModal: @escaping () -> Void,
@@ -64,6 +128,21 @@ extension View {
             item: .init(
                 get: { modal },
                 set: { if $0 == nil { dismissModal() }}
+            ),
+            content: content
+        )
+    }
+    
+    func sheet<Modal: Identifiable, Content: View>(
+        modal: Modal?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Modal) -> Content
+    ) -> some View {
+        
+        sheet(
+            item: .init(
+                get: { modal },
+                set: { if $0 == nil { dismiss() }}
             ),
             content: content
         )
