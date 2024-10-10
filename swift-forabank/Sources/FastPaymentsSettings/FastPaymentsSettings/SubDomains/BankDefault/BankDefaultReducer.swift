@@ -157,7 +157,7 @@ private extension BankDefaultReducer {
         switch result {
         case .success:
             return .init(
-                settingsResult: .success(.contracted(details)),
+                settingsResult: .active(bankDefaultResponse: .init(bankDefault: .offEnabled)),
                 status: .deleteBankDefault(details.paymentContract.phoneNumberMasked.rawValue)
             )
             
