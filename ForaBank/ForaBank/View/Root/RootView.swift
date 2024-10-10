@@ -154,6 +154,39 @@ struct RootView: View {
 
 // MARK: - PaymentsTransfers v1
 
+extension PaymentsTransfersSwitcher: Refreshable {
+    
+    func refresh() {
+        
+        switch state {
+        case .none:
+            break
+            
+        case let .corporate(corporate):
+            corporate.refresh()
+            
+        case let .personal(personal):
+            personal.refresh()
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
+extension PaymentsTransfersPersonal {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
 private extension RootView {
     
     func paymentsTransfersSwitcherView(
@@ -166,6 +199,7 @@ private extension RootView {
             personalView: paymentsTransfersPersonalView,
             undefinedView: { SpinnerView(viewModel: .init()) }
         )
+        .refresh(action: switcher.refresh)
     }
     
     func paymentsTransfersCorporateView(
@@ -544,7 +578,7 @@ private extension RootView {
         
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
-            iconView: { _ in fatalError() }, //makeIconView,
+            iconView: rootViewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
         )
         //    .navigationBarWithBack(
