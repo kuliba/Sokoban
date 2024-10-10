@@ -544,7 +544,7 @@ private extension RootView {
         
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
-            iconView: { _ in fatalError() }, //makeIconView,
+            iconView: rootViewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
         )
         //    .navigationBarWithBack(
