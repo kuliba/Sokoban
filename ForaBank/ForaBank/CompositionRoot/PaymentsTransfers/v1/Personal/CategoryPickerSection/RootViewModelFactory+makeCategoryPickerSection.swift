@@ -120,7 +120,8 @@ extension RootViewModelFactory {
             load: nanoServices.loadCategories,
             microServices: microServices,
             placeholderCount: placeholderCount,
-            scheduler: mainScheduler
+            scheduler: mainScheduler, 
+            interactiveScheduler: backgroundScheduler
         )
         
         return categoryPickerComposer.compose(

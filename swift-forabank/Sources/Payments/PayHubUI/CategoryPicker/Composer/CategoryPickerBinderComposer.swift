@@ -17,17 +17,20 @@ public final class CategoryPickerBinderComposer<Category, List, QRSelect, Naviga
     private let microServices: MicroServices
     private let placeholderCount: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
+    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         load: @escaping Load,
         microServices: MicroServices,
         placeholderCount: Int,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.load = load
         self.microServices = microServices
         self.placeholderCount = placeholderCount
         self.scheduler = scheduler
+        self.interactiveScheduler = interactiveScheduler
     }
     
     public typealias Domain = CategoryPicker<Category, List, QRSelect, Navigation>
@@ -87,7 +90,8 @@ private extension CategoryPickerBinderComposer {
         
         let composer = FlowDomain.Composer(
             microServices: microServices, 
-            scheduler: scheduler
+            scheduler: scheduler,
+            interactiveScheduler: interactiveScheduler
         )
         
         return composer.compose()

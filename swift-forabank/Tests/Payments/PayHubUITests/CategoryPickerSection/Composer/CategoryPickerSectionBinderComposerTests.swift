@@ -251,7 +251,8 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
                 getNavigation: getNavigationSpy.process
             ),
             placeholderCount: placeholderCount,
-            scheduler: scheduler.eraseToAnyScheduler()
+            scheduler: scheduler.eraseToAnyScheduler(),
+            interactiveScheduler: .immediate
         )
         let sut = composer.compose(prefix: prefix, suffix: suffix)
         
