@@ -356,7 +356,7 @@ extension RootViewModelFactory {
                 
                 getServiceCategoryList(nil) {
                     
-                    completion($0.map(\.list))
+                    completion($0.map(\.list).map { $0.sorted(by: \.ord) })
                 }
             }
         }
