@@ -16,5 +16,6 @@ public extension MarketShowcaseFlowEffect {
         
         case orderCard
         case orderSticker
+        case landing(String)
     }
 }

@@ -14,6 +14,7 @@ import RxViewModel
 import SberQR
 import SwiftUI
 import MarketShowcase
+import UIPrimitives
 import UtilityServicePrepaymentUI
 
 struct RootView: View {
@@ -113,6 +114,7 @@ struct RootView: View {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
+        .onFirstAppear { marketShowcaseBinder.content.event(.load) }
         .taggedTabItem(.market, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
@@ -155,6 +157,39 @@ struct RootView: View {
 
 // MARK: - PaymentsTransfers v1
 
+extension PaymentsTransfersSwitcher: Refreshable {
+    
+    func refresh() {
+        
+        switch state {
+        case .none:
+            break
+            
+        case let .corporate(corporate):
+            corporate.refresh()
+            
+        case let .personal(personal):
+            personal.refresh()
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
+extension PaymentsTransfersPersonal {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
 private extension RootView {
     
     func paymentsTransfersSwitcherView(
@@ -167,6 +202,7 @@ private extension RootView {
             personalView: paymentsTransfersPersonalView,
             undefinedView: { SpinnerView(viewModel: .init()) }
         )
+        .refresh(action: switcher.refresh)
     }
     
     func paymentsTransfersCorporateView(
@@ -245,58 +281,95 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSectionDomain.Binder
+        binder: CategoryPickerSection.Binder
     ) -> some View {
         
-        ComposedCategoryPickerSectionFlowView(
-            binder: binder,
-            config: .iFora,
-            itemLabel: itemLabel,
-            makeDestinationView: makeCategoryPickerSectionDestinationView
+        RxWrapperView(
+            model: binder.flow,
+            makeContentView: {
+                
+                CategoryPickerSectionFlowView(
+                    state: $0,
+                    event: $1,
+                    factory: .init(
+                        makeAlert: makeCategoryPickerSectionAlert(binder: binder),
+                        makeContentView: {
+                            
+                            RxWrapperView(
+                                model: binder.content,
+                                makeContentView: { state, event in
+                                    
+                                    CategoryPickerSectionContentView(
+                                        state: state,
+                                        event: event,
+                                        config: .iFora,
+                                        itemLabel: itemLabel
+                                    )
+                                }
+                            )
+                        },
+                        makeDestinationView: makeCategoryPickerSectionDestinationView,
+                        makeFullScreenCoverView: makeCategoryPickerSectionFullScreenCoverView
+                    )
+                )
+            }
         )
+    }
+    
+    func makeCategoryPickerSectionAlert(
+        binder: CategoryPickerSection.Binder
+    ) -> (SelectedCategoryFailure) -> Alert {
+        
+        return { failure in
+            
+            return .init(
+                with: .error(message: failure.message, event: .dismiss),
+                event: { binder.flow.event($0) }
+            )
+        }
     }
     
     @ViewBuilder
     func makeCategoryPickerSectionDestinationView(
-        destination: CategoryPickerSectionDomain.Destination
+        destination: CategoryPickerSectionNavigation.Destination
     ) -> some View {
         
         switch destination {
-        case let .category(selected):
-            selectedCategoryView(selected)
+        case let .list(list):
+            categoryListView(list)
             
-        case let .list(categoryListModelStub):
-            categoryListView(categoryListModelStub)
+        case let .paymentFlow(paymentFlow):
+            switch paymentFlow {
+            case let .mobile(mobile):
+                PaymentsView(viewModel: mobile.paymentsViewModel)
+                
+            case let .standard(standard):
+                switch standard {
+                case let .failure(failedPaymentProviderPicker):
+                    Text("TBD: \(String(describing: failedPaymentProviderPicker))")
+                    
+                case let .success(binder):
+                    paymentProviderPicker(binder)
+                }
+                
+            case let .taxAndStateServices(wrapper):
+                PaymentsView(viewModel: wrapper.paymentsViewModel)
+                
+            case let .transport(transport):
+                transportPaymentsView(transport)
+            }
+            
+        case let .qrDestination(qrDestination):
+            qrDestinationView(qrDestination)
         }
     }
     
     @ViewBuilder
-    func selectedCategoryView(
-        _ selected: SelectedCategoryDestination
+    func makeCategoryPickerSectionFullScreenCoverView(
+        cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         
-        switch selected {
-        case let .mobile(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
-            
-        case let .qr(qr):
-            Text("TBD: \(String(describing: qr))")
-            
-        case let .standard(standard):
-            switch standard {
-            case let .failure(failedPaymentProviderPicker):
-                Text("TBD: \(String(describing: failedPaymentProviderPicker))")
-                
-            case let .success(binder):
-                paymentProviderPicker(binder)
-            }
-            
-        case let .taxAndStateServices(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
-            
-        case let .transport(transport):
-            transportPaymentsView(transport)
-        }
+        QRView(viewModel: cover.qr.qrModel)
     }
     
     func paymentProviderPicker(
@@ -466,6 +539,83 @@ private extension RootView {
         )
     }
     
+    @ViewBuilder
+    func qrDestinationView(
+        _ qrDestination: QRNavigation.Destination
+    ) -> some View {
+        
+        switch qrDestination {
+        case let .qrFailedViewModel(qrFailedViewModel):
+            QRFailedView(viewModel: qrFailedViewModel)
+            
+        case let .internetTV(viewModel):
+            InternetTVDetailsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .operatorSearch(viewModel):
+            QRSearchOperatorView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .payments(wrapper):
+            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            
+        case let .paymentComplete(paymentComplete):
+            PaymentsSuccessView(viewModel: paymentComplete)
+            
+        case let .providerPicker(providerPicker):
+            paymentProviderPicker(providerPicker)
+            
+        case let .sberQR(sberQR):
+            rootViewFactory.makeSberQRConfirmPaymentView(sberQR)
+            
+        case let .servicePicker(servicePicker):
+            servicePickerView(servicePicker)
+        }
+    }
+    
+    func paymentProviderPicker(
+        _ flowModel: SegmentedPaymentProviderPickerFlowModel
+    ) -> some View {
+        
+        ComposedSegmentedPaymentProviderPickerFlowView(
+            flowModel: flowModel,
+            iconView: rootViewFactory.makeIconView,
+            makeAnywayFlowView: makeAnywayFlowView
+        )
+        //    .navigationBarWithBack(
+        //        title: PaymentsTransfersSectionType.payments.name,
+        //        dismiss: viewModel.dismissPaymentProviderPicker,
+        //        rightItem: .barcodeScanner(
+        //            action: viewModel.dismissPaymentProviderPicker
+        //        )
+        //    )
+    }
+    
+    @ViewBuilder
+    func servicePickerView(
+        _ flowModel: AnywayServicePickerFlowModel
+    ) -> some View {
+        
+        let provider = flowModel.state.content.state.payload.provider
+        
+        AnywayServicePickerFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: rootViewFactory.makeIconView
+            )
+        )
+//        .navigationBarWithAsyncIcon(
+//            title: provider.origin.title,
+//            subtitle: provider.origin.inn,
+//            dismiss: viewModel.dismissProviderServicePicker,
+//            icon: viewFactory.iconView(provider.origin.icon),
+//            style: .normal
+//        )
+    }
+    
     func makeIconView(
         md5Hash: String?
     ) -> some View {
@@ -595,7 +745,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSectionState.Item
+        item: CategoryPickerSection.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -628,6 +778,86 @@ private extension RootView {
     ) -> some View {
         
         Color.blue.opacity(0.1)
+    }
+}
+
+// MARK: - payment flow
+
+private extension RootView {
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> some View {
+        
+        let anywayPaymentFactory = rootViewFactory.makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                rootViewFactory.makePaymentCompleteView(
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        merchantIcon: $0.merchantIcon,
+                        result: $0.result.mapError {
+                            
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
+                    { flowModel.event(.goTo(.main)) }
+                )
+            }
+        )
+    }
+}
+
+
+private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
+    
+    static func error(
+        message: String? = nil,
+        event: PrimaryEvent
+    ) -> Self {
+        
+        .default(
+            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+            message: message,
+            primaryEvent: event
+        )
+    }
+    
+    private static func `default`(
+        title: String,
+        message: String?,
+        primaryEvent: PrimaryEvent,
+        secondaryEvent: SecondaryEvent? = nil
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: primaryEvent
+            ),
+            secondaryButton: secondaryEvent.map {
+                
+                .init(
+                    type: .cancel,
+                    title: "Отмена",
+                    event: $0
+                )
+            }
+        )
     }
 }
 
