@@ -59,6 +59,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getClientInformDataServices,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -76,6 +77,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .plainClientInformBottomSheet,
         // UI Components
         .carouselComponent,
         .paymentComponents,
@@ -199,6 +201,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getClientInformDataServices,
+        .getClientInformDataServicesTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -242,6 +246,8 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .plainClientInformBottomSheet,
+        .plainClientInformBottomSheetTests,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -539,6 +545,13 @@ private extension Product {
         ]
     )
     
+    static let plainClientInformBottomSheet = library(
+        name: .plainClientInformBottomSheet,
+        targets: [
+            .plainClientInformBottomSheet
+        ]
+    )
+
     // MARK: - UI Components
     
     static let carouselComponent = library(
@@ -834,6 +847,14 @@ private extension Product {
         ]
     )
     
+    static let getClientInformDataServices = library(
+        name: .getClientInformDataServices,
+        targets: [
+            .getClientInformDataServices
+        ]
+    )
+
+    
     // MARK: - Tools
     
     static let foraTools = library(
@@ -843,6 +864,8 @@ private extension Product {
         ]
     )
 }
+
+// MARK: - Target
 
 private extension Target {
     
@@ -1852,6 +1875,28 @@ private extension Target {
             .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
     )
+
+    static let getClientInformDataServices = target(
+        name: .getClientInformDataServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getClientInformDataServices)"
+    )
+
+    static let getClientInformDataServicesTests = testTarget(
+        name: .getClientInformDataServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getClientInformDataServices
+        ],
+        path: "Tests/Services/\(String.getClientInformDataServicesTests)",
+        resources: [
+
+        ]
+    )
     
     // MARK: - UI
     
@@ -2258,6 +2303,22 @@ private extension Target {
             .userAccountNavigationComponent,
         ],
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
+    )
+    
+    static let plainClientInformBottomSheet = target(
+        name: .plainClientInformBottomSheet,
+        dependencies: [
+            .rxViewModel
+        ],
+        path: "Sources/UI/\(String.plainClientInformBottomSheet)"
+    )
+    
+    static let plainClientInformBottomSheetTests = testTarget(
+        name: .plainClientInformBottomSheetTests,
+        dependencies: [
+            .plainClientInformBottomSheet
+        ],
+        path: "Tests/UI/\(String.plainClientInformBottomSheetTests)"
     )
     
     // MARK: - UI Components
@@ -2786,6 +2847,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
     
+    static let plainClientInformBottomSheet = byName(
+        name: .plainClientInformBottomSheet
+    )
+
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -3008,6 +3073,10 @@ private extension Target.Dependency {
         name: .getProductListByTypeV6Service
     )
     
+    static let getClientInformDataServices = byName(
+        name: .getClientInformDataServices
+    )
+    
     // MARK: - Tools
     
     static let foraTools = byName(
@@ -3127,6 +3196,9 @@ private extension String {
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
+    static let plainClientInformBottomSheet = "PlainClientInformBottomSheet"
+    static let plainClientInformBottomSheetTests = "PlainClientInformBottomSheetTests"
+
     // MARK: - UI Components
     
     static let amountComponent = "AmountComponent"
@@ -3290,6 +3362,9 @@ private extension String {
     
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
+    
+    static let getClientInformDataServices = "GetClientInformDataServices"
+    static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
     // MARK: - Tools
     

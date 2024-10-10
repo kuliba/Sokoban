@@ -7,4 +7,4 @@
 
 import PayHub
 
-public typealias PlainPickerBinder<Element, Navigation> = Binder<PlainPickerContent<Element>, PlainPickerFlow<Element, Navigation>>
+public typealias PlainPickerBinder<Element, Navigation> = Binder<PlainPickerContent<Element>, FlowDomain<Element, Navigation>.Flow>

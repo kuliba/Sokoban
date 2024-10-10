@@ -19,7 +19,7 @@ extension RootViewModelFactory {
 
 // MARK: - Adapter
 
-private extension CreateSberQRPaymentResponse {
+extension CreateSberQRPaymentResponse {
     
     var success: Payments.Success {
         

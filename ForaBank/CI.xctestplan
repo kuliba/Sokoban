@@ -520,6 +520,20 @@
         "identifier" : "MarketShowcaseTests",
         "name" : "MarketShowcaseTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PlainClientInformBottomSheetTests",
+        "name" : "PlainClientInformBottomSheetTests"
+      }
     }
   ],
   "version" : 1

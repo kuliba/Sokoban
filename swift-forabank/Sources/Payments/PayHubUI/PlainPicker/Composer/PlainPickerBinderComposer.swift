@@ -12,18 +12,19 @@ import PayHub
 
 public final class PlainPickerBinderComposer<Element, Navigation> {
     
-    private let makeNavigation: MakeNavigation
+    private let microServices: MicroServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
-        makeNavigation: @escaping MakeNavigation,
+        microServices: MicroServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
-        self.makeNavigation = makeNavigation
+        self.microServices = microServices
         self.scheduler = scheduler
     }
     
-    public typealias MakeNavigation = (Element, @escaping (Navigation) -> Void) -> Void
+    public typealias Domain = FlowDomain<Element, Navigation>
+    public typealias MicroServices = Domain.MicroServices
 }
 
 public extension PlainPickerBinderComposer {
@@ -45,7 +46,7 @@ public extension PlainPickerBinderComposer {
 private extension PlainPickerBinderComposer {
     
     typealias Content = PlainPickerContent<Element>
-    typealias Flow = PlainPickerFlow<Element, Navigation>
+    typealias Flow = Domain.Flow
     
     func makeContent(
         elements: [Element]
@@ -64,8 +65,8 @@ private extension PlainPickerBinderComposer {
     
     func makeFlow() -> Flow {
         
-        let composer = PickerFlowComposer(
-            makeNavigation: makeNavigation,
+        let composer = Domain.Composer(
+            microServices: microServices,
             scheduler: scheduler
         )
         return composer.compose()
