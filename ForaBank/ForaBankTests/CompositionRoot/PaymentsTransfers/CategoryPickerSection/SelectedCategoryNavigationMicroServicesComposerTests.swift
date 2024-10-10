@@ -245,6 +245,52 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
         }
     }
     
+    // MARK: - qrSelect: contactAbroad
+    
+    func test_getNavigation_qrSelect_contactAbroad_shouldDeliverPayments() {
+        
+        getNavigation(with: .qrSelect(.contactAbroad(.avtodor))) {
+            
+            switch $0 {
+            case .qrNavigation(.payments):
+                break
+                
+            default:
+                XCTFail("Expected payments, got \($0) instead.")
+            }
+        }
+    }
+    
+    // MARK: - qrSelect: detailPayment
+    
+    func test_getNavigation_qrSelect_detailPayment_shouldDeliverPayments_nil() {
+        
+        getNavigation(with: .qrSelect(.detailPayment(nil))) {
+            
+            switch $0 {
+            case .qrNavigation(.payments):
+                break
+                
+            default:
+                XCTFail("Expected payments, got \($0) instead.")
+            }
+        }
+    }
+    
+    func test_getNavigation_qrSelect_detailPayment_shouldDeliverPayments() {
+        
+        getNavigation(with: .qrSelect(.detailPayment(.some(.init(original: "", rawData: [:]))))) {
+            
+            switch $0 {
+            case .qrNavigation(.payments):
+                break
+                
+            default:
+                XCTFail("Expected payments, got \($0) instead.")
+            }
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SelectedCategoryNavigationMicroServicesComposer<List, ListModel>
