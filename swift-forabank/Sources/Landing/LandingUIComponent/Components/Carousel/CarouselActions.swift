@@ -20,3 +20,42 @@ public struct CarouselActions {
         self.goToMain = goToMain
     }
 }
+
+extension UILanding.Carousel {
+    
+    static func action(
+        itemAction: ItemAction?,
+        link: String?,
+        actions: CarouselActions
+    ) -> () -> Void {
+        
+        switch(itemAction, link) {
+        case let (.none, .some(link)):
+            return { actions.openUrl(link) }
+            
+        case let (.some(action), .some(link)):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return actions.goToMain
+                case .orderCard: return {}
+                case .goToOrderSticker: return {}
+                }
+            } else { return { actions.openUrl(link) }}
+            
+        case let (.some(action), .none):
+            
+            if let type = LandingActionType(rawValue: action.type) {
+                switch type {
+                case .goToMain: return actions.goToMain
+                case .orderCard: return {}
+                case .goToOrderSticker: return {}
+                }
+            } else { return { } }
+
+            
+        default:
+            return {}
+        }
+    }
+}
