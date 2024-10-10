@@ -278,7 +278,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
         RxWrapperView(
@@ -314,7 +314,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionAlert(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
         return { failure in
@@ -732,7 +732,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSection.ContentDomain.State.Item
+        item: CategoryPickerSectionDomain.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -807,7 +807,7 @@ private extension RootView {
 }
 
 
-private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,

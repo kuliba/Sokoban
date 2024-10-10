@@ -36,7 +36,7 @@ extension SelectedCategoryNavigationMicroServicesComposer {
         return .init(getNavigation: getNavigation)
     }
     
-    typealias Select = CategoryPickerSection.Select
+    typealias Select = CategoryPickerSectionDomain.Select
     typealias Navigation = SelectedCategoryNavigation
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias MicroServices = FlowDomain.MicroServices

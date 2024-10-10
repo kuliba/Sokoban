@@ -23,7 +23,7 @@ extension RootViewModelFactory {
         placeholderCount: Int,
         mainScheduler: AnySchedulerOf<DispatchQueue>,
         backgroundScheduler: AnySchedulerOf<DispatchQueue>
-    ) -> CategoryPickerSection.Binder {
+    ) -> CategoryPickerSectionDomain.Binder {
         
         func loadOperators(
             payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
@@ -108,7 +108,7 @@ extension RootViewModelFactory {
         )
         let microServices = selectedCategoryComposer.compose()
         
-        let categoryPickerComposer = CategoryPickerSection.BinderComposer(
+        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: microServices,
             placeholderCount: placeholderCount,
