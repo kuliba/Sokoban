@@ -9,10 +9,12 @@ import Foundation
 import RemoteServices
 
 public extension ResponseMapper {
+    
     static func mapCollateralLoanShowCaseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<CollateralLoanLandingShowCaseModel> {
+
         map(
             data, httpURLResponse,
             mapOrThrow: map
@@ -22,6 +24,7 @@ public extension ResponseMapper {
     private static func map(
         _ data: _Data
     ) throws -> CollateralLoanLandingShowCaseModel {
+
         try data.getCollateralLoanLandingShowCaseModel()
     }
     
@@ -29,28 +32,37 @@ public extension ResponseMapper {
 }
 
 private extension ResponseMapper._Data {
+    
     func getCollateralLoanLandingShowCaseModel() throws -> ResponseMapper.CollateralLoanLandingShowCaseModel {
-        .init(
-            serial: self.data?.serial,
-            products: self.data?.products?.map(\.self.map) ?? []
+        
+        guard let serial = self.serial else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        return .init(
+            serial: serial,
+            products: self.products?.map(\.self.map) ?? []
         )
     }
 }
 
-private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product {
+private extension ResponseMapper._Data.Product {
+
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product {
         .init(
             theme: self.theme?.map ?? .unknown,
             name: self.name,
             terms: self.terms,
             landingId: self.landingId,
+            image: self.image,
             keyMarketingParams: self.keyMarketingParams?.map,
             features: self.features?.map
         )
     }
 }
 
-private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Theme {
+private extension ResponseMapper._Data.Product.Theme {
+
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Theme {
         switch self {
         case .gray: return .gray
@@ -60,17 +72,18 @@ private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Th
     }
 }
 
-private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Features {
+private extension ResponseMapper._Data.Product.Features {
+
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features {
         .init(
             header: self.header,
-            image: self.image,
-            lists: self.lists?.map(\.self.map) ?? []
+            list: self.list?.map(\.self.map) ?? []
         )
     }
 }
 
-private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Features.List {
+private extension ResponseMapper._Data.Product.Features.List {
+
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Features.List {
         .init(
             bullet: self.bullet,
@@ -79,7 +92,8 @@ private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Fe
     }
 }
 
-private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.KeyMarketingParams {
+private extension ResponseMapper._Data.Product.KeyMarketingParams {
+
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.KeyMarketingParams {
         .init(
             rate: self.rate,
@@ -90,49 +104,51 @@ private extension ResponseMapper.CollateralLoanLandingShowCaseCodable.Product.Ke
 }
 
 private extension ResponseMapper {
-    struct _Data: Codable {
-        let statusCode: Int?
-        let errorMessage: String?
-        let data: CollateralLoanLandingShowCaseCodable?
-    }
-    
-    struct CollateralLoanLandingShowCaseCodable: Codable {
+
+    struct _Data: Decodable {
+        
         let serial: String?
         let products: [Product]?
         
-        struct Product: Codable {
+        struct Product: Decodable {
+
             let theme: Theme?
             let name: String?
             let terms: String?
             let landingId: String?
+            let image: String?
             let keyMarketingParams: KeyMarketingParams?
             let features: Features?
             
-            enum Theme: String, Codable {
+            enum Theme: String, Decodable {
+
                 case gray = "GRAY"
                 case white = "WHITE"
                 case unknown
                 
                 init(from decoder: Decoder) throws {
+
                     let container = try decoder.singleValueContainer()
                     let stringValue = try container.decode(String.self)
                     self = .init(rawValue: stringValue) ?? .unknown
                 }
             }
             
-            struct KeyMarketingParams: Codable {
+            struct KeyMarketingParams: Decodable {
+
                 let rate: String?
                 let amount: String?
                 let term: String?
             }
             
-            struct Features: Codable {
+            struct Features: Decodable {
+
                 let header: String?
-                let image: String?
-                let lists: [List]?
+                let list: [List]?
                 
-                struct List: Codable {
-                    let bullet: String?
+                struct List: Decodable {
+
+                    let bullet: Bool?
                     let text: String?
                 }
             }

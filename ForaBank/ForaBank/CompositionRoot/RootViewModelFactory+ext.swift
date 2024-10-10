@@ -385,7 +385,7 @@ extension RootViewModelFactory {
         }
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetCollateralLoanShowRequest,
+            createRequest: RequestFactory.createGetCollateralLoanLandingRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         

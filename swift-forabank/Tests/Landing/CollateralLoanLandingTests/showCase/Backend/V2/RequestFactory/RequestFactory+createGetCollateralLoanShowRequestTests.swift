@@ -10,7 +10,7 @@ import XCTest
 import CollateralLoanLanding
 
 final class RequestFactory_createGetCollateralLoanShowRequestTests: XCTestCase {
-    func test_createRequest_shouldSetURLWithTwoParameters() throws {
+    func test_createRequest_shouldSetURLWithOneParameter() throws {
         let parameters = ["type": "COLLATERAL_SHOWCASE"]
         let url = anyURL()
         let request = try createRequest(parameters: parameters, url: url)
@@ -39,7 +39,7 @@ final class RequestFactory_createGetCollateralLoanShowRequestTests: XCTestCase {
         XCTAssertNil(request.httpBody)
     }
     
-    func test_createRequest_shouldSetNilHTTPBodyWithTwoParameters() throws {
+    func test_createRequest_shouldSetNilHTTPBodyWithOneParameters() throws {
         
         let parameters = [anyMessage(): anyMessage()]
         let request = try createRequest(parameters: parameters)
@@ -54,6 +54,6 @@ final class RequestFactory_createGetCollateralLoanShowRequestTests: XCTestCase {
         url: URL = anyURL()
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetCollateralLoanShowRequest(parameters: parameters, url: url)
+        try RequestFactory.createGetCollateralLoanLandingRequest(parameters: parameters, url: url)
     }
 }

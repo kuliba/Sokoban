@@ -11,6 +11,14 @@ import XCTest
 @testable import CollateralLoanLanding
 
 final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
+    
+    func test_map_shouldDeliverValidData() {
+        XCTAssertNoDiff(
+            map(.validData),
+            .success(.validStub)
+        )
+    }
+
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         let emptyData: Data = .empty
         
@@ -24,7 +32,7 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
         let invalidData: Data = .invalidData
         XCTAssertNoDiff(
             map(invalidData),
-            .success(.empty)
+            .failure(.invalid(statusCode: 200, data: invalidData))
         )
     }
     
@@ -44,7 +52,7 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(emptyDataResponse),
-            .success(.empty)
+            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
         )
     }
     
@@ -102,7 +110,6 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
-        
         ResponseMapper.mapCollateralLoanShowCaseResponse(data, httpURLResponse)
     }    
 }
@@ -167,72 +174,70 @@ private extension String {
     
     static let validJson = """
 {
-  "RestResult": {
-    "statusCode": 0,
-    "errorMessage": "",
-    "data": {
-      "serial": "d0f7b46028dc52536477c4639198658a",
-      "products": [
-        {
-          "theme": "GRAY",
-          "name": "Кредит под залог транспорта",
-          "keyMarketingParams": {
-            "rate": "от 17,5%",
-            "amount": "до 15 млн ₽",
-            "term": "До 84 месяцев"
-          },
-          "features": {
-            "list": [
-              {
-                "bullet": true,
-                "text": "0 ₽. Условия обслуживания"
-              },
-              {
-                "bullet": false,
-                "text": "Кешбэк до 10 000 ₽ в месяц"
-              },
-              {
-                "bullet": true,
-                "text": "5% выгода при покупке топлива"
-              }
-            ]
-          },
-          "image": "dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_car_collateral_loan.png",
-          "terms": "https://www.forabank.ru/",
-          "landingId": "COLLATERAL_LOAN_CALC_CAR"
-        },
-        {
-          "thema": "WHITE",
-          "title": "Кредит под залог недвижимости",
-          "keyMarketingParams": {
-            "rate": "от 16,5 %",
-            "amount": "До 15 млн. ₽",
-            "term": "до 10 лет"
-          },
-          "features": {
-            "header": "Под залог:",
-            "list": [
-              {
-                "bullet": false,
-                "text": "Квартиры"
-              },
-              {
-                "bullet": false,
-                "text": "Жилого дома с земельным участком"
-              },
-              {
-                "bullet": true,
-                "text": "Нежилого или складского помещения"
-              }
-            ],
-            "image": "dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_real_estate_collateral_loan.png"
-          },
-          "terms": "https://www.forabank.ru/",
-          "landingId": "COLLATERAL_LOAN_CALC_REAL_ESTATE"
-        }
+   "statusCode": 200,
+   "errorMessage": null,
+   "data": {
+      "serial":"d0f7b46028dc52536477c4639198658a",
+      "products":[
+         {
+            "theme":"GRAY",
+            "name":"Кредит под залог транспорта",
+            "keyMarketingParams":{
+               "rate":"от 17,5%",
+               "amount":"до 15 млн ₽",
+               "term":"До 84 месяцев"
+            },
+            "features":{
+               "list":[
+                  {
+                     "bullet":true,
+                     "text":"0 ₽. Условия обслуживания"
+                  },
+                  {
+                     "bullet":false,
+                     "text":"Кешбэк до 10 000 ₽ в месяц"
+                  },
+                  {
+                     "bullet":true,
+                     "text":"5% выгода при покупке топлива"
+                  }
+               ]
+            },
+            "image":"dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_car_collateral_loan.png",
+            "terms":"https://www.forabank.ru/",
+            "landingId":"COLLATERAL_LOAN_CALC_CAR"
+         },
+         {
+            "theme":"WHITE",
+            "name":"Кредит под залог недвижимости",
+            "keyMarketingParams":{
+               "rate":"от 16,5 %",
+               "amount":"до 15 млн. ₽",
+               "term":"до 10 лет"
+            },
+            "features":{
+               "header":"Под залог:",
+               "list":[
+                  {
+                     "bullet":false,
+                     "text":"Квартиры"
+                  },
+                  {
+                     "bullet":false,
+                     "text":"Жилого дома с земельным участком"
+                  },
+                  {
+                     "bullet":true,
+                     "text":"Нежилого или складского помещения"
+                  }
+               ],
+            },
+            "image":"dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_real_estate_collateral_loan.png",
+            "terms":"https://www.forabank.ru/",
+            "landingId":"COLLATERAL_LOAN_CALC_REAL_ESTATE"
+         }
       ]
-    }
-  }
+   }
 }
 """
 }

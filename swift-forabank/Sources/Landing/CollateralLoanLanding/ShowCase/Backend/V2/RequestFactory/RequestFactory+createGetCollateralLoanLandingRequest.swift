@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetCollateralLoanShowRequest.swift
+//  RequestFactory+createGetCollateralLoanLandingRequest.swift
 //  ForaBank
 //
 //  Created by Valentin Ozerov on 04.10.2024.
@@ -10,7 +10,7 @@ import Foundation
 import RemoteServices
 
 public extension RequestFactory {
-    static func createGetCollateralLoanShowRequest(
+    static func createGetCollateralLoanLandingRequest(
         parameters: [String: String],
         url: URL
     ) throws -> URLRequest {
