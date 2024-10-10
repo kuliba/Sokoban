@@ -276,7 +276,7 @@ final class MapperTests: XCTestCase {
         
         let landing = try XCTUnwrap(map())
         
-        XCTAssertNoDiff(landing.main.spacing, [
+        XCTAssertNoDiff(landing.main.verticalSpacing, [
             .init(backgroundColor: "w", type: "b")
         ])
     }
@@ -511,13 +511,86 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 240),
-                scale: "medium",
                 loopedScrolling: true,
                 list: [
                     .init(imageLink: "imageLink1", link: "link1", action: nil),
                     .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
                     .init(imageLink: "imageLink3", link: nil, action: .init(type: "abroad", target: nil))
                 ])
+        ])
+    }
+    
+    func test_map_carouselWithTabs_deliversCarouselWithTabsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [
+            .init(
+                title: "Название раздела",
+                size: .init(width: 182, height: 124),
+                scale: "medium",
+                loopedScrolling: true,
+                tabs: [
+                    .init(
+                        name: "Вкладка 1",
+                        list: [
+                            .init(imageLink: "imageLink1", link: "", action: nil)
+                        ]
+                    ),
+                    .init(
+                        name: "Вкладка 2",
+                        list: [
+                            .init(imageLink: "imageLink21", link: "", action: nil),
+                            .init(imageLink: "imageLink22", link: nil, action: .init(type: "LANDING", target: "abroadSticker"))
+                        ])
+                ])
+        ])
+    }
+    
+    func test_map_carouselWithTabsWithError_notDeliversCarouselWithTabsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [])
+    }
+    
+    func test_map_carouselWithTabsWithError_deliversMultilineHeaderMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiLineHeaders, [
+            .init(
+                backgroundColor: "WHITE",
+                regularTextList: ["Наши"],
+                boldTextList: ["продукты"])
+        ])
+    }
+
+    func test_map_carouselWithDots_deliversCarouselWithDotsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.carouselWithDots.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithDots, [
+            .init(
+                title: nil,
+                size: .init(width: 344, height: 240),
+                scale: "medium",
+                loopedScrolling: true,
+                list: [
+                    .init(imageLink: "imageLink1", link: "link1", action: nil),
+                    .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
+                    .init(imageLink: "imageLink3", link: nil, action: nil)
+                ])
+        ])
+    }
+
+    func test_map_spacing_deliversSpacingInMain() throws {
+
+        let landing = try XCTUnwrap(map(data: Data(String.spacing.utf8)))
+
+        XCTAssertNoDiff(landing.main.spacing, [
+            .init(backgroundColor: "w", heightDp: 10.0),
+            .init(backgroundColor: "b", heightDp: 80.5),
         ])
     }
 
@@ -3178,6 +3251,163 @@ private extension String {
     }
     }
     """
+    
+    static let carouselWithTabs: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [],
+        "main": [
+          {
+            "type": "HORIZONTAL_SLIDER_WITH_TABS",
+            "data": {
+              "title": "Название раздела",
+              "size": "182х124",
+              "scale": "medium",
+              "loopedScrolling": true,
+              "tabs": [
+                {
+                  "name": "Вкладка 1",
+                  "list": [
+                    {
+                      "imageLink": "imageLink1",
+                      "link": ""
+                    }
+                  ]
+                },
+                {
+                  "name": "Вкладка 2",
+                  "list": [
+                    {
+                      "imageLink": "imageLink21",
+                      "link": ""
+                    },
+                    {
+                      "imageLink": "imageLink22",
+                      "action": {
+                        "actionType": "LANDING",
+                        "target": "abroadSticker"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "serial": ""
+      }
+    }
+    """
+    
+    static let carouselWithDots: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "HORIZONTAL_SLIDER_WITH_DOTS",
+        "data": {
+          "size": "344х240",
+          "scale": "medium",
+          "loopedScrolling": true,
+          "list": [
+            {
+              "imageLink": "imageLink1",
+              "link": "link1"
+            },
+            {
+              "imageLink": "imageLink2",
+              "action": {
+                "actionType": "LANDING",
+                "target": "abroadSticker"
+              }
+            },
+            {
+              "imageLink": "imageLink3"
+            }
+          ]
+        }
+      }
+    ],
+    "serial": ""
+    }
+    }
+    """
+
+    static let spacing: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "w",
+                "sizeDp": "10"
+            }
+        },
+        {
+            "type": "SPACING",
+            "data": {
+                "backgroundColor": "b",
+                "sizeDp": "80.5"
+            }
+        },
+    ],
+    "serial": ""
+    }
+    }
+    """
+
+    static let errorCarouselWithTabs = """
+    {
+        "statusCode": 0,
+        "errorMessage": null,
+        "data": {
+            "serial": "8a343d9b6664f9f4fdc45f05bbdc284c",
+            "main": [
+        {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                    "backgroundColor": "WHITE",
+                    "regularTextList": ["Наши"],
+                    "boldTextList": ["продукты"]
+                }
+            },
+        {
+            "type": "HORIZONTAL_SLIDER_WITH_TABS",
+            "data": {
+                "title": "Название раздела",
+                "size": "182х124",
+                "scale": "medium",
+                "loopedScrolling": null,
+                "tabs": [{
+                    "name": "Вкладка 1",
+                    "list": [{
+                        "imageLink": "dict/getProductCatalogImage?image=/products/banners/yandex_364×248.png",
+                    }, {
+                        "link": ""
+                    }]
+                }, {
+                    "name": "Вкладка 2",
+                    "list": [ {
+                        "action": {
+                            "actionType": "LANDING",
+                            "target": "abroadSticker"
+                        }
+                    }]
+                }]
+            }
+        }]
+        }
+    }
+    """
 
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
@@ -3340,7 +3570,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var spacing: [Landing.VerticalSpacing] {
+    var verticalSpacing: [Landing.VerticalSpacing] {
         
         compactMap {
             if case let .verticalSpacing(indents) = $0 {
@@ -3348,6 +3578,17 @@ extension Array where Element == Landing.DataView {
             } else {
                 return nil
             }
+        }
+    }
+    
+    var spacing: [Landing.Spacing] {
+        
+        compactMap {
+            
+            guard case let .spacing(indents) = $0 
+            else { return nil }
+            
+            return indents
         }
     }
     
@@ -3367,6 +3608,28 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .carousel(.base(carouselBase)) = $0 {
                 return carouselBase
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselWithTabs: [Landing.DataView.Carousel.CarouselWithTabs] {
+        
+        compactMap {
+            if case let .carousel(.withTabs(carouselWithTabs)) = $0 {
+                return carouselWithTabs
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var carouselWithDots: [Landing.DataView.Carousel.CarouselWithDots] {
+        
+        compactMap {
+            if case let .carousel(.withDots(carouselWithDots)) = $0 {
+                return carouselWithDots
             } else {
                 return nil
             }

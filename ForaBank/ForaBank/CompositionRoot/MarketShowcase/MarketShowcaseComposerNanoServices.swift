@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LandingMapping
 
 struct MarketShowcaseComposerNanoServices {
     
@@ -13,8 +14,9 @@ struct MarketShowcaseComposerNanoServices {
     let orderCard: OrderCard
     let orderSticker: OrderSticker
     
-    typealias LoadLandingCompletion = (Result<MarketShowcaseDomain.Landing, Error>) -> Void
-    typealias LoadLanding = (@escaping LoadLandingCompletion) -> Void
+    typealias LandingType = String
+    typealias LoadLandingCompletion = (Result<MarketShowcaseDomain.Landing, MarketShowcaseDomain.ContentError>) -> Void
+    typealias LoadLanding = (LandingType, @escaping LoadLandingCompletion) -> Void
     
     typealias OrderCardCompletion = (MarketShowcaseDomain.Destination) -> Void
     typealias OrderCard = (@escaping OrderCardCompletion) -> Void
