@@ -113,12 +113,10 @@ private extension BannerPickerSectionBinderComposer {
             .sink { _ in content.event(.select(nil)) }
         
         let select = content.$state
-            .sink { state in
+            .compactMap(\.selected)
+            .sink { selected in
                 
-                switch state.selected {
-                case .none:
-                    break
-                    
+                switch selected {
                 case let .banner(banner):
                     flow.event(.select(.banner(banner)))
                 }

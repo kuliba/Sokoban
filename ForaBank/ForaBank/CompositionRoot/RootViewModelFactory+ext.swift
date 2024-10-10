@@ -21,6 +21,7 @@ import LandingUIComponent
 import LandingMapping
 import CodableLanding
 import MarketShowcase
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -369,7 +370,7 @@ extension RootViewModelFactory {
             decorated.load {
                 
                 let categories = (try? $0.get()) ?? []
-                completion(categories.map { .category($0)})
+                completion(categories.map { .category($0) })
             }
         }
         
@@ -384,6 +385,8 @@ extension RootViewModelFactory {
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
+            httpClient: httpClient,
+            logger: logger,
             model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
@@ -392,6 +395,7 @@ extension RootViewModelFactory {
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ), 
+            pageSize: 50,
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
         )
@@ -486,6 +490,20 @@ extension RootViewModelFactory {
             personal: paymentsTransfersPersonal,
             scheduler: mainScheduler
         )
+        
+        let getLandingByType = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createMarketplaceLandingRequest,
+            mapResponse: LandingMapper.map,
+            mapError: MarketShowcaseDomain.ContentError.init(error:)
+        )
+
+        let marketShowcaseComposer = MarketShowcaseComposer(
+            nanoServices: .init(
+                loadLanding: { getLandingByType(( "", $0), $1) },
+                orderCard: {_ in },
+                orderSticker: {_ in }),
+            scheduler: .main)
+        let marketShowcaseBinder = marketShowcaseComposer.compose()
 
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
@@ -505,7 +523,8 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             paymentsTransfersSwitcher: paymentsTransfersSwitcher,
-            bannersBinder: mainViewBannersBinder
+            bannersBinder: mainViewBannersBinder,
+            marketShowcaseBinder: marketShowcaseBinder
         )
     }
     
@@ -816,8 +835,8 @@ private extension RootViewModelFactory {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         paymentsTransfersSwitcher: PaymentsTransfersSwitcher,
-        bannersBinder: BannersBinder
-
+        bannersBinder: BannersBinder,
+        marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> RootViewModel {
             
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -887,13 +906,7 @@ private extension RootViewModelFactory {
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
-                
-        let marketShowcaseComposerNanoServicesComposer = MarketShowcaseComposerNanoServicesComposer()
-        let marketShowcaseComposer = MarketShowcaseComposer(
-            nanoServices: marketShowcaseComposerNanoServicesComposer.compose(),
-            scheduler: .main)
-        let marketShowcaseBinder = marketShowcaseComposer.compose()
-        
+                        
         let tabsViewModel = TabsViewModel(
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
@@ -936,7 +949,7 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
+extension Array where Element == CategoryPickerSection.ContentDomain.Item {
     
     var categories: [ServiceCategory] {
         
@@ -946,8 +959,30 @@ extension Array where Element == CategoryPickerSectionItem<ServiceCategory> {
             case let .category(category):
                 return category
                 
-            case .showAll:
+            case .list:
                 return .none
+            }
+        }
+    }
+}
+
+private extension MarketShowcaseDomain.ContentError {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, LandingMapper.MapperError>
+
+    init(
+        error: RemoteError
+    ) {
+        switch error {
+        case .createRequest, .performRequest:
+            self = .init(kind: .alert("Попробуйте позже."))
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .notOkStatus, .mapError, .serverError:
+                self = .init(kind: .alert("Попробуйте позже."))
+            case .connectivityError:
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
             }
         }
     }

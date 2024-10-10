@@ -6,6 +6,7 @@
 //
 
 import PayHub
+import RxViewModel
 import SwiftUI
 
 public struct ComposedPlainPickerView<ContentView, DestinationView, Element, Destination>: View
@@ -29,7 +30,7 @@ where ContentView: View,
     
     public var body: some View {
         
-        PlainPickerFlowWrapperView(
+        RxWrapperView(
             model: binder.flow,
             makeContentView: {
                 
@@ -38,7 +39,7 @@ where ContentView: View,
                     event: $1,
                     makeContentView: {
                         
-                        PlainPickerContentWrapperView(
+                        RxWrapperView(
                             model: binder.content,
                             makeContentView: makeContentView
                         )

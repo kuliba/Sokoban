@@ -7,6 +7,7 @@
 
 import PayHub
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
 struct ComposedCategoryPickerSectionFlowView<CategoryPickerItemLabel, DestinationView>: View
@@ -47,7 +48,7 @@ extension ComposedCategoryPickerSectionFlowView {
     
     func makeContentView() -> some View {
         
-        CategoryPickerSectionContentWrapperView(
+        RxWrapperView(
             model: binder.content,
             makeContentView: { state, event in
                 

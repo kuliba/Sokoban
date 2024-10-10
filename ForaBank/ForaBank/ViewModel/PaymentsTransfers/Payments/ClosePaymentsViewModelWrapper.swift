@@ -54,4 +54,24 @@ final class ClosePaymentsViewModelWrapper: ObservableObject {
             .receive(on: scheduler)
             .assign(to: &$isClosed)
     }
+    
+    init(
+        model: Model,
+        source: Payments.Operation.Source,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        let closeSubject = PassthroughSubject<Void, Never>()
+        
+        self.paymentsViewModel = .init(
+            source: source,
+            model: model,
+            closeAction: { closeSubject.send(()) }
+        )
+        
+        closeSubject
+            .map { _ in true }
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$isClosed)
+    }
 }

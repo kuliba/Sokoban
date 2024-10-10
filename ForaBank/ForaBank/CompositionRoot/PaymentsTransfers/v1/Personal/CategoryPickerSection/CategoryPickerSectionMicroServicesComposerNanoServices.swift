@@ -1,0 +1,29 @@
+//
+//  CategoryPickerSectionMicroServicesComposerNanoServices.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 30.09.2024.
+//
+
+struct CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel> {
+    
+    let makeList: MakeList
+    let makeMobile: MakeMobile
+    let makeQR: MakeQR
+    let makeQRNavigation: MakeQRNavigation
+    let makeStandard: MakeStandard
+    let makeTax: MakeTax
+    let makeTransport: MakeTransport
+    
+    typealias MakeList = ([ServiceCategory]) -> ListModel
+    typealias MakeMobile = () -> ClosePaymentsViewModelWrapper
+    typealias MakeQR = () -> QRModel
+    
+    typealias MakeQRNavigationCompletion = (QRNavigation) -> Void
+    typealias Notify = QRNavigationComposer.Notify
+    typealias MakeQRNavigation = (QRModelResult, @escaping Notify, @escaping MakeQRNavigationCompletion) -> Void
+    
+    typealias MakeStandard = (ServiceCategory, @escaping (StandardSelectedCategoryDestination) -> Void) -> Void
+    typealias MakeTax = () -> ClosePaymentsViewModelWrapper
+    typealias MakeTransport = () -> TransportPaymentsViewModel?
+}

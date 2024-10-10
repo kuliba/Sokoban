@@ -508,6 +508,20 @@
         "identifier" : "MarketShowcaseTests",
         "name" : "MarketShowcaseTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetClientInformDataServicesTests",
+        "name" : "GetClientInformDataServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PlainClientInformBottomSheetTests",
+        "name" : "PlainClientInformBottomSheetTests"
+      }
     }
   ],
   "version" : 1

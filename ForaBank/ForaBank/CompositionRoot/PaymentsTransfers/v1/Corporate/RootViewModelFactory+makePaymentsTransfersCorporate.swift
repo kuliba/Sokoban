@@ -13,12 +13,6 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    typealias LoadLatestOperationsCompletion = (Result<[Latest], Error>) -> Void
-    typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
-    
-    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSectionItem<ServiceCategory>]) -> Void
-    typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
-    
     static func makePaymentsTransfersCorporate(
         bannerPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersCorporateNanoServices,
