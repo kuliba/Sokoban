@@ -104,21 +104,3 @@ private struct ViewByCenterModifier: ViewModifier {
         )
     }
 }
-
-#warning("move to module")
-extension View {
-    
-    func alert<Item: Identifiable>(
-        item: Item?,
-        content: (Item) -> Alert
-    ) -> some View {
-        
-        alert(
-            item: .init(
-                get: { item },
-                set: { _ in } // managed by action in content
-            ),
-            content: content
-        )
-    }
-}
