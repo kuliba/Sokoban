@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 25.09.2024.
 //
 
-public final class MarketShowcaseContentReducer<Landing> {
+public final class MarketShowcaseContentReducer<Landing, InformerPayload> {
     
     public init() {}
 }
@@ -21,7 +21,6 @@ public extension MarketShowcaseContentReducer {
         var effect: Effect?
         
         switch event {
-            
         case .load:
             
             if !state.status.isLoading {
@@ -32,8 +31,14 @@ public extension MarketShowcaseContentReducer {
         case let .loaded(landing):
             state.status = .loaded(landing)
             
-        case .loadFailure:
-            state.status = .failure
+        case let .failure(failure):
+            switch failure {
+            case let .alert(message):
+                state.status = .failure(.alert(message))
+                
+            case let .informer(informer):
+                state.status = .failure(.informer(informer))
+            }
             
         case let .selectLandingType(type):
             state.selection = .landingType(type)
@@ -48,7 +53,7 @@ public extension MarketShowcaseContentReducer {
 
 public extension MarketShowcaseContentReducer {
     
-    typealias State = MarketShowcaseContentState<Landing>
-    typealias Event = MarketShowcaseContentEvent<Landing>
+    typealias State = MarketShowcaseContentState<Landing, InformerPayload>
+    typealias Event = MarketShowcaseContentEvent<Landing, InformerPayload>
     typealias Effect = MarketShowcaseContentEffect
 }
