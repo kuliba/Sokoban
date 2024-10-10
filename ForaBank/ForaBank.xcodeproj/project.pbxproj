@@ -1580,7 +1580,6 @@
 		2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */; };
 		2AD8E5482C116F0700C31E48 /* FeatureFlagsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */; };
 		2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */; };
-		2AD8FD492CB5089F006772FE /* SelectedCategoryNavigationMicroServicesComposerNeverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8FD482CB5089F006772FE /* SelectedCategoryNavigationMicroServicesComposerNeverTests.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */; };
 		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
@@ -1644,7 +1643,6 @@
 		2AE34ACC2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */; };
 		2AE34ACE2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift */; };
 		2AE350CB2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */; };
-		2AE350D72C770F9600A766EE /* CategoryPickerSectionBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350D62C770F9600A766EE /* CategoryPickerSectionBinder.swift */; };
 		2AE350DD2C77220100A766EE /* OperationPickerFlowComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350DC2C77220100A766EE /* OperationPickerFlowComposer.swift */; };
 		2AE350E22C772D3300A766EE /* ServiceCategoryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
@@ -5059,7 +5057,6 @@
 		2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoader.swift; sourceTree = "<group>"; };
 		2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoaderTests.swift; sourceTree = "<group>"; };
 		2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
-		2AD8FD482CB5089F006772FE /* SelectedCategoryNavigationMicroServicesComposerNeverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryNavigationMicroServicesComposerNeverTests.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutView.swift; sourceTree = "<group>"; };
 		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
@@ -5121,7 +5118,6 @@
 		2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeSelectorViewModel.swift"; sourceTree = "<group>"; };
 		2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptionalSelectorViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalContent.swift; sourceTree = "<group>"; };
-		2AE350D62C770F9600A766EE /* CategoryPickerSectionBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPickerSectionBinder.swift; sourceTree = "<group>"; };
 		2AE350DC2C77220100A766EE /* OperationPickerFlowComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlowComposer.swift; sourceTree = "<group>"; };
 		2AE350E12C772D3300A766EE /* ServiceCategoryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategoryLoader.swift; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -11125,7 +11121,6 @@
 			isa = PBXGroup;
 			children = (
 				2A89A11D2CAA804600276FEF /* SelectedCategoryNavigationMicroServicesComposerTests.swift */,
-				2AD8FD482CB5089F006772FE /* SelectedCategoryNavigationMicroServicesComposerNeverTests.swift */,
 			);
 			path = CategoryPickerSection;
 			sourceTree = "<group>";
@@ -12425,7 +12420,6 @@
 		2AE350D12C770F4700A766EE /* Binder */ = {
 			isa = PBXGroup;
 			children = (
-				2AE350D62C770F9600A766EE /* CategoryPickerSectionBinder.swift */,
 			);
 			path = Binder;
 			sourceTree = "<group>";
@@ -21405,7 +21399,6 @@
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,
 				F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */,
 				0C5BFEAE2A5C87A500292346 /* PaymentTemplatesSettings.swift in Sources */,
-				2AE350D72C770F9600A766EE /* CategoryPickerSectionBinder.swift in Sources */,
 				68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */,
 				2AF9ACDC2AE6AFEB00AAB1DB /* Loader.swift in Sources */,
 				774A3E4529264A980011D952 /* Model+Payments.swift in Sources */,
@@ -22729,7 +22722,6 @@
 				2A4B54222AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift in Sources */,
 				2A0788072C35E93A0022AEF6 /* CallSpy.swift in Sources */,
 				2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */,
-				2AD8FD492CB5089F006772FE /* SelectedCategoryNavigationMicroServicesComposerNeverTests.swift in Sources */,
 				2AD54D362B03868100481463 /* CVVPINSessionCacheTests.swift in Sources */,
 				7789794929CB6C1200ECF684 /* XCTestCase+ext.swift in Sources */,
 				83B614802B036C9D002EE299 /* Model+AntifraudDataTests.swift in Sources */,

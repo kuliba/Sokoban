@@ -36,7 +36,7 @@ extension RootViewModelFactory {
     
     typealias LatestPaymentServiceCategoryName = String
     
-    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSection.ContentDomain.Item]) -> Void
+    typealias LoadServiceCategoriesCompletion = ([ServiceCategory]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
 
     @available(*, deprecated, message: "Use RootViewModelFactory.makeLoadLatestOperations with strong `getLatestPayments` API after hard-code for `isOutsidePayments` and `isPhonePayments` deprecation")

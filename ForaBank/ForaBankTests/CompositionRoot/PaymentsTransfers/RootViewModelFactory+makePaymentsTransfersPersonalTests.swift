@@ -51,7 +51,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias SUT = PaymentsTransfersPersonal
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = ForaBank.CategoryPickerSection.ContentDomain
-    private typealias LoadCategoriesSpy = Spy<Void, [ContentDomain.Item], Never>
+    private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
 
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,

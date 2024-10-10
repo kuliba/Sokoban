@@ -52,13 +52,6 @@ extension RootViewModelFactory {
             }
         }
         
-        func makeList(
-            categories: [ServiceCategory]
-        ) -> CategoryListModelStub {
-            
-            return .init(categories: categories)
-        }
-        
         func makeMobile() -> ClosePaymentsViewModelWrapper {
             
             return .init(
@@ -101,10 +94,9 @@ extension RootViewModelFactory {
             model.makeTransportPaymentsViewModel(type: .transport)
         }
         
-        let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer<[ServiceCategory], CategoryListModelStub>(
+        let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
-                makeList: makeList,
                 makeMobile: makeMobile,
                 makeQR: makeQR,
                 makeQRNavigation: makeQRNavigation,
@@ -230,7 +222,7 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices<[ServiceCategory], CategoryListModelStub>.MakeStandard
+    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices.MakeStandard
     /*private*/ typealias LoadLatestForCategory = (ServiceCategory, @escaping (Result<[Latest], Error>) -> Void) -> Void
     /*private*/ typealias LoadOperators = (UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload, @escaping ([PaymentServiceOperator]) -> Void) -> Void
     /*private*/ typealias LoadOperatorsForCategory = (ServiceCategory, @escaping (Result<[PaymentServiceOperator], Error>) -> Void) -> Void

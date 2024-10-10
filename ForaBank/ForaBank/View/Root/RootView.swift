@@ -332,9 +332,6 @@ private extension RootView {
     ) -> some View {
         
         switch destination {
-        case let .list(list):
-            categoryListView(list)
-            
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
             case let .mobile(mobile):
@@ -660,13 +657,6 @@ private extension RootView {
         case let .servicesFailure(servicesFailure):
             Text("TBD: destination view \(String(describing: servicesFailure))")
         }
-    }
-    
-    func categoryListView(
-        _ categoryListModelStub: CategoryListModelStub
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
     }
     
     func makeOperationPickerView(
