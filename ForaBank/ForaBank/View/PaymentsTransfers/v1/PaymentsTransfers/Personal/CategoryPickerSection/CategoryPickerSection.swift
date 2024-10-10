@@ -9,4 +9,4 @@ import Foundation
 import PayHub
 import PayHubUI
 
-typealias CategoryPickerSection = PayHubUI.CategoryPickerSection<ServiceCategory, QRNavigationComposer.NotifyEvent, CategoryPickerSectionNavigation>
+typealias CategoryPickerSection = PayHubUI.CategoryPickerDomain<ServiceCategory, QRNavigationComposer.NotifyEvent, CategoryPickerSectionNavigation>

@@ -33,7 +33,7 @@ public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> 
         self.interactiveScheduler = interactiveScheduler
     }
     
-    public typealias Domain = CategoryPicker<Category, QRSelect, Navigation>
+    public typealias Domain = CategoryPickerDomain<Category, QRSelect, Navigation>
     public typealias ContentDomain = Domain.ContentDomain
     public typealias FlowDomain = Domain.FlowDomain
     

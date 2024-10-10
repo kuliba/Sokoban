@@ -172,7 +172,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
     // MARK: - Helpers
     
-    private typealias Domain = CategoryPicker<Category, Never, Navigation>
+    private typealias Domain = CategoryPickerDomain<Category, Never, Navigation>
     private typealias Composer = Domain.BinderComposer
     private typealias Content = Domain.ContentDomain.Content
     private typealias Flow = Domain.FlowDomain.Flow
