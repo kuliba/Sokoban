@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetCollateralLoanShowRequestTests.swift
+//  RequestFactory+createGetCollateralLoanLandingShowRequestTests.swift
 //  swift-forabank
 //
 //  Created by Valentin Ozerov on 08.10.2024.
@@ -9,7 +9,7 @@ import RemoteServices
 import XCTest
 import CollateralLoanLanding
 
-final class RequestFactory_createGetCollateralLoanShowRequestTests: XCTestCase {
+final class RequestFactory_createGetCollateralLoanLandingShowRequestTests: XCTestCase {
     func test_createRequest_shouldSetURLWithOneParameter() throws {
         let parameters = ["type": "COLLATERAL_SHOWCASE"]
         let url = anyURL()
