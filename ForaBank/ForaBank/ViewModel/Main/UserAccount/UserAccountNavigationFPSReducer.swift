@@ -136,11 +136,19 @@ private extension UserAccountNavigationFPSReducer {
         case let .serverError(message):
             state.spinner = nil
             // non-final => closeAlert
-            state.fpsRoute?.alert = .error(
-                message: message,
-                event: .dismiss(.alert)
-            )
-            
+            let tryMessage = "Превышено количество попыток ввода OTP. Попробуйте повторить позже."
+            if tryMessage == message {
+                state.informer = .failure("Банк по умолчанию не удален")
+                state.fpsRoute?.alert = .error(
+                    message: message,
+                    event: .dismiss(.fpsDestination)
+                )
+                effect = .navigation(.dismissInformer())
+
+            } else {
+                state.fpsRoute?.destination = nil
+            }
+
         case .missingProduct:
             state.spinner = nil
             state.fpsRoute?.alert = .missingProduct(event: .dismiss(.route))
@@ -175,7 +183,29 @@ private extension UserAccountNavigationFPSReducer {
         case let .deleteDefaultBankFailure(message):
             state.spinner = nil
             state.informer = .failure(message)
-            state.fpsRoute?.alert = .init(title: "Ошибка", message: message, primaryButton: .init(type: .default, title: "Ok", event: .dismiss(.alert)))
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
+
+            if message == tryAgain {
+                state.fpsRoute?.alert = .init(
+                    title: "Ошибка",
+                    message: message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "Ok",
+                        event: .dismiss(.alert)
+                    ))
+
+            } else {
+                state.fpsRoute?.alert = .init(
+                    title: "Ошибка",
+                    message: message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "Ok",
+                        event: .dismiss(.fpsDestination))
+                )
+            }
+            effect = .navigation(.dismissInformer())
             
         case .setBankDefaultSuccess:
             state.spinner = nil
