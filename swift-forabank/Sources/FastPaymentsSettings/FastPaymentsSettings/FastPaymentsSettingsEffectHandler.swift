@@ -145,7 +145,7 @@ private extension FastPaymentsSettingsEffectHandler {
             
             switch result {
             case .success(()):
-                dispatch(.bankDefault(.deleteBankDefaultResult(.success)))
+                dispatch(.bankDefault(.prepareDeleteBank(.success)))
                 
             case let .failure(failure):
 //                dispatch(.bankDefault(.deleteBankDefaultResult(.success)))
