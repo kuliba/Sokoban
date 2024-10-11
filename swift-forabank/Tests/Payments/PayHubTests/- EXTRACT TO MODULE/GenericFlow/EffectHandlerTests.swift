@@ -37,10 +37,12 @@ final class FlowEffectHandlerTests: FlowTests {
         let navigation = makeNavigation()
         let (sut, getNavigation) = makeSUT()
         
-        expect(sut, with: .select(makeSelect()), toDeliver: .receive(navigation)) {
-            
-            getNavigation.complete(with: navigation)
-        }
+        expect(
+            sut,
+            with: .select(makeSelect()),
+            toDeliver: .receive(navigation),
+            on: { getNavigation.complete(with: navigation) }
+        )
     }
     
     // MARK: - Helpers
