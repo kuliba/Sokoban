@@ -108,7 +108,9 @@ extension Model {
         
         let actions = CarouselActions(
             openUrl: { landingActions(.card(.openUrl($0))) },
-            goToMain: { landingActions(.card(.goToMain)) })
+            goToMain: { landingActions(.card(.goToMain)) },
+            orderSticker: { landingActions(.sticker(.order))}
+        )
         
         return LandingWrapperViewModel(
             initialState: .success(.init(result)),

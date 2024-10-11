@@ -38,6 +38,24 @@ final class CarouselActionTests: XCTestCase {
             [.goMain])
     }
 
+    func test_itemAction_actionGoToOrderSticker_LinkNil_shouldCallGoOrderSticker() {
+                
+        assertItemAction(
+            for: .init(type: "goToOrderSticker", target: nil),
+            link: nil,
+            [.orderSticker])
+    }
+
+    func test_itemAction_actionGoToOrderSticker_LinkNotNil_shouldCallGoOrderSticker() {
+        
+        let link = anyMessage()
+
+        assertItemAction(
+            for: .init(type: "goToOrderSticker", target: nil),
+            link: link,
+            [.orderSticker])
+    }
+
     func test_itemAction_actionNil_linkNotNil_shouldCallOpenUrl() {
         
         let link = anyMessage()
@@ -86,7 +104,8 @@ final class CarouselActionTests: XCTestCase {
             link: link,
             actions: .init(
                 openUrl: { _ in received.append(.openLink) },
-                goToMain: { received.append(.goMain) }))()
+                goToMain: { received.append(.goMain) }, 
+                orderSticker: { received.append(.orderSticker) }))()
         
         XCTAssertEqual(received, expectedActionTypes)
     }
@@ -95,5 +114,6 @@ final class CarouselActionTests: XCTestCase {
         
         case goMain
         case openLink
+        case orderSticker
     }
 }
