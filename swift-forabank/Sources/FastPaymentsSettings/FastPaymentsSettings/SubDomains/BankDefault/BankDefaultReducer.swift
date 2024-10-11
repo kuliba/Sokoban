@@ -157,7 +157,7 @@ private extension BankDefaultReducer {
         switch result {
         case .success:
             return .init(
-                settingsResult: .active(bankDefaultResponse: .init(bankDefault: .offEnabled)),
+                settingsResult: .success(.contracted(details)),
                 status: .deleteBankDefault(details.paymentContract.phoneNumberMasked.rawValue)
             )
             
@@ -183,9 +183,10 @@ private extension BankDefaultReducer {
         with result: BankDefaultEvent.SetBankDefaultResult
     ) -> State {
         
-        guard let details = state.activeDetails
+        guard var details = state.activeDetails
         else { return state }
-   
+        details.bankDefaultResponse = .init(bankDefault: .offEnabled)
+        
         switch result {
         case .success:
             return .init(
