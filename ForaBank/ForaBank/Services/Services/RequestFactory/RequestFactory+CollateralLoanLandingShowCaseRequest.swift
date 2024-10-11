@@ -10,8 +10,7 @@ import RemoteServices
 
 extension RequestFactory {
     static func createGetCollateralLoanLandingShowCaseRequest(
-        with parameters: [(String, String)],
-        serial: String?
+        with parameters: [(String, String)]
     ) throws -> URLRequest {
         
         let endpoint = Services.Endpoint.createLandingRequest
@@ -19,7 +18,6 @@ extension RequestFactory {
             withBase: Config.serverAgentEnvironment.baseURL,
             parameters: parameters
         )
-            .appendingSerial(serial)
         
         return RemoteServices.RequestFactory.createEmptyRequest(.get, with: url)
     }

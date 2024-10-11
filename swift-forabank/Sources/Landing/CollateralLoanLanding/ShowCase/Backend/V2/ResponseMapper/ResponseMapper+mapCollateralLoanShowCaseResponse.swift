@@ -49,8 +49,9 @@ private extension ResponseMapper._Data {
 private extension ResponseMapper._Data.Product {
 
     var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product {
+        
         .init(
-            theme: self.theme?.map ?? .unknown,
+            theme: themeMap,
             name: self.name,
             terms: self.terms,
             landingId: self.landingId,
@@ -61,14 +62,20 @@ private extension ResponseMapper._Data.Product {
     }
 }
 
-private extension ResponseMapper._Data.Product.Theme {
+private extension ResponseMapper._Data.Product {
 
-    var map: ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Theme {
-        switch self {
-        case .gray: return .gray
-        case .white: return .white
-        case .unknown: return .unknown
+    typealias Theme = ResponseMapper.CollateralLoanLandingShowCaseModel.Product.Theme
+    
+    var themeMap: Theme {
+        
+        var theme = Theme.unknown
+        
+        if let themeFromData = self.theme,
+           let themeMap = Theme(rawValue: themeFromData.lowercased()) {
+            theme = themeMap
         }
+
+        return theme
     }
 }
 
@@ -112,28 +119,14 @@ private extension ResponseMapper {
         
         struct Product: Decodable {
 
-            let theme: Theme?
+            let theme: String?
             let name: String?
             let terms: String?
             let landingId: String?
             let image: String?
             let keyMarketingParams: KeyMarketingParams?
             let features: Features?
-            
-            enum Theme: String, Decodable {
-
-                case gray = "GRAY"
-                case white = "WHITE"
-                case unknown
-                
-                init(from decoder: Decoder) throws {
-
-                    let container = try decoder.singleValueContainer()
-                    let stringValue = try container.decode(String.self)
-                    self = .init(rawValue: stringValue) ?? .unknown
-                }
-            }
-            
+                        
             struct KeyMarketingParams: Decodable {
 
                 let rate: String?

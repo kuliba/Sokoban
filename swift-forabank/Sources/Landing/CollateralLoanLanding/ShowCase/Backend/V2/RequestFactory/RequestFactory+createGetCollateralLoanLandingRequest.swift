@@ -10,10 +10,12 @@ import Foundation
 import RemoteServices
 
 public extension RequestFactory {
+
     static func createGetCollateralLoanLandingRequest(
         parameters: [String: String],
         url: URL
     ) throws -> URLRequest {
+        
         let url = try url.appendingQueryItems(parameters: parameters)
         return createEmptyRequest(.get, with: url)
     }
