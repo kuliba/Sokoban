@@ -301,7 +301,10 @@ private extension RootViewFactoryComposer {
         _ landing: MarketShowcaseDomain.Landing
     ) -> LandingWrapperView {
         
-        let landingViewModel = model.landingViewModelFactory(result: landing, config: .default, landingActions: {
+        let landingViewModel = model.landingViewModelFactory(
+            result: landing,
+            config: .default,
+            landingActions: {
             
             // TODO: add case
             switch $0 {

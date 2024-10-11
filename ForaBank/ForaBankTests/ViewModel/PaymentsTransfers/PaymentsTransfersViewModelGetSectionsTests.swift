@@ -85,6 +85,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            landingServices: .empty(),
             productProfileServices: .preview,
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
