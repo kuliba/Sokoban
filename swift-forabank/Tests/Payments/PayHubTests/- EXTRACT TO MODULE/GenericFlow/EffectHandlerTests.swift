@@ -58,9 +58,12 @@ final class FlowEffectHandlerTests: FlowTests {
         getNavigation: GetNavigationSpy
     ) {
         let getNavigation = GetNavigationSpy()
-        let sut = SUT(microServices: .init(
-            getNavigation: getNavigation.process
-        ))
+        let sut = SUT(
+            microServices: .init(
+                getNavigation: getNavigation.process
+            ),
+            scheduler: .immediate
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(getNavigation, file: file, line: line)
