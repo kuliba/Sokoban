@@ -109,7 +109,8 @@ final class PlainPickerBinderComposerTests: PlainPickerTests {
             microServices: .init(
                 getNavigation: spy.process(_:completion:)
             ),
-            scheduler: scheduler.eraseToAnyScheduler()
+            scheduler: scheduler.eraseToAnyScheduler(),
+            interactiveScheduler: .immediate
         )
         let sut = composer.compose(elements: elements)
         

@@ -7,6 +7,7 @@
 
 import FooterComponent
 import SwiftUI
+import UIPrimitives
 
 struct SegmentedPaymentProviderPickerFlowView<OperatorLabel, DestinationContent>: View
 where OperatorLabel: View,
@@ -22,7 +23,6 @@ where OperatorLabel: View,
         content()
             .navigationDestination(
                 destination: flowModel.state.destination,
-                dismissDestination: { flowModel.state.content.event(.deselect) },
                 content: destinationContent
             )
     }

@@ -370,7 +370,7 @@ extension RootViewModelFactory {
                 
                 backgroundScheduler.delay(for: .seconds(8)) {
                     
-                    completion(response.map(\.list))
+                    completion(response.map(\.list).map { $0.sorted(by: \.ord) })
                 }
             }
         }
@@ -380,11 +380,7 @@ extension RootViewModelFactory {
         )
         let loadServiceCategories: LoadServiceCategories = { completion in
             
-            decorated.load {
-                
-                let categories = (try? $0.get()) ?? []
-                completion(categories.map { .category($0) })
-            }
+            decorated.load { completion((try? $0.get()) ?? []) }
         }
         
         let getLatestPayments = nanoServiceComposer.compose(
@@ -422,13 +418,12 @@ extension RootViewModelFactory {
         
         let oneTime = FireAndForgetDecorator(
             decoratee: loadServiceCategories,
-            decoration: { [weak paymentsTransfersPersonal] response, completion in
+            decoration: { [weak paymentsTransfersPersonal] categories, completion in
                 
                 // notify categoryPicker
-                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(response))
+                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories))
                 
                 // load operators
-                let categories = response.categories
                 let serial = model.localAgent.serial(for: [CodableServicePaymentOperator].self)
                 
                 operatorsService(categories.map { .init(serial: serial, category: $0) }) {
@@ -447,9 +442,9 @@ extension RootViewModelFactory {
             
             oneTime {
                 
-                guard let items = try? $0.get() else { return }
+                guard let categories = try? $0.get() else { return }
 
-                logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(items.categories)", file: #file, line: #line)
+                logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(categories)", file: #file, line: #line)
                 
                 _ = oneTime
             }
@@ -961,23 +956,6 @@ private extension UserAccountModelEffectHandler {
                 model.auth.value = .unlockRequiredManual
             }
         )
-    }
-}
-
-extension Array where Element == CategoryPickerSection.ContentDomain.Item {
-    
-    var categories: [ServiceCategory] {
-        
-        compactMap {
-            
-            switch $0 {
-            case let .category(category):
-                return category
-                
-            case .list:
-                return .none
-            }
-        }
     }
 }
 
