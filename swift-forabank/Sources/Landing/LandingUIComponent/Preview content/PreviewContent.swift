@@ -650,7 +650,26 @@ extension UILanding.Carousel.CarouselWithDots.Config {
         title: .init(textFont: .largeTitle, textColor: .black)
     )
 }
-// MARK: - BlockHorizontalRectangular 
+
+// MARK: - CarouselWithTabs Config
+
+extension UILanding.Carousel.CarouselWithTabs.Config {
+    
+    static let `default`: Self = .init(
+        category: .init(textFont: .body, textColor: .black),
+        cornerRadius: 12,
+        paddings: .init(horizontal: 16, vertical: 8),
+        pageControls: .init(
+            active: Color(red: 153/255, green: 153/255, blue: 153/255),
+            inactive: Color(red: 246/255, green: 246/255, blue: 247/255),
+            widthAndHeight: 6
+        ),
+        spacing: 8,
+        title: .init(textFont: .largeTitle, textColor: .black)
+    )
+}
+
+// MARK: - BlockHorizontalRectangular
 
 extension UILanding.BlockHorizontalRectangular {
     
@@ -777,29 +796,39 @@ extension ImageViewFactory {
     static let `default`: Self = .init(
         makeIconView: {
             if $0 == "1" {
-                .init(
-                    image: .flag,
-                    publisher: Just(.percent).eraseToAnyPublisher()
-                ) } else {
-                    .init(
-                        image: .percent,
-                        publisher: Just(.flag).eraseToAnyPublisher()
-                        
-                    )}
-        },
+        .init(
+            image: .flag,
+            publisher: Just(.percent).eraseToAnyPublisher()
+        ) } else {
+        .init(
+            image: .percent,
+            publisher: Just(.flag).eraseToAnyPublisher()
+            
+        )}},
         makeBannerImageView: {
-            if $0 == "1" {
-                .init(
-                    image: .flag,
-                    publisher: Just(.percent).eraseToAnyPublisher()
-                ) } else {
-                    .init(
-                        image: .percent,
-                        publisher: Just(.flag).eraseToAnyPublisher()
-                        
-                    )}
-        }
-    )
+            switch $0 {
+    case "1":
+        return  .init(
+            image: .flag,
+            publisher: Just(.percent).eraseToAnyPublisher()
+        )
+    case "2":
+        return  .init(
+            image: .shield,
+            publisher: Just(.shield).eraseToAnyPublisher()
+        )
+    case "3":
+        return  .init(
+            image: .bolt,
+            publisher: Just(.bolt).eraseToAnyPublisher()
+        )
+        
+    default:
+        return .init(
+            image: .percent,
+            publisher: Just(.flag).eraseToAnyPublisher()
+        )
+    }})
 }
 
 extension CarouselViewFactory {
@@ -807,7 +836,7 @@ extension CarouselViewFactory {
     static let `default`: Self = .init(
         makeCarouselBaseView: {
             CarouselBaseView(
-                model: $0,
+                carousel: $0,
                 actions: .default,
                 factory: .default,
                 config: .default
@@ -815,13 +844,20 @@ extension CarouselViewFactory {
         },
         makeCarouselWithDotsView: {
             CarouselWithDotsView(
-                model: $0,
+                carousel: $0,
                 actions: .default,
                 factory: .default,
                 config: .default
             )
         },
-        makeCarouselWithTabsView: { EmptyView() }
+        makeCarouselWithTabsView: {
+            CarouselWithTabsView(
+                carousel: $0,
+                actions: .default,
+                factory: .default,
+                config: .default
+            )
+        }
     )
 }
 
@@ -829,7 +865,8 @@ extension CarouselActions {
     
     static let `default`: Self = .init(
         openUrl: {_ in },
-        goToMain: {}
+        goToMain: {},
+        orderSticker: {}
     )
 }
 
@@ -879,6 +916,49 @@ extension Array where Element == UILanding.Carousel.CarouselWithDots.ListItem {
               link: "https://market.yandex.ru",
               action: nil),
         .init(imageLink: "dict/getProductCatalogImage?image=/products/banners/scooter_688×480.png",
+              link: "https://samokat.ru",
+              action: nil),
+    ]
+}
+
+// MARK: - CarouselWithTabs
+
+extension UILanding.Carousel.CarouselWithTabs {
+    
+    static let `default`: Self = .init(
+        title: "Страхование",
+        size: .init(width: 182, height: 240),
+        scale: "",
+        loopedScrolling: false,
+        tabs: [
+            .init(
+                name: "Tabs1",
+                list: .list1),
+            .init(
+                name: "Tabs2",
+                list: .list2),
+
+        ])
+}
+
+// MARK: - CarouselWithTabs List
+
+extension Array where Element == UILanding.Carousel.CarouselWithTabs.ListItem {
+    
+    static let list1: Self =  [
+        .init(imageLink: "1",
+              link: "https://market.yandex.ru",
+              action: nil),
+        .init(imageLink: "2",
+              link: "https://samokat.ru",
+              action: nil),
+    ]
+    
+    static let list2: Self =  [
+        .init(imageLink: "3",
+              link: "https://market.yandex.ru",
+              action: nil),
+        .init(imageLink: "4",
               link: "https://samokat.ru",
               action: nil),
     ]

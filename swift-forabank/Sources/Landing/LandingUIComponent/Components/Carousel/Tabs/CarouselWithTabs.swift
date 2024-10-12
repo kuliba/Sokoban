@@ -60,23 +60,12 @@ public extension UILanding.Carousel {
             
             let imageLink: String
             let link: String?
-            let action: Action?
+            let action: ItemAction?
             
-            public init(imageLink: String, link: String?, action: Action?) {
+            public init(imageLink: String, link: String?, action: ItemAction?) {
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action
-            }
-                        
-            public struct Action: Equatable {
-                
-                let type: String
-                let target: String?
-                
-                public init(type: String, target: String?) {
-                    self.type = type
-                    self.target = target
-                }
             }
         }
     }

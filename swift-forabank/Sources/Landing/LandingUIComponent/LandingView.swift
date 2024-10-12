@@ -366,10 +366,10 @@ extension LandingView {
                 }
                 
             case let .carousel(.withTabs(model)):
-                EmptyView()
-                
+                if let carouselViewFactory { carouselViewFactory.makeCarouselWithTabsView(model)
+                }
+
             case let .carousel(.withDots(model)):
-                
                 if let carouselViewFactory { carouselViewFactory.makeCarouselWithDotsView(model)
                 }
             }
