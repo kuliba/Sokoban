@@ -1151,6 +1151,9 @@ private extension Target {
     
     static let ephemeralStores = target(
         name: .ephemeralStores,
+        dependencies: [
+            .genericLoader,
+        ],
         path: "Sources/Infra/\(String.ephemeralStores)"
     )
     static let ephemeralStoresTests = testTarget(
