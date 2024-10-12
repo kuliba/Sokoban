@@ -541,6 +541,13 @@
         "identifier" : "EphemeralStoresTests",
         "name" : "EphemeralStoresTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GenericLoaderTests",
+        "name" : "GenericLoaderTests"
+      }
     }
   ],
   "version" : 1
