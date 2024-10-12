@@ -24,6 +24,7 @@ let package = Package(
         .landingMapping,
         .landingUIComponent,
         // Infra
+        .ephemeralStores,
         .fetcher,
         .keyChainStore,
         // Payments
@@ -127,6 +128,8 @@ let package = Package(
         .landingUIComponent,
         .landingUIComponentTests,
         // Infra
+        .ephemeralStores,
+        .ephemeralStoresTests,
         .fetcher,
         .fetcherTests,
         .keyChainStore,
@@ -614,6 +617,13 @@ private extension Product {
     )
     
     // MARK: - Infra
+    
+    static let ephemeralStores = library(
+        name: .ephemeralStores,
+        targets: [
+            .ephemeralStores
+        ]
+    )
     
     static let fetcher = library(
         name: .fetcher,
@@ -1128,6 +1138,21 @@ private extension Target {
     )
     
     // MARK: - Infra
+    
+    static let ephemeralStores = target(
+        name: .ephemeralStores,
+        path: "Sources/Infra/\(String.ephemeralStores)"
+    )
+    static let ephemeralStoresTests = testTarget(
+        name: .ephemeralStoresTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+        ],
+        path: "Tests/Infra/\(String.ephemeralStoresTests)"
+    )
     
     static let fetcher = target(
         name: .fetcher,
@@ -2925,6 +2950,10 @@ private extension Target.Dependency {
     
     // MARK: - Infra
     
+    static let ephemeralStores = byName(
+        name: .ephemeralStores
+    )
+    
     static let fetcher = byName(
         name: .fetcher
     )
@@ -3251,6 +3280,9 @@ private extension String {
     static let operatorsListComponentsTests = "OperatorsListComponentsTests"
     
     // MARK: - Infra
+    
+    static let ephemeralStores = "EphemeralStores"
+    static let ephemeralStoresTests = "EphemeralStoresTests"
     
     static let fetcher = "Fetcher"
     static let fetcherTests = "FetcherTests"
