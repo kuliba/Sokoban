@@ -46,6 +46,13 @@ extension RootViewModelFactory {
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
+        func runOnceWhenAuthorized(
+            _ work: @escaping () -> Void,
+            on scheduler: AnySchedulerOfDispatchQueue = backgroundScheduler
+        ) {
+            bindings.insert(model.runOnceWhenAuthorised(work, on: scheduler))
+        }
+        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -352,11 +359,11 @@ extension RootViewModelFactory {
         )
         let getServiceCategoryListLoader = AnyLoader { completion in
             
-            backgroundScheduler.delay(for: .seconds(2)) {
+            getServiceCategoryList(nil) { response in
                 
-                getServiceCategoryList(nil) {
+                backgroundScheduler.delay(for: .seconds(8)) {
                     
-                    completion($0.map(\.list))
+                    completion(response.map(\.list))
                 }
             }
         }
@@ -423,19 +430,21 @@ extension RootViewModelFactory {
                         
                         logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \($0.map(\.category))", file: #file, line: #line)
                     }
+                    
+                    completion()
                 }
-                
-                completion()
             }
         )
 
-        bindings.saveAndRun {
+        runOnceWhenAuthorized {
             
             oneTime {
                 
                 guard let items = try? $0.get() else { return }
 
                 logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(items.categories)", file: #file, line: #line)
+                
+                _ = oneTime
             }
         }
         
