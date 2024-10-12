@@ -56,10 +56,12 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         let navigation = makeNavigation()
         let (sut, getNavigation) = makeSUT()
         
-        expect(sut, with: .select(makeSelect()), toDeliver: .receive(navigation)) {
-            
-            getNavigation.complete(with: navigation)
-        }
+        expect(
+            sut,
+            with: .select(makeSelect()),
+            toDeliver: .receive(navigation),
+            on: { getNavigation.complete(with: navigation) }
+        )
     }
     
     // MARK: - Helpers
@@ -76,12 +78,15 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
         getNavigation: GetNavigationSpy
     ) {
         let getNavigation = GetNavigationSpy()
-        let sut = SUT(microServices: .init(
-            getNavigation: {
-                
-                getNavigation.process(($0, $1), completion: $2)
-            }
-        ))
+        let sut = SUT(
+            microServices: .init(
+                getNavigation: {
+                    
+                    getNavigation.process(($0, $1), completion: $2)
+                }
+            ),
+            scheduler: .immediate
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(getNavigation, file: file, line: line)

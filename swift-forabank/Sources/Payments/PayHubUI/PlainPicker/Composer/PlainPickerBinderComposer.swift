@@ -14,13 +14,16 @@ public final class PlainPickerBinderComposer<Element, Navigation> {
     
     private let microServices: MicroServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
-    
+    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
+
     public init(
         microServices: MicroServices,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.microServices = microServices
         self.scheduler = scheduler
+        self.interactiveScheduler = interactiveScheduler
     }
     
     public typealias Domain = FlowDomain<Element, Navigation>
@@ -67,7 +70,8 @@ private extension PlainPickerBinderComposer {
         
         let composer = Domain.Composer(
             microServices: microServices,
-            scheduler: scheduler
+            scheduler: scheduler,
+            interactiveScheduler: interactiveScheduler
         )
         return composer.compose()
     }
