@@ -290,6 +290,18 @@ extension RootViewModelFactory {
             scheduler: mainScheduler
         )
         
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        // reusable factory
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
+        )
+
+        let getLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createMarketplaceLandingRequest,
+            mapResponse: LandingMapper.map
+        )
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -297,7 +309,8 @@ extension RootViewModelFactory {
             makeTemplates: makeTemplates,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
-            sberQRServices: sberQRServices,
+            sberQRServices: sberQRServices, 
+            landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
@@ -314,12 +327,6 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
-        // reusable factory
-        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: logger
-        )
         // reusable component
         let asyncLocalAgent = LocalAgentAsyncWrapper(
             agent: model.localAgent,
@@ -452,11 +459,6 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        let getLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createMarketplaceLandingRequest,
-            mapResponse: LandingMapper.map
-        )
-
         let mainViewBannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
@@ -510,7 +512,8 @@ extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory, 
+            landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
@@ -664,6 +667,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
+        landingServices: LandingServices,
         productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
@@ -686,6 +690,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
+                landingServices: landingServices,
                 productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
@@ -823,6 +828,7 @@ private extension RootViewModelFactory {
         productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        landingServices: LandingServices,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister,
         makePaymentProviderPickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderPickerFlowModel,
@@ -858,6 +864,7 @@ private extension RootViewModelFactory {
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister, 

@@ -613,7 +613,7 @@ private extension UILanding.Carousel.CarouselBase.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselBase.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: LocalAgentDomain.Landing.CodableCarouselBase.ListItem.Action
@@ -659,7 +659,7 @@ private extension UILanding.Carousel.CarouselWithTabs.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselWithTabs.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: LocalAgentDomain.Landing.CodableCarouselWithTabs.ListItem.Action
@@ -694,7 +694,7 @@ private extension UILanding.Carousel.CarouselWithDots.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselWithDots.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: LocalAgentDomain.Landing.CodableCarouselWithDots.ListItem.Action
