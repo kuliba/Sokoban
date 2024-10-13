@@ -33,6 +33,7 @@ extension SerialLoaderComposer {
     
     typealias Serial = String
     typealias Load<T> = (@escaping (T?) -> Void) -> Void
+    typealias MappingResult<T> = RemoteServices.ResponseMapper.MappingResult<RemoteServices.SerialStamped<String, T>>
     
     /// Composes loaders for serial-stamped data with caching, supporting both local and remote data sources.
     ///
@@ -51,7 +52,7 @@ extension SerialLoaderComposer {
         fromModel: @escaping ([Model]) -> [T],
         toModel: @escaping ([T]) -> [Model],
         createRequest: @escaping (Serial?) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> RemoteServices.ResponseMapper.MappingResult<RemoteServices.SerialStamped<String, T>>
+        mapResponse: @escaping (Data, HTTPURLResponse) -> MappingResult<T>
     ) -> (local: Load<[T]>, remote: Load<[T]>) {
         
         let localLoad = asyncLocalAgent.composeLoad(fromModel: fromModel)
