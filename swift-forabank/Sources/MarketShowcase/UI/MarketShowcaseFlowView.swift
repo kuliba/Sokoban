@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct MarketShowcaseFlowView<ContentView, Destination, InformerPayload>: View
 where ContentView: View {

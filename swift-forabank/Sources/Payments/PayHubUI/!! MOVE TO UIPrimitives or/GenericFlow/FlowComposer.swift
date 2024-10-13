@@ -13,13 +13,16 @@ public final class FlowComposer<Select, Navigation> {
     
     private let microServices: MicroServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
+    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         microServices: MicroServices,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.microServices = microServices
         self.scheduler = scheduler
+        self.interactiveScheduler = interactiveScheduler
     }
     
     public typealias Domain = FlowDomain<Select, Navigation>
@@ -34,7 +37,8 @@ public extension FlowComposer {
         
         let reducer = Domain.Reducer()
         let effectHandler = Domain.EffectHandler(
-            microServices: microServices
+            microServices: microServices,
+            scheduler: interactiveScheduler
         )
         
         return .init(
