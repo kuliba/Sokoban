@@ -5,23 +5,24 @@
 //  Created by Igor Malyarov on 07.11.2023.
 //
 
+import AnywayPaymentBackend
+import CodableLanding
 import Combine
-import Foundation
+import Fetcher
 import ForaTools
+import Foundation
+import GenericRemoteService
+import LandingMapping
+import LandingUIComponent
 import ManageSubscriptionsUI
+import MarketShowcase
 import OperatorsListComponents
+import PayHub
+import PayHubUI
 import PaymentSticker
 import RemoteServices
 import SberQR
 import SwiftUI
-import PayHub
-import PayHubUI
-import Fetcher
-import LandingUIComponent
-import LandingMapping
-import CodableLanding
-import MarketShowcase
-import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -360,9 +361,10 @@ extension RootViewModelFactory {
         )
         
         let localServiceCategoryLoader = GenericLoaderOf<[ServiceCategory]>()
-        let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
-            httpClient: httpClient,
-            log: infoNetworkLog
+        let getServiceCategoryList = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse,
+            mapError: ServiceFailure.init
         )
         let getServiceCategoryListLoader = AnyLoader { completion in
             
