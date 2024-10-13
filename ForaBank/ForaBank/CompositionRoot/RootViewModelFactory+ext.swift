@@ -359,7 +359,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
         
-        let localServiceCategoryLoader = ServiceCategoryLoader.default
+        let localServiceCategoryLoader = GenericLoaderOf<[ServiceCategory]>()
         let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
             httpClient: httpClient,
             log: infoNetworkLog
