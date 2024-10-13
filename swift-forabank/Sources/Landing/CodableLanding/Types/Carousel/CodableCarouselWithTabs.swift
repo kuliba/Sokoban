@@ -12,21 +12,18 @@ public extension CodableLanding {
     struct CodableCarouselWithTabs: Codable, Equatable {
         
         public let title: String?
-        public let size: Size
-        public let scale: String
+        public let size: Sizes
         public let loopedScrolling: Bool
         public let tabs: [TabItem]
                 
         public init(
             title: String?,
-            size: Size,
-            scale: String,
+            size: Sizes,
             loopedScrolling: Bool,
             tabs: [TabItem]
         ) {
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.tabs = tabs
         }

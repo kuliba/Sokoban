@@ -928,7 +928,6 @@ extension UILanding.Carousel.CarouselWithTabs {
     static let `default`: Self = .init(
         title: "Страхование",
         size: .init(width: 182, height: 240),
-        scale: "",
         loopedScrolling: false,
         tabs: [
             .init(

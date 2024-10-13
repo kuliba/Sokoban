@@ -684,8 +684,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }

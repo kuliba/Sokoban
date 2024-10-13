@@ -101,7 +101,7 @@ extension CarouselWithTabsView {
                 
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
-                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .frame(width: size.width, height: size.height)
                     .accessibilityIdentifier("CarouselWithTabsImage")
             }
         }
@@ -116,7 +116,7 @@ public extension CarouselWithTabsView {
     typealias Item = UILanding.Carousel.CarouselWithTabs.ListItem
     typealias Config = UILanding.Carousel.CarouselWithTabs.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselWithTabs.Size
+    typealias ItemSize = Sizes
 }
 
 struct CarouselWithTabsView_Previews: PreviewProvider {

@@ -535,7 +535,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 124),
-                scale: "medium",
                 loopedScrolling: true,
                 tabs: [
                     .init(

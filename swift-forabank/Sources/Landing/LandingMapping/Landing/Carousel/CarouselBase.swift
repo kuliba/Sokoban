@@ -71,11 +71,3 @@ public extension Landing.DataView.Carousel {
         }
     }
 }
-
-extension String {
-    var allNumbers: [Int] {
-        
-        let numbersInString = components(separatedBy: .decimalDigits.inverted).filter { !$0.isEmpty }
-        return numbersInString.compactMap { Int($0) }
-    }
-}
