@@ -84,6 +84,11 @@ public struct LandingView: View {
                     )
                     .onPreferenceChange(ViewOffsetKey.self) {
                         position = $0
+                        viewModel.landing.refresh(
+                            offset: $0,
+                            offsetForStartUpdate: -viewModel.config.offsetForDisplayHeader,
+                            action: carouselViewFactory?.refreshAction ?? {}
+                        )
                     }
             }
             .coordinateSpace(name: "scroll")

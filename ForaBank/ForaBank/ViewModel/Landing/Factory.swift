@@ -103,7 +103,8 @@ extension Model {
     func landingViewModelFactory(
         result: Landing,
         config: UILanding.Component.Config,
-        landingActions: @escaping (LandingEvent) -> Void
+        landingActions: @escaping (LandingEvent) -> Void,
+        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void
     ) -> LandingWrapperViewModel {
         
         let actions = CarouselActions(
@@ -117,7 +118,7 @@ extension Model {
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             imageViewFactory: makeImageViewFactory(),
-            carouselViewFactory: makeCarouselFactory(actions: actions),
+            carouselViewFactory: makeCarouselFactory(actions: actions, contentActions: contentActions),
             limitsViewModel: nil,
             scheduler: .main,
             config: config,
@@ -126,12 +127,14 @@ extension Model {
     }
     
     func makeCarouselFactory(
-        actions: CarouselActions
+        actions: CarouselActions,
+        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void
     ) -> CarouselViewFactory {
         .init(
             makeCarouselBaseView: { self.makeCarouselBaseView($0, actions) },
             makeCarouselWithDotsView: { self.makeCarouselWithDotsView($0, actions) },
-            makeCarouselWithTabsView: { self.makeCarouselWithTabsView($0, actions) }
+            makeCarouselWithTabsView: { self.makeCarouselWithTabsView($0, actions) }, 
+            refreshAction: { contentActions(.load) }
         )
     }
     

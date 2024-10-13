@@ -1798,7 +1798,9 @@ extension MainViewModel {
                     let viewModel = model.landingViewModelFactory(
                         result: landing,
                         config: .default,
-                        landingActions: landingActions(for:))
+                        landingActions: landingActions(for:),
+                        contentActions: {_ in }
+                    )
                     
                     route.destination = .landing(viewModel, false)
                 }

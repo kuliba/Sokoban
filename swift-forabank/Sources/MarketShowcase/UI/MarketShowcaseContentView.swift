@@ -32,10 +32,7 @@ where RefreshView: View,
     
     public var body: some View {
         
-        content()
-            .refresh(action: {
-                event(.load)
-            })
+        NavigationView { content() }
     }
     
     @ViewBuilder

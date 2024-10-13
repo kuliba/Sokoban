@@ -113,6 +113,16 @@ extension UILanding {
       }
       return false
   }
+    
+    func refresh(
+        offset: CGFloat,
+        offsetForStartUpdate: CGFloat,
+        action: () -> Void
+    ){
+        if offset < offsetForStartUpdate {
+            action()
+        }
+    }
 }
 
 extension UILanding {
