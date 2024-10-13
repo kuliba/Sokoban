@@ -12,14 +12,14 @@ public extension CodableLanding {
     struct CodableCarouselBase: Codable, Equatable {
         
         public let title: String?
-        public let size: Size
+        public let size: Sizes
         public let loopedScrolling: Bool
         
         public let list: [ListItem]
         
         public init(
             title: String?,
-            size: Size,
+            size: Sizes,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
@@ -27,17 +27,6 @@ public extension CodableLanding {
             self.size = size
             self.loopedScrolling = loopedScrolling
             self.list = list
-        }
-        
-        public struct Size: Codable, Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
         }
         
         public struct ListItem: Codable, Equatable {

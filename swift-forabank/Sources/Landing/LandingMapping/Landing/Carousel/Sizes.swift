@@ -30,6 +30,7 @@ extension Sizes {
 }
 
 extension String {
+    
     var allNumbers: [Int] {
         
         let numbersInString = components(separatedBy: .decimalDigits.inverted).filter { !$0.isEmpty }

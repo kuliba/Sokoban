@@ -12,14 +12,13 @@ public extension Landing.DataView.Carousel {
     struct CarouselWithDots: Equatable {
         
         public let title: String?
-        public let size: Size
+        public let size: Sizes
         public let loopedScrolling: Bool
-        
         public let list: [ListItem]
         
         public init(
             title: String?,
-            size: Size,
+            size: Sizes,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
@@ -29,23 +28,6 @@ public extension Landing.DataView.Carousel {
             self.list = list
         }
         
-        public struct Size: Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
-            
-            public init(size: String, scale: CGFloat) {
-                let allNumbers = size.allNumbers
-                self.width = CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale
-                self.height = CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale
-            }
-        }
-
         public struct ListItem: Equatable {
             
             public let imageLink: String
