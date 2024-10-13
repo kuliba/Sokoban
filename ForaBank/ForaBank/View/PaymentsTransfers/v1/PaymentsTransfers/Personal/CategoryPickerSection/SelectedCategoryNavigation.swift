@@ -8,13 +8,11 @@
 import Foundation
 import PayHub
 
-typealias CategoryPickerSectionNavigation = SelectedCategoryNavigation<CategoryListModelStub>
-typealias PlainCategoryPickerSectionNavigation = SelectedCategoryNavigation<Never>
+typealias CategoryPickerSectionNavigation = SelectedCategoryNavigation
 
-enum SelectedCategoryNavigation<List> {
+enum SelectedCategoryNavigation {
     
     case failure(SelectedCategoryFailure)
-    case list(List)
     case paymentFlow(PaymentFlow)
     case qrNavigation(QRNavigation)
     
@@ -48,9 +46,6 @@ extension SelectedCategoryNavigation {
         switch self {
         case .failure:
             return nil
-            
-        case let .list(list):
-            return .list(list)
             
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
@@ -107,7 +102,6 @@ extension SelectedCategoryNavigation {
     
     enum Destination {
         
-        case list(List)
         case paymentFlow(PaymentFlowDestination)
         case qrDestination(QRNavigation.Destination)
         
@@ -120,9 +114,6 @@ extension SelectedCategoryNavigation.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case .list:
-            return .list
-            
         case let .paymentFlow(paymentFlow):
             return .paymentFlow(paymentFlow.id)
             
@@ -133,7 +124,6 @@ extension SelectedCategoryNavigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
-        case list
         case paymentFlow(PaymentFlowDestinationID)
         case qrDestination(QRNavigation.Destination.ID)
     }

@@ -23,7 +23,7 @@ extension RootViewModelFactory {
         placeholderCount: Int,
         mainScheduler: AnySchedulerOf<DispatchQueue>,
         backgroundScheduler: AnySchedulerOf<DispatchQueue>
-    ) -> CategoryPickerSection.Binder {
+    ) -> CategoryPickerSectionDomain.Binder {
         
         func loadOperators(
             payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,
@@ -50,13 +50,6 @@ extension RootViewModelFactory {
                     completion(.success($0))
                 }
             }
-        }
-        
-        func makeList(
-            categories: [ServiceCategory]
-        ) -> CategoryListModelStub {
-            
-            return .init(categories: categories)
         }
         
         func makeMobile() -> ClosePaymentsViewModelWrapper {
@@ -101,10 +94,9 @@ extension RootViewModelFactory {
             model.makeTransportPaymentsViewModel(type: .transport)
         }
         
-        let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer<[ServiceCategory], CategoryListModelStub>(
+        let selectedCategoryComposer = SelectedCategoryNavigationMicroServicesComposer(
             model: model,
             nanoServices: .init(
-                makeList: makeList,
                 makeMobile: makeMobile,
                 makeQR: makeQR,
                 makeQRNavigation: makeQRNavigation,
@@ -116,7 +108,7 @@ extension RootViewModelFactory {
         )
         let microServices = selectedCategoryComposer.compose()
         
-        let categoryPickerComposer = CategoryPickerSection.BinderComposer(
+        let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
             load: nanoServices.loadCategories,
             microServices: microServices,
             placeholderCount: placeholderCount,
@@ -230,7 +222,7 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices<[ServiceCategory], CategoryListModelStub>.MakeStandard
+    typealias MakeStandard = CategoryPickerSectionMicroServicesComposerNanoServices.MakeStandard
     /*private*/ typealias LoadLatestForCategory = (ServiceCategory, @escaping (Result<[Latest], Error>) -> Void) -> Void
     /*private*/ typealias LoadOperators = (UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload, @escaping ([PaymentServiceOperator]) -> Void) -> Void
     /*private*/ typealias LoadOperatorsForCategory = (ServiceCategory, @escaping (Result<[PaymentServiceOperator], Error>) -> Void) -> Void

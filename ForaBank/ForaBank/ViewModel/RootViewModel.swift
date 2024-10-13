@@ -662,7 +662,7 @@ extension PaymentsTransfersPersonal {
     }
 }
 
-private extension CategoryPickerSection.Binder {
+private extension CategoryPickerSectionDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         

@@ -11,7 +11,7 @@ import Foundation
 import PayHub
 import RxViewModel
 
-public final class CategoryPickerBinderComposer<Category, List, QRSelect, Navigation> {
+public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> {
     
     private let load: Load
     private let microServices: MicroServices
@@ -33,12 +33,11 @@ public final class CategoryPickerBinderComposer<Category, List, QRSelect, Naviga
         self.interactiveScheduler = interactiveScheduler
     }
     
-    public typealias Domain = CategoryPicker<Category, List, QRSelect, Navigation>
+    public typealias Domain = CategoryPickerDomain<Category, QRSelect, Navigation>
     public typealias ContentDomain = Domain.ContentDomain
     public typealias FlowDomain = Domain.FlowDomain
     
-    public typealias Item = ContentDomain.Item
-    public typealias Load = (@escaping ([Item]) -> Void) -> Void
+    public typealias Load = (@escaping ([Category]) -> Void) -> Void
     
     public typealias MicroServices = FlowDomain.MicroServices
 }
@@ -89,7 +88,7 @@ private extension CategoryPickerBinderComposer {
     func makeFlow() -> FlowDomain.Flow {
         
         let composer = FlowDomain.Composer(
-            microServices: microServices, 
+            microServices: microServices,
             scheduler: scheduler,
             interactiveScheduler: interactiveScheduler
         )
@@ -115,27 +114,8 @@ private extension CategoryPickerBinderComposer {
             .sink { _ in content.event(.select(nil)) }
         
         let select = content.$state
-            .sink {
-                
-                switch $0.selected {
-                case .none:
-                    break
-                    
-                case let .category(category):
-                    flow.event(.select(.pickerSelect(.category(category))))
-                    
-                case .list:
-                    let categories: [Category] = $0.items.compactMap {
-                        
-                        guard case let .element(element) = $0,
-                              case let .category(category) = element.element
-                        else { return nil }
-                        
-                        return category
-                    }
-                    flow.event(.select(.pickerSelect(.list(categories))))
-                }
-            }
+            .compactMap(\.selected)
+            .sink { flow.event(.select(.category($0))) }
         
         return [dismiss, select]
     }
