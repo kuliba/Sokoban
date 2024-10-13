@@ -975,21 +975,22 @@ extension Array where Element == CategoryPickerSection.ContentDomain.Item {
 private extension MarketShowcaseDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, LandingMapper.MapperError>
-
+    
     init(
         error: RemoteError
     ) {
-        switch error {
-        case .createRequest, .performRequest:
-            self = .init(kind: .alert("Попробуйте позже."))
-            
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .notOkStatus, .mapError, .serverError:
-                self = .init(kind: .alert("Попробуйте позже."))
-            case .connectivityError:
+        self = .init(kind: .alert("Попробуйте позже."))
+
+        /*switch error {
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else {
+                self = .init(kind: .alert("Попробуйте позже."))
             }
-        }
+            
+        default:
+            self = .init(kind: .alert("Попробуйте позже."))
+        }*/
     }
 }

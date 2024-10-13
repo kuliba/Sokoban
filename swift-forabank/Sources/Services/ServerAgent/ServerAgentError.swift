@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedAPIInfra
 
 /// ServerAgent's error
 public enum ServerAgentError: LocalizedError {
@@ -64,6 +65,19 @@ public extension Error {
         let nsError = self as NSError
         
         return nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorTimedOut
+    }
+    
+    func isNotConnectedToInternetOrTimeout() -> Bool {
+        
+        guard let sessionError = self as? URLSessionHTTPClient.Error else { return false }
+        
+        switch sessionError {
+        case let .sessionError(error):
+            let nsError = error as NSError
+            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut
+            
+        default: return false
+        }
     }
 }
 
