@@ -42,7 +42,7 @@ where ItemLabel: View,
         } else {
             VStack(spacing: config.spacing) {
                 
-                sectionHeader()
+                headerTitle()
                     .frame(height: config.headerHeight)
                 
                 ScrollView(showsIndicators: false) {
@@ -57,7 +57,7 @@ where ItemLabel: View,
 
 public extension CategoryPickerSectionContentView {
     
-    typealias Domain = CategoryPickerSectionContentDomain<ServiceCategory>
+    typealias Domain = CategoryPickerContentDomain<ServiceCategory>
     typealias State = Domain.State
     typealias Event = Domain.Event
     typealias Config = CategoryPickerSectionContentViewConfig
@@ -73,16 +73,6 @@ private extension LoadablePickerState {
 
 private extension CategoryPickerSectionContentView {
     
-    @ViewBuilder
-    func sectionHeader() -> some View {
-        
-        HStack {
-            
-            headerTitle()
-            showAll()
-        }
-    }
-    
     func headerTitle() -> some View {
         
         ZStack(alignment: .leading) {
@@ -95,14 +85,6 @@ private extension CategoryPickerSectionContentView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .animation(.easeInOut, value: state.isLoading)
-    }
-    
-    private func showAll() -> some View {
-        
-        itemView(item: .element(.init(.list(.init()))))
-            .opacity(state.isLoading ? 0 : 1)
-            .transition(transition)
-            .animation(.easeInOut, value: state.isLoading)
     }
     
     private func titlePlaceholder(
@@ -165,7 +147,7 @@ struct CategoryPickerSectionContentView_Previews: PreviewProvider {
     }
     
     private static func categoryPickerSectionContentView(
-        _ items: [CategoryPickerSectionContentDomain<PreviewServiceCategory>.State.Item]
+        _ items: [CategoryPickerContentDomain<PreviewServiceCategory>.State.Item]
     ) -> some View {
         
         CategoryPickerSectionContentView(
@@ -181,7 +163,7 @@ struct PreviewServiceCategory: Equatable {
     
 }
 
-extension Array where Element == CategoryPickerSectionContentDomain<PreviewServiceCategory>.State.Item {
+extension Array where Element == CategoryPickerContentDomain<PreviewServiceCategory>.State.Item {
     
     static func placeholders(count: Int) -> Self {
         
@@ -190,7 +172,7 @@ extension Array where Element == CategoryPickerSectionContentDomain<PreviewServi
     
     static var preview: Self {
         
-        [PreviewServiceCategory].preview.map { .element(.init(.category($0))) }
+        [PreviewServiceCategory].preview.map { .element(.init($0)) }
     }
 }
 
