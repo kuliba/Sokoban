@@ -22,6 +22,7 @@ import LandingMapping
 import CodableLanding
 import MarketShowcase
 import GenericRemoteService
+import SharedAPIInfra
 
 extension RootViewModelFactory {
     
@@ -979,9 +980,7 @@ private extension MarketShowcaseDomain.ContentError {
     init(
         error: RemoteError
     ) {
-        self = .init(kind: .alert("Попробуйте позже."))
-
-        /*switch error {
+        switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
@@ -991,6 +990,22 @@ private extension MarketShowcaseDomain.ContentError {
             
         default:
             self = .init(kind: .alert("Попробуйте позже."))
-        }*/
+        }
+    }
+}
+
+private extension Error {
+    
+    func isNotConnectedToInternetOrTimeout() -> Bool {
+        
+        guard let sessionError = self as? URLSessionHTTPClient.Error else { return false }
+        
+        switch sessionError {
+        case let .sessionError(error):
+            let nsError = error as NSError
+            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut
+            
+        default: return false
+        }
     }
 }

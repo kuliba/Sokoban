@@ -119,6 +119,13 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_multiTextsWithEmptyList_notDeliversMultiTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.multiTextWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiTexts, [])
+    }
+
     func test_map_deliversMultiMarkersTextsInMain() throws {
         
         let landing = try XCTUnwrap(map())
@@ -3359,6 +3366,25 @@ private extension String {
                 "sizeDp": "80.5"
             }
         },
+    ],
+    "serial": ""
+    }
+    }
+    """
+    
+    static let multiTextWithEmptyList: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "MULTI_TEXT",
+        "data": {
+          "list": []
+        }
+      }
     ],
     "serial": ""
     }
