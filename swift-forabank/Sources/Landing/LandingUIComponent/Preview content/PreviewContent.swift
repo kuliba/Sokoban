@@ -902,7 +902,6 @@ extension UILanding.Carousel.CarouselWithDots {
     static let `default`: Self = .init(
         title: "Страхование",
         size: .init(width: 182, height: 240),
-        scale: "",
         loopedScrolling: false,
         list: .default)
 }

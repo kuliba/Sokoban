@@ -676,7 +676,6 @@ private extension UILanding.Carousel.CarouselWithDots {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }

@@ -730,8 +730,7 @@ private extension Landing.DataView.Carousel.CarouselWithDots {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale.scale()),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }

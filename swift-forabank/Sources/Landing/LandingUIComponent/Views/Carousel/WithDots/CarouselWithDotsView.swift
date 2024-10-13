@@ -97,7 +97,7 @@ extension CarouselWithDotsView {
                 
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
-                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .frame(width: size.width, height: size.height)
                     .accessibilityIdentifier("CarouselWithDotsImage")
             }
         }
