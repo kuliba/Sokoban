@@ -69,13 +69,18 @@ extension SerialLoaderComposer {
             save: save
         )
         
-        let fallback = SerialFallback<Serial, T, Error>(
-            getSerial: getSerial,
+        let fallback = SerialFallback<Serial?, Serial, T, Error>(
+            getSerial: { $0 },
             primary: decorator.decorated,
             secondary: localLoad
         )
         
-        return (localLoad, fallback.callAsFunction(completion:))
+        let remote = { completion in
+        
+            fallback(payload: getSerial(), completion: completion)
+        }
+        
+        return (localLoad, remote)
     }
 }
 
