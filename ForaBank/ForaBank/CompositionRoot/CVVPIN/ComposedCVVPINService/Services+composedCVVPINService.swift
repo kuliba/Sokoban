@@ -9,8 +9,9 @@ import CVVPIN_Services
 import Fetcher
 import Foundation
 import GenericRemoteService
+import GenericLoader
 
-extension GenericLoaderOf: Loader {}
+extension LoaderOf: Loader {}
 
 // MARK: - CVVPINServicesClient
 
@@ -176,7 +177,7 @@ extension Services {
         ) -> any Loader<T> {
             
             LoggingLoaderDecorator(
-                decoratee: GenericLoaderOf(
+                decoratee: LoaderOf(
                     store: store,
                     currentDate: currentDate
                 ),
