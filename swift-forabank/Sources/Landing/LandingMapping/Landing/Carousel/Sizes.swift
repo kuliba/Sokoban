@@ -9,10 +9,10 @@ import Foundation
 
 public struct Sizes: Equatable {
     
-    public let width: CGFloat
-    public let height: CGFloat
+    public let width: Int
+    public let height: Int
     
-    public init(width: CGFloat, height: CGFloat) {
+    public init(width: Int, height: Int) {
         self.width = width
         self.height = height
     }
@@ -23,8 +23,8 @@ extension Sizes {
     init(size: String, scale: String) {
         
         let allNumbers = size.allNumbers
-        let width = CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale.scale()
-        let height = CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale.scale()
+        let width = Int(CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale.scale())
+        let height = Int(CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale.scale())
         self.init(width: width, height: height)
     }
 }

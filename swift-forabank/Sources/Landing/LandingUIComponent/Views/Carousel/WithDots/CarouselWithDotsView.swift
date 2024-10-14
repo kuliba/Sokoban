@@ -112,7 +112,7 @@ public extension CarouselWithDotsView {
     typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
     typealias Config = UILanding.Carousel.CarouselWithDots.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselWithDots.Size
+    typealias ItemSize = Sizes
 }
 
 struct CarouselWithDotsView_Previews: PreviewProvider {

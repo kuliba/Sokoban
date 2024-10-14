@@ -13,7 +13,7 @@ public extension UILanding.Carousel {
         
         public let id: UUID
         let title: String?
-        let size: Size
+        let size: Sizes
         let loopedScrolling: Bool
         
         let list: [ListItem]
@@ -21,7 +21,7 @@ public extension UILanding.Carousel {
         public init(
             id: UUID = UUID(),
             title: String?,
-            size: Size,
+            size: Sizes,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
@@ -32,17 +32,6 @@ public extension UILanding.Carousel {
             self.list = list
         }
         
-        public struct Size: Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
-        }
-
         public struct ListItem: Equatable {
             
             public let id: UUID

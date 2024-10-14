@@ -65,7 +65,7 @@ public struct CarouselWithTabsView: View {
                 link: item.link,
                 actions: actions
             ),
-            size: carousel.size
+            padding: config.paddings.horizontal
         )
     }
     
@@ -93,7 +93,7 @@ extension CarouselWithTabsView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: ItemSize
+        let padding: CGFloat
         
         var body: some View {
             
@@ -101,9 +101,9 @@ extension CarouselWithTabsView {
                 
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
-                    .frame(width: size.width, height: size.height)
                     .accessibilityIdentifier("CarouselWithTabsImage")
             }
+            .padding(.horizontal, padding)
         }
     }
 }
