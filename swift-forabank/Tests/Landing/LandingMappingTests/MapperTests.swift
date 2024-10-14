@@ -119,6 +119,13 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_multiTextsWithEmptyList_notDeliversMultiTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.multiTextWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiTexts, [])
+    }
+
     func test_map_deliversMultiMarkersTextsInMain() throws {
         
         let landing = try XCTUnwrap(map())
@@ -528,7 +535,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 124),
-                scale: "medium",
                 loopedScrolling: true,
                 tabs: [
                     .init(
@@ -574,7 +580,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: nil,
                 size: .init(width: 344, height: 240),
-                scale: "medium",
                 loopedScrolling: true,
                 list: [
                     .init(imageLink: "imageLink1", link: "link1", action: nil),
@@ -3359,6 +3364,25 @@ private extension String {
                 "sizeDp": "80.5"
             }
         },
+    ],
+    "serial": ""
+    }
+    }
+    """
+    
+    static let multiTextWithEmptyList: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "MULTI_TEXT",
+        "data": {
+          "list": []
+        }
+      }
     ],
     "serial": ""
     }

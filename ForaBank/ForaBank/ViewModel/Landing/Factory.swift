@@ -103,7 +103,8 @@ extension Model {
     func landingViewModelFactory(
         result: Landing,
         config: UILanding.Component.Config,
-        landingActions: @escaping (LandingEvent) -> Void
+        landingActions: @escaping (LandingEvent) -> Void,
+        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void
     ) -> LandingWrapperViewModel {
         
         let actions = CarouselActions(
