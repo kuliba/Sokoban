@@ -60,9 +60,18 @@ public struct CarouselBaseView: View {
                 link: item.link,
                 actions: actions
             ),
-            size: carousel.size
+            width: widthForItem()
         )
         .padding(.leading, config.paddings.horizontal)
+    }
+    
+    private func widthForItem() -> CGFloat {
+        
+        if carousel.list.count == 1 {
+            return (UIScreen.main.bounds.width - config.paddings.horizontal * 2).rounded(.toNearestOrEven)
+        } else {
+            return ((UIScreen.main.bounds.width - config.paddings.horizontal - config.spacing) / 2 + 15).rounded(.toNearestOrEven)
+        }
     }
 }
 
@@ -74,18 +83,18 @@ extension CarouselBaseView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: ItemSize
+        let width: CGFloat
         
         var body: some View {
             
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
-                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .frame(width: width)
                     .cornerRadius(config.cornerRadius)
                     .accessibilityIdentifier("CarouselBaseImage")
             }
-            .fixedSize(horizontal: false, vertical: true)
+            .fixedSize(horizontal: true, vertical: false)
         }
     }
 }
