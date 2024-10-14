@@ -1,5 +1,5 @@
 //
-//  Sizes.swift
+//  Size.swift
 //  
 //
 //  Created by Andryusina Nataly on 13.10.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Sizes: Equatable {
+public struct Size: Equatable {
     
     public let width: Int
     public let height: Int
@@ -18,7 +18,7 @@ public struct Sizes: Equatable {
     }
 }
 
-extension Sizes {
+extension Size {
         
     init(size: String, scale: String) {
         

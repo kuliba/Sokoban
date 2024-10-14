@@ -1,5 +1,5 @@
 //
-//  SizesTests.swift
+//  SizeTests.swift
 //
 //
 //  Created by Andryusina Nataly on 14.10.2024.
@@ -8,7 +8,7 @@
 @testable import LandingMapping // for test internal init
 import XCTest
 
-final class SizesTests: XCTestCase {
+final class SizeTests: XCTestCase {
     
     // MARK - test internal init(size: scale)
     
@@ -53,7 +53,7 @@ final class SizesTests: XCTestCase {
         line: UInt = #line
     ) {
         
-        let size = Sizes(size: size, scale: scale)
+        let size = Size(size: size, scale: scale)
         
         XCTAssertNoDiff(size.width, width, "Expected width \"\(width)\" but got \"\(size.width)\" instead.", file: file, line: line)
         XCTAssertNoDiff(size.height, height, "Expected height \(height) but got \(size.height) instead.", file: file, line: line)

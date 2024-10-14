@@ -12,13 +12,13 @@ public extension Landing.DataView.Carousel {
     struct CarouselWithTabs: Equatable {
         
         public let title: String?
-        public let size: Sizes
+        public let size: Size
         public let loopedScrolling: Bool
         public let tabs: [TabItem]
                 
         public init(
             title: String?,
-            size: Sizes,
+            size: Size,
             loopedScrolling: Bool,
             tabs: [TabItem]
         ) {

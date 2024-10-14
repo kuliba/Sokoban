@@ -98,7 +98,7 @@ public extension CarouselBaseView {
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = Sizes
+    typealias ItemSize = Size
 }
 
 struct CarouselBaseView_Previews: PreviewProvider {

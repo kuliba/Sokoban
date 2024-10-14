@@ -116,7 +116,7 @@ public extension CarouselWithTabsView {
     typealias Item = UILanding.Carousel.CarouselWithTabs.ListItem
     typealias Config = UILanding.Carousel.CarouselWithTabs.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = Sizes
+    typealias ItemSize = Size
 }
 
 struct CarouselWithTabsView_Previews: PreviewProvider {
