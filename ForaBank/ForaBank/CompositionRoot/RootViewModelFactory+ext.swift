@@ -23,6 +23,7 @@ import CodableLanding
 import MarketShowcase
 import GenericRemoteService
 import SharedAPIInfra
+import CollateralLoanLanding
 
 extension RootViewModelFactory {
     
@@ -383,6 +384,11 @@ extension RootViewModelFactory {
             
             decorated.load { completion((try? $0.get()) ?? []) }
         }
+        
+        let collateralLoanLandingShowCase = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+        )
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
