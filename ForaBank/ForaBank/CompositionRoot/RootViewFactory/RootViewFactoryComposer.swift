@@ -302,6 +302,11 @@ private extension RootViewFactoryComposer {
         _ landing: MarketShowcaseDomain.Landing
     ) -> LandingWrapperView {
         
+        if landing.statusCode != 200 || landing.errorMessage != nil {
+            
+            contentEvent(.failure(.alert("Попробуйте позже.")))
+        }
+        
         let landingViewModel = model.landingViewModelFactory(
             result: landing,
             config: .default,
