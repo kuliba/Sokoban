@@ -79,6 +79,8 @@ extension SerialLoaderComposer {
     }
 }
 
+// MARK: - Adapters
+
 private extension SerialStampedCachingDecorator where Payload == Serial? {
     
     /// A completion handler type for the remote decoratee function.
@@ -93,13 +95,18 @@ private extension SerialStampedCachingDecorator where Payload == Serial? {
     ///   - completion: A closure that handles the result of the remote fetch.
     typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void
     
+    /// The completion handler type for caching operations.
+    ///
+    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
+    typealias SaveCompletion = (Result<Void, Error>) -> Void
+    
     /// A function type for saving data locally.
     ///
     /// - Parameters:
     ///   - items: An array of items of type `T` to be saved.
     ///   - serial: The `Serial` associated with the items.
     ///   - completion: A closure that handles the result of the save operation.
-    typealias Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
+    typealias Save<T> = ([T], Serial, @escaping SaveCompletion) -> Void
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Value` is an array of `T`.
     ///
@@ -127,7 +134,8 @@ private extension SerialStampedCachingDecorator where Payload == Serial? {
             },
             cache: { payload, completion in
                 
-                save(payload.value, payload.serial, completion)
+                // ignoring result
+                save(payload.value, payload.serial) { _ in completion() }
             }
         )
     }
