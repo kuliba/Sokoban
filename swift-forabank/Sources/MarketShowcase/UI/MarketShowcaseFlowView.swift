@@ -42,7 +42,7 @@ where ContentView: View {
 
             return .init(
                 with: .init(
-                    title: "Ошибка!",
+                    title: "Ошибка",
                     message: alert.message,
                     primaryButton: .init(
                         type: .default,
