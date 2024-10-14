@@ -23,8 +23,8 @@ extension Sizes {
     init(size: String, scale: String) {
         
         let allNumbers = size.allNumbers
-        let width = Int(CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale.scale())
-        let height = Int(CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale.scale())
+        let width = Int((CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale.scale()).rounded(.toNearestOrEven))
+        let height = Int((CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale.scale()).rounded(.toNearestOrEven))
         self.init(width: width, height: height)
     }
 }
