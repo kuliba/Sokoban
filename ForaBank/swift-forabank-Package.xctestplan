@@ -536,6 +536,13 @@
         "identifier" : "GenericLoaderTests",
         "name" : "GenericLoaderTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingTests",
+        "name" : "CollateralLoanLandingTests"
+      }
     }
   ],
   "version" : 1

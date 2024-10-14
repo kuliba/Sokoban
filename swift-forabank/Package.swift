@@ -23,6 +23,7 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        .collateralLoanLanding,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -128,6 +129,8 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        .collateralLoanLanding,
+        .collateralLoanLandingTests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -385,6 +388,13 @@ private extension Product {
         name: .landingUIComponent,
         targets: [
             .landingUIComponent
+        ]
+    )
+    
+    static let collateralLoanLanding = library(
+        name: .collateralLoanLanding,
+        targets: [
+            .collateralLoanLanding
         ]
     )
     
@@ -1145,6 +1155,24 @@ private extension Target {
             .landingUIComponent,
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
+    )
+    
+    static let collateralLoanLanding = target(
+        name: .collateralLoanLanding,
+        dependencies: [
+            .remoteServices,
+            .sharedConfigs
+        ],
+        path: "Sources/Landing/\(String.collateralLoanLanding)"
+    )
+    
+    static let collateralLoanLandingTests = testTarget(
+        name: .collateralLoanLandingTests,
+        dependencies: [
+            .collateralLoanLanding,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanLandingTests)"
     )
     
     // MARK: - Infra
@@ -2813,6 +2841,10 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
+    static let collateralLoanLanding = byName(
+        name: .collateralLoanLanding
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -3191,10 +3223,15 @@ private extension String {
     // MARK: - Landing
     
     static let codableLanding = "CodableLanding"
+    
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"
+    
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
+    
+    static let collateralLoanLanding = "CollateralLoanLanding"
+    static let collateralLoanLandingTests = "CollateralLoanLandingTests"
     
     // MARK: - UI
     
