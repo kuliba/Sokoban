@@ -7,6 +7,7 @@
 
 import AnywayPaymentBackend
 import CodableLanding
+import CollateralLoanLanding
 import Combine
 import Fetcher
 import ForaTools
@@ -364,6 +365,11 @@ extension RootViewModelFactory {
         
             _serviceCategoriesRemoteLoad { completion($0 ?? []) }
         }
+        
+        let collateralLoanLandingShowCase = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+        )
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
