@@ -64,7 +64,7 @@ public struct CarouselWithDotsView: View {
                 link: item.link,
                 actions: actions
             ),
-            size: carousel.size
+            padding: config.paddings.horizontal
         )
     }
     
@@ -89,7 +89,7 @@ extension CarouselWithDotsView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: ItemSize
+        let padding: CGFloat
         
         var body: some View {
             
@@ -97,9 +97,9 @@ extension CarouselWithDotsView {
                 
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
-                    .frame(width: size.width, height: size.height)
                     .accessibilityIdentifier("CarouselWithDotsImage")
             }
+            .padding(.horizontal, padding)
         }
     }
 }

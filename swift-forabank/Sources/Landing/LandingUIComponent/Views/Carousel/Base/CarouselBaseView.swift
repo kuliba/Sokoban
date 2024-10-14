@@ -45,7 +45,6 @@ public struct CarouselBaseView: View {
                     ForEach(carousel.list, id: \.id, content: itemView)
                 }
             }
-            .padding(.horizontal, config.paddings.horizontal)
             .padding(.vertical, config.paddings.vertical)
         }
     }
@@ -63,6 +62,7 @@ public struct CarouselBaseView: View {
             ),
             size: carousel.size
         )
+        .padding(.leading, config.paddings.horizontal)
     }
 }
 

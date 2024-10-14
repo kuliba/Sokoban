@@ -32,7 +32,7 @@ where RefreshView: View,
     
     public var body: some View {
         
-        NavigationView { content() }
+        content()
     }
     
     @ViewBuilder
