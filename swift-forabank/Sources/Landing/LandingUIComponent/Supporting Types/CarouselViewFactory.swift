@@ -12,18 +12,15 @@ public struct CarouselViewFactory {
     let makeCarouselBaseView: MakeCarouselBaseView
     let makeCarouselWithDotsView: MakeCarouselWithDotsView
     let makeCarouselWithTabsView: MakeCarouselWithTabsView
-    let refreshAction: () -> Void
     
     public init(
         makeCarouselBaseView: @escaping MakeCarouselBaseView,
         makeCarouselWithDotsView: @escaping MakeCarouselWithDotsView,
-        makeCarouselWithTabsView: @escaping MakeCarouselWithTabsView,
-        refreshAction: @escaping () -> Void
+        makeCarouselWithTabsView: @escaping MakeCarouselWithTabsView
     ) {
         self.makeCarouselBaseView = makeCarouselBaseView
         self.makeCarouselWithDotsView = makeCarouselWithDotsView
         self.makeCarouselWithTabsView = makeCarouselWithTabsView
-        self.refreshAction = refreshAction
     }
 }
 

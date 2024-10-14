@@ -118,7 +118,7 @@ extension Model {
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             imageViewFactory: makeImageViewFactory(),
-            carouselViewFactory: makeCarouselFactory(actions: actions, contentActions: contentActions),
+            carouselViewFactory: makeCarouselFactory(actions: actions),
             limitsViewModel: nil,
             scheduler: .main,
             config: config,
@@ -127,14 +127,12 @@ extension Model {
     }
     
     func makeCarouselFactory(
-        actions: CarouselActions,
-        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void
+        actions: CarouselActions
     ) -> CarouselViewFactory {
         .init(
             makeCarouselBaseView: { self.makeCarouselBaseView($0, actions) },
             makeCarouselWithDotsView: { self.makeCarouselWithDotsView($0, actions) },
-            makeCarouselWithTabsView: { self.makeCarouselWithTabsView($0, actions) }, 
-            refreshAction: { contentActions(.load) }
+            makeCarouselWithTabsView: { self.makeCarouselWithTabsView($0, actions) }
         )
     }
     

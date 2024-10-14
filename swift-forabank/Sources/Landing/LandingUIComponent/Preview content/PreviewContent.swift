@@ -857,8 +857,7 @@ extension CarouselViewFactory {
                 factory: .default,
                 config: .default
             )
-        }, 
-        refreshAction: {}
+        }
     )
 }
 
