@@ -70,6 +70,7 @@ final class ResponseMapper_mapCollateralLoanShowCaseResponseTests: XCTestCase {
     }
     
     func test_map_shouldDeliverInvalidFailureOnNonOkHTTPResponse() throws {
+        
         for statusCode in [199, 201, 399, 400, 401, 404] {
             let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
             
