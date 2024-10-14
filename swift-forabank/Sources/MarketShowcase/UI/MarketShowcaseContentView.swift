@@ -44,15 +44,14 @@ where RefreshView: View,
         ZStack {
             
             switch state.status {
-            case .initiate, .inflight, .failure:
+            case .initiate, .failure:
                 Color.clear
                     .frame(maxHeight: .infinity)
                 
             case let .loaded(landing):
                 factory.makeLandingView(landing)
-            }
-            
-            if case .inflight = state.status {
+                
+            case .inflight:
                 factory.makeRefreshView()
                     .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             }
