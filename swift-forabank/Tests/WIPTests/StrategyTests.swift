@@ -24,6 +24,7 @@ final class Strategy<T> {
 
 extension Strategy {
     
+    @inlinable
     func load(
         completion: @escaping LoadCompletion
     ) {
