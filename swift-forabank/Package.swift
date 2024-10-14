@@ -2742,7 +2742,10 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .ephemeralStores,
+            .fetcher,
             .foraTools,
+            .genericLoader,
             .genericRemoteService,
             .rxViewModel,
         ]
