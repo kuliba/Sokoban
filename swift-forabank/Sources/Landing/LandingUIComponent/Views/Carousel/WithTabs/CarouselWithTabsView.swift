@@ -17,7 +17,9 @@ public struct CarouselWithTabsView: View {
     let config: Config
     
     @State private var selection: String = "0:0"
-    
+    @State private var selectionTab: String = "0:"
+    @State private var scrollOffset = CGPoint()
+
     public init(
         carousel: CarouselWithTabs,
         actions: CarouselActions,
@@ -41,14 +43,13 @@ public struct CarouselWithTabsView: View {
             
             ScrollViewReader { proxy in
                 
-                        categories(proxy)
+                categories(proxy)
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    
+                OffsetObservingScrollView(axes: .horizontal, showsIndicators: false, offset: $scrollOffset) {
                     HStack {
                         ForEach(0..<carousel.tabs.count, id: \.self) { tabIndex in
                             ForEach(0..<carousel.tabs[tabIndex].list.count, id: \.self) { itemIndex in
-                                itemView(item: carousel.tabs[tabIndex].list[itemIndex], 
+                                itemView(item: carousel.tabs[tabIndex].list[itemIndex],
                                          index: "\(tabIndex):\(itemIndex)"
                                 )
                                     .id("\(tabIndex):\(itemIndex)")
@@ -56,9 +57,10 @@ public struct CarouselWithTabsView: View {
                         }
                     }
                     .padding(.horizontal, config.paddings.horizontal)
-
                 }
                 .padding(.vertical, config.paddings.vertical)
+                .onChange(of: scrollOffset) { _ in changeSelectTabs(proxy)
+                }
             }
         }
     }
@@ -88,7 +90,7 @@ public struct CarouselWithTabsView: View {
             HStack(spacing: config.spacing) {
                 ForEach(0..<carousel.tabs.count, id: \.self) { index in
                     category(index, proxy)
-                        .id("\(index)")
+                        .id("\(index):")
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
@@ -104,14 +106,14 @@ public struct CarouselWithTabsView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 2)
             .frame(height: config.pageControls.height)
-            .background(index == selection.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
+            .background(index == selectionTab.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
             .clipShape(RoundedRectangle(cornerRadius: 90))
             .onTapGesture(perform: {
                 selection = "\(index):0"
+                selectionTab = "\(index):"
                 withAnimation {
                     proxy.scrollTo(selection, anchor: .center)
-                    proxy.scrollTo("\(index)", anchor: .center)
-
+                    proxy.scrollTo(selectionTab, anchor: .center)
                 }
             })
     }
@@ -124,6 +126,21 @@ public struct CarouselWithTabsView: View {
             return (screenWidth - paddings).rounded(.toNearestOrEven)
         } else {
             return ((screenWidth - config.paddings.horizontal - config.spacing) / 2 + config.offset).rounded(.toNearestOrEven)
+        }
+    }
+    
+    private func changeSelectTabs(
+        _ proxy: ScrollViewProxy
+    ) {
+        
+        let _selectionTab = carousel.tabs.items(scrollOffset.x, widthForItem() + config.spacing)
+        
+        if _selectionTab != selectionTab {
+            
+            selectionTab = _selectionTab
+            withAnimation {
+                proxy.scrollTo(selectionTab, anchor: .center)
+            }
         }
     }
 }

@@ -71,3 +71,20 @@ extension UILanding.Carousel.CarouselWithTabs {
         return []
     }
 }
+
+extension Array where Element == UILanding.Carousel.CarouselWithTabs.TabItem {
+    
+    func items(_ offset: CGFloat, _ widthForItem: CGFloat) -> String {
+         
+        let _count = Int((offset / widthForItem).rounded())
+        
+        var itemsCount = 0
+        for (index, element) in enumerated() {
+            if _count <= itemsCount {
+                return "\(index):"
+            }
+            itemsCount += element.list.count
+        }
+        return "\(count - 1):"
+    }
+}
