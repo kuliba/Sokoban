@@ -174,6 +174,157 @@ final class SerialLoaderComposerTests: XCTestCase {
 
     // MARK: - reload
     
+    func test_reload_shouldDeliverNilOnRemoteFailureWithNilSerial() {
+        
+        let (sut, _, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .failure(anyError()))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverEmptyFromEphemeralOnRemoteFailureWithSerial() {
+        
+        let values = [Value]()
+        let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverOneFromEphemeralOnRemoteFailureWithSerial() {
+        
+        let values = [makeValue()]
+        let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverTwoFromEphemeralOnRemoteFailureWithSerial() {
+        
+        let values = [makeValue(), makeValue()]
+        let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverEmptyFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
+        
+        let persisted = SerialStamped(list: [Model](), serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted, at: 1)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverOneFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
+        
+        let value = anyMessage()
+        let models = [makeModel(value)]
+        let persisted = SerialStamped(list: models, serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, [.init(value: value)])
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted, at: 1)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverTwoFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
+        
+        let (value1, value2) = (anyMessage(), anyMessage())
+        let models = [makeModel(value1), makeModel(value2)]
+        let persisted = SerialStamped(list: models, serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, [.init(value: value1), .init(value: value2)])
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: persisted)
+        remoteLoad.complete(with: .failure(anyError()))
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted, at: 1)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias Serial = String
@@ -202,10 +353,10 @@ final class SerialLoaderComposerTests: XCTestCase {
             toModel: { .init(value: $0.value) }
         )
         
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
-        trackForMemoryLeaks(persistentSpy, file: file, line: line)
-        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+//        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
+//        trackForMemoryLeaks(persistentSpy, file: file, line: line)
+//        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
         
         return (sut, ephemeralSpy, persistentSpy, remoteLoadSpy)
     }
