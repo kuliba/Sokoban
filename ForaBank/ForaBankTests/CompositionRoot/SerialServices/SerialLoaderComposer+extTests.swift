@@ -5,109 +5,6 @@
 //  Created by Igor Malyarov on 15.10.2024.
 //
 
-import CombineSchedulers
-import EphemeralStores
-import ForaTools
-import SerialComponents
-
-extension SerialComponents.SerialLoaderComposer
-where Serial == String,
-      Model: Codable {
-    
-    convenience init(
-        localAgent: any LocalAgentProtocol,
-        remoteLoad: @escaping RemoteLoad<[T]>,
-        fromModel: @escaping (Model) -> T,
-        toModel: @escaping (T) -> Model
-    ) {
-        self.init(
-            ephemeral: EphemeralStores.InMemoryStore<[T]>(),
-            persistent: LocalAgentWrapper(localAgent: localAgent),
-            remoteLoad: remoteLoad,
-            fromModel: fromModel,
-            toModel: toModel
-        )
-    }
-}
-
-extension EphemeralStores.InMemoryStore: MonolithicStore {
-    
-    nonisolated public func insert(
-        _ value: Value,
-        _ completion : @escaping InsertCompletion
-    ) {
-        Task {
-            
-            await self.insert(value)
-            completion(.success(()))
-        }
-    }
-    
-    nonisolated public func retrieve(
-        _ completion : @escaping RetrieveCompletion
-    ) {
-        Task {
-            
-            let cache = await self.retrieve()
-            completion(cache)
-        }
-    }
-}
-
-actor LocalAgentWrapper<Value: Codable> {
-    
-    private let localAgent: LocalAgentProtocol
-    
-    init(localAgent: LocalAgentProtocol) {
-        
-        self.localAgent = localAgent
-    }
-    
-    func insert(
-        _ stamped: SerialStamped<String, Value>
-    ) throws {
-        
-        try localAgent.store(stamped.value, serial: stamped.serial)
-    }
-    
-    func retrieve() -> SerialStamped<String, Value>? {
-        
-        let value = localAgent.load(type: Value.self)
-        let serial = localAgent.serial(for: Value.self)
-        
-        guard let value, let serial else { return nil }
-        
-        return .init(value: value, serial: serial)
-    }
-}
-
-extension LocalAgentWrapper: MonolithicStore {
-    
-    nonisolated func insert(
-        _ stamped: SerialStamped<String, Value>,
-        _ completion: @escaping InsertCompletion
-    ) {
-        Task {
-            do {
-                try await insert(stamped)
-                completion(.success(()))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    nonisolated func retrieve(
-        _ completion: @escaping RetrieveCompletion
-    ) {
-        Task {
-            
-            let value = await retrieve()
-            completion(value)
-        }
-    }
-}
-
 import ForaTools
 @testable import ForaBank
 import SerialComponents
@@ -288,13 +185,14 @@ final class SerialLoaderComposer_extTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Serial = String
-    private typealias Stamped = SerialStamped<Serial, [Model]>
     private typealias SUT = SerialComponents.SerialLoaderComposer<Serial, Value, Model>
-    private typealias LocalAgentSpy = ForaBankTests.LocalAgentSpy<Stamped>
-    private typealias RemoteLoadSpy = Spy<Serial?, SerialStamped<Serial, [Value]>, Error>
+    private typealias StampedModel = SerialStamped<Serial, [Model]>
+    private typealias StampedValue = SerialStamped<Serial, [Value]>
+    private typealias LocalAgentSpy = ForaBankTests.LocalAgentSpy<StampedModel>
+    private typealias RemoteLoadSpy = Spy<Serial?, StampedValue, Error>
     
     private func makeSUT(
-        persisted loadStub: Stamped? = nil,
+        persisted loadStub: StampedModel? = nil,
         storeStub: Result<Void, any Error> = .success(()),
         serialStub: String? = nil,
         file: StaticString = #file,

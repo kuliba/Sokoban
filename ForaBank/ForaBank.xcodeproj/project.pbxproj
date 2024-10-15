@@ -610,6 +610,8 @@
 		2A33459E2CB2802500EBF33E /* QRNavigationComposer+extTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */; };
 		2A3394172CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */; };
 		2A3394192CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */; };
+		2A33941B2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33941A2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift */; };
+		2A33941D2CBEDA8D000C6459 /* LocalAgentWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33941C2CBEDA8D000C6459 /* LocalAgentWrapper.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -4109,6 +4111,8 @@
 		2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRNavigationComposer+extTests.swift"; sourceTree = "<group>"; };
 		2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialLoaderComposer+extTests.swift"; sourceTree = "<group>"; };
 		2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialLoaderComposer+extWithLocalAgentTests.swift"; sourceTree = "<group>"; };
+		2A33941A2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialLoaderComposer+ext.swift"; sourceTree = "<group>"; };
+		2A33941C2CBEDA8D000C6459 /* LocalAgentWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentWrapper.swift; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -11050,6 +11054,8 @@
 				2A6DC7AD2C981F3E00A801A0 /* SerialCachingRemoteBatchServiceComposer.swift */,
 				2A6DC7AF2C98200100A801A0 /* LocalLoaderComposer+UpdateMaker.swift */,
 				2A6DC7B12C9828DA00A801A0 /* SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift */,
+				2A33941A2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift */,
+				2A33941C2CBEDA8D000C6459 /* LocalAgentWrapper.swift */,
 				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 			);
 			path = SerialServices;
@@ -20797,6 +20803,7 @@
 				C1F8314F29DD997700D2C40E /* Bool+Extension.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
 				C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */,
+				2A33941B2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
 				2AFD59E92B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift in Sources */,
 				2A6DC7B22C9828DA00A801A0 /* SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift in Sources */,
@@ -22066,6 +22073,7 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
+				2A33941D2CBEDA8D000C6459 /* LocalAgentWrapper.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
 				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,
