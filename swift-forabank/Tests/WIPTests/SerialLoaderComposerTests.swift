@@ -13,9 +13,11 @@ protocol MonolithicStore<Value> {
     
     associatedtype Value
     
-    func insert(_: Value, _: @escaping (Result<Void, Error>) -> Void)
-    func retrieve(_: @escaping (Value?) -> Void)
-    func delete()
+    typealias InsertCompletion = (Result<Void, Error>) -> Void
+    typealias RetrieveCompletion = (Value?) -> Void
+    
+    func insert(_: Value, _: @escaping InsertCompletion)
+    func retrieve(_: @escaping RetrieveCompletion)
 }
 
 typealias LoadCompletion<T> = ([T]?) -> Void
@@ -152,22 +154,125 @@ extension SerialFallback where Payload == Serial? {
 
 import XCTest
 
-//final class SerialLoaderComposerTests: XCTestCase {
-//
-//    // MARK: - Helpers
-//
-//    private typealias SUT = SerialLoaderComposer
-//
-//    private func makeSUT(
-//        file: StaticString = #file,
-//        line: UInt = #line
-//    ) -> SUT {
-//
-//        let sut = SUT()
-//
-//        trackForMemoryLeaks(sut, file: file, line: line)
-//
-//        return sut
-//    }
-//
-//}
+final class SerialLoaderComposerTests: XCTestCase {
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        
+        XCTAssertEqual(ephemeral.insertMessages.count, 0)
+        XCTAssertEqual(ephemeral.retrieveMessages.count, 0)
+        XCTAssertEqual(persistent.insertMessages.count, 0)
+        XCTAssertEqual(persistent.retrieveMessages.count, 0)
+        XCTAssertEqual(remoteLoad.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias Serial = String
+    private typealias SUT = SerialLoaderComposer<Serial, Value, Model>
+    private typealias RemoteLoadSpy = Spy<Serial?, Result<ForaTools.SerialStamped<Serial, [Value]>, Error>>
+    private typealias EphemeralSpy = MonolithicStoreSpy<[Value]>
+    private typealias PersistentSpy = MonolithicStoreSpy<SerialStamped<Serial, Model>>
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        ephemeralSpy: EphemeralSpy,
+        persistentSpy: PersistentSpy,
+        remoteLoadSpy: RemoteLoadSpy
+    ) {
+        let ephemeralSpy = EphemeralSpy()
+        let persistentSpy = PersistentSpy()
+        let remoteLoadSpy = RemoteLoadSpy()
+        let sut = SUT(
+            ephemeral: ephemeralSpy,
+            persistent: persistentSpy,
+            remoteLoad: remoteLoadSpy.process(_:completion:),
+            fromModel: { .init(value: $0.value) },
+            toModel: { .init(value: $0.value) }
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
+        trackForMemoryLeaks(persistentSpy, file: file, line: line)
+        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
+        
+        return (sut, ephemeralSpy, persistentSpy, remoteLoadSpy)
+    }
+    
+    private struct Value: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeValue(
+        _ value: String = anyMessage()
+    ) -> Value {
+        
+        return .init(value: value)
+    }
+    
+    private struct Model: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeModel(
+        _ value: String = anyMessage()
+    ) -> Model {
+        
+        return .init(value: value)
+    }
+}
+
+final class MonolithicStoreSpy<Value>: MonolithicStore {
+    
+    private(set) var insertMessages = [InsertMessage]()
+    private(set) var retrieveMessages = [RetrieveCompletion]()
+    
+    func insert(
+        _ value: Value,
+        _ completion: @escaping InsertCompletion
+    ) {
+        insertMessages.append((value, completion))
+    }
+    
+    func retrieve(
+        _ completion: @escaping (Value?) -> Void // RetrieveCompletion
+    ) {
+        retrieveMessages.append(completion)
+    }
+    
+    func completeInsert(
+        with result: Result<Void, Error>,
+        at index: Int = 0
+    ) {
+        insertMessages[index].completion(result)
+    }
+    
+    func completeInsertWithError(
+        _ error: Error = anyError(),
+        at index: Int = 0
+    ) {
+        insertMessages[index].completion(.failure(error))
+    }
+    
+    func completeInsertSuccessfully(
+        at index: Int = 0
+    ) {
+        insertMessages[index].completion(.success(()))
+    }
+    
+    func completeRetrieve(
+        with value: Value?,
+        at index: Int = 0
+    ) {
+        retrieveMessages[index](value)
+    }
+    
+    typealias InsertMessage = (value: Value, completion: InsertCompletion)
+}
