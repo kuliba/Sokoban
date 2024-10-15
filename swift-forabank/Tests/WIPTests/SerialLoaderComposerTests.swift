@@ -171,7 +171,69 @@ final class SerialLoaderComposerTests: XCTestCase {
     }
 
     // MARK: - load
-
+    
+    func test_load_shouldNotCallPersistentAndRemoteOnEmptyEphemeral() {
+        
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: [])
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(persistent.retrieveMessages.count, 0)
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldNotCallPersistentAndRemoteOnEphemeralWithOne() {
+        
+        let values = [makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(persistent.retrieveMessages.count, 0)
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldNotCallPersistentAndRemoteOnEphemeralWithTwo() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(persistent.retrieveMessages.count, 0)
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
     // MARK: - reload
     
     func test_reload_shouldDeliverNilOnRemoteFailureWithNilSerial() {
