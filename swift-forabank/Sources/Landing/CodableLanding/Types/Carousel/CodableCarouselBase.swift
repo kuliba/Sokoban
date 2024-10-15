@@ -29,17 +29,6 @@ public extension CodableLanding {
             self.list = list
         }
         
-        public struct Size: Codable, Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
-        }
-        
         public struct ListItem: Codable, Equatable {
             
             public let imageLink: String

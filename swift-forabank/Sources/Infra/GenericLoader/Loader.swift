@@ -1,5 +1,5 @@
 //
-//  GenericLoader.swift
+//  Loader.swift
 //  
 //
 //  Created by Igor Malyarov on 06.10.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class GenericLoader<Model, Local> {
+public final class Loader<Model, Local> {
     
     public typealias ToModel = (Local) -> Model
     public typealias ToLocal = (Model) -> Local
@@ -33,7 +33,7 @@ public final class GenericLoader<Model, Local> {
 
 // MARK: - Load
 
-public extension GenericLoader {
+public extension Loader {
     
     typealias LoadResult = Result<Model, Error>
     typealias LoadCompletion = (LoadResult) -> Void
@@ -72,7 +72,7 @@ public extension GenericLoader {
 
 // MARK: - Save
 
-public extension GenericLoader {
+public extension Loader {
     
     typealias SaveResult = Result<Void, Error>
     typealias SaveCompletion = (SaveResult) -> Void

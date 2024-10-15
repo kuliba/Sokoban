@@ -650,7 +650,7 @@ private extension Landing.DataView.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size, scale: data.scale.scale()),
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -684,8 +684,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }
@@ -730,8 +729,7 @@ private extension Landing.DataView.Carousel.CarouselWithDots {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -762,21 +760,5 @@ extension String {
     
     func addingPercentEncoding() -> Self {
         addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
-    }
-}
-
-private extension String {
-    /*
-     https://shorturl.at/5OdQz
-     */
-    func scale() -> CGFloat {
-        
-        switch self {
-            
-        case "small":   return 0.25
-        case "medium":  return 1
-        case "large":   return 1.25
-        default:        return 1
-        }
     }
 }

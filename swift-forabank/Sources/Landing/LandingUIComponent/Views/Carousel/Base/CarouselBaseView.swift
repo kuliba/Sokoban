@@ -45,7 +45,6 @@ public struct CarouselBaseView: View {
                     ForEach(carousel.list, id: \.id, content: itemView)
                 }
             }
-            .padding(.horizontal, config.paddings.horizontal)
             .padding(.vertical, config.paddings.vertical)
         }
     }
@@ -63,6 +62,7 @@ public struct CarouselBaseView: View {
             ),
             size: carousel.size
         )
+        .padding(.leading, config.paddings.horizontal)
     }
 }
 
@@ -81,7 +81,7 @@ extension CarouselBaseView {
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
-                    .frame(width: size.width, height: size.height)
+                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
                     .cornerRadius(config.cornerRadius)
                     .accessibilityIdentifier("CarouselBaseImage")
             }
@@ -98,7 +98,7 @@ public extension CarouselBaseView {
     typealias Item = UILanding.Carousel.CarouselBase.ListItem
     typealias Config = UILanding.Carousel.CarouselBase.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselBase.Size
+    typealias ItemSize = Size
 }
 
 struct CarouselBaseView_Previews: PreviewProvider {

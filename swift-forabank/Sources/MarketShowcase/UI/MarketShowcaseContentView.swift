@@ -45,7 +45,8 @@ where RefreshView: View,
             
             switch state.status {
             case .initiate, .inflight, .failure:
-                EmptyView()
+                Color.clear
+                    .frame(maxHeight: .infinity)
                 
             case let .loaded(landing):
                 factory.makeLandingView(landing)

@@ -32,17 +32,6 @@ public extension UILanding.Carousel {
             self.list = list
         }
         
-        public struct Size: Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
-        }
-
         public struct ListItem: Equatable {
             
             public let id: UUID

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 11.10.2023.
 //
 
-import CVVPINServices
+import GenericLoader
 import Foundation
 
 final class StoreSpy<T>: Store {

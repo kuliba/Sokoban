@@ -22,6 +22,8 @@ import LandingMapping
 import CodableLanding
 import MarketShowcase
 import GenericRemoteService
+import SharedAPIInfra
+import CollateralLoanLanding
 
 extension RootViewModelFactory {
     
@@ -382,6 +384,11 @@ extension RootViewModelFactory {
             
             decorated.load { completion((try? $0.get()) ?? []) }
         }
+        
+        let collateralLoanLandingShowCase = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
+        )
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
@@ -962,21 +969,36 @@ private extension UserAccountModelEffectHandler {
 private extension MarketShowcaseDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, LandingMapper.MapperError>
-
+    
     init(
         error: RemoteError
     ) {
         switch error {
-        case .createRequest, .performRequest:
-            self = .init(kind: .alert("Попробуйте позже."))
-            
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .notOkStatus, .mapError, .serverError:
-                self = .init(kind: .alert("Попробуйте позже."))
-            case .connectivityError:
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else {
+                self = .init(kind: .alert("Попробуйте позже."))
             }
+            
+        default:
+            self = .init(kind: .alert("Попробуйте позже."))
+        }
+    }
+}
+
+private extension Error {
+    
+    func isNotConnectedToInternetOrTimeout() -> Bool {
+        
+        guard let sessionError = self as? URLSessionHTTPClient.Error else { return false }
+        
+        switch sessionError {
+        case let .sessionError(error):
+            let nsError = error as NSError
+            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut
+            
+        default: return false
         }
     }
 }
