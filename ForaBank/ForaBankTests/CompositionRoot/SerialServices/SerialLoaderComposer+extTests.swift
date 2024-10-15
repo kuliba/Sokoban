@@ -115,6 +115,8 @@ import XCTest
 
 final class SerialLoaderComposer_extTests: XCTestCase {
     
+    // MARK: - init
+    
     func test_init_shouldNotCallCollaborators() {
         
         let (sut, localAgent, remoteLoad) = makeSUT()
@@ -125,13 +127,62 @@ final class SerialLoaderComposer_extTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    // MARK: - load
+    
     func test_load_shouldCallRemote() {
         
         let (sut, _, remoteLoad) = makeSUT()
         
+        sut.compose().load { _ in }
+        // await actor thread-hop
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverNilOnRemoteFailure() {
+        
+        let (sut, _, remoteLoad) = makeSUT()
+        
         expect(sut.compose().load) {
-            
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+            XCTAssertNoDiff($0, nil)
+        } on: {
+            remoteLoad.complete(with: anyError())
+        }
+    }
+    
+    func test_load_shouldDeliverEmptyOnRemoteEmpty() {
+        
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, [])
+        } on: {
+            remoteLoad.complete(with: makeStamped([]))
+        }
+    }
+    
+    func test_load_shouldDeliverOneOnRemoteOne() {
+        
+        let values = [makeValue()]
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+    }
+    
+    func test_load_shouldDeliverTwoOnRemoteTwo() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
         }
     }
     
@@ -139,9 +190,11 @@ final class SerialLoaderComposer_extTests: XCTestCase {
         
         let (sut, _, remoteLoad) = makeSUT()
         
-        expect(sut.compose().load, "wait for first load completion") {
-            
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            remoteLoad.complete(with: makeStamped([makeValue()]))
         }
         
         expect(sut.compose().load, "wait for second load completion") {}
@@ -149,25 +202,99 @@ final class SerialLoaderComposer_extTests: XCTestCase {
         XCTAssertEqual(remoteLoad.callCount, 1)
     }
     
+    func test_load_shouldDeliverEmptyOnSecondLoadOnRemoteEmpty() {
+        
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, [])
+        } on: {
+            remoteLoad.complete(with: makeStamped([]))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, [])
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverOneOnSecondLoadOnRemoteOne() {
+        
+        let values = [makeValue()]
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverTwoOnSecondLoadOnRemoteTwo() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, _, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    // MARK: - reload
+    
     func test_reload_shouldCallRemote() {
         
         let (sut, _, remoteLoad) = makeSUT()
         
         expect(sut.compose().reload) {
             
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+            remoteLoad.complete(with: makeStamped([]))
         }
     }
     
     // MARK: - Helpers
     
     private typealias Serial = String
+    private typealias Stamped = SerialStamped<Serial, [Model]>
     private typealias SUT = SerialComponents.SerialLoaderComposer<Serial, Value, Model>
-    private typealias LocalAgentSpy = ForaBankTests.LocalAgentSpy<SerialStamped<Serial, [Model]>>
+    private typealias LocalAgentSpy = ForaBankTests.LocalAgentSpy<Stamped>
     private typealias RemoteLoadSpy = Spy<Serial?, SerialStamped<Serial, [Value]>, Error>
     
     private func makeSUT(
-        persisted loadStub: SerialStamped<Serial, [Model]>? = nil,
+        persisted loadStub: Stamped? = nil,
         storeStub: Result<Void, any Error> = .success(()),
         serialStub: String? = nil,
         file: StaticString = #file,
@@ -220,6 +347,14 @@ final class SerialLoaderComposer_extTests: XCTestCase {
     ) -> Model {
         
         return .init(value: value)
+    }
+    
+    private func makeStamped<T>(
+        _ value: [T],
+        serial: Serial = anyMessage()
+    ) -> SerialStamped<Serial, [T]> {
+        
+        return .init(value: value, serial: serial)
     }
     
     private func expect(

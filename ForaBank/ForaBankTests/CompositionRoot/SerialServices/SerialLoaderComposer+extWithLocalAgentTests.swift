@@ -12,6 +12,8 @@ import XCTest
 
 final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
     
+    // MARK: - init
+    
     func test_init_shouldNotCallCollaborators() {
         
         let (sut, remoteLoad) = makeSUT()
@@ -20,13 +22,62 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
         XCTAssertNotNil(sut)
     }
     
+    // MARK: - load
+    
     func test_load_shouldCallRemote() {
         
         let (sut, remoteLoad) = makeSUT()
         
+        sut.compose().load { _ in }
+        // await actor thread-hop
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverNilOnRemoteFailure() {
+        
+        let (sut, remoteLoad) = makeSUT()
+        
         expect(sut.compose().load) {
-            
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+            XCTAssertNoDiff($0, nil)
+        } on: {
+            remoteLoad.complete(with: anyError())
+        }
+    }
+    
+    func test_load_shouldDeliverEmptyOnRemoteEmpty() {
+        
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, [])
+        } on: {
+            remoteLoad.complete(with: makeStamped([]))
+        }
+    }
+    
+    func test_load_shouldDeliverOneOnRemoteOne() {
+        
+        let values = [makeValue()]
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+    }
+    
+    func test_load_shouldDeliverTwoOnRemoteTwo() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(sut.compose().load) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
         }
     }
     
@@ -34,9 +85,11 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
         
         let (sut, remoteLoad) = makeSUT()
         
-        expect(sut.compose().load, "wait for first load completion") {
-            
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            remoteLoad.complete(with: makeStamped([makeValue()]))
         }
         
         expect(sut.compose().load, "wait for second load completion") {}
@@ -44,13 +97,86 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
         XCTAssertEqual(remoteLoad.callCount, 1)
     }
     
+    func test_load_shouldDeliverEmptyOnSecondLoadOnRemoteEmpty() {
+        
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, [])
+        } on: {
+            remoteLoad.complete(with: makeStamped([]))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, [])
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverOneOnSecondLoadOnRemoteOne() {
+        
+        let values = [makeValue()]
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverTwoOnSecondLoadOnRemoteTwo() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, remoteLoad) = makeSUT()
+        
+        expect(
+            sut.compose().load,
+            "wait for first load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {
+            remoteLoad.complete(with: makeStamped(values))
+        }
+        
+        expect(
+            sut.compose().load,
+            "wait for second load completion"
+        ) {
+            XCTAssertNoDiff($0, values)
+        } on: {}
+        
+        XCTAssertEqual(remoteLoad.callCount, 1)
+    }
+    
+    // MARK: - reload
+    
     func test_reload_shouldCallRemote() {
         
         let (sut, remoteLoad) = makeSUT()
         
         expect(sut.compose().reload) {
             
-            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+            remoteLoad.complete(with: makeStamped([]))
         }
     }
     
@@ -108,6 +234,14 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
     ) -> Model {
         
         return .init(value: value)
+    }
+    
+    private func makeStamped<T>(
+        _ value: [T],
+        serial: Serial = anyMessage()
+    ) -> SerialStamped<Serial, [T]> {
+        
+        return .init(value: value, serial: serial)
     }
     
     private func expect(
