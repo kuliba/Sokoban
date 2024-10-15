@@ -156,6 +156,8 @@ import XCTest
 
 final class SerialLoaderComposerTests: XCTestCase {
     
+    // MARK: - init
+    
     func test_init_shouldNotCallCollaborators() {
         
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
@@ -167,6 +169,10 @@ final class SerialLoaderComposerTests: XCTestCase {
         XCTAssertEqual(remoteLoad.callCount, 0)
         XCTAssertNotNil(sut)
     }
+
+    // MARK: - load
+
+    // MARK: - reload
     
     // MARK: - Helpers
     
