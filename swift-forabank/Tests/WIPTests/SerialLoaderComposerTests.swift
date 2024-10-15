@@ -8,17 +8,7 @@
 import EphemeralStores
 import ForaTools
 import GenericLoader
-
-protocol MonolithicStore<Value> {
-    
-    associatedtype Value
-    
-    typealias InsertCompletion = (Result<Void, Error>) -> Void
-    typealias RetrieveCompletion = (Value?) -> Void
-    
-    func insert(_: Value, _: @escaping InsertCompletion)
-    func retrieve(_: @escaping RetrieveCompletion)
-}
+import SerialComponents
 
 typealias LoadCompletion<T> = ([T]?) -> Void
 typealias Load<T> = (@escaping LoadCompletion<T>) -> Void

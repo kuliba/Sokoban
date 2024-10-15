@@ -2777,6 +2777,7 @@ private extension Target {
             .genericLoader,
             .genericRemoteService,
             .rxViewModel,
+            .serialComponents,
         ]
     )
     
