@@ -14,6 +14,7 @@ public final class FastPaymentsSettingsEffectHandler {
     private let handleContractEffect: HandleContractEffect
     private let getC2BSub: GetC2BSub
     private let getSettings: GetSettings
+    private let prepareDeleteDefaultBank: PrepareDeleteDefaultBank
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let updateProduct: UpdateProduct
     
@@ -22,6 +23,7 @@ public final class FastPaymentsSettingsEffectHandler {
         handleContractEffect: @escaping HandleContractEffect,
         getC2BSub: @escaping GetC2BSub,
         getSettings: @escaping GetSettings,
+        prepareDeleteDefaultBank: @escaping PrepareDeleteDefaultBank,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         updateProduct: @escaping UpdateProduct
     ) {
@@ -29,6 +31,7 @@ public final class FastPaymentsSettingsEffectHandler {
         self.handleContractEffect = handleContractEffect
         self.getC2BSub = getC2BSub
         self.getSettings = getSettings
+        self.prepareDeleteDefaultBank = prepareDeleteDefaultBank
         self.prepareSetBankDefault = prepareSetBankDefault
         self.updateProduct = updateProduct
     }
@@ -50,6 +53,9 @@ public extension FastPaymentsSettingsEffectHandler {
             
         case .getSettings:
             getSettings(dispatch)
+            
+        case .prepareDeleteDefaultBank:
+            prepareDeleteDefaultBank(dispatch)
             
         case .prepareSetBankDefault:
             prepareSetBankDefault(dispatch)
@@ -75,6 +81,14 @@ public extension FastPaymentsSettingsEffectHandler {
     typealias HandleContractEffect = (ContractEffect, @escaping ContractDispatch) -> Void
     typealias GetC2BSub = (@escaping (GetC2BSubResult) -> Void) -> Void
     typealias GetSettings = (@escaping (UserPaymentSettingsResult) -> Void) -> Void
+}
+
+//micro-service `f` delete default bank
+public extension FastPaymentsSettingsEffectHandler {
+    
+    typealias PrepareDeleteDefaultBankResponse = Result<Void, ServiceFailure>
+    typealias PrepareDeleteDefaultBankCompletion = (PrepareDeleteDefaultBankResponse) -> Void
+    typealias PrepareDeleteDefaultBank = (@escaping PrepareDeleteDefaultBankCompletion) -> Void
 }
 
 // micro-service `f`
@@ -122,6 +136,35 @@ private extension FastPaymentsSettingsEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         getSettings { dispatch(.loadSettings($0)) }
+    }
+    
+    func prepareDeleteDefaultBank(
+        _ dispatch: @escaping Dispatch
+    ) {
+        prepareDeleteDefaultBank { result in
+            
+            switch result {
+            case .success(()):
+                dispatch(.bankDefault(.prepareDeleteBank(.success)))
+                
+            case let .failure(failure):
+//                dispatch(.bankDefault(.deleteBankDefaultResult(.success)))
+
+                switch failure {
+                case .connectivityError:
+                    dispatch(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.connectivityError))))
+                    
+                case let .serverError(message):
+                    let tryAgain = "Введен некорректный код. Попробуйте еще раз"
+                    
+                    if message == tryAgain {
+                        dispatch(.bankDefault(.deleteBankDefaultResult(.incorrectOTP(tryAgain))))
+                    } else {
+                        dispatch(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.serverError(message)))))
+                    }
+                }
+            }
+        }
     }
     
     func prepareSetBankDefault(

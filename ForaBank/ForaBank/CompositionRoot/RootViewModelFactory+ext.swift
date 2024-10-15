@@ -118,6 +118,7 @@ extension RootViewModelFactory {
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
+            otpDeleteBankServices: .init(for: fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts(model: model),

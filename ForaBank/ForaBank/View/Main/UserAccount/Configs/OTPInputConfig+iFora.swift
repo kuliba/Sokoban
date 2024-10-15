@@ -33,10 +33,6 @@ extension OTPInputConfig {
         timer: .init(
             textFont: .textH3R18240(),
             textColor: .textSecondary
-        ),
-        title: .init(
-            textFont: .textH3Sb18240(),
-            textColor: .textSecondary
         )
     )
 }
