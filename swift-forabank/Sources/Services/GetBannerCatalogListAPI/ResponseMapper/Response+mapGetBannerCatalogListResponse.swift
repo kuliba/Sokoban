@@ -59,48 +59,41 @@ private extension ResponseMapper._DTO._Item {
 }
 
 private extension ResponseMapper._DTO._Item._BannerAction {
-    
-    enum _BannerActionType: String, Decodable {
         
-        case openDeposit = "DEPOSIT_OPEN"
-        case depositsList = "DEPOSITS"
-        case migTransfer = "MIG_TRANSFER"
-        case migAuthTransfer = "MIG_AUTH_TRANSFER"
-        case contact = "CONTACT_TRANSFER"
-        case depositTransfer = "DEPOSIT_TRANSFER"
-        case landing = "LANDING"
-    }
-
-    
     var data: GetBannerCatalogListResponse.BannerAction? {
         
         switch type {
-            
         case "DEPOSIT_OPEN":
-            guard let depositProductId else {
-                return nil
-            }
+            guard let depositProductId else { return nil }
             return .init(type:.openDeposit(depositProductId))
+            
         case "DEPOSITS":
             return .init(type: .depositsList)
+            
         case "MIG_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .migTransfer(countryId))
+            
         case "MIG_AUTH_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .migAuthTransfer(countryId))
+            
         case "CONTACT_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .contact(countryId))
+            
         case "DEPOSIT_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .depositTransfer(countryId))
+            
         case "LANDING":
             guard let target else { return nil }
             return .init(type: .landing(target))
+            
         case "HOUSING_AND_COMMUNAL_SERVICE":
             // TODO: add new action
             return nil
+            
         case .none, .some:
             return nil
         }
