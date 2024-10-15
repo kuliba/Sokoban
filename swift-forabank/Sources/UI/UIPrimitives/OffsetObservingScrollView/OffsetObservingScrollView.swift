@@ -12,17 +12,17 @@ public struct OffsetObservingScrollView<Content: View>: View {
     
     private let axes: Axis.Set
     private let showsIndicators: Bool
-    private let coordinateSpaceName: UUID
+    private let coordinateSpaceName: String
+    private let content: () -> Content
     
     @Binding var offset: CGPoint
-    @ViewBuilder var content: () -> Content
     
     public init(
         axes: Axis.Set,
         showsIndicators: Bool,
         offset: Binding<CGPoint>,
-        coordinateSpaceName: UUID = UUID(),
-        content: @escaping () -> Content
+        coordinateSpaceName: String,
+        @ViewBuilder content: @escaping () -> Content
     ) {
         self.axes = axes
         self.showsIndicators = showsIndicators
@@ -58,7 +58,7 @@ private struct PositionObservingView<Content: View>: View {
     let coordinateSpace: CoordinateSpace
     
     @Binding var position: CGPoint
-    @ViewBuilder var content: () -> Content
+    @ViewBuilder let content: () -> Content
     
     var body: some View {
         

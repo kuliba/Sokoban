@@ -45,7 +45,12 @@ public struct CarouselWithTabsView: View {
                 
                 categories(proxy)
                 
-                OffsetObservingScrollView(axes: .horizontal, showsIndicators: false, offset: $scrollOffset) {
+                OffsetObservingScrollView(
+                    axes: .horizontal,
+                    showsIndicators: false,
+                    offset: $scrollOffset,
+                    coordinateSpaceName: "carouselScroll"
+                ) {
                     HStack {
                         ForEach(0..<carousel.tabs.count, id: \.self) { tabIndex in
                             ForEach(0..<carousel.tabs[tabIndex].list.count, id: \.self) { itemIndex in
