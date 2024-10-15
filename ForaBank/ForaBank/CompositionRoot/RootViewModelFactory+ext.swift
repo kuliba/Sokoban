@@ -5,25 +5,27 @@
 //  Created by Igor Malyarov on 07.11.2023.
 //
 
+import AnywayPaymentBackend
+import CodableLanding
+import CollateralLoanLanding
 import Combine
-import Foundation
+import Fetcher
+import Fetcher
 import ForaTools
+import Foundation
+import GenericRemoteService
+import LandingMapping
+import LandingUIComponent
 import ManageSubscriptionsUI
+import MarketShowcase
 import OperatorsListComponents
+import PayHub
+import PayHubUI
 import PaymentSticker
 import RemoteServices
 import SberQR
-import SwiftUI
-import PayHub
-import PayHubUI
-import Fetcher
-import LandingUIComponent
-import LandingMapping
-import CodableLanding
-import MarketShowcase
-import GenericRemoteService
 import SharedAPIInfra
-import CollateralLoanLanding
+import SwiftUI
 
 extension RootViewModelFactory {
     
@@ -353,7 +355,7 @@ extension RootViewModelFactory {
             nanoServiceComposer: nanoServiceComposer
         )
         
-        let (serviceCategoriesLocalLoad, serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
+        let (serviceCategoriesLocalLoad, _serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
             getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
             fromModel: [ServiceCategory].init(codable:),
             toModel: [CodableServiceCategory].init(categories:),
@@ -361,28 +363,9 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
         )
         
-        let localServiceCategoryLoader = ServiceCategoryLoader.default
-        let getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
-            httpClient: httpClient,
-            log: infoNetworkLog
-        )
-        let getServiceCategoryListLoader = AnyLoader { completion in
-            
-            getServiceCategoryList(nil) { response in
-                
-                backgroundScheduler.delay(for: .seconds(8)) {
-                    
-                    completion(response.map(\.list).map { $0.sorted(by: \.ord) })
-                }
-            }
-        }
-        let decorated = CacheDecorator(
-            decoratee: getServiceCategoryListLoader,
-            cache: localServiceCategoryLoader.save
-        )
-        let loadServiceCategories: LoadServiceCategories = { completion in
-            
-            decorated.load { completion((try? $0.get()) ?? []) }
+        let serviceCategoriesRemoteLoad: LoadServiceCategories = { completion in
+        
+            _serviceCategoriesRemoteLoad { completion($0 ?? []) }
         }
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
@@ -395,7 +378,10 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
         )
         let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: localServiceCategoryLoader.load,
+            getAllLoadedCategories: { completion in
+                
+                serviceCategoriesLocalLoad { completion($0 ?? []) }
+            },
             getLatestPayments: getLatestPayments
         )
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
@@ -407,7 +393,7 @@ extension RootViewModelFactory {
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: loadServiceCategories,
+                loadCategories: serviceCategoriesRemoteLoad,
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ), 
@@ -424,7 +410,7 @@ extension RootViewModelFactory {
         )
         
         let oneTime = FireAndForgetDecorator(
-            decoratee: loadServiceCategories,
+            decoratee: serviceCategoriesRemoteLoad,
             decoration: { [weak paymentsTransfersPersonal] categories, completion in
                 
                 // notify categoryPicker

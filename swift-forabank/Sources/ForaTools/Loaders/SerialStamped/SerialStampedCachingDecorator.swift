@@ -51,9 +51,7 @@ public extension SerialStampedCachingDecorator {
     typealias Decoratee = (Payload, @escaping DecorateeCompletion) -> Void
     
     /// The completion handler type for caching operations.
-    ///
-    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
-    typealias CacheCompletion = (Result<Void, Error>) -> Void
+    typealias CacheCompletion = () -> Void
     
     /// The cache function that stores a `SerialStamped<Serial, Value>` and calls a completion handler.
     typealias Cache = (SerialStamped<Serial, Value>, @escaping CacheCompletion) -> Void
@@ -100,7 +98,8 @@ public extension SerialStampedCachingDecorator {
             case let .success(success):
                 // Cache the response only if the serials are different
                 if success.serial != getSerial(payload) {
-                    self.cache(success) { _ in completion(.success(success)) }
+                    // ignore cache result
+                    self.cache(success) { completion(.success(success)) }
                 } else {
                     completion(.success(success))
                 }
