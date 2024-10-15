@@ -609,6 +609,7 @@
 		2A33459C2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */; };
 		2A33459E2CB2802500EBF33E /* QRNavigationComposer+extTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */; };
 		2A3394172CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */; };
+		2A3394192CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -4107,6 +4108,7 @@
 		2A33459B2CB2712A00EBF33E /* QRNavigationComposerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRNavigationComposerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A33459D2CB2802500EBF33E /* QRNavigationComposer+extTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRNavigationComposer+extTests.swift"; sourceTree = "<group>"; };
 		2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialLoaderComposer+extTests.swift"; sourceTree = "<group>"; };
+		2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SerialLoaderComposer+extWithLocalAgentTests.swift"; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -11058,6 +11060,7 @@
 			children = (
 				2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */,
 				2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */,
+				2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */,
 			);
 			path = SerialServices;
 			sourceTree = "<group>";
@@ -22350,6 +22353,7 @@
 				83CDFA7F2BD26FB200191D8B /* ArrayOfProductData+ExtensionsTests.swift in Sources */,
 				2A2E330029A3CDC9008B9626 /* Sequence+Extension.swift in Sources */,
 				83676AF22BFBA30F004B614C /* MyProductsSectionViewModelTests.swift in Sources */,
+				2A3394192CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift in Sources */,
 				2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */,
 				2AED642A2A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift in Sources */,
 				2A05586E2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift in Sources */,
