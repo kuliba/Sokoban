@@ -67,10 +67,12 @@ public struct CarouselBaseView: View {
     
     private func widthForItem() -> CGFloat {
         
+        let screenWidth = UIScreen.main.bounds.width
         if carousel.list.count == 1 {
-            return (UIScreen.main.bounds.width - config.paddings.horizontal * 2).rounded(.toNearestOrEven)
+            let paddings = config.paddings.horizontal * 2
+            return (screenWidth - paddings).rounded(.toNearestOrEven)
         } else {
-            return ((UIScreen.main.bounds.width - config.paddings.horizontal - config.spacing) / 2 + 15).rounded(.toNearestOrEven)
+            return ((screenWidth - config.paddings.horizontal - config.spacing) / 2 + config.offset).rounded(.toNearestOrEven)
         }
     }
 }

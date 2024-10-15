@@ -19,6 +19,7 @@ public extension UILanding.Carousel.CarouselWithTabs {
         let spacing: CGFloat
         let title: TextConfig
         let category: TextConfig
+        let offset: CGFloat
 
         public struct PageControls {
             
@@ -47,6 +48,7 @@ public extension UILanding.Carousel.CarouselWithTabs {
         public init(
             category: TextConfig,
             cornerRadius: CGFloat,
+            offset: CGFloat,
             paddings: Paddings,
             pageControls: PageControls,
             spacing: CGFloat,
@@ -54,6 +56,7 @@ public extension UILanding.Carousel.CarouselWithTabs {
         ){
             self.category = category
             self.cornerRadius = cornerRadius
+            self.offset = offset
             self.paddings = paddings
             self.pageControls = pageControls
             self.spacing = spacing
