@@ -129,14 +129,10 @@ extension SerialLoaderComposer {
     ) {
         persistent.retrieve { value in
             
-            guard let value else {
-                return completion(nil)
-            }
+            guard let value else { return completion(nil) }
             
             let list = value.value.map(self.fromModel)
-            self.ephemeral.insert(list) { _ in
-                completion(list)
-            }
+            self.ephemeral.insert(list) { _ in completion(list) }
         }
     }
     
@@ -157,10 +153,15 @@ extension SerialLoaderComposer {
             primary: caching.decorated,
             secondary: localLoad
         )
-        let decoratedRemote = { completion in
+        let decoratedRemote: Load<T> = { completion in
             
             self.getSerial { serial in
-                fallback(payload: serial, completion: completion)
+                
+                fallback(payload: serial) {
+                    
+                    completion($0)
+                    _ = fallback
+                }
             }
         }
         
@@ -173,9 +174,7 @@ extension SerialLoaderComposer {
     func getSerial(
         completion: @escaping (Serial?) -> Void
     ) {
-        persistent.retrieve { stamped in
-            completion(stamped?.serial)
-        }
+        persistent.retrieve { completion($0?.serial) }
     }
 }
 
