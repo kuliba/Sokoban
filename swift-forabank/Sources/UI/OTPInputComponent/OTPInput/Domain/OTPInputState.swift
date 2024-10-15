@@ -78,3 +78,17 @@ public extension OTPInputState.Status {
         }
     }
 }
+
+public extension OTPInputState.Status {
+    
+    var input: Input? {
+        switch self {
+        case let .failure(input, _):
+            return input
+        case let .input(input):
+            return input
+        case .validOTP:
+            return nil
+        }
+    }
+}
