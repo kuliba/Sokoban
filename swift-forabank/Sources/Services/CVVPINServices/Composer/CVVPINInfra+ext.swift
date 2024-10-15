@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GenericLoader
 
 public extension CVVPINInfra {
     
@@ -21,23 +22,23 @@ public extension CVVPINInfra {
         symmetricKeyStore: any Store<SymmetricKey>,
         currentDate: @escaping () -> Date = Date.init
     ) {
-        let eventIDLoader = GenericLoaderOf(
+        let eventIDLoader = LoaderOf(
             store: eventIDStore,
             currentDate: currentDate
         )
-        let rsaKeyPairLoader = GenericLoaderOf(
+        let rsaKeyPairLoader = LoaderOf(
             store: rsaKeyPairStore,
             currentDate: currentDate
         )
-        let sessionIDLoader = GenericLoaderOf(
+        let sessionIDLoader = LoaderOf(
             store: sessionIDStore,
             currentDate: currentDate
         )
-        let sessionKeyWithEventLoader = GenericLoaderOf(
+        let sessionKeyWithEventLoader = LoaderOf(
             store: sessionKeyWithEventStore,
             currentDate: currentDate
         )
-        let symmetricKeyLoader = GenericLoaderOf(
+        let symmetricKeyLoader = LoaderOf(
             store: symmetricKeyStore,
             currentDate: currentDate
         )
@@ -54,26 +55,9 @@ public extension CVVPINInfra {
     }
 }
 
-public typealias GenericLoaderOf<Model> = GenericLoader<Model, Model>
-
-public extension GenericLoaderOf where Local == Model {
-    
-    convenience init(
-        store: any Store<Model>,
-        currentDate: @escaping CurrentDate = Date.init
-    ) {
-        self.init(
-            store: store,
-            toModel: { $0 },
-            toLocal: { $0 },
-            currentDate: currentDate
-        )
-    }
-}
-
 // MARK: - Adapter
 
-public extension GenericLoader {
+public extension Loader {
     
     func saveAndForget(
         _ model: Model,

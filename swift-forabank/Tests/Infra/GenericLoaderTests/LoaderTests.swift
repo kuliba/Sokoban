@@ -1,14 +1,14 @@
 //
-//  GenericLoaderTests.swift
+//  LoaderTests.swift
 //  
 //
 //  Created by Igor Malyarov on 05.10.2023.
 //
 
-import CVVPINServices
+import GenericLoader
 import XCTest
 
-final class GenericLoaderTests: XCTestCase {
+final class LoaderTests: XCTestCase {
     
     // MARK: - init
     
@@ -288,7 +288,7 @@ final class GenericLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = GenericLoader<Model, TestLocal>
+    private typealias SUT = Loader<Model, TestLocal>
     
     private func makeSUT(
         currentDate: Date = .init(),
