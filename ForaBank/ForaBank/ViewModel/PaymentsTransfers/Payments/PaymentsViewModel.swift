@@ -295,13 +295,14 @@ class PaymentsViewModel: ObservableObject {
                     switch content {
                         
                     case .linkNotActive:
+                        
                         if let source {
                             sourceOperation(
                                 model,
                                 source,
                                 closeAction)
-                        }
-                        else {
+                            
+                        } else {
                             self.action.send(PaymentsViewModelAction.Dismiss()) }
                         
                     default:
@@ -474,7 +475,7 @@ extension PaymentsViewModel {
                     closeAction: closeAction
                 )
                 operationViewModel.rootActions = rootActions
-                let cancellable = self.bind(operationViewModel: operationViewModel)
+                let cancellable = bind(operationViewModel: operationViewModel)
                 
                 await MainActor.run {
                     

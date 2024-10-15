@@ -230,15 +230,7 @@ class RootViewModel: ObservableObject, Resetable {
                     self.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
                     
                 case let .c2b(url):
-                    let operationViewModel = PaymentsViewModel(
-                        source: .c2b(url),
-                        model: model,
-                        closeAction: { [weak self] in
-                            
-                            self?.action.send(RootViewModelAction.CloseLink())
-                        }
-                    )
-                    self.link = .payments(operationViewModel)
+                    self.handleC2BDeepLink(url: url)
                     
                 case let .c2bSubscribe(url):
                     let operationViewModel = PaymentsViewModel(
@@ -453,6 +445,24 @@ class RootViewModel: ObservableObject, Resetable {
                 self?.model.action.send(ModelAction.Informer.Show(informer: $0))
             }
             .store(in: &bindings)
+    }
+    
+    private func handleC2BDeepLink(url: URL) {
+        
+        self.rootActions.dismissAll()
+     
+        let operationViewModel = PaymentsViewModel(
+            source: .c2b(url),
+            model: self.model,
+            closeAction: { [weak self] in
+                self?.action.send(RootViewModelAction.CloseLink())
+            }
+        )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+            
+            self?.link = .payments(operationViewModel)
+        }
     }
 }
 
