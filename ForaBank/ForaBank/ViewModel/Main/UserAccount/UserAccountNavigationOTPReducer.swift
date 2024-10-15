@@ -218,6 +218,7 @@ private extension UserAccountNavigationOTPReducer {
         case let .serverError(message):
             state.fpsRoute?.destination = nil
             state.fpsRoute?.alert = .error(message: message, event: .dismiss(.alert))
+            effect = .navigation(.dismissInformer())
         }
         
         return (state, effect)

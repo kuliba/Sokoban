@@ -138,15 +138,17 @@ private extension UserAccountNavigationFPSReducer {
             // non-final => closeAlert
             let tryMessage = "Превышено количество попыток ввода OTP. Попробуйте повторить позже."
             if tryMessage == message {
-                state.informer = .failure("Банк по умолчанию не удален")
                 state.fpsRoute?.alert = .error(
                     message: message,
                     event: .dismiss(.fpsDestination)
                 )
-                effect = .navigation(.dismissInformer())
+                state.informer = .failure("Банк по умолчанию не удален")
+                effect = .navigation(.dismissInformer(3))
 
             } else {
                 state.fpsRoute?.destination = nil
+                state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+                effect = .navigation(.dismissInformer())
             }
 
         case .missingProduct:
