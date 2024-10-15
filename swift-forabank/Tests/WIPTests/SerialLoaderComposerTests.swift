@@ -325,6 +325,178 @@ final class SerialLoaderComposerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
+    func test_reload_shouldDeliverEmptyOnRemoteSuccessEmptyWithNilSerial() {
+        
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverOneOnRemoteSuccessOfOneWithNilSerial() {
+        
+        let values = [makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverTwoOnRemoteSuccessOfTwoWithNilSerial() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverFromEphemeralOnRemoteSuccessWithSameSerial() {
+        
+        let serial = anyMessage()
+        let values = [makeValue(), makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: .init(list: [], serial: serial))
+        remoteLoad.complete(with: .success(.init(value: values, serial: serial)))
+        ephemeral.completeRetrieve(with: values)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverFromPersistentOnRemoteSuccessWithSameSerial() {
+        
+        let serial = anyMessage()
+        let (value1, value2) = (anyMessage(), anyMessage())
+        let values = [makeValue(value1), makeValue(value2)]
+        let models = [makeModel(value1), makeModel(value2)]
+        let persisted = SerialStamped(list: models, serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: .init(list: [], serial: serial))
+        remoteLoad.complete(with: .success(.init(value: values, serial: serial)))
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted, at: 1)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverEmptyFromRemoteOnRemoteSuccessWithDifferentSerial() {
+        
+        let values = [Value]()
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: .init(list: [], serial: anyMessage()))
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverOneFromRemoteOnRemoteSuccessWithDifferentSerial() {
+        
+        let values = [makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: .init(list: [], serial: anyMessage()))
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_reload_shouldDeliverTwoFromRemoteOnRemoteSuccessWithDifferentSerial() {
+        
+        let values = [makeValue(), makeValue()]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let reload = sut.compose().reload
+        let exp = expectation(description: "wait for load completion")
+        
+        reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: .init(list: [], serial: anyMessage()))
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias Serial = String
