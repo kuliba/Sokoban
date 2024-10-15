@@ -23,34 +23,23 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
     func test_load_shouldCallRemote() {
         
         let (sut, remoteLoad) = makeSUT()
-        let exp = expectation(description: "wait for load completion")
         
-        sut.compose().load { _ in exp.fulfill() }
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut.compose().load) {
+            
+            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        }
     }
     
     func test_load_shouldNotCallRemoteOnSecondLoad() {
         
         let (sut, remoteLoad) = makeSUT()
-        let first = expectation(description: "wait for first load completion")
         
-        sut.compose().load { _ in first.fulfill() }
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        expect(sut.compose().load, "wait for first load completion") {
+            
+            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        }
         
-        remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
-        
-        wait(for: [first], timeout: 1)
-        
-        let second = expectation(description: "wait for second load completion")
-        
-        sut.compose().load { _ in second.fulfill() }
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        wait(for: [second], timeout: 1)
+        expect(sut.compose().load, "wait for second load completion") {}
         
         XCTAssertEqual(remoteLoad.callCount, 1)
     }
@@ -58,14 +47,11 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
     func test_reload_shouldCallRemote() {
         
         let (sut, remoteLoad) = makeSUT()
-        let exp = expectation(description: "wait for reload completion")
         
-        sut.compose().reload { _ in exp.fulfill() }
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
-        
-        wait(for: [exp], timeout: 1)
+        expect(sut.compose().reload) {
+            
+            remoteLoad.complete(with: .success(.init(value: [], serial: anyMessage())))
+        }
     }
     
     // MARK: - Helpers
@@ -122,5 +108,27 @@ final class SerialLoaderComposer_extWithLocalAgentTests: LocalAgentTests {
     ) -> Model {
         
         return .init(value: value)
+    }
+    
+    private func expect(
+        _ load: Load<Value>,
+        _ description: String = "wait for load completion",
+        assert: @escaping ([Value]?) -> Void = { _ in },
+        on action: () -> Void
+    ) {
+        let exp = expectation(description: description)
+        
+        load {
+            
+            assert($0)
+            exp.fulfill()
+        }
+        
+        // await actor thread-hop
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
     }
 }
