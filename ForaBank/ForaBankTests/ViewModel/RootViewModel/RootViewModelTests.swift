@@ -216,6 +216,7 @@ final class RootViewModelTests: XCTestCase {
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     qrViewModelFactory: .preview(),
+                    landingServices: .empty(),
                     paymentsTransfersFactory: .preview,
                     updateInfoStatusFlag: .init(.inactive),
                     onRegister: {},

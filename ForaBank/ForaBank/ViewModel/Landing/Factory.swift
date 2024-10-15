@@ -34,7 +34,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            imageViewFactory: makeImageViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -66,7 +66,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            imageViewFactory: makeImageViewFactory(),
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -92,11 +92,90 @@ extension Model {
             initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
-            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            imageViewFactory: makeImageViewFactory(),
             limitsViewModel: limitsViewModel,
             scheduler: .main,
             config: config,
             landingActions: landingActions
+        )
+    }
+    
+    func landingViewModelFactory(
+        result: Landing,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent) -> Void,
+        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void
+    ) -> LandingWrapperViewModel {
+        
+        let actions = CarouselActions(
+            openUrl: { landingActions(.card(.openUrl($0))) },
+            goToMain: { landingActions(.card(.goToMain)) },
+            orderSticker: { landingActions(.sticker(.order))}
+        )
+        
+        return LandingWrapperViewModel(
+            initialState: .success(.init(result)),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            imageViewFactory: makeImageViewFactory(),
+            carouselViewFactory: makeCarouselFactory(actions: actions),
+            limitsViewModel: nil,
+            scheduler: .main,
+            config: config,
+            landingActions: landingActions
+        )
+    }
+    
+    func makeCarouselFactory(
+        actions: CarouselActions
+    ) -> CarouselViewFactory {
+        .init(
+            makeCarouselBaseView: { self.makeCarouselBaseView($0, actions) },
+            makeCarouselWithDotsView: { self.makeCarouselWithDotsView($0, actions) },
+            makeCarouselWithTabsView: { self.makeCarouselWithTabsView($0, actions) }
+        )
+    }
+    
+    func makeCarouselBaseView(
+        _ carousel: UILanding.Carousel.CarouselBase,
+        _ actions: CarouselActions
+    ) -> CarouselBaseView {
+        
+        CarouselBaseView(
+            carousel: carousel,
+            actions: actions,
+            factory: makeImageViewFactory(),
+            config: .iFora)
+    }
+    
+    func makeCarouselWithDotsView(
+        _ carousel: UILanding.Carousel.CarouselWithDots,
+        _ actions: CarouselActions
+    ) -> CarouselWithDotsView {
+        
+        CarouselWithDotsView(
+            carousel: carousel,
+            actions: actions,
+            factory: makeImageViewFactory(),
+            config: .iFora)
+    }
+    
+    func makeCarouselWithTabsView(
+        _ carousel: UILanding.Carousel.CarouselWithTabs,
+        _ actions: CarouselActions
+    ) -> CarouselWithTabsView {
+        
+        CarouselWithTabsView(
+            carousel: carousel,
+            actions: actions,
+            factory: makeImageViewFactory(),
+            config: .iFora)
+    }
+    
+    func makeImageViewFactory() -> ImageViewFactory {
+        .init(
+            makeIconView: imageCache().makeIconView(for:),
+            makeBannerImageView: generalImageCache(.defaultLanding).makeIconView(for:)
         )
     }
 }
@@ -280,4 +359,9 @@ private extension Model {
             httpClient: httpClient,
             withCache: cache)
     }
+}
+
+private extension Image {
+    
+    static let defaultLanding: Image = .init("defaultLanding")
 }

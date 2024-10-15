@@ -23,10 +23,12 @@ public struct LandingMapper {
         return dataToLanding(data)
     }
     
-    public enum MapperError: Error {
+    public enum MapperError: Error, Equatable {
         
         case notOkStatus
         case mapError
+        case serverError(String)
+        case connectivityError
     }
     
     private static func dataToLanding(_ data: Data) -> Result {
@@ -148,7 +150,9 @@ private extension Landing.DataView {
             
         case let .verticalSpacing(data):
             self = .verticalSpacing(.init(data: data))
-            
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
         case let .list(.horizontalRectangleLimits(data)):
             self = .list(.horizontalRectangleLimits(.init(data: data)))
         case let .carousel(.base(data)):
@@ -170,6 +174,17 @@ private extension Landing.VerticalSpacing {
         self.init(
             backgroundColor: .init(data.backgroundColor),
             type: .init(data.type))
+    }
+}
+
+private extension Landing.Spacing {
+    
+    init(
+        data: DecodableLanding.Data.Spacing
+    ) {
+        self.init(
+            backgroundColor: data.backgroundColor,
+            heightDp: CGFloat(Double(data.heightDp) ?? 0))
     }
 }
 
@@ -635,8 +650,7 @@ private extension Landing.DataView.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -648,7 +662,7 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem {
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -670,8 +684,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }
@@ -694,7 +707,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem {
         data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -716,8 +729,7 @@ private extension Landing.DataView.Carousel.CarouselWithDots {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
+            size: .init(size: data.size, scale: data.scale),
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -729,7 +741,7 @@ private extension Landing.DataView.Carousel.CarouselWithDots.ListItem {
         data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: data.imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -741,5 +753,12 @@ private extension Landing.DataView.Carousel.CarouselWithDots.ListItem.Action {
         data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem.Action
     ) {
         self.init(type: data.type, target: data.target)
+    }
+}
+
+extension String {
+    
+    func addingPercentEncoding() -> Self {
+        addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
     }
 }

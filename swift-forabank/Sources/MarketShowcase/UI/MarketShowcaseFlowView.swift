@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct MarketShowcaseFlowView<ContentView, Destination, InformerPayload>: View
 where ContentView: View {
@@ -26,26 +27,22 @@ where ContentView: View {
     
     public var body: some View {
         
-        VStack {
-            Button(action: { event(.failure(.error("Попробуйте позже"))) }, label: { Text("Алерт")})
-
-            contentView()
-                .alert(
-                    item: backendFailure,
-                    content: alert(event: event)
-                )
-        }
+        contentView()
+            .alert(
+                item: backendFailure,
+                content: alert(event: event)
+            )
     }
     
     func alert(
         event: @escaping (Event) -> Void
-    ) -> (BackendFailure) -> Alert {
+    ) -> (AlertFailure) -> Alert {
         
         return { alert in
 
             return .init(
                 with: .init(
-                    title: "Ошибка!",
+                    title: "Ошибка",
                     message: alert.message,
                     primaryButton: .init(
                         type: .default,
@@ -61,12 +58,12 @@ where ContentView: View {
 
 extension MarketShowcaseFlowView {
     
-    var backendFailure: BackendFailure? {
+    var backendFailure: AlertFailure? {
         
-        guard case let .alert(backendFailure) = state.status
+        guard case let .alert(alertFailure) = state.status
         else { return nil }
         
-        return backendFailure
+        return alertFailure
     }
 
     var destination: Destination? {

@@ -48,6 +48,7 @@ extension DecodableLanding.Data {
         case carouselBase = "HORIZONTAL_SLIDER_BASE"
         case carouselWithTabs = "HORIZONTAL_SLIDER_WITH_TABS"
         case carouselWithDots = "HORIZONTAL_SLIDER_WITH_DOTS"
+        case spacing = "SPACING"
     }
 
     // TODO: ListHorizontalRectangleImage -> List.Horizontal.RectangleImage
@@ -89,6 +90,7 @@ extension DecodableLanding.Data {
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+        case spacing(Spacing)
         
         init(from decoder: Decoder) throws {
             
@@ -96,7 +98,7 @@ extension DecodableLanding.Data {
                 case type
                 case data
             }
-
+            
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
             let type = try? container.decode(LandingComponentsType.self, forKey: .type)
@@ -104,88 +106,158 @@ extension DecodableLanding.Data {
             switch type {
                 
             case .iconWithTwoTextLines:
-                let data = try container.decode(IconWithTwoTextLines.self, forKey: .data)
-                self = .iconWithTwoTextLines(data)
+                if let data = try? container.decode(IconWithTwoTextLines.self, forKey: .data) {
+                    self = .iconWithTwoTextLines(data) }
+                else {
+                    self = .noValid("iconWithTwoTextLines")
+                }
                 
             case .listHorizontalRectangleImage:
-                let data = try container.decode(ListHorizontalRectangleImage.self, forKey: .data)
-                self = .list(.horizontalRectangleImage(data))
+                if let data = try? container.decode(ListHorizontalRectangleImage.self, forKey: .data) {
+                    self = .list(.horizontalRectangleImage(data)) }
+                else {
+                    self = .noValid("listHorizontalRectangleImage")
+                }
                 
             case .listHorizontalRoundImage:
-                let data = try container.decode(ListHorizontalRoundImage.self, forKey: .data)
-                self = .list(.horizontalRoundImage(data))
-            
+                if let data = try? container.decode(ListHorizontalRoundImage.self, forKey: .data) {
+                    self = .list(.horizontalRoundImage(data)) }
+                else {
+                    self = .noValid("listHorizontalRoundImage")
+                }
+                
             case .listVerticalRoundImage:
-                let data = try container.decode(ListVerticalRoundImage.self, forKey: .data)
-                self = .list(.verticalRoundImage(data))
+                if let data = try? container.decode(ListVerticalRoundImage.self, forKey: .data) {
+                    self = .list(.verticalRoundImage(data)) }
+                else {
+                    self = .noValid("listVerticalRoundImage")
+                }
                 
             case .multiLineHeader:
-                let data = try container.decode(MultiLineHeader.self, forKey: .data)
-                self = .multi(.lineHeader(data))
-            
+                if let data = try? container.decode(MultiLineHeader.self, forKey: .data) {
+                    self = .multi(.lineHeader(data)) }
+                else {
+                    self = .noValid("multiLineHeader")
+                }
+                
             case .multiMarkersText:
-                let data = try container.decode(MultiMarkersText.self, forKey: .data)
-                self = .multi(.markersText(data))
+                if let data = try? container.decode(MultiMarkersText.self, forKey: .data) {
+                    self = .multi(.markersText(data)) }
+                else {
+                    self = .noValid("multiMarkersText")
+                }
                 
             case .multiText:
-                let data = try container.decode(MultiText.self, forKey: .data)
-                self = .multi(.text(data))
+                if let data = try? container.decode(MultiText.self, forKey: .data), !data.list.isEmpty {
+                    self = .multi(.text(data)) }
+                else {
+                    self = .noValid("multiText")
+                }
                 
             case .multiTextsWithIconsHorizontal:
-                let data = try container.decode([MultiTextsWithIconsHorizontal].self, forKey: .data)
-                self = .multi(.textsWithIconsHorizontalArray(data))
-            
+                if let data = try? container.decode([MultiTextsWithIconsHorizontal].self, forKey: .data) {
+                    self = .multi(.textsWithIconsHorizontalArray(data)) }
+                else {
+                    self = .noValid("multiTextsWithIconsHorizontal")
+                }
+                
             case .pageTitle:
-                let data = try container.decode(PageTitle.self, forKey: .data)
-                self = .pageTitle(data)
-            
+                if let data = try? container.decode(PageTitle.self, forKey: .data) {
+                    self = .pageTitle(data) }
+                else {
+                    self = .noValid("pageTitle")
+                }
+                
             case .textWithIconHorizontal:
-                let data = try container.decode(TextsWithIconHorizontal.self, forKey: .data)
-                self = .textsWithIconHorizontal(data)
-              
+                if let data = try? container.decode(TextsWithIconHorizontal.self, forKey: .data) {
+                    self = .textsWithIconHorizontal(data) }
+                else {
+                    self = .noValid("textWithIconHorizontal")
+                }
+                
             case .multiButtons:
-                let data = try container.decode(MultiButtons.self, forKey: .data)
-                self = .multi(.buttons(data))
+                if let data = try? container.decode(MultiButtons.self, forKey: .data) {
+                    self = .multi(.buttons(data)) }
+                else {
+                    self = .noValid("multiButtons")
+                }
                 
             case .multiTypeButtons:
-                let data = try container.decode(MultiTypeButtons.self, forKey: .data)
-                self = .multi(.typeButtons(data))
+                if let data = try? container.decode(MultiTypeButtons.self, forKey: .data) {
+                    self = .multi(.typeButtons(data)) }
+                else {
+                    self = .noValid("multiTypeButtons")
+                }
                 
             case .image:
-                let data = try container.decode(ImageBlock.self, forKey: .data)
-                self = .image(data)
+                if let data = try? container.decode(ImageBlock.self, forKey: .data) {
+                    self = .image(data) }
+                else {
+                    self = .noValid("image")
+                }
                 
             case .imageSvg:
-                let data = try container.decode(ImageSvg.self, forKey: .data)
-                self = .imageSvg(data)
-
+                if let data = try? container.decode(ImageSvg.self, forKey: .data) {
+                    self = .imageSvg(data) }
+                else {
+                    self = .noValid("imageSvg")
+                }
+                
             case .listDropDownTexts:
-                let data = try container.decode(ListDropDownTexts.self, forKey: .data)
-                self = .list(.dropDownTexts(data))
+                if let data = try? container.decode(ListDropDownTexts.self, forKey: .data) {
+                    self = .list(.dropDownTexts(data))
+                }
+                else {
+                    self = .noValid("listDropDownTexts")
+                }
                 
             case .verticalSpacing:
-                let data = try container.decode(VerticalSpacing.self, forKey: .data)
-                self = .verticalSpacing(data)
+                if let data = try? container.decode(VerticalSpacing.self, forKey: .data) {
+                    self = .verticalSpacing(data) }
+                else {
+                    self = .noValid("verticalSpacing")
+                }
+            case .spacing:
+                if let data = try? container.decode(Spacing.self, forKey: .data) {
+                    self = .spacing(data) }
+                else {
+                    self = .noValid("spacing")
+                }
                 
             case .listHorizontalRectangleLimits:
-                let data = try container.decode(ListHorizontalRectangleLimits.self, forKey: .data)
-                self = .list(.horizontalRectangleLimits(data))
-
+                if let data = try? container.decode(ListHorizontalRectangleLimits.self, forKey: .data) {
+                    self = .list(.horizontalRectangleLimits(data)) }
+                else {
+                    self = .noValid("listHorizontalRectangleLimits")
+                }
+                
             case .blockHorizontalRectangular:
-                let data = try container.decode(BlockHorizontalRectangular.self, forKey: .data)
-                self = .blockHorizontalRectangular(data)
+                if let data = try? container.decode(BlockHorizontalRectangular.self, forKey: .data) {
+                    self = .blockHorizontalRectangular(data) }
+                else {
+                    self = .noValid("blockHorizontalRectangular")
+                }
                 
             case .carouselBase:
-                let data = try container.decode(CarouselBaseDecodable.self, forKey: .data)
-                self = .carousel(.base(data))
+                if let data = try? container.decode(CarouselBaseDecodable.self, forKey: .data) {
+                    self = .carousel(.base(data)) }
+                else {
+                    self = .noValid("carouselBase")
+                }
                 
             case .carouselWithTabs:
-                let data = try container.decode(CarouselWithTabsDecodable.self, forKey: .data)
-                self = .carousel(.withTabs(data))
+                if let data = try? container.decode(CarouselWithTabsDecodable.self, forKey: .data) {
+                    self = .carousel(.withTabs(data)) }
+                else {
+                    self = .noValid("carouselWithTabs")
+                }
                 
             case .carouselWithDots:
-                let data = try container.decode(CarouselWithDotsDecodable.self, forKey: .data)
-                self = .carousel(.withDots(data))
+                if let data = try? container.decode(CarouselWithDotsDecodable.self, forKey: .data) {
+                    self = .carousel(.withDots(data)) }
+                else {
+                    self = .noValid("carouselWithDots")
+                }
                 
             default:
                 // не смогли распарсить - нет такого type

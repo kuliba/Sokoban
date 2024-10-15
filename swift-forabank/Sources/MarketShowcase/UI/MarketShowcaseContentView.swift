@@ -8,18 +8,19 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseContentView<RefreshView, Landing>: View
-where RefreshView: View
+public struct MarketShowcaseContentView<RefreshView, LandingView, Landing, InformerPayload>: View
+where RefreshView: View,
+      LandingView: View
 {
     
     let state: State
-    let event: (Event<Landing>) -> Void
+    let event: (Event<Landing, InformerPayload>) -> Void
     let config: Config
     let factory: Factory
     
     public init(
         state: State,
-        event: @escaping (Event<Landing>) -> Void,
+        event: @escaping (Event<Landing, InformerPayload>) -> Void,
         config: Config,
         factory: Factory
     ) {
@@ -39,54 +40,53 @@ where RefreshView: View
     
     @ViewBuilder
     private func content() -> some View {
-        
-        switch state.status {
-        case .initiate:
-            Text("Initiate")
-                .frame(maxHeight: .infinity)
-                .padding()
+       
+        ZStack {
             
-        case .inflight:
-            
-            factory.makeRefreshView()
-                .modifier(ViewByCenterModifier(height: config.spinnerHeight))
-            
-        case .loaded:
-            VStack {
-                Text("Market")
+            switch state.status {
+            case .initiate, .inflight, .failure:
+                Color.clear
+                    .frame(maxHeight: .infinity)
+                
+            case let .loaded(landing):
+                factory.makeLandingView(landing)
             }
-            .frame(maxHeight: .infinity)
-            .padding()
             
-        case .failure:
-            VStack {
-                Text("Failure")
+            if case .inflight = state.status {
+                factory.makeRefreshView()
+                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             }
-            .frame(maxHeight: .infinity)
-            .padding()
         }
     }
 }
 
 public extension MarketShowcaseContentView {
     
-    typealias State = MarketShowcaseContentState<Landing>
+    typealias State = MarketShowcaseContentState<Landing, InformerPayload>
     typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
-    typealias Factory = ViewFactory<RefreshView>
+    typealias Factory = ViewFactory<RefreshView, Landing, LandingView>
 }
 
 #Preview {
     MarketShowcaseContentView.preview
 }
 
-extension MarketShowcaseContentView where RefreshView == Text, Landing == String {
+extension MarketShowcaseContentView
+where RefreshView == Text,
+      LandingView == Text,
+      Landing == String,
+      InformerPayload == String
+{
     
     static let preview = MarketShowcaseContentView(
         state: .init(status: .initiate),
         event: {_ in },
         config: .iFora,
-        factory: .init(makeRefreshView: { Text("Refresh") }))
+        factory: .init(
+            makeRefreshView: { Text("Refresh") },
+            makeLandingView: { Text($0) }
+        ))
 }
 
 private struct ViewByCenterModifier: ViewModifier {
@@ -102,24 +102,6 @@ private struct ViewByCenterModifier: ViewModifier {
         .position(
             x: UIScreen.main.bounds.width/2,
             y: UIScreen.main.bounds.height/2 - height
-        )
-    }
-}
-
-#warning("move to module")
-extension View {
-    
-    func alert<Item: Identifiable>(
-        item: Item?,
-        content: (Item) -> Alert
-    ) -> some View {
-        
-        alert(
-            item: .init(
-                get: { item },
-                set: { _ in } // managed by action in content
-            ),
-            content: content
         )
     }
 }
