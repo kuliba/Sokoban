@@ -5,11 +5,7 @@
 //  Created by Igor Malyarov on 14.10.2024.
 //
 
-import EphemeralStores
 import ForaTools
-import GenericLoader
-import SerialComponents
-
 import SerialComponents
 import XCTest
 
@@ -130,7 +126,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldCallEphemeralWithEmptyOnEmptyPersistent() {
         
-        let persisted = ForaTools.SerialStamped(value: [Model](), serial: anyMessage())
+        let persisted = SerialStamped(value: [Model](), serial: anyMessage())
         let (sut, ephemeral, persistent, _) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -153,7 +149,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_load_shouldCallEphemeralWithOneOnPersistentWithOne() {
         
         let (values, models) = makeValuesModels(count: 1)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, _) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -176,7 +172,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_load_shouldCallEphemeralWithTwoOnPersistentWithTwo() {
         
         let (values, models) = makeValuesModels(count: 2)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, _) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -198,7 +194,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldNotCallRemoteOnEmptyPersistent() {
         
-        let persisted = ForaTools.SerialStamped(value: [Model](), serial: anyMessage())
+        let persisted = SerialStamped(value: [Model](), serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -221,7 +217,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_load_shouldNotCallRemoteOnPersistentWithOne() {
         
         let (values, models) = makeValuesModels(count: 1)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -244,7 +240,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_load_shouldNotCallRemoteOnPersistentWithTwo() {
         
         let (values, models) = makeValuesModels(count: 2)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -308,7 +304,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverEmptyFromEphemeralOnRemoteFailureWithSerial() {
         
-        let persisted = ForaTools.SerialStamped(value: [makeModel()], serial: anyMessage())
+        let persisted = SerialStamped(value: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -328,7 +324,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverOneFromEphemeralOnRemoteFailureWithSerial() {
         
         let values = makeValuesModels(count: 1).values
-        let persisted = ForaTools.SerialStamped(value: [makeModel()], serial: anyMessage())
+        let persisted = SerialStamped(value: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -348,7 +344,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverTwoFromEphemeralOnRemoteFailureWithSerial() {
         
         let values = makeValuesModels(count: 2).values
-        let persisted = ForaTools.SerialStamped(value: [makeModel()], serial: anyMessage())
+        let persisted = SerialStamped(value: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -367,7 +363,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverEmptyFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
         
-        let persisted = ForaTools.SerialStamped(value: [Model](), serial: anyMessage())
+        let persisted = SerialStamped(value: [Model](), serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -389,7 +385,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverOneFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
         
         let (values, models) = makeValuesModels(count: 2)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -411,7 +407,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverTwoFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
         
         let (values, models) = makeValuesModels(count: 2)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -584,7 +580,7 @@ final class SerialLoaderComposerTests: XCTestCase {
         
         let serial = anyMessage()
         let (values, models) = makeValuesModels(count: 2)
-        let persisted = ForaTools.SerialStamped(value: models, serial: anyMessage())
+        let persisted = SerialStamped(value: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let exp = expectation(description: "wait for load completion")
         
@@ -667,9 +663,9 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     private typealias Serial = String
     private typealias SUT = SerialLoaderComposer<Serial, Value, Model>
-    private typealias RemoteLoadSpy = Spy<Serial?, Result<ForaTools.SerialStamped<Serial, [Value]>, Error>>
+    private typealias RemoteLoadSpy = Spy<Serial?, Result<SerialStamped<Serial, [Value]>, Error>>
     private typealias EphemeralSpy = MonolithicStoreSpy<[Value]>
-    private typealias PersistentSpy = MonolithicStoreSpy<ForaTools.SerialStamped<Serial, [Model]>>
+    private typealias PersistentSpy = MonolithicStoreSpy<SerialStamped<Serial, [Model]>>
     
     private func makeSUT(
         file: StaticString = #file,
