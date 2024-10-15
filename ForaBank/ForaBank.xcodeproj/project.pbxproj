@@ -337,6 +337,7 @@
 		2A0439CB2BB421570063B7AB /* NanoServices+makeGetOperationDetailByPaymentIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439CA2BB421570063B7AB /* NanoServices+makeGetOperationDetailByPaymentIDTests.swift */; };
 		2A0439CD2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439CC2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift */; };
 		2A0439CF2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0439CE2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift */; };
+		2A04BFC52CBE61DA002490C5 /* SerialComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A04BFC42CBE61DA002490C5 /* SerialComponents */; };
 		2A05586E2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */; };
 		2A05ECC52C6C8C740070C5CF /* PayHubPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */; };
 		2A05ECC72C6C8C740070C5CF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A05ECC62C6C8C740070C5CF /* ContentView.swift */; };
@@ -3827,6 +3828,7 @@
 		2A0439CA2BB421570063B7AB /* NanoServices+makeGetOperationDetailByPaymentIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetOperationDetailByPaymentIDTests.swift"; sourceTree = "<group>"; };
 		2A0439CC2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeCreateAnywayTransferV2Tests.swift"; sourceTree = "<group>"; };
 		2A0439CE2BB42C280063B7AB /* NanoServices+makeCreateAnywayTransferNewV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeCreateAnywayTransferNewV2Tests.swift"; sourceTree = "<group>"; };
+		2A04BFC62CBE621D002490C5 /* SerialComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SerialComponents.xctestplan; sourceTree = "<group>"; };
 		2A05586D2B089C9E009F4E99 /* PaymentsOperationViewModelParameterInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationViewModelParameterInputTests.swift; sourceTree = "<group>"; };
 		2A05ECC22C6C8C740070C5CF /* PayHubPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayHubPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A05ECC42C6C8C740070C5CF /* PayHubPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayHubPreviewApp.swift; sourceTree = "<group>"; };
@@ -7159,6 +7161,7 @@
 				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
 				2A3E48732C8ABCF3002D035F /* PaymentTemplateBackendV3 in Frameworks */,
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
+				2A04BFC52CBE61DA002490C5 /* SerialComponents in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
@@ -10017,6 +10020,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A04BFC62CBE621D002490C5 /* SerialComponents.xctestplan */,
 				2A4074862CBA8A380027D7C3 /* GenericLoader.xctestplan */,
 				2A4074832CBA654B0027D7C3 /* EphemeralStores.xctestplan */,
 				83F775CD2CA2D10500A05F69 /* MarketShowcase.xctestplan */,
@@ -18797,6 +18801,7 @@
 				2A373A392CBA64520057A602 /* EphemeralStores */,
 				2A4074842CBA89CA0027D7C3 /* GenericLoader */,
 				A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */,
+				2A04BFC42CBE61DA002490C5 /* SerialComponents */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -27330,6 +27335,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
+		};
+		2A04BFC42CBE61DA002490C5 /* SerialComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SerialComponents;
 		};
 		2A06DC2F2AFACBDD0049709E /* ServerAgent */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -29,6 +29,7 @@ let package = Package(
         .fetcher,
         .genericLoader,
         .keyChainStore,
+        .serialComponents,
         // Payments
         .anywayPayment,
         .latestPaymentsBackendV2,
@@ -140,6 +141,8 @@ let package = Package(
         .genericLoaderTests,
         .keyChainStore,
         .keyChainStoreTests,
+        .serialComponents,
+        .serialComponentsTests,
         // Payments
         .anywayPaymentAdapters,
         .anywayPaymentAdaptersTests,
@@ -656,6 +659,13 @@ private extension Product {
         name: .keyChainStore,
         targets: [
             .keyChainStore
+        ]
+    )
+    
+    static let serialComponents = library(
+        name: .serialComponents,
+        targets: [
+            .serialComponents
         ]
     )
     
@@ -1180,6 +1190,7 @@ private extension Target {
     static let ephemeralStores = target(
         name: .ephemeralStores,
         dependencies: [
+            .foraTools,
             .genericLoader,
         ],
         path: "Sources/Infra/\(String.ephemeralStores)"
@@ -1238,6 +1249,24 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    static let serialComponents = target(
+        name: .serialComponents,
+        path: "Sources/Infra/\(String.serialComponents)"
+    )
+    static let serialComponentsTests = testTarget(
+        name: .serialComponentsTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+            .foraTools,
+            .genericLoader,
+            .serialComponents,
+        ],
+        path: "Tests/Infra/\(String.serialComponentsTests)"
     )
     
     // MARK: - Payments
@@ -3032,6 +3061,10 @@ private extension Target.Dependency {
         name: .keyChainStore
     )
     
+    static let serialComponents = byName(
+        name: .serialComponents
+    )
+    
     // MARK: - Payments
     
     static let anywayPaymentAdapters = byName(
@@ -3367,6 +3400,9 @@ private extension String {
     
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
+    
+    static let serialComponents = "SerialComponents"
+    static let serialComponentsTests = "SerialComponentsTests"
     
     // MARK: - Payments
     

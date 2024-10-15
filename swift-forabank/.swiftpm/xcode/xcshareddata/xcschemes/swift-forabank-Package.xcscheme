@@ -1028,6 +1028,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SerialComponents"
+               BuildableName = "SerialComponents"
+               BlueprintName = "SerialComponents"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -1129,6 +1143,16 @@
                BlueprintIdentifier = "EphemeralStoresTests"
                BuildableName = "EphemeralStoresTests"
                BlueprintName = "EphemeralStoresTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SerialComponentsTests"
+               BuildableName = "SerialComponentsTests"
+               BlueprintName = "SerialComponentsTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

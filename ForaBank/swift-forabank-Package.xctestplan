@@ -543,6 +543,13 @@
         "identifier" : "CollateralLoanLandingTests",
         "name" : "CollateralLoanLandingTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SerialComponentsTests",
+        "name" : "SerialComponentsTests"
+      }
     }
   ],
   "version" : 1
