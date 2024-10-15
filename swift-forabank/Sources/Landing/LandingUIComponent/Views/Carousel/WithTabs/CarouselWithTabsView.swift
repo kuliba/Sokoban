@@ -71,15 +71,17 @@ public struct CarouselWithTabsView: View {
     
     private func categories() -> some View {
         
-        HStack {
-            ForEach(0..<carousel.tabs.count, id: \.self) { index in
-                Capsule()
-                    .fill(index == selection.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
-                    .overlay(
-                        carousel.tabs[index].name.text(withConfig: config.category)
-                    )
-                    .frame(height: 24)
-                    .onTapGesture(perform: { selection = "\(index):0" })
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(0..<carousel.tabs.count, id: \.self) { index in
+                    Capsule()
+                        .fill(index == selection.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
+                        .overlay(
+                            carousel.tabs[index].name.text(withConfig: config.category)
+                        )
+                        .frame(height: config.pageControls.height)
+                        .onTapGesture(perform: { selection = "\(index):0" })
+                }
             }
         }
     }

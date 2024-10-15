@@ -567,7 +567,7 @@ extension UILanding.Carousel.CarouselWithTabs.Config {
         pageControls: .init(
             active: .mainColorsGrayLightest,
             inactive: .clear,
-            widthAndHeight: 6
+            height: 24
         ),
         spacing: 8,
         title: .init(textFont: .textH2Sb20282(), textColor: .textSecondary)

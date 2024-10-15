@@ -24,12 +24,12 @@ public extension UILanding.Carousel.CarouselWithTabs {
             
             let active: Color
             let inactive: Color
-            let widthAndHeight: CGFloat
+            let height: CGFloat
             
-            public init(active: Color, inactive: Color, widthAndHeight: CGFloat) {
+            public init(active: Color, inactive: Color, height: CGFloat) {
                 self.active = active
                 self.inactive = inactive
-                self.widthAndHeight = widthAndHeight
+                self.height = height
             }
         }
 
