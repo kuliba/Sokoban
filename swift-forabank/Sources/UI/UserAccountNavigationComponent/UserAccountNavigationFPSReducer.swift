@@ -133,6 +133,7 @@ private extension UserAccountNavigationFPSReducer {
                 message: message,
                 event: .closeAlert
             )
+            state.informer = "Банк по умолчанию не удален."
             effect = .dismissInformer
             
         case .setBankDefaultSuccess:
