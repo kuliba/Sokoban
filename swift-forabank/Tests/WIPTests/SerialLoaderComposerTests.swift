@@ -169,7 +169,7 @@ final class SerialLoaderComposerTests: XCTestCase {
         XCTAssertEqual(remoteLoad.callCount, 0)
         XCTAssertNotNil(sut)
     }
-
+    
     // MARK: - load
     
     func test_load_shouldNotCallPersistentAndRemoteOnEmptyEphemeral() {
@@ -232,6 +232,100 @@ final class SerialLoaderComposerTests: XCTestCase {
         
         XCTAssertEqual(persistent.retrieveMessages.count, 0)
         XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldNotCallRemoteOnEmptyPersistent() {
+        
+        let persisted = SerialStamped(list: [Model](), serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldNotCallRemoteOnPersistentWithOne() {
+        
+        let value = anyMessage()
+        let values = [makeValue(value)]
+        let persisted = SerialStamped(list: [makeModel(value)], serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldNotCallRemoteOnPersistentWithTwo() {
+        
+        let (value1, value2) = (anyMessage(), anyMessage())
+        let values = [makeValue(value1), makeValue(value2)]
+        let persisted = SerialStamped(list: [makeModel(value1), makeModel(value2)], serial: anyMessage())
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(remoteLoad.callCount, 0)
+    }
+    
+    func test_load_shouldCallRemoteOnEphemeralAndPersistentFailure() {
+        
+        let (value1, value2) = (anyMessage(), anyMessage())
+        let values = [makeValue(value1), makeValue(value2)]
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: nil, at: 1)
+        remoteLoad.complete(with: .success(.init(value: values, serial: anyMessage())))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - reload
@@ -587,10 +681,10 @@ final class SerialLoaderComposerTests: XCTestCase {
             toModel: { .init(value: $0.value) }
         )
         
-//        trackForMemoryLeaks(sut, file: file, line: line)
-//        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
-//        trackForMemoryLeaks(persistentSpy, file: file, line: line)
-//        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
+        //        trackForMemoryLeaks(sut, file: file, line: line)
+        //        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
+        //        trackForMemoryLeaks(persistentSpy, file: file, line: line)
+        //        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
         
         return (sut, ephemeralSpy, persistentSpy, remoteLoadSpy)
     }
