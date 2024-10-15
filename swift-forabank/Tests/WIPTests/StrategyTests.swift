@@ -5,42 +5,7 @@
 //  Created by Igor Malyarov on 14.10.2024.
 //
 
-final class Strategy<T> {
-    
-    let primary: Load
-    let fallback: Load
-    
-    init(
-        primary: @escaping Load,
-        fallback: @escaping Load
-    ) {
-        self.primary = primary
-        self.fallback = fallback
-    }
-    
-    typealias LoadCompletion = ([T]?) -> Void
-    typealias Load = (@escaping LoadCompletion) -> Void
-}
-
-extension Strategy {
-    
-    @inlinable
-    func load(
-        completion: @escaping LoadCompletion
-    ) {
-        primary { [fallback] in
-            
-            switch $0 {
-            case .none:
-                fallback { completion($0) }
-                
-            case let .some(value):
-                completion(value)
-            }
-        }
-    }
-}
-
+import SerialComponents
 import XCTest
 
 final class StrategyTests: XCTestCase {

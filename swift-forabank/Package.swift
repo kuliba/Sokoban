@@ -1253,6 +1253,9 @@ private extension Target {
     
     static let serialComponents = target(
         name: .serialComponents,
+        dependencies: [
+            .foraTools,
+        ],
         path: "Sources/Infra/\(String.serialComponents)"
     )
     static let serialComponentsTests = testTarget(
