@@ -44,6 +44,7 @@ public struct CarouselBaseView: View {
                 HStack(spacing: config.spacing) {
                     ForEach(carousel.list, id: \.id, content: itemView)
                 }
+                .padding(.horizontal, config.paddings.horizontal)
             }
             .padding(.vertical, config.paddings.vertical)
         }
@@ -62,7 +63,6 @@ public struct CarouselBaseView: View {
             ),
             width: widthForItem()
         )
-        .padding(.leading, config.paddings.horizontal)
     }
     
     private func widthForItem() -> CGFloat {
@@ -90,11 +90,12 @@ extension CarouselBaseView {
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
-                    .frame(width: width)
+                    .scaledToFit()
                     .cornerRadius(config.cornerRadius)
                     .accessibilityIdentifier("CarouselBaseImage")
             }
-            .fixedSize(horizontal: true, vertical: false)
+            .frame(width: width)
+            .scaledToFit()
         }
     }
 }
