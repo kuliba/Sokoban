@@ -97,13 +97,18 @@ extension SerialCachingRemoteBatchServiceComposer {
 private extension SerialStampedCachingDecorator {
     
     /// Completion handler type for the remote decoratee.
-    typealias _RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
+    typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
     
     /// Type for the remote decoratee function.
-    typealias _RemoteDecoratee<T> = (Payload, @escaping _RemoteDecorateeCompletion<T>) -> Void
+    typealias RemoteDecoratee<T> = (Payload, @escaping RemoteDecorateeCompletion<T>) -> Void
+    
+    /// The completion handler type for caching operations.
+    ///
+    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
+    typealias SaveCompletion = (Result<Void, Error>) -> Void
     
     /// Type for the save function used in caching.
-    typealias _Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
+    typealias Save<T> = ([T], Serial, @escaping SaveCompletion) -> Void
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when `Value` is `[T]`.
     ///
@@ -112,9 +117,9 @@ private extension SerialStampedCachingDecorator {
     ///   - getSerial: Function to get the serial from `Payload`.
     ///   - save: Function to save the cached data.
     convenience init<T>(
-        decoratee: @escaping _RemoteDecoratee<T>,
+        decoratee: @escaping RemoteDecoratee<T>,
         getSerial: @escaping (Payload) -> Serial?,
-        save: @escaping _Save<T>
+        save: @escaping Save<T>
     ) where Value == [T] {
         
         self.init(
@@ -123,7 +128,11 @@ private extension SerialStampedCachingDecorator {
                 decoratee(withSerial) { completion($0.map(\.stamped)) }
             },
             getSerial: getSerial,
-            cache: { save($0.value, $0.serial, $1) }
+            cache: { payload, completion in
+                
+                // ignoring result
+                save(payload.value, payload.serial) { _ in completion() }
+            }
         )
     }
 }
