@@ -189,7 +189,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldNotCallPersistentAndRemoteOnEphemeralWithOne() {
         
-        let values = [makeValue()]
+        let values = makeValuesModels(count: 1).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -205,7 +205,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldNotCallPersistentAndRemoteOnEphemeralWithTwo() {
         
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -237,7 +237,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldDeliverOneOnEphemeralWithOne() {
         
-        let values = [makeValue()]
+        let values = makeValuesModels(count: 1).values
         let (sut, ephemeral, _,_) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -254,7 +254,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldDeliverTwoOnEphemeralWithTwo() {
         
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, _,_) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -267,6 +267,74 @@ final class SerialLoaderComposerTests: XCTestCase {
         
         ephemeral.completeRetrieve(with: values)
         wait(for: [exp], timeout: 1)
+    }
+    
+    func test_load_shouldCallEphemeralWithEmptyOnEmptyPersistent() {
+        
+        let persisted = SerialStamped(list: [Model](), serial: anyMessage())
+        let (sut, ephemeral, persistent, _) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(ephemeral.insertMessages.map(\.value), [[]])
+    }
+    
+    func test_load_shouldCallEphemeralWithOneOnPersistentWithOne() {
+        
+        let (values, models) = makeValuesModels(count: 1)
+        let persisted = SerialStamped(list: models, serial: anyMessage())
+        let (sut, ephemeral, persistent, _) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(ephemeral.insertMessages.map(\.value), [values])
+    }
+    
+    func test_load_shouldCallEphemeralWithTwoOnPersistentWithTwo() {
+        
+        let (values, models) = makeValuesModels(count: 2)
+        let persisted = SerialStamped(list: models, serial: anyMessage())
+        let (sut, ephemeral, persistent, _) = makeSUT()
+        let load = sut.compose().load
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        ephemeral.completeRetrieve(with: nil)
+        persistent.completeRetrieve(with: persisted)
+        ephemeral.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(ephemeral.insertMessages.map(\.value), [values])
     }
     
     func test_load_shouldNotCallRemoteOnEmptyPersistent() {
@@ -293,9 +361,8 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldNotCallRemoteOnPersistentWithOne() {
         
-        let value = anyMessage()
-        let values = [makeValue(value)]
-        let persisted = SerialStamped(list: [makeModel(value)], serial: anyMessage())
+        let (values, models) = makeValuesModels(count: 1)
+        let persisted = SerialStamped(list: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -317,9 +384,8 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldNotCallRemoteOnPersistentWithTwo() {
         
-        let (value1, value2) = (anyMessage(), anyMessage())
-        let values = [makeValue(value1), makeValue(value2)]
-        let persisted = SerialStamped(list: [makeModel(value1), makeModel(value2)], serial: anyMessage())
+        let (values, models) = makeValuesModels(count: 2)
+        let persisted = SerialStamped(list: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -341,8 +407,7 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_load_shouldCallRemoteOnEphemeralAndPersistentFailure() {
         
-        let (value1, value2) = (anyMessage(), anyMessage())
-        let values = [makeValue(value1), makeValue(value2)]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
         let load = sut.compose().load
         let exp = expectation(description: "wait for load completion")
@@ -368,10 +433,9 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverNilOnRemoteFailureWithNilSerial() {
         
         let (sut, _, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNil($0)
             exp.fulfill()
@@ -385,34 +449,31 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverEmptyFromEphemeralOnRemoteFailureWithSerial() {
         
-        let values = [Value]()
         let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
-            XCTAssertNoDiff($0, values)
+            XCTAssertNoDiff($0, [])
             exp.fulfill()
         }
         
         persistent.completeRetrieve(with: persisted)
         remoteLoad.complete(with: .failure(anyError()))
-        ephemeral.completeRetrieve(with: values)
+        ephemeral.completeRetrieve(with: [])
         
         wait(for: [exp], timeout: 1)
     }
     
     func test_reload_shouldDeliverOneFromEphemeralOnRemoteFailureWithSerial() {
         
-        let values = [makeValue()]
+        let values = makeValuesModels(count: 1).values
         let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -427,13 +488,12 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverTwoFromEphemeralOnRemoteFailureWithSerial() {
         
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let persisted = SerialStamped(list: [makeModel()], serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -450,10 +510,9 @@ final class SerialLoaderComposerTests: XCTestCase {
         
         let persisted = SerialStamped(list: [Model](), serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, [])
             exp.fulfill()
@@ -470,16 +529,14 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverOneFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
         
-        let value = anyMessage()
-        let models = [makeModel(value)]
+        let (values, models) = makeValuesModels(count: 2)
         let persisted = SerialStamped(list: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
-            XCTAssertNoDiff($0, [.init(value: value)])
+            XCTAssertNoDiff($0, values)
             exp.fulfill()
         }
         
@@ -494,16 +551,14 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverTwoFromPersistentOnRemoteFailureWithSerialEmptyEphemeral() {
         
-        let (value1, value2) = (anyMessage(), anyMessage())
-        let models = [makeModel(value1), makeModel(value2)]
+        let (values, models) = makeValuesModels(count: 2)
         let persisted = SerialStamped(list: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
-            XCTAssertNoDiff($0, [.init(value: value1), .init(value: value2)])
+            XCTAssertNoDiff($0, values)
             exp.fulfill()
         }
         
@@ -516,13 +571,83 @@ final class SerialLoaderComposerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
     
+    func test_reload_shouldCallEphemeralAndPersistantWithEmptyOnRemoteSuccessEmptyWithNilSerial() {
+        
+        let serial = anyMessage()
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let exp = expectation(description: "wait for load completion")
+        
+        sut.compose().reload {
+            
+            XCTAssertNoDiff($0, [])
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: [], serial: serial)))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(ephemeral.insertMessages.map(\.value), [[]])
+        XCTAssertNoDiff(persistent.insertMessages.map(\.value), [.init(list: [], serial: serial)])
+    }
+    
+    func test_reload_shouldCallEphemeralAndPersistantWithOneOnRemoteSuccessOfOneWithNilSerial() {
+        
+        let serial = anyMessage()
+        let (values, models) = makeValuesModels(count: 1)
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let exp = expectation(description: "wait for load completion")
+        
+        sut.compose().reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: values, serial: serial)))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(ephemeral.insertMessages.map(\.value), [values])
+        XCTAssertNoDiff(persistent.insertMessages.map(\.value), [.init(list: models, serial: serial)])
+    }
+    
+    func test_reload_shouldCallEphemeralAndPersistantWithTwoOnRemoteSuccessOfTwoWithNilSerial() {
+        
+        let serial = anyMessage()
+        let (values, models) = makeValuesModels(count: 2)
+        let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
+        let exp = expectation(description: "wait for load completion")
+        
+        sut.compose().reload {
+            
+            XCTAssertNoDiff($0, values)
+            exp.fulfill()
+        }
+        
+        persistent.completeRetrieve(with: nil)
+        remoteLoad.complete(with: .success(.init(value: values, serial: serial)))
+        ephemeral.completeInsertSuccessfully()
+        persistent.completeInsertSuccessfully()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(ephemeral.insertMessages.map(\.value), [values])
+        XCTAssertNoDiff(persistent.insertMessages.map(\.value), [.init(list: models, serial: serial)])
+    }
+    
     func test_reload_shouldDeliverEmptyOnRemoteSuccessEmptyWithNilSerial() {
         
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, [])
             exp.fulfill()
@@ -538,12 +663,11 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverOneOnRemoteSuccessOfOneWithNilSerial() {
         
-        let values = [makeValue()]
+        let values = makeValuesModels(count: 1).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -559,12 +683,11 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverTwoOnRemoteSuccessOfTwoWithNilSerial() {
         
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -581,12 +704,11 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverFromEphemeralOnRemoteSuccessWithSameSerial() {
         
         let serial = anyMessage()
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -602,15 +724,12 @@ final class SerialLoaderComposerTests: XCTestCase {
     func test_reload_shouldDeliverFromPersistentOnRemoteSuccessWithSameSerial() {
         
         let serial = anyMessage()
-        let (value1, value2) = (anyMessage(), anyMessage())
-        let values = [makeValue(value1), makeValue(value2)]
-        let models = [makeModel(value1), makeModel(value2)]
+        let (values, models) = makeValuesModels(count: 2)
         let persisted = SerialStamped(list: models, serial: anyMessage())
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -629,10 +748,9 @@ final class SerialLoaderComposerTests: XCTestCase {
         
         let values = [Value]()
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -648,12 +766,11 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverOneFromRemoteOnRemoteSuccessWithDifferentSerial() {
         
-        let values = [makeValue()]
+        let values = makeValuesModels(count: 1).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -669,12 +786,11 @@ final class SerialLoaderComposerTests: XCTestCase {
     
     func test_reload_shouldDeliverTwoFromRemoteOnRemoteSuccessWithDifferentSerial() {
         
-        let values = [makeValue(), makeValue()]
+        let values = makeValuesModels(count: 2).values
         let (sut, ephemeral, persistent, remoteLoad) = makeSUT()
-        let reload = sut.compose().reload
         let exp = expectation(description: "wait for load completion")
         
-        reload {
+        sut.compose().reload {
             
             XCTAssertNoDiff($0, values)
             exp.fulfill()
@@ -716,10 +832,11 @@ final class SerialLoaderComposerTests: XCTestCase {
             toModel: { .init(value: $0.value) }
         )
         
-        //        trackForMemoryLeaks(sut, file: file, line: line)
-        //        trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
-        //        trackForMemoryLeaks(persistentSpy, file: file, line: line)
-        //        trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
+        // TODO: fix memory leaks
+        //    trackForMemoryLeaks(sut, file: file, line: line)
+        //    trackForMemoryLeaks(ephemeralSpy, file: file, line: line)
+        //    trackForMemoryLeaks(persistentSpy, file: file, line: line)
+        //    trackForMemoryLeaks(remoteLoadSpy, file: file, line: line)
         
         return (sut, ephemeralSpy, persistentSpy, remoteLoadSpy)
     }
@@ -746,6 +863,20 @@ final class SerialLoaderComposerTests: XCTestCase {
     ) -> Model {
         
         return .init(value: value)
+    }
+    
+    private func makeValuesModels(
+        count: Int
+    ) -> (values: [Value], models: [Model]) {
+        
+        let content = (0..<count).map { _ in anyMessage() }
+        let values = content.map(makeValue(_:))
+        let models = content.map(makeModel(_:))
+        
+        XCTAssertEqual(values.count, count)
+        XCTAssertEqual(models.count, count)
+        
+        return (values, models)
     }
 }
 
