@@ -21,27 +21,29 @@ public struct PlainClientInformBottomSheetView: View {
     
     public var body: some View {
         ZStack(alignment: .top) {
-
+            
             if viewModel.isShowNavBar {
                 NavBarView()
                     .transition(.identity)
             }
             
             ScrollView(viewModel.axes, showsIndicators: false) {
-
+                
                 ContentStack()
-                    .background(GeometryReader {
-                        Color.clear.preference(key: ViewOffsetKey.self,
-                                               value: -$0.frame(in: .named("scroll")).origin.y)
+                    .background(GeometryReader { geometry in
+                        Color.clear
+                            .preference(key: ContentHeightKey.self, value: geometry.size.height)
                     })
-                    .onPreferenceChange(ViewOffsetKey.self) { value in
-                        withAnimation(.linear(duration: 0.2)) {
-                            viewModel.isShowNavBar = value > config.sizes.navBarHeight
-                        }
-                    }
             }
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
+            .onPreferenceChange(ContentHeightKey.self) { contentHeight in
+                withAnimation(.linear(duration: 0.2)) {
+                    
+                    viewModel.isShowNavBar = contentHeight > UIScreen.main.bounds.height
+                    viewModel.shouldScroll = contentHeight > UIScreen.main.bounds.height
+                }
+            }
         }
     }
     
@@ -86,15 +88,17 @@ public struct PlainClientInformBottomSheetView: View {
         
         VStack(spacing: config.sizes.spacing) {
             
-            config.colors.grayGrabber
-                .frame(
-                    width: config.sizes.grabberWidth,
-                    height: config.sizes.grabberHeight,
-                    alignment: .top
-                )
-                .cornerRadius(config.sizes.grabberCornerRadius)
-                .padding(.top, config.paddings.topGrabber)
-                .ignoresSafeArea()
+            if !viewModel.isShowNavBar {
+                config.colors.grayGrabber
+                    .frame(
+                        width: config.sizes.grabberWidth,
+                        height: config.sizes.grabberHeight,
+                        alignment: .top
+                    )
+                    .cornerRadius(config.sizes.grabberCornerRadius)
+                    .padding(.top, config.paddings.topGrabber)
+                    .ignoresSafeArea()
+            }
             
             switch info {
             case .single(let singleInfo):
@@ -103,9 +107,13 @@ public struct PlainClientInformBottomSheetView: View {
                 Text(singleInfo.text)
                     .font(config.titleConfig.textFont)
                     .foregroundColor(config.titleConfig.textColor)
+                
             case .multiple(let multipleInfo):
-                iconView(multipleInfo.title.image)
-                titleView(multipleInfo.title.title)
+                if !viewModel.isShowNavBar {
+                    iconView(multipleInfo.title.image)
+                    titleView(multipleInfo.title.title)
+                }
+                
                 VStack(alignment: .leading, spacing: config.sizes.spacing) {
                     ForEach(multipleInfo.items) { item in
                         PlainClientInformRowView(
@@ -116,6 +124,7 @@ public struct PlainClientInformBottomSheetView: View {
                     }
                 }
                 .padding(.horizontal, config.paddings.horizontal)
+                .padding(.vertical, viewModel.isShowNavBar ? config.sizes.navBarHeight : 0)
             }
 
             
@@ -142,11 +151,11 @@ public struct PlainClientInformBottomSheetView: View {
             .foregroundColor(config.textConfig.textColor)
     }
     
-    struct ViewOffsetKey: PreferenceKey {
+    struct ContentHeightKey: PreferenceKey {
         
         static var defaultValue: CGFloat = 0
         static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-            value += nextValue()
+            value = max(value, nextValue())
         }
     }
 }

@@ -25,6 +25,6 @@ struct PlainClientInformBottomSheetWrapperView: View {
         PlainClientInformBottomSheetView(
             viewModel: viewModel,
             config: config, 
-            info: $viewModel.info)
+            info: viewModel.info)
     }
 }

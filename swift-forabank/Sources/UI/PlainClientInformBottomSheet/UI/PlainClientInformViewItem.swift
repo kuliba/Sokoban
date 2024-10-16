@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-@available(iOS 15, *)
 struct PlainClientInformRowView: View {
     
     let logo: Image?
@@ -30,7 +29,7 @@ struct PlainClientInformRowView: View {
             if let logo = logo {
                 logo
                     .resizable()
-                    .foregroundColor(.gray) // it shall be part of an logo image
+                    .foregroundColor(.gray)
                     .frame(width: config.sizes.rowIconSize, height: config.sizes.rowIconSize)
             }
             
