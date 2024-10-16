@@ -109,80 +109,63 @@ struct FastPaymentsSettingsOTPServices {
 
 // MARK: - Live Service
 
+extension LoggingRemoteNanoServiceComposer {
+
+    typealias ServiceFailure = OTPInputComponent.ServiceFailure
+
+    typealias ForaRequestFactory = ForaBank.RequestFactory
+    typealias FastResponseMapper = RemoteServices.ResponseMapper
+    
+    func composeFastInitiateOTP() -> CountdownEffectHandler.InitiateOTP {
+        
+        let initiateOTP = self.compose(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: OTPInputComponent.ServiceFailure.init(error:)
+        )
+        
+        return { completion in initiateOTP((), completion) }
+    }
+    
+    func composeFastSubmitOTP() -> OTPFieldEffectHandler.SubmitOTP {
+        
+        let submitOTP = self.compose(
+            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:)
+        )
+        
+        return { otp, completion in submitOTP(.init(otp.rawValue), completion) }
+    }
+    
+    func composeFastSetBankDefault() -> UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault {
+        
+        let prepareSetBankDefault = self.compose(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: FastPaymentsSettings.ServiceFailure.init(error:)
+        )
+        
+        return { completion in prepareSetBankDefault((), completion) }
+    }
+}
+
 /*private*/ extension FastPaymentsSettingsOTPServices {
     
     init(
         _ httpClient: HTTPClient,
-        _ log: @escaping (String, StaticString, UInt) -> Void
+        _ logger: any LoggerAgentProtocol
     ) {
-        typealias ServiceFailure = OTPInputComponent.ServiceFailure
-
-        typealias ForaRequestFactory = ForaBank.RequestFactory
-        typealias FastResponseMapper = RemoteServices.ResponseMapper
-        
-        let initiateOTP = adaptedLoggingFetch(
-            ForaRequestFactory.createPrepareSetBankDefaultRequest,
-            FastResponseMapper.mapPrepareSetBankDefaultResponse,
-            mapError: OTPInputComponent.ServiceFailure.init(error:)
-        )
-        
-        let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
-            mapPayload: { .init($0.rawValue) },
-            ForaRequestFactory.createMakeSetBankDefaultRequest,
-            FastResponseMapper.mapMakeSetBankDefaultResponse,
-            mapError: ServiceFailure.init(error:)
-        )
-        
-        let prepareSetBankDefault = adaptedLoggingFetch(
-            ForaRequestFactory.createPrepareSetBankDefaultRequest,
-            FastResponseMapper.mapPrepareSetBankDefaultResponse,
-            mapError: FastPaymentsSettings.ServiceFailure.init(error:)
+        let composer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
         )
         
         self.init(
-            initiateOTP: initiateOTP,
-            submitOTP: submitOTP,
-            prepareSetBankDefault: prepareSetBankDefault
+            initiateOTP: composer.composeFastInitiateOTP(),
+            submitOTP: composer.composeFastSubmitOTP(),
+            prepareSetBankDefault: composer.composeFastSetBankDefault()
         )
-        
-        func adaptedLoggingFetch<Output, MappingError: Error, Failure: Error>(
-            _ createRequest: @escaping () throws -> URLRequest,
-            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
-            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) -> NanoServices.VoidFetch<Output, Failure> {
-            
-            NanoServices.adaptedLoggingFetch(
-                createRequest: createRequest,
-                httpClient: httpClient,
-                mapResponse: mapResponse,
-                mapError: mapError,
-                log: log,
-                file: file,
-                line: line
-            )
-        }
-        
-        func adaptedLoggingFetch<Payload, Input, Output, MappingError: Error, Failure: Error>(
-            mapPayload: @escaping (Payload) -> Input,
-            _ createRequest: @escaping (Input) throws -> URLRequest,
-            _ mapResponse: @escaping NanoServices.MapResponse<Output, MappingError>,
-            mapError: @escaping NanoServices.MapError<MappingError, Failure>,
-            file: StaticString = #file,
-            line: UInt = #line
-        ) -> NanoServices.Fetch<Payload, Output, Failure> {
-            
-            NanoServices.adaptedLoggingFetch(
-                createRequest: { try createRequest(mapPayload($0)) },
-                httpClient: httpClient,
-                mapResponse: mapResponse,
-                mapError: mapError,
-                log: log,
-                file: file,
-                line: line
-            )
-        }
     }
 }
 
