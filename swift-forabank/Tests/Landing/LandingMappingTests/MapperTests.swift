@@ -33,9 +33,10 @@ final class MapperTests: XCTestCase {
     
     func test_map_statusCode200_errorNotNil_FailureServerError() throws {
         
-        let landing = try XCTUnwrap(map(statusCode: 200, data: Data(String.error.utf8)))
+        let message = anyMessage()
+        let landing = try XCTUnwrap(map(statusCode: 200, data: Data(error(message: message).utf8)))
         
-        XCTAssertNoDiff(landing, .failure(.serverError("Ошибка")))
+        XCTAssertNoDiff(landing, .failure(.serverError(message)))
     }
     
     func test_map_statusCode200_dataEmpty() throws {
@@ -629,6 +630,21 @@ final class MapperTests: XCTestCase {
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil)!
+    }
+    
+    private func anyMessage() -> String {
+        
+        UUID().uuidString
+    }
+
+    private func error(message: String) -> String {
+        return """
+        {
+          "statusCode": 0,
+          "errorMessage": "\(message)",
+          "data": null
+        }
+        """
     }
 }
 
@@ -3426,10 +3442,6 @@ private extension String {
         }
     }
     """
-
-    static let error: Self = """
-{"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
-"""
 }
 
 extension Array where Element == Landing.DataView {
