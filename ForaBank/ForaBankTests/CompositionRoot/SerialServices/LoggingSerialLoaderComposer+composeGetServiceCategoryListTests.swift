@@ -1,5 +1,5 @@
 //
-//  LoggingSerialLoaderComposerTests.swift
+//  LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 15.10.2024.
@@ -11,7 +11,7 @@ import RemoteServices
 import SerialComponents
 import XCTest
 
-final class LoggingSerialLoaderComposerTests: LocalAgentTests {
+final class LoggingSerialLoaderComposer_composeGetServiceCategoryListTests: LocalAgentTests {
     
     // MARK: - init
     
@@ -175,12 +175,7 @@ final class LoggingSerialLoaderComposerTests: LocalAgentTests {
         _ sut: SUT
     ) -> (load: Load<ServiceCategory>, reload: Load<ServiceCategory>) {
         
-        return sut.compose(
-            createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse,
-            fromModel: { .init(codable: $0) },
-            toModel: { $0.codable }
-        )
+        return sut.composeGetServiceCategoryList()
     }
     
     private func expect<T>(
@@ -204,22 +199,6 @@ final class LoggingSerialLoaderComposerTests: LocalAgentTests {
         action()
         
         wait(for: [exp], timeout: 1)
-    }
-}
-
-// MARK: - Adapters
-
-private extension ForaBank.ResponseMapper {
-    
-    static func mapGetServiceCategoryListResponse(
-        data: Data,
-        response: HTTPURLResponse
-    ) -> Result<ForaTools.SerialStamped<String, [ServiceCategory]>, Error> {
-        
-        RemoteServices.ResponseMapper
-            .mapGetServiceCategoryListResponse(data, response)
-            .map { .init(value: $0.list, serial: $0.serial) }
-            .mapError { $0 }
     }
 }
 
