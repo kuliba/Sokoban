@@ -17,7 +17,9 @@ public struct CarouselWithTabsView: View {
     let config: Config
     
     @State private var selection: String = "0:0"
-    
+    @State private var selectionTab: String = "0:"
+    @State private var scrollOffset = CGPoint()
+
     public init(
         carousel: CarouselWithTabs,
         actions: CarouselActions,
@@ -31,7 +33,7 @@ public struct CarouselWithTabsView: View {
     }
     
     public var body: some View {
-            
+        
         VStack(alignment: .leading) {
             carousel.title.map {
                 $0.text(withConfig: config.title)
@@ -39,22 +41,36 @@ public struct CarouselWithTabsView: View {
                     .padding(.horizontal, config.paddings.horizontal)
             }
             
-            categories()
-            
-            TabView(selection: $selection){
-                ForEach(0..<carousel.tabs.count, id: \.self) { tabIndex in
-                    ForEach(0..<carousel.tabs[tabIndex].list.count, id: \.self) { itemIndex in
-                        itemView(item: carousel.tabs[tabIndex].list[itemIndex])
-                            .tag("\(tabIndex):\(itemIndex)")
+            ScrollViewReader { proxy in
+                
+                categories(proxy)
+                
+                OffsetObservingScrollView(
+                    axes: .horizontal,
+                    showsIndicators: false,
+                    offset: $scrollOffset,
+                    coordinateSpaceName: "carouselScroll"
+                ) {
+                    HStack {
+                        ForEach(0..<carousel.tabs.count, id: \.self) { tabIndex in
+                            ForEach(0..<carousel.tabs[tabIndex].list.count, id: \.self) { itemIndex in
+                                itemView(item: carousel.tabs[tabIndex].list[itemIndex],
+                                         index: "\(tabIndex):\(itemIndex)"
+                                )
+                                    .id("\(tabIndex):\(itemIndex)")
+                            }
+                        }
                     }
+                    .padding(.horizontal, config.paddings.horizontal)
+                }
+                .padding(.vertical, config.paddings.vertical)
+                .onChange(of: scrollOffset) { _ in changeSelectTabs(proxy)
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: CGFloat(carousel.size.height))
         }
     }
     
-    private func itemView (item: Item) -> some View {
+    private func itemView (item: Item, index: String) -> some View {
         
         ItemView(
             item: item,
@@ -65,21 +81,70 @@ public struct CarouselWithTabsView: View {
                 link: item.link,
                 actions: actions
             ),
-            padding: config.paddings.horizontal
+            padding: config.paddings.horizontal,
+            width: widthForItem()
         )
     }
     
-    private func categories() -> some View {
+    private func categories(
+        _ proxy: ScrollViewProxy
+    ) -> some View {
         
-        HStack {
-            ForEach(0..<carousel.tabs.count, id: \.self) { index in
-                Capsule()
-                    .fill(index == selection.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
-                    .overlay(
-                        carousel.tabs[index].name.text(withConfig: config.category)
-                    )
-                    .frame(height: 24)
-                    .onTapGesture(perform: { selection = "\(index):0" })
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: config.spacing) {
+                ForEach(0..<carousel.tabs.count, id: \.self) { index in
+                    category(index, proxy)
+                        .id("\(index):")
+                }
+            }
+            .padding(.horizontal, config.paddings.horizontal)
+        }
+    }
+    
+    private func category(
+        _ index: Int,
+        _ proxy: ScrollViewProxy
+    ) -> some View {
+        
+        carousel.tabs[index].name.text(withConfig: config.category)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 2)
+            .frame(height: config.pageControls.height)
+            .background(index == selectionTab.sectionIndex() ? config.pageControls.active : config.pageControls.inactive)
+            .clipShape(RoundedRectangle(cornerRadius: 90))
+            .onTapGesture(perform: {
+                selection = "\(index):0"
+                selectionTab = "\(index):"
+                withAnimation {
+                    proxy.scrollTo(selection, anchor: .center)
+                    proxy.scrollTo(selectionTab, anchor: .center)
+                }
+            })
+    }
+    
+    private func widthForItem() -> CGFloat {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        if carousel.tabs.count == 1, carousel.tabs.first?.list.count == 1 {
+            let paddings = config.paddings.horizontal * 2
+            return (screenWidth - paddings).rounded(.toNearestOrEven)
+        } else {
+            return ((screenWidth - config.paddings.horizontal - config.spacing) / 2 + config.offset).rounded(.toNearestOrEven)
+        }
+    }
+    
+    private func changeSelectTabs(
+        _ proxy: ScrollViewProxy
+    ) {
+        
+        let _selectionTab = carousel.tabs.items(scrollOffset.x, widthForItem() + config.spacing)
+        
+        if _selectionTab != selectionTab {
+            
+            selectionTab = _selectionTab
+            withAnimation {
+                proxy.scrollTo(selectionTab, anchor: .center)
             }
         }
     }
@@ -94,16 +159,19 @@ extension CarouselWithTabsView {
         let factory: Factory
         let action: () -> Void
         let padding: CGFloat
-        
+        let width: CGFloat
+
         var body: some View {
             
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
+                    .scaledToFit()
                     .cornerRadius(config.cornerRadius)
                     .accessibilityIdentifier("CarouselWithTabsImage")
             }
-            .padding(.horizontal, padding)
+            .frame(width: width)
+            .scaledToFit()
         }
     }
 }

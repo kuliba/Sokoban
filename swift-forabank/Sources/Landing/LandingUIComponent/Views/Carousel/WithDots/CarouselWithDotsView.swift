@@ -46,13 +46,13 @@ public struct CarouselWithDotsView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: CGFloat(carousel.size.height))
+            .frame(height: carousel.size.newHeight(config.paddings.horizontal))
             
             pageControl()
                 .frame(maxWidth: .infinity)
         }
     }
-    
+        
     private func itemView (item: Item) -> some View {
         
         ItemView(

@@ -628,6 +628,7 @@ extension UILanding.Carousel.CarouselBase.Config {
     
     static let `default`: Self = .init(
         cornerRadius: 12,
+        offset: 15,
         paddings: .init(horizontal: 16, vertical: 8),
         spacing: 8,
         title: .init(textFont: .largeTitle, textColor: .black)
@@ -658,11 +659,12 @@ extension UILanding.Carousel.CarouselWithTabs.Config {
     static let `default`: Self = .init(
         category: .init(textFont: .body, textColor: .black),
         cornerRadius: 12,
+        offset: 15,
         paddings: .init(horizontal: 16, vertical: 8),
         pageControls: .init(
             active: Color(red: 153/255, green: 153/255, blue: 153/255),
             inactive: Color(red: 246/255, green: 246/255, blue: 247/255),
-            widthAndHeight: 6
+            height: 24
         ),
         spacing: 8,
         title: .init(textFont: .largeTitle, textColor: .black)

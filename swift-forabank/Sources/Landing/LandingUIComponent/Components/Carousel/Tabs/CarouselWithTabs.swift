@@ -44,11 +44,18 @@ public extension UILanding.Carousel {
 
         public struct ListItem: Equatable {
             
+            public let id: UUID
             let imageLink: String
             let link: String?
             let action: ItemAction?
             
-            public init(imageLink: String, link: String?, action: ItemAction?) {
+            public init(
+                id: UUID = UUID(),
+                imageLink: String,
+                link: String?,
+                action: ItemAction?
+            ) {
+                self.id = id
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action
@@ -62,5 +69,22 @@ extension UILanding.Carousel.CarouselWithTabs {
     func imageRequests() -> [ImageRequest] {
         
         return []
+    }
+}
+
+extension Array where Element == UILanding.Carousel.CarouselWithTabs.TabItem {
+    
+    func items(_ offset: CGFloat, _ widthForItem: CGFloat) -> String {
+         
+        let _count = Int((offset / widthForItem).rounded())
+        
+        var itemsCount = 0
+        for (index, element) in enumerated() {
+            if _count <= itemsCount {
+                return "\(index):"
+            }
+            itemsCount += element.list.count
+        }
+        return "\(count - 1):"
     }
 }
