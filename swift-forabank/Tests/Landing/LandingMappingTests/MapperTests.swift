@@ -31,17 +31,11 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing, .failure(.mapError))
     }
     
-    func test_map_statusCode200_errorNotNil_dataEmpty_error() throws {
+    func test_map_statusCode200_errorNotNil_FailureServerError() throws {
         
-        let landing = try XCTUnwrap(map(data: Data(String.error.utf8)))
+        let landing = try XCTUnwrap(map(statusCode: 200, data: Data(String.error.utf8)))
         
-        XCTAssertNoDiff(landing.statusCode, 404)
-        XCTAssertNoDiff(landing.errorMessage, "404: Не найден запрос к серверу")
-        XCTAssertNoDiff(landing.header, [])
-        XCTAssertNoDiff(landing.main, [])
-        XCTAssertNoDiff(landing.footer, [])
-        XCTAssertNoDiff(landing.details, [])
-        XCTAssertNoDiff(landing.serial, nil)
+        XCTAssertNoDiff(landing, .failure(.serverError("Ошибка")))
     }
     
     func test_map_statusCode200_dataEmpty() throws {

@@ -35,6 +35,9 @@ public struct LandingMapper {
         
         if let decoded = try? decode(data) {
             let landing = Self.decodeLandingToLanding(decoded)
+            if let errorMessage = landing.errorMessage {
+                return .failure(.serverError(errorMessage))
+            }
             return .success(landing)
         }
         return .failure(.mapError)
