@@ -1541,8 +1541,9 @@
 		2AD0F6972BCEA48A007EC720 /* ComposedAnywayPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */; };
 		2AD0F6992BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */; };
 		2AD0F69B2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F69A2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift */; };
-		2AD109652CBF0944007C9593 /* LoggingSerialLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposerTests.swift */; };
+		2AD109652CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift */; };
 		2AD109672CBF85B8007C9593 /* LoggingSerialLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD109662CBF85B8007C9593 /* LoggingSerialLoaderComposer.swift */; };
+		2AD109692CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD109682CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift */; };
 		2AD15D132C19D0FC003329C7 /* TransactionDocumentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD15D122C19D0FC003329C7 /* TransactionDocumentButton.swift */; };
 		2AD15D152C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD15D142C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift */; };
 		2AD15D172C19D2C2003329C7 /* PDFDocumentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD15D162C19D2C2003329C7 /* PDFDocumentWrapperView.swift */; };
@@ -5033,8 +5034,9 @@
 		2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedAnywayPaymentView.swift; sourceTree = "<group>"; };
 		2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedAnywayPaymentViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F69A2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedAnywayPaymentLayoutViewFactory+preview.swift"; sourceTree = "<group>"; };
-		2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingSerialLoaderComposerTests.swift; sourceTree = "<group>"; };
+		2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift"; sourceTree = "<group>"; };
 		2AD109662CBF85B8007C9593 /* LoggingSerialLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingSerialLoaderComposer.swift; sourceTree = "<group>"; };
+		2AD109682CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift"; sourceTree = "<group>"; };
 		2AD15D122C19D0FC003329C7 /* TransactionDocumentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDocumentButton.swift; sourceTree = "<group>"; };
 		2AD15D142C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift"; sourceTree = "<group>"; };
 		2AD15D162C19D2C2003329C7 /* PDFDocumentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFDocumentWrapperView.swift; sourceTree = "<group>"; };
@@ -11060,6 +11062,7 @@
 				2A6DC7B12C9828DA00A801A0 /* SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift */,
 				2A33941A2CBEDA51000C6459 /* SerialLoaderComposer+ext.swift */,
 				2AD109662CBF85B8007C9593 /* LoggingSerialLoaderComposer.swift */,
+				2AD109682CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift */,
 				2A33941C2CBEDA8D000C6459 /* LocalAgentWrapper.swift */,
 				2A7CA2142C91D9B300B900E9 /* CodableTypes */,
 			);
@@ -11072,7 +11075,7 @@
 				2A6CCF512C92E577008ADA74 /* SerialLoaderComposerTests.swift */,
 				2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */,
 				2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */,
-				2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposerTests.swift */,
+				2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift */,
 			);
 			path = SerialServices;
 			sourceTree = "<group>";
@@ -20599,6 +20602,7 @@
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				7798848A285C983A0023CA65 /* ProductProfileDetailCircleProgressViewComponent.swift in Sources */,
 				2A2D4D312B6E7EDC006912EE /* RequestFactory+createPrepareSetBankDefaultRequest.swift in Sources */,
+				2AD109692CBF9358007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryList.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
 				50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */,
 				0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */,
@@ -22564,7 +22568,7 @@
 				2AB6BFE62AB72E8E00AAFFF7 /* WaitingAuthLoginViewModelTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				2AA309612B9086D900C2FE42 /* Model+loadOperatorsTests.swift in Sources */,
-				2AD109652CBF0944007C9593 /* LoggingSerialLoaderComposerTests.swift in Sources */,
+				2AD109652CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift in Sources */,
 				77A76A7E27FB036200A271B3 /* ServerCommandsAtmTests.swift in Sources */,
 				0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */,
 				839914812C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift in Sources */,

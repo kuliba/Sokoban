@@ -29,10 +29,11 @@ final class LoggingSerialLoaderComposer {
 extension LoggingSerialLoaderComposer {
     
     typealias Serial = String
+    typealias StampedResult<T> = Result<SerialStamped<String, [T]>, Error>
     
     func compose<T, Model: Codable>(
         createRequest: @escaping (Serial?) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<SerialStamped<String, [T]>, Error>,
+        mapResponse: @escaping (Data, HTTPURLResponse) -> StampedResult<T>,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) -> (load: Load<T>, reload: Load<T>) {

@@ -76,20 +76,7 @@ struct CodableServiceCategory: Codable {
     }
 }
 
-/*private*/ extension ServiceCategory {
-    
-    init(codable: CodableServiceCategory) {
-        
-        self.init(
-            latestPaymentsCategory: codable.latestCategory,
-            md5Hash: codable.md5Hash,
-            name: codable.name,
-            ord: codable.ord,
-            paymentFlow: codable.flow,
-            hasSearch: codable.hasSearch,
-            type: codable.category
-        )
-    }
+extension ServiceCategory {
     
     var codable: CodableServiceCategory {
         
@@ -101,6 +88,22 @@ struct CodableServiceCategory: Codable {
             paymentFlow: codablePaymentFlow,
             hasSearch: hasSearch,
             type: codableType
+        )
+    }
+}
+
+private extension ServiceCategory {
+    
+    init(codable: CodableServiceCategory) {
+        
+        self.init(
+            latestPaymentsCategory: codable.latestCategory,
+            md5Hash: codable.md5Hash,
+            name: codable.name,
+            ord: codable.ord,
+            paymentFlow: codable.flow,
+            hasSearch: codable.hasSearch,
+            type: codable.category
         )
     }
     
@@ -151,6 +154,22 @@ struct CodableServiceCategory: Codable {
         case .transport:                   return .transport
         case .taxAndStateService:          return .taxAndStateService
         }
+    }
+}
+
+extension CodableServiceCategory {
+    
+    var serviceCategory: ServiceCategory {
+        
+        return .init(
+            latestPaymentsCategory: latestCategory,
+            md5Hash: md5Hash,
+            name: name,
+            ord: ord,
+            paymentFlow: flow,
+            hasSearch: hasSearch,
+            type: category
+        )
     }
 }
 
