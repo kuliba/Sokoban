@@ -7,14 +7,19 @@
 
 import SwiftUI
 
-struct PlainClientInformBottomSheetView: View {
+public struct PlainClientInformBottomSheetView: View {
     
     @ObservedObject var viewModel: PlainClientInformBottomSheetViewModel
-    @State private var contentHeight: CGFloat = .zero
     let config: Config
     let info: Info
 
-    var body: some View {
+    public init(viewModel: PlainClientInformBottomSheetViewModel, config: Config, info: Info) {
+        self.viewModel = viewModel
+        self.config = config
+        self.info = info
+    }
+    
+    public var body: some View {
         ZStack(alignment: .top) {
 
             if viewModel.isShowNavBar {
@@ -146,10 +151,10 @@ struct PlainClientInformBottomSheetView: View {
     }
 }
 
-extension PlainClientInformBottomSheetView {
+public extension PlainClientInformBottomSheetView {
     
     typealias Config = PlainClientInformBottomSheetConfig
-    typealias Info = InfoModel
+    typealias Info = ClientInformDataState
 }
 
 // MARK: - Preview
@@ -158,7 +163,7 @@ struct PlainClientInformBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         
         PlainClientInformBottomSheetView(
-            viewModel: .init(shouldScroll: true, info: .preview),
+            viewModel: .init(info: .preview),
             config: .default, 
             info: .preview
         )

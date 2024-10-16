@@ -22,7 +22,7 @@ public struct PlainClientInformBottomSheetConfig {
         let grayGrabber: Color
         let grayBackground: Color
         
-        init(
+        public init(
             grayGrabber: Color,
             grayBackground: Color
         ) {

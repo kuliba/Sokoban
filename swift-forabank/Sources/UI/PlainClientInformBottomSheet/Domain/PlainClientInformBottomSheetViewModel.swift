@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-class PlainClientInformBottomSheetViewModel: ObservableObject {
+public class PlainClientInformBottomSheetViewModel: ObservableObject {
     
     @Published var isShowNavBar = false
     @Published var shouldScroll = true
     var axes: Axis.Set { return shouldScroll ? .vertical : [] }
     
-    let info: InfoModel
+    let info: ClientInformDataState
     
-    init(isShowNavBar: Bool = false, shouldScroll: Bool, info: InfoModel) {
+    public init(isShowNavBar: Bool = false, info: ClientInformDataState) {
         self.isShowNavBar = isShowNavBar
-        self.shouldScroll = shouldScroll
         self.info = info
     }
 }
