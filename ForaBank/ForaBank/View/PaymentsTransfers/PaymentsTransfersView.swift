@@ -449,9 +449,6 @@ extension PaymentsTransfersView {
         switch fullScreenCover.type {
         case let .qrScanner(node):
             QRView(viewModel: node.model.qrModel)
-                .navigationBarHidden(true)
-                .navigationBarBackButtonHidden(true)
-                .edgesIgnoringSafeArea(.all)
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)
