@@ -1733,6 +1733,7 @@
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
 		2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */; };
 		2AF50A162B315CC9009CB9E5 /* Model+imageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */; };
+		2AF5299E2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5299D2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift */; };
 		2AF59F3C2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */; };
 		2AF59F3E2C9436D0003556B1 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */; };
 		2AF59F402C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
@@ -5223,6 +5224,7 @@
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF50A122B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+imageCache.swift"; sourceTree = "<group>"; };
+		2AF5299D2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+awaitActorThreadHop.swift"; sourceTree = "<group>"; };
 		2AF59F392C93F8ED003556B1 /* OperatorsSerialCachingRemoteBatchServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsSerialCachingRemoteBatchServiceComposerTests.swift; sourceTree = "<group>"; };
 		2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientSpy+assertQueryItems.swift"; sourceTree = "<group>"; };
 		2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
@@ -11150,6 +11152,7 @@
 				2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */,
 				2AD437662B00A9CD0027286A /* XCTestCase+assert.swift */,
 				2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */,
+				2AF5299D2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift */,
 			);
 			path = "XCTestCase+Ext";
 			sourceTree = "<group>";
@@ -22441,6 +22444,7 @@
 				2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */,
 				2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */,
 				2A89A11E2CAA804600276FEF /* SelectedCategoryNavigationMicroServicesComposerTests.swift in Sources */,
+				2AF5299E2CBFB5D200D49804 /* XCTestCase+awaitActorThreadHop.swift in Sources */,
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,
 				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,

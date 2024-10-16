@@ -20,6 +20,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         XCTAssertEqual(httpClient.callCount, 0)
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -33,6 +34,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         XCTAssertEqual(httpClient.callCount, 0)
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -47,6 +49,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         sessionAgent.sessionState.value = active()
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
         XCTAssertNotNil(bindings)
@@ -60,6 +63,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssert(httpClient.requests.contains(request))
         XCTAssertNotNil(bindings)
@@ -82,6 +86,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let initialState = try sut.categoryPickerContent().state
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
@@ -95,6 +100,8 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
         httpClient.complete(with: success())
         backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
         
