@@ -1738,6 +1738,7 @@
 		2AF529D02CC01C9A00D49804 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF529CF2CC01C9A00D49804 /* ContentView.swift */; };
 		2AF529D22CC01C9B00D49804 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AF529D12CC01C9B00D49804 /* Assets.xcassets */; };
 		2AF529D52CC01C9B00D49804 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AF529D42CC01C9B00D49804 /* Preview Assets.xcassets */; };
+		2AF529DC2CC01CEA00D49804 /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF529DB2CC01CEA00D49804 /* RefreshableScrollView.swift */; };
 		2AF59F3C2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */; };
 		2AF59F3E2C9436D0003556B1 /* RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */; };
 		2AF59F402C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */; };
@@ -5234,6 +5235,7 @@
 		2AF529CF2CC01C9A00D49804 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2AF529D12CC01C9B00D49804 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2AF529D42CC01C9B00D49804 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2AF529DB2CC01CEA00D49804 /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 		2AF59F392C93F8ED003556B1 /* OperatorsSerialCachingRemoteBatchServiceComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsSerialCachingRemoteBatchServiceComposerTests.swift; sourceTree = "<group>"; };
 		2AF59F3B2C942E54003556B1 /* HTTPClientSpy+assertQueryItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientSpy+assertQueryItems.swift"; sourceTree = "<group>"; };
 		2AF59F3D2C9436D0003556B1 /* RemoteNanoServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNanoServiceFactory.swift; sourceTree = "<group>"; };
@@ -12784,6 +12786,7 @@
 			children = (
 				2AF529CD2CC01C9A00D49804 /* RefreshableScrollViewPreviewApp.swift */,
 				2AF529CF2CC01C9A00D49804 /* ContentView.swift */,
+				2AF529DB2CC01CEA00D49804 /* RefreshableScrollView.swift */,
 				2AF529D12CC01C9B00D49804 /* Assets.xcassets */,
 				2AF529D32CC01C9B00D49804 /* Preview Content */,
 			);
@@ -20290,6 +20293,7 @@
 			files = (
 				2AF529D02CC01C9A00D49804 /* ContentView.swift in Sources */,
 				2AF529CE2CC01C9A00D49804 /* RefreshableScrollViewPreviewApp.swift in Sources */,
+				2AF529DC2CC01CEA00D49804 /* RefreshableScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

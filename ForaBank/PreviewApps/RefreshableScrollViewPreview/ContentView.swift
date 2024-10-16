@@ -8,14 +8,39 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var items = ["Item 1", "Item 2", "Item 3"]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        
+        RefreshableScrollView(
+            action: refreshData,
+            showsIndicators: false,
+            offsetForStartUpdate: -100,
+            refreshCompletionDelay: 2.0
+        ) {
+            VStack {
+                
+                ForEach(items, id: \.self) {
+                    
+                    Text($0)
+                        .padding(.horizontal)
+                    
+                    Divider()
+                }
+            }
         }
-        .padding()
+    }
+    
+    func refreshData() {
+        
+        print("refresh requested")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            
+            items.append("New Item \(items.count + 1)")
+            print("refresh performed")
+        }
     }
 }
 
