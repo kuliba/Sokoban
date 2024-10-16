@@ -141,26 +141,28 @@ private extension FastPaymentsSettingsEffectHandler {
     func prepareDeleteDefaultBank(
         _ dispatch: @escaping Dispatch
     ) {
+        
         prepareDeleteDefaultBank { result in
+            
+            let dispatch = { dispatch(.bankDefault(.deleteBankDefaultResult($0))) }
             
             switch result {
             case .success(()):
-                dispatch(.bankDefault(.deleteBankDefaultResult(.success)))
+                dispatch(.success)
                 
             case let .failure(failure):
-//                dispatch(.bankDefault(.deleteBankDefaultResult(.success)))
 
                 switch failure {
                 case .connectivityError:
-                    dispatch(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.connectivityError))))
+                    dispatch(.serviceFailure(.connectivityError))
                     
                 case let .serverError(message):
                     let tryAgain = "Введен некорректный код. Попробуйте еще раз"
                     
                     if message == tryAgain {
-                        dispatch(.bankDefault(.deleteBankDefaultResult(.incorrectOTP(tryAgain))))
+                        dispatch(.incorrectOTP(tryAgain))
                     } else {
-                        dispatch(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.serverError(message)))))
+                        dispatch(.serviceFailure(.serverError(message)))
                     }
                 }
             }
