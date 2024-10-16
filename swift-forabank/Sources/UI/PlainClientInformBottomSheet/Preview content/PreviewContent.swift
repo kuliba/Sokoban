@@ -16,9 +16,6 @@ extension PlainClientInformBottomSheetConfig.Colors {
         ),
         grayBackground: Color(
             red: 0.97, green: 0.97, blue: 0.97
-        ),
-        textSecondary: Color(
-            red: 0.11, green: 0.11, blue: 0.11
         )
     )
 }
@@ -27,11 +24,6 @@ extension Image {
     
     static let clock: Self = .init(systemName: "clock")
     static let infoCircle: Self = .init(systemName: "info.circle")
-}
-
-extension PlainClientInformBottomSheetConfig.Fonts {
-    
-    static let preview: Self = .init(title: .title, navTitle: .title2, text: .caption2)
 }
 
 extension PlainClientInformBottomSheetConfig.Strings {
@@ -55,7 +47,6 @@ extension PlainClientInformBottomSheetConfig {
     
     static let `default`: Self = .init(
         colors: .preview,
-        fonts: .preview,
         strings: .preview,
         titleConfig: .init(
             textFont: .title,

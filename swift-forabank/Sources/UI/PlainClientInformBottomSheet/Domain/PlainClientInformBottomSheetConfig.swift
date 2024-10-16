@@ -11,7 +11,6 @@ import SharedConfigs
 public struct PlainClientInformBottomSheetConfig {
     
     let colors: Colors
-    let fonts: Fonts
     let strings: Strings
     let titleConfig: TextConfig
     let textConfig: TextConfig
@@ -22,33 +21,13 @@ public struct PlainClientInformBottomSheetConfig {
         
         let grayGrabber: Color
         let grayBackground: Color
-        let textSecondary: Color
         
         init(
             grayGrabber: Color,
-            grayBackground: Color,
-            textSecondary: Color
+            grayBackground: Color
         ) {
             self.grayGrabber = grayGrabber
             self.grayBackground = grayBackground
-            self.textSecondary = textSecondary
-        }
-    }
-    
-    public struct Fonts {
-        
-        let title: Font
-        let navTitle: Font
-        let text: Font
-        
-        init(
-            title: Font,
-            navTitle: Font,
-            text: Font
-        ) {
-            self.title = title
-            self.navTitle = navTitle
-            self.text = text
         }
     }
     
@@ -116,7 +95,6 @@ public struct PlainClientInformBottomSheetConfig {
     
     public init(
         colors: Colors,
-        fonts: Fonts,
         strings: Strings,
         titleConfig: TextConfig,
         textConfig: TextConfig,
@@ -127,7 +105,6 @@ public struct PlainClientInformBottomSheetConfig {
     ) {
         
         self.colors = colors
-        self.fonts = fonts
         self.strings = strings
         self.titleConfig = titleConfig
         self.textConfig = textConfig

@@ -96,8 +96,8 @@ struct PlainClientInformBottomSheetView: View {
                 iconView(singleInfo.label.image)
                 titleView(singleInfo.label.title)
                 Text(singleInfo.text)
-                    .font(config.fonts.navTitle)
-                    .foregroundColor(config.colors.textSecondary)
+                    .font(config.titleConfig.textFont)
+                    .foregroundColor(config.titleConfig.textColor)
             case .multiple(let multipleInfo):
                 iconView(multipleInfo.title.image)
                 titleView(multipleInfo.title.title)
@@ -127,14 +127,14 @@ struct PlainClientInformBottomSheetView: View {
     
     private func titleView(_ text: String) -> some View {
         Text(text)
-            .font(config.fonts.navTitle)
-            .foregroundColor(config.colors.textSecondary)
+            .font(config.titleConfig.textFont)
+            .foregroundColor(config.titleConfig.textColor)
     }
 
     func textView(_ text: Binding<AttributedString>) -> some View {
         Text(text.wrappedValue)
-            .font(config.fonts.navTitle)
-            .foregroundColor(config.colors.textSecondary)
+            .font(config.textConfig.textFont)
+            .foregroundColor(config.textConfig.textColor)
     }
     
     struct ViewOffsetKey: PreferenceKey {
