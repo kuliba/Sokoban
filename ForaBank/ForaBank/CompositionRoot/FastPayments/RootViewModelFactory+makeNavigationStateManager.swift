@@ -180,6 +180,12 @@ extension FastPaymentsSettingsOTPServices {
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         
+        let initiateOTP = adaptedLoggingFetch(
+            ForaRequestFactory.createPrepareDeleteDefaultBankRequest,
+            FastResponseMapper.mapPrepareDeleteBankDefaultResponse(_:_:),
+            mapError: OTPInputComponent.ServiceFailure.init(error:)
+        )
+        
         let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
             mapPayload: { .init($0.rawValue) },
             ForaRequestFactory.createMakeDeleteBankDefaultRequest(payload:),
@@ -194,7 +200,7 @@ extension FastPaymentsSettingsOTPServices {
         )
         
         self.init(
-            initiateOTP: { _ in },
+            initiateOTP: initiateOTP,
             submitOTP: submitOTP,
             prepareSetBankDefault: prepareSetBankDefault
         )

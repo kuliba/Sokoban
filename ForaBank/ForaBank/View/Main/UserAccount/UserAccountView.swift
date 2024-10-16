@@ -422,12 +422,9 @@ private struct OTPInputWrapperView<HeaderView: View>: View {
     let headerView: () -> HeaderView
     
     var body: some View {
-        
-        switch viewModel.state.status {
-        case .failure:
-            EmptyView()
+
+        if let input = viewModel.state.status.input {
             
-        case let .input(input):
             OTPInputView(
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
@@ -435,8 +432,8 @@ private struct OTPInputWrapperView<HeaderView: View>: View {
                 config: .iFora,
                 headerView: headerView
             )
+        } else {
             
-        case .validOTP:
             EmptyView()
         }
     }

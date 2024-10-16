@@ -116,7 +116,7 @@ private extension OTPInputState {
     var projection: OTPInputStateProjection? {
         
         switch status {
-        case let .failure(otpFieldFailure):
+        case let .failure(input, otpFieldFailure):
             switch otpFieldFailure {
             case .connectivityError:
                 return .failure(.connectivityError)
