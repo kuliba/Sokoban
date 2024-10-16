@@ -76,7 +76,7 @@ struct CodableServiceCategory: Codable {
     }
 }
 
-private extension ServiceCategory {
+/*private*/ extension ServiceCategory {
     
     init(codable: CodableServiceCategory) {
         
