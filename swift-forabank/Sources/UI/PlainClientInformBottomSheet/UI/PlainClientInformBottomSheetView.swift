@@ -38,11 +38,9 @@ public struct PlainClientInformBottomSheetView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(-1)
             .onPreferenceChange(ContentHeightKey.self) { contentHeight in
-                withAnimation(.linear(duration: 0.2)) {
                     
                     viewModel.isShowNavBar = contentHeight > UIScreen.main.bounds.height
                     viewModel.shouldScroll = contentHeight > UIScreen.main.bounds.height
-                }
             }
         }
     }
