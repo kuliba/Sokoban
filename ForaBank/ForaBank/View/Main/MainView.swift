@@ -315,13 +315,10 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            NavigationView {
-                
-                QRView(viewModel: node.model.qrModel)
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
+            QRView(viewModel: node.model.qrModel)
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+                .edgesIgnoringSafeArea(.all)
             
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
