@@ -31,9 +31,9 @@ extension PlainClientInformBottomSheetConfig.Strings {
     static let preview: Self = .init(titlePlaceholder: "Информация")
 }
 
-extension InfoModel {
+extension ClientInformDataState {
     
-    static let preview: Self = InfoModel.multiple(.init(
+    static let preview: Self = ClientInformDataState.multiple(.init(
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
