@@ -23,8 +23,6 @@ struct PlainClientInformBottomSheetWrapperView: View {
 
     public var body: some View {
         
-        PlainClientInformBottomSheetView(
-            config: config,
-            info: info)
+        PlainClientInformBottomSheetView(config: config, info: info)
     }
 }

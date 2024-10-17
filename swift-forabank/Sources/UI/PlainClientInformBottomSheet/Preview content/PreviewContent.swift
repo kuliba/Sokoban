@@ -10,13 +10,9 @@ import SwiftUI
 extension PlainClientInformBottomSheetConfig.Colors {
     
     static let preview: Self = .init(
-        grayGrabber:
-        Color(
-            red: 0.83, green: 0.83, blue: 0.83
-        ),
-        grayBackground: Color(
-            red: 0.97, green: 0.97, blue: 0.97
-        )
+
+        grayGrabber: Color(red: 0.83, green: 0.83, blue: 0.83),
+        grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97)
     )
 }
 
@@ -77,8 +73,3 @@ extension PlainClientInformBottomSheetConfig {
         rowImage: .clock
     )
 }
-
-let modelPreview = [ """
- SOME LONG TEXT FOR PRESENTATION. It looks that we can use this text field for two strings of text. Great, but what about three strings? It's okay to, maybe four Strings? Good! Working as well.
-"""
-]

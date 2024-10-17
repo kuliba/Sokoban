@@ -14,7 +14,11 @@ struct PlainClientInformRowView: View {
     let text: String
     let config: PlainClientInformBottomSheetConfig
     
-    init(logo: Image? = nil, text: AttributedString, config: PlainClientInformBottomSheetConfig) {
+    init(
+        logo: Image? = nil,
+        text: AttributedString,
+        config: PlainClientInformBottomSheetConfig
+    ) {
         
         self.logo = logo
         self.text = NSAttributedString(text).string
