@@ -7,14 +7,13 @@
 
 import SwiftUI
 
-
+@available(iOS 15, *)
 struct PlainClientInformRowView: View {
     
     let logo: Image?
     let text: String
     let config: PlainClientInformBottomSheetConfig
     
-    @available(iOS 15, *)
     init(logo: Image? = nil, text: AttributedString, config: PlainClientInformBottomSheetConfig) {
         
         self.logo = logo
@@ -22,12 +21,11 @@ struct PlainClientInformRowView: View {
         self.config = config
     }
     
-    
     var body: some View {
         
         HStack(alignment: .top, spacing: 20) {
             
-            if let logo = logo {
+            if let logo {
                 logo
                     .resizable()
                     .foregroundColor(.gray)
@@ -37,7 +35,6 @@ struct PlainClientInformRowView: View {
             Text(text)
                 .font(config.textConfig.textFont)
                 .foregroundColor(config.textConfig.textColor)
-                
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

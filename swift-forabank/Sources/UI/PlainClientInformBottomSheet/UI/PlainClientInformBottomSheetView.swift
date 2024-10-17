@@ -127,13 +127,11 @@ public struct PlainClientInformBottomSheetView: View {
                 .padding(.horizontal, config.paddings.horizontal)
                 .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight : 0)
             }
-
-            
-            
         }
     }
     
     private func iconView(_ image: Image) -> some View {
+        
         image
             .resizable()
             .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
@@ -141,12 +139,14 @@ public struct PlainClientInformBottomSheetView: View {
     }
     
     private func titleView(_ text: String) -> some View {
+        
         Text(text)
             .font(config.titleConfig.textFont)
             .foregroundColor(config.titleConfig.textColor)
     }
 
     private func textView(_ text: Binding<AttributedString>) -> some View {
+        
         Text(text.wrappedValue)
             .font(config.textConfig.textFont)
             .foregroundColor(config.textConfig.textColor)
