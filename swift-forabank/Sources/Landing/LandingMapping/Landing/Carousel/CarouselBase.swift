@@ -28,24 +28,7 @@ public extension Landing.DataView.Carousel {
             self.loopedScrolling = loopedScrolling
             self.list = list
         }
-        
-        public struct Size: Equatable {
-            
-            public let width: CGFloat
-            public let height: CGFloat
-            
-            public init(width: CGFloat, height: CGFloat) {
-                self.width = width
-                self.height = height
-            }
-            
-            public init(size: String, scale: CGFloat) {
-                let allNumbers = size.allNumbers
-                self.width = CGFloat(!allNumbers.isEmpty ? allNumbers[0] : 0) * scale
-                self.height = CGFloat(allNumbers.count > 1 ? allNumbers[1] : 0) * scale
-            }
-        }
-        
+                
         public struct ListItem: Equatable {
             
             public let imageLink: String
@@ -69,13 +52,5 @@ public extension Landing.DataView.Carousel {
                 }
             }
         }
-    }
-}
-
-extension String {
-    var allNumbers: [Int] {
-        
-        let numbersInString = components(separatedBy: .decimalDigits.inverted).filter { !$0.isEmpty }
-        return numbersInString.compactMap { Int($0) }
     }
 }

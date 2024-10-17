@@ -46,4 +46,10 @@ extension Spy where Response == Void {
     ) {
         process(payload) { completion() }
     }
+    
+    func complete(
+        at index: Int = 0
+    ) {
+        messages[index].completion(())
+    }
 }

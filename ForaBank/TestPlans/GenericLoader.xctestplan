@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A7E0176F-6DDD-4834-A34E-D0EE47D60F1F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GenericLoaderTests",
+        "name" : "GenericLoaderTests"
+      }
+    }
+  ],
+  "version" : 1
+}

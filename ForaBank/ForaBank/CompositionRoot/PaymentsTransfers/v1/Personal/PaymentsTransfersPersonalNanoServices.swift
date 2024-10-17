@@ -16,7 +16,7 @@ struct PaymentsTransfersPersonalNanoServices {
 
 extension PaymentsTransfersPersonalNanoServices {
     
-    typealias LoadCategoriesCompletion = ([CategoryPickerSection.ContentDomain.Item]) -> Void
+    typealias LoadCategoriesCompletion = ([ServiceCategory]) -> Void
     typealias LoadCategories = (@escaping LoadCategoriesCompletion) -> Void
     
     typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void

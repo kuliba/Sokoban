@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct MarketShowcaseFlowView<ContentView, Destination, InformerPayload>: View
 where ContentView: View {
@@ -41,7 +42,7 @@ where ContentView: View {
 
             return .init(
                 with: .init(
-                    title: "Ошибка!",
+                    title: "Ошибка",
                     message: alert.message,
                     primaryButton: .init(
                         type: .default,

@@ -114,8 +114,7 @@ struct RootView: View {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
-        .onFirstAppear { marketShowcaseBinder.content.event(.load) }
-        .taggedTabItem(.market, selected: viewModel.selected)
+        .onAppear { marketShowcaseBinder.content.event(.load) }
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
     }
@@ -154,6 +153,39 @@ struct RootView: View {
 
 // MARK: - PaymentsTransfers v1
 
+extension PaymentsTransfersSwitcher: Refreshable {
+    
+    func refresh() {
+        
+        switch state {
+        case .none:
+            break
+            
+        case let .corporate(corporate):
+            corporate.refresh()
+            
+        case let .personal(personal):
+            personal.refresh()
+        }
+    }
+}
+
+extension PaymentsTransfersCorporate {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
+extension PaymentsTransfersPersonal {
+    
+    func refresh() {
+        
+        self.content.reload()
+    }
+}
+
 private extension RootView {
     
     func paymentsTransfersSwitcherView(
@@ -166,6 +198,7 @@ private extension RootView {
             personalView: paymentsTransfersPersonalView,
             undefinedView: { SpinnerView(viewModel: .init()) }
         )
+        .refresh(action: switcher.refresh)
     }
     
     func paymentsTransfersCorporateView(
@@ -244,7 +277,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
         RxWrapperView(
@@ -280,7 +313,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionAlert(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
         return { failure in
@@ -298,9 +331,6 @@ private extension RootView {
     ) -> some View {
         
         switch destination {
-        case let .list(list):
-            categoryListView(list)
-            
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
             case let .mobile(mobile):
@@ -544,7 +574,7 @@ private extension RootView {
         
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
-            iconView: { _ in fatalError() }, //makeIconView,
+            iconView: rootViewFactory.makeIconView,
             makeAnywayFlowView: makeAnywayFlowView
         )
         //    .navigationBarWithBack(
@@ -628,13 +658,6 @@ private extension RootView {
         }
     }
     
-    func categoryListView(
-        _ categoryListModelStub: CategoryListModelStub
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
-    }
-    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -708,7 +731,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSection.ContentDomain.State.Item
+        item: CategoryPickerSectionDomain.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -783,7 +806,7 @@ private extension RootView {
 }
 
 
-private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,

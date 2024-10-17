@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHubUI
 
-final class SelectedCategoryNavigationMicroServicesComposer<List, ListModel> {
+final class SelectedCategoryNavigationMicroServicesComposer {
     
     private let model: Model
     private let nanoServices: NanoServices
@@ -26,7 +26,7 @@ final class SelectedCategoryNavigationMicroServicesComposer<List, ListModel> {
         self.scheduler = scheduler
     }
     
-    typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel>
+    typealias NanoServices = CategoryPickerSectionMicroServicesComposerNanoServices
 }
 
 extension SelectedCategoryNavigationMicroServicesComposer {
@@ -36,8 +36,8 @@ extension SelectedCategoryNavigationMicroServicesComposer {
         return .init(getNavigation: getNavigation)
     }
     
-    typealias Select = CategoryPickerSection.Select
-    typealias Navigation = SelectedCategoryNavigation<ListModel>
+    typealias Select = CategoryPickerSectionDomain.Select
+    typealias Navigation = SelectedCategoryNavigation
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias MicroServices = FlowDomain.MicroServices
 }
@@ -49,11 +49,11 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     func getNavigation(
         payload: Select,
         notify: @escaping Notify,
-        completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
+        completion: @escaping (SelectedCategoryNavigation) -> Void
     ) {
         switch payload {
-        case let .pickerSelect(pickerSelect):
-            getNavigation(pickerSelect: pickerSelect, notify, completion)
+        case let .category(category):
+            getNavigation(category: category, notify, completion)
             
         case let .qrSelect(qrSelect):
             getNavigation(qrSelect: qrSelect, notify, completion)
@@ -63,52 +63,46 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     // MARK: - PickerSelect
     
     func getNavigation(
-        pickerSelect payload: CategoryPickerSection.Select.PickerSelect,
+        category: ServiceCategory,
         _ notify: @escaping Notify,
-        _ completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
+        _ completion: @escaping (SelectedCategoryNavigation) -> Void
     ) {
-        switch payload {
-        case let .category(category):
-            switch category.paymentFlow {
-            case .mobile:
-                completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
-                
-            case .qr:
-                let qr = nanoServices.makeQR()
-                let cancellable = qr.$state
-                    .compactMap { $0 }
-                    .flatMap {
-                        
-                        self.notifyPublisher(
-                            result: $0,
-                            notify: { notify(.select(.qrSelect($0))) }
-                        )
-                    }
-                    .sink(receiveValue: notify)
-                
-                completion(.paymentFlow(.qr(.init(
-                    model: qr,
-                    cancellable: cancellable
-                ))))
-                
-            case .standard:
-                nanoServices.makeStandard(category) {
+        switch category.paymentFlow {
+        case .mobile:
+            completion(.paymentFlow(.mobile(nanoServices.makeMobile())))
+            
+        case .qr:
+            let qr = nanoServices.makeQR()
+            let cancellable = qr.$state
+                .compactMap { $0 }
+                .flatMap {
                     
-                    completion(.paymentFlow(.standard($0)))
+                    self.notifyPublisher(
+                        result: $0,
+                        notify: { notify(.select(.qrSelect($0))) }
+                    )
                 }
+                .sink(receiveValue: notify)
+            
+            completion(.paymentFlow(.qr(.init(
+                model: qr,
+                cancellable: cancellable
+            ))))
+            
+        case .standard:
+            nanoServices.makeStandard(category) {
                 
-            case .taxAndStateServices:
-                completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))
-                
-            case .transport:
-                guard let transport = nanoServices.makeTransport()
-                else { return completion(.failure(.transport)) }
-                
-                completion(.paymentFlow(.transport(transport)))
+                completion(.paymentFlow(.standard($0)))
             }
             
-        case let .list(categories):
-            completion(.list(nanoServices.makeList(categories)))
+        case .taxAndStateServices:
+            completion(.paymentFlow(.taxAndStateServices(nanoServices.makeTax())))
+            
+        case .transport:
+            guard let transport = nanoServices.makeTransport()
+            else { return completion(.failure(.transport)) }
+            
+            completion(.paymentFlow(.transport(transport)))
         }
     }
     
@@ -140,7 +134,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     func getNavigation(
         qrSelect payload: QRNavigationComposer.NotifyEvent,
         _ notify: @escaping (FlowDomain.Event) -> Void,
-        _ completion: @escaping (SelectedCategoryNavigation<ListModel>) -> Void
+        _ completion: @escaping (SelectedCategoryNavigation) -> Void
     ) {
         switch payload {
         case let .contactAbroad(source):

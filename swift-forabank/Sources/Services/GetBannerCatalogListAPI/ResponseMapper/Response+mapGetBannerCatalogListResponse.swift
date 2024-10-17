@@ -59,34 +59,42 @@ private extension ResponseMapper._DTO._Item {
 }
 
 private extension ResponseMapper._DTO._Item._BannerAction {
-    
+        
     var data: GetBannerCatalogListResponse.BannerAction? {
         
         switch type {
-            
-        case .openDeposit:
-            guard let depositProductId else {
-                return nil
-            }
+        case "DEPOSIT_OPEN":
+            guard let depositProductId else { return nil }
             return .init(type:.openDeposit(depositProductId))
-        case .depositsList:
+            
+        case "DEPOSITS":
             return .init(type: .depositsList)
-        case .migTransfer:
+            
+        case "MIG_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .migTransfer(countryId))
-        case .migAuthTransfer:
+            
+        case "MIG_AUTH_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .migAuthTransfer(countryId))
-        case .contact:
+            
+        case "CONTACT_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .contact(countryId))
-        case .depositTransfer:
+            
+        case "DEPOSIT_TRANSFER":
             guard let countryId else { return nil }
             return .init(type: .depositTransfer(countryId))
-        case .landing:
+            
+        case "LANDING":
             guard let target else { return nil }
             return .init(type: .landing(target))
-        case .none:
+            
+        case "HOUSING_AND_COMMUNAL_SERVICE":
+            // TODO: add new action
+            return nil
+            
+        case .none, .some:
             return nil
         }
     }
@@ -125,7 +133,7 @@ private extension ResponseMapper {
             
             struct _BannerAction: Decodable {
                 
-                let type: _BannerActionType?
+                let type: String?
                 let target: String?
                 let countryId: String?
                 let depositProductId: String?
@@ -134,17 +142,6 @@ private extension ResponseMapper {
                     case type, target, countryId
                     case depositProductId = "depositProductID"
                 }
-            }
-            
-            enum _BannerActionType: String, Decodable {
-                
-                case openDeposit = "DEPOSIT_OPEN"
-                case depositsList = "DEPOSITS"
-                case migTransfer = "MIG_TRANSFER"
-                case migAuthTransfer = "MIG_AUTH_TRANSFER"
-                case contact = "CONTACT_TRANSFER"
-                case depositTransfer = "DEPOSIT_TRANSFER"
-                case landing = "LANDING"
             }
         }
     }
