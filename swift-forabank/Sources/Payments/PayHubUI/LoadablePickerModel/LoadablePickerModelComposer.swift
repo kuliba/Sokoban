@@ -13,15 +13,18 @@ public final class LoadablePickerModelComposer<ID, Item>
 where ID: Hashable {
     
     private let load: Load
+    private let reload: Load
     private let makeID: MakeID
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         load: @escaping Load,
+        reload: @escaping Load,
         makeID: @escaping MakeID,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.load = load
+        self.reload = reload
         self.makeID = makeID
         self.scheduler = scheduler
     }
@@ -29,6 +32,17 @@ where ID: Hashable {
     public typealias LoadCompletion = ([Item]?) -> Void
     public typealias Load = (@escaping LoadCompletion) -> Void
     public typealias MakeID = () -> ID
+}
+
+public extension LoadablePickerModelComposer {
+    
+   convenience init(
+        load: @escaping Load,
+        makeID: @escaping MakeID,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.init(load: load, reload: load, makeID: makeID, scheduler: scheduler)
+    }
 }
 
 public extension LoadablePickerModelComposer {
@@ -45,7 +59,7 @@ public extension LoadablePickerModelComposer {
             makePlaceholders: { placeholderIDs }
         )
         let effectHandler = LoadablePickerEffectHandler<Item>(
-            microServices: .init(load: load)
+            microServices: .init(load: load, reload: reload)
         )
         
         return .init(
