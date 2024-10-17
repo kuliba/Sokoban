@@ -154,11 +154,7 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
             terms: "https://www.forabank.ru/",
             landingId: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
             image: anyMessage(),
-            keyMarketingParams: .init(
-                rate: "от 16,5 %",
-                amount: "До 15 млн. ₽",
-                term: "до 10 лет"
-            ),
+            keyMarketingParams: keyMarketingParams,
             features: .init(
                 header: featuresHeader,
                 list: [
