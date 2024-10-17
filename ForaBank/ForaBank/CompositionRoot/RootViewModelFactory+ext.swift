@@ -416,11 +416,14 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        performOrWaitForActive {
+        if paymentsTransfersFlag.isActive {
             
-            decoratedServiceCategoryListReload {
+            performOrWaitForActive {
                 
-                logger.log(level: .info, category: .network, message: "Loaded \($0?.count ?? 0) categories", file: #file, line: #line)
+                decoratedServiceCategoryListReload {
+                    
+                    logger.log(level: .info, category: .network, message: "Loaded \($0?.count ?? 0) categories", file: #file, line: #line)
+                }
             }
         }
         
