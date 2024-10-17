@@ -69,8 +69,10 @@ private extension LoadablePickerReducer {
     func handleLoaded(
         _ state: inout State,
         _ effect: inout Effect?,
-        with elements: [Element]
+        with elements: [Element]?
     ) {
+        guard let elements else { return }
+        
         state.suffix = state.suffix
             .map(\.id)
             .assignIDs(elements, makeID)

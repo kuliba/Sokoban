@@ -121,7 +121,7 @@ struct BannerPickerSectionContentView_Previews: PreviewProvider {
             case .load:
                 print("load")
             case let .loaded(items):
-                print("loaded \(items.count)")
+                print("loaded \((items ?? []).count)")
             case let .select(item):
                 print("select \(String(describing: item))")
             }
