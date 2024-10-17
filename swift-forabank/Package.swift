@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "swift-forabank",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v14),
         .macOS(.v11),
     ],
     products: [
