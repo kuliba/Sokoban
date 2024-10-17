@@ -5,9 +5,8 @@
 //  Created by Igor Malyarov on 30.09.2024.
 //
 
-struct CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel> {
+struct CategoryPickerSectionMicroServicesComposerNanoServices {
     
-    let makeList: MakeList
     let makeMobile: MakeMobile
     let makeQR: MakeQR
     let makeQRNavigation: MakeQRNavigation
@@ -15,7 +14,6 @@ struct CategoryPickerSectionMicroServicesComposerNanoServices<List, ListModel> {
     let makeTax: MakeTax
     let makeTransport: MakeTransport
     
-    typealias MakeList = ([ServiceCategory]) -> ListModel
     typealias MakeMobile = () -> ClosePaymentsViewModelWrapper
     typealias MakeQR = () -> QRModel
     

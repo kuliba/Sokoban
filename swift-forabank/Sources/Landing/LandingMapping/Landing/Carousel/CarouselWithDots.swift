@@ -13,40 +13,19 @@ public extension Landing.DataView.Carousel {
         
         public let title: String?
         public let size: Size
-        public let scale: String
         public let loopedScrolling: Bool
-        
         public let list: [ListItem]
         
         public init(
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.list = list
-        }
-        
-        public struct Size: Equatable {
-            
-            public let width: Int
-            public let height: Int
-            
-            public init(width: Int, height: Int) {
-                self.width = width
-                self.height = height
-            }
-            
-            public init(size: String) {
-                let allNumbers = size.allNumbers
-                self.width = !allNumbers.isEmpty ? allNumbers[0] : 0
-                self.height = allNumbers.count > 1 ? allNumbers[1] : 0
-            }
         }
         
         public struct ListItem: Equatable {

@@ -5,14 +5,20 @@
 //  Created by Igor Malyarov on 23.08.2024.
 //
 
+import CombineSchedulers
+import Foundation
+
 public final class FlowEffectHandler<Select, Navigation> {
     
     private let microServices: MicroServices
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
-        microServices: MicroServices
+        microServices: MicroServices,
+        scheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
     ) {
         self.microServices = microServices
+        self.scheduler = scheduler
     }
     
     public typealias MicroServices = FlowEffectHandlerMicroServices<Select, Navigation>
@@ -26,10 +32,7 @@ public extension FlowEffectHandler {
     ) {
         switch effect {
         case let .select(select):
-            microServices.getNavigation(select, dispatch) {
-                
-                dispatch(.receive($0))
-            }
+            handle(select, dispatch)
         }
     }
 }
@@ -40,4 +43,30 @@ public extension FlowEffectHandler {
     
     typealias Event = FlowEvent<Select, Navigation>
     typealias Effect = FlowEffect<Select>
+}
+
+public extension FlowEffectHandler {
+    
+    func handle(
+        _ select: Select,
+        _ dispatch: @escaping Dispatch
+    ) {
+        microServices.getNavigation(select, dispatch) { [weak self] navigation in
+            
+            self?.scheduler.delay(for: .milliseconds(100)) {
+                
+                dispatch(.receive(navigation))
+            }
+        }
+    }
+}
+
+extension AnySchedulerOf<DispatchQueue> {
+    
+    func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: .init(.now() + timeout), action)
+    }
 }

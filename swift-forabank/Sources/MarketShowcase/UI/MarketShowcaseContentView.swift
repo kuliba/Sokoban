@@ -44,16 +44,29 @@ where RefreshView: View,
         ZStack {
             
             switch state.status {
-            case .initiate, .inflight, .failure:
-                EmptyView()
+            case .initiate:
+                Color.clear
+                    .frame(maxHeight: .infinity)
                 
+            case let .failure(_, oldLanding):
+                if let oldLanding {
+                    factory.makeLandingView(oldLanding)
+                } else {
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
             case let .loaded(landing):
                 factory.makeLandingView(landing)
-            }
-            
-            if case .inflight = state.status {
-                factory.makeRefreshView()
-                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                
+            case let .inflight(oldLanding):
+                oldLanding.map {
+                    factory.makeLandingView($0)
+                }
+                if oldLanding == nil {
+                    factory.makeRefreshView()
+                        .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                }
             }
         }
     }
@@ -101,24 +114,6 @@ private struct ViewByCenterModifier: ViewModifier {
         .position(
             x: UIScreen.main.bounds.width/2,
             y: UIScreen.main.bounds.height/2 - height
-        )
-    }
-}
-
-#warning("move to module")
-extension View {
-    
-    func alert<Item: Identifiable>(
-        item: Item?,
-        content: (Item) -> Alert
-    ) -> some View {
-        
-        alert(
-            item: .init(
-                get: { item },
-                set: { _ in } // managed by action in content
-            ),
-            content: content
         )
     }
 }

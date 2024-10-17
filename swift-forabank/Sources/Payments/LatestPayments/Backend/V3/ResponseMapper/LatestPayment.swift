@@ -178,6 +178,7 @@ extension ResponseMapper.LatestPayment {
         case elecsnet
         case external
         case foreignCard
+        case golden
         case housingAndCommunalService
         case interestDeposit
         case internet

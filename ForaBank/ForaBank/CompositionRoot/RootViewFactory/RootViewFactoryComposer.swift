@@ -301,11 +301,20 @@ private extension RootViewFactoryComposer {
     }
     
     func makeLandingView(
+        _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
         _ landing: MarketShowcaseDomain.Landing
     ) -> LandingWrapperView {
         
-        let landingViewModel = model.landingViewModelFactory(result: landing, config: .default, landingActions: {
+        if landing.errorMessage != nil {
+            
+            contentEvent(.failure(.alert("Попробуйте позже.")))
+        }
+        
+        let landingViewModel = model.landingViewModelFactory(
+            result: landing,
+            config: .default,
+            landingActions: {
             
             // TODO: add case
             switch $0 {
@@ -327,7 +336,8 @@ private extension RootViewFactoryComposer {
             case .listVerticalRoundImageAction: // ???
                 break
             }
-        })
+            }, 
+            contentActions: contentEvent)
         
        return LandingWrapperView(viewModel: landingViewModel)
     }
@@ -352,7 +362,7 @@ private extension RootViewFactoryComposer {
                                         config: .iFora,
                                         factory: .init(
                                             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { self.makeLandingView(flowEvent, $0) }
+                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0) }
                                         )
                                     )
                                 })

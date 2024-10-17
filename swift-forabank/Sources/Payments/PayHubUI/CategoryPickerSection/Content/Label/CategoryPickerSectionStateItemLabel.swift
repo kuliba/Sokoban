@@ -39,13 +39,7 @@ where CategoryIcon: View,
         
         switch item {
         case let .element(identified):
-            switch identified.element {
-            case let .category(category):
-                categoryView(category)
-                
-            case .list:
-                config.showAll.render()
-            }
+            categoryView(identified.element)
             
         case .placeholder:
             placeholderLabel()
@@ -55,7 +49,7 @@ where CategoryIcon: View,
 
 public extension CategoryPickerSectionStateItemLabel {
     
-    typealias Domain = CategoryPickerSectionContentDomain<ServiceCategory>
+    typealias Domain = CategoryPickerContentDomain<ServiceCategory>
     typealias Item = Domain.State.Item
     typealias Config = CategoryPickerSectionStateItemLabelConfig
 }

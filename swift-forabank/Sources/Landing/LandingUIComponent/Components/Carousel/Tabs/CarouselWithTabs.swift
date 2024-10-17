@@ -14,7 +14,6 @@ public extension UILanding.Carousel {
         public let id: UUID
         let title: String?
         let size: Size
-        let scale: String
         let loopedScrolling: Bool
         let tabs: [TabItem]
         
@@ -22,29 +21,16 @@ public extension UILanding.Carousel {
             id: UUID = UUID(),
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             tabs: [TabItem]
         ) {
             self.id = id
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.tabs = tabs
         }
         
-        public struct Size: Equatable {
-            
-            public let width: Int
-            public let height: Int
-            
-            public init(width: Int, height: Int) {
-                self.width = width
-                self.height = height
-            }
-        }
-
         public struct TabItem: Equatable {
             
             public let name: String
@@ -58,25 +44,21 @@ public extension UILanding.Carousel {
 
         public struct ListItem: Equatable {
             
+            public let id: UUID
             let imageLink: String
             let link: String?
-            let action: Action?
+            let action: ItemAction?
             
-            public init(imageLink: String, link: String?, action: Action?) {
+            public init(
+                id: UUID = UUID(),
+                imageLink: String,
+                link: String?,
+                action: ItemAction?
+            ) {
+                self.id = id
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action
-            }
-                        
-            public struct Action: Equatable {
-                
-                let type: String
-                let target: String?
-                
-                public init(type: String, target: String?) {
-                    self.type = type
-                    self.target = target
-                }
             }
         }
     }
@@ -87,5 +69,22 @@ extension UILanding.Carousel.CarouselWithTabs {
     func imageRequests() -> [ImageRequest] {
         
         return []
+    }
+}
+
+extension Array where Element == UILanding.Carousel.CarouselWithTabs.TabItem {
+    
+    func items(_ offset: CGFloat, _ widthForItem: CGFloat) -> String {
+         
+        let _count = Int((offset / widthForItem).rounded())
+        
+        var itemsCount = 0
+        for (index, element) in enumerated() {
+            if _count <= itemsCount {
+                return "\(index):"
+            }
+            itemsCount += element.list.count
+        }
+        return "\(count - 1):"
     }
 }

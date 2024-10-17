@@ -16,6 +16,7 @@ struct QRView: View {
             
             zStack
                 .navigationBarHidden(true)
+                .edgesIgnoringSafeArea(.all)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

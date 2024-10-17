@@ -61,7 +61,7 @@ extension MarketShowcaseComposer {
                         case .initiate, .inflight, .loaded:
                             break
                             
-                        case let .failure(kind):
+                        case let .failure(kind, _):
                             switch kind {
                             case let .alert(message):
                                 flow?.event(.failure(.error(message)))

@@ -11,6 +11,8 @@ struct SerialStamped<Serial, T> {
     let serial: Serial
 }
 
+extension SerialStamped: Equatable where Serial: Equatable, T: Equatable {}
+
 final class BlaComposer {
     
     private let agent: any LocalAgentProtocol

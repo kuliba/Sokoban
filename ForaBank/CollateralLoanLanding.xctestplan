@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "85F0C27B-4920-4DA0-A416-1D721D2ED9F8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "EDB1437C265FDA410028EF5A",
+      "name" : "ForaBank"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingTests",
+        "name" : "CollateralLoanLandingTests"
+      }
+    }
+  ],
+  "version" : 1
+}
