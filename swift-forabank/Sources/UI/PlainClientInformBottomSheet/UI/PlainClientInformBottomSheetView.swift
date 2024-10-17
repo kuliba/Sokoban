@@ -10,12 +10,14 @@ import SwiftUI
 @available(iOS 15, *)
 public struct PlainClientInformBottomSheetView: View {
     
-    @ObservedObject var viewModel: PlainClientInformBottomSheetViewModel
-    let config: Config
-    let info: Info
 
-    public init(viewModel: PlainClientInformBottomSheetViewModel, config: Config, info: Info) {
-        self.viewModel = viewModel
+    private let config: Config
+    private let info: Info
+    @State private var isShowNavBar = false
+    @State private var shouldScroll = true
+    private var axes: Axis.Set { return shouldScroll ? .vertical : [] }
+    
+    public init(config: Config, info: Info) {
         self.config = config
         self.info = info
     }
@@ -23,12 +25,12 @@ public struct PlainClientInformBottomSheetView: View {
     public var body: some View {
         ZStack(alignment: .top) {
             
-            if viewModel.isShowNavBar {
+            if isShowNavBar {
                 NavBarView()
                     .transition(.identity)
             }
             
-            ScrollView(viewModel.axes, showsIndicators: false) {
+            ScrollView(axes, showsIndicators: false) {
                 
                 ContentStack()
                     .background(GeometryReader { geometry in
@@ -40,8 +42,8 @@ public struct PlainClientInformBottomSheetView: View {
             .zIndex(-1)
             .onPreferenceChange(ContentHeightKey.self) { contentHeight in
                     
-                    viewModel.isShowNavBar = contentHeight > UIScreen.main.bounds.height
-                    viewModel.shouldScroll = contentHeight > UIScreen.main.bounds.height
+                    isShowNavBar = contentHeight > UIScreen.main.bounds.height
+                    shouldScroll = contentHeight > UIScreen.main.bounds.height
             }
         }
     }
@@ -87,7 +89,7 @@ public struct PlainClientInformBottomSheetView: View {
         
         VStack(spacing: config.sizes.spacing) {
             
-            if !viewModel.isShowNavBar {
+            if !isShowNavBar {
                 config.colors.grayGrabber
                     .frame(
                         width: config.sizes.grabberWidth,
@@ -108,7 +110,7 @@ public struct PlainClientInformBottomSheetView: View {
                     .foregroundColor(config.titleConfig.textColor)
                 
             case .multiple(let multipleInfo):
-                if !viewModel.isShowNavBar {
+                if !isShowNavBar {
                     iconView(multipleInfo.title.image)
                     titleView(multipleInfo.title.title)
                 }
@@ -123,7 +125,7 @@ public struct PlainClientInformBottomSheetView: View {
                     }
                 }
                 .padding(.horizontal, config.paddings.horizontal)
-                .padding(.vertical, viewModel.isShowNavBar ? config.sizes.navBarHeight : 0)
+                .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight : 0)
             }
 
             
@@ -144,7 +146,7 @@ public struct PlainClientInformBottomSheetView: View {
             .foregroundColor(config.titleConfig.textColor)
     }
 
-    func textView(_ text: Binding<AttributedString>) -> some View {
+    private func textView(_ text: Binding<AttributedString>) -> some View {
         Text(text.wrappedValue)
             .font(config.textConfig.textFont)
             .foregroundColor(config.textConfig.textColor)
@@ -173,7 +175,6 @@ struct PlainClientInformBottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         
         PlainClientInformBottomSheetView(
-            viewModel: .init(info: .preview),
             config: .default, 
             info: .preview
         )

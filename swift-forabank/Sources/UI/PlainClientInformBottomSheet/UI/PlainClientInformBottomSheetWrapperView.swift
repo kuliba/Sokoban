@@ -10,22 +10,21 @@ import SwiftUI
 @available(iOS 15, *)
 struct PlainClientInformBottomSheetWrapperView: View {
     
-    @ObservedObject var viewModel: PlainClientInformBottomSheetViewModel
+    let info: ClientInformDataState
     let config: PlainClientInformBottomSheetConfig
     
     public init(
-        viewModel: PlainClientInformBottomSheetViewModel,
+        info: ClientInformDataState,
         config: PlainClientInformBottomSheetConfig
     ) {
-        self.viewModel = viewModel
+        self.info = info
         self.config = config
     }
 
     public var body: some View {
         
         PlainClientInformBottomSheetView(
-            viewModel: viewModel,
-            config: config, 
-            info: viewModel.info)
+            config: config,
+            info: info)
     }
 }
