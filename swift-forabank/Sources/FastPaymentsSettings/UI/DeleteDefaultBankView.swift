@@ -17,9 +17,10 @@ struct DeleteDefaultBankView: View {
         
         HStack(spacing: 17) {
             
-            config.icon
+            config.iconConfig.icon
                 .resizable()
                 .frame(width: 24, height: 24, alignment: .center)
+                .foregroundColor(config.iconConfig.foreground)
             
             VStack(spacing: 8) {
                 
@@ -32,18 +33,17 @@ struct DeleteDefaultBankView: View {
                     withConfig: config.descriptionConfig
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
             }
             
-            config.buttonIcon
-                .resizable()
-                .frame(width: 24, height: 24, alignment: .center)
-                .onTapGesture(perform: action)
+            Button(action: action) {
+                
+                config.buttonConfig.icon
+                    .resizable()
+                    .foregroundColor(config.buttonConfig.foreground)
+                    .frame(width: 24, height: 24, alignment: .center)
+            }
         }
-        .padding(.leading, 17)
-        .padding(.trailing, 20)
-        .padding(.vertical, 13)
-        .background(Color.gray)
+        .background(config.backgroundView)
         .cornerRadius(12)
     }
 }
@@ -75,7 +75,8 @@ extension DeleteDefaultBankConfig {
         titleConfig: .init(textFont: .system(size: 16), textColor: .black),
         description: "Вы можете удалить любой банк ранее установленный по умолчанию",
         descriptionConfig: .init(textFont: .system(size: 12), textColor: .white),
-        icon: .init(systemName: "building.columns"),
-        buttonIcon: .init(systemName: "xmark.circle")
+        iconConfig: .init(icon: .init(systemName: "building.columns"), foreground: .black),
+        buttonConfig: .init(icon: .init(systemName: "xmark.circle"), foreground: .gray),
+        backgroundView: .red
     )
 }

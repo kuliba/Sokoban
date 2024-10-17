@@ -121,10 +121,14 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountView(
-        viewModel: UserAccountViewModel
+        viewModel: UserAccountViewModel,
+        config: UserAccountConfig
     ) -> UserAccountView {
         
-        UserAccountView.init(viewModel: viewModel)
+        UserAccountView(
+            viewModel: viewModel,
+            config: config
+        )
     }
     
     func makeAnywayPaymentFactory(

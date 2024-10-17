@@ -23,7 +23,7 @@ final class RequestFactory_createPrepareDeleteBankDefaultRequestTests: XCTestCas
         
         let request = createRequest()
         
-        XCTAssertNoDiff(request.httpMethod, "GET")
+        XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
     func test_createRequest_shouldSetCachePolicy() {

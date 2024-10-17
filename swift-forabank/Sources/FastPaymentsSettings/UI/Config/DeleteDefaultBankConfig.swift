@@ -14,22 +14,56 @@ public struct DeleteDefaultBankConfig {
     let titleConfig: TextConfig
     let description: String
     let descriptionConfig: TextConfig
-    let icon: Image
-    let buttonIcon: Image
+    let iconConfig: IconConfig
+    let buttonConfig: ButtonConfig
+    let backgroundView: Color
     
     public init(
         title: String,
         titleConfig: TextConfig,
         description: String,
         descriptionConfig: TextConfig,
-        icon: Image,
-        buttonIcon: Image
+        iconConfig: IconConfig,
+        buttonConfig: ButtonConfig,
+        backgroundView: Color
     ) {
         self.title = title
         self.titleConfig = titleConfig
         self.description = description
         self.descriptionConfig = descriptionConfig
-        self.icon = icon
-        self.buttonIcon = buttonIcon
+        self.iconConfig = iconConfig
+        self.buttonConfig = buttonConfig
+        self.backgroundView = backgroundView
+    }
+}
+
+public extension DeleteDefaultBankConfig {
+    
+    struct IconConfig {
+        
+        let icon: Image
+        let foreground: Color
+        
+        public init(
+            icon: Image,
+            foreground: Color
+        ) {
+            self.icon = icon
+            self.foreground = foreground
+        }
+    }
+    
+    struct ButtonConfig {
+        
+        let icon: Image
+        let foreground: Color
+        
+        public init(
+            icon: Image,
+            foreground: Color
+        ) {
+            self.icon = icon
+            self.foreground = foreground
+        }
     }
 }
