@@ -90,3 +90,16 @@ public struct CollateralLoanLandingShowCaseUIModel {
 }
 
 extension CollateralLoanLandingShowCaseUIModel: Equatable {}
+
+extension CollateralLoanLandingShowCaseUIModel.Product.Theme {
+    public func map() -> CollateralLoanLandingShowCaseTheme {
+        switch self {
+        case .white:
+            return .white
+        case .gray:
+            return .gray
+        default:
+            return .white
+        }
+    }
+}

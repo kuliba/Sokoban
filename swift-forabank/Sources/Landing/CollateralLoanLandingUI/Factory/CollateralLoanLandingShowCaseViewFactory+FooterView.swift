@@ -12,7 +12,7 @@ extension CollateralLoanLandingShowCaseViewFactory {
 
             .init(
                 config: config,
-                theme: CollateralLoanLandingShowCaseTheme.map(model.theme)
+                theme: model.theme.map()
             )
     }
 }

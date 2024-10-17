@@ -19,19 +19,4 @@ public struct CollateralLoanLandingShowCaseTheme {
     }
 }
 
-extension CollateralLoanLandingShowCaseTheme {
-
-    public static func map(_ modelTheme: CollateralLoanLandingShowCaseUIModel.Product.Theme?) -> Self {
-
-        switch modelTheme {
-        case .gray:
-            return .gray
-        case .white:
-            return .white
-        default:
-            return .white
-        }
-    }
-}
-
 extension CollateralLoanLandingShowCaseTheme: Equatable {}

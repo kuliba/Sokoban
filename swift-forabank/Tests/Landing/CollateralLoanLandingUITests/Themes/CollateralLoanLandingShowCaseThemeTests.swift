@@ -10,30 +10,23 @@ import CollateralLoanLandingUI
 
 final class CollateralLoanLandingShowCaseThemeTests: XCTestCase {
     
-    func test_mapWhiteTheme() {
+    func test_map_shouldDeliverWhiteOnWhiteTheme() {
         
-        let result = Theme.map(.white)
-        XCTAssertNoDiff(result, .white)
+        assert(ModelTheme.white.map(), .white)
     }
     
-    func test_mapGrayTheme() {
+    func test_map_shouldDeliverGrayOnGrayTheme() {
         
-        let result = Theme.map(.gray)
-        assert(result, .gray)
+        assert(ModelTheme.gray.map(), .gray)
     }
     
-    func test_mapDefaultTheme() {
+    func test_map_shouldDeliverWhiteOnUnknownTheme() {
 
-        let result = Theme.map(.unknown)
-        assert(result, .white)
+        assert(ModelTheme.unknown.map(), .white)
     }
     
     private typealias Theme = CollateralLoanLandingShowCaseTheme
     private typealias ModelTheme = CollateralLoanLandingShowCaseUIModel.Product.Theme
-    
-    private func mapped(_ theme: ModelTheme) -> Theme {
-        Theme.map(theme)
-    }
     
     private func assert(
         _ receivedTheme: Theme,
@@ -42,7 +35,7 @@ final class CollateralLoanLandingShowCaseThemeTests: XCTestCase {
         line: UInt = #line
     ) {
         
-        let theme = mapped(modelTheme)
+        let theme = modelTheme.map()
         XCTAssertNoDiff(theme, receivedTheme, file: file, line: line)
     }
 }

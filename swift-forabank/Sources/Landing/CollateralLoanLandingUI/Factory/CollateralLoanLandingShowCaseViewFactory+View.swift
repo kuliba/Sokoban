@@ -25,7 +25,7 @@ extension CollateralLoanLandingShowCaseViewFactory {
             bulletsView: bulletsView,
             imageView: imageView,
             footerView: footerView,
-            theme: CollateralLoanLandingShowCaseTheme.map(model.theme)
+            theme: model.theme.map()
         )
     }
 }
