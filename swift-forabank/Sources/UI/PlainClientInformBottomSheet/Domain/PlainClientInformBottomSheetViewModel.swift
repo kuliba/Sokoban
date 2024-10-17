@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 15, *)
 public class PlainClientInformBottomSheetViewModel: ObservableObject {
     
     @Published var isShowNavBar = false

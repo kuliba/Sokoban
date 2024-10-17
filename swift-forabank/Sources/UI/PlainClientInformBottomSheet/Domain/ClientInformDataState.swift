@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 15, *)
 public enum ClientInformDataState {
     
     case single(Single)

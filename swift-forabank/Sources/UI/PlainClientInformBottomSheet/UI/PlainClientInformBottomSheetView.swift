@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 15, *)
 public struct PlainClientInformBottomSheetView: View {
     
     @ObservedObject var viewModel: PlainClientInformBottomSheetViewModel
@@ -158,6 +159,7 @@ public struct PlainClientInformBottomSheetView: View {
     }
 }
 
+@available(iOS 15, *)
 public extension PlainClientInformBottomSheetView {
     
     typealias Config = PlainClientInformBottomSheetConfig
@@ -165,6 +167,7 @@ public extension PlainClientInformBottomSheetView {
 }
 
 // MARK: - Preview
+@available(iOS 15, *)
 struct PlainClientInformBottomSheetView_Previews: PreviewProvider {
     
     static var previews: some View {

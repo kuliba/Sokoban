@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 15, *)
 struct PlainClientInformBottomSheetWrapperView: View {
     
     @ObservedObject var viewModel: PlainClientInformBottomSheetViewModel

@@ -14,6 +14,7 @@ struct PlainClientInformRowView: View {
     let text: String
     let config: PlainClientInformBottomSheetConfig
     
+    @available(iOS 15, *)
     init(logo: Image? = nil, text: AttributedString, config: PlainClientInformBottomSheetConfig) {
         
         self.logo = logo
