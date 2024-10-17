@@ -56,19 +56,12 @@ public struct PlainClientInformBottomSheetView: View {
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
             
-            config.colors.grayGrabber
-                .frame(
-                    width: config.sizes.grabberWidth,
-                    height: config.sizes.grabberHeight,
-                    alignment: .top
-                )
-                .cornerRadius(config.sizes.grabberCornerRadius)
-                .padding(.top, config.paddings.topGrabber)
-                .ignoresSafeArea()
+            grabberView()
             
             switch info {
             case .single(let singleInfo):
                 NavBarTitle(singleInfo.label.title)
+                
             case .multiple(let multipleInfo):
                 NavBarTitle(multipleInfo.title.title)
             }
@@ -89,44 +82,62 @@ public struct PlainClientInformBottomSheetView: View {
         
         VStack(spacing: config.sizes.spacing) {
             
-            if !isShowNavBar {
-                config.colors.grayGrabber
-                    .frame(
-                        width: config.sizes.grabberWidth,
-                        height: config.sizes.grabberHeight,
-                        alignment: .top
-                    )
-                    .cornerRadius(config.sizes.grabberCornerRadius)
-                    .padding(.top, config.paddings.topGrabber)
-                    .ignoresSafeArea()
-            }
+            if !isShowNavBar { grabberView() }
             
             switch info {
             case .single(let singleInfo):
-                iconView(singleInfo.label.image)
-                titleView(singleInfo.label.title)
-                Text(singleInfo.text)
-                    .font(config.titleConfig.textFont)
-                    .foregroundColor(config.titleConfig.textColor)
+                singleInfoView(singleInfo)
                 
             case .multiple(let multipleInfo):
-                if !isShowNavBar {
-                    iconView(multipleInfo.title.image)
-                    titleView(multipleInfo.title.title)
-                }
-                
-                VStack(alignment: .leading, spacing: config.sizes.spacing) {
-                    ForEach(multipleInfo.items) { item in
-                        PlainClientInformRowView(
-                            logo: item.image,
-                            text: item.title,
-                            config: config
-                        )
-                    }
-                }
-                .padding(.horizontal, config.paddings.horizontal)
-                .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight : 0)
+                multipleInfoView(multipleInfo)
             }
+        }
+    }
+    
+    private func grabberView() -> some View {
+        config.colors.grayGrabber
+            .frame(
+                width: config.sizes.grabberWidth,
+                height: config.sizes.grabberHeight,
+                alignment: .top
+            )
+            .cornerRadius(config.sizes.grabberCornerRadius)
+            .padding(.top, config.paddings.topGrabber)
+            .ignoresSafeArea()
+    }
+
+    private func singleInfoView(_ singleInfo: Info.Single) -> some View {
+        VStack(spacing: config.sizes.spacing) {
+            iconView(singleInfo.label.image)
+            titleView(singleInfo.label.title)
+            Text(singleInfo.text)
+                .font(config.titleConfig.textFont)
+                .foregroundColor(config.titleConfig.textColor)
+        }
+    }
+
+    private func multipleInfoView(_ multipleInfo: Info.Multiple) -> some View {
+        
+        VStack(spacing: config.sizes.spacing) {
+            
+            if !isShowNavBar {
+                iconView(multipleInfo.title.image)
+                titleView(multipleInfo.title.title)
+            }
+            
+            VStack(alignment: .leading, spacing: config.sizes.spacing) {
+                
+                ForEach(multipleInfo.items) { item in
+                    
+                    PlainClientInformRowView(
+                        logo: item.image,
+                        text: item.title,
+                        config: config
+                    )
+                }
+            }
+            .padding(.horizontal, config.paddings.horizontal)
+            .padding(.vertical, isShowNavBar ? config.sizes.navBarHeight : 0)
         }
     }
     
