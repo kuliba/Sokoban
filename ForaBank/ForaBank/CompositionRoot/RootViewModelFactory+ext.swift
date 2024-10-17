@@ -51,11 +51,10 @@ extension RootViewModelFactory {
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
     ) -> RootViewModel {
         
-        func runOnceWhenAuthorized(
-            _ work: @escaping () -> Void,
-            on scheduler: AnySchedulerOfDispatchQueue = backgroundScheduler
+        func performOrWaitForActive(
+            _ work: @escaping () -> Void
         ) {
-            bindings.insert(model.runOnceWhenAuthorised(work, on: scheduler))
+            bindings.insert(model.performOrWaitForActive(work))
         }
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
@@ -417,7 +416,7 @@ extension RootViewModelFactory {
             backgroundScheduler: backgroundScheduler
         )
         
-        runOnceWhenAuthorized {
+        performOrWaitForActive {
             
             decoratedServiceCategoryListReload {
                 

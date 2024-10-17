@@ -31,7 +31,6 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
             sessionState: active()
         )
-        XCTAssertEqual(httpClient.callCount, 0)
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
