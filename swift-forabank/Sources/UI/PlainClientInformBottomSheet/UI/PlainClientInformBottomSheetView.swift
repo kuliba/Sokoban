@@ -9,30 +9,33 @@ import SwiftUI
 
 @available(iOS 15, *)
 public struct PlainClientInformBottomSheetView: View {
-    
 
-    private let config: Config
-    private let info: Info
     @State private var isShowNavBar = false
     @State private var shouldScroll = true
     private var axes: Axis.Set { return shouldScroll ? .vertical : [] }
     
+    private let config: Config
+    private let info: Info
+    
     public init(config: Config, info: Info) {
+        
         self.config = config
         self.info = info
     }
     
     public var body: some View {
+        
         ZStack(alignment: .top) {
             
             if isShowNavBar {
-                NavBarView()
+                
+                navBarView()
                     .transition(.identity)
             }
             
             ScrollView(axes, showsIndicators: false) {
                 
-                ContentStack()
+                contentStack()
                     .background(GeometryReader { geometry in
                         Color.clear
                             .preference(key: ContentHeightKey.self, value: geometry.size.height)
@@ -48,7 +51,7 @@ public struct PlainClientInformBottomSheetView: View {
         }
     }
     
-    private func NavBarView() -> some View {
+    private func navBarView() -> some View {
         
         ZStack(alignment: .top) {
 
@@ -58,11 +61,12 @@ public struct PlainClientInformBottomSheetView: View {
             
             grabberView()
             
-            NavBarTitle(info.navBarTitle())
+            navBarTitle(info.navBarTitle())
         }
     }
     
-    private func NavBarTitle(_ text: String) -> some View {
+    private func navBarTitle(_ text: String) -> some View {
+        
         Text(text)
             .font(.largeTitle)
             .foregroundColor(.black)
@@ -72,7 +76,7 @@ public struct PlainClientInformBottomSheetView: View {
             .background(config.colors.grayBackground)
     }
     
-    private func ContentStack() -> some View {
+    private func contentStack() -> some View {
         
         VStack(spacing: config.sizes.spacing) {
             
@@ -89,6 +93,7 @@ public struct PlainClientInformBottomSheetView: View {
     }
     
     private func grabberView() -> some View {
+        
         config.colors.grayGrabber
             .frame(
                 width: config.sizes.grabberWidth,
@@ -101,6 +106,7 @@ public struct PlainClientInformBottomSheetView: View {
     }
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
+        
         VStack(spacing: config.sizes.spacing) {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)

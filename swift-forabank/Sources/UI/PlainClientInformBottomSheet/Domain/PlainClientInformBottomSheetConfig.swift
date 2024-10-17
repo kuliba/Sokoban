@@ -103,7 +103,6 @@ public struct PlainClientInformBottomSheetConfig {
         image: Image,
         rowImage: Image
     ) {
-        
         self.colors = colors
         self.strings = strings
         self.titleConfig = titleConfig
@@ -111,5 +110,4 @@ public struct PlainClientInformBottomSheetConfig {
         self.sizes = sizes
         self.paddings = paddings
     }
-    
 }

@@ -36,8 +36,7 @@ extension ClientInformDataState {
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
             Label(image: .infoCircle, title: "Информация на главном портале обновилась")
         ]
-    )
-    )
+    ))
 }
 
 extension PlainClientInformBottomSheetConfig {

@@ -19,7 +19,6 @@ struct PlainClientInformRowView: View {
         text: AttributedString,
         config: PlainClientInformBottomSheetConfig
     ) {
-        
         self.logo = logo
         self.text = NSAttributedString(text).string
         self.config = config
