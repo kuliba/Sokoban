@@ -1,5 +1,5 @@
 //
-//  CollateralLoanLandingShowCaseProductFactory+View.swift
+//  CollateralLoanLandingShowCaseViewFactory+View.swift
 //
 //
 //  Created by Valentin Ozerov on 14.10.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension CollateralLoanLandingShowCaseProductFactory {
+extension CollateralLoanLandingShowCaseViewFactory {
     
     func makeView(with model: CollateralLoanLandingShowCaseUIModel.Product)
     -> CollateralLoanLandingShowCaseProductView {

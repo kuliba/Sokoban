@@ -10,7 +10,6 @@ import SwiftUI
 extension CollateralLoanLandingShowCaseTheme {
     
     public static let white = Self(
-        
         foregroundColor: .primary,
         backgroundColor: .white
     )

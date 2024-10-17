@@ -16,15 +16,15 @@ struct CollateralLoanLandingShowCaseProductTermsView: View {
     var body: some View {
         
         HStack {
-            params.rate.map { rate($0) }
+            rate(params.rate)
             Spacer()
-            params.amount.map { amount($0) }
+            amount(params.amount)
             Spacer()
             Text("|")
                 .font(config.fonts.body)
                 .foregroundColor(theme.foregroundColor)
             Spacer()
-            params.term.map { term($0) }
+            term(params.term)
         }
         .frame(height: config.termsView.height)
         .padding(.top, config.paddings.top)

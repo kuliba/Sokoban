@@ -7,61 +7,126 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingShowCaseViewConfig {
+public struct CollateralLoanLandingShowCaseViewConfig {
     
-    let fonts: Fonts
-    let paddings: Paddings
+    public let fonts: Fonts
+    public let paddings: Paddings
 
-    let headerView: HeaderView
-    let termsView: TermsView
-    let bulletsView: BulletsView
-    let imageView: ImageView
-    let footerView: FooterView
+    public let headerView: HeaderView
+    public let termsView: TermsView
+    public let bulletsView: BulletsView
+    public let imageView: ImageView
+    public let footerView: FooterView
     
-    struct Fonts {
+    public init(
+        fonts: Fonts,
+        paddings: Paddings,
+        headerView: HeaderView,
+        termsView: TermsView,
+        bulletsView: BulletsView,
+        imageView: ImageView,
+        footerView: FooterView
+    ) {
         
-        let header: Font
-        let body: Font
+        self.fonts = fonts
+        self.paddings = paddings
+        self.headerView = headerView
+        self.termsView = termsView
+        self.bulletsView = bulletsView
+        self.imageView = imageView
+        self.footerView = footerView
     }
     
-    struct Paddings {
+    public struct Fonts {
+        
+        public let header: Font
+        public let body: Font
+        
+        public init(header: Font, body: Font) {
+         
+            self.header = header
+            self.body = body
+        }
+    }
+    
+    public struct Paddings {
 
-        let outer: Outer
-        let top: CGFloat
+        public let outer: Outer
+        public let top: CGFloat
 
-        struct Outer {
+        public init(outer: Outer, top: CGFloat) {
+         
+            self.outer = outer
+            self.top = top
+        }
+        
+        public struct Outer {
             
-            let vertical: CGFloat
-            let leading: CGFloat
-            let trailing: CGFloat
+            public let vertical: CGFloat
+            public let leading: CGFloat
+            public let trailing: CGFloat
+            
+            public init(vertical: CGFloat, leading: CGFloat, trailing: CGFloat) {
+               
+                self.vertical = vertical
+                self.leading = leading
+                self.trailing = trailing
+            }
         }
     }
 
-    struct HeaderView {
+    public struct HeaderView {
 
-        let height: CGFloat
+        public let height: CGFloat
+        
+        public init(height: CGFloat) {
+            
+            self.height = height
+        }
     }
 
-    struct TermsView {
+    public struct TermsView {
 
-        let height: CGFloat
+        public let height: CGFloat
+        
+        public init(height: CGFloat) {
+            
+            self.height = height
+        }
     }
 
-    struct BulletsView {
+    public struct BulletsView {
 
-        let itemSpacing: CGFloat
-        let height: CGFloat
+        public let itemSpacing: CGFloat
+        public let height: CGFloat
+        
+        public init(itemSpacing: CGFloat, height: CGFloat) {
+            
+            self.itemSpacing = itemSpacing
+            self.height = height
+        }
     }
     
-    struct ImageView {
+    public struct ImageView {
 
-        let height: CGFloat
-        let сornerRadius: CGFloat
+        public let height: CGFloat
+        public let сornerRadius: CGFloat
+        
+        public init(height: CGFloat, сornerRadius: CGFloat) {
+            
+            self.height = height
+            self.сornerRadius = сornerRadius
+        }
     }
 
-    struct FooterView {
+    public struct FooterView {
 
-        let height: CGFloat
+        public let height: CGFloat
+        
+        public init(height: CGFloat) {
+
+            self.height = height
+        }
     }
 }
 
@@ -70,41 +135,21 @@ extension CollateralLoanLandingShowCaseViewConfig {
     static let base = Self(
 
         fonts: .init(
-
             header: Font.system(size: 32).bold(),
             body: Font.system(size: 14)
         ),
         paddings: .init(
-
             outer: .init(
-
                 vertical: 32,
                 leading: 19,
                 trailing: 20
             ),
             top: 24
         ),
-        headerView: .init(
-            
-            height: 80
-        ),
-        termsView: .init(
-            
-            height: 24
-        ),
-        bulletsView: .init(
-            
-            itemSpacing: 4,
-            height: 84
-        ),
-        imageView: .init(
-            
-            height: 236,
-            сornerRadius: 12
-        ),
-        footerView: .init(
-            
-            height: 48
-        )
+        headerView: .init(height: 80),
+        termsView: .init(height: 24),
+        bulletsView: .init(itemSpacing: 4, height: 84),
+        imageView: .init(height: 236, сornerRadius: 12),
+        footerView: .init(height: 48)
     )
 }

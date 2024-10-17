@@ -13,7 +13,9 @@ where ContentView: View,
 {
     
     public let makeContentView: MakeContentView
-    let makeSpinnerView: MakeSpinnerView
+    public let makeSpinnerView: MakeSpinnerView
+
+    let config: CollateralLoanLandingShowCaseViewConfig = .base
 
     public init(
         @ViewBuilder makeContentView: @escaping MakeContentView,

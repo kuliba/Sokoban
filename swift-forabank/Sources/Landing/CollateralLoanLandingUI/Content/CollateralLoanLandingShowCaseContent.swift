@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class CollateralLoanLandingShowCaseContent: ObservableObject {
+public final class CollateralLoanLandingShowCaseContent {
 
     enum ViewState {
 
@@ -22,6 +22,7 @@ public final class CollateralLoanLandingShowCaseContent: ObservableObject {
     init(
         model: Model
     ) {
+        
         self.model = model
     }
 }

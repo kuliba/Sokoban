@@ -6,95 +6,81 @@
 //
 
 import XCTest
+import SwiftUI
 
 @testable import CollateralLoanLandingUI
 
-final class CollateralLoanLandingShowCaseProductFactoryTests: XCTestCase {
+final class CollateralLoanLandingShowCaseProductFactoryTests<ContentView, SpinnerView>: XCTestCase
+where ContentView: View,
+      SpinnerView: View
+{
 
-    func test_makeBulletsView() {
+    func test_makeBulletsForProductView() {
 
-        // Arrange
         let sut = makeSUT()
-        
-        // Act
         let result = sut.makeBulletsView(with: .stub2)
-        
-        // Assert
-        XCTAssertEqual(result?.header, "Под залог:")
+        XCTAssertNoDiff(result.header, Product.stub2.features.header)
     }
     
-    func test_makeTermsView() {
+    func test_makeTermsForProductView() {
 
-        // Arrange
         let sut = makeSUT()
-
-        // Act
         let result = sut.makeTermsView(with: .stub2)
-
-        // Assert
-        XCTAssertEqual(result?.params.amount, "До 15 млн. ₽")
+        XCTAssertNoDiff(result.params.amount, Product.stub2.terms)
     }
 
-    func test_makeFooterView() {
+    func test_makeFooterForProductView() {
 
-        // Arrange
         let sut = makeSUT()
-
-        // Act
         let result = sut.makeFooterView(with: .stub2)
-
-        // Assert
-        XCTAssertEqual(result.theme.foregroundColor, .primary)
+        let theme = Theme.map(Product.stub2.theme)
+        XCTAssertNoDiff(result.theme.foregroundColor, theme.foregroundColor)
     }
 
-    func test_makeHeaderView() {
+    func test_makeHeaderForProductView() {
 
-        // Arrange
         let sut = makeSUT()
-
-        // Act
         let result = sut.makeHeaderView(with: .stub2)
-
-        // Assert
-        XCTAssertEqual(result?.title, "Кредит под залог недвижимости")
+        XCTAssertNoDiff(result.title, Product.stub2.name)
     }
 
-    func test_makeImageView() {
+    func test_makeImageForProductView() {
 
-        // Arrange
         let sut = makeSUT()
-        
-        // Act
         let result = sut.makeImageView(with: .stub2)
-
-        // Assert
-        XCTAssertEqual(result?.url, "dict/getProductCatalogImage?image=/products/landing-image/collateral-loan/list_real_estate_collateral_loan.png")
+        XCTAssertNoDiff(result.url, Product.stub2.image)
     }
 
-    func test_makeView() {
+    func test_makeProductView() {
 
-        // Arrange
         let sut = makeSUT()
-
-        // Act
         let result = sut.makeView(with: .stub2)
+        
+        XCTAssertNoDiff(result.headerView.title, Product.stub2.name)
 
-        // Assert
-        XCTAssertNotNil(result.headerView)
-        XCTAssertNotNil(result.termsView)
-        XCTAssertNotNil(result.bulletsView)
-        XCTAssertNotNil(result.imageView)
+        XCTAssertNoDiff(result.termsView.params.amount, Product.stub2.keyMarketingParams.amount)
+        XCTAssertNoDiff(result.termsView.params.rate, Product.stub2.keyMarketingParams.rate)
+        XCTAssertNoDiff(result.termsView.params.term, Product.stub2.keyMarketingParams.term)
+
+        XCTAssertNoDiff(result.bulletsView.bulletsData.first?.1, Product.stub2.features.list.first?.text)
+        XCTAssertNoDiff(result.bulletsView.header, Product.stub2.features.header)
+
+        XCTAssertNoDiff(result.imageView.url, Product.stub2.image)
+        
         XCTAssertNotNil(result.footerView)
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(
-        storeURL: URL? = nil,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> CollateralLoanLandingShowCaseProductFactory {
-        .init(config: .base)
+    private typealias SUT = CollateralLoanLandingShowCaseViewFactory<ContentView, SpinnerView>
+    private typealias Product = CollateralLoanLandingShowCaseUIModel.Product
+    private typealias Theme = CollateralLoanLandingShowCaseTheme
+    
+    private func makeSUT() -> SUT {
+        .init(
+            makeContentView: { EmptyView() as! ContentView },
+            makeSpinnerView: { EmptyView() as! SpinnerView }
+        )
     }
 }
 

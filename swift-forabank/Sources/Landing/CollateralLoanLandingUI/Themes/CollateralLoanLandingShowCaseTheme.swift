@@ -9,8 +9,14 @@ import SwiftUI
 
 public struct CollateralLoanLandingShowCaseTheme {
 
-    let foregroundColor: Color
-    let backgroundColor: Color
+    public let foregroundColor: Color
+    public let backgroundColor: Color
+    
+    public init(foregroundColor: Color, backgroundColor: Color) {
+     
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+    }
 }
 
 extension CollateralLoanLandingShowCaseTheme {

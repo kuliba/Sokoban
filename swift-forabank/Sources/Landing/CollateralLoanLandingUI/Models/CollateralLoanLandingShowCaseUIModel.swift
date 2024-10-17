@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 16.10.2024.
 //
 
-public struct CollateralLoanLandingShowCaseUIModel: Equatable {
+public struct CollateralLoanLandingShowCaseUIModel {
 
     public let products: [Product]
     
@@ -15,13 +15,13 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
     
     public struct Product: Equatable {
 
-        public let theme: Theme?
-        public let name: String?
-        public let terms: String?
-        public let landingId: String?
-        public let image: String?
-        public let keyMarketingParams: KeyMarketingParams?
-        public let features: Features?
+        public let theme: Theme
+        public let name: String
+        public let terms: String
+        public let landingId: String
+        public let image: String
+        public let keyMarketingParams: KeyMarketingParams
+        public let features: Features
         
         public enum Theme: String {
 
@@ -31,14 +31,15 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
         }
         
         public init(
-            theme: Theme?,
-            name: String?,
-            terms: String?,
-            landingId: String?,
-            image: String?,
-            keyMarketingParams: KeyMarketingParams?,
-            features: Features?
+            theme: Theme,
+            name: String,
+            terms: String,
+            landingId: String,
+            image: String,
+            keyMarketingParams: KeyMarketingParams,
+            features: Features
         ) {
+            
             self.theme = theme
             self.name = name
             self.terms = terms
@@ -50,11 +51,12 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
         
         public struct KeyMarketingParams: Equatable {
 
-            public let rate: String?
-            public let amount: String?
-            public let term: String?
+            public let rate: String
+            public let amount: String
+            public let term: String
             
-            public init(rate: String?, amount: String?, term: String?) {
+            public init(rate: String, amount: String, term: String) {
+                
                 self.rate = rate
                 self.amount = amount
                 self.term = term
@@ -67,6 +69,7 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
             public let list: [List]
             
             public init(header: String?, list: [List]) {
+                
                 self.header = header
                 self.list = list
             }
@@ -77,6 +80,7 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
                 public let text: String
                 
                 public init(bullet: Bool, text: String) {
+                    
                     self.bullet = bullet
                     self.text = text
                 }
@@ -84,3 +88,5 @@ public struct CollateralLoanLandingShowCaseUIModel: Equatable {
         }
     }
 }
+
+extension CollateralLoanLandingShowCaseUIModel: Equatable {}

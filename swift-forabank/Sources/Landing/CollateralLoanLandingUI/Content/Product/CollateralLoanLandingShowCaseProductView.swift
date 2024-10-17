@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CollateralLoanLandingShowCaseProductView: View {
     
-    let headerView: HeaderView?
-    let termsView: TermsView?
-    let bulletsView: BulletsView?
-    let imageView: ImageView?
+    let headerView: HeaderView
+    let termsView: TermsView
+    let bulletsView: BulletsView
+    let imageView: ImageView
     let footerView: FooterView
     
     let theme: Theme
@@ -20,10 +20,10 @@ struct CollateralLoanLandingShowCaseProductView: View {
     var body: some View {
 
         VStack {
-            headerView.map { $0 }
-            termsView.map { $0 }
-            bulletsView.map { $0 }
-            imageView.map { $0 }
+            headerView
+            termsView
+            bulletsView
+            imageView
             footerView
         }
         .background(theme.backgroundColor)
