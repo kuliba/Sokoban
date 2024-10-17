@@ -108,8 +108,10 @@ public struct PlainClientInformBottomSheetView: View {
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
         
         VStack(spacing: config.sizes.spacing) {
+            
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
+            
             Text(singleInfo.text)
                 .font(config.textConfig.textFont)
                 .foregroundColor(config.titleConfig.textColor)
