@@ -141,7 +141,7 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel {
 fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
     
     static func makeStub(
-        theme: Theme = .unknown,
+        theme: Theme = .random,
         title: String = anyMessage(),
         image: String = anyMessage(),
         keyMarketingParams: KeyMarketingParams = .makeAny(),
