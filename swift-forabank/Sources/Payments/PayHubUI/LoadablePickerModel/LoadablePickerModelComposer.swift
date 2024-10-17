@@ -26,7 +26,7 @@ where ID: Hashable {
         self.scheduler = scheduler
     }
     
-    public typealias LoadCompletion = ([Item]) -> Void
+    public typealias LoadCompletion = ([Item]?) -> Void
     public typealias Load = (@escaping LoadCompletion) -> Void
     public typealias MakeID = () -> ID
 }

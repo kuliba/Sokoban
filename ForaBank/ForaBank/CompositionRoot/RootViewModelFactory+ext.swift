@@ -369,11 +369,6 @@ extension RootViewModelFactory {
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = loggingSerialLoaderComposer.composeGetServiceCategoryList()
         
-        let serviceCategoriesRemoteLoad: LoadServiceCategories = { completion in
-        
-            serviceCategoryListReload { completion($0 ?? []) }
-        }
-        
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
             mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
@@ -394,7 +389,7 @@ extension RootViewModelFactory {
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: serviceCategoriesRemoteLoad,
+                loadCategories: serviceCategoryListReload,
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ), 
@@ -411,7 +406,7 @@ extension RootViewModelFactory {
         )
         
         let oneTime = FireAndForgetDecorator(
-            decoratee: serviceCategoriesRemoteLoad,
+            decoratee: serviceCategoryListReload,
             decoration: { [weak paymentsTransfersPersonal] categories, completion in
                 
                 // notify categoryPicker
@@ -420,7 +415,7 @@ extension RootViewModelFactory {
                 // load operators
                 let serial = model.localAgent.serial(for: [CodableServicePaymentOperator].self)
                 
-                operatorsService(categories.map { .init(serial: serial, category: $0) }) {
+                operatorsService((categories ?? []).map { .init(serial: serial, category: $0) }) {
                     
                     if !$0.isEmpty {
                         
