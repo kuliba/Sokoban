@@ -239,7 +239,8 @@ final class RootViewModelTests: XCTestCase {
             showLoginAction: { _ in
                 
                     .init(viewModel: .init(authLoginViewModel: .preview))
-            }
+            }, 
+            landingServices: .empty()
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
@@ -364,12 +365,19 @@ private extension RootViewModel.Link {
             return .userAccount
         case .payments:
             return .payments
+        case .landing:
+            return .landing
+        case .orderProduct:
+            return .orderProduct
+        case .openCard:
+            return .openCard
         }
     }
     
     enum Case {
         
         case messages, me2me, userAccount, payments
+        case landing, orderProduct, openCard
     }
 }
 

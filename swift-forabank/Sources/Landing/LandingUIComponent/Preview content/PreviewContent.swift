@@ -868,7 +868,9 @@ extension CarouselActions {
     static let `default`: Self = .init(
         openUrl: {_ in },
         goToMain: {},
-        orderSticker: {}
+        orderSticker: {}, 
+        orderCard: {}, 
+        landing: {_ in }
     )
 }
 

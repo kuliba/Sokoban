@@ -299,7 +299,8 @@ private extension RootViewFactoryComposer {
     func makeLandingView(
         _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
-        _ landing: MarketShowcaseDomain.Landing
+        _ landing: MarketShowcaseDomain.Landing,
+        _ orderCard: @escaping () -> Void
     ) -> LandingWrapperView {
         
         if landing.errorMessage != nil {
@@ -333,13 +334,17 @@ private extension RootViewFactoryComposer {
                 break
             }
             }, 
-            contentActions: contentEvent)
+            contentActions: contentEvent,
+            outsideAction: { flowEvent(.select(.landing($0))) }, 
+            orderCard: orderCard
+        )
         
        return LandingWrapperView(viewModel: landingViewModel)
     }
     
     func makeMarketShowcaseView(
-        viewModel: MarketShowcaseDomain.Binder
+        viewModel: MarketShowcaseDomain.Binder,
+        orderCard: @escaping () -> Void
     ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
         
@@ -358,7 +363,7 @@ private extension RootViewFactoryComposer {
                                         config: .iFora,
                                         factory: .init(
                                             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0) }
+                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0, orderCard) }
                                         )
                                     )
                                 })

@@ -16,6 +16,7 @@ import SwiftUI
 import MarketShowcase
 import UIPrimitives
 import UtilityServicePrepaymentUI
+import LandingUIComponent
 
 struct RootView: View {
     
@@ -110,7 +111,7 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -146,6 +147,21 @@ struct RootView: View {
         case let .payments(paymentsViewModel):
             NavigationView {
                 PaymentsView(viewModel: paymentsViewModel)
+            }
+            
+        case let .landing(viewModel):
+            NavigationView {
+                LandingWrapperView(viewModel: viewModel)
+            }
+            .accentColor(.textSecondary)
+
+            
+        case let .orderProduct(viewModel):
+            OrderProductView(viewModel: viewModel)
+            
+        case let .openCard(viewModel):
+            NavigationView {
+                AuthProductsView(viewModel: viewModel)
             }
         }
     }
@@ -987,7 +1003,8 @@ struct RootView_Previews: PreviewProvider {
                 showLoginAction: { _ in
                     
                         .init(viewModel: .init(authLoginViewModel: .preview))
-                }
+                }, 
+                landingServices: .empty()
             ),
             rootViewFactory: .preview
         )
@@ -1039,7 +1056,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _ in .none }
+            makeMarketShowcaseView: { _,_  in .none }
         )
     }
 }

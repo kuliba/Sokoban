@@ -10,6 +10,7 @@ import Foundation
 import PayHub
 import SwiftUI
 import MarketShowcase
+import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -30,7 +31,8 @@ class RootViewModel: ObservableObject, Resetable {
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
-    
+    private let landingServices: LandingServices
+
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -45,7 +47,8 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        showLoginAction: @escaping ShowLoginAction
+        showLoginAction: @escaping ShowLoginAction,
+        landingServices: LandingServices
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
@@ -56,6 +59,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
+        self.landingServices = landingServices
         
         tabsViewModel.mainViewModel.rootActions = rootActions
         if case let .legacy(paymentsViewModel) = tabsViewModel.paymentsModel {
@@ -434,15 +438,8 @@ class RootViewModel: ObservableObject, Resetable {
         tabsViewModel.marketShowcaseBinder.flow.$state
             .compactMap(\.outside)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] outside in
-                
-                switch outside {
-                case .main:
-                    self?.rootActions.switchTab(.main)
-                    
-                case let .openURL(linkURL):
-                    linkURL.openLink()
-                }
+            .sink { [weak self] in
+                self?.handleOutside($0)
             }
             .store(in: &bindings)
         
@@ -454,6 +451,102 @@ class RootViewModel: ObservableObject, Resetable {
             }
             .store(in: &bindings)
     }
+    
+    private func handleOutside(
+        _ outside: MarketShowcaseDomain.FlowState.Status.Outside
+    ) {
+        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
+            
+            switch outside {
+            case .main: self?.rootActions.switchTab(.main)
+                
+            case let .openURL(linkURL): linkURL.openLink()
+                
+            case let .landing(type):
+                self?.landingServices.loadLandingByType(type) {
+                    switch $0 {
+                    case let .success(landing):
+                        Task { @MainActor [weak self] in
+                            
+                            guard let self else { return }
+
+                            let viewModel = model.landingViewModelFactory(
+                                result: landing,
+                                config: .default,
+                                landingActions: {
+                                    switch $0 {
+                                        
+                                    case let .card(action):
+                                        switch action {
+                                        case .goToMain: self.resetLink()
+                                            
+                                        case let .openUrl(linkURL): linkURL.openLink()
+                                            
+                                        case .order(cardTarif: let cardTarif, cardType: let cardType):
+                                            self.orderCard(cardTarif, cardType)
+                                        }
+                                    case .sticker(_):
+                                        break
+                                    default:
+                                        break
+                                    }
+                                },
+                                contentActions: { _ in },
+                                outsideAction: {_ in }, 
+                                orderCard: openCard
+                            )
+                            
+                            link = .landing(viewModel)
+                        }
+                        
+                    case .failure:
+                        break
+                    }
+                }
+            }
+        }
+    }
+    
+    func orderCard(
+        _ cardTarif: Int,
+        _ cardType: Int
+    ) {
+        if let catalogProduct = model.catalogProduct(for: .tarif(cardTarif, type: cardType)) {
+            
+            handleShowOrderProductAction(catalogProduct)
+        }
+    }
+
+    func handleShowOrderProductAction(
+        _ productData: CatalogProductData
+    ) {
+        let viewModel = OrderProductView.ViewModel(
+                model,
+                productData: productData
+            )
+        
+        link = .init(.orderProduct(viewModel))
+    }
+    
+    func openCard() {
+        
+        if model.onlyCorporateCards {
+            
+            model.productsOpenAccountURL.absoluteString.openLink()
+
+        } else {
+            
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                dismissAction: { [weak self] in
+                    self?.resetLink()
+                })
+            
+            link = .openCard(authProductsViewModel)
+        }
+    }
+
 }
 
 private extension MarketShowcaseFlowState {
@@ -578,6 +671,9 @@ extension RootViewModel {
         case me2me(RequestMeToMeModel)
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
+        case landing(LandingWrapperViewModel)
+        case orderProduct(OrderProductView.ViewModel)
+        case openCard(AuthProductsViewModel)
     }
     
     enum PaymentsModel {

@@ -105,15 +105,20 @@ final class CarouselActionTests: XCTestCase {
             actions: .init(
                 openUrl: { _ in received.append(.openLink) },
                 goToMain: { received.append(.goMain) }, 
-                orderSticker: { received.append(.orderSticker) }))()
+                orderSticker: { received.append(.orderSticker) },
+                orderCard: { received.append(.orderCard) },
+                landing: { received.append(.landing($0)) }
+            ))()
         
         XCTAssertEqual(received, expectedActionTypes)
     }
 
-    enum ActionType {
+    enum ActionType: Equatable {
         
         case goMain
+        case landing(String?)
         case openLink
+        case orderCard
         case orderSticker
     }
 }
