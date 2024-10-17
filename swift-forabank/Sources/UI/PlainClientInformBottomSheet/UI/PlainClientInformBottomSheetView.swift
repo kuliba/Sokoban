@@ -58,13 +58,7 @@ public struct PlainClientInformBottomSheetView: View {
             
             grabberView()
             
-            switch info {
-            case .single(let singleInfo):
-                NavBarTitle(singleInfo.label.title)
-                
-            case .multiple(let multipleInfo):
-                NavBarTitle(multipleInfo.title.title)
-            }
+            NavBarTitle(info.navBarTitle())
         }
     }
     

@@ -47,3 +47,18 @@ public enum ClientInformDataState {
         }
     }
 }
+
+@available(iOS 15, *)
+extension ClientInformDataState {
+    
+    func navBarTitle() -> String {
+        
+        switch self {
+        case .single(let singleInfo):
+            return singleInfo.label.title
+            
+        case .multiple(let multipleInfo):
+            return multipleInfo.title.title
+        }
+    }
+}
