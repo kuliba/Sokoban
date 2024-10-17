@@ -105,8 +105,9 @@ public struct PlainClientInformBottomSheetView: View {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
             Text(singleInfo.text)
-                .font(config.titleConfig.textFont)
+                .font(config.textConfig.textFont)
                 .foregroundColor(config.titleConfig.textColor)
+                .padding(.horizontal, config.paddings.horizontal)
         }
     }
 
@@ -157,7 +158,7 @@ public struct PlainClientInformBottomSheetView: View {
             .foregroundColor(config.textConfig.textColor)
     }
     
-    struct ContentHeightKey: PreferenceKey {
+    private struct ContentHeightKey: PreferenceKey {
         
         static var defaultValue: CGFloat = 0
         static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
