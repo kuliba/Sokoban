@@ -28,5 +28,5 @@ public extension CarouselViewFactory {
     
     typealias MakeCarouselBaseView = (UILanding.Carousel.CarouselBase) -> CarouselBaseView
     typealias MakeCarouselWithDotsView = (UILanding.Carousel.CarouselWithDots) -> CarouselWithDotsView
-    typealias MakeCarouselWithTabsView = () -> EmptyView
+    typealias MakeCarouselWithTabsView = (UILanding.Carousel.CarouselWithTabs) -> CarouselWithTabsView
 }

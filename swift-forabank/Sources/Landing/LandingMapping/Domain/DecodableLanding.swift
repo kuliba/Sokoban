@@ -148,7 +148,7 @@ extension DecodableLanding.Data {
                 }
                 
             case .multiText:
-                if let data = try? container.decode(MultiText.self, forKey: .data) {
+                if let data = try? container.decode(MultiText.self, forKey: .data), !data.list.isEmpty {
                     self = .multi(.text(data)) }
                 else {
                     self = .noValid("multiText")

@@ -11,7 +11,7 @@ import UIPrimitives
 
 public struct CarouselWithDotsView: View {
     
-    let model: CarouselWithDots
+    let carousel: CarouselWithDots
     let actions: CarouselActions
     let factory: Factory
     let config: Config
@@ -19,12 +19,12 @@ public struct CarouselWithDotsView: View {
     @State private var selection: Int = 0
     
     public init(
-        model: CarouselWithDots,
+        carousel: CarouselWithDots,
         actions: CarouselActions,
         factory: Factory,
         config: Config
     ) {
-        self.model = model
+        self.carousel = carousel
         self.actions = actions
         self.factory = factory
         self.config = config
@@ -34,40 +34,44 @@ public struct CarouselWithDotsView: View {
             
         VStack(alignment: .leading) {
             
-            model.title.map {
+            carousel.title.map {
                 $0.text(withConfig: config.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, config.paddings.horizontal)
             }
             
             TabView(selection: $selection){
-                ForEach(0..<model.list.count, id: \.self) {
-                    itemView(item: model.list[$0])
+                ForEach(0..<carousel.list.count, id: \.self) {
+                    itemView(item: carousel.list[$0])
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: CGFloat(model.size.height))
+            .frame(height: carousel.size.newHeight(config.paddings.horizontal))
             
             pageControl()
                 .frame(maxWidth: .infinity)
         }
     }
-    
+        
     private func itemView (item: Item) -> some View {
         
         ItemView(
             item: item,
             config: config,
             factory: factory,
-            action: model.action(item: item, actions: actions),
-            size: model.size
+            action: UILanding.Carousel.action(
+                itemAction: item.action,
+                link: item.link,
+                actions: actions
+            ),
+            padding: config.paddings.horizontal
         )
     }
     
     private func pageControl() -> some View {
         
         HStack {
-            ForEach(0..<model.list.count, id: \.self) { index in
+            ForEach(0..<carousel.list.count, id: \.self) { index in
                 Circle()
                     .frame(widthAndHeight: config.pageControls.widthAndHeight)
                     .foregroundColor(index == selection ? config.pageControls.active : config.pageControls.inactive )
@@ -85,7 +89,7 @@ extension CarouselWithDotsView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: ItemSize
+        let padding: CGFloat
         
         var body: some View {
             
@@ -93,9 +97,9 @@ extension CarouselWithDotsView {
                 
                 factory.makeBannerImageView(item.imageLink)
                     .cornerRadius(config.cornerRadius)
-                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
                     .accessibilityIdentifier("CarouselWithDotsImage")
             }
+            .padding(.horizontal, padding)
         }
     }
 }
@@ -108,7 +112,7 @@ public extension CarouselWithDotsView {
     typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
     typealias Config = UILanding.Carousel.CarouselWithDots.Config
     typealias Factory = ImageViewFactory
-    typealias ItemSize = UILanding.Carousel.CarouselWithDots.Size
+    typealias ItemSize = Size
 }
 
 struct CarouselWithDotsView_Previews: PreviewProvider {
@@ -116,7 +120,7 @@ struct CarouselWithDotsView_Previews: PreviewProvider {
     static var previews: some View {
         
         CarouselWithDotsView(
-            model: .default,
+            carousel: .default,
             actions: .default,
             factory: .default,
             config: .default

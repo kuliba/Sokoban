@@ -114,8 +114,7 @@ struct RootView: View {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
-        .onFirstAppear { marketShowcaseBinder.content.event(.load) }
-        .taggedTabItem(.market, selected: viewModel.selected)
+        .onAppear { marketShowcaseBinder.content.event(.load) }
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
     }
@@ -281,7 +280,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionView(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> some View {
         
         RxWrapperView(
@@ -317,7 +316,7 @@ private extension RootView {
     }
     
     func makeCategoryPickerSectionAlert(
-        binder: CategoryPickerSection.Binder
+        binder: CategoryPickerSectionDomain.Binder
     ) -> (SelectedCategoryFailure) -> Alert {
         
         return { failure in
@@ -335,9 +334,6 @@ private extension RootView {
     ) -> some View {
         
         switch destination {
-        case let .list(list):
-            categoryListView(list)
-            
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
             case let .mobile(mobile):
@@ -665,13 +661,6 @@ private extension RootView {
         }
     }
     
-    func categoryListView(
-        _ categoryListModelStub: CategoryListModelStub
-    ) -> some View {
-        
-        Text("TBD: CategoryPickerSectionDestinationView for \(String(describing: categoryListModelStub))")
-    }
-    
     func makeOperationPickerView(
         binder: OperationPickerBinder
     ) -> some View {
@@ -745,7 +734,7 @@ private extension RootView {
     }
     
     private func itemLabel(
-        item: CategoryPickerSection.ContentDomain.State.Item
+        item: CategoryPickerSectionDomain.ContentDomain.State.Item
     ) -> some View {
         
         CategoryPickerSectionStateItemLabel(
@@ -820,7 +809,7 @@ private extension RootView {
 }
 
 
-private extension AlertModelOf<CategoryPickerSection.FlowDomain.Event> {
+private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
     
     static func error(
         message: String? = nil,

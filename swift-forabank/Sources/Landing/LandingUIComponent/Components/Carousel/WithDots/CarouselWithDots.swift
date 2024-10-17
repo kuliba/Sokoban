@@ -14,7 +14,6 @@ public extension UILanding.Carousel {
         public let id: UUID
         let title: String?
         let size: Size
-        let scale: String
         let loopedScrolling: Bool
         
         let list: [ListItem]
@@ -23,50 +22,26 @@ public extension UILanding.Carousel {
             id: UUID = UUID(),
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
             self.id = id
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.list = list
         }
         
-        public struct Size: Equatable {
-            
-            public let width: Int
-            public let height: Int
-            
-            public init(width: Int, height: Int) {
-                self.width = width
-                self.height = height
-            }
-        }
-
         public struct ListItem: Equatable {
             
             let imageLink: String
             let link: String?
-            let action: Action?
+            let action: ItemAction?
             
-            public init(imageLink: String, link: String?, action: Action?) {
+            public init(imageLink: String, link: String?, action: ItemAction?) {
                 self.imageLink = imageLink
                 self.link = link
                 self.action = action
-            }
-                        
-            public struct Action: Equatable {
-                
-                let type: String
-                let target: String?
-                
-                public init(type: String, target: String?) {
-                    self.type = type
-                    self.target = target
-                }
             }
         }
     }
@@ -78,39 +53,4 @@ extension UILanding.Carousel.CarouselWithDots {
         
         return []
     }
-}
-
-extension UILanding.Carousel.CarouselWithDots {
-    
-    func action(
-        item: Item,
-        actions: CarouselActions
-    ) -> Action {
-        
-        switch item.action {
-        case .none:
-            
-            guard let link = item.link else { return {} }
-            return { actions.openUrl(link) }
-            
-        case let .some(action):
-            
-            if let type = LandingActionType(rawValue: action.type) {
-                switch type {
-                case .goToMain: return actions.goToMain
-                case .orderCard: return {}
-                case .goToOrderSticker: return {}
-                }
-            }
-            
-            return {}
-        }
-    }
-}
-
-extension UILanding.Carousel.CarouselWithDots {
-    
-    typealias Action = () -> Void
-    typealias Event = LandingEvent
-    typealias Item = UILanding.Carousel.CarouselWithDots.ListItem
 }
