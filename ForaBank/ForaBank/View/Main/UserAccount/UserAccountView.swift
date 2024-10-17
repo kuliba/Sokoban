@@ -289,12 +289,13 @@ struct UserAccountView: View {
         fpsDestination: UserAccountRoute.FPSDestination
     ) -> some View {
          
-        let title = "Введите код из сообщения"
 
         ZStack {
             
             switch fpsDestination {
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
+                let title = "Введите код из сообщения"
+
                 OTPInputWrapperView(
                     viewModel: timedOTPInputViewModel,
                     headerView: {
@@ -305,10 +306,47 @@ struct UserAccountView: View {
                 .navigationBar(with: .fastPayments(
                     action: { viewModel.event(.dismiss(.fpsDestination)) }
                 ))
+            case let .confirmDeleteDefaultBank(timedOTPInputViewModel, _):
+                
+                OTPInputWrapperView(
+                    viewModel: timedOTPInputViewModel,
+                    headerView: {
+                        
+                        infoView(config.infoVerificationConfig)
+                    }
+                )
+                .navigationBar(with: .fastPaymentsDeleteBank(
+                    action: { viewModel.event(.dismiss(.fpsDestination)) }
+                ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
         }
+    }
+    
+    func infoView(
+        _ config: UserAccountConfig.InfoVerificationConfig
+    ) -> some View {
+    
+        HStack(spacing: 12) {
+            
+            ZStack {
+                
+                Circle()
+                    .frame(width: 32, height: 32)
+                    .foregroundColor(.white)
+                    
+                config.icon
+            }
+            
+            config.title.text(withConfig: config.titleConfig)
+                .padding(.vertical, 8)
+                .padding(.trailing, 16)
+            
+        }
+        .padding(.horizontal, 16)
+        .background(config.backgroundColor)
+        .cornerRadius(90)
     }
     
     @ViewBuilder
@@ -384,12 +422,9 @@ private struct OTPInputWrapperView<HeaderView: View>: View {
     let headerView: () -> HeaderView
     
     var body: some View {
-        
-        switch viewModel.state.status {
-        case .failure:
-            EmptyView()
+
+        if let input = viewModel.state.status.input {
             
-        case let .input(input):
             OTPInputView(
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
@@ -397,8 +432,8 @@ private struct OTPInputWrapperView<HeaderView: View>: View {
                 config: .iFora,
                 headerView: headerView
             )
+        } else {
             
-        case .validOTP:
             EmptyView()
         }
     }
@@ -412,6 +447,18 @@ private extension NavigationBarView.ViewModel {
         
         .init(
             title: "Настройки СБП",
+            subtitle: "Система быстрых платежей",
+            icon: "ic32Sbp",
+            action: action
+        )
+    }
+    
+    static func fastPaymentsDeleteBank(
+        action: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: "Удаление банка по умолчанию",
             subtitle: "Система быстрых платежей",
             icon: "ic32Sbp",
             action: action

@@ -16,6 +16,7 @@ public struct ActiveContractConfig {
     let bankDefault: BankDefaultConfig
     let carousel: CarouselComponentConfig
     let consentList: ConsentListConfig
+    public let deleteDefaultBank: DeleteDefaultBankConfig
     let paymentContract: PaymentContractConfig
     public let productSelect: ProductSelectConfig
     
@@ -25,6 +26,7 @@ public struct ActiveContractConfig {
         bankDefault: BankDefaultConfig,
         carousel: CarouselComponentConfig,
         consentList: ConsentListConfig,
+        deleteDefaultBank: DeleteDefaultBankConfig,
         paymentContract: PaymentContractConfig,
         productSelect: ProductSelectConfig
     ) {
@@ -33,6 +35,7 @@ public struct ActiveContractConfig {
         self.bankDefault = bankDefault
         self.carousel = carousel
         self.consentList = consentList
+        self.deleteDefaultBank = deleteDefaultBank
         self.paymentContract = paymentContract
         self.productSelect = productSelect
     }

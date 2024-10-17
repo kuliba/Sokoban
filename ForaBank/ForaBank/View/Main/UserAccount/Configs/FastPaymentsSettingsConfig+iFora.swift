@@ -18,12 +18,25 @@ extension FastPaymentsSettingsConfig {
         backgroundColor: .mainColorsGrayLightest,
         bankDefault: .iFora, 
         carousel: .iForaSmall,
-        consentList: .iFora,
+        consentList: .iFora, 
+        deleteDefaultBank: .iFora,
         paymentContract: .iFora,
         productSelect: .iFora
     )
 }
 
+extension DeleteDefaultBankConfig {
+    
+    static let iFora: Self = .init(
+        title: "Удалить банк по умолчанию",
+        titleConfig: .init(textFont: .textH4M16240(), textColor: .textSecondary),
+        description: "Вы можете удалить любой банк ранее установленный по умолчанию",
+        descriptionConfig: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
+        iconConfig: .init(icon: .ic24Bank, foreground: .textPlaceholder),
+        buttonConfig: .init(icon: .ic24CircleClose, foreground: .textPlaceholder),
+        backgroundView: .mainColorsGrayLightest
+    )
+}
 extension BankDefaultConfig {
     
     static let iFora: Self = .init(

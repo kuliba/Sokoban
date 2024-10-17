@@ -12,6 +12,7 @@ public enum FastPaymentsSettingsEffect: Equatable {
     case consentList(ConsentListEffect)
     case contract(ContractEffect)
     case getSettings
+    case prepareDeleteDefaultBank
     case prepareSetBankDefault
     case subscription(SubscriptionEffect)
     case updateProduct(ContractCore)
