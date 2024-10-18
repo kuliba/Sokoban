@@ -44,6 +44,7 @@ public struct CarouselBaseView: View {
                 HStack(spacing: config.spacing) {
                     ForEach(carousel.list, id: \.id, content: itemView)
                 }
+                .padding(.horizontal, config.paddings.horizontal)
             }
             .padding(.vertical, config.paddings.vertical)
         }
@@ -60,9 +61,19 @@ public struct CarouselBaseView: View {
                 link: item.link,
                 actions: actions
             ),
-            size: carousel.size
+            width: widthForItem()
         )
-        .padding(.leading, config.paddings.horizontal)
+    }
+    
+    private func widthForItem() -> CGFloat {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        if carousel.list.count == 1 {
+            let paddings = config.paddings.horizontal * 2
+            return (screenWidth - paddings).rounded(.toNearestOrEven)
+        } else {
+            return ((screenWidth - config.paddings.horizontal - config.spacing) / 2 + config.offset).rounded(.toNearestOrEven)
+        }
     }
 }
 
@@ -74,18 +85,19 @@ extension CarouselBaseView {
         let config: Config
         let factory: Factory
         let action: () -> Void
-        let size: ItemSize
+        let width: CGFloat
         
         var body: some View {
             
             Button(action: action) {
                 
                 factory.makeBannerImageView(item.imageLink)
-                    .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+                    .scaledToFit()
                     .cornerRadius(config.cornerRadius)
                     .accessibilityIdentifier("CarouselBaseImage")
             }
-            .fixedSize(horizontal: false, vertical: true)
+            .frame(width: width)
+            .scaledToFit()
         }
     }
 }

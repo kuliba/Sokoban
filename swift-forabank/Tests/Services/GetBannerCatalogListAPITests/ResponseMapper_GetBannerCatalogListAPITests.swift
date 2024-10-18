@@ -123,6 +123,20 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
                 action: .init(type: .landing("market_showcase")))
         ]))
     }
+    
+    // TODO: update test when new type is added
+    func test_map_actionService_shouldDeliverValidData() throws {
+        
+        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.serviceLanding.utf8))).get()
+        
+        XCTAssertNoDiff(result, .init(serial: "", bannerCatalogList: [
+            .init(
+                productName: "ЖКХ",
+                conditions: ["Оплати"],
+                links: .init(image: "imageLink", order: "", condition: ""),
+                action: nil)
+        ]))
+    }
 
     // MARK: - Helpers
     
@@ -331,6 +345,28 @@ private extension String {
             "action": {
               "type": "LANDING",
               "target": "market_showcase"
+            }
+          }
+        ]
+      }
+    }
+    """
+    
+    static let serviceLanding: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "serial": "",
+        "BannerCatalogList": [
+          {
+            "productName": "ЖКХ",
+            "txtСondition": [
+              "Оплати"
+            ],
+            "imageLink": "imageLink",
+            "action": {
+              "type": "HOUSING_AND_COMMUNAL_SERVICE",
             }
           }
         ]
