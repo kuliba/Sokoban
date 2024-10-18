@@ -75,6 +75,13 @@ class Model {
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
+    let ___client: CurrentValueSubject<___Client, Never>
+    struct ___Client {
+        
+        let authorized: Void?
+        let notAuthorized: Void?
+    }
+    #warning("rename and replace")
     
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -241,6 +248,7 @@ class Model {
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
+        self.___client = .init(.init(authorized: nil, notAuthorized: nil))
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }

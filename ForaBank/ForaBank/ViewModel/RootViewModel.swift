@@ -142,11 +142,11 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [unowned self] in
                         
-                        guard let clientInformData = self.model.clientInform.value.data?.authorized,
-                              let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
-                        else { return }
+                        // add notAuthorized when it will be ready
                         
-                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        guard let authorized = self.model.___client.value.authorized else { return }
+
+                        self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
                     }
                 }
             }
