@@ -26,6 +26,8 @@ import RemoteServices
 import SberQR
 import SharedAPIInfra
 import SwiftUI
+import PlainClientInformBottomSheet
+import GetClientInformDataServices
 
 extension RootViewModelFactory {
     
@@ -503,6 +505,35 @@ extension RootViewModelFactory {
             scheduler: .main)
         let marketShowcaseBinder = marketShowcaseComposer.compose()
 
+        // MARK: - Notifications Authorized
+        
+        let _createGetAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
+        )
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformDataState?) -> Void) in
+        
+            _createGetAuthorizedZoneClientInformData(nil) {
+                
+                completion(.init(
+                    $0,
+                    infoLabel: .init(image: .ic12EyeOff, title: "Информация")
+                ))
+            }
+        }
+        runOnceWhenAuthorized {
+            
+            createGetAuthorizedZoneClientInformData {
+                
+                if let info = $0 {
+                    logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                    model.clientInform.value = info
+                } else {
+                    logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientData", file: #file, line: #line)
+                }
+            }
+        }
+        
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             model: model,
