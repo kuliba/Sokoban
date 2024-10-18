@@ -372,7 +372,18 @@ extension RootViewModelFactory {
         
         let decoratedServiceCategoryListReload = backgroundScheduler.decorate(
             load: serviceCategoryListReload,
-            with: operatorsService,
+            with: { payload, completion in
+                
+                operatorsService(payload) {
+                
+                    if !$0.isEmpty {
+                        
+                        logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
+                    }
+                    
+                    completion()
+                }
+            },
             map: {
                 
                 let serial = model.localAgent.serial(
@@ -970,9 +981,10 @@ private extension Error {
 
 extension Scheduler {
     
+    // use to decorate with SerialCachingRemoteBatchService
     func decorate<T, V>(
         load: @escaping Load<T>,
-        with decoration: @escaping ([V], @escaping ([V]) -> Void) -> Void,
+        with decoration: @escaping ([V], @escaping () -> Void) -> Void,
         map: @escaping (T) -> V
     ) -> Load<T> {
         
@@ -985,12 +997,12 @@ extension Scheduler {
                     completion(nil)
                     
                 case let .some(values):
-                    perform(
-                        work: decoration,
-                        with: values.map(map)
-                    ) { _ in
+                    schedule {
                         
-                        completion(values)
+                        decoration(values.map(map)) {
+                            
+                            completion(values)
+                        }
                     }
                 }
             }
