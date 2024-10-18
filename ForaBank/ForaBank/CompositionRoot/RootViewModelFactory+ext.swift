@@ -500,7 +500,7 @@ extension RootViewModelFactory {
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: .main)
+            scheduler: mainScheduler)
         let marketShowcaseBinder = marketShowcaseComposer.compose()
 
         return make(

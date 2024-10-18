@@ -548,11 +548,27 @@ final class MapperTests: XCTestCase {
         ])
     }
     
-    func test_map_carouselWithTabsWithError_notDeliversCarouselWithTabsInMain() throws {
+    func test_map_carouselWithTabsWithError_deliversCarouselWithValidTabsInMain() throws {
         
         let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
         
-        XCTAssertNoDiff(landing.main.carouselWithTabs, [])
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [
+            .init(
+                title: "Название раздела",
+                size: .init(width: 182, height: 124),
+                loopedScrolling: false,
+                tabs: [
+                    .init(
+                        name: "Вкладка 1",
+                        list: [
+                            .init(
+                                imageLink: "dict/getProductCatalogImage?image=/products/banners/yandex_364%C3%97248.png",
+                                link: nil,
+                                action: nil)
+                        ]),
+                    .init(name: "Вкладка 2", list: [])
+            ])
+        ])
     }
     
     func test_map_carouselWithTabsWithError_deliversMultilineHeaderMain() throws {
@@ -580,6 +596,24 @@ final class MapperTests: XCTestCase {
                     .init(imageLink: "imageLink1", link: "link1", action: nil),
                     .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
                     .init(imageLink: "imageLink3", link: nil, action: nil)
+                ])
+        ])
+    }
+    
+    func test_map_carouselBaseWithError_deliversCarouselBaseWithValidItemInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselBase.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselBase, [
+            .init(
+                title: "Медицина и здоровье",
+                size: .init(width: 4, height: 2),
+                loopedScrolling: false,
+                list: [
+                    .init(
+                        imageLink: "imageLink1",
+                        link: "link1",
+                        action: nil)
                 ])
         ])
     }
@@ -3442,6 +3476,35 @@ private extension String {
         }
     }
     """
+    
+    static let errorCarouselBase = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+        {
+            "type": "HORIZONTAL_SLIDER_BASE",
+            "data": {
+                "title": "Медицина и здоровье",
+                "size": "4х2",
+                "scale": "medium",
+                "loopedScrolling": null,
+                "list": [{
+                    "imageLink": "imageLink1",
+                    "link": "link1"
+                }, {
+                    "link": "https://www.forabank.ru/landings/na-zdorovie/"
+                }]
+            }
+        }
+    ],
+    "serial": ""
+    }
+    }
+
+"""
 }
 
 extension Array where Element == Landing.DataView {
