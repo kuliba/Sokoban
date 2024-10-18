@@ -24,6 +24,7 @@ import PayHubUI
 import PaymentSticker
 import RemoteServices
 import SberQR
+import SerialComponents
 import SharedAPIInfra
 import SwiftUI
 
@@ -354,24 +355,24 @@ extension RootViewModelFactory {
             asyncLocalAgent: asyncLocalAgent,
             nanoServiceComposer: nanoServiceComposer
         )
-        
-        let (serviceCategoriesLocalLoad, _serviceCategoriesRemoteLoad) = serialLoaderComposer.compose(
-            getSerial: { model.localAgent.serial(for: [CodableServiceCategory].self) },
-            fromModel: [ServiceCategory].init(codable:),
-            toModel: [CodableServiceCategory].init(categories:),
-            createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse
+        // reusable factory
+        let loggingSerialLoaderComposer = LoggingSerialLoaderComposer(
+            httpClient: httpClient,
+            localAgent: model.localAgent,
+            logger: logger
         )
-        
-        let serviceCategoriesRemoteLoad: LoadServiceCategories = { completion in
-        
-            _serviceCategoriesRemoteLoad { completion($0 ?? []) }
-        }
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
+        
+        let (serviceCategoryListLoad, serviceCategoryListReload) = loggingSerialLoaderComposer.composeGetServiceCategoryList()
+        
+        let serviceCategoriesRemoteLoad: LoadServiceCategories = { completion in
+        
+            serviceCategoryListReload { completion($0 ?? []) }
+        }
         
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
@@ -380,7 +381,7 @@ extension RootViewModelFactory {
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: { completion in
                 
-                serviceCategoriesLocalLoad { completion($0 ?? []) }
+                serviceCategoryListLoad { completion($0 ?? []) }
             },
             getLatestPayments: getLatestPayments
         )

@@ -1,6 +1,6 @@
 //
-//  LoadablePickerEffectHandlerTests.swift
-//  
+//  LoadablePickerEffectHandlerNonOptionalTests.swift
+//
 //
 //  Created by Igor Malyarov on 20.08.2024.
 //
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
+final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
     
     // MARK: - init
     
@@ -46,16 +46,6 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         wait(for: [exp], timeout: 0.1)
     }
     
-    func test_load_shouldDeliverNilOnLoadNil() {
-        
-        let (sut, loadPay) = makeSUT()
-        
-        expect(sut, with: .load, toDeliver: .loaded(nil)) {
-            
-            loadPay.complete(with: nil)
-        }
-    }
-    
     func test_load_shouldDeliverEmptyOnLoadEmptySuccess() {
         
         let (sut, loadPay) = makeSUT()
@@ -91,7 +81,7 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
     // MARK: - Helpers
     
     private typealias SUT = LoadablePickerEffectHandler<Element>
-    private typealias LoadSpy = Spy<Void, [Element]?>
+    private typealias LoadSpy = Spy<Void, [Element]>
     
     private func makeSUT(
         file: StaticString = #file,

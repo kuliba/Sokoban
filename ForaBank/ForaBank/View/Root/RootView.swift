@@ -192,13 +192,18 @@ private extension RootView {
         _ switcher: PaymentsTransfersSwitcher
     ) -> some View {
         
-        ComposedProfileSwitcherView(
-            model: switcher,
-            corporateView: paymentsTransfersCorporateView,
-            personalView: paymentsTransfersPersonalView,
-            undefinedView: { SpinnerView(viewModel: .init()) }
-        )
-        .refresh(action: switcher.refresh)
+        RefreshableScrollView(
+            action: switcher.refresh,
+            showsIndicators: false,
+            refreshCompletionDelay: 2.0
+        ) {
+            ComposedProfileSwitcherView(
+                model: switcher,
+                corporateView: paymentsTransfersCorporateView,
+                personalView: paymentsTransfersPersonalView,
+                undefinedView: { SpinnerView(viewModel: .init()) }
+            )
+        }
     }
     
     func paymentsTransfersCorporateView(
