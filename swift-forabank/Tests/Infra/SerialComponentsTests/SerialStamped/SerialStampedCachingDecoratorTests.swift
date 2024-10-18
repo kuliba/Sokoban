@@ -68,29 +68,6 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 0.1)
     }
     
-    func test_decorated_shouldNotCallCacheOnSameLoadedSerial() {
-        
-        let serial = anyMessage()
-        let (sut, loadSpy, cacheSpy) = makeSUT()
-        
-        sut(serial) { _ in }
-        loadSpy.complete(with: .success(makeLoadResponse(serial: serial)))
-        
-        XCTAssertEqual(cacheSpy.callCount, 0)
-    }
-    
-    func test_decorated_shouldDeliverLoadedOnSameLoadedSerial() {
-        
-        let serial = anyMessage()
-        let response = makeLoadResponse(serial: serial)
-        let (sut, loadSpy, _) = makeSUT()
-        
-        expect(sut, with: serial, toDeliver: .success(response)) {
-            
-            loadSpy.complete(with: .success(response))
-        }
-    }
-    
     func test_decorated_shouldNotDeliverSuccessOnInstanceDeallocation() {
         
         var sut: SUT?

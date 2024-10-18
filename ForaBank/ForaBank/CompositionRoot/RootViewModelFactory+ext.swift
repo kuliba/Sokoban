@@ -368,12 +368,7 @@ extension RootViewModelFactory {
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = loggingSerialLoaderComposer.composeGetServiceCategoryList()
         
-        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService(
-            getSerial: { _ in
-                
-                model.localAgent.serial(for: [CodableServicePaymentOperator].self)
-            }
-        )
+        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
         let decoratedServiceCategoryListReload = backgroundScheduler.decorate(
             load: serviceCategoryListReload,
