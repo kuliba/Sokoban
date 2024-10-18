@@ -10,12 +10,12 @@ import Foundation
 
 struct CollateralLoanLandingShowCaseBulletListView: View {
 
-    var listItems: [(bullet: Bool, text: String)]
-    var bullet: String = "•"
-    var bulletWidth: CGFloat? = nil
-    var bulletAlignment: Alignment = .leading
-    var theme: Theme
-    var config: Config
+    let listItems: [(bullet: Bool, text: String)]
+    let bullet: String = "•"
+    let bulletWidth: CGFloat? = nil
+    let bulletAlignment: Alignment = .leading
+    let theme: Theme
+    let config: Config
     
     var body: some View {
         
