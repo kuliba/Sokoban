@@ -23,9 +23,13 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        .collateralLoanLanding,
         // Infra
+        .ephemeralStores,
         .fetcher,
+        .genericLoader,
         .keyChainStore,
+        .serialComponents,
         // Payments
         .anywayPayment,
         .latestPaymentsBackendV2,
@@ -126,11 +130,19 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        .collateralLoanLanding,
+        .collateralLoanLandingTests,
         // Infra
+        .ephemeralStores,
+        .ephemeralStoresTests,
         .fetcher,
         .fetcherTests,
+        .genericLoader,
+        .genericLoaderTests,
         .keyChainStore,
         .keyChainStoreTests,
+        .serialComponents,
+        .serialComponentsTests,
         // Payments
         .anywayPaymentAdapters,
         .anywayPaymentAdaptersTests,
@@ -382,6 +394,13 @@ private extension Product {
         ]
     )
     
+    static let collateralLoanLanding = library(
+        name: .collateralLoanLanding,
+        targets: [
+            .collateralLoanLanding
+        ]
+    )
+    
     // MARK: - UI
     
     static let activateSlider = library(
@@ -615,6 +634,13 @@ private extension Product {
     
     // MARK: - Infra
     
+    static let ephemeralStores = library(
+        name: .ephemeralStores,
+        targets: [
+            .ephemeralStores
+        ]
+    )
+    
     static let fetcher = library(
         name: .fetcher,
         targets: [
@@ -622,10 +648,24 @@ private extension Product {
         ]
     )
     
+    static let genericLoader = library(
+        name: .genericLoader,
+        targets: [
+            .genericLoader
+        ]
+    )
+    
     static let keyChainStore = library(
         name: .keyChainStore,
         targets: [
             .keyChainStore
+        ]
+    )
+    
+    static let serialComponents = library(
+        name: .serialComponents,
+        targets: [
+            .serialComponents
         ]
     )
     
@@ -1127,7 +1167,44 @@ private extension Target {
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
     
+    static let collateralLoanLanding = target(
+        name: .collateralLoanLanding,
+        dependencies: [
+            .remoteServices,
+            .sharedConfigs
+        ],
+        path: "Sources/Landing/\(String.collateralLoanLanding)"
+    )
+    
+    static let collateralLoanLandingTests = testTarget(
+        name: .collateralLoanLandingTests,
+        dependencies: [
+            .collateralLoanLanding,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanLandingTests)"
+    )
+    
     // MARK: - Infra
+    
+    static let ephemeralStores = target(
+        name: .ephemeralStores,
+        dependencies: [
+            .foraTools,
+            .genericLoader,
+        ],
+        path: "Sources/Infra/\(String.ephemeralStores)"
+    )
+    static let ephemeralStoresTests = testTarget(
+        name: .ephemeralStoresTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+        ],
+        path: "Tests/Infra/\(String.ephemeralStoresTests)"
+    )
     
     static let fetcher = target(
         name: .fetcher,
@@ -1144,6 +1221,21 @@ private extension Target {
         path: "Tests/Infra/\(String.fetcherTests)"
     )
     
+    static let genericLoader = target(
+        name: .genericLoader,
+        path: "Sources/Infra/\(String.genericLoader)"
+    )
+    static let genericLoaderTests = testTarget(
+        name: .genericLoaderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .genericLoader,
+        ],
+        path: "Tests/Infra/\(String.genericLoaderTests)"
+    )
+    
     static let keyChainStore = target(
         name: .keyChainStore,
         path: "Sources/Infra/\(String.keyChainStore)"
@@ -1157,6 +1249,27 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    static let serialComponents = target(
+        name: .serialComponents,
+        dependencies: [
+            .foraTools,
+        ],
+        path: "Sources/Infra/\(String.serialComponents)"
+    )
+    static let serialComponentsTests = testTarget(
+        name: .serialComponentsTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+            .foraTools,
+            .genericLoader,
+            .serialComponents,
+        ],
+        path: "Tests/Infra/\(String.serialComponentsTests)"
     )
     
     // MARK: - Payments
@@ -1688,6 +1801,9 @@ private extension Target {
     
     static let cvvPINServices = target(
         name: .cvvPINServices,
+        dependencies: [
+            .genericLoader
+        ],
         path: "Sources/Services/\(String.cvvPINServices)"
     )
     static let cvvPINServicesTests = testTarget(
@@ -2658,9 +2774,13 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .ephemeralStores,
+            .fetcher,
             .foraTools,
+            .genericLoader,
             .genericRemoteService,
             .rxViewModel,
+            .serialComponents,
         ]
     )
     
@@ -2755,6 +2875,10 @@ private extension Target.Dependency {
     )
     static let landingUIComponent = byName(
         name: .landingUIComponent
+    )
+    
+    static let collateralLoanLanding = byName(
+        name: .collateralLoanLanding
     )
     
     static let serverAgent = byName(
@@ -2925,12 +3049,24 @@ private extension Target.Dependency {
     
     // MARK: - Infra
     
+    static let ephemeralStores = byName(
+        name: .ephemeralStores
+    )
+    
     static let fetcher = byName(
         name: .fetcher
     )
     
+    static let genericLoader = byName(
+        name: .genericLoader
+    )
+    
     static let keyChainStore = byName(
         name: .keyChainStore
+    )
+    
+    static let serialComponents = byName(
+        name: .serialComponents
     )
     
     // MARK: - Payments
@@ -3127,10 +3263,15 @@ private extension String {
     // MARK: - Landing
     
     static let codableLanding = "CodableLanding"
+    
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"
+    
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
+    
+    static let collateralLoanLanding = "CollateralLoanLanding"
+    static let collateralLoanLandingTests = "CollateralLoanLandingTests"
     
     // MARK: - UI
     
@@ -3252,11 +3393,20 @@ private extension String {
     
     // MARK: - Infra
     
+    static let ephemeralStores = "EphemeralStores"
+    static let ephemeralStoresTests = "EphemeralStoresTests"
+    
     static let fetcher = "Fetcher"
     static let fetcherTests = "FetcherTests"
     
+    static let genericLoader = "GenericLoader"
+    static let genericLoaderTests = "GenericLoaderTests"
+    
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
+    
+    static let serialComponents = "SerialComponents"
+    static let serialComponentsTests = "SerialComponentsTests"
     
     // MARK: - Payments
     

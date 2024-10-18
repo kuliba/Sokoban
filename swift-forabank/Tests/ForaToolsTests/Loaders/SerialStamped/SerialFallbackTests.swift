@@ -68,14 +68,13 @@ final class SerialFallbackTests: XCTestCase {
     
     // MARK: - non-nil serial, primary failure - deliver secondary result
     
-    func test_shouldDeliverSecondaryFailureOnPrimaryFailureSecondaryFailure() {
+    func test_shouldDeliverNilOnPrimaryFailureSecondaryFailure() {
         
-        let (primaryFailure, secondaryFailure) = (makeFailure(), makeFailure())
         let (sut, primary, secondary) = makeSUT(serial: anyMessage())
         
         expect(sut, toDeliver: .none) {
             
-            primary.complete(with: .failure(primaryFailure))
+            primary.complete(with: .failure(makeFailure()))
             secondary.complete(with: .none)
         }
     }
@@ -160,10 +159,9 @@ final class SerialFallbackTests: XCTestCase {
     
     // MARK: - same serial: ignore primary result
     
-    func test_shouldDeliverFailureOnSecondaryFailureSameSerial() {
+    func test_shouldDeliverNilOnSecondaryFailureSameSerial() {
         
         let serial = anyMessage()
-        let failure = makeFailure()
         let (sut, primary, secondary) = makeSUT(serial: serial)
         
         expect(sut, toDeliver: .none) {
@@ -219,7 +217,7 @@ final class SerialFallbackTests: XCTestCase {
         let exp = expectation(description: "completion should not complete")
         exp.isInverted = true
         
-        sut? { _ in exp.fulfill() }
+        sut?(payload: makePayload()) { _ in exp.fulfill() }
         sut = nil
         primary.complete(with: makeSuccess(makeItems(count: 100)))
         
@@ -229,8 +227,8 @@ final class SerialFallbackTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Serial = String
-    private typealias SUT = SerialFallback<Serial, Item, Failure>
-    private typealias Primary = Spy<Serial?, SUT.PrimaryResult>
+    private typealias SUT = SerialFallback<Payload, Serial, Item, Failure>
+    private typealias Primary = Spy<Payload, SUT.PrimaryResult>
     private typealias Secondary = Spy<Void, [Item]?>
     
     private func makeSUT(
@@ -245,7 +243,7 @@ final class SerialFallbackTests: XCTestCase {
         let primary = Primary()
         let secondary = Secondary()
         let sut = SUT(
-            getSerial: { serial },
+            getSerial: { _ in serial },
             primary: primary.process(_:completion:),
             secondary: secondary.process(completion:)
         )
@@ -288,6 +286,18 @@ final class SerialFallbackTests: XCTestCase {
         return .init(value: value)
     }
     
+    private struct Payload: Equatable {
+        
+        let value: String
+    }
+    
+    private func makePayload(
+        _ value: String = anyMessage()
+    ) -> Payload {
+        
+        return .init(value: value)
+    }
+    
     private func makeSuccess(
         _ items: [Item],
         _ serial: Serial = anyMessage()
@@ -298,6 +308,7 @@ final class SerialFallbackTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
+        with payload: Payload? = nil,
         toDeliver expectedResult: [Item]?,
         on action: () -> Void,
         file: StaticString = #file,
@@ -305,7 +316,8 @@ final class SerialFallbackTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut {
+        sut(payload: payload ?? makePayload()) {
+            
             XCTAssertNoDiff($0, expectedResult, "Expected \(String(describing: expectedResult)), but got \(String(describing: $0)) instead.", file: file, line: line)
             exp.fulfill()
         }

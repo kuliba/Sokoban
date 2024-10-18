@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 /// A custom button that triggers a full-screen cover when tapped.
 ///

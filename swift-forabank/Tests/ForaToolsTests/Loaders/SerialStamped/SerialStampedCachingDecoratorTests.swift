@@ -131,7 +131,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         XCTAssertNotEqual(oldSerial, newSerial)
     }
     
-    func test_decorated_shouldDeliverLoadedOnDifferentLoadedSerialCacheFailure() {
+    func test_decorated_shouldDeliverLoadedOnDifferentLoadedSerial() {
         
         let (oldSerial, newSerial) = (anyMessage(), anyMessage())
         let response = makeLoadResponse(serial: newSerial)
@@ -140,20 +140,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
         expect(sut, with: oldSerial, toDeliver: .success(response)) {
             
             loadSpy.complete(with: .success(response))
-            cacheSpy.complete(with: .failure(anyError()))
-        }
-    }
-    
-    func test_decorated_shouldDeliverLoadedOnDifferentLoadedSerialCacheSuccess() {
-        
-        let (oldSerial, newSerial) = (anyMessage(), anyMessage())
-        let response = makeLoadResponse(serial: newSerial)
-        let (sut, loadSpy, cacheSpy) = makeSUT()
-        
-        expect(sut, with: oldSerial, toDeliver: .success(response)) {
-            
-            loadSpy.complete(with: .success(response))
-            cacheSpy.complete(with: .success(()))
+            cacheSpy.complete()
         }
     }
     
@@ -162,7 +149,7 @@ final class SerialStampedCachingDecoratorTests: XCTestCase {
     private typealias Serial = String
     private typealias SUT = SerialStampedCachingDecorator<Serial?, Serial, Value>
     private typealias LoadSpy = Spy<Serial?, Result<SerialStamped<String, Value>, Error>>
-    private typealias CacheSpy = Spy<SerialStamped<String, Value>, Result<Void, Error>>
+    private typealias CacheSpy = Spy<SerialStamped<String, Value>, Void>
     
     private func makeSUT(
         file: StaticString = #file,

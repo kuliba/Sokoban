@@ -621,7 +621,6 @@ private extension CodableLanding.CodableCarouselWithTabs {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }
@@ -667,7 +666,6 @@ private extension CodableLanding.CodableCarouselWithDots {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }

@@ -61,7 +61,9 @@ private extension ResponseMapper._Latest._Service {
     
     var service: ResponseMapper.LatestPayment.Service? {
         
-        guard let puref else { return nil }
+        guard let puref,
+              let type = type?.type
+        else { return nil }
         
         return .init(
             additionalItems: (additionalList ?? []).map(\.item),
@@ -76,7 +78,7 @@ private extension ResponseMapper._Latest._Service {
             paymentDate: paymentDate,
             paymentFlow: paymentFlow?.flow,
             puref: puref,
-            type: type.type
+            type: type
         )
     }
 }
@@ -191,6 +193,7 @@ private extension ResponseMapper._Latest._PaymentOperationDetailType {
         case .elecsnet:                         return .elecsnet
         case .external:                         return .external
         case .foreignCard:                      return .foreignCard
+        case .golden:                           return .golden
         case .housingAndCommunalService:        return .housingAndCommunalService
         case .interestDeposit:                  return .interestDeposit
         case .internet:                         return .internet
@@ -243,7 +246,7 @@ private extension ResponseMapper._Latest {
         let paymentDate: Date
         let date: Int
         let paymentOperationDetailType: _PaymentOperationDetailType?
-        let type: _LatestType
+        let type: _LatestType?
         let currencyAmount: String?
         let puref: String?
         let md5hash: String?
@@ -347,6 +350,7 @@ private extension ResponseMapper._Latest {
         case elecsnet = "ELECSNET"
         case external = "EXTERNAL"
         case foreignCard = "FOREIGN_CARD"
+        case golden = "GOLDEN_PAYMENT"
         case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
         case interestDeposit = "INTEREST_DEPOSIT"
         case internet = "INTERNET"

@@ -5,20 +5,22 @@
 //  Created by Igor Malyarov on 25.08.2024.
 //
 
+import AnywayPaymentBackend
 import CombineSchedulers
 import ForaTools
 import Foundation
-
-typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+import RemoteServices
 
 final class LoadServiceCategoriesComposer {
     
-    private let getServiceCategoryList: NanoServices.GetServiceCategoryList
+    typealias GetServiceCategoryListDomain = RemoteDomain<String?, RemoteServices.SerialStamped<String, ServiceCategory>, Error, Error>
+    
+    private let getServiceCategoryList: GetServiceCategoryListDomain.Service
     
     init(
         collectionPeriod: DispatchTimeInterval,
         httpClient: HTTPClient,
-        log: @escaping Log,
+        logger: LoggerAgentProtocol,
         backgroundScheduler: AnySchedulerOf<DispatchQueue>
     ) {
 #warning("could be injected by higher level composer")
@@ -27,11 +29,16 @@ final class LoadServiceCategoriesComposer {
             scheduler: backgroundScheduler,
             performRequest: httpClient.performRequest(_:completion:)
         )
-        let debugNetworkLog = { log(.debug, .network, $0, $1, $2) }
         
-        self.getServiceCategoryList = NanoServices.makeGetServiceCategoryList(
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: collectorBundler,
-            log: debugNetworkLog
+            logger: logger
+        )
+        
+        self.getServiceCategoryList = nanoServiceComposer.compose(
+            createRequest: ForaBank.RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetServiceCategoryListResponse,
+            mapError: ServiceFailure.init
         )
     }
 }
@@ -90,11 +97,9 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
         sut { _ in  }
         
         scheduler.advance(to: .init(.now().advanced(by: .milliseconds(99))))
-        
         XCTAssertEqual(httpClient.callCount, 0)
         
         scheduler.advance(to: .init(.now().advanced(by: .milliseconds(100))))
-        
         XCTAssertEqual(httpClient.callCount, 1)
     }
     
@@ -146,7 +151,7 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
         sut { _ in  }
         
         XCTExpectFailure("Need to find a bug.") {
-         
+            
             XCTAssertEqual(httpClient.callCount, 2)
         }
     }
@@ -191,13 +196,13 @@ final class LoadServiceCategoriesComposerTests: XCTestCase {
         let composer = Composer(
             collectionPeriod: collectionPeriod,
             httpClient: httpClient,
-            log: { _,_,_,_,_ in }, // TODO: add logging tests
+            logger: LoggerSpy(), // TODO: add logging tests
             backgroundScheduler: scheduler.eraseToAnyScheduler()
         )
         let sut = composer.compose()
         
 #warning("restore memory tracking")
-                trackForMemoryLeaks(composer, file: file, line: line)
+        trackForMemoryLeaks(composer, file: file, line: line)
         // trackForMemoryLeaks(httpClient, file: file, line: line)
         // trackForMemoryLeaks(scheduler, file: file, line: line)
         

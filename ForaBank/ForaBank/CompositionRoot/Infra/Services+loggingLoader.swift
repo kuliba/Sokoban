@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GenericLoader
 
 extension Services {
     
@@ -18,7 +19,7 @@ extension Services {
     ) -> any Loader<T> {
         
         LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
+            decoratee: LoaderOf(
                 store: store,
                 currentDate: currentDate
             ),
