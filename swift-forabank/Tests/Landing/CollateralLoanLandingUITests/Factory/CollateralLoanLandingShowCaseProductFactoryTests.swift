@@ -12,8 +12,7 @@ import SwiftUI
 
 final class CollateralLoanLandingShowCaseProductFactoryTests<ContentView, SpinnerView>: XCTestCase
 where ContentView: View,
-      SpinnerView: View
-{
+      SpinnerView: View {
 
     func test_make_shouldMakeBulletsViewWithHeader() {
 
@@ -119,9 +118,9 @@ where ContentView: View,
     // MARK: - Helpers
     
     private typealias SUT = CollateralLoanLandingShowCaseViewFactory<ContentView, SpinnerView>
-    private typealias Product = CollateralLoanLandingShowCaseUIModel.Product
+    private typealias Product = CollateralLoanLandingShowCaseData.Product
     private typealias Theme = CollateralLoanLandingShowCaseTheme
-    private typealias ModelTheme = CollateralLoanLandingShowCaseUIModel.Product.Theme
+    private typealias ModelTheme = CollateralLoanLandingShowCaseData.Product.Theme
     
     private func makeSUT() -> SUT {
         .init(
@@ -131,14 +130,14 @@ where ContentView: View,
     }
 }
 
-fileprivate extension CollateralLoanLandingShowCaseUIModel {
+fileprivate extension CollateralLoanLandingShowCaseData {
 
     static let stub = Self(
         products: [Product](repeating: .makeStub(), count: .random(in: 0..<10))
     )
 }
 
-fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
+fileprivate extension CollateralLoanLandingShowCaseData.Product {
     
     static func makeStub(
         theme: Theme = .random,
@@ -148,7 +147,7 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
         featuresHeader: String = anyMessage()
     ) -> Self {
         
-        typealias List = CollateralLoanLandingShowCaseUIModel.Product.Features.List
+        typealias List = CollateralLoanLandingShowCaseData.Product.Features.List
         
         let list = [List](repeating: .init(bullet: .random(), text: anyMessage()), count: .random(in: 0..<10))
         
@@ -167,7 +166,7 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
     }
 }
 
-fileprivate extension CollateralLoanLandingShowCaseUIModel.Product.KeyMarketingParams {
+fileprivate extension CollateralLoanLandingShowCaseData.Product.KeyMarketingParams {
 
     static func makeAny() -> Self {
         .init(
@@ -178,7 +177,7 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product.KeyMarketingP
     }
 }
 
-fileprivate extension CollateralLoanLandingShowCaseUIModel.Product.Theme {
+fileprivate extension CollateralLoanLandingShowCaseData.Product.Theme {
     
     static var random: Self {
         

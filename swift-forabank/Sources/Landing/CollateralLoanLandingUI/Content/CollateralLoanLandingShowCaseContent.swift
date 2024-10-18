@@ -7,27 +7,27 @@
 
 import Foundation
 
-public final class CollateralLoanLandingShowCaseContent {
-
-    enum ViewState {
-
-        case content
-        case spinner
-    }
-    
-    let model: Model
-    
+public final class CollateralLoanLandingShowCaseContent: ObservableObject {
+        
     @Published var viewState = ViewState.spinner
     
+    let data: ShowCaseData
+
     init(
-        model: Model
+        data: ShowCaseData
     ) {
         
-        self.model = model
+        self.data = data
     }
 }
 
 extension CollateralLoanLandingShowCaseContent {
-    
-    typealias Model = CollateralLoanLandingShowCaseUIModel
+
+    enum ViewState {
+        
+        case content
+        case spinner
+    }
+
+    typealias ShowCaseData = CollateralLoanLandingShowCaseData
 }

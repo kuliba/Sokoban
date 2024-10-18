@@ -7,7 +7,7 @@
 
 extension CollateralLoanLandingShowCaseViewFactory {
 
-    func makeTermsView(with model: CollateralLoanLandingShowCaseUIModel.Product)
+    func makeTermsView(with model: CollateralLoanLandingShowCaseData.Product)
         -> CollateralLoanLandingShowCaseProductTermsView {
 
             .init(

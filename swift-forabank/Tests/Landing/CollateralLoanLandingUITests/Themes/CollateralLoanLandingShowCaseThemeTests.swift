@@ -26,7 +26,7 @@ final class CollateralLoanLandingShowCaseThemeTests: XCTestCase {
     }
     
     private typealias Theme = CollateralLoanLandingShowCaseTheme
-    private typealias ModelTheme = CollateralLoanLandingShowCaseUIModel.Product.Theme
+    private typealias ModelTheme = CollateralLoanLandingShowCaseData.Product.Theme
     
     private func assert(
         _ receivedTheme: Theme,
@@ -36,6 +36,6 @@ final class CollateralLoanLandingShowCaseThemeTests: XCTestCase {
     ) {
         
         let theme = modelTheme.map()
-        XCTAssertNoDiff(theme, receivedTheme, file: file, line: line)
+        XCTAssertNoDiff(receivedTheme, theme, file: file, line: line)
     }
 }

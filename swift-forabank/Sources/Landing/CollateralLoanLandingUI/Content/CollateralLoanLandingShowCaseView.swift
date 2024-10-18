@@ -9,10 +9,9 @@ import SwiftUI
 
 struct CollateralLoanLandingShowCaseView<SpinnerView, ContentView>: View
 where SpinnerView: View,
-      ContentView: View
-{
+      ContentView: View {
     
-    private var content: Content
+    @ObservedObject private(set) var content: Content
     
     @State var isSpinnerShowing = true
     
@@ -22,7 +21,6 @@ where SpinnerView: View,
         content: Content,
         factory: Factory
     ) {
-        
         self.content = content
         self.factory = factory
     }
@@ -30,9 +28,11 @@ where SpinnerView: View,
     public var body: some View {
         
         switch content.viewState {
+            
         case .content:
             ScrollView(showsIndicators: false) {
-                ForEach(content.model.products, id: \.landingId) {
+
+                ForEach(content.data.products, id: \.landingId) {
                     factory.makeView(with: $0)
                 }
             }

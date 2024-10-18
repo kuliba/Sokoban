@@ -17,17 +17,25 @@ struct CollateralLoanLandingShowCaseProductBulletsView: View {
     var body: some View {
         
         Group {
-            header.map {
-                Text($0)
-                    .font(config.fonts.body)
-                    .foregroundColor(theme.foregroundColor)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, config.paddings.top)
-            }
-            CollateralLoanLandingShowCaseBulletListView(listItems: bulletsData, theme: theme, config: config)
+            
+            headerView
+            ListView(listItems: bulletsData, theme: theme, config: config)
         }
         .padding(.leading, config.paddings.outer.leading)
         .padding(.trailing, config.paddings.outer.trailing)
+    }
+    
+    @ViewBuilder
+    var headerView: some View {
+
+        header.map {
+
+            Text($0)
+                .font(config.fonts.body)
+                .foregroundColor(theme.foregroundColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, config.paddings.top)
+        }
     }
 }
 
@@ -35,4 +43,5 @@ extension CollateralLoanLandingShowCaseProductBulletsView {
 
     typealias Config = CollateralLoanLandingShowCaseViewConfig
     typealias Theme = CollateralLoanLandingShowCaseTheme
+    typealias ListView = CollateralLoanLandingShowCaseBulletListView
 }

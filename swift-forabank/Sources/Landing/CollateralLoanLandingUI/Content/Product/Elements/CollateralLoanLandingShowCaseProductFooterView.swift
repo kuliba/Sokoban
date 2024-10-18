@@ -15,7 +15,9 @@ struct CollateralLoanLandingShowCaseProductFooterView: View {
     var body: some View {
 
         HStack(spacing: 4) {
+            
             HStack(spacing: 12) {
+
                 Image(systemName: "info.circle")
                     .resizable()
                     .frame(width: 24, height: 24)
@@ -25,6 +27,7 @@ struct CollateralLoanLandingShowCaseProductFooterView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             
             HStack {
+
                 Text("Получить")
                     .font(config.fonts.body)
                     .foregroundColor(theme.foregroundColor)

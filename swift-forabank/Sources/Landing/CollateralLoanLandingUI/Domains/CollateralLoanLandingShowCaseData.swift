@@ -5,7 +5,7 @@
 //  Created by Valentin Ozerov on 16.10.2024.
 //
 
-public struct CollateralLoanLandingShowCaseUIModel {
+public struct CollateralLoanLandingShowCaseData {
 
     public let products: [Product]
     
@@ -39,7 +39,6 @@ public struct CollateralLoanLandingShowCaseUIModel {
             keyMarketingParams: KeyMarketingParams,
             features: Features
         ) {
-            
             self.theme = theme
             self.name = name
             self.terms = terms
@@ -89,11 +88,14 @@ public struct CollateralLoanLandingShowCaseUIModel {
     }
 }
 
-extension CollateralLoanLandingShowCaseUIModel: Equatable {}
+extension CollateralLoanLandingShowCaseData: Equatable {}
 
-extension CollateralLoanLandingShowCaseUIModel.Product.Theme {
+extension CollateralLoanLandingShowCaseData.Product.Theme {
+    
     public func map() -> CollateralLoanLandingShowCaseTheme {
+
         switch self {
+
         case .white:
             return .white
         case .gray:

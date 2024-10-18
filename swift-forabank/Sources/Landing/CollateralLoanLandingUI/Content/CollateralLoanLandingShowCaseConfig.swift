@@ -11,7 +11,6 @@ public struct CollateralLoanLandingShowCaseViewConfig {
     
     public let fonts: Fonts
     public let paddings: Paddings
-
     public let headerView: HeaderView
     public let termsView: TermsView
     public let bulletsView: BulletsView
@@ -27,7 +26,6 @@ public struct CollateralLoanLandingShowCaseViewConfig {
         imageView: ImageView,
         footerView: FooterView
     ) {
-        
         self.fonts = fonts
         self.paddings = paddings
         self.headerView = headerView

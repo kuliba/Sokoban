@@ -16,6 +16,7 @@ struct CollateralLoanLandingShowCaseProductTermsView: View {
     var body: some View {
         
         HStack {
+            
             rate(params.rate)
             Spacer()
             amount(params.amount)
@@ -63,7 +64,7 @@ private extension CollateralLoanLandingShowCaseProductTermsView {
 
 extension CollateralLoanLandingShowCaseProductTermsView {
     
-    typealias Params = CollateralLoanLandingShowCaseUIModel.Product.KeyMarketingParams
+    typealias Params = CollateralLoanLandingShowCaseData.Product.KeyMarketingParams
     typealias Config = CollateralLoanLandingShowCaseViewConfig
     typealias Theme = CollateralLoanLandingShowCaseTheme
 }

@@ -14,12 +14,12 @@ struct CollateralLoanLandingShowCaseProductView: View {
     let bulletsView: BulletsView
     let imageView: ImageView
     let footerView: FooterView
-    
     let theme: Theme
     
     var body: some View {
 
         VStack {
+            
             headerView
             termsView
             bulletsView

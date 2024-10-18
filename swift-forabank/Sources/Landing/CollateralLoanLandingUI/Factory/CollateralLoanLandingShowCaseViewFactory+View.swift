@@ -10,7 +10,7 @@ import SwiftUI
 
 extension CollateralLoanLandingShowCaseViewFactory {
     
-    func makeView(with model: CollateralLoanLandingShowCaseUIModel.Product)
+    func makeView(with model: CollateralLoanLandingShowCaseData.Product)
     -> CollateralLoanLandingShowCaseProductView {
 
         let headerView = makeHeaderView(with: model)
