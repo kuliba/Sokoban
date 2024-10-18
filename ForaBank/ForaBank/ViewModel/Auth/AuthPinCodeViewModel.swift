@@ -119,21 +119,21 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 case .active:
                     
-                    guard clientInformData.isRecieved, isViewDidAppear else { return }
+                    guard clientInformData != nil, isViewDidAppear else { return }
                     
                     withAnimation {
                         self.spinner = nil
                     }
                         
-                    if !self.model.clientInformStatus.isShowNotAuthorized,
-                       let message = clientInformData.data?.notAuthorized  {
-                       
-                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(message: message))
-                    
-                    } else {
-                    
-                        tryAutoEvaluateSensor()
-                    }
+//                    if !self.model.clientInformStatus.isShowNotAuthorized,
+//                       let message = clientInformData.data?.notAuthorized  {
+//                       
+//                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(message: message))
+//                    
+//                    } else {
+//                    
+//                        tryAutoEvaluateSensor()
+//                    }
                     
                 default:
                     withAnimation {

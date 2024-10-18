@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 extension AuthLoginViewModel {
     
@@ -36,16 +37,18 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
+            clientInformMessage: Empty()
+            #warning("fix and update")
+//            clientInformMessage: clientInform
+//                .filter { [self] _ in
+//                    
+//                    !clientInformStatus.isShowNotAuthorized
+//                }
+//                .compactMap(\.data?.notAuthorized)
+//                .handleEvents(receiveOutput: { [self] _ in
+//                    
+//                    clientInformStatus.isShowNotAuthorized = true
+//                })
                 .eraseToAnyPublisher(),
             
             checkClientResponse: action

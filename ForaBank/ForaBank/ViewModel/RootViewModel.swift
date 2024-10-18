@@ -10,6 +10,7 @@ import Foundation
 import PayHub
 import SwiftUI
 import MarketShowcase
+import PlainClientInformBottomSheet
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -483,16 +484,17 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
+            clientInformMessage: Empty()
+//            clientInformMessage: clientInform
+//                .filter { [self] _ in
+//                    
+//                    !clientInformStatus.isShowNotAuthorized
+//                }
+//                .compactMap(\.data?.notAuthorized)
+//                .handleEvents(receiveOutput: { [self] _ in
+//                    
+//                    clientInformStatus.isShowNotAuthorized = true
+//                })
                 .eraseToAnyPublisher(),
             
             checkClientResponse: action
