@@ -5,35 +5,51 @@
 //  Created by Igor Malyarov on 18.10.2024.
 //
 
+import GenericRemoteService
 import SerialComponents
 
 extension LoggingRemoteNanoServiceComposer {
     
-    typealias SerialLoadCompletion<T> = (SerialStamped<String, T>?) -> Void
+    typealias Stamped<T> = SerialStamped<String, T>
+    typealias SerialLoadCompletion<T> = (Stamped<T>?) -> Void
     typealias SerialLoad<T> = (String?, @escaping SerialLoadCompletion<T>) -> Void
     
     func composeSerial<T, MapResponseError: Error>(
         createRequest: @escaping (String?) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<T, MapResponseError>
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> SerialLoad<T> {
         
-        return { [weak self] serial, completion in
+        return { [self] serial, completion in
+            
+            let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
+            let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
             
             do {
                 let request = try createRequest(serial)
-                self?.httpClient.performRequest(request) {
+                httpClient.performRequest(request) {
                     
                     switch $0 {
-                    case let .failure(failure):
+                    case .failure:
                         completion(.none)
                         
                     case let .success((data, response)):
-                        mapResponse(data, response)
-                        completion(.none)
+                        switch mapResponse(data, response) {
+                        case .failure:
+                            completion(.none)
+                            
+                        case let .success(stamped):
+                            if stamped.serial == serial {
+                                completion(.none)
+                            } else {
+                                completion(stamped)
+                            }
+                        }
                     }
                 }
             } catch {
-                
+                completion(.none)
             }
         }
     }
@@ -81,6 +97,24 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         XCTAssertNoDiff(createRequestSpy.payloads, [serial])
     }
     
+    func test_composeSerial_shouldDeliverFailureOnCreateRequestFailure() {
+        
+        let (sut, _,_) = makeSUT()
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: { _ in throw anyError() },
+            mapResponse: { _,_ in .failure(anyError()) }
+        )
+        let exp = expectation(description: "wait for completion")
+        
+        composed(anyMessage()) {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     func test_composeSerial_shouldCallHTTPClientWithRequest() {
         
         let request = anyURLRequest()
@@ -95,10 +129,30 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         XCTAssertNoDiff(httpClientSpy.requests, [request])
     }
     
+    func test_composeSerial_shouldDeliverFailureOnHTTPClientFailure() {
+        
+        let (sut, httpClientSpy, _) = makeSUT()
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in .failure(anyError()) }
+        )
+        let exp = expectation(description: "wait for completion")
+        
+        composed(anyMessage()) {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        httpClientSpy.complete(with: anyError())
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     func test_composeSerial_shouldNotCallMapResponseOnHTTPClientFailure() {
         
         let (sut, httpClientSpy, _) = makeSUT()
-        let mapResponseSpy = MapResponseSpy(stubs: [.success(makeValue())])
+        let mapResponseSpy = MapResponseSpy(stubs: [.success(makeStamped())])
         let composed: SerialLoad = sut.composeSerial(
             createRequest: { _ in anyURLRequest() },
             mapResponse: mapResponseSpy.call(_:_:)
@@ -118,7 +172,7 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let (data, response) = (anyData(), anyHTTPURLResponse())
         let (sut, httpClientSpy, _) = makeSUT()
-        let mapResponseSpy = MapResponseSpy(stubs: [.success(makeValue())])
+        let mapResponseSpy = MapResponseSpy(stubs: [.success(makeStamped())])
         let composed: SerialLoad = sut.composeSerial(
             createRequest: { _ in anyURLRequest() },
             mapResponse: mapResponseSpy.call(_:_:)
@@ -135,12 +189,75 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         XCTAssertNoDiff(mapResponseSpy.payloads.map(\.1), [response])
     }
     
+    func test_composeSerial_shouldDeliverFailureOnMapResponseFailure() {
+        
+        let (sut, httpClientSpy, _) = makeSUT()
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in .failure(anyError()) }
+        )
+        let exp = expectation(description: "wait for completion")
+        
+        composed(anyMessage()) {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_composeSerial_shouldDeliverFailureOnSameSerial() {
+        
+        let serial = anyMessage()
+        let (sut, httpClientSpy, _) = makeSUT()
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) }
+        )
+        let exp = expectation(description: "wait for completion")
+        
+        composed(serial) {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_composeSerial_shouldDeliverStampedOnDifferentSerial() {
+        
+        let stamped = makeStamped()
+        let (sut, httpClientSpy, _) = makeSUT()
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in self.makeStampedSuccess(stamped) }
+        )
+        let exp = expectation(description: "wait for completion")
+        
+        composed(anyMessage()) {
+            
+            XCTAssertNoDiff($0, stamped)
+            exp.fulfill()
+        }
+        
+        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = LoggingRemoteNanoServiceComposer
     private typealias SerialLoad = SUT.SerialLoad<Value>
     private typealias CreateRequestSpy = CallSpy<String?, URLRequest>
-    private typealias MapResponseSpy = CallSpy<(Data, HTTPURLResponse), Result<Value, Failure>>
+    private typealias Stamped = SUT.Stamped<Value>
+    private typealias MapResponseSpy = CallSpy<(Data, HTTPURLResponse), Result<Stamped, Failure>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -186,5 +303,28 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     ) -> Value {
         
         return .init(value: value)
+    }
+    
+    private func makeStamped(
+        value: Value? = nil,
+        serial: String = anyMessage()
+    ) -> Stamped {
+        
+        return .init(value: value ?? makeValue(), serial: serial)
+    }
+    
+    private func makeStampedSuccess(
+        _ stamped: Stamped
+    ) -> Result<Stamped, Failure> {
+        
+        return .success(stamped)
+    }
+    
+    private func makeStampedSuccess(
+        value: Value? = nil,
+        serial: String = anyMessage()
+    ) -> Result<Stamped, Failure> {
+        
+        return .success(makeStamped(value: value, serial: serial))
     }
 }
