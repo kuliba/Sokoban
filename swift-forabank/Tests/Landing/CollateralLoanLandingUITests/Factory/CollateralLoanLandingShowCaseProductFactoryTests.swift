@@ -134,7 +134,7 @@ where ContentView: View,
 fileprivate extension CollateralLoanLandingShowCaseUIModel {
 
     static let stub = Self(
-        products: [.makeStub(), .makeStub()]
+        products: [Product](repeating: .makeStub(), count: .random(in: 0..<10))
     )
 }
 
@@ -148,20 +148,20 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product {
         featuresHeader: String = anyMessage()
     ) -> Self {
         
-        Self(
+        typealias List = CollateralLoanLandingShowCaseUIModel.Product.Features.List
+        
+        let list = [List](repeating: .init(bullet: .random(), text: anyMessage()), count: .random(in: 0..<10))
+        
+        return .init(
             theme: theme,
             name: title,
-            terms: "https://www.forabank.ru/",
-            landingId: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-            image: anyMessage(),
+            terms: anyMessage(),
+            landingId: anyMessage(),
+            image: image,
             keyMarketingParams: keyMarketingParams,
             features: .init(
                 header: featuresHeader,
-                list: [
-                    .init(bullet: false, text: "Квартиры"),
-                    .init(bullet: false, text: "Жилого дома с земельным участком"),
-                    .init(bullet: true, text: "Нежилого или складского помещения")
-                ]
+                list: list
             )
         )
     }
@@ -182,13 +182,15 @@ fileprivate extension CollateralLoanLandingShowCaseUIModel.Product.Theme {
     
     static var random: Self {
         
-        let randomIndex = Int.random(in: 0...2)
-        return [.gray, .white, .unknown][randomIndex]
+        let values: [Self] = [.gray, .white, .unknown]
+        let randomIndex = Int.random(in: 0..<values.count)
+        return values[randomIndex]
     }
     
     static var validRandom: Self {
 
-        let randomIndex = Int.random(in: 0...1)
-        return [.gray, .white][randomIndex]
+        let values: [Self] = [.gray, .white]
+        let randomIndex = Int.random(in: 0..<values.count)
+        return values[randomIndex]
     }
 }
