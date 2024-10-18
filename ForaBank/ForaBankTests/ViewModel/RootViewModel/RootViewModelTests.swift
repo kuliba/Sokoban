@@ -189,9 +189,72 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertSpy.values, [nil, .newVersion, nil])
     }
     
+    // MARK: - OpenCard
+
+    func test_openCard_shouldSetLinkToOpenCard() {
+        
+        let (sut, model, linkSpy, _) = makeSUT()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.openCard()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .openCard])
+    }
+    
+    // MARK: - OrderSticker
+
+    func test_orderSticker_noCard_shouldSetAlertToNeedOrderCard() {
+        
+        let (sut, _, _, alertSpy) = makeSUT()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil, Alert.ViewModel.needOrderCard(primaryAction: {}).view])
+    }
+    
+    func test_orderSticker_onlyCorporateCard_shouldSetAlertToDisableForCorporateCard() {
+        
+        let (sut, _, _, alertSpy) = makeSUT(
+            product: makeCardProduct(cardType: .individualBusinessman))
+        
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil, Alert.ViewModel.disableForCorporateCard(primaryAction: {}).view])
+    }
+
+    func test_orderSticker_withCard_shouldSetLinkToPaymentSticker() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
+    }
+
+    // MARK: - OpenOrderCard
+
+    func test_openOrderCard_shouldSetLinkToOpenCard() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.openOrderCard()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .openCard])
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(
+        product: ProductData? = nil,
         appVersion: String? = "1",
         file: StaticString = #file,
         line: UInt = #line
@@ -202,6 +265,10 @@ final class RootViewModelTests: XCTestCase {
         alertSpy: ValueSpy<Alert.ViewModel.View?>
     ) {
         let model: Model = .mockWithEmptyExcept()
+        if let product {
+            
+            model.products.value.append(element: product, toValueOfKey: product.productType)
+        }
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
@@ -255,6 +322,61 @@ final class RootViewModelTests: XCTestCase {
         trackForMemoryLeaks(alertSpy, file: file, line: line)
         
         return (sut, model, linkSpy, alertSpy)
+    }
+    
+    private func makeCardProduct(
+        cardType: ProductCardData.CardType,
+        status: ProductCardData.StatusCard = .active
+    ) -> ProductCardData {
+        
+        .init(
+            id: 1,
+            productType: .card,
+            number: "1111",
+            numberMasked: "****",
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: "RUB",
+            mainField: "Card",
+            additionalField: nil,
+            customName: nil,
+            productName: "Card",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: .test,
+            largeDesign: .test,
+            mediumDesign: .test,
+            smallDesign: .test,
+            fontDesignColor: .init(description: ""),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "CARD",
+            validThru: Date(),
+            status: .active,
+            expireDate: "01/01/01",
+            holderName: "Иванов",
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: nil,
+            statusPc: nil,
+            isMain: nil,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            statusCard: status,
+            cardType: cardType,
+            idParent: nil
+        )
     }
 }
 
@@ -369,13 +491,15 @@ private extension RootViewModel.Link {
             return .landing
         case .openCard:
             return .openCard
+        case .paymentSticker:
+            return .paymentSticker
         }
     }
     
     enum Case {
         
         case messages, me2me, userAccount, payments
-        case landing, openCard
+        case landing, openCard, paymentSticker
     }
 }
 

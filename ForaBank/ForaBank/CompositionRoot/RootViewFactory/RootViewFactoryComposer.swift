@@ -57,7 +57,8 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketShowcaseView: makeMarketShowcaseView
+            makeMarketShowcaseView: makeMarketShowcaseView, 
+            makeNavigationOperationView: makeNavigationOperationView
         )
     }
 }
@@ -330,8 +331,8 @@ private extension RootViewFactoryComposer {
                 switch action {
                 case .goToMain:
                     flowEvent(.select(.goToMain))
-                case .order:
-                    print("")
+                default:
+                    break
                 }
             default:break
             }
@@ -371,6 +372,17 @@ private extension RootViewFactoryComposer {
                         }
                 })
         : nil
+    }
+    
+    func makeNavigationOperationView(
+        dismissAll: @escaping() -> Void
+    ) -> some View {
+        
+        RootViewModelFactory.makeNavigationOperationView(
+            httpClient: model.authenticatedHTTPClient(),
+            model: model,
+            dismissAll: dismissAll
+        )()
     }
 }
 

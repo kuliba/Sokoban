@@ -489,7 +489,7 @@ class RootViewModel: ObservableObject, Resetable {
                                         case .goToMain: self.resetLink()
                                             
                                         case .order:
-                                            print("order")
+                                            self.orderSticker()
                                         }
                                     default:
                                         break
@@ -510,25 +510,49 @@ class RootViewModel: ObservableObject, Resetable {
         }
     }
         
+    func openOrderCard() {
+        
+        let authProductsViewModel = AuthProductsViewModel(
+            model,
+            products: model.catalogProducts.value,
+            dismissAction: { [weak self] in
+                self?.resetLink()
+            })
+        
+        link = .openCard(authProductsViewModel)
+    }
+    
     func openCard() {
         
         if model.onlyCorporateCards {
-            
             model.productsOpenAccountURL.absoluteString.openLink()
-
         } else {
-            
-            let authProductsViewModel = AuthProductsViewModel(
-                model,
-                products: model.catalogProducts.value,
-                dismissAction: { [weak self] in
-                    self?.resetLink()
-                })
-            
-            link = .openCard(authProductsViewModel)
+            openOrderCard()
         }
     }
 
+    func orderSticker() {
+        
+        if model.onlyCorporateCards {
+            alert = .disableForCorporateCard { [weak self] in
+                self?.action.send(RootViewModelAction.CloseAlert())
+            }
+        } else {
+            
+            let productsCard = model.products(.card)
+            
+            if productsCard == nil ||
+                productsCard?.contains(where: {
+                    ($0 as? ProductCardData)?.isMain == true }) == false
+            {
+                alert = .needOrderCard(primaryAction: { [weak self] in
+                    self?.openOrderCard()
+                })
+            } else {
+                self.link = .paymentSticker
+            }
+        }
+    }
 }
 
 private extension MarketShowcaseFlowState {
@@ -655,6 +679,7 @@ extension RootViewModel {
         case payments(PaymentsViewModel)
         case landing(LandingWrapperViewModel, Bool)
         case openCard(AuthProductsViewModel)
+        case paymentSticker
     }
     
     enum PaymentsModel {

@@ -164,7 +164,26 @@ struct RootView: View {
             NavigationView {
                 AuthProductsView(viewModel: viewModel)
             }
+            
+        case .paymentSticker:
+            NavigationView {
+             
+                AnyView(
+                    rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
+                )
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: backButton())
+                .foregroundColor(.textSecondary)
+            }
         }
+    }
+    
+    private func backButton() -> some View {
+        Button(
+            action: { viewModel.resetLink() },
+            label: { Image("ic24ChevronLeft") })
     }
 }
 
@@ -1057,7 +1076,8 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _,_  in .none }
+            makeMarketShowcaseView: { _,_  in .none }, 
+            makeNavigationOperationView: { _ in AnyView(Text("")) }
         )
     }
 }
