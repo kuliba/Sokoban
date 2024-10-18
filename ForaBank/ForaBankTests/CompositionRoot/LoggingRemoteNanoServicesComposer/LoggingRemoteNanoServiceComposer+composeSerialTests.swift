@@ -28,6 +28,7 @@ extension LoggingRemoteNanoServiceComposer {
             
             do {
                 let request = try createRequest(serial)
+                
                 httpClient.performRequest(request) {
                     
                     switch $0 {
@@ -100,13 +101,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     func test_composeSerial_shouldDeliverFailureOnCreateRequestFailure() {
         
         let (sut, _,_) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in throw anyError() },
-            mapResponse: { _,_ in .failure(anyError()) }
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in throw anyError() },
+            mapResponse: { _,_ in .failure(self.makeFailure()) },
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: ()
@@ -130,13 +129,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     func test_composeSerial_shouldDeliverFailureOnHTTPClientFailure() {
         
         let (sut, httpClientSpy, _) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in .failure(anyError()) }
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in .failure(self.makeFailure()) },
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: anyError())
@@ -147,13 +144,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let (sut, httpClientSpy, _) = makeSUT()
         let mapResponseSpy = MapResponseSpy(stubs: [.success(makeStamped())])
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: mapResponseSpy.call(_:_:)
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: mapResponseSpy.call(_:_:),
             with: anyMessage(),
             on: httpClientSpy.complete(with: anyError())
         )
@@ -166,13 +161,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         let (data, response) = (anyData(), anyHTTPURLResponse())
         let (sut, httpClientSpy, _) = makeSUT()
         let mapResponseSpy = MapResponseSpy(stubs: [.success(makeStamped())])
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: mapResponseSpy.call(_:_:)
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: mapResponseSpy.call(_:_:),
             with: anyMessage(),
             on: httpClientSpy.complete(with: (data, response))
         )
@@ -184,13 +177,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     func test_composeSerial_shouldDeliverFailureOnMapResponseFailure() {
         
         let (sut, httpClientSpy, _) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in .failure(anyError()) }
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in .failure(self.makeFailure()) },
             with: anyMessage(),
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -201,13 +192,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let serial = anyMessage()
         let (sut, httpClientSpy, _) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) }
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) },
             with: serial,
             assert: { XCTAssertNil($0) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -218,13 +207,11 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
         
         let stamped = makeStamped()
         let (sut, httpClientSpy, _) = makeSUT()
-        let composed: SerialLoad = sut.composeSerial(
-            createRequest: { _ in anyURLRequest() },
-            mapResponse: { _,_ in self.makeStampedSuccess(stamped) }
-        )
         
         expect(
-            load: composed,
+            sut,
+            createRequest: { _ in anyURLRequest() },
+            mapResponse: { _,_ in self.makeStampedSuccess(stamped) },
             with: anyMessage(),
             assert: { XCTAssertNoDiff($0, stamped) },
             on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
@@ -309,15 +296,21 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     }
     
     private func expect(
-        load: SerialLoad,
+        _ sut: SUT,
+        createRequest: @escaping (String?) throws -> URLRequest,
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped, Failure>,
         with serial: String? = anyMessage(),
         assert: @escaping (Stamped?) -> Void = { _ in },
         on action: @autoclosure () -> Void,
         timeout: TimeInterval = 1
     ) {
+        let composed: SerialLoad = sut.composeSerial(
+            createRequest: createRequest,
+            mapResponse: mapResponse
+        )
         let exp = expectation(description: "wait for completion")
         
-        load(serial) {
+        composed(serial) {
             
             assert($0)
             exp.fulfill()
