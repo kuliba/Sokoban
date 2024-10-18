@@ -151,12 +151,8 @@ struct RootView: View {
             
         case let .landing(viewModel, needIgnoringSafeArea):
             NavigationView {
-                if needIgnoringSafeArea {
-                    LandingWrapperView(viewModel: viewModel)
-                        .edgesIgnoringSafeArea(.bottom)
-                } else {
-                    LandingWrapperView(viewModel: viewModel)
-                }
+                LandingWrapperView(viewModel: viewModel)
+                    .modifier(IgnoringSafeArea(needIgnoringSafeArea, .bottom))
             }
             .accentColor(.textSecondary)
                         
@@ -1084,5 +1080,27 @@ private extension RootViewFactory {
             makeMarketShowcaseView: { _,_  in .none }, 
             makeNavigationOperationView: { _ in AnyView(Text("")) }
         )
+    }
+}
+
+private struct IgnoringSafeArea: ViewModifier {
+    
+    let needIgnoringSafeArea: Bool
+    let edgeSet: Edge.Set
+    
+    init(
+        _ needIgnoringSafeArea: Bool,
+        _ edgeSet: Edge.Set
+    ) {
+        self.needIgnoringSafeArea = needIgnoringSafeArea
+        self.edgeSet = edgeSet
+    }
+        
+    func body(content: Content) -> some View {
+        
+        if needIgnoringSafeArea {
+            content
+                .edgesIgnoringSafeArea(edgeSet)
+        } else { content }
     }
 }
