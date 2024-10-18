@@ -85,3 +85,62 @@ extension Scheduler {
         self.schedule { work(completion) }
     }
 }
+
+extension Scheduler {
+    
+    /// Returns a new closure that schedules the original work with a payload and a response.
+    ///
+    /// - Parameter work: The original work closure accepting a payload and a completion handler with a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Payload, Response>(
+        _ work: @escaping WorkWithPayloadAndResponse<Payload, Response>
+    ) -> WorkWithPayloadAndResponse<Payload, Response> {
+        
+        return { payload, completion in
+            
+            self.schedule { work(payload, completion) }
+        }
+    }
+    
+    /// Returns a new closure that schedules the original work with a payload and no response.
+    ///
+    /// - Parameter work: The original work closure accepting a payload and a completion handler without a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Payload>(
+        _ work: @escaping WorkWithPayload<Payload>
+    ) -> WorkWithPayload<Payload> {
+        
+        return { payload, completion in
+            
+            self.schedule { work(payload, completion) }
+        }
+    }
+    
+    /// Returns a new closure that schedules the original work without a payload but with a response.
+    ///
+    /// - Parameter work: The original work closure accepting a completion handler with a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Response>(
+        _ work: @escaping WorkWithResponse<Response>
+    ) -> WorkWithResponse<Response> {
+        
+        return { completion in
+            
+            self.schedule { work(completion) }
+        }
+    }
+    
+    /// Returns a new closure that schedules the original work without a payload or a response.
+    ///
+    /// - Parameter work: The original work closure accepting a completion handler without a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled(
+        _ work: @escaping WorkWithoutPayloadAndResponse
+    ) -> WorkWithoutPayloadAndResponse {
+        
+        return { completion in
+            
+            self.schedule { work(completion) }
+        }
+    }
+}
