@@ -5,57 +5,6 @@
 //  Created by Igor Malyarov on 18.10.2024.
 //
 
-import GenericRemoteService
-import SerialComponents
-
-extension LoggingRemoteNanoServiceComposer {
-    
-    typealias Stamped<T> = SerialStamped<String, T>
-    typealias SerialLoadCompletion<T> = (Stamped<T>?) -> Void
-    typealias SerialLoad<T> = (String?, @escaping SerialLoadCompletion<T>) -> Void
-    
-    func composeSerial<T, MapResponseError: Error>(
-        createRequest: @escaping (String?) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> SerialLoad<T> {
-        
-        return { [self] serial, completion in
-            
-            let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
-            let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
-            
-            do {
-                let request = try createRequest(serial)
-                
-                httpClient.performRequest(request) {
-                    
-                    switch $0 {
-                    case .failure:
-                        completion(.none)
-                        
-                    case let .success((data, response)):
-                        switch mapResponse(data, response) {
-                        case .failure:
-                            completion(.none)
-                            
-                        case let .success(stamped):
-                            if stamped.serial == serial {
-                                completion(.none)
-                            } else {
-                                completion(stamped)
-                            }
-                        }
-                    }
-                }
-            } catch {
-                completion(.none)
-            }
-        }
-    }
-}
-
 @testable import ForaBank
 import XCTest
 
