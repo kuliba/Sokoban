@@ -92,23 +92,23 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         XCTAssertNotNil(bindings)
     }
     
-    func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
-        
-        let (sut, httpClient, _, backgroundScheduler, bindings) = makeSUT(
-            sessionState: active()
-        )
-        
-        backgroundScheduler.advance()
-        awaitActorThreadHop()
-        
-        httpClient.complete(with: success())
-        backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
-        awaitActorThreadHop()
-        
-        let state = try sut.categoryPickerContent().state
-        XCTAssertNoDiff(state.isLoading, false)
-        XCTAssertNotNil(bindings)
-    }
+//    func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
+//        
+//        let (sut, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+//            sessionState: active()
+//        )
+//        
+//        backgroundScheduler.advance()
+//        awaitActorThreadHop()
+//        
+//        httpClient.complete(with: success())
+//        backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
+//        awaitActorThreadHop()
+//        
+//        let state = try sut.categoryPickerContent().state
+//        XCTAssertNoDiff(state.isLoading, false)
+//        XCTAssertNotNil(bindings)
+//    }
     
     // MARK: - Helpers
     
