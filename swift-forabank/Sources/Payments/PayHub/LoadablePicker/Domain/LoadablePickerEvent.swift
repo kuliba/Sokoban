@@ -8,7 +8,8 @@
 public enum LoadablePickerEvent<Element> {
     
     case load
-    case loaded([Element])
+    case loaded([Element]?)
+    case reload
     case select(Element?)
 }
 

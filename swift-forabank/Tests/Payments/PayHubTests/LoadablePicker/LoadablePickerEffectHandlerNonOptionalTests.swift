@@ -1,5 +1,5 @@
 //
-//  LoadablePickerEffectHandlerTests.swift
+//  LoadablePickerEffectHandlerNonOptionalTests.swift
 //
 //
 //  Created by Igor Malyarov on 20.08.2024.
@@ -8,7 +8,7 @@
 import PayHub
 import XCTest
 
-final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
+final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
     
     // MARK: - init
     
@@ -76,64 +76,6 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         expect(sut, with: .load, toDeliver: .loaded([latest1, latest2])) {
             
             loadSpy.complete(with: [latest1, latest2])
-        }
-    }
-    
-    // MARK: - reload
-    
-    func test_reload_shouldCallLoad() {
-        
-        let (sut, _, reloadSpy) = makeSUT()
-        
-        sut.handleEffect(.reload) { _ in }
-        
-        XCTAssertEqual(reloadSpy.callCount, 1)
-    }
-    
-    func test_reload_shouldNotDeliverResultOnInstanceDeallocation() throws {
-        
-        var sut: SUT?
-        let reloadSpy: LoadSpy
-        (sut, _, reloadSpy) = makeSUT()
-        let exp = expectation(description: "completion should not be called")
-        exp.isInverted = true
-        
-        sut?.handleEffect(.reload) { _ in exp.fulfill() }
-        sut = nil
-        reloadSpy.complete(with: [])
-        
-        wait(for: [exp], timeout: 0.1)
-    }
-    
-    func test_reload_shouldDeliverEmptyOnLoadEmptySuccess() {
-        
-        let (sut, _, reloadSpy) = makeSUT()
-        
-        expect(sut, with: .reload, toDeliver: .loaded([])) {
-            
-            reloadSpy.complete(with: [])
-        }
-    }
-    
-    func test_reload_shouldDeliverOneOnLoadSuccessWithOne() {
-        
-        let latest = makeElement()
-        let (sut, _, reloadSpy) = makeSUT()
-        
-        expect(sut, with: .reload, toDeliver: .loaded([latest])) {
-            
-            reloadSpy.complete(with: [latest])
-        }
-    }
-    
-    func test_reload_shouldDeliverTwoOnLoadSuccessWithTwo() {
-        
-        let (latest1, latest2) = (makeElement(), makeElement())
-        let (sut, _, reloadSpy) = makeSUT()
-        
-        expect(sut, with: .reload, toDeliver: .loaded([latest1, latest2])) {
-            
-            reloadSpy.complete(with: [latest1, latest2])
         }
     }
     

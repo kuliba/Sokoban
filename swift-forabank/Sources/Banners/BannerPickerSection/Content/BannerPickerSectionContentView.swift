@@ -118,10 +118,10 @@ struct BannerPickerSectionContentView_Previews: PreviewProvider {
         _ items: [BannerPickerSectionState<PreviewServiceBanner>.Item],
         _ event: @escaping (BannerPickerSectionEvent<PreviewServiceBanner>) -> Void =  {
             switch $0 {
-            case .load:
+            case .load, .reload:
                 print("load")
             case let .loaded(items):
-                print("loaded \(items.count)")
+                print("loaded \((items ?? []).count)")
             case let .select(item):
                 print("select \(String(describing: item))")
             }
