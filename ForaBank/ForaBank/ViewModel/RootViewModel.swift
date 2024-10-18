@@ -509,28 +509,7 @@ class RootViewModel: ObservableObject, Resetable {
             }
         }
     }
-    
-    func orderCard(
-        _ cardTarif: Int,
-        _ cardType: Int
-    ) {
-        if let catalogProduct = model.catalogProduct(for: .tarif(cardTarif, type: cardType)) {
-            
-            handleShowOrderProductAction(catalogProduct)
-        }
-    }
-
-    func handleShowOrderProductAction(
-        _ productData: CatalogProductData
-    ) {
-        let viewModel = OrderProductView.ViewModel(
-                model,
-                productData: productData
-            )
         
-        link = .init(.orderProduct(viewModel))
-    }
-    
     func openCard() {
         
         if model.onlyCorporateCards {
@@ -675,7 +654,6 @@ extension RootViewModel {
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
         case landing(LandingWrapperViewModel, Bool)
-        case orderProduct(OrderProductView.ViewModel)
         case openCard(AuthProductsViewModel)
     }
     

@@ -159,10 +159,7 @@ struct RootView: View {
                 }
             }
             .accentColor(.textSecondary)
-            
-        case let .orderProduct(viewModel):
-            OrderProductView(viewModel: viewModel)
-            
+                        
         case let .openCard(viewModel):
             NavigationView {
                 AuthProductsView(viewModel: viewModel)
