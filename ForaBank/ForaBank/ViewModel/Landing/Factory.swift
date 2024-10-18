@@ -112,7 +112,6 @@ extension Model {
         let actions = CarouselActions(
             openUrl: { landingActions(.card(.openUrl($0))) },
             goToMain: { landingActions(.card(.goToMain)) },
-            orderSticker: { landingActions(.sticker(.order))}, 
             orderCard: { orderCard() },
             landing: { if let target = $0 { outsideAction(target) } }
         )

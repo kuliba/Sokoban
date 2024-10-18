@@ -11,20 +11,17 @@ public struct CarouselActions {
     
     let openUrl: (String) -> Void
     let goToMain: () -> Void
-    let orderSticker: () -> Void
     let orderCard: () -> Void
     let landing: (String?) -> Void
     
     public init(
         openUrl: @escaping (String) -> Void,
         goToMain: @escaping () -> Void,
-        orderSticker: @escaping () -> Void,
         orderCard: @escaping () -> Void,
         landing: @escaping (String?) -> Void
     ) {
         self.openUrl = openUrl
         self.goToMain = goToMain
-        self.orderSticker = orderSticker
         self.orderCard = orderCard
         self.landing = landing
     }
@@ -60,9 +57,11 @@ extension UILanding.Carousel {
             switch type {
             case .goToMain: return actions.goToMain
                 
-            case .goToOrderSticker: return actions.orderSticker
-                
-            default: return {}
+            default:
+                return {
+                    guard let link else { return {}() }
+                    actions.openUrl(link)
+                }
             }
         } else {
             
