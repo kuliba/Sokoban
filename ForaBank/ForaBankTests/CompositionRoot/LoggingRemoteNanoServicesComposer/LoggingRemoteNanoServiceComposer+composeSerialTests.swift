@@ -104,15 +104,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in throw anyError() },
             mapResponse: { _,_ in .failure(anyError()) }
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            assert: { XCTAssertNil($0) },
+            on: ()
+        )
     }
     
     func test_composeSerial_shouldCallHTTPClientWithRequest() {
@@ -136,17 +134,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: { _,_ in .failure(anyError()) }
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        httpClientSpy.complete(with: anyError())
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            assert: { XCTAssertNil($0) },
+            on: httpClientSpy.complete(with: anyError())
+        )
     }
     
     func test_composeSerial_shouldNotCallMapResponseOnHTTPClientFailure() {
@@ -157,13 +151,12 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: mapResponseSpy.call(_:_:)
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) { _ in exp.fulfill() }
-        
-        httpClientSpy.complete(with: anyError())
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            on: httpClientSpy.complete(with: anyError())
+        )
         
         XCTAssertEqual(mapResponseSpy.callCount, 0)
     }
@@ -177,13 +170,12 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: mapResponseSpy.call(_:_:)
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) { _ in exp.fulfill() }
-        
-        httpClientSpy.complete(with: (data, response))
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            on: httpClientSpy.complete(with: (data, response))
+        )
         
         XCTAssertNoDiff(mapResponseSpy.payloads.map(\.0), [data])
         XCTAssertNoDiff(mapResponseSpy.payloads.map(\.1), [response])
@@ -196,17 +188,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: { _,_ in .failure(anyError()) }
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            assert: { XCTAssertNil($0) },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
     }
     
     func test_composeSerial_shouldDeliverFailureOnSameSerial() {
@@ -217,17 +205,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: { _,_ in self.makeStampedSuccess(serial: serial) }
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(serial) {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: serial,
+            assert: { XCTAssertNil($0) },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
     }
     
     func test_composeSerial_shouldDeliverStampedOnDifferentSerial() {
@@ -238,17 +222,13 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
             createRequest: { _ in anyURLRequest() },
             mapResponse: { _,_ in self.makeStampedSuccess(stamped) }
         )
-        let exp = expectation(description: "wait for completion")
         
-        composed(anyMessage()) {
-            
-            XCTAssertNoDiff($0, stamped)
-            exp.fulfill()
-        }
-        
-        httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
-        
-        wait(for: [exp], timeout: 1)
+        expect(
+            load: composed,
+            with: anyMessage(),
+            assert: { XCTAssertNoDiff($0, stamped) },
+            on: httpClientSpy.complete(with: (anyData(), anyHTTPURLResponse()))
+        )
     }
     
     // MARK: - Helpers
@@ -326,5 +306,25 @@ final class LoggingRemoteNanoServiceComposer_composeSerialTests: XCTestCase {
     ) -> Result<Stamped, Failure> {
         
         return .success(makeStamped(value: value, serial: serial))
+    }
+    
+    private func expect(
+        load: SerialLoad,
+        with serial: String? = anyMessage(),
+        assert: @escaping (Stamped?) -> Void = { _ in },
+        on action: @autoclosure () -> Void,
+        timeout: TimeInterval = 1
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        load(serial) {
+            
+            assert($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
