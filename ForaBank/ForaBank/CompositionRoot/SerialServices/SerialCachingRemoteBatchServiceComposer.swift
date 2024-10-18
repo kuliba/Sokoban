@@ -8,6 +8,7 @@
 import ForaTools
 import Foundation
 import RemoteServices
+import SerialComponents
 
 /// A composer for creating batch services with serial caching remote loaders.
 final class SerialCachingRemoteBatchServiceComposer {
@@ -139,7 +140,7 @@ private extension SerialStampedCachingDecorator {
 
 private extension RemoteServices.SerialStamped {
     
-    var stamped: ForaTools.SerialStamped<Serial, [T]> {
+    var stamped: SerialComponents.SerialStamped<Serial, [T]> {
         
         return .init(value: list, serial: serial)
     }

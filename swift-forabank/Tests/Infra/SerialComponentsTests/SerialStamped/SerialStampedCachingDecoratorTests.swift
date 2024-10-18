@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 10.09.2024.
 //
 
-import ForaTools
+import SerialComponents
 import XCTest
 
 final class SerialStampedCachingDecoratorTests: XCTestCase {
