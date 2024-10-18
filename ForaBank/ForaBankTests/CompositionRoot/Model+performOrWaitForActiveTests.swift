@@ -1,5 +1,5 @@
 //
-//  Model+runOnceWhenAuthorisedTests.swift
+//  Model+performOrWaitForActiveTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 11.10.2024.
@@ -10,17 +10,16 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class Model_runOnceWhenAuthorisedTests: XCTestCase {
+final class Model_performOrWaitForActiveTests: XCTestCase {
     
     func test_shouldExecuteWorkOnActiveSession() {
         
         let exp = expectation(description: "wait for work")
-        let (sut, _, cancellable, scheduler) = makeSUT(
+        let (sut, _, cancellable) = makeSUT(
             sessionState: active(),
             work: exp.fulfill
         )
         
-        scheduler.advance()
         wait(for: [exp], timeout: 0.1)
         XCTAssertNotNil(sut)
         XCTAssertNotNil(cancellable)
@@ -30,12 +29,11 @@ final class Model_runOnceWhenAuthorisedTests: XCTestCase {
         
         let exp = expectation(description: "wait for work")
         exp.isInverted = true
-        let (sut, _, cancellable, scheduler) = makeSUT(
+        let (sut, _, cancellable) = makeSUT(
             sessionState: .inactive,
             work: exp.fulfill
         )
         
-        scheduler.advance()
         wait(for: [exp], timeout: 0.1)
         XCTAssertNotNil(sut)
         XCTAssertNotNil(cancellable)
@@ -44,14 +42,13 @@ final class Model_runOnceWhenAuthorisedTests: XCTestCase {
     func test_shouldExecuteWorkOnceSessionFlipToActiveFromInactive() {
         
         let exp = expectation(description: "wait for work")
-        let (sut, sessionAgent, cancellable, scheduler) = makeSUT(
+        let (sut, sessionAgent, cancellable) = makeSUT(
             sessionState: .inactive,
             work: exp.fulfill
         )
         
         sessionAgent.sessionState.value = active()
         
-        scheduler.advance()
         wait(for: [exp], timeout: 0.1)
         XCTAssertNotNil(sut)
         XCTAssertNotNil(cancellable)
@@ -69,24 +66,19 @@ final class Model_runOnceWhenAuthorisedTests: XCTestCase {
     ) -> (
         sut: SUT,
         sessionAgent: SessionAgentEmptyMock,
-        cancellable: AnyCancellable,
-        scheduler: TestSchedulerOfDispatchQueue
+        cancellable: AnyCancellable
     ) {
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         
         let sut = SUT.mockWithEmptyExcept(sessionAgent: sessionAgent)
-        let scheduler = DispatchQueue.test
-        let cancellable = sut.runOnceWhenAuthorised(
-            work,
-            on: scheduler.eraseToAnyScheduler()
-        )
+        let cancellable = sut.performOrWaitForActive(work)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(sessionAgent, file: file, line: line)
         trackForMemoryLeaks(cancellable, file: file, line: line)
         
-        return (sut, sessionAgent, cancellable, scheduler)
+        return (sut, sessionAgent, cancellable)
     }
     
     private func active() -> SessionState {

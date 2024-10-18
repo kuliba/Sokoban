@@ -31,7 +31,7 @@ private extension ForaBank.ResponseMapper {
     static func mapGetServiceCategoryListResponse(
         data: Data,
         response: HTTPURLResponse
-    ) -> Result<ForaTools.SerialStamped<String, [ServiceCategory]>, Error> {
+    ) -> Result<SerialComponents.SerialStamped<String, [ServiceCategory]>, Error> {
         
         RemoteServices.ResponseMapper
             .mapGetServiceCategoryListResponse(data, response)

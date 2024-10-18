@@ -37,7 +37,7 @@ public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> 
     public typealias ContentDomain = Domain.ContentDomain
     public typealias FlowDomain = Domain.FlowDomain
     
-    public typealias Load = (@escaping ([Category]) -> Void) -> Void
+    public typealias Load = (@escaping ([Category]?) -> Void) -> Void
     
     public typealias MicroServices = FlowDomain.MicroServices
 }
