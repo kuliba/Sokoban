@@ -149,12 +149,16 @@ struct RootView: View {
                 PaymentsView(viewModel: paymentsViewModel)
             }
             
-        case let .landing(viewModel):
+        case let .landing(viewModel, needIgnoringSafeArea):
             NavigationView {
-                LandingWrapperView(viewModel: viewModel)
+                if needIgnoringSafeArea {
+                    LandingWrapperView(viewModel: viewModel)
+                        .edgesIgnoringSafeArea(.bottom)
+                } else {
+                    LandingWrapperView(viewModel: viewModel)
+                }
             }
             .accentColor(.textSecondary)
-
             
         case let .orderProduct(viewModel):
             OrderProductView(viewModel: viewModel)

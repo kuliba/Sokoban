@@ -323,15 +323,17 @@ private extension RootViewFactoryComposer {
                     flowEvent(.select(.goToMain))
                 case let .openUrl(url):
                     flowEvent(.select(.openURL(url)))
-                case let .order(cardTarif: cardTarif, cardType: cardType):
-                    flowEvent(.select(.orderCard))
+                default:
+                    break
                 }
-            case let .sticker(action): // ???
-                break
-            case let .bannerAction(action): // ???
-                break
-            case .listVerticalRoundImageAction: // ???
-                break
+            case let .sticker(action):
+                switch action {
+                case .goToMain:
+                    flowEvent(.select(.goToMain))
+                case .order:
+                    print("")
+                }
+            default:break
             }
             }, 
             contentActions: contentEvent,

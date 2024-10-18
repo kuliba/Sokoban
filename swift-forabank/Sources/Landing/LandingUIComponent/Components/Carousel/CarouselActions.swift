@@ -39,7 +39,7 @@ extension UILanding.Carousel {
     ) -> () -> Void {
         
         switch(itemAction, link) {
-        case let (.none, .some(link)): 
+        case let (.none, .some(link)):
             return { actions.openUrl(link) }
             
         case let (.some(action), _):
@@ -59,24 +59,26 @@ extension UILanding.Carousel {
         if let type = LandingActionType(rawValue: itemAction.type) {
             switch type {
             case .goToMain: return actions.goToMain
-            case .orderCard: return {}
+                
             case .goToOrderSticker: return actions.orderSticker
+                
+            default: return {}
             }
         } else {
             
             switch itemAction.type {
             case "LANDING":
                 return { actions.landing(itemAction.target) }
+                
             case "cardOrderList":
                 return { actions.orderCard() }
                 
-            default: 
+            default:
                 return {
                     guard let link else { return {}() }
                     actions.openUrl(link)
                 }
             }
         }
-        
     }
 }

@@ -472,7 +472,7 @@ class RootViewModel: ObservableObject, Resetable {
 
                             let viewModel = model.landingViewModelFactory(
                                 result: landing,
-                                config: .default,
+                                config: type == "abroadSticker" ? .stickerDefault : .default,
                                 landingActions: {
                                     switch $0 {
                                         
@@ -481,12 +481,16 @@ class RootViewModel: ObservableObject, Resetable {
                                         case .goToMain: self.resetLink()
                                             
                                         case let .openUrl(linkURL): linkURL.openLink()
-                                            
-                                        case .order(cardTarif: let cardTarif, cardType: let cardType):
-                                            self.orderCard(cardTarif, cardType)
+                                        
+                                        default: break
                                         }
-                                    case .sticker(_):
-                                        break
+                                    case let .sticker(action):
+                                        switch action {
+                                        case .goToMain: self.resetLink()
+                                            
+                                        case .order:
+                                            print("order")
+                                        }
                                     default:
                                         break
                                     }
@@ -496,7 +500,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 orderCard: openCard
                             )
                             
-                            link = .landing(viewModel)
+                            link = .landing(viewModel, type == "abroadSticker")
                         }
                         
                     case .failure:
@@ -671,7 +675,7 @@ extension RootViewModel {
         case me2me(RequestMeToMeModel)
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
-        case landing(LandingWrapperViewModel)
+        case landing(LandingWrapperViewModel, Bool)
         case orderProduct(OrderProductView.ViewModel)
         case openCard(AuthProductsViewModel)
     }
