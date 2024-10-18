@@ -104,7 +104,6 @@ extension Model {
         result: Landing,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void,
-        contentActions: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         outsideAction: @escaping (String) -> Void,
         orderCard: @escaping () -> Void
     ) -> LandingWrapperViewModel {

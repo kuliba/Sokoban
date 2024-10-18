@@ -336,8 +336,7 @@ private extension RootViewFactoryComposer {
             default:break
             }
             }, 
-            contentActions: contentEvent,
-            outsideAction: { flowEvent(.select(.landing($0))) }, 
+            outsideAction: { flowEvent(.select(.landing($0))) },
             orderCard: orderCard
         )
         

@@ -495,7 +495,6 @@ class RootViewModel: ObservableObject, Resetable {
                                         break
                                     }
                                 },
-                                contentActions: { _ in },
                                 outsideAction: {_ in }, 
                                 orderCard: openCard
                             )

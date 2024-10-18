@@ -1799,7 +1799,6 @@ extension MainViewModel {
                         result: landing,
                         config: .default,
                         landingActions: landingActions(for:),
-                        contentActions: {_ in },
                         outsideAction: {_ in }, 
                         orderCard: {})
                     
