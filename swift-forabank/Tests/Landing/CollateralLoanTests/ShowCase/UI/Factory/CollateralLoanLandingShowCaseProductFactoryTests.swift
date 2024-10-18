@@ -8,7 +8,7 @@
 import XCTest
 import SwiftUI
 
-@testable import CollateralLoanLandingUI
+@testable import CollateralLoanLandingShowCaseUI
 
 final class CollateralLoanLandingShowCaseProductFactoryTests<ContentView, SpinnerView>: XCTestCase
 where ContentView: View,

@@ -2969,8 +2969,9 @@
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
-		A79AAED92CB670BA00B5ABE0 /* CollateralLoanLanding in Frameworks */ = {isa = PBXBuildFile; productRef = A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */; };
-		A7B86B0B2CBFEEC100168312 /* CollateralLoanLandingUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7B86B0A2CBFEEC100168312 /* CollateralLoanLandingUI */; };
+		A7B401F62CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */; };
+		A7B401F82CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */; };
+		A7B401FA2CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */; };
 		A7C41FCA2CB5990600EFE68D /* RequestFactory+CollateralLoanLandingShowCaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanLandingShowCaseRequest.swift */; };
 		C1002AC32A2E1E3300BDA817 /* ThreeBounceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */; };
 		C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */; };
@@ -6434,9 +6435,10 @@
 		A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsView.swift; sourceTree = "<group>"; };
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
+		A73961772CC2653A004E99ED /* CollateralLoanLandingShowCaseBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingShowCaseBackend.xctestplan; sourceTree = "<group>"; };
+		A73961782CC26589004E99ED /* CollateralLoanLandingShowCaseUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingShowCaseUI.xctestplan; sourceTree = "<group>"; };
 		A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CollateralLoanLanding.xctestplan; path = ../CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A79AAED72CB64D3200B5ABE0 /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
-		A7B86B0C2CBFFDE700168312 /* CollateralLoanLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingUI.xctestplan; sourceTree = "<group>"; };
 		A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanLandingShowCaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+CollateralLoanLandingShowCaseRequest.swift"; sourceTree = "<group>"; };
 		C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeBounceView.swift; sourceTree = "<group>"; };
 		C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagingSubscriptionViewComponent.swift; sourceTree = "<group>"; };
@@ -7173,12 +7175,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */,
-				A79AAED92CB670BA00B5ABE0 /* CollateralLoanLanding in Frameworks */,
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
 				8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */,
 				EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */,
+				A7B401F62CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
 				2AB9E0B92B371E0C00D36D07 /* PaymentComponents in Frameworks */,
@@ -7188,6 +7190,7 @@
 				2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */,
+				A7B401FA2CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI in Frameworks */,
 				2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */,
 				2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */,
 				2AF720232C74841D00919CAF /* PayHub in Frameworks */,
@@ -7213,7 +7216,6 @@
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
 				2A3599B02ADA816800820369 /* KeyChainStore in Frameworks */,
-				A7B86B0B2CBFEEC100168312 /* CollateralLoanLandingUI in Frameworks */,
 				2A3E48712C8AB878002D035F /* LatestPaymentsBackendV2 in Frameworks */,
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
@@ -7252,6 +7254,7 @@
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
 				838C09602C8DD9E700E894AC /* Banners in Frameworks */,
 				2A566EA52B67830B00359E05 /* UserAccountNavigationComponent in Frameworks */,
+				A7B401F82CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend in Frameworks */,
 				2A6ECBAE2C8AC70C007C44CB /* LatestPaymentsBackendV3 in Frameworks */,
 				2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */,
 				ED4FC621266EA5CD0092B4AB /* Valet in Frameworks */,
@@ -10057,7 +10060,8 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
-				A7B86B0C2CBFFDE700168312 /* CollateralLoanLandingUI.xctestplan */,
+				A73961782CC26589004E99ED /* CollateralLoanLandingShowCaseUI.xctestplan */,
+				A73961772CC2653A004E99ED /* CollateralLoanLandingShowCaseBackend.xctestplan */,
 				2A04BFC62CBE621D002490C5 /* SerialComponents.xctestplan */,
 				2A4074862CBA8A380027D7C3 /* GenericLoader.xctestplan */,
 				2A4074832CBA654B0027D7C3 /* EphemeralStores.xctestplan */,
@@ -18887,9 +18891,10 @@
 				EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */,
 				2A373A392CBA64520057A602 /* EphemeralStores */,
 				2A4074842CBA89CA0027D7C3 /* GenericLoader */,
-				A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */,
 				2A04BFC42CBE61DA002490C5 /* SerialComponents */,
-				A7B86B0A2CBFEEC100168312 /* CollateralLoanLandingUI */,
+				A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */,
+				A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */,
+				A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -28148,13 +28153,17 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MarketShowcase;
 		};
-		A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */ = {
+		A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = CollateralLoanLanding;
+			productName = CollateralLoanLandingDraftBackend;
 		};
-		A7B86B0A2CBFEEC100168312 /* CollateralLoanLandingUI */ = {
+		A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = CollateralLoanLandingUI;
+			productName = CollateralLoanLandingShowCaseBackend;
+		};
+		A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CollateralLoanLandingShowCaseUI;
 		};
 		C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */ = {
 			isa = XCSwiftPackageProductDependency;

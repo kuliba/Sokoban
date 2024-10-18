@@ -7,7 +7,7 @@
 
 import RemoteServices
 import XCTest
-import CollateralLoanLanding
+import CollateralLoanLandingShowCaseBackend
 
 final class RequestFactory_createGetCollateralLoanLandingShowRequestTests: XCTestCase {
     func test_createRequest_shouldSetURLWithOneParameterWithoutSerial() throws {
