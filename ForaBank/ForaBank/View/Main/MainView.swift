@@ -17,6 +17,7 @@ import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
+import PlainClientInformBottomSheet
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -303,8 +304,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openAccount(openAccountViewModel):
             OpenAccountView(viewModel: openAccountViewModel)
             
-        case let .clientInform(clientInformViewModel):
-            ClientInformView(viewModel: clientInformViewModel)
+        case let .clientInform(clientInform):
+            PlainClientInformBottomSheetView(config: .iFora, info: clientInform)
         }
     }
     

@@ -483,6 +483,7 @@ private extension Model {
     
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
+        #warning("rebuild according new response")
         .init(
             clientInformMessage: Empty()
 //            clientInformMessage: clientInform
