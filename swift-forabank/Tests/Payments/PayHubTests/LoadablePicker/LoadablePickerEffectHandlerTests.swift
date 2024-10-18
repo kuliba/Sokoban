@@ -46,6 +46,16 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
         wait(for: [exp], timeout: 0.1)
     }
     
+    func test_load_shouldDeliverNilOnLoadNil() {
+        
+        let (sut, loadPay) = makeSUT()
+        
+        expect(sut, with: .load, toDeliver: .loaded(nil)) {
+            
+            loadPay.complete(with: nil)
+        }
+    }
+    
     func test_load_shouldDeliverEmptyOnLoadEmptySuccess() {
         
         let (sut, loadPay) = makeSUT()
@@ -81,7 +91,7 @@ final class LoadablePickerEffectHandlerTests: LoadablePickerTests {
     // MARK: - Helpers
     
     private typealias SUT = LoadablePickerEffectHandler<Element>
-    private typealias LoadSpy = Spy<Void, [Element]>
+    private typealias LoadSpy = Spy<Void, [Element]?>
     
     private func makeSUT(
         file: StaticString = #file,

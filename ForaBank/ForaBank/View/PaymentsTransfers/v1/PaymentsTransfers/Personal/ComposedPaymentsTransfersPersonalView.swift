@@ -7,6 +7,7 @@
 
 import PayHub
 import PayHubUI
+import RxViewModel
 import SwiftUI
 
 struct ComposedPaymentsTransfersPersonalView<ContentView>: View
@@ -17,7 +18,7 @@ where ContentView: View {
     
     var body: some View {
         
-        PaymentsTransfersPersonalFlowWrapperView(
+        RxWrapperView(
             model: personal.flow,
             makeContentView: {
                 

@@ -24,7 +24,8 @@ public extension MarketShowcaseContentReducer {
         case .load:
             
             if !state.status.isLoading {
-                state.status = .inflight
+                let oldLanding = state.status.oldLanding
+                state.status = .inflight(oldLanding)
                 effect = .load
             }
             
@@ -34,10 +35,12 @@ public extension MarketShowcaseContentReducer {
         case let .failure(failure):
             switch failure {
             case let .alert(message):
-                state.status = .failure(.alert(message))
+                let oldLanding = state.status.oldLanding
+                state.status = .failure(.alert(message), oldLanding)
                 
             case let .informer(informer):
-                state.status = .failure(.informer(informer))
+                let oldLanding = state.status.oldLanding
+                state.status = .failure(.informer(informer), oldLanding)
             }
             
         case let .selectLandingType(type):
