@@ -2166,8 +2166,6 @@ extension ProductProfileViewModel {
                         httpClient: model.authenticatedHTTPClient(),
                         logger: LoggerAgent()
                     ).makeNavigationOperationView(
-                        httpClient: model.authenticatedHTTPClient(),
-                        model: model,
                         dismissAll: rootActions.dismissAll
                     )()
 

@@ -67,8 +67,6 @@ struct RootView: View {
                     httpClient: viewModel.model.authenticatedHTTPClient(),
                     logger: LoggerAgent()
                 ).makeNavigationOperationView(
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    model: viewModel.model,
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,

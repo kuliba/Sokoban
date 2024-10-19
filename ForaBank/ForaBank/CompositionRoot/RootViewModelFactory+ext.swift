@@ -62,15 +62,11 @@ extension RootViewModelFactory {
         }
         
         let rsaKeyPairStore = makeLoggingStore(
-            store: KeyTagKeyChainStore<RSADomain.KeyPair>(
-                keyTag: .rsa
-            ),
-            logger: logger
+            store: KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
         )
         
         let resetCVVPINActivation = makeResetCVVPINActivation(
-            rsaKeyPairStore: rsaKeyPairStore,
-            logger: logger
+            rsaKeyPairStore: rsaKeyPairStore
         )
         
         let cvvPINServicesClient = Services.cvvPINServicesClient(
@@ -443,11 +439,7 @@ extension RootViewModelFactory {
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
-        let loadBannersList = makeLoadBanners(
-            infoNetworkLog: infoNetworkLog,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
+        let loadBannersList = makeLoadBanners()
         
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
             bannerPickerPlaceholderCount: 6,
@@ -464,9 +456,7 @@ extension RootViewModelFactory {
                 loadBanners: loadBannersList,
                 // TODO: add real serial model.localAgent.serial(for: LandingType.self)
                 loadLandingByType: { getLanding(( "", $0), $1) }
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            )
         )
         
         // call and notify bannerPicker
@@ -497,12 +487,12 @@ extension RootViewModelFactory {
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: .main)
+            scheduler: mainScheduler
+        )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
         
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
-            model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -525,8 +515,6 @@ extension RootViewModelFactory {
     }
     
     func makeNavigationOperationView(
-        httpClient: HTTPClient,
-        model: Model,
         dismissAll: @escaping() -> Void
     ) -> () -> some View {
         
@@ -544,10 +532,7 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: self.makeStickerDetailDocumentButtons(
-                            httpClient: httpClient,
-                            model: model
-                        ),
+                        buttonsView: self.makeStickerDetailDocumentButtons(),
                         mainButtonAction: dismissAll,
                         configuration: .default
                     )
@@ -612,8 +597,6 @@ extension RootViewModelFactory {
     }
     
     func makeStickerDetailDocumentButtons(
-        httpClient: HTTPClient,
-        model: Model
     ) -> (
         PaymentSticker.OperationResult.PaymentID
     ) -> some View {
@@ -782,11 +765,10 @@ extension ProductProfileViewModel {
 private extension RootViewModelFactory {
     
     func makeLoggingStore<Key>(
-        store: any Store<Key>,
-        logger: LoggerAgentProtocol
+        store: any Store<Key>
     ) -> any Store<Key> {
         
-        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        let log = { self.logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         
         return LoggingStoreDecorator(
             decoratee: store,
@@ -797,8 +779,7 @@ private extension RootViewModelFactory {
     typealias ResetCVVPINActivation = () -> Void
     
     func makeResetCVVPINActivation(
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
-        logger: LoggerAgentProtocol
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>
     ) -> ResetCVVPINActivation {
         
         return rsaKeyPairStore.deleteCacheIgnoringResult
@@ -810,7 +791,6 @@ private extension RootViewModelFactory {
     
     func make(
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -844,7 +824,7 @@ private extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeSections: { self.model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeTemplates: makeTemplates,
             makeUtilitiesViewModel: makeUtilitiesViewModel
@@ -891,7 +871,7 @@ private extension RootViewModelFactory {
             
             let loginViewModel = ComposedLoginViewModel(
                 authLoginViewModel: .init(
-                    model,
+                    self.model,
                     rootActions: $0,
                     onRegister: onRegister
                 )

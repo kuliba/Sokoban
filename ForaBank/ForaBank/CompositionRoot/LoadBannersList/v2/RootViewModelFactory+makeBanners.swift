@@ -33,9 +33,7 @@ extension RootViewModelFactory {
     
     func makeBannersForMainView(
         bannerPickerPlaceholderCount: Int,
-        nanoServices: BannersNanoServices,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        nanoServices: BannersNanoServices
     ) -> BannersBinder {
         
         // MARK: - BannerPicker
