@@ -375,10 +375,8 @@ extension RootViewModelFactory {
             }
         }
 
-        let getLatestPayments = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
-            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
-        )
+        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
+        
         let _makeLoadLatestOperations = makeLoadLatestOperations(
             getAllLoadedCategories: { completion in
                 

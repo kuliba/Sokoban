@@ -1478,6 +1478,7 @@
 		2AC2ADCA2B22FDF70049EE9B /* QRResolverFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */; };
 		2AC2F0872CC2ED02006FCFBC /* Scheduler+scheduledTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2F0862CC2ED02006FCFBC /* Scheduler+scheduledTests.swift */; };
 		2AC2F0892CC441A6006FCFBC /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */; };
+		2AC2F08C2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2F08B2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */; };
 		2AC2FB0B2C50D4CE001972CB /* PaymentProviderServicePickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2FB0A2C50D4CE001972CB /* PaymentProviderServicePickerModel.swift */; };
 		2AC2FB0E2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2FB0D2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift */; };
 		2AC2FB102C5103FC001972CB /* PaymentProviderServicePickerFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2FB0F2C5103FC001972CB /* PaymentProviderServicePickerFlowState.swift */; };
@@ -4985,6 +4986,7 @@
 		2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRResolverFeatureFlag.swift; sourceTree = "<group>"; };
 		2AC2F0862CC2ED02006FCFBC /* Scheduler+scheduledTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scheduler+scheduledTests.swift"; sourceTree = "<group>"; };
 		2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logging.swift"; sourceTree = "<group>"; };
+		2AC2F08B2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift"; sourceTree = "<group>"; };
 		2AC2FB0A2C50D4CE001972CB /* PaymentProviderServicePickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerModel.swift; sourceTree = "<group>"; };
 		2AC2FB0D2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerFlowModel.swift; sourceTree = "<group>"; };
 		2AC2FB0F2C5103FC001972CB /* PaymentProviderServicePickerFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerFlowState.swift; sourceTree = "<group>"; };
@@ -11313,6 +11315,7 @@
 				2AF2C97F2C957C9B00FF775E /* RemoteDomainOf.swift */,
 				2AF2C9812C957CF100FF775E /* StringSerialRemoteDomain.swift */,
 				2A42B4092C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift */,
+				2AC2F08A2CC44B54006FCFBC /* LoggingRemoteNanoServiceComposer */,
 				2AF59F3F2C943779003556B1 /* LoggingRemoteNanoServiceComposer+RemoteNanoServiceFactory.swift */,
 				2A42B40D2C8DBD2F00A9B658 /* ErasedRemoteNanoServiceFactory.swift */,
 				2A94AAEE2C8ED0DE003B4FB1 /* LoggingRemoteNanoServiceComposer+ErasedRemoteNanoServiceFactory.swift */,
@@ -11989,6 +11992,14 @@
 				2A629D5D2C6C660D0087F895 /* Flags */,
 			);
 			path = FeatureFlags;
+			sourceTree = "<group>";
+		};
+		2AC2F08A2CC44B54006FCFBC /* LoggingRemoteNanoServiceComposer */ = {
+			isa = PBXGroup;
+			children = (
+				2AC2F08B2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift */,
+			);
+			path = LoggingRemoteNanoServiceComposer;
 			sourceTree = "<group>";
 		};
 		2AC2FB092C50D4C1001972CB /* PaymentProviderServicePicker */ = {
@@ -21137,6 +21148,7 @@
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
 				83DBC7B62C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift in Sources */,
 				2A35DDAF2C02405E00EFF0EB /* Model+paymentProducts.swift in Sources */,
+				2AC2F08C2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift in Sources */,
 				ED288CAA2874C95F00B9ABC6 /* AlertTextFieldComponent.swift in Sources */,
 				5047487228566C130007128F /* OpenAccountButtonViewComponent.swift in Sources */,
 				778E26A42875AF4D00D0ED60 /* RootViewModel+Preview.swift in Sources */,
