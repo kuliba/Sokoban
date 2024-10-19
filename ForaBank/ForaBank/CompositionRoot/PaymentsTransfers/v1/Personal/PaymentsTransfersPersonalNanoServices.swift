@@ -10,6 +10,7 @@ import PayHubUI
 struct PaymentsTransfersPersonalNanoServices {
     
     let loadCategories: LoadCategories
+    let reloadCategories: LoadCategories
     let loadAllLatest: LoadAllLatest
     let loadLatestForCategory: LoadLatestForCategory
 }

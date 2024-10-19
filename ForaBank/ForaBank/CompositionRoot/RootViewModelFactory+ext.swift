@@ -413,7 +413,8 @@ extension RootViewModelFactory {
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: decoratedServiceCategoryListReload,
+                loadCategories: serviceCategoryListLoad,
+                reloadCategories: decoratedServiceCategoryListReload,
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),

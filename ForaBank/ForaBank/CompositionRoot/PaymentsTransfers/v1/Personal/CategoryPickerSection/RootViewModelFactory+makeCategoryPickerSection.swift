@@ -110,9 +110,10 @@ extension RootViewModelFactory {
         
         let categoryPickerComposer = CategoryPickerSectionDomain.BinderComposer(
             load: nanoServices.loadCategories,
+            reload: nanoServices.reloadCategories,
             microServices: microServices,
             placeholderCount: placeholderCount,
-            scheduler: mainScheduler, 
+            scheduler: mainScheduler,
             interactiveScheduler: backgroundScheduler
         )
         
