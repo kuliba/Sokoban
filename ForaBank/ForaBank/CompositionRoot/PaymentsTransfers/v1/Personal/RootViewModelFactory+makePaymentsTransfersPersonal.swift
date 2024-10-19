@@ -12,7 +12,7 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    static func makePaymentsTransfersPersonal(
+    func makePaymentsTransfersPersonal(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model,

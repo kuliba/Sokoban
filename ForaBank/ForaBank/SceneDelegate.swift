@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
-    private lazy var rootViewModel = RootViewModelFactory.make(
+    private lazy var rootViewModel = RootViewModelFactory().make(
         model: model,
         httpClient: httpClient,
         logger: logger,

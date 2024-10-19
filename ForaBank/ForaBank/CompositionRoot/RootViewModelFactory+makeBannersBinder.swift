@@ -12,7 +12,7 @@ import Banners
 
 extension RootViewModelFactory {
     
-    static func makeLoadBanners(
+    func makeLoadBanners(
         httpClient: HTTPClient,
         infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
@@ -60,7 +60,7 @@ extension RootViewModelFactory {
 
 extension BannersBinder {
     
-    static let preview: BannersBinder = RootViewModelFactory.makeBannersForMainView(
+    static let preview: BannersBinder = RootViewModelFactory().makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
         nanoServices: .init(
             loadBanners: {_ in },

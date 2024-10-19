@@ -30,7 +30,7 @@ import SwiftUI
 
 extension RootViewModelFactory {
     
-    static func make(
+    func make(
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
@@ -98,7 +98,7 @@ extension RootViewModelFactory {
             case .active:
                 return .init(fastPaymentsViewModel: .new({
                     
-                    makeNewFastPaymentsViewModel(
+                    self.makeNewFastPaymentsViewModel(
                         httpClient: fpsHTTPClient,
                         model: model,
                         log: infoNetworkLog,
@@ -546,7 +546,7 @@ extension RootViewModelFactory {
         )
     }
     
-    static func makeNavigationOperationView(
+    func makeNavigationOperationView(
         httpClient: HTTPClient,
         model: Model,
         dismissAll: @escaping() -> Void
@@ -569,7 +569,7 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: makeStickerDetailDocumentButtons(
+                        buttonsView: self.makeStickerDetailDocumentButtons(
                             httpClient: httpClient,
                             model: model
                         ),
@@ -636,7 +636,7 @@ extension RootViewModelFactory {
         }
     }
     
-    static func makeStickerDetailDocumentButtons(
+    func makeStickerDetailDocumentButtons(
         httpClient: HTTPClient,
         model: Model
     ) -> (
@@ -810,7 +810,7 @@ extension ProductProfileViewModel {
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
-    static func makeLoggingStore<Key>(
+    func makeLoggingStore<Key>(
         store: any Store<Key>,
         logger: LoggerAgentProtocol
     ) -> any Store<Key> {
@@ -825,7 +825,7 @@ private extension RootViewModelFactory {
     
     typealias ResetCVVPINActivation = () -> Void
     
-    static func makeResetCVVPINActivation(
+    func makeResetCVVPINActivation(
         rsaKeyPairStore: any Store<RSADomain.KeyPair>,
         logger: LoggerAgentProtocol
     ) -> ResetCVVPINActivation {
@@ -837,7 +837,7 @@ private extension RootViewModelFactory {
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
-    static func make(
+    func make(
         paymentsTransfersFlag: PaymentsTransfersFlag,
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,

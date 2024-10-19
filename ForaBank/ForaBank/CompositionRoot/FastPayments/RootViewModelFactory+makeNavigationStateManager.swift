@@ -19,7 +19,7 @@ import ForaTools
 
 extension RootViewModelFactory {
     
-    static func makeNavigationStateManager(
+    func makeNavigationStateManager(
         modelEffectHandler: UserAccountModelEffectHandler,
         otpServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,

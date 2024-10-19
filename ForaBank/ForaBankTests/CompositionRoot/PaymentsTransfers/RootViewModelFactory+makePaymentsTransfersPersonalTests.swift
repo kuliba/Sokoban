@@ -68,7 +68,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let loadCategoriesSpy = LoadCategoriesSpy()
         let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
-        let sut = RootViewModelFactory.makePaymentsTransfersPersonal(
+        let sut = RootViewModelFactory().makePaymentsTransfersPersonal(
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             model: .mockWithEmptyExcept(),

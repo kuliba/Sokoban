@@ -10,7 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeQRViewModelFactory(
+    func makeQRViewModelFactory(
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,

@@ -10,7 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeAnywayServicePickerFlowModelComposer(
+    func makeAnywayServicePickerFlowModelComposer(
         httpClient: HTTPClient,
         log: @escaping Log,
         model: Model,

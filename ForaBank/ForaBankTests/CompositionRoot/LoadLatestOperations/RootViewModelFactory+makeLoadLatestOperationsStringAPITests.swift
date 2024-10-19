@@ -179,13 +179,13 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
         let getLatestPaymentsSpy = GetLatestPaymentsSpy()
         let sut: SUT
         if let hardcoded {
-            sut = RootViewModelFactory.makeLoadLatestOperations(
+            sut = RootViewModelFactory().makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:),
                 hardcoded: hardcoded
             )
         } else {
-            sut = RootViewModelFactory.makeLoadLatestOperations(
+            sut = RootViewModelFactory().makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:)
             )

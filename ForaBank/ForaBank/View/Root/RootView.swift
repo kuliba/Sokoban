@@ -62,7 +62,7 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
+                navigationOperationView: RootViewModelFactory().makeNavigationOperationView(
                     httpClient: viewModel.model.authenticatedHTTPClient(),
                     model: viewModel.model,
                     dismissAll: viewModel.rootActions.dismissAll

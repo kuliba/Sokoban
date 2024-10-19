@@ -10,7 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeTemplatesComposer(
+    func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         model: Model,

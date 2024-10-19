@@ -14,7 +14,7 @@ import UIPrimitives
 
 extension RootViewModelFactory {
     
-    static func makeNewFastPaymentsViewModel(
+    func makeNewFastPaymentsViewModel(
         httpClient: HTTPClient,
         model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,

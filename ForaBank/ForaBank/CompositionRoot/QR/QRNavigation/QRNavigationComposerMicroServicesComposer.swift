@@ -181,7 +181,7 @@ private extension QRNavigationComposerMicroServicesComposer {
             
             guard let self else { return }
             
-            let make = RootViewModelFactory.makeSberQRConfirmPaymentViewModel(
+            let make = RootViewModelFactory().makeSberQRConfirmPaymentViewModel(
                 model: model,
                 logger: logger
             )

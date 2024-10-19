@@ -194,10 +194,12 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let load = LoadSpy()
+        let reload = LoadSpy()
         let getNavigationSpy = GetNavigationSpy()
         let scheduler = DispatchQueue.test
         let composer = Composer(
             load: load.process(completion:), 
+            reload: reload.process(completion:),
             microServices: .init(
                 getNavigation: getNavigationSpy.process
             ),

@@ -77,7 +77,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
     ) {
         let model: Model = .mockWithEmptyExcept()
         let httpClient = HTTPClientSpy()
-        let make = RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(
+        let make = RootViewModelFactory().makeSegmentedPaymentProviderPickerFlowModel(
             httpClient: httpClient,
             log: { _,_,_,_,_ in },
             model: model,

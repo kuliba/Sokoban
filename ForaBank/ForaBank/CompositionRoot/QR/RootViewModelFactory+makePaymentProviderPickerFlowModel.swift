@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
-    static func makeSegmentedPaymentProviderPickerFlowModel(
+    func makeSegmentedPaymentProviderPickerFlowModel(
         httpClient: HTTPClient,
         log: @escaping Log,
         model: Model,

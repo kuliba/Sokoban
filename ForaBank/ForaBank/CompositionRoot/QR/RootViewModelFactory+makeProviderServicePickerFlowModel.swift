@@ -11,7 +11,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeProviderServicePickerFlowModel(
+    func makeProviderServicePickerFlowModel(
         httpClient: HTTPClient,
         log: @escaping Log,
         model: Model,

@@ -9,7 +9,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
-    static func makePaymentsSuccessViewModel(
+    func makePaymentsSuccessViewModel(
         model: Model
     ) -> QRViewModelFactory.MakePaymentsSuccessViewModel {
         

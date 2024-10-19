@@ -10,7 +10,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeMakeQRScannerModel(
+    func makeMakeQRScannerModel(
         model: Model,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,

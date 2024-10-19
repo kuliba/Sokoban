@@ -11,7 +11,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
-    static func makeSberQRConfirmPaymentViewModel(
+    func makeSberQRConfirmPaymentViewModel(
         model: Model,
         logger: LoggerAgentProtocol
     ) -> MakeSberQRConfirmPaymentViewModel {

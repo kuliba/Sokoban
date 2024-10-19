@@ -14,7 +14,7 @@ import SberQR
 
 extension RootViewModelFactory {
     
-    static func makeCategoryPickerSection(
+    func makeCategoryPickerSection(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model,
@@ -63,7 +63,7 @@ extension RootViewModelFactory {
         
         func makeQR() -> QRModel {
             
-            RootViewModelFactory.makeMakeQRScannerModel(
+            makeMakeQRScannerModel(
                 model: model,
                 qrResolverFeatureFlag: .init(.active),
                 utilitiesPaymentsFlag: .init(.active(.live)),
@@ -172,7 +172,7 @@ extension RootViewModelFactory {
             qrMapping: QRMapping
         ) -> SegmentedPaymentProviderPickerFlowModel {
             
-            let make = RootViewModelFactory.makeSegmentedPaymentProviderPickerFlowModel(
+            let make = makeSegmentedPaymentProviderPickerFlowModel(
                 httpClient: httpClient,
                 log: logger.log,
                 model: model,
@@ -228,7 +228,7 @@ extension RootViewModelFactory {
     /*private*/ typealias LoadOperators = (UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload, @escaping ([PaymentServiceOperator]) -> Void) -> Void
     /*private*/ typealias LoadOperatorsForCategory = (ServiceCategory, @escaping (Result<[PaymentServiceOperator], Error>) -> Void) -> Void
     
-    /*private*/ static func makeStandard(
+    /*private*/ func makeStandard(
         loadLatestForCategory: @escaping LoadLatestForCategory,
         loadOperators: @escaping LoadOperators,
         loadOperatorsForCategory: @escaping LoadOperatorsForCategory,

@@ -14,7 +14,7 @@ extension RootViewModelFactory {
             
     typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
-    static func makeOperationStateViewModel(
+    func makeOperationStateViewModel(
         _ httpClient: HTTPClient,
         model: Model
     ) -> MakeOperationStateViewModel {

@@ -31,7 +31,7 @@ extension RootViewModelFactory {
     typealias LoadServiceBannersCompletion = ([BannerPickerSectionItem<BannerCatalogListData>]) -> Void
     typealias LoadServiceBanners = (@escaping LoadServiceCategoriesCompletion) -> Void
     
-    static func makeBannersForMainView(
+    func makeBannersForMainView(
         bannerPickerPlaceholderCount: Int,
         nanoServices: BannersNanoServices,
         mainScheduler: AnySchedulerOf<DispatchQueue>,
@@ -80,7 +80,7 @@ extension RootViewModelFactory {
         return .init(content: content, flow: flow, bind: { _,_ in [] })
     }
     
-    static func selectBanner(
+    func selectBanner(
         composer: StandardSelectedBannerDestinationNanoServicesComposer
     ) -> (
         BannerCatalogListData, @escaping (SelectedBannerDestination) -> Void

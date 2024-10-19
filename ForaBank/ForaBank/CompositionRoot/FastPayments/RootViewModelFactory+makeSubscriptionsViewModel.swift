@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
     typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
     
-    static func makeSubscriptionsViewModel(
+    func makeSubscriptionsViewModel(
         getProducts: @escaping GetSubscriptionProducts,
         c2bSubscription: C2BSubscription?,
         scheduler: AnySchedulerOfDispatchQueue
@@ -48,13 +48,13 @@ extension RootViewModelFactory {
         }
     }
     
-    static func getSubscriptionProducts(
+    func getSubscriptionProducts(
         model: Model
     ) -> GetSubscriptionProducts {
         
         return { onDelete, onDetail in
             
-            getSubscriptionProducts(
+            self.getSubscriptionProducts(
                 items: model.subscriptions.value?.list ?? [],
                 getProduct: model.product(forID:),
                 getImage: { model.images.value[.init($0)]?.image },
@@ -79,7 +79,7 @@ extension RootViewModelFactory {
     typealias ProductID = String
     typealias MakeSubscriptionViewModel = (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
     
-    static func getSubscriptionProducts(
+    func getSubscriptionProducts(
         items: [C2BSubscription.ProductSubscription],
         getProduct: @escaping (ProductID) -> ProductData?,
         getImage: @escaping (MD5Hash) -> Image?,

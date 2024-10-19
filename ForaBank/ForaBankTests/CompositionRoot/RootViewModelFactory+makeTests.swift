@@ -133,7 +133,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
-        let sut = RootViewModelFactory.make(
+        let sut = RootViewModelFactory().make(
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),

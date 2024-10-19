@@ -7,4 +7,4 @@
 
 import Foundation
 
-enum RootViewModelFactory {}
+final class RootViewModelFactory {}
