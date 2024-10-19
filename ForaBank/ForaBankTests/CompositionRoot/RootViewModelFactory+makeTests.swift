@@ -133,10 +133,11 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
-        let sut = RootViewModelFactory().make(
+        let sut = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
-            logger: LoggerSpy(),
+            logger: LoggerSpy()
+        ).make(
             bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),

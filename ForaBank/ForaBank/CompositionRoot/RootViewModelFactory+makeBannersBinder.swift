@@ -60,7 +60,11 @@ extension RootViewModelFactory {
 
 extension BannersBinder {
     
-    static let preview: BannersBinder = RootViewModelFactory().makeBannersForMainView(
+    static let preview: BannersBinder = RootViewModelFactory(
+        model: .emptyMock,
+        httpClient: Model.emptyMock.authenticatedHTTPClient(),
+        logger: LoggerAgent()
+    ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
         nanoServices: .init(
             loadBanners: {_ in },

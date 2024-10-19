@@ -68,10 +68,11 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let loadCategoriesSpy = LoadCategoriesSpy()
         let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
-        let sut = RootViewModelFactory().makePaymentsTransfersPersonal(
-            httpClient: HTTPClientSpy(),
-            logger: LoggerSpy(),
+        let sut = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
+            httpClient: HTTPClientSpy(),
+            logger: LoggerSpy()
+        ).makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             nanoServices: .init(

@@ -31,9 +31,6 @@ import SwiftUI
 extension RootViewModelFactory {
     
     func make(
-        model: Model,
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
         bindings: inout Set<AnyCancellable>,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
@@ -85,7 +82,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
+        let infoNetworkLog = { self.logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
         ? HTTPClientStub.fastPaymentsSettings()
@@ -100,7 +97,7 @@ extension RootViewModelFactory {
                     
                     self.makeNewFastPaymentsViewModel(
                         httpClient: fpsHTTPClient,
-                        model: model,
+                        model: self.model,
                         log: infoNetworkLog,
                         scheduler: $0
                     )
@@ -109,7 +106,7 @@ extension RootViewModelFactory {
             case .inactive:
                 return .init(fastPaymentsViewModel: .legacy({
                     
-                    .init(model: $0,newModel: model,closeAction: $1)
+                    .init(model: $0,newModel: self.model,closeAction: $1)
                 }))
             }
         }()
@@ -200,7 +197,7 @@ extension RootViewModelFactory {
             repeatPayment: infoPaymentService,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {
-                model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+                self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
             }
         )
         
@@ -208,7 +205,7 @@ extension RootViewModelFactory {
             cancelC2BSub: { (token: SubscriptionViewModel.Token) in
                 
                 let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
+                self.model.action.send(action)
             })
         
         let productNavigationStateManager = ProductProfileFlowManager(
@@ -393,7 +390,7 @@ extension RootViewModelFactory {
     
                         print("==== schedule operatorsService for \(categories.count) categories")
                         
-                        let serial = model.localAgent.serial(
+                        let serial = self.model.localAgent.serial(
                             for: [CodableServicePaymentOperator].self
                         )
                         
@@ -401,7 +398,7 @@ extension RootViewModelFactory {
                             
                             if !$0.isEmpty {
                                 
-                                logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
+                                self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
                             }
                             print("==== operatorsService completion")
                             completion(categories)
@@ -425,9 +422,6 @@ extension RootViewModelFactory {
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            httpClient: httpClient,
-            logger: logger,
-            model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
@@ -454,7 +448,7 @@ extension RootViewModelFactory {
                         // notify categoryPicker
                         paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
                         
-                        logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
+                        self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
                         
                         _ = backgroundScheduler // !! DO NOT REMOVE THIS LINE
                     }

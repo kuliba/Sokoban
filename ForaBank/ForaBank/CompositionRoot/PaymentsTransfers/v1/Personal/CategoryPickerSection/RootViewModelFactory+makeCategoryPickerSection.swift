@@ -205,6 +205,7 @@ extension RootViewModelFactory {
             completion: @escaping (QRNavigation) -> Void
         ) {
             let microServicesComposer = QRNavigationComposerMicroServicesComposer(
+                httpClient: httpClient, 
                 logger: logger,
                 model: model,
                 createSberQRPayment: createSberQRPayment,

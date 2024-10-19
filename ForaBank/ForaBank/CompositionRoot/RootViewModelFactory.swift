@@ -7,4 +7,19 @@
 
 import Foundation
 
-final class RootViewModelFactory {}
+final class RootViewModelFactory {
+    
+    let model: Model
+    let httpClient: HTTPClient
+    let logger: LoggerAgentProtocol
+    
+    init(
+        model: Model, 
+        httpClient: HTTPClient,
+        logger: LoggerAgentProtocol
+    ) {
+        self.model = model
+        self.httpClient = httpClient
+        self.logger = logger
+    }
+}
