@@ -136,7 +136,9 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let sut = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
-            logger: LoggerSpy()
+            logger: LoggerSpy(),
+            mainScheduler: .immediate,
+            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
         ).make(
             bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
@@ -147,9 +149,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            updateInfoStatusFlag: .init(.active)
         )
         
         return (sut, httpClient, sessionAgent, backgroundScheduler, bindings)

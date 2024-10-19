@@ -40,10 +40,7 @@ extension RootViewModelFactory {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        mainScheduler: AnySchedulerOfDispatchQueue = .main,
-        interactiveScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInteractive),
-        backgroundScheduler: AnySchedulerOfDispatchQueue
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> RootViewModel {
         
         func performOrWaitForActive(
@@ -373,7 +370,7 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .some(categories):
-                    backgroundScheduler.schedule {
+                    self.backgroundScheduler.schedule {
     
                         print("==== schedule operatorsService for \(categories.count) categories")
                         
@@ -428,6 +425,7 @@ extension RootViewModelFactory {
                 
                 decoratedServiceCategoryListReload { [weak paymentsTransfersPersonal] categories in
                     
+                    let backgroundScheduler = self.backgroundScheduler
                     backgroundScheduler.schedule { [backgroundScheduler] in
                         
                         print("==== decoratedServiceCategoryListReload completion", paymentsTransfersPersonal.map { ObjectIdentifier($0) })
