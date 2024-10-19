@@ -96,8 +96,6 @@ extension RootViewModelFactory {
                 return .init(fastPaymentsViewModel: .new({
                     
                     self.makeNewFastPaymentsViewModel(
-                        httpClient: fpsHTTPClient,
-                        model: self.model,
                         log: infoNetworkLog,
                         scheduler: $0
                     )
@@ -131,8 +129,6 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
-            model: model,
-            logger: logger,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
             scheduler: mainScheduler
@@ -217,9 +213,6 @@ extension RootViewModelFactory {
         let templatesComposer = makeTemplatesComposer(
             paymentsTransfersFlag: paymentsTransfersFlag,
             utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            model: model,
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
             scheduler: mainScheduler
         )
         let makeTemplates = templatesComposer.compose
@@ -281,17 +274,11 @@ extension RootViewModelFactory {
         )
         
         let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
-            model: model,
             flag: utilitiesPaymentsFlag.optionOrStub,
             scheduler: mainScheduler
         )
         
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
-            model: model,
             flag: utilitiesPaymentsFlag.optionOrStub,
             scheduler: mainScheduler
         )
@@ -459,7 +446,6 @@ extension RootViewModelFactory {
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
         
         let loadBannersList = makeLoadBanners(
-            httpClient: httpClient,
             infoNetworkLog: infoNetworkLog,
             mainScheduler: mainScheduler,
             backgroundScheduler: backgroundScheduler
@@ -552,10 +538,7 @@ extension RootViewModelFactory {
             setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
         ) -> some View {
             
-            let makeOperationStateViewModel = makeOperationStateViewModel(
-                httpClient,
-                model: model
-            )
+            let makeOperationStateViewModel = makeOperationStateViewModel()
             
             return OperationView(
                 model: makeOperationStateViewModel(setSelection),
@@ -637,13 +620,9 @@ extension RootViewModelFactory {
         PaymentSticker.OperationResult.PaymentID
     ) -> some View {
         
-        let makeDetailButton = makeOperationDetailButton(
-            httpClient: httpClient,
-            model: model
-        )
+        let makeDetailButton = makeOperationDetailButton()
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient,
             printFormType: .sticker
         )
         

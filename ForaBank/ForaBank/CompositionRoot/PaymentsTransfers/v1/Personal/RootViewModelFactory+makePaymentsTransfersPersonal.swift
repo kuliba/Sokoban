@@ -24,9 +24,6 @@ extension RootViewModelFactory {
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
-            httpClient: httpClient,
-            logger: logger,
-            model: model,
             nanoServices: nanoServices,
             pageSize: pageSize,
             placeholderCount: categoryPickerPlaceholderCount,

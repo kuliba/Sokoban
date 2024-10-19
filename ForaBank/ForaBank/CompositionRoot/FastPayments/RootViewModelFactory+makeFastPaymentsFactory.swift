@@ -15,14 +15,12 @@ import UIPrimitives
 extension RootViewModelFactory {
     
     func makeNewFastPaymentsViewModel(
-        httpClient: HTTPClient,
-        model: Model,
         log: @escaping (String, StaticString, UInt) -> Void,
         scheduler: AnySchedulerOfDispatchQueue
     ) -> FastPaymentsSettingsViewModel {
         
-        let getProducts = /*isStub ? { .preview } :*/ model.getFastPaymentsSettingsProducts
-        let getBanks = /*isStub ? { [] } :*/ model.getBanks
+        let getProducts = model.getFastPaymentsSettingsProducts
+        let getBanks = model.getBanks
         
         let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, log)
         

@@ -82,9 +82,6 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy()
         ).makeSegmentedPaymentProviderPickerFlowModel(
-            httpClient: httpClient,
-            log: { _,_,_,_,_ in },
-            model: model,
             flag: flag,
             scheduler: .immediate
         )

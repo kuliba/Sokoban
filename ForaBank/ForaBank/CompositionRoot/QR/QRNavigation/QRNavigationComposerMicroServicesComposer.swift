@@ -188,10 +188,7 @@ private extension QRNavigationComposerMicroServicesComposer {
                 model: model,
                 httpClient: httpClient,
                 logger: logger
-            ).makeSberQRConfirmPaymentViewModel(
-                model: model,
-                logger: logger
-            )
+            ).makeSberQRConfirmPaymentViewModel()
             
             do {
                 let sberQR = try make($0.get(), payload.pay)

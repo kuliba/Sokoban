@@ -17,10 +17,7 @@ enum _PaymentID {}
 
 extension RootViewModelFactory {
     
-    func makeOperationDetailButton(
-        httpClient: HTTPClient,
-        model: Model
-    ) -> (PaymentID) -> some View {
+    func makeOperationDetailButton() -> (PaymentID) -> some View {
         
         return makeButton
         

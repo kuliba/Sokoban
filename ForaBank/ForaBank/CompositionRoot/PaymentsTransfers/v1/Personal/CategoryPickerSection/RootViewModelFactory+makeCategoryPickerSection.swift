@@ -15,9 +15,6 @@ import SberQR
 extension RootViewModelFactory {
     
     func makeCategoryPickerSection(
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
-        model: Model,
         nanoServices: PaymentsTransfersPersonalNanoServices,
         pageSize: Int,
         placeholderCount: Int,
@@ -31,7 +28,7 @@ extension RootViewModelFactory {
         ) {
             backgroundScheduler.schedule {
                 
-                model.loadOperators(payload, completion)
+                self.model.loadOperators(payload, completion)
             }
         }
         
@@ -41,7 +38,7 @@ extension RootViewModelFactory {
         ) {
             backgroundScheduler.schedule {
                 
-                model.loadOperators(.init(
+                self.model.loadOperators(.init(
                     afterOperatorID: nil,
                     for: category.type,
                     searchText: "",
@@ -64,7 +61,6 @@ extension RootViewModelFactory {
         func makeQR() -> QRModel {
             
             makeMakeQRScannerModel(
-                model: model,
                 qrResolverFeatureFlag: .init(.active),
                 utilitiesPaymentsFlag: .init(.active(.live)),
                 scheduler: mainScheduler
@@ -75,7 +71,6 @@ extension RootViewModelFactory {
             loadLatestForCategory: nanoServices.loadLatestForCategory,
             loadOperators: loadOperators,
             loadOperatorsForCategory: loadOperatorsForCategory,
-            model: model,
             pageSize: pageSize,
             mainScheduler: mainScheduler
         )
@@ -173,9 +168,6 @@ extension RootViewModelFactory {
         ) -> SegmentedPaymentProviderPickerFlowModel {
             
             let make = makeSegmentedPaymentProviderPickerFlowModel(
-                httpClient: httpClient,
-                log: logger.log,
-                model: model,
                 pageSize: pageSize,
                 flag: .live,
                 scheduler: mainScheduler
@@ -189,9 +181,6 @@ extension RootViewModelFactory {
             completion: @escaping (AnywayServicePickerFlowModel) -> Void
         ) {
             let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-                httpClient: httpClient,
-                log: logger.log,
-                model: model,
                 flag: .live,
                 scheduler: mainScheduler
             )
@@ -233,7 +222,6 @@ extension RootViewModelFactory {
         loadLatestForCategory: @escaping LoadLatestForCategory,
         loadOperators: @escaping LoadOperators,
         loadOperatorsForCategory: @escaping LoadOperatorsForCategory,
-        model: Model,
         pageSize: Int,
         mainScheduler: AnySchedulerOf<DispatchQueue>
     ) -> MakeStandard {
@@ -248,7 +236,7 @@ extension RootViewModelFactory {
                 loadLatest: loadLatestForCategory,
                 loadOperators: loadOperatorsForCategory,
                 makeMicroServices: microServicesComposer.compose,
-                model: model,
+                model: self.model,
                 scheduler: mainScheduler
             )
             let standardNanoServices = standardNanoServicesComposer.compose(category: category)

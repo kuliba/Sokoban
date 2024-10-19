@@ -13,7 +13,6 @@ import Banners
 extension RootViewModelFactory {
     
     func makeLoadBanners(
-        httpClient: HTTPClient,
         infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
         mainScheduler: AnySchedulerOfDispatchQueue = .main,
         backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)

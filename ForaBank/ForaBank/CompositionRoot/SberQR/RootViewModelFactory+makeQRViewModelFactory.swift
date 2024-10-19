@@ -11,8 +11,6 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeQRViewModelFactory(
-        model: Model,
-        logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         scheduler: AnySchedulerOf<DispatchQueue>
@@ -20,18 +18,12 @@ extension RootViewModelFactory {
         
         .init(
             makeQRScannerModel: makeMakeQRScannerModel(
-                model: model,
                 qrResolverFeatureFlag: qrResolverFeatureFlag,
                 utilitiesPaymentsFlag: utilitiesPaymentsFlag,
                 scheduler: scheduler
             ),
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(
-                model: model,
-                logger: logger
-            ),
-            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(
-                model: model
-            )
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(),
+            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel()
         )
     }
 }

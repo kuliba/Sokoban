@@ -11,9 +11,6 @@ import Foundation
 extension RootViewModelFactory {
     
     func makeAnywayServicePickerFlowModelComposer(
-        httpClient: HTTPClient,
-        log: @escaping Log,
-        model: Model,
         pageSize: Int = 50,
         flag: StubbedFeatureFlag.Option,
         scheduler: AnySchedulerOf<DispatchQueue>
@@ -23,7 +20,7 @@ extension RootViewModelFactory {
             flag: flag,
             model: model,
             httpClient: httpClient,
-            log: log,
+            log: logger.log,
             scheduler: scheduler
         )
         let anywayComposer = AnywayFlowComposer(
@@ -45,7 +42,7 @@ extension RootViewModelFactory {
             flag: flag,
             model: model,
             httpClient: httpClient,
-            log: log,
+            log: logger.log,
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
