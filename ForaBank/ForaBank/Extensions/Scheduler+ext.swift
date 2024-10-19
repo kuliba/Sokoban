@@ -11,12 +11,10 @@ import Foundation
 extension Scheduler {
     
     // Typealiases for completion handlers
-    
     typealias Completion<Response> = (_ response: Response) -> Void
     typealias CompletionWithoutResponse = () -> Void
     
     // Typealiases for work closures
-    
     typealias WorkWithPayloadAndResponse<Payload, Response> = (
         _ payload: Payload,
         _ completion: @escaping Completion<Response>
@@ -35,7 +33,7 @@ extension Scheduler {
         _ completion: @escaping CompletionWithoutResponse
     ) -> Void
     
-    /// Schedules work with a payload and a response, waits for completion, and then calls the completion handler with the response.
+    /// Schedules work with a payload and a response, and then calls the completion handler with the response.
     ///
     /// - Parameters:
     ///   - work: The work to be performed, accepting a payload and a completion handler with a response.
@@ -46,22 +44,10 @@ extension Scheduler {
         with payload: Payload,
         completion: @escaping Completion<Response>
     ) {
-        let group = DispatchGroup()
-        group.enter()
-        
-        schedule {
-            
-            work(payload) { response in
-                
-                group.leave()
-                completion(response)
-            }
-        }
-        
-        group.wait()
+        self.schedule { work(payload, completion) }
     }
     
-    /// Schedules work with a payload, waits for completion, and then calls the completion handler.
+    /// Schedules work with a payload, and then calls the completion handler.
     ///
     /// - Parameters:
     ///   - work: The work to be performed, accepting a payload and a completion handler without a response.
@@ -72,22 +58,10 @@ extension Scheduler {
         with payload: Payload,
         completion: @escaping CompletionWithoutResponse
     ) {
-        let group = DispatchGroup()
-        group.enter()
-        
-        schedule {
-            
-            work(payload) {
-                
-                group.leave()
-                completion()
-            }
-        }
-        
-        group.wait()
+        self.schedule { work(payload, completion) }
     }
     
-    /// Schedules work without a payload but with a response, waits for completion, and then calls the completion handler with the response.
+    /// Schedules work without a payload but with a response, and then calls the completion handler with the response.
     ///
     /// - Parameters:
     ///   - work: The work to be performed, accepting a completion handler with a response.
@@ -96,22 +70,10 @@ extension Scheduler {
         work: @escaping WorkWithResponse<Response>,
         completion: @escaping Completion<Response>
     ) {
-        let group = DispatchGroup()
-        group.enter()
-        
-        schedule {
-            
-            work { response in
-                
-                group.leave()
-                completion(response)
-            }
-        }
-        
-        group.wait()
+        self.schedule { work(completion) }
     }
     
-    /// Schedules work without a payload or response, waits for completion, and then calls the completion handler.
+    /// Schedules work without a payload or response, and then calls the completion handler.
     ///
     /// - Parameters:
     ///   - work: The work to be performed, accepting a completion handler without a response.
@@ -120,18 +82,65 @@ extension Scheduler {
         work: @escaping WorkWithoutPayloadAndResponse,
         completion: @escaping CompletionWithoutResponse
     ) {
-        let group = DispatchGroup()
-        group.enter()
+        self.schedule { work(completion) }
+    }
+}
+
+extension Scheduler {
+    
+    /// Returns a new closure that schedules the original work with a payload and a response.
+    ///
+    /// - Parameter work: The original work closure accepting a payload and a completion handler with a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Payload, Response>(
+        _ work: @escaping WorkWithPayloadAndResponse<Payload, Response>
+    ) -> WorkWithPayloadAndResponse<Payload, Response> {
         
-        schedule {
+        return { payload, completion in
             
-            work {
-                
-                group.leave()
-                completion()
-            }
+            self.schedule { work(payload, completion) }
         }
+    }
+    
+    /// Returns a new closure that schedules the original work with a payload and no response.
+    ///
+    /// - Parameter work: The original work closure accepting a payload and a completion handler without a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Payload>(
+        _ work: @escaping WorkWithPayload<Payload>
+    ) -> WorkWithPayload<Payload> {
         
-        group.wait()
+        return { payload, completion in
+            
+            self.schedule { work(payload, completion) }
+        }
+    }
+    
+    /// Returns a new closure that schedules the original work without a payload but with a response.
+    ///
+    /// - Parameter work: The original work closure accepting a completion handler with a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled<Response>(
+        _ work: @escaping WorkWithResponse<Response>
+    ) -> WorkWithResponse<Response> {
+        
+        return { completion in
+            
+            self.schedule { work(completion) }
+        }
+    }
+    
+    /// Returns a new closure that schedules the original work without a payload or a response.
+    ///
+    /// - Parameter work: The original work closure accepting a completion handler without a response.
+    /// - Returns: A new work closure that schedules the original work using the scheduler.
+    func scheduled(
+        _ work: @escaping WorkWithoutPayloadAndResponse
+    ) -> WorkWithoutPayloadAndResponse {
+        
+        return { completion in
+            
+            self.schedule { work(completion) }
+        }
     }
 }
