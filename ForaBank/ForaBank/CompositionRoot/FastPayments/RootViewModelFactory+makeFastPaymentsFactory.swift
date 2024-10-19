@@ -14,15 +14,12 @@ import UIPrimitives
 
 extension RootViewModelFactory {
     
-    func makeNewFastPaymentsViewModel(
-        log: @escaping (String, StaticString, UInt) -> Void,
-        scheduler: AnySchedulerOfDispatchQueue
-    ) -> FastPaymentsSettingsViewModel {
+    func makeNewFastPaymentsViewModel() -> FastPaymentsSettingsViewModel {
         
         let getProducts = model.getFastPaymentsSettingsProducts
         let getBanks = model.getBanks
         
-        let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, log)
+        let getBankDefaultResponse: MicroServices.Facade.GetBankDefaultResponse = NanoServices.makeDecoratedGetBankDefault(httpClient, infoNetworkLog)
         
         let bankDefaultReducer = BankDefaultReducer()
         let consentListReducer = ConsentListRxReducer()
@@ -36,20 +33,20 @@ extension RootViewModelFactory {
             productsReduce: productsReducer.reduce(_:_:)
         )
         
-        let facade = MicroServices.Facade(httpClient, getProducts, getBanks, getBankDefaultResponse, log)
+        let facade = MicroServices.Facade(httpClient, getProducts, getBanks, getBankDefaultResponse, infoNetworkLog)
         
         let effectHandler = FastPaymentsSettingsEffectHandler(
             facade: facade,
             httpClient: httpClient, 
             getProducts: model.getC2BSubscriptionProducts,
-            log: log
+            log: infoNetworkLog
         )
         
         return .init(
             initialState: .init(),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
     }
 }

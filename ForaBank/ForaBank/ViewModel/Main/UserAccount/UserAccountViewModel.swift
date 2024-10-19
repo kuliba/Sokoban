@@ -440,7 +440,7 @@ private extension UserAccountViewModel {
                 
 #warning("move to reducer with event?")
             case let .new(makeNew):
-                let viewModel = makeNew(scheduler)
+                let viewModel = makeNew()
                 let cancellable = viewModel.$state
                     .dropFirst()
                     .removeDuplicates()

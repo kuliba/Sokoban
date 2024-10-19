@@ -75,8 +75,6 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let infoNetworkLog = { self.logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
-        
         let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
         ? HTTPClientStub.fastPaymentsSettings()
         : httpClient
@@ -88,10 +86,7 @@ extension RootViewModelFactory {
             case .active:
                 return .init(fastPaymentsViewModel: .new({
                     
-                    self.makeNewFastPaymentsViewModel(
-                        log: infoNetworkLog,
-                        scheduler: $0
-                    )
+                    self.makeNewFastPaymentsViewModel()
                 }))
                 
             case .inactive:
@@ -107,13 +102,10 @@ extension RootViewModelFactory {
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts(model: model),
-                c2bSubscription: model.subscriptions.value,
-                scheduler: mainScheduler
+                getProducts: getSubscriptionProducts,
+                c2bSubscription: model.subscriptions.value
             ),
-            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
-            log: infoNetworkLog,
-            scheduler: mainScheduler
+            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -303,9 +295,8 @@ extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts(model: model),
-                c2bSubscription: model.subscriptions.value,
-                scheduler: mainScheduler
+                getProducts: getSubscriptionProducts,
+                c2bSubscription: model.subscriptions.value
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
