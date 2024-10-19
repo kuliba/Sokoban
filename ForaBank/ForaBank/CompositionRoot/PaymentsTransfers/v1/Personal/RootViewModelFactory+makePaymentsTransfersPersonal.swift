@@ -16,9 +16,7 @@ extension RootViewModelFactory {
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        pageSize: Int
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
@@ -26,9 +24,7 @@ extension RootViewModelFactory {
         let categoryPicker = makeCategoryPickerSection(
             nanoServices: nanoServices,
             pageSize: pageSize,
-            placeholderCount: categoryPickerPlaceholderCount,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            placeholderCount: categoryPickerPlaceholderCount
         )
         
         // MARK: - OperationPicker

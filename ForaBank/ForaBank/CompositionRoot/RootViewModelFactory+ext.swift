@@ -197,8 +197,7 @@ extension RootViewModelFactory {
         
         let templatesComposer = makeTemplatesComposer(
             paymentsTransfersFlag: paymentsTransfersFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
         )
         let makeTemplates = templatesComposer.compose
         
@@ -259,8 +258,7 @@ extension RootViewModelFactory {
         )
         
         let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            scheduler: mainScheduler
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
         
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
@@ -401,9 +399,7 @@ extension RootViewModelFactory {
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            pageSize: 50,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            pageSize: 50
         )
         
         if paymentsTransfersFlag.isActive {
@@ -436,9 +432,7 @@ extension RootViewModelFactory {
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
                 loadBanners: loadBannersList
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            )
         )
         
         let mainViewBannersBinder = makeBannersForMainView(

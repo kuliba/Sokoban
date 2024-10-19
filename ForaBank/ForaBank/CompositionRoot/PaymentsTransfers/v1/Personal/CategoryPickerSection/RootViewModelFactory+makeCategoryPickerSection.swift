@@ -17,9 +17,7 @@ extension RootViewModelFactory {
     func makeCategoryPickerSection(
         nanoServices: PaymentsTransfersPersonalNanoServices,
         pageSize: Int,
-        placeholderCount: Int,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        placeholderCount: Int
     ) -> CategoryPickerSectionDomain.Binder {
         
         func loadOperators(

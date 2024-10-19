@@ -12,8 +12,7 @@ extension RootViewModelFactory {
     
     func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     ) -> TemplatesListFlowModelComposer {
         
         let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
@@ -21,18 +20,18 @@ extension RootViewModelFactory {
             model: model,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let anywayFlowComposer = AnywayFlowComposer(
             makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let initiatePayment = NanoServices.initiateAnywayPayment(
             flag: utilitiesPaymentsFlag.optionOrStub,
             httpClient: httpClient,
             log: logger.log,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let composer = InitiateAnywayPaymentMicroServiceComposer(
             getOutlineProduct: { _ in self.model.outlineProduct() },
@@ -94,7 +93,7 @@ extension RootViewModelFactory {
             makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
             microServices: microServicesComposer.compose(),
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
     }
 }

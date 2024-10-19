@@ -71,7 +71,9 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let sut = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
-            logger: LoggerSpy()
+            logger: LoggerSpy(),
+            mainScheduler: .immediate,
+            backgroundScheduler: .immediate
         ).makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
@@ -81,9 +83,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
             ),
-            pageSize: pageSize,
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            pageSize: pageSize
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
