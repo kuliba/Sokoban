@@ -342,23 +342,19 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .some(categories):
-                    self.backgroundScheduler.schedule {
-    
-                        print("==== schedule operatorsService for \(categories.count) categories")
+                    
+                    let serial = self.model.localAgent.serial(
+                        for: [CodableServicePaymentOperator].self
+                    )
+                    
+                    operatorsService(.standard(from: categories, with: serial)) {
                         
-                        let serial = self.model.localAgent.serial(
-                            for: [CodableServicePaymentOperator].self
-                        )
-                        
-                        operatorsService(.standard(from: categories, with: serial)) {
+                        if !$0.isEmpty {
                             
-                            if !$0.isEmpty {
-                                
-                                self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
-                            }
-                            print("==== operatorsService completion")
-                            completion(categories)
+                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
                         }
+                        
+                        completion(categories)
                     }
                 }
             }
@@ -393,18 +389,10 @@ extension RootViewModelFactory {
                 
                 decoratedServiceCategoryListReload { [weak paymentsTransfersPersonal] categories in
                     
-                    let backgroundScheduler = self.backgroundScheduler
-                    backgroundScheduler.schedule { [backgroundScheduler] in
-                        
-                        print("==== decoratedServiceCategoryListReload completion", paymentsTransfersPersonal.map { ObjectIdentifier($0) })
-                        
-                        // notify categoryPicker
-                        paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
-                        
-                        self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-                        
-                        _ = backgroundScheduler // !! DO NOT REMOVE THIS LINE
-                    }
+                    // notify categoryPicker
+                    paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
+                    
+                    self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
                 }
             }
         }

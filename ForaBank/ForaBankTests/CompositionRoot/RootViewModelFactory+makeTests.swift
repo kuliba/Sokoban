@@ -99,17 +99,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
-        awaitActorThreadHop()
         
         httpClient.complete(with: success())
-        backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
         awaitActorThreadHop()
-        backgroundScheduler.advance()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
         XCTAssertNotNil(bindings)
-        XCTAssertNotNil(backgroundScheduler)
     }
     
     // MARK: - Helpers
