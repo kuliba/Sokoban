@@ -212,7 +212,7 @@ final class RootViewModelTests: XCTestCase {
         
         sut.orderSticker()
         
-        XCTAssertNoDiff(alertSpy.values, [nil, Alert.ViewModel.needOrderCard(primaryAction: {}).view])
+        XCTAssertNoDiff(alertSpy.values, [nil, .needOrderCard])
     }
     
     func test_orderSticker_onlyCorporateCard_shouldSetAlertToDisableForCorporateCard() {
@@ -224,7 +224,7 @@ final class RootViewModelTests: XCTestCase {
         
         sut.orderSticker()
         
-        XCTAssertNoDiff(alertSpy.values, [nil, Alert.ViewModel.disableForCorporateCard(primaryAction: {}).view])
+        XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
     }
 
     func test_orderSticker_withCard_shouldSetLinkToPaymentSticker() {
@@ -559,4 +559,8 @@ private extension Alert.ViewModel.View {
             title: "Обновить"
         )
     )
+    
+    static let needOrderCard: Self = Alert.ViewModel.needOrderCard(primaryAction: {}).view
+    static let disableForCorporateCard: Self = Alert.ViewModel.disableForCorporateCard(primaryAction: {}).view
+    
 }

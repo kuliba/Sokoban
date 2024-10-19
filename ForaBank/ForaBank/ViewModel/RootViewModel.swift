@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import ForaTools
 import PayHub
 import SwiftUI
 import MarketShowcase
@@ -32,6 +33,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
     private let landingServices: LandingServices
+    private let mainScheduler: AnySchedulerOfDispatchQueue
 
     let model: Model
     private let infoDictionary: [String : Any]?
@@ -48,7 +50,8 @@ class RootViewModel: ObservableObject, Resetable {
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction,
-        landingServices: LandingServices
+        landingServices: LandingServices,
+        mainScheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
@@ -60,6 +63,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
         self.landingServices = landingServices
+        self.mainScheduler = mainScheduler
         
         tabsViewModel.mainViewModel.rootActions = rootActions
         if case let .legacy(paymentsViewModel) = tabsViewModel.paymentsModel {
@@ -455,57 +459,67 @@ class RootViewModel: ObservableObject, Resetable {
     private func handleOutside(
         _ outside: MarketShowcaseDomain.FlowState.Status.Outside
     ) {
-        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
+        mainScheduler.delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
             case .main: self?.rootActions.switchTab(.main)
                 
             case let .openURL(linkURL): linkURL.openLink()
                 
-            case let .landing(type):
-                self?.landingServices.loadLandingByType(type) {
-                    switch $0 {
-                    case let .success(landing):
-                        Task { @MainActor [weak self] in
-                            
-                            guard let self else { return }
-
-                            let viewModel = model.landingViewModelFactory(
-                                result: landing,
-                                config: type == "abroadSticker" ? .stickerDefault : .default,
-                                landingActions: {
-                                    switch $0 {
-                                        
-                                    case let .card(action):
-                                        switch action {
-                                        case .goToMain: self.resetLink()
-                                            
-                                        case let .openUrl(linkURL): linkURL.openLink()
-                                        
-                                        default: break
-                                        }
-                                    case let .sticker(action):
-                                        switch action {
-                                        case .goToMain: self.resetLink()
-                                            
-                                        case .order:
-                                            self.orderSticker()
-                                        }
-                                    default:
-                                        break
-                                    }
-                                },
-                                outsideAction: {_ in }, 
-                                orderCard: openCard
-                            )
-                            
-                            link = .landing(viewModel, type == "abroadSticker")
-                        }
-                        
-                    case .failure:
-                        break
-                    }
-                }
+            case let .landing(type): self?.landing(by: type)
+            }
+        }
+    }
+    
+    private func cardActions(_ action: LandingEvent.Card) {
+        switch action {
+        case .goToMain: resetLink()
+            
+        case let .openUrl(linkURL): linkURL.openLink()
+            
+        default: break
+        }
+    }
+    
+    private func stickerActions(_ action: LandingEvent.Sticker) {
+        switch action {
+        case .goToMain: resetLink()
+            
+        case .order: orderSticker()
+        }
+    }
+    
+    private func landingActions(_ event: LandingEvent) {
+        switch event {
+        case let .card(action): cardActions(action)
+            
+        case let .sticker(action):stickerActions(action)
+            
+        default:break
+        }
+    }
+    
+    private func landing(by type: String) {
+        
+        landingServices.loadLandingByType(type) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch $0 {
+            case let .success(landing):
+                
+                let viewModel = model.landingViewModelFactory(
+                    result: landing,
+                    config: type == "abroadSticker" ? .stickerDefault : .default,
+                    landingActions: { self.landingActions($0) },
+                    outsideAction: {_ in },
+                    orderCard: openCard
+                )
+                
+                link = .landing(viewModel, type == "abroadSticker")
+                
+            case .failure:
+                break
             }
         }
     }
