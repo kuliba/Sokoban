@@ -211,6 +211,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(reload, file: file, line: line)
         trackForMemoryLeaks(load, file: file, line: line)
         trackForMemoryLeaks(getNavigationSpy, file: file, line: line)
         
