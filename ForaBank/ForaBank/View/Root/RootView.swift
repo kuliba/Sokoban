@@ -162,24 +162,11 @@ struct RootView: View {
             }
             
         case .paymentSticker:
-            NavigationView {
-             
                 AnyView(
                     rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
                 )
-                .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: backButton())
-                .foregroundColor(.textSecondary)
-            }
+            
         }
-    }
-    
-    private func backButton() -> some View {
-        Button(
-            action: { viewModel.resetLink() },
-            label: { Image("ic24ChevronLeft") })
     }
 }
 

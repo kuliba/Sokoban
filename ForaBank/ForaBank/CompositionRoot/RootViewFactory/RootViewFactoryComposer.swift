@@ -378,11 +378,19 @@ private extension RootViewFactoryComposer {
         dismissAll: @escaping() -> Void
     ) -> some View {
         
-        RootViewModelFactory.makeNavigationOperationView(
-            httpClient: model.authenticatedHTTPClient(),
-            model: model,
-            dismissAll: dismissAll
-        )()
+        NavigationView {
+            
+            RootViewModelFactory.makeNavigationOperationView(
+                httpClient: model.authenticatedHTTPClient(),
+                model: model,
+                dismissAll: dismissAll
+            )()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
+                .foregroundColor(.textSecondary)
+        }
     }
 }
 
