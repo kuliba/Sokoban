@@ -57,8 +57,7 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeNavigationOperationView: makeNavigationOperationView
+            makeMarketShowcaseView: makeMarketShowcaseView
         )
     }
 }
@@ -372,25 +371,6 @@ private extension RootViewFactoryComposer {
                         }
                 })
         : nil
-    }
-    
-    func makeNavigationOperationView(
-        dismissAll: @escaping() -> Void
-    ) -> some View {
-        
-        NavigationView {
-            
-            RootViewModelFactory.makeNavigationOperationView(
-                httpClient: model.authenticatedHTTPClient(),
-                model: model,
-                dismissAll: dismissAll
-            )()
-                .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
-                .foregroundColor(.textSecondary)
-        }
     }
 }
 

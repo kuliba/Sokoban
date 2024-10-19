@@ -162,10 +162,17 @@ struct RootView: View {
             }
             
         case .paymentSticker:
-                AnyView(
-                    rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
-                )
             
+            RootViewModelFactory.makeNavigationOperationView(
+                httpClient: viewModel.model.authenticatedHTTPClient(),
+                model: viewModel.model,
+                dismissAll: viewModel.resetLink
+            )()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: Button(action: viewModel.resetLink) { Image("ic24ChevronLeft") })
+                .foregroundColor(.textSecondary)
         }
     }
 }
@@ -1064,8 +1071,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _,_  in .none }, 
-            makeNavigationOperationView: { _ in AnyView(Text("")) }
+            makeMarketShowcaseView: { _,_  in .none }
         )
     }
 }
