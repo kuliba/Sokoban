@@ -26,7 +26,7 @@ extension LoggingSerialLoaderComposer {
 
 // MARK: - Adapters
 
-private extension ForaBank.ResponseMapper {
+/*private*/ extension ForaBank.ResponseMapper {
     
     static func mapGetServiceCategoryListResponse(
         data: Data,
