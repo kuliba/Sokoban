@@ -323,18 +323,11 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-#warning("extract to a generic namespace")
-        typealias ServiceCategoryListLoaderComposer = SerialComponents.SerialLoaderComposer<String, ServiceCategory, CodableServiceCategory>
-        typealias ServiceCategoryListRemoteLoad = ServiceCategoryListLoaderComposer.RemoteLoad
-        
-        let serviceCategoryRemoteLoad: ServiceCategoryListRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
-            createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse
-        )
+        let serviceCategoryRemoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
         
         let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
-        let serviceCategoryListLoaderComposer = ServiceCategoryListLoaderComposer(
+        let serviceCategoryListLoaderComposer = SerialComponents.SerialLoaderComposer(
             // TODO: replace to use: asyncLocalAgent: asyncLocalAgent,
             localAgent: model.localAgent,
             remoteLoad: backgroundScheduler.scheduled(serviceCategoryRemoteLoad),
