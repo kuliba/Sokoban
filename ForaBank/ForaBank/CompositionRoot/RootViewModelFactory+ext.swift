@@ -327,15 +327,11 @@ extension RootViewModelFactory {
         
         let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
-        let serviceCategoryListLoaderComposer = SerialComponents.SerialLoaderComposer(
-            // TODO: replace to use: asyncLocalAgent: asyncLocalAgent,
-            localAgent: model.localAgent,
+        let (serviceCategoryListLoad, serviceCategoryListReload) = composeLoaders(
             remoteLoad: backgroundScheduler.scheduled(serviceCategoryRemoteLoad),
             fromModel: { $0.serviceCategory },
             toModel: { $0.codable }
         )
-        
-        let (serviceCategoryListLoad, serviceCategoryListReload) = serviceCategoryListLoaderComposer.compose()
         
         let decoratedServiceCategoryListReload: Load<[ServiceCategory]> = { completion in
             
@@ -383,8 +379,8 @@ extension RootViewModelFactory {
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: serviceCategoryListLoad,
-                reloadCategories: decoratedServiceCategoryListReload,
+                loadCategories: backgroundScheduler.scheduled(serviceCategoryListLoad),
+                reloadCategories: backgroundScheduler.scheduled(decoratedServiceCategoryListReload),
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
