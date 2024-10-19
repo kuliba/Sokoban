@@ -13,13 +13,11 @@ extension RootViewModelFactory {
     
     func makeProviderServicePickerFlowModel(
         pageSize: Int = 50,
-        flag: StubbedFeatureFlag.Option,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        flag: StubbedFeatureFlag.Option
     ) -> (PaymentProviderServicePickerPayload) -> AnywayServicePickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-            flag: flag,
-            scheduler: scheduler
+            flag: flag
         )
         
         return {

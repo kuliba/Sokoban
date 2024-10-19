@@ -12,15 +12,13 @@ extension RootViewModelFactory {
     
     func makeQRViewModelFactory(
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     ) -> QRViewModelFactory {
         
         .init(
             makeQRScannerModel: makeMakeQRScannerModel(
                 qrResolverFeatureFlag: qrResolverFeatureFlag,
-                utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-                scheduler: scheduler
+                utilitiesPaymentsFlag: utilitiesPaymentsFlag
             ),
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(),
             makePaymentsSuccessViewModel: makePaymentsSuccessViewModel()

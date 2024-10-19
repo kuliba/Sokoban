@@ -60,8 +60,7 @@ extension RootViewModelFactory {
             
             makeMakeQRScannerModel(
                 qrResolverFeatureFlag: .init(.active),
-                utilitiesPaymentsFlag: .init(.active(.live)),
-                scheduler: mainScheduler
+                utilitiesPaymentsFlag: .init(.active(.live))
             )()
         }
         
@@ -167,8 +166,7 @@ extension RootViewModelFactory {
             
             let make = makeSegmentedPaymentProviderPickerFlowModel(
                 pageSize: pageSize,
-                flag: .live,
-                scheduler: mainScheduler
+                flag: .live
             )
             
             return make(multi, qrCode, qrMapping)
@@ -179,8 +177,7 @@ extension RootViewModelFactory {
             completion: @escaping (AnywayServicePickerFlowModel) -> Void
         ) {
             let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-                flag: .live,
-                scheduler: mainScheduler
+                flag: .live
             )
             
             completion(servicePickerComposer.compose(payload: payload))

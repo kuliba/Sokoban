@@ -80,10 +80,10 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         let make = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
-            logger: LoggerSpy()
+            logger: LoggerSpy(),
+            mainScheduler: .immediate
         ).makeSegmentedPaymentProviderPickerFlowModel(
-            flag: flag,
-            scheduler: .immediate
+            flag: flag
         )
         let mix = mix ?? .init(.provider(makeSegmentedProvider()), .provider(makeSegmentedProvider()))
         let sut = make(mix, qrCode ?? anyQR(), qrMapping)

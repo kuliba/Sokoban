@@ -115,8 +115,7 @@ extension RootViewModelFactory {
         
         let qrViewModelFactory = makeQRViewModelFactory(
             qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
         )
         
         let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
@@ -262,8 +261,7 @@ extension RootViewModelFactory {
         )
         
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            scheduler: mainScheduler
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...

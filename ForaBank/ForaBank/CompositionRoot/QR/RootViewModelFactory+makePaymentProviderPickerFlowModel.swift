@@ -17,8 +17,7 @@ extension RootViewModelFactory {
     ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-            flag: flag,
-            scheduler: mainScheduler
+            flag: flag
         )
         
         let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
