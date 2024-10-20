@@ -36,7 +36,8 @@ where ID: Hashable {
 
 public extension LoadablePickerModelComposer {
     
-   convenience init(
+    @available(*, deprecated, message: "Use designated init, explicitly set reload as load.")
+    convenience init(
         load: @escaping Load,
         makeID: @escaping MakeID,
         scheduler: AnySchedulerOf<DispatchQueue>
