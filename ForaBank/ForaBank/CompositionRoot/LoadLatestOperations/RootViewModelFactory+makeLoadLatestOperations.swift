@@ -40,7 +40,7 @@ extension RootViewModelFactory {
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     @available(*, deprecated, message: "Use RootViewModelFactory.makeLoadLatestOperations with strong `getLatestPayments` API after hard-code for `isOutsidePayments` and `isPhonePayments` deprecation")
-    static func makeLoadLatestOperations(
+    func makeLoadLatestOperations(
         getAllLoadedCategories: @escaping (@escaping LoadServiceCategoriesCompletion) -> Void,
         getLatestPayments: @escaping ([LatestPaymentServiceCategoryName], @escaping LoadLatestOperationsCompletion) -> Void,
         hardcoded: [String] = ["isOutsidePayments", "isPhonePayments"]
