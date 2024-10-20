@@ -12708,8 +12708,11 @@
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
-				8338C9CE2CC2DD450030D7F5 /* RootViewModelFactory */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
+				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
+				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
+				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
 				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
@@ -15653,17 +15656,6 @@
 				83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		8338C9CE2CC2DD450030D7F5 /* RootViewModelFactory */ = {
-			isa = PBXGroup;
-			children = (
-				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
-				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
-				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
-				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
-			);
-			path = RootViewModelFactory;
 			sourceTree = "<group>";
 		};
 		833D3E322C2EDD9F006626F2 /* ControlPanel */ = {
