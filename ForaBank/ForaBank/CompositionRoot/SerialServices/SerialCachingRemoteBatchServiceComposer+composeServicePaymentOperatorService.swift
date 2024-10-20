@@ -16,7 +16,7 @@ extension SerialCachingRemoteBatchServiceComposer {
     func composeServicePaymentOperatorService(
     ) -> ServicePaymentProviderBatchService {
         
-        let composed = self.compose(
+        let composed = compose(
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentOperator].init(providers:)

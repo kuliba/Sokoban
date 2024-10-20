@@ -327,8 +327,12 @@ extension RootViewModelFactory {
         
         let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
+        // threading
+        let _serviceCategoryRemoteLoad = backgroundScheduler.scheduled(serviceCategoryRemoteLoad)
+        let _operatorsService = backgroundScheduler.scheduled(operatorsService)
+        
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeLoaders(
-            remoteLoad: backgroundScheduler.scheduled(serviceCategoryRemoteLoad),
+            remoteLoad: _serviceCategoryRemoteLoad,
             fromModel: { $0.serviceCategory },
             toModel: { $0.codable }
         )
@@ -347,37 +351,40 @@ extension RootViewModelFactory {
                         for: [CodableServicePaymentOperator].self
                     )
                     
-                    operatorsService(.standard(from: categories, with: serial)) {
+                    _operatorsService(.standard(from: categories, with: serial)) { failedCategories in
                         
-                        if !$0.isEmpty {
+                        if !failedCategories.isEmpty {
                             
-                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
+                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \(failedCategories).", file: #file, line: #line)
                         }
                         
                         completion(categories)
+                        _ = batchServiceComposer
+                        _ = operatorsService
+                        _ = _operatorsService
                     }
                 }
             }
         }
-
+        
         let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
         
-        let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: { completion in
-                
-                serviceCategoryListLoad { completion($0 ?? []) }
-            },
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: serviceCategoryListLoad,
             getLatestPayments: getLatestPayments
         )
-        let loadAllLatestOperations = _makeLoadLatestOperations(.all)
+        
+        // threading
+        let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
+        let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: backgroundScheduler.scheduled(serviceCategoryListLoad),
-                reloadCategories: backgroundScheduler.scheduled(decoratedServiceCategoryListReload),
-                loadAllLatest: loadAllLatestOperations,
+                loadCategories: loadCategories,
+                reloadCategories: reloadCategories,
+                loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
             pageSize: 50
@@ -387,7 +394,7 @@ extension RootViewModelFactory {
             
             performOrWaitForActive {
                 
-                decoratedServiceCategoryListReload { [weak paymentsTransfersPersonal] categories in
+                reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
                     // notify categoryPicker
                     paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
