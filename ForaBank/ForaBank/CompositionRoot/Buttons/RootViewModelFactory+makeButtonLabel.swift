@@ -9,7 +9,7 @@ import SwiftUI
 
 extension RootViewModelFactory {
     
-    static func makeSuccessButtonLabel(
+    func makeSuccessButtonLabel(
         option: Payments.ParameterSuccessOptionButtons.Option
     ) -> some View {
         

@@ -14,7 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    private lazy var backgroundScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInitiated)
     private lazy var model: Model = AppDelegate.shared.model
     private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
         with: model, 
@@ -22,10 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
-    private lazy var rootViewModel = RootViewModelFactory.make(
+    private lazy var rootViewModel = RootViewModelFactory(
         model: model,
         httpClient: httpClient,
-        logger: logger,
+        logger: logger
+    ).make(
         bindings: &bindings,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
@@ -35,8 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         getProductListByTypeV6Flag: .init(.active),
         marketplaceFlag: featureFlags.marketplaceFlag,
         paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-        updateInfoStatusFlag: .init(.active),
-        backgroundScheduler: backgroundScheduler
+        updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,
