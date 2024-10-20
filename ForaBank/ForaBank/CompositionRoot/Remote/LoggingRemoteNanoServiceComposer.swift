@@ -152,4 +152,65 @@ extension LoggingRemoteNanoServiceComposer {
             }
         }
     }
+    
+    /// A closure type representing a completion handler that provides an optional `Stamped<T>`.
+    /// The completion handler receives a `Stamped<T>` if new data is available (i.e., the serial has changed),
+    /// or `nil` if no new data is available or an error occurred.
+    typealias SerialResultLoadCompletion<T> = (Result<Stamped<T>, Error>) -> Void
+    
+    /// A closure type representing a function that takes an optional `String` serial and a completion handler.
+    typealias SerialResultLoad<T> = (String?, @escaping SerialResultLoadCompletion<T>) -> Void
+
+    func composeSerialResultLoad<T, MapResponseError: Error>(
+        createRequest: @escaping (String?) throws -> URLRequest,
+        mapResponse: @escaping (Data, HTTPURLResponse) -> Result<Stamped<T>, MapResponseError>,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SerialResultLoad<T> {
+        
+        return { [self] serial, completion in
+            
+            let createRequest = logger.decorate(createRequest, with: .network, file: file, line: line)
+            let mapResponse = logger.decorate(mapResponse: mapResponse, with: .network, file: file, line: line)
+            
+            do {
+                let request = try createRequest(serial)
+                
+                httpClient.performRequest(request) { result in
+                    
+                    switch result {
+                    case .failure:
+                        completion(.failure(SerialResultLoadError.performRequestFailure))
+                        
+                    case let .success((data, response)):
+                        switch mapResponse(data, response) {
+                        case .failure:
+                            completion(.failure(SerialResultLoadError.mapResponseFailure))
+                            
+                        case let .success(stamped):
+                            // Check if the stamped serial is different from the input serial
+                            if stamped.serial == serial {
+                                // If serials are the same, invoke the completion with nil
+                                completion(.failure(SerialResultLoadError.noNewDataFailure))
+                            } else {
+                                // If serials are different, invoke the completion with the new stamped value
+                                completion(.success(stamped))
+                            }
+                        }
+                    }
+                }
+            } catch {
+                // Invoke the completion with nil if an error occurs during request creation
+                completion(.failure(SerialResultLoadError.urlRequestCreationFailure))
+            }
+        }
+    }
+    
+    enum SerialResultLoadError: Error {
+        
+        case mapResponseFailure
+        case noNewDataFailure
+        case performRequestFailure
+        case urlRequestCreationFailure
+    }
 }

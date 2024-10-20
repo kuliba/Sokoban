@@ -5,14 +5,16 @@
 //  Created by Mikhail on 27.05.2021.
 //
 
-import UIKit
 import Combine
+import CombineSchedulers
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
+    private lazy var backgroundScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInitiated)
     private lazy var model: Model = AppDelegate.shared.model
     private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
         with: model, 
@@ -33,7 +35,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         getProductListByTypeV6Flag: .init(.active),
         marketplaceFlag: featureFlags.marketplaceFlag,
         paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-        updateInfoStatusFlag: .init(.active)
+        updateInfoStatusFlag: .init(.active),
+        backgroundScheduler: backgroundScheduler
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,

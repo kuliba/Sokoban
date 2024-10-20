@@ -92,8 +92,8 @@ extension RootViewModelFactory {
             toolbar: toolbar,
             reload: {
                 
-                categoryPicker.content.event(.load)
-                operationPicker.content.event(.load)
+                categoryPicker.content.event(.reload)
+                operationPicker.content.event(.reload)
             }
         )
         

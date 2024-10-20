@@ -21,7 +21,7 @@ where Serial: Equatable {
     let persistent: any Persistent
     /// A closure that defines how to load data from a remote source.
     @usableFromInline
-    let remoteLoad: RemoteLoad<[T]>
+    let remoteLoad: RemoteLoad
     /// A function to convert from `Model` to the domain-specific type `T`.
     @usableFromInline
     let fromModel: (Model) -> T
@@ -39,7 +39,7 @@ where Serial: Equatable {
     public init(
         ephemeral: any Ephemeral,
         persistent: any Persistent,
-        remoteLoad: @escaping RemoteLoad<[T]>,
+        remoteLoad: @escaping RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) {
@@ -56,9 +56,9 @@ where Serial: Equatable {
     public typealias Persistent = MonolithicStore<SerialStamped<Serial, [Model]>>
     
     /// Completion handler type for remote loading operations.
-    public typealias RemoteLoadCompletion<Value> = (Result<SerialStamped<Serial, Value>, Error>) -> Void
+    public typealias RemoteLoadCompletion = (Result<SerialStamped<Serial, [T]>, Error>) -> Void
     /// Closure type representing a remote loading operation.
-    public typealias RemoteLoad<Value> = (Serial?, @escaping RemoteLoadCompletion<Value>) -> Void
+    public typealias RemoteLoad = (Serial?, @escaping RemoteLoadCompletion) -> Void
 }
 
 public extension SerialLoaderComposer {
