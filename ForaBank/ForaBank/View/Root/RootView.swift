@@ -165,9 +165,11 @@ struct RootView: View {
             
         case .paymentSticker:
             
-            RootViewModelFactory.makeNavigationOperationView(
-                httpClient: viewModel.model.authenticatedHTTPClient(),
+            RootViewModelFactory(
                 model: viewModel.model,
+                httpClient: viewModel.model.authenticatedHTTPClient(),
+                logger: LoggerAgent()
+            ).makeNavigationOperationView(
                 dismissAll: viewModel.resetLink
             )()
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
