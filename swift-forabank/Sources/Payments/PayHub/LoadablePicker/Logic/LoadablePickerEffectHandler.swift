@@ -1,6 +1,6 @@
 //
 //  LoadablePickerEffectHandler.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 20.08.2024.
 //
@@ -27,6 +27,14 @@ public extension LoadablePickerEffectHandler {
         switch effect {
         case .load:
             microServices.load { [weak self] in
+                
+                guard self != nil else { return }
+                
+                dispatch(.loaded($0))
+            }
+            
+        case .reload:
+            microServices.reload { [weak self] in
                 
                 guard self != nil else { return }
                 

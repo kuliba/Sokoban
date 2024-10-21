@@ -8,4 +8,5 @@
 public enum LoadablePickerEffect: Equatable {
     
     case load
+    case reload
 }

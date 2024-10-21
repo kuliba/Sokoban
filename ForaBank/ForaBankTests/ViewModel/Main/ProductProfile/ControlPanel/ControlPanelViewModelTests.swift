@@ -85,10 +85,15 @@ extension ControlPanelReducer.MakeViewModels {
             initialState: .success(.preview),
             imagePublisher: .imagePublisher,
             imageLoader: {_ in }, 
-            makeIconView:  { _ in .init(
-            image: .cardPlaceholder,
-            publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
-        )},
+            imageViewFactory: .init(
+                makeIconView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )},
+                makeBannerImageView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )}),
             limitsViewModel: nil,
             config: .stickerDefault,
             landingActions: {_ in })

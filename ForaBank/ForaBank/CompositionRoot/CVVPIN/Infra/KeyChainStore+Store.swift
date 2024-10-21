@@ -5,11 +5,11 @@
 //  Created by Igor Malyarov on 14.10.2023.
 //
 
-import CVVPINServices
+import GenericLoader
 import Foundation
 import KeyChainStore
 
-extension KeyChainStore: CVVPINServices.Store {
+extension KeyChainStore: GenericLoader.Store {
     
     public typealias Local = Key
     

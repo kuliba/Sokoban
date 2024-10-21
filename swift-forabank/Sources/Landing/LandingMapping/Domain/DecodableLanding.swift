@@ -98,7 +98,7 @@ extension DecodableLanding.Data {
                 case type
                 case data
             }
-
+            
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
             let type = try? container.decode(LandingComponentsType.self, forKey: .type)
@@ -114,151 +114,151 @@ extension DecodableLanding.Data {
                 
             case .listHorizontalRectangleImage:
                 if let data = try? container.decode(ListHorizontalRectangleImage.self, forKey: .data) {
-                self = .list(.horizontalRectangleImage(data)) }
+                    self = .list(.horizontalRectangleImage(data)) }
                 else {
                     self = .noValid("listHorizontalRectangleImage")
                 }
                 
             case .listHorizontalRoundImage:
                 if let data = try? container.decode(ListHorizontalRoundImage.self, forKey: .data) {
-                self = .list(.horizontalRoundImage(data)) }
+                    self = .list(.horizontalRoundImage(data)) }
                 else {
                     self = .noValid("listHorizontalRoundImage")
                 }
-            
+                
             case .listVerticalRoundImage:
                 if let data = try? container.decode(ListVerticalRoundImage.self, forKey: .data) {
-                self = .list(.verticalRoundImage(data)) }
+                    self = .list(.verticalRoundImage(data)) }
                 else {
                     self = .noValid("listVerticalRoundImage")
                 }
                 
             case .multiLineHeader:
                 if let data = try? container.decode(MultiLineHeader.self, forKey: .data) {
-                self = .multi(.lineHeader(data)) }
+                    self = .multi(.lineHeader(data)) }
                 else {
                     self = .noValid("multiLineHeader")
                 }
-            
+                
             case .multiMarkersText:
                 if let data = try? container.decode(MultiMarkersText.self, forKey: .data) {
-                self = .multi(.markersText(data)) }
+                    self = .multi(.markersText(data)) }
                 else {
                     self = .noValid("multiMarkersText")
                 }
                 
             case .multiText:
-                if let data = try? container.decode(MultiText.self, forKey: .data) {
-                self = .multi(.text(data)) }
+                if let data = try? container.decode(MultiText.self, forKey: .data), !data.list.isEmpty {
+                    self = .multi(.text(data)) }
                 else {
                     self = .noValid("multiText")
                 }
                 
             case .multiTextsWithIconsHorizontal:
                 if let data = try? container.decode([MultiTextsWithIconsHorizontal].self, forKey: .data) {
-                self = .multi(.textsWithIconsHorizontalArray(data)) }
+                    self = .multi(.textsWithIconsHorizontalArray(data)) }
                 else {
                     self = .noValid("multiTextsWithIconsHorizontal")
                 }
-            
+                
             case .pageTitle:
                 if let data = try? container.decode(PageTitle.self, forKey: .data) {
-                self = .pageTitle(data) }
+                    self = .pageTitle(data) }
                 else {
                     self = .noValid("pageTitle")
                 }
-            
+                
             case .textWithIconHorizontal:
                 if let data = try? container.decode(TextsWithIconHorizontal.self, forKey: .data) {
-                self = .textsWithIconHorizontal(data) }
+                    self = .textsWithIconHorizontal(data) }
                 else {
                     self = .noValid("textWithIconHorizontal")
                 }
-              
+                
             case .multiButtons:
                 if let data = try? container.decode(MultiButtons.self, forKey: .data) {
-                self = .multi(.buttons(data)) }
+                    self = .multi(.buttons(data)) }
                 else {
                     self = .noValid("multiButtons")
                 }
                 
             case .multiTypeButtons:
                 if let data = try? container.decode(MultiTypeButtons.self, forKey: .data) {
-                self = .multi(.typeButtons(data)) }
+                    self = .multi(.typeButtons(data)) }
                 else {
                     self = .noValid("multiTypeButtons")
                 }
                 
             case .image:
                 if let data = try? container.decode(ImageBlock.self, forKey: .data) {
-                self = .image(data) }
+                    self = .image(data) }
                 else {
                     self = .noValid("image")
                 }
                 
             case .imageSvg:
                 if let data = try? container.decode(ImageSvg.self, forKey: .data) {
-                self = .imageSvg(data) }
+                    self = .imageSvg(data) }
                 else {
                     self = .noValid("imageSvg")
                 }
-
+                
             case .listDropDownTexts:
                 if let data = try? container.decode(ListDropDownTexts.self, forKey: .data) {
                     self = .list(.dropDownTexts(data))
-                } 
+                }
                 else {
                     self = .noValid("listDropDownTexts")
                 }
                 
             case .verticalSpacing:
                 if let data = try? container.decode(VerticalSpacing.self, forKey: .data) {
-                self = .verticalSpacing(data) }
+                    self = .verticalSpacing(data) }
                 else {
                     self = .noValid("verticalSpacing")
                 }
             case .spacing:
                 if let data = try? container.decode(Spacing.self, forKey: .data) {
-                self = .spacing(data) }
+                    self = .spacing(data) }
                 else {
                     self = .noValid("spacing")
                 }
                 
             case .listHorizontalRectangleLimits:
                 if let data = try? container.decode(ListHorizontalRectangleLimits.self, forKey: .data) {
-                self = .list(.horizontalRectangleLimits(data)) }
+                    self = .list(.horizontalRectangleLimits(data)) }
                 else {
                     self = .noValid("listHorizontalRectangleLimits")
                 }
-
+                
             case .blockHorizontalRectangular:
                 if let data = try? container.decode(BlockHorizontalRectangular.self, forKey: .data) {
-                self = .blockHorizontalRectangular(data) }
+                    self = .blockHorizontalRectangular(data) }
                 else {
                     self = .noValid("blockHorizontalRectangular")
                 }
                 
             case .carouselBase:
                 if let data = try? container.decode(CarouselBaseDecodable.self, forKey: .data) {
-                self = .carousel(.base(data)) }
+                    self = .carousel(.base(data)) }
                 else {
                     self = .noValid("carouselBase")
                 }
                 
             case .carouselWithTabs:
                 if let data = try? container.decode(CarouselWithTabsDecodable.self, forKey: .data) {
-                self = .carousel(.withTabs(data)) }
+                    self = .carousel(.withTabs(data)) }
                 else {
                     self = .noValid("carouselWithTabs")
                 }
                 
             case .carouselWithDots:
                 if let data = try? container.decode(CarouselWithDotsDecodable.self, forKey: .data) {
-                self = .carousel(.withDots(data)) }
+                    self = .carousel(.withDots(data)) }
                 else {
                     self = .noValid("carouselWithDots")
                 }
-                                
+                
             default:
                 // не смогли распарсить - нет такого type
                 self = .noValid("нет такого типа")

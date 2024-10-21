@@ -8,19 +8,19 @@
 import SwiftUI
 import UIPrimitives
 
-public struct MarketShowcaseContentView<RefreshView, LandingView, Landing>: View
+public struct MarketShowcaseContentView<RefreshView, LandingView, Landing, InformerPayload>: View
 where RefreshView: View,
       LandingView: View
 {
     
     let state: State
-    let event: (Event<Landing>) -> Void
+    let event: (Event<Landing, InformerPayload>) -> Void
     let config: Config
     let factory: Factory
     
     public init(
         state: State,
-        event: @escaping (Event<Landing>) -> Void,
+        event: @escaping (Event<Landing, InformerPayload>) -> Void,
         config: Config,
         factory: Factory
     ) {
@@ -44,16 +44,29 @@ where RefreshView: View,
         ZStack {
             
             switch state.status {
-            case .initiate, .inflight, .failure:
-                EmptyView()
+            case .initiate:
+                Color.clear
+                    .frame(maxHeight: .infinity)
                 
+            case let .failure(_, oldLanding):
+                if let oldLanding {
+                    factory.makeLandingView(oldLanding)
+                } else {
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
             case let .loaded(landing):
                 factory.makeLandingView(landing)
-            }
-            
-            if case .inflight = state.status {
-                factory.makeRefreshView()
-                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                
+            case let .inflight(oldLanding):
+                oldLanding.map {
+                    factory.makeLandingView($0)
+                }
+                if oldLanding == nil {
+                    factory.makeRefreshView()
+                        .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                }
             }
         }
     }
@@ -61,7 +74,7 @@ where RefreshView: View,
 
 public extension MarketShowcaseContentView {
     
-    typealias State = MarketShowcaseContentState<Landing>
+    typealias State = MarketShowcaseContentState<Landing, InformerPayload>
     typealias Event = MarketShowcaseContentEvent
     typealias Config = MarketShowcaseConfig
     typealias Factory = ViewFactory<RefreshView, Landing, LandingView>
@@ -74,7 +87,9 @@ public extension MarketShowcaseContentView {
 extension MarketShowcaseContentView
 where RefreshView == Text,
       LandingView == Text,
-      Landing == String {
+      Landing == String,
+      InformerPayload == String
+{
     
     static let preview = MarketShowcaseContentView(
         state: .init(status: .initiate),
@@ -99,24 +114,6 @@ private struct ViewByCenterModifier: ViewModifier {
         .position(
             x: UIScreen.main.bounds.width/2,
             y: UIScreen.main.bounds.height/2 - height
-        )
-    }
-}
-
-#warning("move to module")
-extension View {
-    
-    func alert<Item: Identifiable>(
-        item: Item?,
-        content: (Item) -> Alert
-    ) -> some View {
-        
-        alert(
-            item: .init(
-                get: { item },
-                set: { _ in } // managed by action in content
-            ),
-            content: content
         )
     }
 }
