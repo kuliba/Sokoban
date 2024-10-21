@@ -32,7 +32,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
-    private let landingServices: LandingServices
+    let landingServices: LandingServices
     private let mainScheduler: AnySchedulerOfDispatchQueue
 
     let model: Model
@@ -73,7 +73,6 @@ class RootViewModel: ObservableObject, Resetable {
         bind()
         bindAuth()
         bindTabBar()
-        bindTabBarMarketShowcase()
     }
     
     func reset() {
@@ -84,6 +83,11 @@ class RootViewModel: ObservableObject, Resetable {
     func resetLink() {
         
         link = nil
+    }
+    
+    func setLink(to newValue: Link) {
+        
+        link = newValue
     }
     
     private func bindAuth() {
@@ -435,159 +439,6 @@ class RootViewModel: ObservableObject, Resetable {
             .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .assign(to: &$isTabBarHidden)
-    }
-    
-    private func bindTabBarMarketShowcase() {
-        
-        tabsViewModel.marketShowcaseBinder.flow.$state
-            .compactMap(\.outside)
-            .receive(on: mainScheduler)
-            .sink { [weak self] in
-                self?.handleOutside($0)
-            }
-            .store(in: &bindings)
-        
-        tabsViewModel.marketShowcaseBinder.flow.$state
-            .compactMap(\.informer)
-            .receive(on: mainScheduler)
-            .sink { [weak self] in
-                self?.model.action.send(ModelAction.Informer.Show(informer: $0))
-            }
-            .store(in: &bindings)
-    }
-    
-    private func handleOutside(
-        _ outside: MarketShowcaseDomain.FlowState.Status.Outside
-    ) {
-        mainScheduler.delay(for: .milliseconds(300)) { [weak self] in
-            
-            switch outside {
-            case .main: self?.rootActions.switchTab(.main)
-                
-            case let .openURL(linkURL): linkURL.openLink()
-                
-            case let .landing(type): self?.landing(by: type)
-            }
-        }
-    }
-    
-    private func cardActions(_ action: LandingEvent.Card) {
-        switch action {
-        case .goToMain: resetLink()
-            
-        case let .openUrl(linkURL): linkURL.openLink()
-            
-        default: break
-        }
-    }
-    
-    private func stickerActions(_ action: LandingEvent.Sticker) {
-        switch action {
-        case .goToMain: resetLink()
-            
-        case .order: orderSticker()
-        }
-    }
-    
-    private func landingActions(_ event: LandingEvent) {
-        switch event {
-        case let .card(action): cardActions(action)
-            
-        case let .sticker(action):stickerActions(action)
-            
-        default:break
-        }
-    }
-    
-    private func landing(by type: String) {
-        
-        landingServices.loadLandingByType(type) { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-            case let .success(landing):
-                
-                let viewModel = model.landingViewModelFactory(
-                    result: landing,
-                    config: type == "abroadSticker" ? .stickerDefault : .default,
-                    landingActions: { self.landingActions($0) },
-                    outsideAction: {_ in },
-                    orderCard: openCard
-                )
-                
-                link = .landing(viewModel, type == "abroadSticker")
-                
-            case .failure:
-                break
-            }
-        }
-    }
-        
-    func openOrderCard() {
-        
-        let authProductsViewModel = AuthProductsViewModel(
-            model,
-            products: model.catalogProducts.value,
-            dismissAction: { [weak self] in
-                self?.resetLink()
-            })
-        
-        link = .openCard(authProductsViewModel)
-    }
-    
-    func openCard() {
-        
-        if model.onlyCorporateCards {
-            model.productsOpenAccountURL.absoluteString.openLink()
-        } else {
-            openOrderCard()
-        }
-    }
-
-    func orderSticker() {
-        
-        if model.onlyCorporateCards {
-            alert = .disableForCorporateCard { [weak self] in
-                self?.action.send(RootViewModelAction.CloseAlert())
-            }
-        } else {
-            
-            let productsCard = model.products(.card)
-            
-            if productsCard == nil ||
-                productsCard?.contains(where: {
-                    ($0 as? ProductCardData)?.isMain == true }) == false
-            {
-                alert = .needOrderCard(primaryAction: { [weak self] in
-                    self?.openOrderCard()
-                })
-            } else {
-                self.link = .paymentSticker
-            }
-        }
-    }
-}
-
-private extension MarketShowcaseFlowState {
-    
-    var outside: Status.Outside? {
-        
-        guard case let .outside(outside) = self.status
-        else { return nil }
-        
-        return outside
-    }
-}
-
-private extension MarketShowcaseFlowState {
-    
-    var informer: InformerPayload? {
-        
-        guard case let .informer(informerPayload) = self.status
-        else { return nil }
-        
-        return informerPayload
     }
 }
 
