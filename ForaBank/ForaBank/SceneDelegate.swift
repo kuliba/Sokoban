@@ -5,8 +5,10 @@
 //  Created by Mikhail on 27.05.2021.
 //
 
-import UIKit
 import Combine
+import CombineSchedulers
+import UIKit
+import MarketShowcase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -20,21 +22,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
-    private lazy var rootViewModel = RootViewModelFactory.make(
-        model: model,
-        httpClient: httpClient,
-        logger: logger,
-        bindings: &bindings,
-        qrResolverFeatureFlag: .init(.active),
-        fastPaymentsSettingsFlag: .init(.active(.live)),
-        utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
-        historyFilterFlag: featureFlags.historyFilterFlag,
-        changeSVCardLimitsFlag: .init(.active),
-        getProductListByTypeV6Flag: .init(.active),
-        marketplaceFlag: featureFlags.marketplaceFlag,
-        paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-        updateInfoStatusFlag: .init(.active)
-    )
+    private lazy var rootViewModel = {
+        
+        let factory = RootViewModelFactory(
+            model: model,
+            httpClient: httpClient,
+            logger: logger
+        )
+            
+        let viewModel = factory.make(
+            bindings: &bindings,
+            qrResolverFeatureFlag: .init(.active),
+            fastPaymentsSettingsFlag: .init(.active(.live)),
+            utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
+            historyFilterFlag: featureFlags.historyFilterFlag,
+            changeSVCardLimitsFlag: .init(.active),
+            getProductListByTypeV6Flag: .init(.active),
+            marketplaceFlag: featureFlags.marketplaceFlag,
+            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
+            updateInfoStatusFlag: .init(.active)
+        )
+        
+        bind(rootViewModel: viewModel)
+        
+        let binder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: viewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: viewModel,
+            scheduler: .main
+        )
+
+        bindings.formUnion(binder.bind())
+        
+        return viewModel
+    }()
+    
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,
         httpClient: httpClient,
@@ -54,8 +75,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
-        bind(rootViewModel: rootViewModel)
-
         //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,

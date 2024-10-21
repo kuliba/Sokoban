@@ -6,6 +6,7 @@
 //
 
 import CVVPINServices
+import GenericLoader
 import XCTest
 
 final class InMemoryStoreTests: XCTestCase {

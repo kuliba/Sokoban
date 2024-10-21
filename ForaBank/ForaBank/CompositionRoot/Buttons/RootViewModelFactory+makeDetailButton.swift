@@ -17,16 +17,13 @@ enum _PaymentID {}
 
 extension RootViewModelFactory {
     
-    static func makeOperationDetailButton(
-        httpClient: HTTPClient,
-        model: Model
-    ) -> (PaymentID) -> some View {
+    func makeOperationDetailButton() -> (PaymentID) -> some View {
         
         return makeButton
         
         func makeButton(paymentID: PaymentID) -> some View {
             
-            let buttonLabel = { makeSuccessButtonLabel(option: .details) }
+            let buttonLabel = { self.makeSuccessButtonLabel(option: .details) }
 
             // TODO: reuse methods form `AnywayPayment`
             let getDetailService = RemoteService(

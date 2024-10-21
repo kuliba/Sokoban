@@ -6,8 +6,8 @@
 //
 
 import PayHub
-
 import SwiftUI
+import UIPrimitives
 
 public struct BannerPickerSectionFlowView<ContentView, DestinationView, Banner, SelectedBanner, BannerList>: View
 where ContentView: View,
@@ -32,7 +32,7 @@ where ContentView: View,
         factory.makeContentView()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.dismiss) },
+                dismiss: { event(.dismiss) },
                 content: factory.makeDestinationView
             )
     }

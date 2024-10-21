@@ -11,15 +11,12 @@ import RemoteServices
 extension SerialCachingRemoteBatchServiceComposer {
     
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
-    typealias RemoteProvider = RemoteServices.ResponseMapper.ServicePaymentProvider
     typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
     func composeServicePaymentOperatorService(
-        getSerial: @escaping (GetOperatorsListByParamPayload) -> String?
     ) -> ServicePaymentProviderBatchService {
         
         let composed = self.compose(
-            getSerial: getSerial,
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentOperator].init(providers:)

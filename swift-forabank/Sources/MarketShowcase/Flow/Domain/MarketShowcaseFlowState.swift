@@ -25,7 +25,7 @@ public extension MarketShowcaseFlowState {
     
     enum Status {
         
-        case alert(BackendFailure)
+        case alert(AlertFailure)
         case destination(Destination)
         case informer(InformerPayload)
         case outside(Outside)
@@ -33,18 +33,8 @@ public extension MarketShowcaseFlowState {
         public enum Outside: Equatable {
             case main
             case openURL(String)
+            case landing(String)
         }
-    }
-}
-
-public struct BackendFailure: Equatable, Identifiable {
-    
-    public var id: String { message }
-
-    let message: String
-    
-    public init(message: String) {
-        self.message = message
     }
 }
 

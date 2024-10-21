@@ -2189,9 +2189,11 @@ extension ProductProfileViewModel {
             } else {
                 
                 if let rootActions {
-                    let view: any View = RootViewModelFactory.makeNavigationOperationView(
-                        httpClient: model.authenticatedHTTPClient(),
+                    let view: any View = RootViewModelFactory(
                         model: model,
+                        httpClient: model.authenticatedHTTPClient(),
+                        logger: LoggerAgent()
+                    ).makeNavigationOperationView(
                         dismissAll: rootActions.dismissAll
                     )()
 

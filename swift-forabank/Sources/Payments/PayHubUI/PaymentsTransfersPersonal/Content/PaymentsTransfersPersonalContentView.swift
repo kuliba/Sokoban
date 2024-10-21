@@ -32,10 +32,6 @@ where CategoryPickerView: View,
         
         VStack(spacing: config.spacing) {
             
-            Button("Reload | to be replaced with \"swipe to refresh\")".uppercased(), action: content.reload)
-                .foregroundColor(.blue)
-                .font(.caption.bold())
-            
             VStack(alignment: .leading, spacing: config.titleSpacing) {
                 
                 config.title.render()

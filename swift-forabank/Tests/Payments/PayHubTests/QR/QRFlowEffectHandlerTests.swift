@@ -32,14 +32,16 @@ final class QRFlowEffectHandlerTests: QRFlowTests {
     }
     
     func test_processScanResult_shouldDeliverDestination() {
-    
+        
         let destination = makeDestination()
         let (sut, processScanResult) = makeSUT()
         
-        expect(sut, with: .processScanResult(makeScanResult()), toDeliver: .setDestination(destination)) {
-            
-            processScanResult.complete(with: destination)
-        }
+        expect(
+            sut,
+            with: .processScanResult(makeScanResult()), 
+            toDeliver: .setDestination(destination),
+            on: { processScanResult.complete(with: destination) }
+        )
     }
     
     // MARK: - Helpers
