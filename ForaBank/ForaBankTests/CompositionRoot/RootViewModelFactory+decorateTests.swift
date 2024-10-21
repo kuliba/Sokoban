@@ -58,17 +58,8 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
         
         let (_,_, decoratee, decoration, decorated) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        decorated {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        decoratee.complete(with: nil)
-        
-        wait(for: [exp], timeout: 1)
+        call(decorated, on: decoratee.complete(with: nil))
         
         XCTAssertEqual(decoration.callCount, 0)
     }
@@ -76,33 +67,19 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
         
         let (_,_, decoratee, _, decorated) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        decorated {
-            
-            XCTAssertNil($0)
-            exp.fulfill()
-        }
-        
-        decoratee.complete(with: nil)
-        
-        wait(for: [exp], timeout: 1)
+        call(
+            decorated,
+            assert: { XCTAssertNoDiff($0, nil) },
+            on: decoratee.complete(with: nil)
+        )
     }
     
     func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
         
         let (_,_, decoratee, decoration, decorated) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        decorated {
-            
-            XCTAssertEqual($0, [])
-            exp.fulfill()
-        }
-        
-        decoratee.complete(with: [])
-        
-        wait(for: [exp], timeout: 1)
+        call(decorated, on: decoratee.complete(with: []))
         
         XCTAssertEqual(decoration.callCount, 0)
     }
@@ -110,17 +87,12 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
         
         let (_,_, decoratee, _, decorated) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        decorated {
-            
-            XCTAssertEqual($0, [])
-            exp.fulfill()
-        }
-        
-        decoratee.complete(with: [])
-        
-        wait(for: [exp], timeout: 1)
+        call(
+            decorated,
+            assert: { XCTAssertNoDiff($0, []) },
+            on: decoratee.complete(with: [])
+        )
     }
     
     // MARK: - Helpers
@@ -164,5 +136,24 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         trackForMemoryLeaks(decoration, file: file, line: line)
         
         return (sut, httpClient, decoratee, decoration, decorated)
+    }
+    
+    private func call(
+        _ decorated: SUT.Load<[ServiceCategory]>,
+        assert: @escaping ([ServiceCategory]?) -> Void = { _ in },
+        on action: @autoclosure () -> Void,
+        timeout: TimeInterval = 1.0
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        decorated {
+            
+            assert($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
