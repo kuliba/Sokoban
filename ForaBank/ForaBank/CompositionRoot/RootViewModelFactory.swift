@@ -18,6 +18,12 @@ final class RootViewModelFactory {
     let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     let backgroundScheduler: AnySchedulerOf<DispatchQueue>
     
+    // reusable components & factories
+    let asyncLocalAgent: LocalAgentAsyncWrapper
+    let batchServiceComposer: SerialCachingRemoteBatchServiceComposer
+    let loggingSerialLoaderComposer: LoggingSerialLoaderComposer
+    let nanoServiceComposer: LoggingRemoteNanoServiceComposer
+    
     init(
         model: Model,
         httpClient: HTTPClient,
@@ -32,5 +38,32 @@ final class RootViewModelFactory {
         self.mainScheduler = mainScheduler
         self.interactiveScheduler = interactiveScheduler
         self.backgroundScheduler = backgroundScheduler
+        
+        // reusable components & factories
+        
+        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
+        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
+        )
+        
+        self.asyncLocalAgent = .init(
+            agent: model.localAgent,
+            interactiveScheduler: interactiveScheduler,
+            backgroundScheduler: backgroundScheduler
+        )
+        
+        self.batchServiceComposer = .init(
+            nanoServiceFactory: nanoServiceComposer,
+            updateMaker: asyncLocalAgent
+        )
+        
+        self.loggingSerialLoaderComposer = .init(
+            httpClient: httpClient,
+            localAgent: model.localAgent,
+            logger: logger
+        )
+        
+        self.nanoServiceComposer = nanoServiceComposer
     }
 }

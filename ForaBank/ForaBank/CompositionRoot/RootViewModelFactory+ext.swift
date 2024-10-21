@@ -263,14 +263,7 @@ extension RootViewModelFactory {
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
-        
-        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
-        // reusable factory
-        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: logger
-        )
-        
+                
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -298,24 +291,6 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder
-        )
-        
-        // reusable component
-        let asyncLocalAgent = LocalAgentAsyncWrapper(
-            agent: model.localAgent,
-            interactiveScheduler: interactiveScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
-        // reusable factory
-        let batchServiceComposer = SerialCachingRemoteBatchServiceComposer(
-            nanoServiceFactory: nanoServiceComposer,
-            updateMaker: asyncLocalAgent
-        )
-        // reusable factory
-        let loggingSerialLoaderComposer = LoggingSerialLoaderComposer(
-            httpClient: httpClient,
-            localAgent: model.localAgent,
-            logger: logger
         )
         
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
