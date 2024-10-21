@@ -13,6 +13,15 @@ where ID == UUID {
     
     convenience init(
         load: @escaping Load,
+        reload: @escaping Load,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        self.init(load: load, reload: reload, makeID: UUID.init, scheduler: scheduler)
+    }
+    
+    @available(*, deprecated, message: "Use LoadablePickerModelComposer.init(load:reload:scheduler:), explicitly set reload as load.")
+    convenience init(
+        load: @escaping Load,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.init(load: load, makeID: UUID.init, scheduler: scheduler)

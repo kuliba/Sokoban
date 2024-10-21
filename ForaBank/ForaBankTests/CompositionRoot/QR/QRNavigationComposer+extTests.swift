@@ -10,6 +10,7 @@ import CombineSchedulers
 extension QRNavigationComposer {
     
     convenience init(
+        httpClient: any HTTPClient,
         logger: any LoggerAgentProtocol,
         model: Model,
         createSberQRPayment: @escaping QRNavigationComposerMicroServicesComposer.CreateSberQRPayment,
@@ -21,6 +22,7 @@ extension QRNavigationComposer {
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         let composer = QRNavigationComposerMicroServicesComposer(
+            httpClient: httpClient,
             logger: logger,
             model: model,
             createSberQRPayment: createSberQRPayment,
@@ -152,6 +154,7 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
             makeServicePicker: .init()
         )
         let sut = SUT(
+            httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             model: model,
             createSberQRPayment: spies.createSberQRPayment.process(_:completion:),

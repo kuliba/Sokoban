@@ -15,7 +15,7 @@ where Serial == String,
     
     convenience init(
         localAgent: any LocalAgentProtocol,
-        remoteLoad: @escaping RemoteLoad<[T]>,
+        remoteLoad: @escaping RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) {

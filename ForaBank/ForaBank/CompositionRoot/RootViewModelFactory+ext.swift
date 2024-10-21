@@ -30,12 +30,7 @@ import SwiftUI
 
 extension RootViewModelFactory {
     
-    typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
-    
-    static func make(
-        model: Model,
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
+    func make(
         bindings: inout Set<AnyCancellable>,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
@@ -45,17 +40,13 @@ extension RootViewModelFactory {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        mainScheduler: AnySchedulerOfDispatchQueue = .main,
-        interactiveScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInteractive),
-        backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> RootViewModel {
         
-        func runOnceWhenAuthorized(
-            _ work: @escaping () -> Void,
-            on scheduler: AnySchedulerOfDispatchQueue = backgroundScheduler
+        func performOrWaitForActive(
+            _ work: @escaping () -> Void
         ) {
-            bindings.insert(model.runOnceWhenAuthorised(work, on: scheduler))
+            bindings.insert(model.performOrWaitForActive(work))
         }
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
@@ -71,15 +62,11 @@ extension RootViewModelFactory {
         }
         
         let rsaKeyPairStore = makeLoggingStore(
-            store: KeyTagKeyChainStore<RSADomain.KeyPair>(
-                keyTag: .rsa
-            ),
-            logger: logger
+            store: KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
         )
         
         let resetCVVPINActivation = makeResetCVVPINActivation(
-            rsaKeyPairStore: rsaKeyPairStore,
-            logger: logger
+            rsaKeyPairStore: rsaKeyPairStore
         )
         
         let cvvPINServicesClient = Services.cvvPINServicesClient(
@@ -87,8 +74,6 @@ extension RootViewModelFactory {
             logger: logger,
             rsaKeyPairStore: rsaKeyPairStore
         )
-        
-        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
         let fpsHTTPClient = fastPaymentsSettingsFlag.isStub
         ? HTTPClientStub.fastPaymentsSettings()
@@ -101,18 +86,13 @@ extension RootViewModelFactory {
             case .active:
                 return .init(fastPaymentsViewModel: .new({
                     
-                    makeNewFastPaymentsViewModel(
-                        httpClient: fpsHTTPClient,
-                        model: model,
-                        log: infoNetworkLog,
-                        scheduler: $0
-                    )
+                    self.makeNewFastPaymentsViewModel()
                 }))
                 
             case .inactive:
                 return .init(fastPaymentsViewModel: .legacy({
                     
-                    .init(model: $0,newModel: model,closeAction: $1)
+                    .init(model: $0,newModel: self.model,closeAction: $1)
                 }))
             }
         }()
@@ -122,13 +102,10 @@ extension RootViewModelFactory {
             otpServices: .init(fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts(model: model),
-                c2bSubscription: model.subscriptions.value,
-                scheduler: mainScheduler
+                getProducts: getSubscriptionProducts,
+                c2bSubscription: model.subscriptions.value
             ),
-            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60,
-            log: infoNetworkLog,
-            scheduler: mainScheduler
+            duration: fastPaymentsSettingsFlag.isStub ? 10 : 60
         )
         
         let sberQRServices = Services.makeSberQRServices(
@@ -137,11 +114,8 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
-            model: model,
-            logger: logger,
             qrResolverFeatureFlag: qrResolverFeatureFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            scheduler: mainScheduler
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
         )
         
         let utilitiesHTTPClient = utilitiesPaymentsFlag.isStub
@@ -203,7 +177,7 @@ extension RootViewModelFactory {
             repeatPayment: infoPaymentService,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: {
-                model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+                self.model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
             }
         )
         
@@ -211,7 +185,7 @@ extension RootViewModelFactory {
             cancelC2BSub: { (token: SubscriptionViewModel.Token) in
                 
                 let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                model.action.send(action)
+                self.model.action.send(action)
             })
         
         let productNavigationStateManager = ProductProfileFlowManager(
@@ -222,11 +196,7 @@ extension RootViewModelFactory {
         
         let templatesComposer = makeTemplatesComposer(
             paymentsTransfersFlag: paymentsTransfersFlag,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
-            model: model,
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
-            scheduler: mainScheduler
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
         )
         let makeTemplates = templatesComposer.compose
         
@@ -287,19 +257,11 @@ extension RootViewModelFactory {
         )
         
         let makePaymentProviderPickerFlowModel = makeSegmentedPaymentProviderPickerFlowModel(
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
-            model: model,
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            scheduler: mainScheduler
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
         
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
-            httpClient: httpClient,
-            log: logger.log(level:category:message:file:line:),
-            model: model,
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            scheduler: mainScheduler
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
         
         // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
@@ -308,7 +270,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             logger: logger
         )
-
+        
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -321,7 +283,7 @@ extension RootViewModelFactory {
             makeTemplates: makeTemplates,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
-            sberQRServices: sberQRServices, 
+            sberQRServices: sberQRServices,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -329,9 +291,8 @@ extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
-                getProducts: getSubscriptionProducts(model: model),
-                c2bSubscription: model.subscriptions.value,
-                scheduler: mainScheduler
+                getProducts: getSubscriptionProducts,
+                c2bSubscription: model.subscriptions.value
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
@@ -351,11 +312,6 @@ extension RootViewModelFactory {
             updateMaker: asyncLocalAgent
         )
         // reusable factory
-        let serialLoaderComposer = SerialLoaderComposer(
-            asyncLocalAgent: asyncLocalAgent,
-            nanoServiceComposer: nanoServiceComposer
-        )
-        // reusable factory
         let loggingSerialLoaderComposer = LoggingSerialLoaderComposer(
             httpClient: httpClient,
             localAgent: model.localAgent,
@@ -367,13 +323,58 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let (serviceCategoryListLoad, serviceCategoryListReload) = loggingSerialLoaderComposer.composeGetServiceCategoryList()
+#warning("extract to a generic namespace")
+        typealias ServiceCategoryListLoaderComposer = SerialComponents.SerialLoaderComposer<String, ServiceCategory, CodableServiceCategory>
+        typealias ServiceCategoryListRemoteLoad = ServiceCategoryListLoaderComposer.RemoteLoad
         
-        let serviceCategoriesRemoteLoad: LoadServiceCategories = { completion in
+        let serviceCategoryRemoteLoad: ServiceCategoryListRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse
+        )
         
-            serviceCategoryListReload { completion($0 ?? []) }
+        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
+        
+        let serviceCategoryListLoaderComposer = ServiceCategoryListLoaderComposer(
+            // TODO: replace to use: asyncLocalAgent: asyncLocalAgent,
+            localAgent: model.localAgent,
+            remoteLoad: backgroundScheduler.scheduled(serviceCategoryRemoteLoad),
+            fromModel: { $0.serviceCategory },
+            toModel: { $0.codable }
+        )
+        
+        let (serviceCategoryListLoad, serviceCategoryListReload) = serviceCategoryListLoaderComposer.compose()
+        
+        let decoratedServiceCategoryListReload: Load<[ServiceCategory]> = { completion in
+            
+            serviceCategoryListReload {
+                
+                switch $0 {
+                case .none:
+                    completion(nil)
+                    
+                case let .some(categories):
+                    self.backgroundScheduler.schedule {
+    
+                        print("==== schedule operatorsService for \(categories.count) categories")
+                        
+                        let serial = self.model.localAgent.serial(
+                            for: [CodableServicePaymentOperator].self
+                        )
+                        
+                        operatorsService(.standard(from: categories, with: serial)) {
+                            
+                            if !$0.isEmpty {
+                                
+                                self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
+                            }
+                            print("==== operatorsService completion")
+                            completion(categories)
+                        }
+                    }
+                }
+            }
         }
-        
+
         let getLatestPayments = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
             mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
@@ -388,91 +389,59 @@ extension RootViewModelFactory {
         let loadAllLatestOperations = _makeLoadLatestOperations(.all)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            httpClient: httpClient,
-            logger: logger,
-            model: model,
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: serviceCategoriesRemoteLoad,
+                loadCategories: serviceCategoryListLoad,
+                reloadCategories: decoratedServiceCategoryListReload,
                 loadAllLatest: loadAllLatestOperations,
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
-            ), 
-            pageSize: 50,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            ),
+            pageSize: 50
         )
         
-        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService(
-            getSerial: { _ in
-                
-                model.localAgent.serial(for: [CodableServicePaymentOperator].self)
-            }
-        )
-        
-        let oneTime = FireAndForgetDecorator(
-            decoratee: serviceCategoriesRemoteLoad,
-            decoration: { [weak paymentsTransfersPersonal] categories, completion in
-                
-                // notify categoryPicker
-                paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories))
-                
-                // load operators
-                let serial = model.localAgent.serial(for: [CodableServicePaymentOperator].self)
-                
-                operatorsService(categories.map { .init(serial: serial, category: $0) }) {
-                    
-                    if !$0.isEmpty {
-                        
-                        logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \($0.map(\.category))", file: #file, line: #line)
-                    }
-                    
-                    completion()
-                }
-            }
-        )
-
-        runOnceWhenAuthorized {
+        if paymentsTransfersFlag.isActive {
             
-            oneTime {
+            performOrWaitForActive {
                 
-                guard let categories = try? $0.get() else { return }
-
-                logger.log(level: .error, category: .network, message: "Failed to load operators for categories: \(categories)", file: #file, line: #line)
-                
-                _ = oneTime
+                decoratedServiceCategoryListReload { [weak paymentsTransfersPersonal] categories in
+                    
+                    let backgroundScheduler = self.backgroundScheduler
+                    backgroundScheduler.schedule { [backgroundScheduler] in
+                        
+                        print("==== decoratedServiceCategoryListReload completion", paymentsTransfersPersonal.map { ObjectIdentifier($0) })
+                        
+                        // notify categoryPicker
+                        paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
+                        
+                        self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
+                        
+                        _ = backgroundScheduler // !! DO NOT REMOVE THIS LINE
+                    }
+                }
             }
         }
         
         let hasCorporateCardsOnlyPublisher = model.products.map(\.hasCorporateCardsOnly).eraseToAnyPublisher()
-                
-        let loadBannersList = makeLoadBanners(
-            httpClient: httpClient,
-            infoNetworkLog: infoNetworkLog,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
-
+        
+        let loadBannersList = makeLoadBanners()
+        
         let paymentsTransfersCorporate = makePaymentsTransfersCorporate(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
                 loadBanners: loadBannersList
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            )
         )
         
         let mainViewBannersBinder = makeBannersForMainView(
             bannerPickerPlaceholderCount: 6,
             nanoServices: .init(
-                loadBanners: loadBannersList, 
+                loadBanners: loadBannersList,
                 // TODO: add real serial model.localAgent.serial(for: LandingType.self)
                 loadLandingByType: { getLanding(( "", $0), $1) }
-            ),
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            )
         )
-
+        
         // call and notify bannerPicker
         bindings.saveAndRun {
             
@@ -482,7 +451,7 @@ extension RootViewModelFactory {
                 mainViewBannersBinder.content.bannerPicker.content.event(.loaded($0))
             }
         }
-
+        
         let paymentsTransfersSwitcher = PaymentsTransfersSwitcher(
             hasCorporateCardsOnly: hasCorporateCardsOnlyPublisher,
             corporate: paymentsTransfersCorporate,
@@ -495,18 +464,18 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map,
             mapError: MarketShowcaseDomain.ContentError.init(error:)
         )
-
+        
         let marketShowcaseComposer = MarketShowcaseComposer(
             nanoServices: .init(
                 loadLanding: { getLandingByType(( "", $0), $1) },
                 orderCard: {_ in },
                 orderSticker: {_ in }),
-            scheduler: .main)
+            scheduler: mainScheduler
+        )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
-
+        
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
-            model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -515,7 +484,7 @@ extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory, 
+            qrViewModelFactory: qrViewModelFactory,
             landingServices: .init(loadLandingByType: { getLanding(( "", $0), $1) }),
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation,
@@ -528,9 +497,7 @@ extension RootViewModelFactory {
         )
     }
     
-    static func makeNavigationOperationView(
-        httpClient: HTTPClient,
-        model: Model,
+    func makeNavigationOperationView(
         dismissAll: @escaping() -> Void
     ) -> () -> some View {
         
@@ -540,10 +507,7 @@ extension RootViewModelFactory {
             setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
         ) -> some View {
             
-            let makeOperationStateViewModel = makeOperationStateViewModel(
-                httpClient,
-                model: model
-            )
+            let makeOperationStateViewModel = makeOperationStateViewModel()
             
             return OperationView(
                 model: makeOperationStateViewModel(setSelection),
@@ -551,10 +515,7 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: makeStickerDetailDocumentButtons(
-                            httpClient: httpClient,
-                            model: model
-                        ),
+                        buttonsView: self.makeStickerDetailDocumentButtons(),
                         mainButtonAction: dismissAll,
                         configuration: .default
                     )
@@ -618,20 +579,14 @@ extension RootViewModelFactory {
         }
     }
     
-    static func makeStickerDetailDocumentButtons(
-        httpClient: HTTPClient,
-        model: Model
+    func makeStickerDetailDocumentButtons(
     ) -> (
         PaymentSticker.OperationResult.PaymentID
     ) -> some View {
         
-        let makeDetailButton = makeOperationDetailButton(
-            httpClient: httpClient,
-            model: model
-        )
+        let makeDetailButton = makeOperationDetailButton()
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient,
             printFormType: .sticker
         )
         
@@ -762,7 +717,7 @@ extension ProductProfileViewModel {
                 },
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
-                }, 
+                },
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 model: model
@@ -779,7 +734,7 @@ extension ProductProfileViewModel {
                 paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product, 
+                product: product,
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
                 rootView: rootView,
@@ -792,12 +747,11 @@ extension ProductProfileViewModel {
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
-    static func makeLoggingStore<Key>(
-        store: any Store<Key>,
-        logger: LoggerAgentProtocol
+    func makeLoggingStore<Key>(
+        store: any Store<Key>
     ) -> any Store<Key> {
         
-        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        let log = { self.logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         
         return LoggingStoreDecorator(
             decoratee: store,
@@ -807,9 +761,8 @@ private extension RootViewModelFactory {
     
     typealias ResetCVVPINActivation = () -> Void
     
-    static func makeResetCVVPINActivation(
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
-        logger: LoggerAgentProtocol
+    func makeResetCVVPINActivation(
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>
     ) -> ResetCVVPINActivation {
         
         return rsaKeyPairStore.deleteCacheIgnoringResult
@@ -819,9 +772,8 @@ private extension RootViewModelFactory {
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
-    static func make(
+    func make(
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -841,7 +793,7 @@ private extension RootViewModelFactory {
         bannersBinder: BannersBinder,
         marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> RootViewModel {
-            
+        
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
             dataUpdateFailure: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
@@ -849,13 +801,13 @@ private extension RootViewModelFactory {
             disableForCorporateCard: {
                 .disableForCorporateCard(primaryAction: $0)
             })
-
+        
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeAlertViewModels: makeAlertViewModels, 
+            makeAlertViewModels: makeAlertViewModels,
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeSections: { self.model.makeSections(flag: updateInfoStatusFlag) },
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeTemplates: makeTemplates,
             makeUtilitiesViewModel: makeUtilitiesViewModel
@@ -870,7 +822,7 @@ private extension RootViewModelFactory {
             landingServices: landingServices,
             paymentsTransfersFactory: paymentsTransfersFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            onRegister: onRegister, 
+            onRegister: onRegister,
             bannersBinder: bannersBinder
         )
         
@@ -902,7 +854,7 @@ private extension RootViewModelFactory {
             
             let loginViewModel = ComposedLoginViewModel(
                 authLoginViewModel: .init(
-                    model,
+                    self.model,
                     rootActions: $0,
                     onRegister: onRegister
                 )
@@ -910,7 +862,7 @@ private extension RootViewModelFactory {
             
             return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
         }
-                        
+        
         let tabsViewModel = TabsViewModel(
             mainViewModel: mainViewModel,
             paymentsModel: paymentsModel,
@@ -930,6 +882,20 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+private extension Array
+where Element == RequestFactory.GetOperatorsListByParamPayload {
+    
+    static func standard(
+        from categories: [ServiceCategory],
+        with serial: String?
+    ) -> Self {
+        
+        return categories
+            .filter { $0.paymentFlow == .standard }
+            .map { .init(serial: serial, category: $0) }
+    }
+}
 
 private extension UserAccountModelEffectHandler {
     

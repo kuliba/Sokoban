@@ -7,6 +7,7 @@
 
 import ForaTools
 import Foundation
+import SerialComponents
 
 extension RequestFactory {
     

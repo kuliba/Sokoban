@@ -19,15 +19,13 @@ import ForaTools
 
 extension RootViewModelFactory {
     
-    static func makeNavigationStateManager(
+    func makeNavigationStateManager(
         modelEffectHandler: UserAccountModelEffectHandler,
         otpServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         duration: Int,
-        length: Int = 6,
-        log: @escaping (String, StaticString, UInt) -> Void,
-        scheduler: AnySchedulerOfDispatchQueue
+        length: Int = 6
     ) -> UserAccountNavigationStateManager {
         
         let fpsReducer = ForaBank.UserAccountNavigationFPSReducer()
@@ -64,7 +62,7 @@ extension RootViewModelFactory {
                 )
             },
             prepareSetBankDefault: otpServices.prepareSetBankDefault,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         let userAccountEffectHandler = UserAccountEffectHandler(

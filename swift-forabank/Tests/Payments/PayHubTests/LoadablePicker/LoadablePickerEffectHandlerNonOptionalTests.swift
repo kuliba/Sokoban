@@ -14,9 +14,10 @@ final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
     
     func test_init_shouldNotCallCollaborator() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, loadSpy, reloadSpy) = makeSUT()
         
         XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertEqual(reloadSpy.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -24,7 +25,7 @@ final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
     
     func test_load_shouldCallLoad() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         
         sut.handleEffect(.load) { _ in }
         
@@ -35,7 +36,7 @@ final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
         
         var sut: SUT?
         let loadSpy: LoadSpy
-        (sut, loadSpy) = makeSUT()
+        (sut, loadSpy, _) = makeSUT()
         let exp = expectation(description: "completion should not be called")
         exp.isInverted = true
         
@@ -48,83 +49,48 @@ final class LoadablePickerEffectHandlerNonOptionalTests: LoadablePickerTests {
     
     func test_load_shouldDeliverEmptyOnLoadEmptySuccess() {
         
-        let (sut, loadPay) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         
         expect(sut, with: .load, toDeliver: .loaded([])) {
             
-            loadPay.complete(with: [])
+            loadSpy.complete(with: [])
         }
     }
     
     func test_load_shouldDeliverOneOnLoadSuccessWithOne() {
         
         let latest = makeElement()
-        let (sut, loadPay) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         
         expect(sut, with: .load, toDeliver: .loaded([latest])) {
             
-            loadPay.complete(with: [latest])
+            loadSpy.complete(with: [latest])
         }
     }
     
     func test_load_shouldDeliverTwoOnLoadSuccessWithTwo() {
         
         let (latest1, latest2) = (makeElement(), makeElement())
-        let (sut, loadPay) = makeSUT()
+        let (sut, loadSpy, _) = makeSUT()
         
         expect(sut, with: .load, toDeliver: .loaded([latest1, latest2])) {
             
-            loadPay.complete(with: [latest1, latest2])
+            loadSpy.complete(with: [latest1, latest2])
         }
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = LoadablePickerEffectHandler<Element>
-    private typealias LoadSpy = Spy<Void, [Element]>
+    private typealias SUT = EffectHandler
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        loadSpy: LoadSpy
+        loadSpy: LoadSpy,
+        reloadSpy: LoadSpy
     ) {
-        let loadSpy = LoadSpy()
-        let sut = SUT(
-            microServices: .init(
-                load: loadSpy.process
-            )
-        )
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(loadSpy, file: file, line: line)
-        
-        return (sut, loadSpy)
-    }
-    
-    private func expect(
-        _ sut: SUT,
-        with effect: SUT.Effect,
-        toDeliver expectedEvents: SUT.Event...,
-        on action: @escaping () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        exp.expectedFulfillmentCount = expectedEvents.count
-        var events = [SUT.Event]()
-        
-        sut.handleEffect(effect) {
-            
-            events.append($0)
-            exp.fulfill()
-        }
-        
-        action()
-        
-        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
-        
-        wait(for: [exp], timeout: 1)
+        makeEffectHandler(file: #file, line: #line)
     }
 }

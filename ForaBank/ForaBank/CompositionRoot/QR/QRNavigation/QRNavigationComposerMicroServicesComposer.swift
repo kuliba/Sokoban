@@ -12,6 +12,7 @@ import SberQR
 
 final class QRNavigationComposerMicroServicesComposer {
     
+    private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
     private let model: Model
     private let createSberQRPayment: CreateSberQRPayment
@@ -21,6 +22,7 @@ final class QRNavigationComposerMicroServicesComposer {
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        httpClient: any HTTPClient,
         logger: any LoggerAgentProtocol,
         model: Model,
         createSberQRPayment: @escaping CreateSberQRPayment,
@@ -31,6 +33,7 @@ final class QRNavigationComposerMicroServicesComposer {
         makeServicePicker: @escaping MicroServices.MakeServicePicker,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.httpClient = httpClient
         self.logger = logger
         self.model = model
         self.createSberQRPayment = createSberQRPayment
@@ -181,10 +184,11 @@ private extension QRNavigationComposerMicroServicesComposer {
             
             guard let self else { return }
             
-            let make = RootViewModelFactory.makeSberQRConfirmPaymentViewModel(
+            let make = RootViewModelFactory(
                 model: model,
+                httpClient: httpClient,
                 logger: logger
-            )
+            ).makeSberQRConfirmPaymentViewModel()
             
             do {
                 let sberQR = try make($0.get(), payload.pay)
