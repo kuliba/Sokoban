@@ -10818,6 +10818,35 @@
 			path = QR;
 			sourceTree = "<group>";
 		};
+		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
+			isa = PBXGroup;
+			children = (
+				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
+				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+composeServicePaymentOperatorService.swift */,
+				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
+				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
+				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
+				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeServiceCategoryListLoaders.swift */,
+				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
+				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
+				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
+			);
+			path = RootViewModelFactory;
+			sourceTree = "<group>";
+		};
+		2A72ACC22CC6CC6100B8BF5B /* RootViewModelFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
+				2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */,
+				2A72ACB92CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift */,
+				2A72ACBB2CC6800500B8BF5B /* RootViewModelFactoryTests.swift */,
+				2AF59F392C93F8ED003556B1 /* RootViewModelFactory_composeServicePaymentOperatorServiceTests.swift */,
+			);
+			path = RootViewModelFactory;
+			sourceTree = "<group>";
+		};
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
 			isa = PBXGroup;
 			children = (
@@ -10873,17 +10902,12 @@
 				2A35DDA62C021A5C00EFF0EB /* PaymentsTransfers */,
 				2ACFD65C2C5CCA65003F08AE /* QR */,
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
+				2A72ACC22CC6CC6100B8BF5B /* RootViewModelFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
-				2A1EEB392C802F1A006F96BE /* RootViewModelFactory+makeTests.swift */,
-				2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */,
-				2A72ACB92CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift */,
-				2A72ACBB2CC6800500B8BF5B /* RootViewModelFactoryTests.swift */,
 				2A24C8572CB9256D0073F636 /* Model+performOrWaitForActiveTests.swift */,
 				2A7CA21E2C92154F00B900E9 /* SerialServices */,
 				2A94AAFC2C8F79D6003B4FB1 /* Services */,
 				2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */,
-				2AF59F392C93F8ED003556B1 /* RootViewModelFactory_composeServicePaymentOperatorServiceTests.swift */,
-				2A6DC7AA2C970CE100A801A0 /* SerialCachingRemoteBatchServiceComposerTests.swift */,
 				2A42B4102C8ECA3400A9B658 /* RemoteNanoServicesComposerAsFactory */,
 				2A42B4022C8D64EF00A9B658 /* LoggingRemoteNanoServicesComposer */,
 			);
@@ -11133,6 +11157,7 @@
 				2A3394162CBE7D97000C6459 /* SerialLoaderComposer+extTests.swift */,
 				2A3394182CBEA8C5000C6459 /* SerialLoaderComposer+extWithLocalAgentTests.swift */,
 				2AD109642CBF0944007C9593 /* LoggingSerialLoaderComposer+composeGetServiceCategoryListTests.swift */,
+				2A6DC7AA2C970CE100A801A0 /* SerialCachingRemoteBatchServiceComposerTests.swift */,
 			);
 			path = SerialServices;
 			sourceTree = "<group>";
@@ -12747,18 +12772,7 @@
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
-				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
-				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
-				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+composeServicePaymentOperatorService.swift */,
-				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
-				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
-				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
-				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeServiceCategoryListLoaders.swift */,
-				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
-				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
-				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
-				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
-				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
+				2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
 				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,

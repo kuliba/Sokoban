@@ -10,6 +10,8 @@ import Foundation
 
 final class RootViewModelFactory {
     
+    // TODO: - hide properties, provide methods to use in extensions
+    
     let model: Model
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
