@@ -41,27 +41,53 @@ extension ForaBank.RequestFactory.GetOperatorsListByParamPayload {
     }
 }
 
-struct CodableServicePaymentOperator: Codable, Identifiable {
+struct CodableServicePaymentOperator: Codable, Equatable, Identifiable {
     
     let id: String
     let inn: String
     let md5Hash: String?
     let name: String
     let type: String
+    let sortedOrder: Int
 }
 
 extension Array where Element == CodableServicePaymentOperator {
     
     init(providers: [RemoteServices.ResponseMapper.ServicePaymentProvider]) {
         
-        self = providers.map(\.codable)
+        self = providers
+            .sorted { $0.precedes($1) }
+            .enumerated()
+            .map(CodableServicePaymentOperator.init(_:_:))
     }
 }
 
-private extension RemoteServices.ResponseMapper.ServicePaymentProvider {
+extension RemoteServices.ResponseMapper.ServicePaymentProvider {
     
-    var codable: CodableServicePaymentOperator {
+    func precedes(_ other: Self) -> Bool {
         
-        return .init(id: id, inn: inn, md5Hash: md5Hash, name: name, type: type)
+        guard name == other.name
+        else {
+            return name.customLexicographicallyPrecedes(other.name)
+        }
+        
+        return inn.customLexicographicallyPrecedes(other.inn)
+    }
+}
+
+private extension CodableServicePaymentOperator {
+    
+    init(
+        _ sortedOrder: Int,
+        _ provider: RemoteServices.ResponseMapper.ServicePaymentProvider
+    ) {
+       self.init(
+        id: provider.id,
+        inn: provider.inn,
+        md5Hash: provider.md5Hash,
+        name: provider.name,
+        type: provider.type,
+        sortedOrder: sortedOrder
+       )
     }
 }
