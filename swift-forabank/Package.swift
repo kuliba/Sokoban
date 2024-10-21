@@ -82,7 +82,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
-        .plainClientInformBottomSheet,
+        .plainClientInform,
         // UI Components
         .carouselComponent,
         .paymentComponents,
@@ -261,8 +261,8 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
-        .plainClientInformBottomSheet,
-        .plainClientInformBottomSheetTests,
+        .plainClientInform,
+        .plainClientInformTests,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -574,10 +574,10 @@ private extension Product {
         ]
     )
     
-    static let plainClientInformBottomSheet = library(
-        name: .plainClientInformBottomSheet,
+    static let plainClientInform = library(
+        name: .plainClientInform,
         targets: [
-            .plainClientInformBottomSheet
+            .plainClientInform
         ]
     )
 
@@ -2446,20 +2446,20 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
-    static let plainClientInformBottomSheet = target(
-        name: .plainClientInformBottomSheet,
+    static let plainClientInform = target(
+        name: .plainClientInform,
         dependencies: [
             .sharedConfigs
         ],
-        path: "Sources/UI/\(String.plainClientInformBottomSheet)"
+        path: "Sources/UI/\(String.plainClientInform)"
     )
     
-    static let plainClientInformBottomSheetTests = testTarget(
-        name: .plainClientInformBottomSheetTests,
+    static let plainClientInformTests = testTarget(
+        name: .plainClientInformTests,
         dependencies: [
-            .plainClientInformBottomSheet
+            .plainClientInform
         ],
-        path: "Tests/UI/\(String.plainClientInformBottomSheetTests)"
+        path: "Tests/UI/\(String.plainClientInformTests)"
     )
     
     // MARK: - UI Components
@@ -3000,8 +3000,8 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
     
-    static let plainClientInformBottomSheet = byName(
-        name: .plainClientInformBottomSheet
+    static let plainClientInform = byName(
+        name: .plainClientInform
     )
 
     // MARK: - UI Components
@@ -3369,8 +3369,8 @@ private extension String {
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
     
-    static let plainClientInformBottomSheet = "PlainClientInformBottomSheet"
-    static let plainClientInformBottomSheetTests = "PlainClientInformBottomSheetTests"
+    static let plainClientInform = "PlainClientInform"
+    static let plainClientInformTests = "PlainClientInformTests"
 
     // MARK: - UI Components
     

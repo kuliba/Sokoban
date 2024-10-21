@@ -1,5 +1,5 @@
 //
-//  PlainClientInformBottomSheetWrapperView.swift
+//  PlainClientInformWrapperView.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 08.10.2024.
@@ -8,14 +8,14 @@
 import SwiftUI
 
 @available(iOS 15, *)
-struct PlainClientInformBottomSheetWrapperView: View {
+struct PlainClientInformWrapperView: View {
     
     private let info: ClientInformDataState
-    private let config: PlainClientInformBottomSheetConfig
+    private let config: PlainClientInformConfig
     
     public init(
         info: ClientInformDataState,
-        config: PlainClientInformBottomSheetConfig
+        config: PlainClientInformConfig
     ) {
         self.info = info
         self.config = config
@@ -23,6 +23,6 @@ struct PlainClientInformBottomSheetWrapperView: View {
 
     public var body: some View {
         
-        PlainClientInformBottomSheetView(config: config, info: info)
+        PlainClientInformView(config: config, info: info)
     }
 }

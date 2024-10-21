@@ -1,5 +1,5 @@
 //
-//  PlainClientInformBottomSheetView.swift
+//  PlainClientInformView.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 04.10.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15, *)
-public struct PlainClientInformBottomSheetView: View {
+public struct PlainClientInformView: View {
 
     @State private var isShowNavBar = false
     @State private var shouldScroll = true
@@ -176,19 +176,19 @@ public struct PlainClientInformBottomSheetView: View {
 }
 
 @available(iOS 15, *)
-public extension PlainClientInformBottomSheetView {
+public extension PlainClientInformView {
     
-    typealias Config = PlainClientInformBottomSheetConfig
+    typealias Config = PlainClientInformConfig
     typealias Info = ClientInformDataState
 }
 
 // MARK: - Preview
 @available(iOS 15, *)
-struct PlainClientInformBottomSheetView_Previews: PreviewProvider {
+struct PlainClientInformView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PlainClientInformBottomSheetView(
+        PlainClientInformView(
             config: .default, 
             info: .preview
         )

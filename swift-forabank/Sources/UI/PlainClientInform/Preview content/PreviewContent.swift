@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension PlainClientInformBottomSheetConfig.Colors {
+extension PlainClientInformConfig.Colors {
     
     static let preview: Self = .init(
 
@@ -22,7 +22,7 @@ extension Image {
     static let infoCircle: Self = .init(systemName: "info.circle")
 }
 
-extension PlainClientInformBottomSheetConfig.Strings {
+extension PlainClientInformConfig.Strings {
     
     static let preview: Self = .init(titlePlaceholder: "Информация")
 }
@@ -39,7 +39,7 @@ extension ClientInformDataState {
     ))
 }
 
-extension PlainClientInformBottomSheetConfig {
+extension PlainClientInformConfig {
     
     static let `default`: Self = .init(
         colors: .preview,

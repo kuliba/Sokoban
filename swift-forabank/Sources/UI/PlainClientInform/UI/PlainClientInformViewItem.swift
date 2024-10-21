@@ -12,12 +12,12 @@ struct PlainClientInformRowView: View {
     
     let logo: Image?
     let text: String
-    let config: PlainClientInformBottomSheetConfig
+    let config: PlainClientInformConfig
     
     init(
         logo: Image? = nil,
         text: AttributedString,
-        config: PlainClientInformBottomSheetConfig
+        config: PlainClientInformConfig
     ) {
         self.logo = logo
         self.text = NSAttributedString(text).string
