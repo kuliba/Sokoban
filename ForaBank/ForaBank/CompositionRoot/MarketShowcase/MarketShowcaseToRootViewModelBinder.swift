@@ -94,7 +94,7 @@ extension RootViewModel {
                     self?.openOrderCard()
                 })
             } else {
-                self.setLink(to: .paymentSticker)
+                setLink(to: .paymentSticker)
             }
         }
     }
@@ -105,15 +105,17 @@ extension RootViewModel {
     ) {
         scheduler.delay(for: .milliseconds(300)) { [weak self] in
             
+            guard let self else { return }
+            
             switch outside {
             case .main:
-                self?.rootActions.switchTab(.main)
+                self.rootActions.switchTab(.main)
                 
             case let .openURL(linkURL):
                 linkURL.openLink()
                 
             case let .landing(type):
-                self?.landing(by: type)
+                self.landing(by: type)
             }
         }
     }
