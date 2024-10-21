@@ -298,7 +298,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
+        let operatorsService = composeServicePaymentOperatorService()
         
         // threading
         let _operatorsService = backgroundScheduler.scheduled(operatorsService)

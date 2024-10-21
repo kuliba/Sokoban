@@ -1,5 +1,5 @@
 //
-//  RootViewModel+composeServiceCategoryListLoaders.swift
+//  RootViewModelFactory+composeServiceCategoryListLoaders.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 21.10.2024.

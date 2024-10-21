@@ -1,5 +1,5 @@
 //
-//  OperatorsSerialCachingRemoteBatchServiceComposerTests.swift
+//  RootViewModelFactory+composeServicePaymentOperatorServiceTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -9,17 +9,17 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
+final class RootViewModelFactory_composeServicePaymentOperatorServiceTests: RootViewModelFactoryTests {
     
     // MARK: - compose
     
     func test_compose_shouldNotCallCollaborators() {
         
-        let (sut, httpClient, local) = makeSUT()
+        let (sut, httpClient, localAgent, _) = makeCompose()
         
         XCTAssertEqual(httpClient.callCount, 0)
-        XCTAssertEqual(local.loadCallCount, 0)
-        XCTAssertEqual(local.storeCallCount, 0)
+        XCTAssertEqual(localAgent.loadCallCount, 0)
+        XCTAssertEqual(localAgent.storeCallCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -27,10 +27,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     func test_remote_shouldNotCallHTTPClientOnEmptyCategories() {
         
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut([]) { _ in exp.fulfill() }
+        batchService([]) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(httpClient.callCount, 0)
@@ -41,10 +41,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
         let payloads = [
             makeCategory(flow: .mobile)
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) { _ in exp.fulfill() }
+        batchService(payloads) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(httpClient.callCount, 0)
@@ -58,10 +58,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .taxAndStateServices),
             makeCategory(flow: .transport),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) { _ in exp.fulfill() }
+        batchService(payloads) { _ in exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(httpClient.callCount, 0)
@@ -72,10 +72,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
         let payloads = [
             makeCategory(flow: .standard, type: .digitalWallets)
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) { _ in exp.fulfill() }
+        batchService(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         
         wait(for: [exp], timeout: 1)
@@ -90,10 +90,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .standard, type: .education),
             makeCategory(flow: .standard, type: .digitalWallets),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) { _ in exp.fulfill() }
+        batchService(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         httpClient.complete(with: .failure(anyError()), at: 1)
         
@@ -112,10 +112,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .mobile),
             makeCategory(flow: .standard, type: .security),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) { _ in exp.fulfill() }
+        batchService(payloads) { _ in exp.fulfill() }
         httpClient.complete(with: .failure(anyError()))
         httpClient.complete(with: .failure(anyError()), at: 1)
         
@@ -134,10 +134,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .taxAndStateServices),
             makeCategory(flow: .transport),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, _, _) = makeSUT()
+        let (_,_,_, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) {
+        batchService(payloads) {
             
             XCTAssertNoDiff($0, [])
             exp.fulfill()
@@ -151,10 +151,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
         let payloads = [
             makeCategory(flow: .standard, type: .internet),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) {
+        batchService(payloads) {
             
             XCTAssertNoDiff($0.map(\.category.type), [.internet])
             XCTAssertNoDiff($0.map(\.serial), [nil])
@@ -171,10 +171,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .standard, type: .internet),
             makeCategory(flow: .standard, type: .security),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) {
+        batchService(payloads) {
             
             XCTAssertNoDiff($0.map(\.category.type), [.internet, .security])
             XCTAssertNoDiff($0.map(\.serial), [nil, nil])
@@ -192,10 +192,10 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
             makeCategory(flow: .standard, type: .internet),
             makeCategory(flow: .standard, type: .security),
         ].map { Payload(serial: nil, category: $0) }
-        let (sut, httpClient, _) = makeSUT()
+        let (_, httpClient, _, batchService) = makeCompose()
         let exp = expectation(description: "wait for completion")
         
-        sut(payloads) {
+        batchService(payloads) {
             
             XCTAssertNoDiff($0.map(\.category.type), [.internet])
             XCTAssertNoDiff($0.map(\.serial), [nil])
@@ -209,12 +209,11 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = SerialCachingRemoteBatchServiceComposer
-    private typealias SUT = Composer.ServicePaymentProviderBatchService
-    private typealias Payload = SerialCachingRemoteBatchServiceComposer.GetOperatorsListByParamPayload
+    private typealias BatchService = SUT.ServicePaymentProviderBatchService
+    private typealias Payload = SUT.GetOperatorsListByParamPayload
     private typealias Perform = Spy<ServiceCategory.CategoryType, Void, Error>
     
-    private func makeSUT(
+    private func makeCompose(
         loadStub: Model? = nil,
         storeStub: Result<Void, any Error> = .failure(anyError()),
         serialStub: String? = nil,
@@ -223,35 +222,24 @@ final class OperatorsSerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     ) -> (
         sut: SUT,
         httpClient: HTTPClientSpy,
-        agent: LocalAgentSpy<Model>
+        localAgent: LocalAgentSpy<Model>,
+        batchService: BatchService
     ) {
-        let agent = LocalAgentSpy(
+        let localAgent = LocalAgentSpy(
             loadStub: loadStub,
             storeStub: storeStub,
             serialStub: serialStub
         )
-        let asyncLocalAgent = LocalAgentAsyncWrapper(
-            agent: agent,
-            interactiveScheduler: .immediate,
-            backgroundScheduler: .immediate
+        let model: ForaBank.Model = .mockWithEmptyExcept(
+            localAgent: localAgent
         )
-        let httpClient = HTTPClientSpy()
-        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: LoggerAgent()
-        )
-        let composer = Composer(
-            nanoServiceFactory: nanoServiceComposer,
-            updateMaker: asyncLocalAgent
-        )
-        let sut = composer.composeServicePaymentOperatorService()
+        let (sut, httpClient, _) = makeSUT(model: model)
         
-        trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(nanoServiceComposer, file: file, line: line)
-        trackForMemoryLeaks(httpClient, file: file, line: line)
-        trackForMemoryLeaks(agent, file: file, line: line)
+        let batchService = sut.composeServicePaymentOperatorService()
         
-        return (sut, httpClient, agent)
+        trackForMemoryLeaks(localAgent, file: file, line: line)
+        
+        return (sut, httpClient, localAgent, batchService)
     }
     
     private struct Value: Equatable {
@@ -354,4 +342,3 @@ private extension String {
 """
     }
 }
-
