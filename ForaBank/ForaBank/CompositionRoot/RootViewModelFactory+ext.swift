@@ -337,32 +337,18 @@ extension RootViewModelFactory {
             toModel: { $0.codable }
         )
         
-        let decoratedServiceCategoryListReload: Load<[ServiceCategory]> = { completion in
-            
-            serviceCategoryListReload {
+        let decoratedServiceCategoryListReload = decorate(
+            decoratee: serviceCategoryListReload,
+            with: { categories, completion in
                 
-                switch $0 {
-                case .none:
-                    completion(nil)
+                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
+                
+                _operatorsService(payloads) { failed in
                     
-                case let .some(categories):
-                    let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                    
-                    _operatorsService(payloads) { failedCategories in
-                        
-                        if !failedCategories.isEmpty {
-                            
-                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \(failedCategories).", file: #file, line: #line)
-                        }
-                        
-                        completion(categories)
-                        _ = batchServiceComposer
-                        _ = operatorsService
-                        _ = _operatorsService
-                    }
+                    completion(failed.map(\.category))
                 }
             }
-        }
+        )
         
         let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
         
