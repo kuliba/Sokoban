@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 22.10.2023.
 //
 
-import CVVPINServices
+import GenericLoader
 
-#warning("move `GenericLoader` to `Infra` module")
-typealias GenericLoaderOf<Model> = CVVPINServices.GenericLoaderOf<Model>
+typealias GenericLoaderOf<Model> = GenericLoader.LoaderOf<Model>

@@ -12,31 +12,65 @@ import XCTest
 
 final class RootViewModelFactory_makeTests: XCTestCase {
     
-    func test_shouldCallHTTPClient() {
+    func test_shouldNotCallHTTPClientOnInactiveSessionState() {
         
-        let (_, httpClient, backgroundScheduler, _) = makeSUT()
+        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+            sessionState: .inactive
+        )
+        XCTAssertEqual(httpClient.callCount, 0)
+        
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
         XCTAssertNoDiff(httpClient.callCount, 0)
-        
-        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
-        
-        XCTAssertNoDiff(httpClient.callCount, 2)
+        XCTAssertNotNil(bindings)
     }
     
-    func test_shouldCallHTTPClientWithGetServiceCategoryList() throws {
+    func test_shouldCallHTTPClientOnActiveSessionState() {
         
-        let (_, httpClient, backgroundScheduler, _) = makeSUT()
-        
-        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
-        
-        XCTAssertNoDiff(
-            httpClient.requests.first,
-            try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: nil)
+        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+            sessionState: active()
         )
+        
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssertGreaterThan(httpClient.callCount, 0)
+        XCTAssertNotNil(bindings)
+    }
+    
+    func test_shouldCallHTTPClientOnSessionStateChangeToActive() {
+        
+        let (_, httpClient, sessionAgent, backgroundScheduler, bindings) = makeSUT(
+            sessionState: .inactive
+        )
+        XCTAssertEqual(httpClient.callCount, 0)
+        
+        sessionAgent.sessionState.value = active()
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
+        XCTAssertNotNil(bindings)
+    }
+    
+    func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSession() throws {
+        
+        let request = try createGetServiceCategoryListRequest(serial: nil)
+        let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+            sessionState: active()
+        )
+        
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssert(httpClient.requests.contains(request))
+        XCTAssertNotNil(bindings)
     }
     
     func test_shouldSetCategoryPickerStateToLoading() throws {
         
-        let (sut, _,_,_) = makeSUT()
+        let (sut, _,_,_,_) = makeSUT()
         
         let initialState = try sut.categoryPickerContent().state
         
@@ -45,10 +79,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldNotChangeCategoryPickerStateOnMissingHTTPCompletion() throws {
         
-        let (sut, _, backgroundScheduler, bindings) = makeSUT()
+        let (sut, _,_, backgroundScheduler, bindings) = makeSUT(
+            sessionState: active()
+        )
         let initialState = try sut.categoryPickerContent().state
         
-        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
@@ -57,14 +94,22 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     
     func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
         
-        let (sut, httpClient, backgroundScheduler, bindings) = makeSUT()
+        let (sut, httpClient, _, backgroundScheduler, bindings) = makeSUT(
+            sessionState: active()
+        )
         
-        backgroundScheduler.advance(to: .init(.now() + .seconds(2)))
+        backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
         httpClient.complete(with: success())
+        backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
+        awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
         XCTAssertNotNil(bindings)
+        XCTAssertNotNil(backgroundScheduler)
     }
     
     // MARK: - Helpers
@@ -72,21 +117,29 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     private typealias SUT = RootViewModel
     
     private func makeSUT(
+        sessionState: SessionState = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         httpClient: HTTPClientSpy,
+        sessionAgent: SessionAgentEmptyMock,
         backgroundScheduler: TestSchedulerOf<DispatchQueue>,
         bindings: Set<AnyCancellable>
     ) {
         let httpClient = HTTPClientSpy()
         let backgroundScheduler = DispatchQueue.test
         var bindings = Set<AnyCancellable>()
-        let sut = RootViewModelFactory.make(
-            model: .mockWithEmptyExcept(),
+        let sessionAgent = SessionAgentEmptyMock()
+        sessionAgent.sessionState.value = sessionState
+        let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
+        let sut = RootViewModelFactory(
+            model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
+            mainScheduler: .immediate,
+            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+        ).make(
             bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
@@ -96,12 +149,17 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            updateInfoStatusFlag: .init(.active)
         )
         
-        return (sut, httpClient, backgroundScheduler, bindings)
+        return (sut, httpClient, sessionAgent, backgroundScheduler, bindings)
+    }
+    
+    private func createGetServiceCategoryListRequest(
+        serial: String?
+    ) throws -> URLRequest {
+        
+        try ForaBank.RequestFactory.createGetServiceCategoryListRequest(serial: serial)
     }
     
     private func success(
@@ -120,7 +178,36 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     ) -> String {
         
         return """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "abc",
+        "categoryGroupList": [
+            {
+                "type": "mobile",
+                "name": "Мобильная связь",
+                "ord": 20,
+                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
+                "paymentFlow": "MOBILE",
+                "latestPaymentsCategory": "isMobilePayments",
+                "search": false
+            }
+        ]
+    }
+}
 """
+    }
+    
+    private func active() -> SessionState {
+        
+        return .active(
+            start: .infinity,
+            credentials: .init(
+                token: anyMessage(),
+                csrfAgent: CSRFAgentDummy.dummy
+            )
+        )
     }
 }
 
@@ -131,7 +218,7 @@ private extension RootViewModel {
     func categoryPickerContent(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> CategoryPickerSection.ContentDomain.Content {
+    ) throws -> CategoryPickerSectionDomain.ContentDomain.Content {
         
         let v1 = try personal(file: file, line: line)
         

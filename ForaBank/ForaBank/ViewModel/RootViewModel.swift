@@ -445,6 +445,14 @@ class RootViewModel: ObservableObject, Resetable {
                 }
             }
             .store(in: &bindings)
+        
+        tabsViewModel.marketShowcaseBinder.flow.$state
+            .compactMap(\.informer)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.model.action.send(ModelAction.Informer.Show(informer: $0))
+            }
+            .store(in: &bindings)
     }
 }
 
@@ -456,6 +464,17 @@ private extension MarketShowcaseFlowState {
         else { return nil }
         
         return outside
+    }
+}
+
+private extension MarketShowcaseFlowState {
+    
+    var informer: InformerPayload? {
+        
+        guard case let .informer(informerPayload) = self.status
+        else { return nil }
+        
+        return informerPayload
     }
 }
 
@@ -643,17 +662,12 @@ extension PaymentsTransfersPersonal {
     }
 }
 
-private extension CategoryPickerSection.Binder {
+private extension CategoryPickerSectionDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
         flow.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
-}
-
-private extension CategoryPickerSectionFlowState {
-    
-    var hasDestination: Bool { navigation != nil }
 }
 
 private extension OperationPickerBinder {

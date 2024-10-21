@@ -91,7 +91,9 @@ private extension CodableLanding.DataView {
             
         case let .verticalSpacing(data):
             self = .verticalSpacing(.init(data: data))
-            
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
         case let .blockHorizontalRectangular(data):
             self = .blockHorizontalRectangular(.init(data: data))
             
@@ -113,6 +115,17 @@ private extension CodableLanding.VerticalSpacing {
         self.init(
             backgroundColor: .init(data.backgroundColor.rawValue),
             type: .init(data.type.rawValue))
+    }
+}
+
+private extension CodableLanding.Spacing {
+    
+    init(
+        data: Landing.Spacing
+    ) {
+        self.init(
+            backgroundColor: data.backgroundColor,
+            heightDp: data.heightDp)
     }
 }
 
@@ -574,7 +587,6 @@ private extension CodableLanding.CodableCarouselBase {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -609,7 +621,6 @@ private extension CodableLanding.CodableCarouselWithTabs {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }
@@ -655,7 +666,6 @@ private extension CodableLanding.CodableCarouselWithDots {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }

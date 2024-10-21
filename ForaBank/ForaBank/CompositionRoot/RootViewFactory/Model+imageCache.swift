@@ -23,6 +23,11 @@ extension Model {
     
     func generalImageCache() -> ImageCache {
         
+        generalImageCache(nil)
+    }
+
+    func generalImageCache(_ defaultImage: Image?) -> ImageCache {
+        
         .init(
             requestImages: {
                $0.forEach { endpoint in
@@ -30,7 +35,11 @@ extension Model {
                 }
             },
             imagesPublisher: images,
-            fallback: ImageCacheFallback.image(forKey:)
+            fallback: {
+                guard let defaultImage else { return ImageCacheFallback.image(forKey:$0) }
+                
+                return defaultImage
+            }
         )
     }
 }

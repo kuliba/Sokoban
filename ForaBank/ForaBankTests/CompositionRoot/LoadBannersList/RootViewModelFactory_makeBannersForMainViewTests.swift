@@ -57,14 +57,16 @@ final class RootViewModelFactory_makeBannersForMainViewTests: XCTestCase {
         let loadBannersSpy = LoadBannersSpy()
         let loadLandingByTypeSpy = LoadLandingSpy()
 
-        let sut = RootViewModelFactory.makeBannersForMainView(
+        let sut = RootViewModelFactory(
+            model: .mockWithEmptyExcept(),
+            httpClient: HTTPClientSpy(),
+            logger: LoggerSpy()
+        ).makeBannersForMainView(
             bannerPickerPlaceholderCount: bannerPickerPlaceholderCount,
             nanoServices: .init(
                 loadBanners: loadBannersSpy.process(completion:),
                 loadLandingByType: loadLandingByTypeSpy.process(_:completion:)
-            ),
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

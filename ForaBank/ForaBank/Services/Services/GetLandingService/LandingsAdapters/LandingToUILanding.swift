@@ -93,7 +93,9 @@ private extension UILanding.Component {
             
         case let .verticalSpacing(data):
             self = .verticalSpacing(.init(data: data))
-            
+        case let .spacing(data):
+            self = .spacing(.init(data: data))
+
         case let .blockHorizontalRectangular(data):
             self = .blockHorizontalRectangular(.init(data: data))
             
@@ -115,6 +117,18 @@ private extension UILanding.VerticalSpacing {
         self.init(
             backgroundColor: .init(rawValue: data.backgroundColor.rawValue) ?? .black,
             spacingType: .init(rawValue: data.type.rawValue) ?? .small
+        )
+    }
+}
+
+private extension UILanding.Spacing {
+    
+    init(
+        data: Landing.Spacing
+    ) {
+        self.init(
+            backgroundColor: .init(rawValue: data.backgroundColor) ?? .black,
+            heightDp: data.heightDp
         )
     }
 }
@@ -586,7 +600,6 @@ private extension UILanding.Carousel.CarouselBase {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -604,7 +617,7 @@ private extension UILanding.Carousel.CarouselBase.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselBase.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: Landing.DataView.Carousel.CarouselBase.ListItem.Action
@@ -621,7 +634,6 @@ private extension UILanding.Carousel.CarouselWithTabs {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             tabs: data.tabs.map { .init(data: $0) })
     }
@@ -650,7 +662,7 @@ private extension UILanding.Carousel.CarouselWithTabs.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselWithTabs.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action
@@ -667,7 +679,6 @@ private extension UILanding.Carousel.CarouselWithDots {
         self.init(
             title: data.title,
             size: .init(width: data.size.width, height: data.size.height),
-            scale: data.scale,
             loopedScrolling: data.loopedScrolling,
             list: data.list.map { .init(data: $0) })
     }
@@ -685,7 +696,7 @@ private extension UILanding.Carousel.CarouselWithDots.ListItem {
     }
 }
 
-private extension UILanding.Carousel.CarouselWithDots.ListItem.Action {
+private extension ItemAction {
     
     init(
         data: Landing.DataView.Carousel.CarouselWithDots.ListItem.Action

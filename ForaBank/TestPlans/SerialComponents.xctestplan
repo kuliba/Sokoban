@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7FCB2998-92F0-4076-97EA-3532FDC18676",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SerialComponentsTests",
+        "name" : "SerialComponentsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

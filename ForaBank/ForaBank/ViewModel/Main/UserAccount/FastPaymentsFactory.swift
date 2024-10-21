@@ -19,7 +19,7 @@ extension FastPaymentsFactory {
         typealias CloseAction = () -> Void
         typealias MakeLegacyFastPaymentsViewModel = ([FastPaymentContractFindListDatum]?, @escaping CloseAction) -> MeToMeSettingView.ViewModel
         
-        typealias MakeNewFastPaymentsViewModel = (AnySchedulerOfDispatchQueue) -> FastPaymentsSettingsViewModel
+        typealias MakeNewFastPaymentsViewModel = () -> FastPaymentsSettingsViewModel
         
         case legacy(MakeLegacyFastPaymentsViewModel)
         case new(MakeNewFastPaymentsViewModel)

@@ -111,7 +111,8 @@ final class FlowComposerTests: XCTestCase {
                     getNavigation.process(($0, $1), completion: $2)
                 }
             ),
-            scheduler: .immediate
+            scheduler: .immediate,
+            interactiveScheduler: .immediate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

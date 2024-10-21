@@ -21,6 +21,7 @@ extension CodableLanding {
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+        case spacing(Spacing)
     }
 }
 
