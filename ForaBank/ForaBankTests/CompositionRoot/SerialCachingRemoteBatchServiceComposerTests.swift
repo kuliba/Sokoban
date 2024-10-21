@@ -314,7 +314,6 @@ final class SerialCachingRemoteBatchServiceComposerTests: XCTestCase {
     private typealias ToModelSpy = CallSpy<[Value], [Model]>
     
     private func makeSUT(
-        serial: String? = nil,
         makeRequestStub: [URLRequest] = [anyURLRequest()],
         mapResponseStub: [StampedResult] = [.failure(.invalid(statusCode: 200, data: .empty))],
         toModels models: [Model] = [],
@@ -340,7 +339,6 @@ final class SerialCachingRemoteBatchServiceComposerTests: XCTestCase {
         let mapResponseSpy = MapResponseSpy(stubs: mapResponseStub)
         let toModelSpy = ToModelSpy(stubs: [models])
         let sut = composer.compose(
-            getSerial: { _ in serial },
             makeRequest: makeRequestSpy.call(payload:),
             mapResponse: mapResponseSpy.call(_:_:),
             toModel: toModelSpy.call(payload:)

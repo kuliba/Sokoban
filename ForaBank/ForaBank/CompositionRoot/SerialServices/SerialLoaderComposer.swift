@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 12.09.2024.
 //
 
-import ForaTools
 import Foundation
 import RemoteServices
+import SerialComponents
 
 /// A composer responsible for creating loaders that handle serial-stamped data, supporting both local and remote data sources with caching capabilities.
 final class SerialLoaderComposer {
@@ -33,6 +33,7 @@ extension SerialLoaderComposer {
     
     typealias Serial = String
     typealias Load<T> = (@escaping (T?) -> Void) -> Void
+    typealias MappingResult<T> = RemoteServices.ResponseMapper.MappingResult<RemoteServices.SerialStamped<String, T>>
     
     /// Composes loaders for serial-stamped data with caching, supporting both local and remote data sources.
     ///
@@ -51,7 +52,7 @@ extension SerialLoaderComposer {
         fromModel: @escaping ([Model]) -> [T],
         toModel: @escaping ([T]) -> [Model],
         createRequest: @escaping (Serial?) throws -> URLRequest,
-        mapResponse: @escaping (Data, HTTPURLResponse) -> RemoteServices.ResponseMapper.MappingResult<RemoteServices.SerialStamped<String, T>>
+        mapResponse: @escaping (Data, HTTPURLResponse) -> MappingResult<T>
     ) -> (local: Load<[T]>, remote: Load<[T]>) {
         
         let localLoad = asyncLocalAgent.composeLoad(fromModel: fromModel)
@@ -68,15 +69,22 @@ extension SerialLoaderComposer {
             save: save
         )
         
-        let fallback = SerialFallback<Serial, T, Error>(
-            getSerial: getSerial,
+        let fallback = SerialFallback<Serial?, Serial, T, Error>(
+            getSerial: { $0 },
             primary: decorator.decorated,
             secondary: localLoad
         )
         
-        return (localLoad, fallback.callAsFunction(completion:))
+        let remote = { completion in
+        
+            fallback(payload: getSerial(), completion: completion)
+        }
+        
+        return (localLoad, remote)
     }
 }
+
+// MARK: - Adapters
 
 private extension SerialStampedCachingDecorator where Payload == Serial? {
     
@@ -92,13 +100,18 @@ private extension SerialStampedCachingDecorator where Payload == Serial? {
     ///   - completion: A closure that handles the result of the remote fetch.
     typealias RemoteDecoratee<T> = (Serial?, @escaping RemoteDecorateeCompletion<T>) -> Void
     
+    /// The completion handler type for caching operations.
+    ///
+    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
+    typealias SaveCompletion = (Result<Void, Error>) -> Void
+    
     /// A function type for saving data locally.
     ///
     /// - Parameters:
     ///   - items: An array of items of type `T` to be saved.
     ///   - serial: The `Serial` associated with the items.
     ///   - completion: A closure that handles the result of the save operation.
-    typealias Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
+    typealias Save<T> = ([T], Serial, @escaping SaveCompletion) -> Void
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when the `Value` is an array of `T`.
     ///
@@ -126,7 +139,8 @@ private extension SerialStampedCachingDecorator where Payload == Serial? {
             },
             cache: { payload, completion in
                 
-                save(payload.value, payload.serial, completion)
+                // ignoring result
+                save(payload.value, payload.serial) { _ in completion() }
             }
         )
     }

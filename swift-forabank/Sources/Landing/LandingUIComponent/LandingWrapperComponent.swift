@@ -27,8 +27,9 @@ public final class LandingWrapperViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
-    let makeIconView: LandingView.MakeIconView
-    
+    let imageViewFactory: ImageViewFactory
+    let carouselViewFactory: CarouselViewFactory?
+
     let config: UILanding.Component.Config
     
     var cardLimitsInfo: CardLimitsInfo?
@@ -39,7 +40,8 @@ public final class LandingWrapperViewModel: ObservableObject {
         statePublisher: StatePublisher,
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
-        makeIconView: @escaping LandingView.MakeIconView,
+        imageViewFactory: ImageViewFactory,
+        carouselViewFactory: CarouselViewFactory? = nil,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
@@ -47,7 +49,8 @@ public final class LandingWrapperViewModel: ObservableObject {
         self.state = initialState
         self.landingActions = landingActions
         self.config = config
-        self.makeIconView = makeIconView
+        self.imageViewFactory = imageViewFactory
+        self.carouselViewFactory = carouselViewFactory
         
         let landing = try? initialState.get()
         
@@ -79,7 +82,8 @@ public final class LandingWrapperViewModel: ObservableObject {
         initialState: State,
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
-        makeIconView: @escaping LandingView.MakeIconView,
+        imageViewFactory: ImageViewFactory,
+        carouselViewFactory: CarouselViewFactory? = nil,
         limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
@@ -88,7 +92,8 @@ public final class LandingWrapperViewModel: ObservableObject {
         self.state = initialState
         self.landingActions = landingActions
         self.config = config
-        self.makeIconView = makeIconView
+        self.imageViewFactory = imageViewFactory
+        self.carouselViewFactory = carouselViewFactory
         self.limitsViewModel = limitsViewModel
         
         let landing = try? initialState.get()
@@ -247,7 +252,8 @@ public struct LandingWrapperView: View {
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
-            makeIconView: viewModel.makeIconView, 
+            imageViewFactory: viewModel.imageViewFactory,
+            carouselViewFactory: viewModel.carouselViewFactory,
             limitsViewModel: viewModel.limitsViewModel,
             cardLimitsInfo: cardLimitsInfo, 
             limitIsChanged: limitIsChanged,
@@ -269,10 +275,7 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     statePublisher: Just(.failure(.preview)).eraseToAnyPublisher(),
                     imagePublisher: imagePublisher,
                     imageLoader: { _ in },
-                    makeIconView: { _ in .init(
-                        image: .flag,
-                        publisher: Just(.percent).eraseToAnyPublisher()
-                    )}, 
+                    imageViewFactory: .default,
                     scheduler: .immediate,
                     config: .defaultValue,
                     landingActions: { _ in }
@@ -284,10 +287,7 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
                     imagePublisher: imagePublisher,
                     imageLoader: { _ in },
-                    makeIconView: { _ in .init(
-                        image: .flag,
-                        publisher: Just(.percent).eraseToAnyPublisher()
-                    )},
+                    imageViewFactory: .default,
                     scheduler: .immediate,
                     config: .defaultValue,
                     landingActions: { _ in }

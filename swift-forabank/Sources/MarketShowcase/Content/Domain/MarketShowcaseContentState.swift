@@ -32,9 +32,9 @@ extension MarketShowcaseContentState: Equatable where Landing: Equatable, Inform
 public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
     
     case initiate
-    case inflight
+    case inflight(Landing?)
     case loaded(Landing)
-    case failure(Failure)
+    case failure(Failure, Landing?)
     
     var isLoading: Bool {
         
@@ -46,6 +46,23 @@ public enum MarketShowcaseContentStatus<Landing, InformerPayload> {
         }
     }
     
+    var oldLanding: Landing? {
+        
+        switch self {
+        case let .loaded(landing):
+            return landing
+            
+        case let .failure(_, landing):
+            return landing
+            
+        case let .inflight(landing):
+            return landing
+
+        case .initiate:
+            return nil
+        }
+    }
+
     public enum Failure {
         
         case alert(String)

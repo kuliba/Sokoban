@@ -15,7 +15,7 @@ extension RootViewModelFactory {
     typealias LoadLatestOperations = (@escaping LoadLatestOperationsCompletion) -> Void
     
     static func makeLoadLatestOperations(
-        getAllLoadedCategories: @escaping (@escaping ([ServiceCategory]) -> Void) -> Void,
+        getAllLoadedCategories: @escaping (@escaping LoadServiceCategoriesCompletion) -> Void,
         getLatestPayments: @escaping ([ServiceCategory], @escaping LoadLatestOperationsCompletion) -> Void
     ) -> (CategorySet) -> LoadLatestOperations {
         
@@ -36,12 +36,12 @@ extension RootViewModelFactory {
     
     typealias LatestPaymentServiceCategoryName = String
     
-    typealias LoadServiceCategoriesCompletion = ([CategoryPickerSection.ContentDomain.Item]) -> Void
+    typealias LoadServiceCategoriesCompletion = ([ServiceCategory]) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
-
+    
     @available(*, deprecated, message: "Use RootViewModelFactory.makeLoadLatestOperations with strong `getLatestPayments` API after hard-code for `isOutsidePayments` and `isPhonePayments` deprecation")
-    static func makeLoadLatestOperations(
-        getAllLoadedCategories: @escaping (@escaping ([ServiceCategory]) -> Void) -> Void,
+    func makeLoadLatestOperations(
+        getAllLoadedCategories: @escaping (@escaping LoadServiceCategoriesCompletion) -> Void,
         getLatestPayments: @escaping ([LatestPaymentServiceCategoryName], @escaping LoadLatestOperationsCompletion) -> Void,
         hardcoded: [String] = ["isOutsidePayments", "isPhonePayments"]
     ) -> (CategorySet) -> LoadLatestOperations {
@@ -53,19 +53,28 @@ extension RootViewModelFactory {
                 switch categorySet {
                 case .all:
                     getAllLoadedCategories { categories in
+                        
 #warning("add hardcoded: В данный момент блок “Перевести” не динамичен, поэтому последние операции для него, пока вызываем с фронта по типам: isOutsidePayments (за рубеж) и isPhonePayments (По номеру телефона)")
-                        getLatestPayments(categories.compactMap(\.latestPaymentsCategoryName) + hardcoded, completion)
+                        getLatestPayments(categories.latestPaymentsCategoryNames + hardcoded, completion)
                     }
                     
                 case let .list(categories):
-                    getLatestPayments(categories.compactMap(\.latestPaymentsCategoryName), completion)
+                    getLatestPayments(categories.latestPaymentsCategoryNames, completion)
                 }
             }
         }
     }
 }
 
-extension RemoteServices.ResponseMapper.ServiceCategory {
+private extension Array where Element == RemoteServices.ResponseMapper.ServiceCategory {
+    
+    var latestPaymentsCategoryNames: [String] {
+        
+        compactMap(\.latestPaymentsCategoryName)
+    }
+}
+
+private extension RemoteServices.ResponseMapper.ServiceCategory {
     
     var latestPaymentsCategoryName: String? {
         

@@ -44,7 +44,7 @@ struct BlockHorizontalRectangularView: View {
 extension BlockHorizontalRectangularView {
     
     typealias Event = BlockHorizontalRectangularEvent
-    typealias Factory = ViewFactory
+    typealias Factory = ImageViewFactory
     typealias Config = UILanding.BlockHorizontalRectangular.Config
     typealias Item = UILanding.BlockHorizontalRectangular.Item
 }
@@ -75,9 +75,11 @@ extension BlockHorizontalRectangularView {
                     Text(item.title)
                         .font(config.titleConfig.textFont)
                         .foregroundColor(config.titleConfig.textColor)
+                        .accessibilityIdentifier("BlockHorizontalRectangularTitle")
                     Text(item.description)
                         .font(config.subtitleConfig.textFont)
                         .foregroundColor(config.subtitleConfig.textColor)
+                        .accessibilityIdentifier("BlockHorizontalRectangularSubtitle")
 
                     ForEach(item.limits, id: \.id, content: limit)
                 }
@@ -93,6 +95,7 @@ extension BlockHorizontalRectangularView {
                     Text(limit.title)
                         .font(config.limitTitleConfig.textFont)
                         .foregroundColor(config.limitTitleConfig.textColor)
+                        .accessibilityIdentifier("BlockHorizontalRectangularItemLimitTitle")
 
                     VStack(alignment: .leading, spacing: 4) {
 
@@ -143,6 +146,7 @@ extension BlockHorizontalRectangularView {
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
                         .font(.system(size: 12))
+                        .accessibilityIdentifier("BlockHorizontalRectangularItemHint")
                 },
                 makeIconView: factory.makeIconView)
             .disabled(!enableEdit)

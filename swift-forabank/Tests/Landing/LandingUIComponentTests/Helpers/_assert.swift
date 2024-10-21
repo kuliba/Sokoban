@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import Foundation
 
 typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
 
@@ -30,4 +31,9 @@ func _assertState<State, Event, Effect>(
         "\nExpected \(expectedState), but got \(receivedState) instead.",
         file: file, line: line
     )
+}
+
+func anyMessage() -> String {
+    
+    UUID().uuidString
 }
