@@ -167,9 +167,12 @@ extension Model {
         return .init(
             source: source,
             model: self,
-            closeAction: { [weak self] in
+            closeAction: {
                 
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                withAnimation {
+                    
+                    NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                }
             }
         )
     }
