@@ -12,6 +12,7 @@ struct ImageView: View {
     
     @ObservedObject var model: UILanding.ImageBlock.ViewModel
     let config: UILanding.ImageBlock.Config
+    let factory: ImageViewFactory
 
     var body: some View {
         
@@ -23,6 +24,12 @@ struct ImageView: View {
                         .foregroundColor(Color(red: 0.96, green: 0.96, blue: 0.97))
                         .frame(height: 64)
                         .shimmering()
+                } else {
+                    factory.makeBannerImageView(model.data.link.rawValue)
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+                        .padding(.horizontal, config.paddings.horizontal)
+                        .padding(.vertical, config.paddings.vertical)
                 }
                 
             case let .some(image):

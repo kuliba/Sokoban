@@ -2424,7 +2424,7 @@ private extension Target {
     static let plainClientInformBottomSheet = target(
         name: .plainClientInformBottomSheet,
         dependencies: [
-            .rxViewModel
+            .sharedConfigs
         ],
         path: "Sources/UI/\(String.plainClientInformBottomSheet)"
     )
