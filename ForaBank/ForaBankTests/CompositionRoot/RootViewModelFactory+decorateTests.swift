@@ -7,9 +7,11 @@
 
 extension RootViewModelFactory {
     
+    typealias ServiceCategoryBatchService = ([ServiceCategory], @escaping ([ServiceCategory]) -> Void) -> Void
+    
     func decorate(
         decoratee: @escaping Load<[ServiceCategory]>,
-        with decoration: @escaping ([ServiceCategory], @escaping ([ServiceCategory]) -> Void) -> Void
+        with decoration: @escaping ServiceCategoryBatchService
     ) -> Load<[ServiceCategory]> {
         
         return { completion in
@@ -23,8 +25,9 @@ extension RootViewModelFactory {
                 case .some([]):
                     completion([])
                     
-                default:
-                    break
+                case let .some(categories):
+                    decoration(categories) { _ in }
+                    completion(categories)
                 }
             }
         }
@@ -95,6 +98,50 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         )
     }
     
+    func test_decorated_shouldCallDecorationWithOneOnDecorateeResultWithOne() {
+        
+        let category = makeServiceCategory()
+        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        
+        call(decorated, on: decoratee.complete(with: [category]))
+        
+        XCTAssertNoDiff(decoration.payloads, [[category]])
+    }
+    
+    func test_decorated_shouldDeliverOneOnDecorateeResultOfOne() {
+        
+        let category = makeServiceCategory()
+        let (_,_, decoratee, _, decorated) = makeSUT()
+        
+        call(
+            decorated,
+            assert: { XCTAssertNoDiff($0, [category]) },
+            on: decoratee.complete(with: [category])
+        )
+    }
+    
+    func test_decorated_shouldCallDecorationWithTwoOnDecorateeResultWithTwo() {
+        
+        let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
+        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        
+        call(decorated, on: decoratee.complete(with: [category1, category2]))
+        
+        XCTAssertNoDiff(decoration.payloads, [[category1, category2]])
+    }
+    
+    func test_decorated_shouldDeliverTwoOnDecorateeResultOfTwo() {
+        
+        let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
+        let (_,_, decoratee, _, decorated) = makeSUT()
+        
+        call(
+            decorated,
+            assert: { XCTAssertNoDiff($0, [category1, category2]) },
+            on: decoratee.complete(with: [category1, category2])
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RootViewModelFactory
@@ -155,29 +202,5 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: timeout)
-    }
-}
-
-extension XCTestCase {
-    
-    func makeServiceCategory(
-        latestPaymentsCategory: ServiceCategory.LatestPaymentsCategory? = nil,
-        md5Hash: String = anyMessage(),
-        name: String = anyMessage(),
-        ord: Int = .random(in: 1...100),
-        flow paymentFlow: ServiceCategory.PaymentFlow = .mobile,
-        hasSearch: Bool = false,
-        type: ServiceCategory.CategoryType = .networkMarketing
-    ) -> ServiceCategory {
-        
-        return .init(
-            latestPaymentsCategory: latestPaymentsCategory,
-            md5Hash: md5Hash,
-            name: name,
-            ord: ord,
-            paymentFlow: paymentFlow,
-            hasSearch: hasSearch,
-            type: type
-        )
     }
 }
