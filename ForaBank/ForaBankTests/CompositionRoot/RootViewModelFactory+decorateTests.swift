@@ -14,7 +14,7 @@ extension RootViewModelFactory {
         with decoration: @escaping ServiceCategoryBatchService
     ) -> Load<[ServiceCategory]> {
         
-        return { completion in
+        return { [log = logger.log] completion in
             
             decoratee {
                 
@@ -26,7 +26,14 @@ extension RootViewModelFactory {
                     completion([])
                     
                 case let .some(categories):
-                    decoration(categories) { _ in }
+                    decoration(categories) { failedCategories in
+                        
+                        if !failedCategories.isEmpty {
+                            
+                            log(.error, .network, "Fail to load categories named: \(failedCategories.map(\.name)).", #fileID, #line)
+                        }
+                    }
+                    
                     completion(categories)
                 }
             }
@@ -41,17 +48,18 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, httpClient, decoratee, decoration, _) = makeSUT()
+        let (sut, httpClient, decoratee, decoration, logger, _) = makeSUT()
         
         XCTAssertEqual(httpClient.callCount, 0)
         XCTAssertEqual(decoratee.callCount, 0)
         XCTAssertEqual(decoration.callCount, 0)
+        XCTAssertEqual(logger.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
     func test_decorated_shouldCallDecoratee() {
         
-        let (_,_, decoratee, _, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeSUT()
         
         decorated { _ in }
         
@@ -60,7 +68,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
         
-        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
         
         call(decorated, on: decoratee.complete(with: nil))
         
@@ -69,7 +77,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
         
-        let (_,_, decoratee, _, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeSUT()
         
         call(
             decorated,
@@ -80,7 +88,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
         
         call(decorated, on: decoratee.complete(with: []))
         
@@ -89,7 +97,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, _, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeSUT()
         
         call(
             decorated,
@@ -101,7 +109,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldCallDecorationWithOneOnDecorateeResultWithOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
         
         call(decorated, on: decoratee.complete(with: [category]))
         
@@ -111,7 +119,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverOneOnDecorateeResultOfOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, _, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeSUT()
         
         call(
             decorated,
@@ -123,7 +131,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldCallDecorationWithTwoOnDecorateeResultWithTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
         
         call(decorated, on: decoratee.complete(with: [category1, category2]))
         
@@ -133,13 +141,62 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverTwoOnDecorateeResultOfTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, _, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeSUT()
         
         call(
             decorated,
             assert: { XCTAssertNoDiff($0, [category1, category2]) },
             on: decoratee.complete(with: [category1, category2])
         )
+    }
+    
+    func test_decorated_shouldNotCallLoggerOnEmptyDecorationResult() {
+        
+        let (_,_, decoratee, _, logger, decorated) = makeSUT()
+        
+        call(
+            decorated,
+            on: decoratee.complete(with: [])
+        )
+        
+        XCTAssertEqual(logger.callCount, 0)
+    }
+    
+    func test_decorated_shouldCallLoggerWithOneOnDecorationResultOfOne() {
+        
+        let categoryName = anyMessage()
+        let category = makeServiceCategory(name: categoryName)
+        let (_,_, decoratee, decoration, logger, decorated) = makeSUT()
+        
+        call(
+            decorated,
+            on:  decoratee.complete(with: [makeServiceCategory()])
+        )
+        
+        decoration.complete(with: [category])
+        
+        XCTAssertNoDiff(logger.events.map(\.level), [.error])
+        XCTAssertNoDiff(logger.events.map(\.category), [.network])
+        XCTAssertNoDiff(logger.events.map(\.message), ["Fail to load categories named: [\"\(categoryName)\"]."])
+    }
+    
+    func test_decorated_shouldCallLoggerWithTwoOnDecorationResultOfTwo() {
+        
+        let (categoryName1, categoryName2) = (anyMessage(), anyMessage())
+        let category1 = makeServiceCategory(name: categoryName1)
+        let category2 = makeServiceCategory(name: categoryName2)
+        let (_,_, decoratee, decoration, logger, decorated) = makeSUT()
+        
+        call(
+            decorated,
+            on:  decoratee.complete(with: [makeServiceCategory()])
+        )
+        
+        decoration.complete(with: [category1, category2])
+        
+        XCTAssertNoDiff(logger.events.map(\.level), [.error])
+        XCTAssertNoDiff(logger.events.map(\.category), [.network])
+        XCTAssertNoDiff(logger.events.map(\.message), ["Fail to load categories named: [\"\(categoryName1)\", \"\(categoryName2)\"]."])
     }
     
     // MARK: - Helpers
@@ -156,6 +213,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         httpClient: HTTPClientSpy,
         decoratee: Decoratee,
         decoration: Decoration,
+        logger: LoggerSpy,
         decorated: SUT.Load<[ServiceCategory]>
     ) {
         let model: Model = .mockWithEmptyExcept()
@@ -175,14 +233,13 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        // TODO: - restore memory leaks tracking after Model fix
         trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(logger, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
         trackForMemoryLeaks(decoration, file: file, line: line)
         
-        return (sut, httpClient, decoratee, decoration, decorated)
+        return (sut, httpClient, decoratee, decoration, logger, decorated)
     }
     
     private func call(
