@@ -513,12 +513,12 @@ extension RootViewModelFactory {
         )
         let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformDataState?) -> Void) in
         
-            _createGetAuthorizedZoneClientInformData(nil) {
-                
-                completion(.init(
-                    $0,
-                    infoLabel: .init(image: .ic12EyeOff, title: "Информация")
-                ))
+            _createGetAuthorizedZoneClientInformData(nil) { result in
+
+//                completion(.init(
+//                    $0,
+//                    infoLabel: .init(image: .ic24Info, title: "Информация")
+//                ))
             }
         }
         runOnceWhenAuthorized {

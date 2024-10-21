@@ -77,13 +77,7 @@ class Model {
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     let ___client: CurrentValueSubject<___Client, Never>
-    struct ___Client {
-        
-        let authorized: Void?
-        let notAuthorized: Void?
-    }
-    #warning("rename and replace")
-    
+
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
     //MARK: Deposits

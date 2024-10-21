@@ -33,12 +33,11 @@ extension AuthLoginViewModel {
 }
 
 private extension Model {
-    
+    #warning("fix and update")
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
             clientInformMessage: Empty()
-            #warning("fix and update")
 //            clientInformMessage: clientInform
 //                .filter { [self] _ in
 //                    
