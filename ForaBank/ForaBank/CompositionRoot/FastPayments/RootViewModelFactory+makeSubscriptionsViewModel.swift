@@ -15,10 +15,9 @@ extension RootViewModelFactory {
     typealias OnSubscriptionDelete = (SubscriptionViewModel.Token, String) -> Void
     typealias OnSubscriptionDetail = (SubscriptionViewModel.Token) -> Void
     
-    static func makeSubscriptionsViewModel(
+    func makeSubscriptionsViewModel(
         getProducts: @escaping GetSubscriptionProducts,
-        c2bSubscription: C2BSubscription?,
-        scheduler: AnySchedulerOfDispatchQueue
+        c2bSubscription: C2BSubscription?
     ) -> UserAccountNavigationStateManager.MakeSubscriptionsViewModel {
         
         return { onDelete, onDetail in
@@ -43,43 +42,41 @@ extension RootViewModelFactory {
                 configurator: .init(
                     backgroundColor: .mainColorsGrayLightest
                 ),
-                scheduler: scheduler
+                scheduler: self.mainScheduler
             )
         }
     }
     
-    static func getSubscriptionProducts(
-        model: Model
-    ) -> GetSubscriptionProducts {
+    func getSubscriptionProducts(
+        onDelete: @escaping OnSubscriptionDelete,
+        onDetail: @escaping OnSubscriptionDetail
+    ) -> [SubscriptionsViewModel.Product] {
         
-        return { onDelete, onDetail in
-            
-            getSubscriptionProducts(
-                items: model.subscriptions.value?.list ?? [],
-                getProduct: model.product(forID:),
-                getImage: { model.images.value[.init($0)]?.image },
-                formatBalance: model.formatBalanceFraction(product:),
-                makeSubscriptionViewModel: {
-                    
+        getSubscriptionProducts(
+            items: model.subscriptions.value?.list ?? [],
+            getProduct: model.product(forID:),
+            getImage: { self.model.images.value[.init($0)]?.image },
+            formatBalance: model.formatBalanceFraction(product:),
+            makeSubscriptionViewModel: {
+                
 #warning("reuse ImageCache")
-                    return $0.makeSubscriptionViewModel(
-                        getImage: { model.images.value[$0]?.image },
-                        requestImage: {
-                            
-                            model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
-                        },
-                        onDelete: onDelete,
-                        onDetail: onDetail
-                    )
-                }
-            )
-        }
+                return $0.makeSubscriptionViewModel(
+                    getImage: { self.model.images.value[$0]?.image },
+                    requestImage: {
+                        
+                        self.model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [$0]))
+                    },
+                    onDelete: onDelete,
+                    onDetail: onDetail
+                )
+            }
+        )
     }
     
     typealias ProductID = String
     typealias MakeSubscriptionViewModel = (C2BSubscription.ProductSubscription.Subscription) -> SubscriptionViewModel
     
-    static func getSubscriptionProducts(
+    func getSubscriptionProducts(
         items: [C2BSubscription.ProductSubscription],
         getProduct: @escaping (ProductID) -> ProductData?,
         getImage: @escaping (MD5Hash) -> Image?,

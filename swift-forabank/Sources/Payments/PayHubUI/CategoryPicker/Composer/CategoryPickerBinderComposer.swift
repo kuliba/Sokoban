@@ -14,6 +14,7 @@ import RxViewModel
 public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> {
     
     private let load: Load
+    private let reload: Load
     private let microServices: MicroServices
     private let placeholderCount: Int
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -21,12 +22,14 @@ public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> 
     
     public init(
         load: @escaping Load,
+        reload: @escaping Load,
         microServices: MicroServices,
         placeholderCount: Int,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.load = load
+        self.reload = load
         self.microServices = microServices
         self.placeholderCount = placeholderCount
         self.scheduler = scheduler
@@ -37,7 +40,7 @@ public final class CategoryPickerBinderComposer<Category, QRSelect, Navigation> 
     public typealias ContentDomain = Domain.ContentDomain
     public typealias FlowDomain = Domain.FlowDomain
     
-    public typealias Load = (@escaping ([Category]) -> Void) -> Void
+    public typealias Load = (@escaping ([Category]?) -> Void) -> Void
     
     public typealias MicroServices = FlowDomain.MicroServices
 }
@@ -70,6 +73,7 @@ private extension CategoryPickerBinderComposer {
         
         let composer = LoadablePickerModelComposer(
             load: load,
+            reload: reload,
             scheduler: scheduler
         )
         

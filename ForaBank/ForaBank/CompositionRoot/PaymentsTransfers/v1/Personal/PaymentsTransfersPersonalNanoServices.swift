@@ -10,13 +10,14 @@ import PayHubUI
 struct PaymentsTransfersPersonalNanoServices {
     
     let loadCategories: LoadCategories
+    let reloadCategories: LoadCategories
     let loadAllLatest: LoadAllLatest
     let loadLatestForCategory: LoadLatestForCategory
 }
 
 extension PaymentsTransfersPersonalNanoServices {
     
-    typealias LoadCategoriesCompletion = ([ServiceCategory]) -> Void
+    typealias LoadCategoriesCompletion = ([ServiceCategory]?) -> Void
     typealias LoadCategories = (@escaping LoadCategoriesCompletion) -> Void
     
     typealias LoadLatestCompletion = (Result<[Latest], Error>) -> Void

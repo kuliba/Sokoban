@@ -14,40 +14,44 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     
     func test_reduce_load_stateInflight_shouldNotChangeStated() {
         
-        assertState(.load, on: .init(status: .inflight))
+        assertState(.load, on: .init(status: .inflight(nil)))
     }
     
     func test_reduce_load_stateInflight_shouldDeliverLoadEffect
     () {
         
-        assert(.load, on: .init(status: .inflight), effect: nil)
+        assert(.load, on: .init(status: .inflight(nil)), effect: nil)
     }
-    
+        
     func test_reduce_load_stateLoaded_shouldStatusToInflight() {
         
-        assertState(.load, on: .init(status: .loaded(""))) {
+        let landing = anyMessage()
+        
+        assertState(.load, on: .init(status: .loaded(landing))) {
             
-            $0.status = .inflight
+            $0.status = .inflight(landing)
         }
     }
     
     func test_reduce_load_stateLoaded_shouldDeliverLoadEffect() {
-        
-        assert(.load, on: .init(status: .loaded("")), effect: .load)
+      
+        let landing = anyMessage()
+
+        assert(.load, on: .init(status: .loaded(landing)), effect: .load)
     }
     
     func test_reduce_loaded_stateInflight_shouldStatusToLoaded() {
         
         let landing = anyMessage()
 
-        assertState(.loaded(landing), on: .init(status: .inflight)) {
+        assertState(.loaded(landing), on: .init(status: .inflight(nil))) {
             $0.status = .loaded(landing)
         }
     }
     
     func test_reduce_loaded_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.loaded(""), on: .init(status: .inflight), effect: nil)
+        assert(.loaded(""), on: .init(status: .inflight(nil)), effect: nil)
     }
 
     func test_reduce_loaded_stateLoaded_shouldStatusToNewLoaded() {
@@ -66,10 +70,11 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     func test_reduce_failureAlert_stateInflight_shouldStatusToFailure() {
         
         let alert = anyMessage()
-
-        assertState(.failure(.alert(alert)), on: .init(status: .inflight)) {
+        let landing = anyMessage()
+        
+        assertState(.failure(.alert(alert)), on: .init(status: .inflight(landing))) {
             
-            $0.status = .failure(.alert(alert))
+            $0.status = .failure(.alert(alert), landing)
         }
     }
     
@@ -77,16 +82,17 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
         
         let alert = anyMessage()
 
-        assert(.failure(.alert(alert)), on: .init(status: .inflight), effect: nil)
+        assert(.failure(.alert(alert)), on: .init(status: .inflight(nil)), effect: nil)
     }
     
     func test_reduce_failureInformer_stateInflight_shouldStatusToFailure() {
         
         let informer = anyMessage()
-
-        assertState(.failure(.informer(informer)), on: .init(status: .inflight)) {
+        let landing = anyMessage()
+        
+        assertState(.failure(.informer(informer)), on: .init(status: .inflight(landing))) {
             
-            $0.status = .failure(.informer(informer))
+            $0.status = .failure(.informer(informer), landing)
         }
     }
     
@@ -94,7 +100,7 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
         
         let alert = anyMessage()
 
-        assert(.failure(.alert(alert)), on: .init(status: .inflight), effect: nil)
+        assert(.failure(.alert(alert)), on: .init(status: .inflight(nil)), effect: nil)
     }
 
     
@@ -102,7 +108,7 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
         
         let landing = anyMessage()
 
-        assertState(.selectLandingType(landing), on: .init(status: .inflight)) {
+        assertState(.selectLandingType(landing), on: .init(status: .inflight(nil))) {
             
             $0.selection = .landingType(landing)
         }
@@ -112,12 +118,12 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
         
         let landing = anyMessage()
 
-        assert(.selectLandingType(landing), on: .init(status: .inflight), effect: nil)
+        assert(.selectLandingType(landing), on: .init(status: .inflight(nil)), effect: nil)
     }
 
     func test_reduce_reset_shouldSelectionToNil() {
         
-        assertState(.resetSelection, on: .init(selection: .landingType(""), status: .inflight)) {
+        assertState(.resetSelection, on: .init(selection: .landingType(""), status: .inflight(nil))) {
             
             $0.selection = nil
         }
@@ -125,7 +131,7 @@ final class MarketShowcaseContentReducerTests: XCTestCase {
     
     func test_reduce_reset_shouldDeliverNoEffect() {
         
-        assert(.resetSelection, on: .init(selection: .landingType(""), status: .inflight), effect: nil)
+        assert(.resetSelection, on: .init(selection: .landingType(""), status: .inflight(nil)), effect: nil)
     }
 
     // MARK: - Helpers

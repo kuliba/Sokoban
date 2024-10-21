@@ -8,6 +8,7 @@
 import ForaTools
 import Foundation
 import RemoteServices
+import SerialComponents
 
 /// A composer for creating batch services with serial caching remote loaders.
 final class SerialCachingRemoteBatchServiceComposer {
@@ -61,13 +62,11 @@ extension SerialCachingRemoteBatchServiceComposer {
     /// Composes a batch service with serial caching capabilities.
     ///
     /// - Parameters:
-    ///   - getSerial: Function to retrieve the serial string from a `Payload`.
     ///   - makeRequest: Function to create a network request from a `Payload`.
     ///   - mapResponse: Function to map a network response to the expected type.
     ///   - toModel: Function to transform an array of `[T]` into `[Model]`.
     /// - Returns: A batch service that performs the composed operations.
     func compose<Payload, T, Model: Codable & Identifiable>(
-        getSerial: @escaping (Payload) -> String?,
         makeRequest: @escaping StringSerialRemoteDomain<Payload, T>.MakeRequest,
         mapResponse: @escaping StringSerialRemoteDomain<Payload, T>.MapResponse,
         toModel: @escaping ([T]) -> [Model]
@@ -83,7 +82,6 @@ extension SerialCachingRemoteBatchServiceComposer {
         )
         let decorator = SerialStampedCachingDecorator(
             decoratee: perform,
-            getSerial: getSerial,
             save: update
         )
         let batcher = Batcher(perform: decorator.decorated)
@@ -97,24 +95,27 @@ extension SerialCachingRemoteBatchServiceComposer {
 private extension SerialStampedCachingDecorator {
     
     /// Completion handler type for the remote decoratee.
-    typealias _RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
+    typealias RemoteDecorateeCompletion<T> = (Result<RemoteServices.SerialStamped<Serial, T>, Error>) -> Void
     
     /// Type for the remote decoratee function.
-    typealias _RemoteDecoratee<T> = (Payload, @escaping _RemoteDecorateeCompletion<T>) -> Void
+    typealias RemoteDecoratee<T> = (Payload, @escaping RemoteDecorateeCompletion<T>) -> Void
+    
+    /// The completion handler type for caching operations.
+    ///
+    /// - Parameter result: A `Result` indicating success with `Void` or an `Error` on failure.
+    typealias SaveCompletion = (Result<Void, Error>) -> Void
     
     /// Type for the save function used in caching.
-    typealias _Save<T> = ([T], Serial, @escaping CacheCompletion) -> Void
+    typealias Save<T> = ([T], Serial, @escaping SaveCompletion) -> Void
     
     /// Convenience initialiser for `SerialStampedCachingDecorator` when `Value` is `[T]`.
     ///
     /// - Parameters:
     ///   - decoratee: The remote decoratee function.
-    ///   - getSerial: Function to get the serial from `Payload`.
     ///   - save: Function to save the cached data.
     convenience init<T>(
-        decoratee: @escaping _RemoteDecoratee<T>,
-        getSerial: @escaping (Payload) -> Serial?,
-        save: @escaping _Save<T>
+        decoratee: @escaping RemoteDecoratee<T>,
+        save: @escaping Save<T>
     ) where Value == [T] {
         
         self.init(
@@ -122,15 +123,18 @@ private extension SerialStampedCachingDecorator {
                 
                 decoratee(withSerial) { completion($0.map(\.stamped)) }
             },
-            getSerial: getSerial,
-            cache: { save($0.value, $0.serial, $1) }
+            cache: { payload, completion in
+                
+                // ignoring result
+                save(payload.value, payload.serial) { _ in completion() }
+            }
         )
     }
 }
 
 private extension RemoteServices.SerialStamped {
     
-    var stamped: ForaTools.SerialStamped<Serial, [T]> {
+    var stamped: SerialComponents.SerialStamped<Serial, [T]> {
         
         return .init(value: list, serial: serial)
     }

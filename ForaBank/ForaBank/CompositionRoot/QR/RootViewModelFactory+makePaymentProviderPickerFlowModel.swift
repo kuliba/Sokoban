@@ -11,29 +11,19 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
-    
-    static func makeSegmentedPaymentProviderPickerFlowModel(
-        httpClient: HTTPClient,
-        log: @escaping Log,
-        model: Model,
+    func makeSegmentedPaymentProviderPickerFlowModel(
         pageSize: Int = 50,
-        flag: StubbedFeatureFlag.Option,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        flag: StubbedFeatureFlag.Option
     ) -> (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel {
         
         let servicePickerComposer = makeAnywayServicePickerFlowModelComposer(
-            httpClient: httpClient,
-            log: log,
-            model: model,
-            flag: flag,
-            scheduler: scheduler
+            flag: flag
         )
         
         let pickerFlowComposer = SegmentedPaymentProviderPickerFlowModelComposer(
             makeServicePickerFlowModel: servicePickerComposer.compose,
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         
         return pickerFlowComposer.compose
