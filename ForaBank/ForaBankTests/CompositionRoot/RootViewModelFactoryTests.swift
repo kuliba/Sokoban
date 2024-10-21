@@ -13,6 +13,7 @@ class RootViewModelFactoryTests: XCTestCase {
     typealias SUT = RootViewModelFactory
     
     func makeSUT(
+        model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -20,7 +21,6 @@ class RootViewModelFactoryTests: XCTestCase {
         httpClient: HTTPClientSpy,
         logger: LoggerSpy
     ) {
-        let model: Model = .mockWithEmptyExcept()
         let httpClient = HTTPClientSpy()
         let logger = LoggerSpy() // TODO: add logging tests
         let sut = SUT(
