@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15, *)
-public enum ClientInformDataState {
+public enum ClientInformZoneDataState {
     
     case single(Single)
     case multiple(Multiple)
@@ -37,11 +37,16 @@ public enum ClientInformDataState {
     
     public struct Label<Title>: Identifiable {
         
-        public let id = UUID()
+        public let id: UUID
         public let image: Image
         public let title: Title
         
-        public init(image: Image, title: Title) {
+        public init(
+            id: UUID = .init(),
+            image: Image,
+            title: Title
+        ) {
+            self.id = id
             self.image = image
             self.title = title
         }
@@ -49,7 +54,7 @@ public enum ClientInformDataState {
 }
 
 @available(iOS 15, *)
-extension ClientInformDataState {
+extension ClientInformZoneDataState {
     
     func navBarTitle() -> String {
         

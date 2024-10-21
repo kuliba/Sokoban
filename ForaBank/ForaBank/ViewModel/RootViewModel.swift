@@ -480,10 +480,9 @@ private extension MarketShowcaseFlowState {
 }
 
 private extension Model {
-    
+    #warning("rebuild according new response")
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
-        #warning("rebuild according new response")
         .init(
             clientInformMessage: Empty()
 //            clientInformMessage: clientInform

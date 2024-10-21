@@ -14,39 +14,44 @@ struct ___Client {
 }
 
 enum ClientInformZoneDataState {
-
+    
     case single(Single)
     case multiple(Multiple)
     
-    public struct Single {
+    struct Single {
         
-        public let label: Label<String>
-        public let text: AttributedString
+        let label: Label<String>
+        let text: AttributedString
         
-        public init(label: Label<String>, text: AttributedString) {
+        init(label: Label<String>, text: AttributedString) {
             self.label = label
             self.text = text
         }
     }
     
-    public struct Multiple {
+    struct Multiple {
         
-        public let title: Label<String>
-        public let items: [Label<AttributedString>]
+        let title: Label<String>
+        let items: [Label<AttributedString>]
         
-        public init(title: Label<String>, items: [Label<AttributedString>]) {
+        init(title: Label<String>, items: [Label<AttributedString>]) {
             self.title = title
             self.items = items
         }
     }
     
-    public struct Label<Title>: Identifiable {
+    struct Label<Title>: Identifiable {
         
-        public let id = UUID()
-        public let image: Image
-        public let title: Title
+        let id: UUID
+        let image: Image
+        let title: Title
         
-        public init(image: Image, title: Title) {
+        init(
+            id: UUID = .init(),
+            image: Image,
+            title: Title
+        ) {
+            self.id = id
             self.image = image
             self.title = title
         }

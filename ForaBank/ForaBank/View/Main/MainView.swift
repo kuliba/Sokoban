@@ -305,7 +305,7 @@ struct MainView<NavigationOperationView: View>: View {
             OpenAccountView(viewModel: openAccountViewModel)
             
         case let .clientInform(clientInform):
-            PlainClientInformBottomSheetView(config: .iFora, info: clientInform)
+            PlainClientInformBottomSheetView(config: .iFora, info: clientInform.client)
         }
     }
     
@@ -794,4 +794,28 @@ extension PaymentSticker.OperationViewConfiguration {
 extension OperationStateViewModel {
     
     static let empty = OperationStateViewModel { _,_ in }
+}
+
+// MARK: - Adapters
+
+private extension ClientInformZoneDataState {
+    
+    var client: PlainClientInformBottomSheet.ClientInformZoneDataState {
+        
+        switch self {
+        case let .single(single):
+            return .single(.init(
+                label: .init(image: single.label.image, title: single.label.title),
+                text: single.text
+            ))
+        case let .multiple(multiple):
+            return .multiple(.init(
+                title: .init(image: multiple.title.image, title: multiple.title.title),
+                items: multiple.items.map {
+                    
+                    return .init(id: $0.id, image: $0.image, title: $0.title)
+                }
+            ))
+        }
+    }
 }

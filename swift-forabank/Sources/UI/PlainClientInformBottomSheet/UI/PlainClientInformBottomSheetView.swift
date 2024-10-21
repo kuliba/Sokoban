@@ -179,7 +179,7 @@ public struct PlainClientInformBottomSheetView: View {
 public extension PlainClientInformBottomSheetView {
     
     typealias Config = PlainClientInformBottomSheetConfig
-    typealias Info = ClientInformDataState
+    typealias Info = ClientInformZoneDataState
 }
 
 // MARK: - Preview

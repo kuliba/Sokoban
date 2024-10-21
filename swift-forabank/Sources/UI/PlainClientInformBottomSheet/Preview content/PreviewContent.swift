@@ -28,9 +28,9 @@ extension PlainClientInformBottomSheetConfig.Strings {
 }
 
 @available(iOS 15, *)
-extension ClientInformDataState {
+extension ClientInformZoneDataState {
     
-    static let preview: Self = ClientInformDataState.multiple(.init(
+    static let preview: Self = ClientInformZoneDataState.multiple(.init(
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
