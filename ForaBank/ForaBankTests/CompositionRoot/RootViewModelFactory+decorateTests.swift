@@ -14,6 +14,19 @@ extension RootViewModelFactory {
         
         return { completion in
             
+            decoratee {
+                
+                switch $0 {
+                case .none:
+                    completion(nil)
+                    
+                case .some([]):
+                    completion([])
+                    
+                default:
+                    break
+                }
+            }
         }
     }
 }
@@ -33,10 +46,87 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_decorated_shouldCallDecoratee() {
+        
+        let (_,_, decoratee, _, decorated) = makeSUT()
+        
+        decorated { _ in }
+        
+        XCTAssertNoDiff(decoratee.callCount, 1)
+    }
+    
+    func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
+        
+        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        decorated {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        decoratee.complete(with: nil)
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(decoration.callCount, 0)
+    }
+    
+    func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
+        
+        let (_,_, decoratee, _, decorated) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        decorated {
+            
+            XCTAssertNil($0)
+            exp.fulfill()
+        }
+        
+        decoratee.complete(with: nil)
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
+        
+        let (_,_, decoratee, decoration, decorated) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        decorated {
+            
+            XCTAssertEqual($0, [])
+            exp.fulfill()
+        }
+        
+        decoratee.complete(with: [])
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(decoration.callCount, 0)
+    }
+    
+    func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
+        
+        let (_,_, decoratee, _, decorated) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        decorated {
+            
+            XCTAssertEqual($0, [])
+            exp.fulfill()
+        }
+        
+        decoratee.complete(with: [])
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RootViewModelFactory
-    private typealias Decoratee = Spy<Void, [ServiceCategory], Never>
+    private typealias Decoratee = Spy<Void, [ServiceCategory]?, Never>
     private typealias Decoration = Spy<[ServiceCategory], [ServiceCategory], Never>
     
     private func makeSUT(
