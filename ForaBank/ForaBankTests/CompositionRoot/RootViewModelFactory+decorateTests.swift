@@ -8,11 +8,11 @@
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_decorateTests: XCTestCase {
+final class RootViewModelFactory_decorateTests: RootViewModelFactoryTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, httpClient, decoratee, decoration, logger, _) = makeSUT()
+        let (sut, httpClient, decoratee, decoration, logger, _) = makeDecorated()
         
         XCTAssertEqual(httpClient.callCount, 0)
         XCTAssertEqual(decoratee.callCount, 0)
@@ -23,7 +23,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldCallDecoratee() {
         
-        let (_,_, decoratee, _,_, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeDecorated()
         
         decorated { _ in }
         
@@ -32,7 +32,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldNotCallDecorationOnDecorateeNilResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: decoratee.complete(with: nil))
         
@@ -41,7 +41,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldDeliverNilOnDecorateeNilResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -52,7 +52,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldNotCallDecorationOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: decoratee.complete(with: []))
         
@@ -61,7 +61,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldDeliverEmptyOnDecorateeEmptyResult() {
         
-        let (_,_, decoratee, _,_, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -73,7 +73,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldCallDecorationWithOneOnDecorateeResultWithOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: decoratee.complete(with: [category]))
         
@@ -83,7 +83,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverOneOnDecorateeResultOfOne() {
         
         let category = makeServiceCategory()
-        let (_,_, decoratee, _,_, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -95,7 +95,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldCallDecorationWithTwoOnDecorateeResultWithTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, decoration, _, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, _, decorated) = makeDecorated()
         
         call(decorated, on: decoratee.complete(with: [category1, category2]))
         
@@ -105,7 +105,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     func test_decorated_shouldDeliverTwoOnDecorateeResultOfTwo() {
         
         let (category1, category2) = (makeServiceCategory(), makeServiceCategory())
-        let (_,_, decoratee, _,_, decorated) = makeSUT()
+        let (_,_, decoratee, _,_, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -116,7 +116,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     func test_decorated_shouldNotCallLoggerOnEmptyDecorationResult() {
         
-        let (_,_, decoratee, _, logger, decorated) = makeSUT()
+        let (_,_, decoratee, _, logger, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -130,7 +130,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         
         let categoryName = anyMessage()
         let category = makeServiceCategory(name: categoryName)
-        let (_,_, decoratee, decoration, logger, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -150,7 +150,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         let (categoryName1, categoryName2) = (anyMessage(), anyMessage())
         let category1 = makeServiceCategory(name: categoryName1)
         let category2 = makeServiceCategory(name: categoryName2)
-        let (_,_, decoratee, decoration, logger, decorated) = makeSUT()
+        let (_,_, decoratee, decoration, logger, decorated) = makeDecorated()
         
         call(
             decorated,
@@ -168,11 +168,10 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = RootViewModelFactory
     private typealias Decoratee = Spy<Void, [ServiceCategory]?, Never>
     private typealias Decoration = Spy<[ServiceCategory], [ServiceCategory], Never>
     
-    private func makeSUT(
+    private func makeDecorated(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -183,14 +182,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         logger: LoggerSpy,
         decorated: SUT.Load<[ServiceCategory]>
     ) {
-        let model: Model = .mockWithEmptyExcept()
-        let httpClient = HTTPClientSpy()
-        let logger = LoggerSpy() // TODO: add logging tests
-        let sut = SUT(
-            model: model,
-            httpClient: httpClient,
-            logger: logger
-        )
+        let (sut, httpClient, logger) = makeSUT(file: file, line: line)
         let decoratee = Decoratee()
         let decoration = Decoration()
         
@@ -200,7 +192,6 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(logger, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
