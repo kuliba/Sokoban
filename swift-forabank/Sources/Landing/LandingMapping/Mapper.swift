@@ -23,16 +23,21 @@ public struct LandingMapper {
         return dataToLanding(data)
     }
     
-    public enum MapperError: Error {
+    public enum MapperError: Error, Equatable {
         
         case notOkStatus
         case mapError
+        case serverError(String)
+        case connectivityError
     }
     
     private static func dataToLanding(_ data: Data) -> Result {
         
         if let decoded = try? decode(data) {
             let landing = Self.decodeLandingToLanding(decoded)
+            if let errorMessage = landing.errorMessage {
+                return .failure(.serverError(errorMessage))
+            }
             return .success(landing)
         }
         return .failure(.mapError)
@@ -180,10 +185,9 @@ private extension Landing.Spacing {
     init(
         data: DecodableLanding.Data.Spacing
     ) {
-        
         self.init(
             backgroundColor: data.backgroundColor,
-            heightDp: data.heightDp)
+            heightDp: CGFloat(Double(data.heightDp) ?? 0))
     }
 }
 
@@ -649,20 +653,23 @@ private extension Landing.DataView.Carousel.CarouselBase {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
-            loopedScrolling: data.loopedScrolling,
-            list: data.list.map { .init(data: $0) })
+            size: .init(size: data.size ?? "214x214", scale: data.scale ?? "medium"),
+            loopedScrolling: data.loopedScrolling ?? false,
+            list: data.list.compactMap {
+                guard let element = $0, let imageLink = element.imageLink else { return nil }
+                return .init(data: element, imageLink: imageLink)
+            })
     }
 }
 
 private extension Landing.DataView.Carousel.CarouselBase.ListItem {
     
     init(
-        data: DecodableLanding.Data.CarouselBaseDecodable.ListItem
+        data: DecodableLanding.Data.CarouselBaseDecodable.ListItem,
+        imageLink: String
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -673,7 +680,7 @@ private extension Landing.DataView.Carousel.CarouselBase.ListItem.Action {
     init(
         data: DecodableLanding.Data.CarouselBaseDecodable.ListItem.Action
     ) {
-        self.init(type: data.type, target: data.target)
+        self.init(type: data.type ?? "unknow", target: data.target)
     }
 }
 
@@ -684,10 +691,12 @@ private extension Landing.DataView.Carousel.CarouselWithTabs {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
-            loopedScrolling: data.loopedScrolling,
-            tabs: data.tabs.map { .init(data: $0) })
+            size: .init(size: data.size ?? "214x146", scale: data.scale ?? "medium"),
+            loopedScrolling: data.loopedScrolling ?? false,
+            tabs: data.tabs.compactMap {
+                guard let element = $0 else { return nil }
+                return .init(data: element)
+            })
     }
 }
 
@@ -697,18 +706,22 @@ private extension Landing.DataView.Carousel.CarouselWithTabs.TabItem {
         data: DecodableLanding.Data.CarouselWithTabsDecodable.TabItem
     ) {
         self.init(
-            name: data.name,
-            list: data.list.map { .init(data: $0) } )
+            name: data.name ?? "",
+            list: data.list.compactMap {
+                guard let element = $0, let imageLink = element.imageLink else { return nil }
+                return .init(data: element, imageLink: imageLink)
+            })
     }
 }
 
 private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem {
     
     init(
-        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem
+        data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem,
+        imageLink: String
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -719,7 +732,7 @@ private extension Landing.DataView.Carousel.CarouselWithTabs.ListItem.Action {
     init(
         data: DecodableLanding.Data.CarouselWithTabsDecodable.ListItem.Action
     ) {
-        self.init(type: data.type, target: data.target)
+        self.init(type: data.type ?? "unknow", target: data.target)
     }
 }
 
@@ -730,20 +743,23 @@ private extension Landing.DataView.Carousel.CarouselWithDots {
     ) {
         self.init(
             title: data.title,
-            size: .init(size: data.size),
-            scale: data.scale,
-            loopedScrolling: data.loopedScrolling,
-            list: data.list.map { .init(data: $0) })
+            size: .init(size: data.size ?? "408x283", scale: data.scale ?? "medium"),
+            loopedScrolling: data.loopedScrolling ?? false,
+            list: data.list.compactMap {
+                guard let element = $0, let imageLink = element.imageLink else { return nil }
+                return .init(data: element, imageLink: imageLink)
+            })
     }
 }
 
 private extension Landing.DataView.Carousel.CarouselWithDots.ListItem {
     
     init(
-        data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem
+        data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem,
+        imageLink: String
     ) {
         self.init(
-            imageLink: data.imageLink,
+            imageLink: imageLink.addingPercentEncoding(),
             link: data.link,
             action: data.action.map { .init(data: $0)})
     }
@@ -754,6 +770,13 @@ private extension Landing.DataView.Carousel.CarouselWithDots.ListItem.Action {
     init(
         data: DecodableLanding.Data.CarouselWithDotsDecodable.ListItem.Action
     ) {
-        self.init(type: data.type, target: data.target)
+        self.init(type: data.type ?? "unknow", target: data.target)
+    }
+}
+
+extension String {
+    
+    func addingPercentEncoding() -> Self {
+        addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
     }
 }

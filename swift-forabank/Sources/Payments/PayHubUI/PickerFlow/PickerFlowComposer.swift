@@ -22,8 +22,8 @@ public final class PickerFlowComposer<Element, Navigation> {
         self.scheduler = scheduler
     }
     
-    public typealias MakeNavigation = (Element, @escaping Dispatch, @escaping (Navigation) -> Void) -> Void
-    public typealias Dispatch = (Event) -> Void
+    public typealias MakeNavigation = (Element, @escaping Notify, @escaping (Navigation) -> Void) -> Void
+    public typealias Notify = (Event) -> Void
     public typealias Event = PickerFlowEvent<Element, Navigation>
 }
 

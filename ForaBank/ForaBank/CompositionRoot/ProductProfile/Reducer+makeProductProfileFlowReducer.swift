@@ -9,7 +9,7 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeProductProfileFlowReducer() -> ProductProfileFlowReducer {
+    func makeProductProfileFlowReducer() -> ProductProfileFlowReducer {
      
         ProductProfileFlowReducer(
             alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,

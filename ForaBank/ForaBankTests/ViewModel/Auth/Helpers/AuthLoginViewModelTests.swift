@@ -139,14 +139,21 @@ class AuthLoginViewModelTests: XCTestCase {
                     .eraseToAnyPublisher()
             }()
             
-            return .init(
-                statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
-                imagePublisher: imagePublisher,
-                imageLoader: { _ in },
+            let makeImageViewFactory = ImageViewFactory(
                 makeIconView: { _ in .init(
                     image: .cardPlaceholder,
                     publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
                 )},
+                makeBannerImageView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )})
+
+            return .init(
+                statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
+                imagePublisher: imagePublisher,
+                imageLoader: { _ in },
+                imageViewFactory: makeImageViewFactory,
                 config: .default) { [weak self] event in
                     switch event {
                         

@@ -12,7 +12,7 @@ extension DecodableLanding.Data {
     struct Spacing: Decodable, Equatable {
         
         let backgroundColor: String
-        let heightDp: CGFloat
+        let heightDp: String
         
         enum CodingKeys: String, CodingKey {
             case backgroundColor

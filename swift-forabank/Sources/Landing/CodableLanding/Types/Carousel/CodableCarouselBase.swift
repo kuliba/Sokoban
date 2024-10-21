@@ -13,7 +13,6 @@ public extension CodableLanding {
         
         public let title: String?
         public let size: Size
-        public let scale: String
         public let loopedScrolling: Bool
         
         public let list: [ListItem]
@@ -21,26 +20,13 @@ public extension CodableLanding {
         public init(
             title: String?,
             size: Size,
-            scale: String,
             loopedScrolling: Bool,
             list: [ListItem]
         ) {
             self.title = title
             self.size = size
-            self.scale = scale
             self.loopedScrolling = loopedScrolling
             self.list = list
-        }
-        
-        public struct Size: Codable, Equatable {
-            
-            public let width: Int
-            public let height: Int
-            
-            public init(width: Int, height: Int) {
-                self.width = width
-                self.height = height
-            }
         }
         
         public struct ListItem: Codable, Equatable {

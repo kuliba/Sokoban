@@ -9,17 +9,16 @@ import SberQR
 
 extension RootViewModelFactory {
     
-    static func makePaymentsSuccessViewModel(
-        model: Model
+    func makePaymentsSuccessViewModel(
     ) -> QRViewModelFactory.MakePaymentsSuccessViewModel {
         
-        return { .init(paymentSuccess: $0.success, model) }
+        return { .init(paymentSuccess: $0.success, self.model) }
     }
 }
 
 // MARK: - Adapter
 
-private extension CreateSberQRPaymentResponse {
+extension CreateSberQRPaymentResponse {
     
     var success: Payments.Success {
         
