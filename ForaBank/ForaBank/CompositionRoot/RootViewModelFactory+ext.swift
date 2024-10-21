@@ -492,15 +492,15 @@ extension RootViewModelFactory {
 //                ))
             }
         }
-        runOnceWhenAuthorized {
+        performOrWaitForActive {
             
             createGetAuthorizedZoneClientInformData {
                 
                 if let info = $0 {
-                    logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                    model.clientInform.value = info
+                    self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                    self.model.clientInform.value = info
                 } else {
-                    logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientData", file: #file, line: #line)
+                    self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientData", file: #file, line: #line)
                 }
             }
         }
