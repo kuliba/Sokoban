@@ -33,6 +33,7 @@ public extension MarketShowcaseFlowState {
         public enum Outside: Equatable {
             case main
             case openURL(String)
+            case landing(String)
         }
     }
 }
