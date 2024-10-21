@@ -24,6 +24,7 @@ let package = Package(
         .landingMapping,
         .landingUIComponent,
         .collateralLoanLanding,
+        .collateralLoanLandingUI,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -132,6 +133,8 @@ let package = Package(
         .landingUIComponentTests,
         .collateralLoanLanding,
         .collateralLoanLandingTests,
+        .collateralLoanLandingUI,
+        .collateralLoanLandingUITests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -398,6 +401,13 @@ private extension Product {
         name: .collateralLoanLanding,
         targets: [
             .collateralLoanLanding
+        ]
+    )
+    
+    static let collateralLoanLandingUI = library(
+        name: .collateralLoanLandingUI,
+        targets: [
+            .collateralLoanLandingUI
         ]
     )
     
@@ -1184,6 +1194,21 @@ private extension Target {
             .customDump
         ],
         path: "Tests/Landing/\(String.collateralLoanLandingTests)"
+    )
+    
+    static let collateralLoanLandingUI = target(
+        name: .collateralLoanLandingUI,
+        dependencies: [],
+        path: "Sources/Landing/\(String.collateralLoanLandingUI)"
+    )
+    
+    static let collateralLoanLandingUITests = testTarget(
+        name: .collateralLoanLandingUITests,
+        dependencies: [
+            .collateralLoanLandingUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanLandingUITests)"
     )
     
     // MARK: - Infra
@@ -2883,6 +2908,10 @@ private extension Target.Dependency {
         name: .collateralLoanLanding
     )
     
+    static let collateralLoanLandingUI = byName(
+        name: .collateralLoanLandingUI
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -3274,6 +3303,9 @@ private extension String {
     
     static let collateralLoanLanding = "CollateralLoanLanding"
     static let collateralLoanLandingTests = "CollateralLoanLandingTests"
+    
+    static let collateralLoanLandingUI = "CollateralLoanLandingUI"
+    static let collateralLoanLandingUITests = "CollateralLoanLandingUITests"
     
     // MARK: - UI
     
