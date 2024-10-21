@@ -8,6 +8,7 @@
 import ForaTools
 import Foundation
 import RemoteServices
+import SerialComponents
 
 /// A composer for creating batch services with serial caching remote loaders.
 final class SerialCachingRemoteBatchServiceComposer {
@@ -61,13 +62,11 @@ extension SerialCachingRemoteBatchServiceComposer {
     /// Composes a batch service with serial caching capabilities.
     ///
     /// - Parameters:
-    ///   - getSerial: Function to retrieve the serial string from a `Payload`.
     ///   - makeRequest: Function to create a network request from a `Payload`.
     ///   - mapResponse: Function to map a network response to the expected type.
     ///   - toModel: Function to transform an array of `[T]` into `[Model]`.
     /// - Returns: A batch service that performs the composed operations.
     func compose<Payload, T, Model: Codable & Identifiable>(
-        getSerial: @escaping (Payload) -> String?,
         makeRequest: @escaping StringSerialRemoteDomain<Payload, T>.MakeRequest,
         mapResponse: @escaping StringSerialRemoteDomain<Payload, T>.MapResponse,
         toModel: @escaping ([T]) -> [Model]
@@ -83,7 +82,6 @@ extension SerialCachingRemoteBatchServiceComposer {
         )
         let decorator = SerialStampedCachingDecorator(
             decoratee: perform,
-            getSerial: getSerial,
             save: update
         )
         let batcher = Batcher(perform: decorator.decorated)
@@ -114,11 +112,9 @@ private extension SerialStampedCachingDecorator {
     ///
     /// - Parameters:
     ///   - decoratee: The remote decoratee function.
-    ///   - getSerial: Function to get the serial from `Payload`.
     ///   - save: Function to save the cached data.
     convenience init<T>(
         decoratee: @escaping RemoteDecoratee<T>,
-        getSerial: @escaping (Payload) -> Serial?,
         save: @escaping Save<T>
     ) where Value == [T] {
         
@@ -127,7 +123,6 @@ private extension SerialStampedCachingDecorator {
                 
                 decoratee(withSerial) { completion($0.map(\.stamped)) }
             },
-            getSerial: getSerial,
             cache: { payload, completion in
                 
                 // ignoring result
@@ -139,7 +134,7 @@ private extension SerialStampedCachingDecorator {
 
 private extension RemoteServices.SerialStamped {
     
-    var stamped: ForaTools.SerialStamped<Serial, [T]> {
+    var stamped: SerialComponents.SerialStamped<Serial, [T]> {
         
         return .init(value: list, serial: serial)
     }

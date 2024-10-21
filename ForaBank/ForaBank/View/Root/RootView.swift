@@ -62,9 +62,11 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
+                navigationOperationView: RootViewModelFactory(
                     model: viewModel.model,
+                    httpClient: viewModel.model.authenticatedHTTPClient(),
+                    logger: LoggerAgent()
+                ).makeNavigationOperationView(
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
@@ -114,7 +116,7 @@ struct RootView: View {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
-        .onFirstAppear { marketShowcaseBinder.content.event(.load) }
+        .onAppear { marketShowcaseBinder.content.event(.load) }
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMarketButton")
     }
@@ -192,13 +194,18 @@ private extension RootView {
         _ switcher: PaymentsTransfersSwitcher
     ) -> some View {
         
-        ComposedProfileSwitcherView(
-            model: switcher,
-            corporateView: paymentsTransfersCorporateView,
-            personalView: paymentsTransfersPersonalView,
-            undefinedView: { SpinnerView(viewModel: .init()) }
-        )
-        .refresh(action: switcher.refresh)
+        RefreshableScrollView(
+            action: switcher.refresh,
+            showsIndicators: false,
+            refreshCompletionDelay: 2.0
+        ) {
+            ComposedProfileSwitcherView(
+                model: switcher,
+                corporateView: paymentsTransfersCorporateView,
+                personalView: paymentsTransfersPersonalView,
+                undefinedView: { SpinnerView(viewModel: .init()) }
+            )
+        }
     }
     
     func paymentsTransfersCorporateView(

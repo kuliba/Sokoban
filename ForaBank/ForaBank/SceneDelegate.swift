@@ -5,8 +5,9 @@
 //  Created by Mikhail on 27.05.2021.
 //
 
-import UIKit
 import Combine
+import CombineSchedulers
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -20,10 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
-    private lazy var rootViewModel = RootViewModelFactory.make(
+    private lazy var rootViewModel = RootViewModelFactory(
         model: model,
         httpClient: httpClient,
-        logger: logger,
+        logger: logger
+    ).make(
         bindings: &bindings,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),

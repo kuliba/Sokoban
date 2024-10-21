@@ -44,17 +44,29 @@ where RefreshView: View,
         ZStack {
             
             switch state.status {
-            case .initiate, .inflight, .failure:
+            case .initiate:
                 Color.clear
                     .frame(maxHeight: .infinity)
                 
+            case let .failure(_, oldLanding):
+                if let oldLanding {
+                    factory.makeLandingView(oldLanding)
+                } else {
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
             case let .loaded(landing):
                 factory.makeLandingView(landing)
-            }
-            
-            if case .inflight = state.status {
-                factory.makeRefreshView()
-                    .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                
+            case let .inflight(oldLanding):
+                oldLanding.map {
+                    factory.makeLandingView($0)
+                }
+                if oldLanding == nil {
+                    factory.makeRefreshView()
+                        .modifier(ViewByCenterModifier(height: config.spinnerHeight))
+                }
             }
         }
     }

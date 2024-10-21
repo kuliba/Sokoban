@@ -14,7 +14,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, _, spy) = makeSUT()
+        let (sut, _,_, spy) = makeSUT()
         
         XCTAssertEqual(spy.callCount, 0)
         XCTAssertNotNil(sut)
@@ -22,7 +22,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
 
     func test_init_shouldCallLoadOnLoad() {
         
-        let (sut, _, spy) = makeSUT()
+        let (sut, _,_, spy) = makeSUT()
         
         sut.content.operationPicker.content.event(.load)
         
@@ -62,31 +62,36 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     ) -> (
         sut: SUT,
         loadCategoriesSpy: LoadCategoriesSpy,
+        reloadCategoriesSpy: LoadCategoriesSpy,
         loadLatestSpy: LoadLatestSpy
     ) {
         let loadCategoriesSpy = LoadCategoriesSpy()
+        let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
-        let sut = RootViewModelFactory.makePaymentsTransfersPersonal(
+        let sut = RootViewModelFactory(
+            model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            model: .mockWithEmptyExcept(),
+            mainScheduler: .immediate,
+            backgroundScheduler: .immediate
+        ).makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             nanoServices: .init(
                 loadCategories: loadCategoriesSpy.process(completion:),
+                reloadCategories: reloadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
             ),
-            pageSize: pageSize,
-            mainScheduler: .immediate,
-            backgroundScheduler: .immediate
+            pageSize: pageSize
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadCategoriesSpy, file: file, line: line)
+        trackForMemoryLeaks(reloadCategoriesSpy, file: file, line: line)
         trackForMemoryLeaks(loadLatestSpy, file: file, line: line)
         
-        return (sut, loadCategoriesSpy, loadLatestSpy)
+        return (sut, loadCategoriesSpy, reloadCategoriesSpy, loadLatestSpy)
     }
 }
 

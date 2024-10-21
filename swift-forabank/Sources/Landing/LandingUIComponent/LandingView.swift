@@ -263,7 +263,7 @@ extension LandingView {
                 SpacingView(model: model, config: config.spacing)
                 
             case let .image(model):
-                ImageView(model: .init(data: model, images: images), config: config.image)
+                ImageView(model: .init(data: model, images: images), config: config.image, factory: imageViewFactory)
                 
             case let .list(.dropDownTexts(model)):
                 ListDropdownTextsUIView(model: model, config: config.listDropDownTexts)

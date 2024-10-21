@@ -40,6 +40,9 @@ public extension LoadablePickerReducer {
         case let .loaded(elements):
             handleLoaded(&state, &effect, with: elements)
             
+        case .reload:
+            reload(&state, &effect)
+            
         case let .select(element):
             state.selected = element
         }
@@ -69,11 +72,22 @@ private extension LoadablePickerReducer {
     func handleLoaded(
         _ state: inout State,
         _ effect: inout Effect?,
-        with elements: [Element]
+        with elements: [Element]?
     ) {
+        guard let elements else { return }
+        
         state.suffix = state.suffix
             .map(\.id)
             .assignIDs(elements, makeID)
             .map { State.Item.element($0) }
+    }
+    
+    func reload(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        state.suffix = makePlaceholders().map { .placeholder($0) }
+        state.selected = nil
+        effect = .reload
     }
 }
