@@ -1124,6 +1124,7 @@
 		2A72ACBA2CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72ACB92CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift */; };
 		2A72ACBC2CC6800500B8BF5B /* RootViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72ACBB2CC6800500B8BF5B /* RootViewModelFactoryTests.swift */; };
 		2A72ACBE2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */; };
+		2A72ACC02CC6A73800B8BF5B /* RootViewModel+composeServiceCategoryListLoaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72ACBF2CC6A73800B8BF5B /* RootViewModel+composeServiceCategoryListLoaders.swift */; };
 		2A72B2682C05F16B00454F22 /* RequestFactory+createCreateAnywayTransferV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72B2672C05F16B00454F22 /* RequestFactory+createCreateAnywayTransferV2RequestTests.swift */; };
 		2A7325EA2A30466800C35022 /* PaymentsTypesTransportCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */; };
 		2A7325EC2A304A6E00C35022 /* Model+PaymentsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */; };
@@ -4656,6 +4657,7 @@
 		2A72ACB92CC67FD500B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeGetOperatorsListByParamPayloadsTests.swift"; sourceTree = "<group>"; };
 		2A72ACBB2CC6800500B8BF5B /* RootViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift"; sourceTree = "<group>"; };
+		2A72ACBF2CC6A73800B8BF5B /* RootViewModel+composeServiceCategoryListLoaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+composeServiceCategoryListLoaders.swift"; sourceTree = "<group>"; };
 		2A72B2672C05F16B00454F22 /* RequestFactory+createCreateAnywayTransferV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferV2RequestTests.swift"; sourceTree = "<group>"; };
 		2A7323A92BB193070031958E /* AnywayPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AnywayPayment.xctestplan; sourceTree = "<group>"; };
 		2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTypesTransportCaseTests.swift; sourceTree = "<group>"; };
@@ -12749,6 +12751,7 @@
 				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
 				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
+				2A72ACBF2CC6A73800B8BF5B /* RootViewModel+composeServiceCategoryListLoaders.swift */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
 				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
@@ -21322,6 +21325,7 @@
 				6806FAAA27E9234A00EA005A /* CustomLineShapeWithAlignment.swift in Sources */,
 				2AA3A1012BF4BB9B00B1D104 /* UtilityPaymentOperatorLoaderComposer.swift in Sources */,
 				2AA54A6D2C57A31700542C49 /* PaymentProviderServicePickerPayload.swift in Sources */,
+				2A72ACC02CC6A73800B8BF5B /* RootViewModel+composeServiceCategoryListLoaders.swift in Sources */,
 				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
 				8362FB0329DEF7F20094457E /* SearchCityViewModel.swift in Sources */,
 				77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */,

@@ -298,19 +298,12 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let serviceCategoryRemoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
-        
         let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
         // threading
-        let _serviceCategoryRemoteLoad = backgroundScheduler.scheduled(serviceCategoryRemoteLoad)
         let _operatorsService = backgroundScheduler.scheduled(operatorsService)
         
-        let (serviceCategoryListLoad, serviceCategoryListReload) = composeLoaders(
-            remoteLoad: _serviceCategoryRemoteLoad,
-            fromModel: { $0.serviceCategory },
-            toModel: { $0.codable }
-        )
+        let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
         let decoratedServiceCategoryListReload = decorate(
             decoratee: serviceCategoryListReload,
