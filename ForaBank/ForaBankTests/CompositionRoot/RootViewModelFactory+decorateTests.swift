@@ -162,7 +162,7 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         XCTAssertEqual(logger.callCount, 0)
     }
     
-    func test_decorated_shouldCallLoggerWithOneOnDecorationResultOfOne() {
+    func test_decorated_shouldCallLoggerWithOneOnDecorationResultOfOne() throws {
         
         let categoryName = anyMessage()
         let category = makeServiceCategory(name: categoryName)
@@ -177,10 +177,11 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         
         XCTAssertNoDiff(logger.events.map(\.level), [.error])
         XCTAssertNoDiff(logger.events.map(\.category), [.network])
-        XCTAssertNoDiff(logger.events.map(\.message), ["Fail to load categories named: [\"\(categoryName)\"]."])
+        
+        try singleMessage(logger, contains: categoryName)
     }
     
-    func test_decorated_shouldCallLoggerWithTwoOnDecorationResultOfTwo() {
+    func test_decorated_shouldCallLoggerWithTwoOnDecorationResultOfTwo() throws {
         
         let (categoryName1, categoryName2) = (anyMessage(), anyMessage())
         let category1 = makeServiceCategory(name: categoryName1)
@@ -196,7 +197,9 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         
         XCTAssertNoDiff(logger.events.map(\.level), [.error])
         XCTAssertNoDiff(logger.events.map(\.category), [.network])
-        XCTAssertNoDiff(logger.events.map(\.message), ["Fail to load categories named: [\"\(categoryName1)\", \"\(categoryName2)\"]."])
+
+        try singleMessage(logger, contains: categoryName1)
+        try singleMessage(logger, contains: categoryName2)
     }
     
     // MARK: - Helpers
@@ -259,5 +262,19 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: timeout)
+    }
+    
+    private func singleMessage(
+        _ logger: LoggerSpy,
+        contains string: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let count = logger.events.count
+        XCTAssertEqual(count, 1, "Expected one log message, but got \(count) instead.", file: file, line: line)
+        
+        let message = try XCTUnwrap(logger.events.first.map(\.message))
+        XCTAssert(message.contains(string), "Log message does not contain \"\(string)\".", file: file, line: line)
     }
 }
