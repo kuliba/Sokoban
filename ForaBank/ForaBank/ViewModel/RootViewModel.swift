@@ -441,7 +441,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         tabsViewModel.marketShowcaseBinder.flow.$state
             .compactMap(\.outside)
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [weak self] in
                 self?.handleOutside($0)
             }
@@ -449,7 +449,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         tabsViewModel.marketShowcaseBinder.flow.$state
             .compactMap(\.informer)
-            .receive(on: DispatchQueue.main)
+            .receive(on: mainScheduler)
             .sink { [weak self] in
                 self?.model.action.send(ModelAction.Informer.Show(informer: $0))
             }
