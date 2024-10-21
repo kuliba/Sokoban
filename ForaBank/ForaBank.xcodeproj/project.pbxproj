@@ -1215,6 +1215,7 @@
 		2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */; };
 		2A85775C2CC61951003BE84E /* RootViewModelFactory+decorate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */; };
 		2A85775E2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */; };
+		2A8577602CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85775F2CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift */; };
 		2A85DEAF29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */; };
 		2A872E8F2B00DE50007A8E72 /* SessionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E8E2B00DE50007A8E72 /* SessionCode.swift */; };
 		2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E902B00DE6C007A8E72 /* SessionKey.swift */; };
@@ -4736,6 +4737,7 @@
 		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
 		2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+decorate.swift"; sourceTree = "<group>"; };
 		2A85775D2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+decorateTests.swift"; sourceTree = "<group>"; };
+		2A85775F2CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+makeServiceCategory.swift"; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
 		2A872E8E2B00DE50007A8E72 /* SessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCode.swift; sourceTree = "<group>"; };
 		2A872E902B00DE6C007A8E72 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
@@ -12265,6 +12267,7 @@
 				2AD437692B00BD200027286A /* Spy.swift */,
 				2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */,
 				2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */,
+				2A85775F2CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -22600,6 +22603,7 @@
 				77E24F1B28B7BE05005899BA /* SessionAgentTests.swift in Sources */,
 				77F9F25B2A45ABBA00699433 /* PaymentsParametersReducerTests.swift in Sources */,
 				2A51903B2A7E12CB0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequestTests.swift in Sources */,
+				2A8577602CC6512C003BE84E /* XCTestCase+makeServiceCategory.swift in Sources */,
 				2AECD58D29FC519800FC0E81 /* SearchBarComponentTests.swift in Sources */,
 				2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */,
 				77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */,

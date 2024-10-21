@@ -157,3 +157,27 @@ final class RootViewModelFactory_decorateTests: XCTestCase {
         wait(for: [exp], timeout: timeout)
     }
 }
+
+extension XCTestCase {
+    
+    func makeServiceCategory(
+        latestPaymentsCategory: ServiceCategory.LatestPaymentsCategory? = nil,
+        md5Hash: String = anyMessage(),
+        name: String = anyMessage(),
+        ord: Int = .random(in: 1...100),
+        flow paymentFlow: ServiceCategory.PaymentFlow = .mobile,
+        hasSearch: Bool = false,
+        type: ServiceCategory.CategoryType = .networkMarketing
+    ) -> ServiceCategory {
+        
+        return .init(
+            latestPaymentsCategory: latestPaymentsCategory,
+            md5Hash: md5Hash,
+            name: name,
+            ord: ord,
+            paymentFlow: paymentFlow,
+            hasSearch: hasSearch,
+            type: type
+        )
+    }
+}
