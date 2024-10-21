@@ -3162,8 +3162,8 @@
 		D4BD60922B97DF5500909F43 /* NewProductButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60912B97DF5500909F43 /* NewProductButton.swift */; };
 		D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60972B98A24E00909F43 /* StickerView.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
+		EC2C392C2CC691E600636243 /* PlainClientInform in Frameworks */ = {isa = PBXBuildFile; productRef = EC2C392B2CC691E600636243 /* PlainClientInform */; };
 		EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */ = {isa = PBXBuildFile; productRef = EC5994402CA5B0820050CA05 /* GetClientInformDataServices */; };
-		EC651CAF2CB02558000E4FB5 /* PlainClientInformBottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
 		ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */; };
@@ -7193,13 +7193,13 @@
 				7769F5CB27D8CAD100F80607 /* ScrollViewProxy in Frameworks */,
 				2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */,
 				77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */,
+				EC2C392C2CC691E600636243 /* PlainClientInform in Frameworks */,
 				2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */,
 				2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */,
 				2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */,
 				2AF720232C74841D00919CAF /* PayHub in Frameworks */,
-				EC651CAF2CB02558000E4FB5 /* PlainClientInformBottomSheet in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
 				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
@@ -18896,12 +18896,12 @@
 				2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */,
 				83F775CA2CA2CE0700A05F69 /* MarketShowcase */,
 				EC5994402CA5B0820050CA05 /* GetClientInformDataServices */,
-				EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */,
 				2A373A392CBA64520057A602 /* EphemeralStores */,
 				2A4074842CBA89CA0027D7C3 /* GenericLoader */,
 				A79AAED82CB670BA00B5ABE0 /* CollateralLoanLanding */,
 				2A04BFC42CBE61DA002490C5 /* SerialComponents */,
 				A7B86B0A2CBFEEC100168312 /* CollateralLoanLandingUI */,
+				EC2C392B2CC691E600636243 /* PlainClientInform */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -28248,13 +28248,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PinCodeUI;
 		};
+		EC2C392B2CC691E600636243 /* PlainClientInform */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PlainClientInform;
+		};
 		EC5994402CA5B0820050CA05 /* GetClientInformDataServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GetClientInformDataServices;
-		};
-		EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PlainClientInformBottomSheet;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;
