@@ -12,12 +12,7 @@ import Banners
 
 extension RootViewModelFactory {
     
-    static func makeLoadBanners(
-        httpClient: HTTPClient,
-        infoNetworkLog: @escaping (String, StaticString, UInt) -> Void,
-        mainScheduler: AnySchedulerOfDispatchQueue = .main,
-        backgroundScheduler: AnySchedulerOfDispatchQueue = .global(qos: .userInitiated)
-    ) -> LoadBanners {
+    func makeLoadBanners() -> LoadBanners {
         
         let localBannerListLoader = ServiceItemsLoader.default
         let getBannerList = NanoServices.makeGetBannerCatalogListV2(
@@ -27,9 +22,10 @@ extension RootViewModelFactory {
         
         let getBannerListLoader = AnyLoader { completion in
             
-            backgroundScheduler.delay(for: .seconds(2)) {
+            self.backgroundScheduler.delay(for: .seconds(2)) {
                 
                 localBannerListLoader.serial {
+                    
                     getBannerList(($0, 120)) {
                         
                         completion($0)
@@ -60,12 +56,15 @@ extension RootViewModelFactory {
 
 extension BannersBinder {
     
-    static let preview: BannersBinder = RootViewModelFactory.makeBannersForMainView(
+    static let preview: BannersBinder = RootViewModelFactory(
+        model: .emptyMock,
+        httpClient: Model.emptyMock.authenticatedHTTPClient(),
+        logger: LoggerAgent()
+    ).makeBannersForMainView(
         bannerPickerPlaceholderCount: 1,
         nanoServices: .init(
             loadBanners: {_ in },
             loadLandingByType: {_, _ in }
-        ),
-        mainScheduler: .main,
-        backgroundScheduler: .global())
+        )
+    )
 }

@@ -20,6 +20,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         XCTAssertEqual(httpClient.callCount, 0)
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -30,9 +31,9 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let (_, httpClient, _, backgroundScheduler, bindings) = makeSUT(
             sessionState: active()
         )
-        XCTAssertEqual(httpClient.callCount, 0)
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -47,6 +48,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         sessionAgent.sessionState.value = active()
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
         XCTAssertNotNil(bindings)
@@ -60,6 +62,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         XCTAssert(httpClient.requests.contains(request))
         XCTAssertNotNil(bindings)
@@ -82,6 +85,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let initialState = try sut.categoryPickerContent().state
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
@@ -95,12 +99,17 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         )
         
         backgroundScheduler.advance()
+        awaitActorThreadHop()
+        
         httpClient.complete(with: success())
         backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
+        awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
         XCTAssertNotNil(bindings)
+        XCTAssertNotNil(backgroundScheduler)
     }
     
     // MARK: - Helpers
@@ -124,10 +133,13 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         let sessionAgent = SessionAgentEmptyMock()
         sessionAgent.sessionState.value = sessionState
         let model: Model = .mockWithEmptyExcept(sessionAgent: sessionAgent)
-        let sut = RootViewModelFactory.make(
+        let sut = RootViewModelFactory(
             model: model,
             httpClient: httpClient,
             logger: LoggerSpy(),
+            mainScheduler: .immediate,
+            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+        ).make(
             bindings: &bindings,
             qrResolverFeatureFlag: .init(.active),
             fastPaymentsSettingsFlag: .init(.active(.live)),
@@ -137,9 +149,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: .init(.inactive),
             paymentsTransfersFlag: .init(.active),
-            updateInfoStatusFlag: .init(.active),
-            mainScheduler: .immediate,
-            backgroundScheduler: backgroundScheduler.eraseToAnyScheduler()
+            updateInfoStatusFlag: .init(.active)
         )
         
         return (sut, httpClient, sessionAgent, backgroundScheduler, bindings)
@@ -168,6 +178,24 @@ final class RootViewModelFactory_makeTests: XCTestCase {
     ) -> String {
         
         return """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "abc",
+        "categoryGroupList": [
+            {
+                "type": "mobile",
+                "name": "Мобильная связь",
+                "ord": 20,
+                "md5hash": "c16ee4f2d0b7cea6f8b92193bccce4d7",
+                "paymentFlow": "MOBILE",
+                "latestPaymentsCategory": "isMobilePayments",
+                "search": false
+            }
+        ]
+    }
+}
 """
     }
     

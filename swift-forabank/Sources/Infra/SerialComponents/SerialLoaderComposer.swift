@@ -21,7 +21,7 @@ where Serial: Equatable {
     let persistent: any Persistent
     /// A closure that defines how to load data from a remote source.
     @usableFromInline
-    let remoteLoad: RemoteLoad<[T]>
+    let remoteLoad: RemoteLoad
     /// A function to convert from `Model` to the domain-specific type `T`.
     @usableFromInline
     let fromModel: (Model) -> T
@@ -39,7 +39,7 @@ where Serial: Equatable {
     public init(
         ephemeral: any Ephemeral,
         persistent: any Persistent,
-        remoteLoad: @escaping RemoteLoad<[T]>,
+        remoteLoad: @escaping RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) {
@@ -56,9 +56,9 @@ where Serial: Equatable {
     public typealias Persistent = MonolithicStore<SerialStamped<Serial, [Model]>>
     
     /// Completion handler type for remote loading operations.
-    public typealias RemoteLoadCompletion<Value> = (Result<SerialStamped<Serial, Value>, Error>) -> Void
+    public typealias RemoteLoadCompletion = (Result<SerialStamped<Serial, [T]>, Error>) -> Void
     /// Closure type representing a remote loading operation.
-    public typealias RemoteLoad<Value> = (Serial?, @escaping RemoteLoadCompletion<Value>) -> Void
+    public typealias RemoteLoad = (Serial?, @escaping RemoteLoadCompletion) -> Void
 }
 
 public extension SerialLoaderComposer {
@@ -129,14 +129,10 @@ extension SerialLoaderComposer {
     ) {
         persistent.retrieve { value in
             
-            guard let value else {
-                return completion(nil)
-            }
+            guard let value else { return completion(nil) }
             
             let list = value.value.map(self.fromModel)
-            self.ephemeral.insert(list) { _ in
-                completion(list)
-            }
+            self.ephemeral.insert(list) { _ in completion(list) }
         }
     }
     
@@ -157,10 +153,15 @@ extension SerialLoaderComposer {
             primary: caching.decorated,
             secondary: localLoad
         )
-        let decoratedRemote = { completion in
+        let decoratedRemote: Load<T> = { completion in
             
             self.getSerial { serial in
-                fallback(payload: serial, completion: completion)
+                
+                fallback(payload: serial) {
+                    
+                    completion($0)
+                    _ = fallback
+                }
             }
         }
         
@@ -173,9 +174,7 @@ extension SerialLoaderComposer {
     func getSerial(
         completion: @escaping (Serial?) -> Void
     ) {
-        persistent.retrieve { stamped in
-            completion(stamped?.serial)
-        }
+        persistent.retrieve { completion($0?.serial) }
     }
 }
 

@@ -12,24 +12,23 @@ import SwiftUI
 
 extension RootViewModelFactory {
             
-    static func makeOperationStateViewModel(
-        _ httpClient: HTTPClient,
-        model: Model
-    ) -> MakeOperationStateViewModel {
+    typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
+    
+    func makeOperationStateViewModel() -> MakeOperationStateViewModel {
         
         return {
             
             let dictionaryService = Services.makeGetStickerDictService(
-                httpClient: httpClient
+                httpClient: self.httpClient
             )
             let transferService = Services.makeCommissionProductTransferService(
-                httpClient: httpClient
+                httpClient: self.httpClient
             )
             let makeTransferService = Services.makeTransferService(
-                httpClient: httpClient
+                httpClient: self.httpClient
             )
             let imageLoaderService = Services.makeImageListService(
-                httpClient: httpClient
+                httpClient: self.httpClient
             )
             
             let businessLogic = BusinessLogic(
@@ -38,8 +37,8 @@ extension RootViewModelFactory {
                 processMakeTransferService: makeTransferService.makeTransferProcess,
                 processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
-                products: { model.productsMapper() },
-                cityList: { model.citiesMapper($0) }
+                products: { self.model.productsMapper() },
+                cityList: { self.model.citiesMapper($0) }
             )
             
             return OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
