@@ -346,12 +346,9 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .some(categories):
+                    let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
                     
-                    let serial = self.model.localAgent.serial(
-                        for: [CodableServicePaymentOperator].self
-                    )
-                    
-                    _operatorsService(.standard(from: categories, with: serial)) { failedCategories in
+                    _operatorsService(payloads) { failedCategories in
                         
                         if !failedCategories.isEmpty {
                             
@@ -864,20 +861,6 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
-
-private extension Array
-where Element == RequestFactory.GetOperatorsListByParamPayload {
-    
-    static func standard(
-        from categories: [ServiceCategory],
-        with serial: String?
-    ) -> Self {
-        
-        return categories
-            .filter { $0.paymentFlow == .standard }
-            .map { .init(serial: serial, category: $0) }
-    }
-}
 
 private extension UserAccountModelEffectHandler {
     
