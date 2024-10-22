@@ -18,10 +18,11 @@ final class ModelRootFactory {
         logger: LoggerAgentProtocol,
         model: Model
     ) {
-        self.httpClient = HTTPClientFactory.makeHTTPClient(
-            with: model,
-            logger: logger
+        let httpClientFactory = ModelHTTPClientFactory(
+            logger: logger,
+            model: model
         )
+        self.httpClient = httpClientFactory.makeHTTPClient()
         self.logger = logger
         self.model = model
     }
