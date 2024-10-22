@@ -101,7 +101,7 @@ extension Services {
             case getSVCardLimits
             case getSvgImageList
             case getVerificationCode
-            case getAuthorizedZoneClientInform
+            case getAuthorizedZoneClientInformData
             case makeSetBankDefault
             case makeTransfer
             case prepareSetBankDefault
@@ -373,7 +373,7 @@ extension Services.Endpoint {
     static let getAuthorizedZoneClientInform: Self = .init(
         pathPrefix: .rest,
         version: .v1,
-        serviceName: .getAuthorizedZoneClientInform
+        serviceName: .getAuthorizedZoneClientInformData
     )
     
     static let makeSetBankDefault: Self = .init(
