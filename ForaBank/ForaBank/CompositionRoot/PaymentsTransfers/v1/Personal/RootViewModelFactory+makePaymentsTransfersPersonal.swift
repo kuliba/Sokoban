@@ -47,7 +47,11 @@ extension RootViewModelFactory {
         
         // MARK: - Transfers
         
-        let transfers = makeTransfers()
+        let transfers = makeTransfers(
+            elements: PaymentsTransfersPersonalTransfersDomain.Element.allCases,
+            scheduler: mainScheduler,
+            interactiveScheduler: interactiveScheduler
+        )
         
         // MARK: - PaymentsTransfers
         

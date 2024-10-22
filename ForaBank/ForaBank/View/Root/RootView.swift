@@ -758,22 +758,26 @@ private extension RootView {
     }
     
     private func makePaymentsTransfersTransfersView(
-        transfers: PaymentsTransfersPersonalTransfersStub
+        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        VStack(spacing: 32) {
-            
-            ZStack {
+        ComposedPlainPickerView(
+            binder: transfers,
+            makeContentView: { state, event in
                 
-                Color.black.opacity(0.75)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                
-                Text("TBD: Transfers \(String(describing: transfers))")
-                    .foregroundColor(.white)
-                    .font(.headline.bold())
-            }
-            .frame(height: 124)
-        }
+                VStack {
+                    
+                    PTSectionTransfersButtonsView(
+                        title: PaymentsTransfersSectionType.transfers.name,
+                        buttons: state.elements.map { type in
+                            
+                            return .init(type: type) { event(.select(type)) }
+                        }
+                    )
+                }
+            },
+            makeDestinationView: { _ in EmptyView() }
+        )
     }
     
     private func itemLabel(

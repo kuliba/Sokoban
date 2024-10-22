@@ -12589,18 +12589,9 @@
 		2AE350C62C770C6500A766EE /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
-				2AE350C92C770C7B00A766EE /* Binder */,
 				2AE350C82C770C7500A766EE /* Content */,
-				2AE350C72C770C6C00A766EE /* Flow */,
 			);
 			path = PaymentsTransfers;
-			sourceTree = "<group>";
-		};
-		2AE350C72C770C6C00A766EE /* Flow */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Flow;
 			sourceTree = "<group>";
 		};
 		2AE350C82C770C7500A766EE /* Content */ = {
@@ -12610,13 +12601,6 @@
 				833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */,
 			);
 			path = Content;
-			sourceTree = "<group>";
-		};
-		2AE350C92C770C7B00A766EE /* Binder */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Binder;
 			sourceTree = "<group>";
 		};
 		2AE350CE2C770F0800A766EE /* CategoryPickerSection */ = {

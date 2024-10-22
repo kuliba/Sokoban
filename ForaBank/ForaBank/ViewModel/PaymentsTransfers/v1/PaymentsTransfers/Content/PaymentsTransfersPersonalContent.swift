@@ -7,6 +7,4 @@
 
 import PayHubUI
 
-typealias PaymentsTransfersPersonalContent = PayHubUI.PaymentsTransfersPersonalContent<CategoryPickerSectionDomain.Binder, OperationPickerBinder, PaymentsTransfersPersonalToolbarBinder, PaymentsTransfersPersonalTransfersStub>
-
-final class PaymentsTransfersPersonalTransfersStub {}
+typealias PaymentsTransfersPersonalContent = PayHubUI.PaymentsTransfersPersonalContent<CategoryPickerSectionDomain.Binder, OperationPickerBinder, PaymentsTransfersPersonalToolbarBinder, PaymentsTransfersPersonalTransfersDomain.Binder>
