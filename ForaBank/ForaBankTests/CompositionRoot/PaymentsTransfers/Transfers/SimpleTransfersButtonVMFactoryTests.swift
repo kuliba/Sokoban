@@ -38,6 +38,33 @@ final class SimpleTransfersButtonVMFactoryTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
+    func test_buttonAction_shouldDeliverAbroadOnAbroadButtonType() {
+        
+        let (sut, spy) = makeSUT()
+        
+        sut.makeButton(for: .abroad).action()
+        
+        XCTAssertNoDiff(spy.payloads, [.abroad])
+    }
+    
+    func test_buttonAction_shouldDeliverAnotherCardOnAnotherCardButtonType() {
+        
+        let (sut, spy) = makeSUT()
+        
+        sut.makeButton(for: .anotherCard).action()
+        
+        XCTAssertNoDiff(spy.payloads, [.anotherCard])
+    }
+    
+    func test_buttonAction_shouldDeliverBetweenSelfOnBetweenSelfButtonType() {
+        
+        let (sut, spy) = makeSUT()
+        
+        sut.makeButton(for: .betweenSelf).action()
+        
+        XCTAssertNoDiff(spy.payloads, [.betweenSelf])
+    }
+    
     func test_buttonAction_shouldDeliverByPhoneNumberOnByPhoneNumberButtonType() {
         
         let (sut, spy) = makeSUT()
@@ -45,6 +72,27 @@ final class SimpleTransfersButtonVMFactoryTests: XCTestCase {
         sut.makeButton(for: .byPhoneNumber).action()
         
         XCTAssertNoDiff(spy.payloads, [.byPhoneNumber])
+    }
+    
+    func test_buttonAction_shouldDeliverRequisitesOnRequisitesButtonType() {
+        
+        let (sut, spy) = makeSUT()
+        
+        sut.makeButton(for: .requisites).action()
+        
+        XCTAssertNoDiff(spy.payloads, [.requisites])
+    }
+    
+    func test_buttonAction_shouldDeliverTypeOnButtonType() {
+        
+        let (sut, spy) = makeSUT()
+        
+        for type in SUT.ButtonType.allCases {
+            
+            sut.makeButton(for: type).action()
+        }
+        
+        XCTAssertNoDiff(spy.payloads, SUT.ButtonType.allCases)
     }
     
     // MARK: - Helpers
@@ -60,7 +108,7 @@ final class SimpleTransfersButtonVMFactoryTests: XCTestCase {
         sut: SUT,
         spy: ActionSpy
     ) {
-        let spy = ActionSpy(stubs: [()])
+        let spy = ActionSpy(stubs: .init(repeating: (), count: 5))
         let sut: SUT = SimpleTransfersButtonVMFactory(
             action: spy.call(payload:)
         )
