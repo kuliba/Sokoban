@@ -84,6 +84,9 @@ private extension UserAccountNavigationFPSReducer {
         var effect: Effect?
         
         switch status {
+        case .accountLink:
+            state.destination?.destination = .accountLink
+            
         case .inflight:
             state.isLoading = true
             
