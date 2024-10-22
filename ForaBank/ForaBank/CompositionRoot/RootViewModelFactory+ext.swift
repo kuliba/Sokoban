@@ -479,13 +479,15 @@ extension RootViewModelFactory {
         // MARK: - Notifications Authorized
         
         let _createGetAuthorizedZoneClientInformData = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetServiceCategoryListRequest,
+            createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
         )
-        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformDataState?) -> Void) in
-        
-            _createGetAuthorizedZoneClientInformData(nil) { result in
-
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (___Client?) -> Void) in
+            
+            _createGetAuthorizedZoneClientInformData(()) { result in
+                
+                print("Hello ✅")
+                completion(___Client.init(authorized: nil, notAuthorized: nil))
 //                completion(.init(
 //                    $0,
 //                    infoLabel: .init(image: .ic24Info, title: "Информация")
@@ -498,9 +500,9 @@ extension RootViewModelFactory {
                 
                 if let info = $0 {
                     self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                    self.model.clientInform.value = info
+                    self.model.___client.value = info
                 } else {
-                    self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientData", file: #file, line: #line)
+                    self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
                 }
             }
         }

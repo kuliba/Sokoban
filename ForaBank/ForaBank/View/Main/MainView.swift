@@ -792,7 +792,7 @@ extension OperationStateViewModel {
 
 // MARK: - Adapters
 
-private extension ClientInformZoneDataState {
+private extension AuthorizedInformDataType {
     
     var client: PlainClientInformBottomSheet.ClientInformZoneDataState {
         
