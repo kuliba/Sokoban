@@ -16,7 +16,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var factory: RootFactory = ModelRootFactory(
-        bindings: &bindings,
         logger: LoggerAgent.shared,
         model: AppDelegate.shared.model
     )
@@ -25,17 +24,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private lazy var rootViewModel = {
         
-        let rootViewModel = factory.makeRootViewModel(featureFlags)
+        let rootViewModel = factory.makeRootViewModel(
+            featureFlags,
+            bindings: &bindings
+        )
         
         bind(rootViewModel: rootViewModel)
-        
-        let binder = MarketShowcaseToRootViewModelBinder(
-            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
-            rootViewModel: rootViewModel,
-            scheduler: .main
-        )
-
-        bindings.formUnion(binder.bind())
         
         return rootViewModel
     }()
