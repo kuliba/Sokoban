@@ -10,35 +10,31 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeTemplatesComposer(
+    func makeTemplatesComposer(
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        model: Model,
-        httpClient: HTTPClient,
-        log: @escaping Log,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     ) -> TemplatesListFlowModelComposer {
         
         let anywayTransactionViewModelComposer = AnywayTransactionViewModelComposer(
             flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
-            log: log,
-            scheduler: scheduler
+            log: logger.log,
+            scheduler: mainScheduler
         )
         let anywayFlowComposer = AnywayFlowComposer(
             makeAnywayTransactionViewModel: anywayTransactionViewModelComposer.compose(transaction:),
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let initiatePayment = NanoServices.initiateAnywayPayment(
             flag: utilitiesPaymentsFlag.optionOrStub,
             httpClient: httpClient,
-            log: log,
-            scheduler: scheduler
+            log: logger.log,
+            scheduler: mainScheduler
         )
         let composer = InitiateAnywayPaymentMicroServiceComposer(
-            getOutlineProduct: { _ in model.outlineProduct() },
+            getOutlineProduct: { _ in self.model.outlineProduct() },
             processPayload: { payload, completion in
                 
                 initiatePayment(payload.outline.payload.puref) {
@@ -85,7 +81,7 @@ extension RootViewModelFactory {
                 
                 return PaymentsViewModel(
                     source: .template(template.id),
-                    model: model,
+                    model: self.model,
                     closeAction: close
                 )
             },
@@ -97,7 +93,7 @@ extension RootViewModelFactory {
             makeAnywayFlowModel: anywayFlowComposer.compose,
             model: model,
             microServices: microServicesComposer.compose(),
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
     }
 }

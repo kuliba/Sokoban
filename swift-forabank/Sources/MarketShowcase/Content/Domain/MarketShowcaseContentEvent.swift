@@ -5,14 +5,20 @@
 //  Created by Andryusina Nataly on 25.09.2024.
 //
 
-public enum MarketShowcaseContentEvent<Landing> {
+public enum MarketShowcaseContentEvent<Landing, InformerPayload> {
     
     case load
     case loaded(Landing)
-    case loadFailure
+    case failure(Failure)
     case selectLandingType(String)
     case resetSelection
+    
+    public enum Failure {
+        case alert(String)
+        case informer(InformerPayload)
+    }
 }
 
-extension MarketShowcaseContentEvent: Equatable where Landing: Equatable {}
+extension MarketShowcaseContentEvent: Equatable where Landing: Equatable, InformerPayload: Equatable {}
 
+extension MarketShowcaseContentEvent.Failure: Equatable where InformerPayload: Equatable {}

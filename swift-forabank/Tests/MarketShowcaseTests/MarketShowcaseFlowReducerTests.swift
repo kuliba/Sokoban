@@ -14,41 +14,53 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     
     func test_reduce_destination_shouldStatusToDestination() {
         
-        assertState(.destination("destination"), on: .init()) {
+        let destination = anyMessage()
+
+        assertState(.destination(destination), on: .init()) {
             
-            $0.status = .destination("destination")
+            $0.status = .destination(destination)
         }
     }
     
     func test_reduce_destination_shouldDeliverNoEffect() {
         
-        assert(.destination("destination"), on: .init(), effect: nil)
+        let destination = anyMessage()
+
+        assert(.destination(destination), on: .init(), effect: nil)
     }
     
     func test_reduce_failure_timeout_shouldStatusToInformer() {
         
-        assertState(.failure(.timeout("timeout")), on: .init()) {
+        let timeout = anyMessage()
+
+        assertState(.failure(.timeout(timeout)), on: .init()) {
             
-            $0.status = .informer("timeout")
+            $0.status = .informer(timeout)
         }
     }
     
     func test_reduce_failure_timeout_shouldDeliverNoEffect() {
         
-        assert(.failure(.timeout("timeout")), on: .init(), effect: nil)
+        let timeout = anyMessage()
+        
+        assert(.failure(.timeout(timeout)), on: .init(), effect: nil)
     }
     
     func test_reduce_failure_error_shouldStateToAlert() {
         
-        assertState(.failure(.error("error")), on: .init()) {
+        let error = anyMessage()
+        
+        assertState(.failure(.error(error)), on: .init()) {
             
-            $0.status = .alert(.init(message: "error"))
+            $0.status = .alert(.init(message: error))
         }
     }
     
     func test_reduce_failure_error_shouldDeliverNoEffect() {
         
-        assert(.failure(.error("error")), on: .init(), effect: nil)
+        let error = anyMessage()
+
+        assert(.failure(.error(error)), on: .init(), effect: nil)
     }
 
     func test_reduce_reset_shouldStateToNil() {
@@ -99,13 +111,19 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
     
     func test_reduce_select_landing_shouldNotChangeState() {
         
-        assertState(.select(.landing("landing")), on: .init())
+        let landingType = anyMessage()
+
+        assertState(.select(.landing(landingType)), on: .init()) {
+            
+            $0.status = .outside(.landing(landingType))
+        }
     }
     
-    func test_reduce_select_landing_shouldDeliverLandingEffect() {
+    func test_reduce_select_landing_shouldDeliverNoEffect() {
         
-        let landingType = "landingType"
-        assert(.select(.landing(landingType)), on: .init(), effect: .select(.landing(landingType)))
+        let landingType = anyMessage()
+        
+        assert(.select(.landing(landingType)), on: .init(), effect: nil)
     }
 
     // MARK: - Helpers

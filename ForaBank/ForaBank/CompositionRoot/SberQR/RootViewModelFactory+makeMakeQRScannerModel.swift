@@ -10,17 +10,15 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeMakeQRScannerModel(
-        model: Model,
+    func makeMakeQRScannerModel(
         qrResolverFeatureFlag: QRResolverFeatureFlag,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
     ) -> MakeQRScannerModel {
         
         // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
         let qrResolve: QRViewModel.QRResolve = { string in
             
-            let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
+            let isSberQR = qrResolverFeatureFlag.isActive ? self.model.isSberQR : { _ in false }
             let resolver = QRResolver(isSberQR: isSberQR)
             
             return resolver.resolve(string: string)
@@ -37,7 +35,7 @@ extension RootViewModelFactory {
             return .init(
                 mapScanResult: mapper.mapScanResult(_:_:),
                 makeQRModel: { .init(closeAction: $0, qrResolve: qrResolve) },
-                scheduler: scheduler
+                scheduler: self.mainScheduler
             )
         }
     }

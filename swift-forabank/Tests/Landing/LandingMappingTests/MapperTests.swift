@@ -31,17 +31,12 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing, .failure(.mapError))
     }
     
-    func test_map_statusCode200_errorNotNil_dataEmpty_error() throws {
+    func test_map_statusCode200_errorNotNil_FailureServerError() throws {
         
-        let landing = try XCTUnwrap(map(data: Data(String.error.utf8)))
+        let message = anyMessage()
+        let landing = try XCTUnwrap(map(statusCode: 200, data: Data(error(message: message).utf8)))
         
-        XCTAssertNoDiff(landing.statusCode, 404)
-        XCTAssertNoDiff(landing.errorMessage, "404: Не найден запрос к серверу")
-        XCTAssertNoDiff(landing.header, [])
-        XCTAssertNoDiff(landing.main, [])
-        XCTAssertNoDiff(landing.footer, [])
-        XCTAssertNoDiff(landing.details, [])
-        XCTAssertNoDiff(landing.serial, nil)
+        XCTAssertNoDiff(landing, .failure(.serverError(message)))
     }
     
     func test_map_statusCode200_dataEmpty() throws {
@@ -119,6 +114,13 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_multiTextsWithEmptyList_notDeliversMultiTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.multiTextWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiTexts, [])
+    }
+
     func test_map_deliversMultiMarkersTextsInMain() throws {
         
         let landing = try XCTUnwrap(map())
@@ -511,7 +513,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 240),
-                scale: "medium",
                 loopedScrolling: true,
                 list: [
                     .init(imageLink: "imageLink1", link: "link1", action: nil),
@@ -529,7 +530,6 @@ final class MapperTests: XCTestCase {
             .init(
                 title: "Название раздела",
                 size: .init(width: 182, height: 124),
-                scale: "medium",
                 loopedScrolling: true,
                 tabs: [
                     .init(
@@ -548,6 +548,41 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_carouselWithTabsWithError_deliversCarouselWithValidTabsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselWithTabs, [
+            .init(
+                title: "Название раздела",
+                size: .init(width: 182, height: 124),
+                loopedScrolling: false,
+                tabs: [
+                    .init(
+                        name: "Вкладка 1",
+                        list: [
+                            .init(
+                                imageLink: "dict/getProductCatalogImage?image=/products/banners/yandex_364%C3%97248.png",
+                                link: nil,
+                                action: nil)
+                        ]),
+                    .init(name: "Вкладка 2", list: [])
+            ])
+        ])
+    }
+    
+    func test_map_carouselWithTabsWithError_deliversMultilineHeaderMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselWithTabs.utf8)))
+        
+        XCTAssertNoDiff(landing.main.multiLineHeaders, [
+            .init(
+                backgroundColor: "WHITE",
+                regularTextList: ["Наши"],
+                boldTextList: ["продукты"])
+        ])
+    }
+
     func test_map_carouselWithDots_deliversCarouselWithDotsInMain() throws {
         
         let landing = try XCTUnwrap(map(data: Data(String.carouselWithDots.utf8)))
@@ -556,12 +591,29 @@ final class MapperTests: XCTestCase {
             .init(
                 title: nil,
                 size: .init(width: 344, height: 240),
-                scale: "medium",
                 loopedScrolling: true,
                 list: [
                     .init(imageLink: "imageLink1", link: "link1", action: nil),
                     .init(imageLink: "imageLink2", link: nil, action: .init(type: "LANDING", target: "abroadSticker")),
                     .init(imageLink: "imageLink3", link: nil, action: nil)
+                ])
+        ])
+    }
+    
+    func test_map_carouselBaseWithError_deliversCarouselBaseWithValidItemInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.errorCarouselBase.utf8)))
+        
+        XCTAssertNoDiff(landing.main.carouselBase, [
+            .init(
+                title: "Медицина и здоровье",
+                size: .init(width: 4, height: 2),
+                loopedScrolling: false,
+                list: [
+                    .init(
+                        imageLink: "imageLink1",
+                        link: "link1",
+                        action: nil)
                 ])
         ])
     }
@@ -612,6 +664,21 @@ final class MapperTests: XCTestCase {
             statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil)!
+    }
+    
+    private func anyMessage() -> String {
+        
+        UUID().uuidString
+    }
+
+    private func error(message: String) -> String {
+        return """
+        {
+          "statusCode": 0,
+          "errorMessage": "\(message)",
+          "data": null
+        }
+        """
     }
 }
 
@@ -3346,10 +3413,97 @@ private extension String {
     }
     }
     """
+    
+    static let multiTextWithEmptyList: Self = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+      {
+        "type": "MULTI_TEXT",
+        "data": {
+          "list": []
+        }
+      }
+    ],
+    "serial": ""
+    }
+    }
+    """
 
+    static let errorCarouselWithTabs = """
+    {
+        "statusCode": 0,
+        "errorMessage": null,
+        "data": {
+            "serial": "8a343d9b6664f9f4fdc45f05bbdc284c",
+            "main": [
+        {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                    "backgroundColor": "WHITE",
+                    "regularTextList": ["Наши"],
+                    "boldTextList": ["продукты"]
+                }
+            },
+        {
+            "type": "HORIZONTAL_SLIDER_WITH_TABS",
+            "data": {
+                "title": "Название раздела",
+                "size": "182х124",
+                "scale": "medium",
+                "loopedScrolling": null,
+                "tabs": [{
+                    "name": "Вкладка 1",
+                    "list": [{
+                        "imageLink": "dict/getProductCatalogImage?image=/products/banners/yandex_364×248.png",
+                    }, {
+                        "link": ""
+                    }]
+                }, {
+                    "name": "Вкладка 2",
+                    "list": [ {
+                        "action": {
+                            "actionType": "LANDING",
+                            "target": "abroadSticker"
+                        }
+                    }]
+                }]
+            }
+        }]
+        }
+    }
+    """
+    
+    static let errorCarouselBase = """
+    {
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+    "header": [],
+    "main": [
+        {
+            "type": "HORIZONTAL_SLIDER_BASE",
+            "data": {
+                "title": "Медицина и здоровье",
+                "size": "4х2",
+                "scale": "medium",
+                "loopedScrolling": null,
+                "list": [{
+                    "imageLink": "imageLink1",
+                    "link": "link1"
+                }, {
+                    "link": "https://www.forabank.ru/landings/na-zdorovie/"
+                }]
+            }
+        }
+    ],
+    "serial": ""
+    }
+    }
 
-    static let error: Self = """
-{"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
 """
 }
 

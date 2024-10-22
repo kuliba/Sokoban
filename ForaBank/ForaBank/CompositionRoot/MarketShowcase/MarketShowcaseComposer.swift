@@ -53,13 +53,32 @@ extension MarketShowcaseComposer {
                         }
                     }
                 
+                let failureInfo = content.$state
+                    .compactMap { $0.status }
+                    .sink { [weak flow] in
+                        
+                        switch $0 {
+                        case .initiate, .inflight, .loaded:
+                            break
+                            
+                        case let .failure(kind, _):
+                            switch kind {
+                            case let .alert(message):
+                                flow?.event(.failure(.error(message)))
+                                
+                            case let .informer(informerPayload):
+                                flow?.event(.failure(.timeout(informerPayload)))
+                            }
+                        }
+                    }
+
                 let status = flow.$state.map(\.status)
                 let reset = status
                     .combineLatest(status.dropFirst())
                     .filter { $0.0 != nil && $0.1 == nil }
                     .sink { [weak content] _ in content?.event(.resetSelection)}
                 
-                return [select, reset]
+                return [select, failureInfo, reset]
             })
     }
 }

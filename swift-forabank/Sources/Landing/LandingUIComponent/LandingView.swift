@@ -19,7 +19,8 @@ public struct LandingView: View {
     
     private let action: (LandingEvent) -> Void
     private let images: [String: Image]
-    private let makeIconView: MakeIconView
+    private let imageViewFactory: ImageViewFactory
+    private let carouselViewFactory: CarouselViewFactory?
     private let makeLimit: MakeLimit
     private var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
     private let cardLimitsInfo: CardLimitsInfo?
@@ -30,7 +31,8 @@ public struct LandingView: View {
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
-        makeIconView: @escaping MakeIconView,
+        imageViewFactory: ImageViewFactory,
+        carouselViewFactory: CarouselViewFactory? = nil,
         makeLimit: @escaping MakeLimit = { _ in nil },
         limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         cardLimitsInfo: CardLimitsInfo?,
@@ -40,7 +42,8 @@ public struct LandingView: View {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
         self.action = action
-        self.makeIconView = makeIconView
+        self.imageViewFactory = imageViewFactory
+        self.carouselViewFactory = carouselViewFactory
         self.makeLimit = makeLimit
         self.limitsViewModel = limitsViewModel
         self.cardLimitsInfo = cardLimitsInfo
@@ -149,7 +152,8 @@ public struct LandingView: View {
             selectDetail: viewModel.selectDetail,
             action: action,
             orderCard: orderCard,
-            makeIconView: makeIconView,
+            imageViewFactory: imageViewFactory, 
+            carouselViewFactory: carouselViewFactory,
             makeLimit: makeLimit,
             canOpenDetail: {
                 return viewModel.landing.components(g: $0.groupID.rawValue, v: $0.viewID.rawValue) != []
@@ -212,7 +216,8 @@ extension LandingView {
         let selectDetail: (DetailDestination?) -> Void
         let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
-        let makeIconView: MakeIconView
+        let imageViewFactory: ImageViewFactory
+        let carouselViewFactory: CarouselViewFactory?
         let makeLimit: MakeLimit
         let canOpenDetail: UILanding.CanOpenDetail
         let limitsViewModel: ListHorizontalRectangleLimitsViewModel?
@@ -220,7 +225,11 @@ extension LandingView {
         let newLimits: () -> [BlockHorizontalRectangularEvent.Limit]
 
         var body: some View {
-            
+            makeContentView()
+        }
+        
+        @ViewBuilder
+        func makeContentView() -> some View {
             switch component {
                 
             case let .list(.horizontalRoundImage(model)):
@@ -254,7 +263,7 @@ extension LandingView {
                 SpacingView(model: model, config: config.spacing)
                 
             case let .image(model):
-                ImageView(model: .init(data: model, images: images), config: config.image)
+                ImageView(model: .init(data: model, images: images), config: config.image, factory: imageViewFactory)
                 
             case let .list(.dropDownTexts(model)):
                 ListDropdownTextsUIView(model: model, config: config.listDropDownTexts)
@@ -310,7 +319,7 @@ extension LandingView {
                 if let limitsViewModel {
                     ListHorizontalRectangleLimitsWrappedView(
                         model: limitsViewModel,
-                        factory: .init(makeIconView: makeIconView),
+                        factory: imageViewFactory,
                         config: config.listHorizontalRectangleLimits)
                 }
                 else {
@@ -320,7 +329,7 @@ extension LandingView {
                             reduce: {state,_ in (state, .none)},
                             handleEffect: {_,_ in }
                         ),
-                        factory: .init(makeIconView: makeIconView),
+                        factory: imageViewFactory,
                         config: config.listHorizontalRectangleLimits)
                 }
             case let .multi(.typeButtons(model)):
@@ -349,17 +358,20 @@ extension LandingView {
                         ),
                         reduce: BlockHorizontalRectangularReducer(limitIsChanged: limitIsChanged).reduce(_:_:),
                         handleEffect: {_,_ in }),
-                    factory: .init(makeIconView: makeIconView),
+                    factory: imageViewFactory,
                     config: config.blockHorizontalRectangular)
                 
             case let .carousel(.base(model)):
-                EmptyView()
+                if let carouselViewFactory { carouselViewFactory.makeCarouselBaseView(model)
+                }
                 
             case let .carousel(.withTabs(model)):
-                EmptyView()
-                
+                if let carouselViewFactory { carouselViewFactory.makeCarouselWithTabsView(model)
+                }
+
             case let .carousel(.withDots(model)):
-                EmptyView()
+                if let carouselViewFactory { carouselViewFactory.makeCarouselWithDotsView(model)
+                }
             }
         }
     }
@@ -391,11 +403,8 @@ struct LandingUIView_Previews: PreviewProvider {
             ),
             images: .defaultValue,
             action: { _ in },
-            makeIconView: { _ in .init(
-                image: .flag,
-                publisher: Just(.percent).eraseToAnyPublisher()
-            )}, 
-            makeLimit: { _ in nil }, 
+            imageViewFactory: .default,
+            makeLimit: { _ in nil },
             limitsViewModel: nil, 
             cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true),
             limitIsChanged: { _ in }, 

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.10.2023.
 //
 
-import CVVPINServices
+import GenericLoader
 import Foundation
 
 final class LoggingStoreDecorator<T> {
@@ -24,7 +24,7 @@ final class LoggingStoreDecorator<T> {
     }
 }
 
-extension LoggingStoreDecorator: CVVPINServices.Store {
+extension LoggingStoreDecorator: GenericLoader.Store {
     
     typealias Local = T
     

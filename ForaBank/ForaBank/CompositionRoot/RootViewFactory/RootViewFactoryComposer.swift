@@ -57,7 +57,8 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketShowcaseView: makeMarketShowcaseView
+            makeMarketShowcaseView: makeMarketShowcaseView, 
+            makeNavigationOperationView: makeNavigationOperationView
         )
     }
 }
@@ -297,11 +298,21 @@ private extension RootViewFactoryComposer {
     }
     
     func makeLandingView(
+        _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
-        _ landing: MarketShowcaseDomain.Landing
+        _ landing: MarketShowcaseDomain.Landing,
+        _ orderCard: @escaping () -> Void
     ) -> LandingWrapperView {
         
-        let landingViewModel = model.landingViewModelFactory(result: landing, config: .default, landingActions: {
+        if landing.errorMessage != nil {
+            
+            contentEvent(.failure(.alert("Попробуйте позже.")))
+        }
+        
+        let landingViewModel = model.landingViewModelFactory(
+            result: landing,
+            config: .default,
+            landingActions: {
             
             // TODO: add case
             switch $0 {
@@ -313,23 +324,29 @@ private extension RootViewFactoryComposer {
                     flowEvent(.select(.goToMain))
                 case let .openUrl(url):
                     flowEvent(.select(.openURL(url)))
-                case let .order(cardTarif: cardTarif, cardType: cardType):
-                    flowEvent(.select(.orderCard))
+                default:
+                    break
                 }
-            case let .sticker(action): // ???
-                break
-            case let .bannerAction(action): // ???
-                break
-            case .listVerticalRoundImageAction: // ???
-                break
+            case let .sticker(action):
+                switch action {
+                case .goToMain:
+                    flowEvent(.select(.goToMain))
+                default:
+                    break
+                }
+            default:break
             }
-        })
+            }, 
+            outsideAction: { flowEvent(.select(.landing($0))) },
+            orderCard: orderCard
+        )
         
        return LandingWrapperView(viewModel: landingViewModel)
     }
     
     func makeMarketShowcaseView(
-        viewModel: MarketShowcaseDomain.Binder
+        viewModel: MarketShowcaseDomain.Binder,
+        orderCard: @escaping () -> Void
     ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
         
@@ -348,13 +365,31 @@ private extension RootViewFactoryComposer {
                                         config: .iFora,
                                         factory: .init(
                                             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { self.makeLandingView(flowEvent, $0) }
+                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0, orderCard) }
                                         )
                                     )
                                 })
                         }
                 })
         : nil
+    }
+    
+    func makeNavigationOperationView(
+        dismissAll: @escaping() -> Void
+    ) -> some View {
+        
+        NavigationView {
+            
+            RootViewModelFactory(
+                model: model, httpClient: model.authenticatedHTTPClient(), 
+                logger: LoggerAgent()
+            ).makeNavigationOperationView(dismissAll: dismissAll)()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
+                .foregroundColor(.textSecondary)
+        }
     }
 }
 

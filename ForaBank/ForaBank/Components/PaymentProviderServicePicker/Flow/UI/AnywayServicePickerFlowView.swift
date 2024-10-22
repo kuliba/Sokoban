@@ -25,7 +25,6 @@ where AnywayFlowView: View {
             )
             .navigationDestination(
                 destination: flowModel.destination,
-                dismissDestination: { flowModel.event(.dismiss) },
                 content: destinationContent
             )
     }
