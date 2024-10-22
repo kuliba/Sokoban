@@ -539,7 +539,7 @@
 		2A2836E42CC79A9D00694241 /* ModelRootFactory+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E32CC79A9D00694241 /* ModelRootFactory+shared.swift */; };
 		2A2836E92CC7A08800694241 /* HTTPClientFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E82CC7A08800694241 /* HTTPClientFactory.swift */; };
 		2A2836EC2CC7AADB00694241 /* RootViewModelFactory+makeTransfers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836EB2CC7AADB00694241 /* RootViewModelFactory+makeTransfers.swift */; };
-		2A2836EF2CC7B9E300694241 /* TransfersButtonVMFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836EE2CC7B9E300694241 /* TransfersButtonVMFactoryTests.swift */; };
+		2A2836EF2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836EE2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -4074,7 +4074,7 @@
 		2A2836E32CC79A9D00694241 /* ModelRootFactory+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootFactory+shared.swift"; sourceTree = "<group>"; };
 		2A2836E82CC7A08800694241 /* HTTPClientFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientFactory.swift; sourceTree = "<group>"; };
 		2A2836EB2CC7AADB00694241 /* RootViewModelFactory+makeTransfers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTransfers.swift"; sourceTree = "<group>"; };
-		2A2836EE2CC7B9E300694241 /* TransfersButtonVMFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersButtonVMFactoryTests.swift; sourceTree = "<group>"; };
+		2A2836EE2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTransfersButtonVMFactoryTests.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -8932,7 +8932,7 @@
 		2A2836ED2CC7B9B200694241 /* Transfers */ = {
 			isa = PBXGroup;
 			children = (
-				2A2836EE2CC7B9E300694241 /* TransfersButtonVMFactoryTests.swift */,
+				2A2836EE2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift */,
 			);
 			path = Transfers;
 			sourceTree = "<group>";
@@ -22918,7 +22918,7 @@
 				2A58BC1D2C8C127200D688C1 /* RequestFactory+createGetAllLatestPaymentsV3RequestTests.swift in Sources */,
 				2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */,
 				7758401B27B2A0CB00251969 /* PaymentsOperationTests.swift in Sources */,
-				2A2836EF2CC7B9E300694241 /* TransfersButtonVMFactoryTests.swift in Sources */,
+				2A2836EF2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift in Sources */,
 				2AA4C9F02A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift in Sources */,
 				C172098C2A9E28EC0020CE93 /* ProductDataFilterTests.swift in Sources */,
 				2AE886392AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift in Sources */,
