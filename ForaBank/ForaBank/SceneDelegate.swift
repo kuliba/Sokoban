@@ -15,11 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    private lazy var factory: RootFactory = ModelRootFactory(
-        logger: LoggerAgent.shared,
-        model: AppDelegate.shared.model
-    )
-
+    private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
     private lazy var rootViewModel = {
