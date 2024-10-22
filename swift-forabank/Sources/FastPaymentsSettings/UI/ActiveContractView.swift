@@ -66,6 +66,12 @@ struct ActiveContractView: View {
                 isSelected: contractDetails.productSelect.selected?.id == $0.id
             )
         }
+        
+        AccountLinkingSettingsButton(
+            action: { event(.accountLinking) },
+            config: config.accountLinking
+        )
+        .padding()
     }
 }
 
