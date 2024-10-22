@@ -298,10 +298,8 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let operatorsService = composeServicePaymentOperatorService()
-        
         // threading
-        let _operatorsService = backgroundScheduler.scheduled(operatorsService)
+        let operatorsService = backgroundScheduler.scheduled(servicePaymentOperatorService)
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
@@ -311,9 +309,10 @@ extension RootViewModelFactory {
                 
                 let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
                 
-                _operatorsService(payloads) { failed in
+                operatorsService(payloads) { failed in
                     
                     completion(failed.map(\.category))
+                    _ = operatorsService
                 }
             }
         )

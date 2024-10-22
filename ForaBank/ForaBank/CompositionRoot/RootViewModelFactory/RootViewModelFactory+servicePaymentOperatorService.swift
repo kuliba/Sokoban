@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+composeServicePaymentOperatorService.swift
+//  RootViewModelFactory+servicePaymentOperatorService.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
@@ -13,22 +13,24 @@ extension RootViewModelFactory {
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
     
-    func composeServicePaymentOperatorService(
-    ) -> ServicePaymentProviderBatchService {
-        
+    func servicePaymentOperatorService(
+        payloads: [GetOperatorsListByParamPayload],
+        completion: @escaping ([GetOperatorsListByParamPayload]) -> Void
+    ) {
         let composed = batchServiceComposer.compose(
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentOperator].init(providers:)
         )
         
-        return { payloads, completion in
+        let withStandard = payloads.filter(\.hasStandardFlow)
+        
+        guard !withStandard.isEmpty else { return completion([]) }
+        
+        composed(withStandard) {
             
-            let withStandard = payloads.filter(\.hasStandardFlow)
-            
-            guard !withStandard.isEmpty else { return completion([]) }
-            
-            composed(withStandard, completion)
+            completion($0)
+            _ = composed
         }
     }
 }
@@ -81,13 +83,13 @@ private extension CodableServicePaymentOperator {
         _ sortedOrder: Int,
         _ provider: RemoteServices.ResponseMapper.ServicePaymentProvider
     ) {
-       self.init(
-        id: provider.id,
-        inn: provider.inn,
-        md5Hash: provider.md5Hash,
-        name: provider.name,
-        type: provider.type,
-        sortedOrder: sortedOrder
-       )
+        self.init(
+            id: provider.id,
+            inn: provider.inn,
+            md5Hash: provider.md5Hash,
+            name: provider.name,
+            type: provider.type,
+            sortedOrder: sortedOrder
+        )
     }
 }
