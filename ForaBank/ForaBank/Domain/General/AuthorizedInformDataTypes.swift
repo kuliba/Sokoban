@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ___Client {
     
-    let authorized: AuthorizedInformDataType?
-    let notAuthorized: Void?
+    var authorized: AuthorizedInformDataType?
+    var notAuthorized: Void?
 }
 
 enum AuthorizedInformDataType {

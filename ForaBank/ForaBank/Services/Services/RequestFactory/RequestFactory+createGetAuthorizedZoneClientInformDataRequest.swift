@@ -17,7 +17,7 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.getAuthorizedZoneClientInform
         let url = try! endpoint.url(withBase: base)
         
-        var request = RemoteServices.RequestFactory.createGetAuthorizedZoneClientInformData(url: url)
+        let request = RemoteServices.RequestFactory.createGetAuthorizedZoneClientInformData(url: url)
         return request
     }
 }
