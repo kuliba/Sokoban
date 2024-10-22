@@ -11,6 +11,7 @@ import FastPaymentsSettings
 import OTPInputComponent
 import RxViewModel
 import UIPrimitives
+import ManageSubscriptionsUI
 
 public extension UserAccountNavigation {
     
