@@ -7,9 +7,11 @@
 
 import Combine
 import Foundation
+import ForaTools
 import PayHub
 import SwiftUI
 import MarketShowcase
+import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -30,7 +32,9 @@ class RootViewModel: ObservableObject, Resetable {
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
-    
+    let landingServices: LandingServices
+    private let mainScheduler: AnySchedulerOfDispatchQueue
+
     let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
@@ -45,7 +49,9 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        showLoginAction: @escaping ShowLoginAction
+        showLoginAction: @escaping ShowLoginAction,
+        landingServices: LandingServices,
+        mainScheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
         self.navigationStateManager = navigationStateManager
@@ -56,6 +62,8 @@ class RootViewModel: ObservableObject, Resetable {
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
+        self.landingServices = landingServices
+        self.mainScheduler = mainScheduler
         
         tabsViewModel.mainViewModel.rootActions = rootActions
         if case let .legacy(paymentsViewModel) = tabsViewModel.paymentsModel {
@@ -65,7 +73,6 @@ class RootViewModel: ObservableObject, Resetable {
         bind()
         bindAuth()
         bindTabBar()
-        bindTabBarMarketShowcase()
     }
     
     func reset() {
@@ -76,6 +83,11 @@ class RootViewModel: ObservableObject, Resetable {
     func resetLink() {
         
         link = nil
+    }
+    
+    func setLink(to newValue: Link) {
+        
+        link = newValue
     }
     
     private func bindAuth() {
@@ -421,32 +433,6 @@ class RootViewModel: ObservableObject, Resetable {
             .assign(to: &$isTabBarHidden)
     }
     
-    private func bindTabBarMarketShowcase() {
-        
-        tabsViewModel.marketShowcaseBinder.flow.$state
-            .compactMap(\.outside)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] outside in
-                
-                switch outside {
-                case .main:
-                    self?.rootActions.switchTab(.main)
-                    
-                case let .openURL(linkURL):
-                    linkURL.openLink()
-                }
-            }
-            .store(in: &bindings)
-        
-        tabsViewModel.marketShowcaseBinder.flow.$state
-            .compactMap(\.informer)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.model.action.send(ModelAction.Informer.Show(informer: $0))
-            }
-            .store(in: &bindings)
-    }
-    
     private func handleC2BDeepLink(url: URL) {
         
         self.rootActions.dismissAll()
@@ -463,28 +449,6 @@ class RootViewModel: ObservableObject, Resetable {
             
             self?.link = .payments(operationViewModel)
         }
-    }
-}
-
-private extension MarketShowcaseFlowState {
-    
-    var outside: Status.Outside? {
-        
-        guard case let .outside(outside) = self.status
-        else { return nil }
-        
-        return outside
-    }
-}
-
-private extension MarketShowcaseFlowState {
-    
-    var informer: InformerPayload? {
-        
-        guard case let .informer(informerPayload) = self.status
-        else { return nil }
-        
-        return informerPayload
     }
 }
 
@@ -588,6 +552,9 @@ extension RootViewModel {
         case me2me(RequestMeToMeModel)
         case userAccount(UserAccountViewModel)
         case payments(PaymentsViewModel)
+        case landing(LandingWrapperViewModel, Bool)
+        case openCard(AuthProductsViewModel)
+        case paymentSticker
     }
     
     enum PaymentsModel {

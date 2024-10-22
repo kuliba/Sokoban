@@ -876,7 +876,8 @@ private extension RootViewModelFactory {
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
             model,
-            showLoginAction: showLoginAction
+            showLoginAction: showLoginAction, 
+            landingServices: landingServices
         )
     }
 }
