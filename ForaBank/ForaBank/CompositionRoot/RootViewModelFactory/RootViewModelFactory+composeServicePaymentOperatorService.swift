@@ -1,5 +1,5 @@
 //
-//  SerialCachingRemoteBatchServiceComposer+composeServicePaymentOperatorService.swift
+//  RootViewModelFactory+composeServicePaymentOperatorService.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.09.2024.
@@ -8,7 +8,7 @@
 import OperatorsListBackendV0
 import RemoteServices
 
-extension SerialCachingRemoteBatchServiceComposer {
+extension RootViewModelFactory {
     
     typealias GetOperatorsListByParamPayload = ForaBank.RequestFactory.GetOperatorsListByParamPayload
     typealias ServicePaymentProviderBatchService = BatchService<GetOperatorsListByParamPayload>
@@ -16,7 +16,7 @@ extension SerialCachingRemoteBatchServiceComposer {
     func composeServicePaymentOperatorService(
     ) -> ServicePaymentProviderBatchService {
         
-        let composed = compose(
+        let composed = batchServiceComposer.compose(
             makeRequest: ForaBank.RequestFactory.getOperatorsListByParam,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyTrueResponse,
             toModel: [CodableServicePaymentOperator].init(providers:)

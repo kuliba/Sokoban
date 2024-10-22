@@ -263,14 +263,7 @@ extension RootViewModelFactory {
         let makePaymentProviderServicePickerFlowModel = makeProviderServicePickerFlowModel(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
-        
-        // TODO: let errorErasedNanoServiceComposer: RemoteNanoServiceFactory = LoggingRemoteNanoServiceComposer...
-        // reusable factory
-        let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
-            httpClient: httpClient,
-            logger: logger
-        )
-        
+                
         let getLanding = nanoServiceComposer.compose(
             createRequest: RequestFactory.createMarketplaceLandingRequest,
             mapResponse: LandingMapper.map
@@ -300,69 +293,30 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder
         )
         
-        // reusable component
-        let asyncLocalAgent = LocalAgentAsyncWrapper(
-            agent: model.localAgent,
-            interactiveScheduler: interactiveScheduler,
-            backgroundScheduler: backgroundScheduler
-        )
-        // reusable factory
-        let batchServiceComposer = SerialCachingRemoteBatchServiceComposer(
-            nanoServiceFactory: nanoServiceComposer,
-            updateMaker: asyncLocalAgent
-        )
-        // reusable factory
-        let loggingSerialLoaderComposer = LoggingSerialLoaderComposer(
-            httpClient: httpClient,
-            localAgent: model.localAgent,
-            logger: logger
-        )
-        
         let collateralLoanLandingShowCase = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let serviceCategoryRemoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
-        
-        let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
+        let operatorsService = composeServicePaymentOperatorService()
         
         // threading
-        let _serviceCategoryRemoteLoad = backgroundScheduler.scheduled(serviceCategoryRemoteLoad)
         let _operatorsService = backgroundScheduler.scheduled(operatorsService)
         
-        let (serviceCategoryListLoad, serviceCategoryListReload) = composeLoaders(
-            remoteLoad: _serviceCategoryRemoteLoad,
-            fromModel: { $0.serviceCategory },
-            toModel: { $0.codable }
-        )
+        let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
-        let decoratedServiceCategoryListReload: Load<[ServiceCategory]> = { completion in
-            
-            serviceCategoryListReload {
+        let decoratedServiceCategoryListReload = decorate(
+            decoratee: serviceCategoryListReload,
+            with: { categories, completion in
                 
-                switch $0 {
-                case .none:
-                    completion(nil)
+                let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
+                
+                _operatorsService(payloads) { failed in
                     
-                case let .some(categories):
-                    let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
-                    
-                    _operatorsService(payloads) { failedCategories in
-                        
-                        if !failedCategories.isEmpty {
-                            
-                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \(failedCategories).", file: #file, line: #line)
-                        }
-                        
-                        completion(categories)
-                        _ = batchServiceComposer
-                        _ = operatorsService
-                        _ = _operatorsService
-                    }
+                    completion(failed.map(\.category))
                 }
             }
-        }
+        )
         
         let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
         
