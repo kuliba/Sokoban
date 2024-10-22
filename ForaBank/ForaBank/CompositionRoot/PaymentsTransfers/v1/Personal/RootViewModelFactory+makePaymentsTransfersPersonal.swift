@@ -45,12 +45,17 @@ extension RootViewModelFactory {
         )
         let toolbar = toolbarComposer.compose()
         
+        // MARK: - Transfers
+        
+        let transfers = makeTransfers()
+        
         // MARK: - PaymentsTransfers
         
         let content = PaymentsTransfersPersonalContent(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
             toolbar: toolbar,
+            transfers: transfers,
             reload: {
                 
                 categoryPicker.content.event(.reload)

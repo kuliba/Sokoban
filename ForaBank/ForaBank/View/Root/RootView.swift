@@ -293,7 +293,8 @@ private extension RootView {
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
                             makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView
+                            makeToolbarView: makePaymentsTransfersToolbarView,
+                            makeTransfersView: makePaymentsTransfersTransfersView
                         ),
                         config: .iFora
                     )
@@ -754,6 +755,25 @@ private extension RootView {
                 }
             )
         )
+    }
+    
+    private func makePaymentsTransfersTransfersView(
+        transfers: PaymentsTransfersPersonalTransfersStub
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            ZStack {
+                
+                Color.black.opacity(0.75)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Text("TBD: Transfers \(String(describing: transfers))")
+                    .foregroundColor(.white)
+                    .font(.headline.bold())
+            }
+            .frame(height: 124)
+        }
     }
     
     private func itemLabel(
