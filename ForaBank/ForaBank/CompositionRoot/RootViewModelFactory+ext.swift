@@ -323,26 +323,19 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-#warning("extract to a generic namespace")
-        typealias ServiceCategoryListLoaderComposer = SerialComponents.SerialLoaderComposer<String, ServiceCategory, CodableServiceCategory>
-        typealias ServiceCategoryListRemoteLoad = ServiceCategoryListLoaderComposer.RemoteLoad
-        
-        let serviceCategoryRemoteLoad: ServiceCategoryListRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
-            createRequest: RequestFactory.createGetServiceCategoryListRequest,
-            mapResponse: ForaBank.ResponseMapper.mapGetServiceCategoryListResponse
-        )
+        let serviceCategoryRemoteLoad = nanoServiceComposer.composeServiceCategoryRemoteLoad()
         
         let operatorsService = batchServiceComposer.composeServicePaymentOperatorService()
         
-        let serviceCategoryListLoaderComposer = ServiceCategoryListLoaderComposer(
-            // TODO: replace to use: asyncLocalAgent: asyncLocalAgent,
-            localAgent: model.localAgent,
-            remoteLoad: backgroundScheduler.scheduled(serviceCategoryRemoteLoad),
+        // threading
+        let _serviceCategoryRemoteLoad = backgroundScheduler.scheduled(serviceCategoryRemoteLoad)
+        let _operatorsService = backgroundScheduler.scheduled(operatorsService)
+        
+        let (serviceCategoryListLoad, serviceCategoryListReload) = composeLoaders(
+            remoteLoad: _serviceCategoryRemoteLoad,
             fromModel: { $0.serviceCategory },
             toModel: { $0.codable }
         )
-        
-        let (serviceCategoryListLoad, serviceCategoryListReload) = serviceCategoryListLoaderComposer.compose()
         
         let decoratedServiceCategoryListReload: Load<[ServiceCategory]> = { completion in
             
@@ -353,48 +346,42 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .some(categories):
-                    self.backgroundScheduler.schedule {
-    
-                        print("==== schedule operatorsService for \(categories.count) categories")
+                    let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
+                    
+                    _operatorsService(payloads) { failedCategories in
                         
-                        let serial = self.model.localAgent.serial(
-                            for: [CodableServicePaymentOperator].self
-                        )
-                        
-                        operatorsService(.standard(from: categories, with: serial)) {
+                        if !failedCategories.isEmpty {
                             
-                            if !$0.isEmpty {
-                                
-                                self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \($0).", file: #file, line: #line)
-                            }
-                            print("==== operatorsService completion")
-                            completion(categories)
+                            self.logger.log(level: .error, category: .network, message: "Fail to load operators for categories \(failedCategories).", file: #file, line: #line)
                         }
+                        
+                        completion(categories)
+                        _ = batchServiceComposer
+                        _ = operatorsService
+                        _ = _operatorsService
                     }
                 }
             }
         }
-
-        let getLatestPayments = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetAllLatestPaymentsV3Request,
-            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestPaymentsResponse
-        )
-        let _makeLoadLatestOperations = makeLoadLatestOperations(
-            getAllLoadedCategories: { completion in
-                
-                serviceCategoryListLoad { completion($0 ?? []) }
-            },
+        
+        let getLatestPayments = nanoServiceComposer.composeGetLatestPayments()
+        
+        let makeLoadLatestOperations = makeLoadLatestOperations(
+            getAllLoadedCategories: serviceCategoryListLoad,
             getLatestPayments: getLatestPayments
         )
-        let loadAllLatestOperations = _makeLoadLatestOperations(.all)
+        
+        // threading
+        let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
+        let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
             nanoServices: .init(
-                loadCategories: serviceCategoryListLoad,
-                reloadCategories: decoratedServiceCategoryListReload,
-                loadAllLatest: loadAllLatestOperations,
+                loadCategories: loadCategories,
+                reloadCategories: reloadCategories,
+                loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
             pageSize: 50
@@ -404,20 +391,12 @@ extension RootViewModelFactory {
             
             performOrWaitForActive {
                 
-                decoratedServiceCategoryListReload { [weak paymentsTransfersPersonal] categories in
+                reloadCategories { [weak paymentsTransfersPersonal] categories in
                     
-                    let backgroundScheduler = self.backgroundScheduler
-                    backgroundScheduler.schedule { [backgroundScheduler] in
-                        
-                        print("==== decoratedServiceCategoryListReload completion", paymentsTransfersPersonal.map { ObjectIdentifier($0) })
-                        
-                        // notify categoryPicker
-                        paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
-                        
-                        self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
-                        
-                        _ = backgroundScheduler // !! DO NOT REMOVE THIS LINE
-                    }
+                    // notify categoryPicker
+                    paymentsTransfersPersonal?.content.categoryPicker.content.event(.loaded(categories ?? []))
+                    
+                    self.logger.log(level: .info, category: .network, message: "==== Loaded \(categories?.count ?? 0) categories", file: #file, line: #line)
                 }
             }
         }
@@ -883,20 +862,6 @@ private extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
-
-private extension Array
-where Element == RequestFactory.GetOperatorsListByParamPayload {
-    
-    static func standard(
-        from categories: [ServiceCategory],
-        with serial: String?
-    ) -> Self {
-        
-        return categories
-            .filter { $0.paymentFlow == .standard }
-            .map { .init(serial: serial, category: $0) }
-    }
-}
 
 private extension UserAccountModelEffectHandler {
     

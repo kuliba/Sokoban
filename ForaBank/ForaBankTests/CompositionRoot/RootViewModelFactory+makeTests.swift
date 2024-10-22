@@ -21,6 +21,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         XCTAssertNoDiff(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -34,6 +35,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         XCTAssertGreaterThan(httpClient.callCount, 0)
         XCTAssertNotNil(bindings)
@@ -49,6 +51,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         sessionAgent.sessionState.value = active()
         backgroundScheduler.advance()
         awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
         XCTAssertNotNil(bindings)
@@ -63,6 +66,7 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         XCTAssert(httpClient.requests.contains(request))
         XCTAssertNotNil(bindings)
@@ -86,30 +90,28 @@ final class RootViewModelFactory_makeTests: XCTestCase {
         
         backgroundScheduler.advance()
         awaitActorThreadHop()
+        backgroundScheduler.advance()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state, initialState)
         XCTAssertNotNil(bindings)
     }
     
-    func test_shouldChangeCategoryPickerStateOnHTTPCompletion() throws {
+    func test_shouldChangeCategoryPickerStateOnHTTPCompletionWithNewSerial() throws {
         
         let (sut, httpClient, _, backgroundScheduler, bindings) = makeSUT(
             sessionState: active()
         )
         
         backgroundScheduler.advance()
-        awaitActorThreadHop()
         
         httpClient.complete(with: success())
-        backgroundScheduler.advance(to: .init(.now() + .seconds(8)))
         awaitActorThreadHop()
         backgroundScheduler.advance()
         
         let state = try sut.categoryPickerContent().state
         XCTAssertNoDiff(state.isLoading, false)
         XCTAssertNotNil(bindings)
-        XCTAssertNotNil(backgroundScheduler)
     }
     
     // MARK: - Helpers
