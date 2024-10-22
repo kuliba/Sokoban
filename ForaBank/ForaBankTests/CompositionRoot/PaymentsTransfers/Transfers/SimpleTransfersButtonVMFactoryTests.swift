@@ -38,61 +38,12 @@ final class SimpleTransfersButtonVMFactoryTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_buttonAction_shouldDeliverAbroadOnAbroadButtonType() {
-        
-        let (sut, spy) = makeSUT()
-        
-        sut.makeButton(for: .abroad).action()
-        
-        XCTAssertNoDiff(spy.payloads, [.abroad])
-    }
-    
-    func test_buttonAction_shouldDeliverAnotherCardOnAnotherCardButtonType() {
-        
-        let (sut, spy) = makeSUT()
-        
-        sut.makeButton(for: .anotherCard).action()
-        
-        XCTAssertNoDiff(spy.payloads, [.anotherCard])
-    }
-    
-    func test_buttonAction_shouldDeliverBetweenSelfOnBetweenSelfButtonType() {
-        
-        let (sut, spy) = makeSUT()
-        
-        sut.makeButton(for: .betweenSelf).action()
-        
-        XCTAssertNoDiff(spy.payloads, [.betweenSelf])
-    }
-    
-    func test_buttonAction_shouldDeliverByPhoneNumberOnByPhoneNumberButtonType() {
-        
-        let (sut, spy) = makeSUT()
-        
-        sut.makeButton(for: .byPhoneNumber).action()
-        
-        XCTAssertNoDiff(spy.payloads, [.byPhoneNumber])
-    }
-    
-    func test_buttonAction_shouldDeliverRequisitesOnRequisitesButtonType() {
-        
-        let (sut, spy) = makeSUT()
-        
-        sut.makeButton(for: .requisites).action()
-        
-        XCTAssertNoDiff(spy.payloads, [.requisites])
-    }
-    
-    func test_buttonAction_shouldDeliverTypeOnButtonType() {
-        
-        let (sut, spy) = makeSUT()
+    func test_buttonAction_shouldDeliverButtonType() {
         
         for type in SUT.ButtonType.allCases {
             
-            sut.makeButton(for: type).action()
+            tap(on: type, delivers: type)
         }
-        
-        XCTAssertNoDiff(spy.payloads, SUT.ButtonType.allCases)
     }
     
     // MARK: - Helpers
@@ -114,5 +65,18 @@ final class SimpleTransfersButtonVMFactoryTests: XCTestCase {
         )
         
         return (sut, spy)
+    }
+    
+    // MARK: - DSL
+    
+    private func tap(
+        on buttonType: ButtonType,
+        delivers expectedButtonType: ButtonType,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let (sut, spy) = makeSUT()
+        sut.makeButton(for: buttonType).action()
+        XCTAssertNoDiff(spy.payloads, [expectedButtonType], file: file, line: line)
     }
 }
