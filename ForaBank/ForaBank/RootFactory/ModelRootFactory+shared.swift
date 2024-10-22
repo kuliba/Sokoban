@@ -8,6 +8,10 @@
 extension ModelRootFactory {
     
     static let shared: ModelRootFactory = .init(
+        httpClientFactory: ModelHTTPClientFactory(
+            logger: LoggerAgent.shared,
+            model: Model.shared
+        ),
         logger: LoggerAgent.shared,
         model: Model.shared
     )

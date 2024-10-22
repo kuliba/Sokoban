@@ -537,7 +537,7 @@
 		2A273E912C770173009935E6 /* OperationPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E902C770173009935E6 /* OperationPickerContent.swift */; };
 		2A273E932C7701FD009935E6 /* OperationPickerFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A273E922C7701FD009935E6 /* OperationPickerFlow.swift */; };
 		2A2836E42CC79A9D00694241 /* ModelRootFactory+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E32CC79A9D00694241 /* ModelRootFactory+shared.swift */; };
-		2A2836E72CC79FEF00694241 /* ModelHTTPClientFactory+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E62CC79FEF00694241 /* ModelHTTPClientFactory+shared.swift */; };
+		2A2836E92CC7A08800694241 /* HTTPClientFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2836E82CC7A08800694241 /* HTTPClientFactory.swift */; };
 		2A283AA82B5E9EEC0065E6C1 /* OTPInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */; };
 		2A283AAA2B5EA6980065E6C1 /* DemoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */; };
 		2A283AAC2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */; };
@@ -4070,7 +4070,7 @@
 		2A273E902C770173009935E6 /* OperationPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerContent.swift; sourceTree = "<group>"; };
 		2A273E922C7701FD009935E6 /* OperationPickerFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationPickerFlow.swift; sourceTree = "<group>"; };
 		2A2836E32CC79A9D00694241 /* ModelRootFactory+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelRootFactory+shared.swift"; sourceTree = "<group>"; };
-		2A2836E62CC79FEF00694241 /* ModelHTTPClientFactory+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelHTTPClientFactory+shared.swift"; sourceTree = "<group>"; };
+		2A2836E82CC7A08800694241 /* HTTPClientFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientFactory.swift; sourceTree = "<group>"; };
 		2A283AA72B5E9EEC0065E6C1 /* OTPInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputWrapperView.swift; sourceTree = "<group>"; };
 		2A283AA92B5EA6980065E6C1 /* DemoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSettings.swift; sourceTree = "<group>"; };
 		2A283AAB2B5EA83D0065E6C1 /* DemoSettings+shortSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DemoSettings+shortSuccess.swift"; sourceTree = "<group>"; };
@@ -8911,8 +8911,8 @@
 		2A2836E52CC79FD100694241 /* HTTPClientFactory */ = {
 			isa = PBXGroup;
 			children = (
+				2A2836E82CC7A08800694241 /* HTTPClientFactory.swift */,
 				2A0A3F652C2A0AA400029854 /* ModelHTTPClientFactory.swift */,
-				2A2836E62CC79FEF00694241 /* ModelHTTPClientFactory+shared.swift */,
 			);
 			path = HTTPClientFactory;
 			sourceTree = "<group>";
@@ -21853,6 +21853,7 @@
 				0CA7D0BC29F7D66F00986C80 /* SwipeButtonViewModel.swift in Sources */,
 				C15CB8E42B7EF26B00718B49 /* Service+getOperatorsListByParam.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
+				2A2836E92CC7A08800694241 /* HTTPClientFactory.swift in Sources */,
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				2A92EA6A2C667B44001452E7 /* TemplatesListFlowEffectHandlerMicroServices.swift in Sources */,
 				2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */,
@@ -22162,7 +22163,6 @@
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
 				68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */,
 				2A36245B2C5E6A3200174C50 /* SegmentedPaymentProviderPickerReducer.swift in Sources */,
-				2A2836E72CC79FEF00694241 /* ModelHTTPClientFactory+shared.swift in Sources */,
 				0C2B55E7299D45A200F9074C /* PaymentsProductTemplateViewComponent.swift in Sources */,
 				0B71D7A228FD834D00AA1970 /* QRCode.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,

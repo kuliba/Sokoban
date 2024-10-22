@@ -22,7 +22,7 @@ final class ModelHTTPClientFactory {
     }
 }
 
-extension ModelHTTPClientFactory {
+extension ModelHTTPClientFactory: HTTPClientFactory {
     
     func makeHTTPClient() -> HTTPClient {
         
