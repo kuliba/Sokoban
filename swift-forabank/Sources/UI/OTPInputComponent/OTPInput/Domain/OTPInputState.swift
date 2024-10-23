@@ -29,7 +29,7 @@ public extension OTPInputState {
     
     enum Status: Equatable {
 
-        case failure(ServiceFailure)
+        case failure(Input, ServiceFailure)
         case input(Input)
         case validOTP
 #warning("idea for better - more readable model:")
@@ -75,6 +75,20 @@ public extension OTPInputState.Status {
             }
             
             self.otpField = input.otpField
+        }
+    }
+}
+
+public extension OTPInputState.Status {
+    
+    var input: Input? {
+        switch self {
+        case let .failure(input, _):
+            return input
+        case let .input(input):
+            return input
+        case .validOTP:
+            return nil
         }
     }
 }

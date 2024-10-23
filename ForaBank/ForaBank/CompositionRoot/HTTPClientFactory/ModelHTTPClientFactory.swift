@@ -1,5 +1,5 @@
 //
-//  HTTPClientFactory.swift
+//  ModelHTTPClientFactory.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 24.06.2024.
@@ -8,14 +8,23 @@
 import ForaTools
 import Foundation
 
-enum HTTPClientFactory {}
-
-extension HTTPClientFactory {
+final class ModelHTTPClientFactory {
     
-    static func makeHTTPClient(
-        with model: Model,
-        logger: LoggerAgentProtocol
-    ) -> HTTPClient {
+    let logger: LoggerAgentProtocol
+    let model: Model
+    
+    init(
+        logger: LoggerAgentProtocol,
+        model: Model
+    ) {
+        self.model = model
+        self.logger = logger
+    }
+}
+
+extension ModelHTTPClientFactory: HTTPClientFactory {
+    
+    func makeHTTPClient() -> HTTPClient {
         
         let httpClient = model.authenticatedHTTPClient()
         
