@@ -65,22 +65,21 @@ private extension OTPInputReducer {
         var effect: Effect?
         
         switch state.status {
-        case .failure, .validOTP:
+        case  .validOTP:
             break
-
+        case var .failure(input, failure):
+            let (countdownState, countdownEffect) = countdownReduce(input.countdown, countdownEvent)
+            
+            input.countdown = countdownState
+            state.status = .failure(input, failure)
+            effect = countdownEffect.map(Effect.countdown)
         case var .input(input):
             let (countdownState, countdownEffect) = countdownReduce(input.countdown, countdownEvent)
             
-#warning("should we reset OTP Field Input on countdown completion?")
-            switch countdownState {
-            case let .failure(countdownFailure):
-                switch countdownFailure {
-                case .connectivityError:
-                    state.status = .failure(.connectivityError)
-                    
-                case let .serverError(message):
-                    state.status = .failure(.serverError(message))
-                }
+            switch input.otpField.status {
+            case let .failure(error):
+                state.status = .failure(input, error)
+                input.countdown = countdownState
                 effect = countdownEffect.map(Effect.countdown)
                 
             default:
@@ -102,15 +101,32 @@ private extension OTPInputReducer {
         var effect: Effect?
         
         switch state.status {
-        case .failure, .validOTP:
+        case .validOTP:
             break
+        case var .failure(input, error):
+            let (otpFieldState, otpFieldEffect) = otpFieldReduce(input.otpField, otpFieldEvent)
+            switch otpFieldState.status {
+            case let .failure(otpFieldFailure):
+                input.otpField = .init(status: .failure(otpFieldFailure))
+                state.status = .failure(input, otpFieldFailure)
+                
+            case .validOTP:
+                state.status = .validOTP
+                
+            default:
+                input.otpField = otpFieldState
+                state.status = .input(input)
+            }
+
+            effect = otpFieldEffect.map(Effect.otpField)
             
         case var .input(input):
             let (otpFieldState, otpFieldEffect) = otpFieldReduce(input.otpField, otpFieldEvent)
         
             switch otpFieldState.status {
             case let .failure(otpFieldFailure):
-                state.status = .failure(otpFieldFailure)
+                input.otpField = .init(status: .failure(otpFieldFailure))
+                state.status = .failure(input, otpFieldFailure)
                 
             case .validOTP:
                 state.status = .validOTP
