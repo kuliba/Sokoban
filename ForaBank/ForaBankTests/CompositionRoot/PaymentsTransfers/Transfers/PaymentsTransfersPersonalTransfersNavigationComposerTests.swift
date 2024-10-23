@@ -18,6 +18,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
 
 struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
     
+    let makeAbroad: MakeContactsViewModel
     let makeContacts: MakeContactsViewModel
     let makeMeToMe: MakeMeToMe
 }
@@ -47,6 +48,9 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
     ) -> Domain.Navigation? {
         
         switch element {
+        case .abroad:
+            return .contacts(nanoServices.makeAbroad())
+            
         case .betweenSelf:
             return nanoServices.makeMeToMe().map { .meToMe($0) }
             
@@ -70,9 +74,35 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let (sut, spies) = makeSUT()
         
+        XCTAssertEqual(spies.makeAbroad.callCount, 0)
         XCTAssertEqual(spies.makeContacts.callCount, 0)
         XCTAssertEqual(spies.makeMeToMe.callCount, 0)
         XCTAssertNotNil(sut)
+    }
+    
+    func test_abroad_shouldCallMakeAbroad() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.abroad)
+        
+        XCTAssertEqual(spies.makeAbroad.callCount, 1)
+    }
+    
+    func test_abroad_shouldDeliverContacts() {
+        
+        let abroad = makeContactsViewModel()
+        let (sut, _) = makeSUT(abroad: abroad)
+        
+        let navigation = sut.compose(.abroad)
+        
+        switch navigation {
+        case let .contacts(received):
+            XCTAssert(abroad === received.model)
+            
+        default:
+            XCTFail("Expected abroad contacts, got \(String(describing: navigation)) instead.")
+        }
     }
     
     func test_betweenSelf_shouldCallMakeContacts() {
@@ -84,9 +114,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeMeToMe.callCount, 1)
     }
     
-    func test_betweenSelf_shouldDeliverNilOn___() {
+    func test_betweenSelf_shouldDeliverNilOnNil() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT(meToMe: nil)
         
         let navigation = sut.compose(.betweenSelf)
         
@@ -99,7 +129,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
-    func test_betweenSelf_shouldDeliverMeToMeOn___() throws {
+    func test_betweenSelf_shouldDeliverMeToMe() throws {
         
         let meToMe = try makePaymentsMeToMeViewModel()
         let (sut, _) = makeSUT(meToMe: meToMe)
@@ -107,15 +137,15 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let navigation = sut.compose(.betweenSelf)
         
         switch navigation {
-        case let .meToMe(receivedMeToMe):
-            XCTAssert(meToMe === receivedMeToMe)
+        case let .meToMe(received):
+            XCTAssert(meToMe === received)
             
         default:
             XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
         }
     }
     
-    func test_byPhone_shouldCallMakeContacts() {
+    func test_byPhoneNumber_shouldCallMakeContacts() {
         
         let (sut, spies) = makeSUT()
         
@@ -124,7 +154,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeContacts.callCount, 1)
     }
     
-    func test_byPhone_shouldDeliverContacts() {
+    func test_byPhoneNumber_shouldDeliverContacts() {
         
         let contacts = makeContactsViewModel()
         let (sut, _) = makeSUT(contacts: contacts)
@@ -132,8 +162,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let navigation = sut.compose(.byPhoneNumber)
         
         switch navigation {
-        case let .contacts(receivedContacts):
-            XCTAssert(contacts === receivedContacts.model)
+        case let .contacts(received):
+            XCTAssert(contacts === received.model)
             
         default:
             XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
@@ -148,11 +178,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     private struct Spies {
         
+        let makeAbroad: MakeContacts
         let makeContacts: MakeContacts
         let makeMeToMe: MakeMeToMe
     }
     
     private func makeSUT(
+        abroad: ContactsViewModel? = nil,
         contacts: ContactsViewModel? = nil,
         meToMe: PaymentsMeToMeViewModel? = nil,
         file: StaticString = #file,
@@ -162,6 +194,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         spies: Spies
     ) {
         let spies = Spies(
+            makeAbroad: .init(stubs: [
+                makeContactsViewModelNode(
+                    abroad ?? makeContactsViewModel()
+                )
+            ]),
             makeContacts: .init(stubs: [
                 makeContactsViewModelNode(
                     contacts ?? makeContactsViewModel()
@@ -170,6 +207,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             makeMeToMe: .init(stubs: [meToMe])
         )
         let sut = SUT(nanoServices: .init(
+            makeAbroad: spies.makeAbroad.call,
             makeContacts: spies.makeContacts.call,
             makeMeToMe: spies.makeMeToMe.call
         ))
