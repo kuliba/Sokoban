@@ -62,9 +62,7 @@ public struct LandingView: View {
     var backButton : some View {
         
         Button(action: {
-            // TODO: Me, Struct
-            action(.card(.goToMain))
-            action(.sticker(.goToMain))
+            action(.goToBack)
         }) { Image(systemName: "chevron.backward") }
     }
     

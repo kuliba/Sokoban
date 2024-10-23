@@ -156,6 +156,9 @@ private extension RootViewModel {
         case let .sticker(action):
             stickerActions(action)
             
+        case .goToBack:
+            resetLink()
+            
         default:break
         }
     }
@@ -163,9 +166,9 @@ private extension RootViewModel {
     func cardActions(_ action: LandingEvent.Card) {
         switch action {
         case .goToMain: 
-            resetLink()
+            goToMain()
             
-        case let .openUrl(linkURL): 
+        case let .openUrl(linkURL):
             linkURL.openLink()
             
         default: break
@@ -175,11 +178,16 @@ private extension RootViewModel {
     func stickerActions(_ action: LandingEvent.Sticker) {
         switch action {
         case .goToMain: 
-            resetLink()
-            
+            goToMain()
+
         case .order: 
             orderSticker()
         }
+    }
+    
+    func goToMain() {
+        resetLink()
+        rootActions.switchTab(.main)
     }
 }
 
