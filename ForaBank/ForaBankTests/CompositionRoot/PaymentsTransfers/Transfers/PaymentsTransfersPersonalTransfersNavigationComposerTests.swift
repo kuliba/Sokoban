@@ -13,18 +13,21 @@ enum PaymentsTransfersPersonalTransfersDomain {
         
         case contacts(Node<ContactsViewModel>)
         case meToMe(PaymentsMeToMeViewModel)
+        case payments(Node<PaymentsViewModel>)
     }
 }
 
 struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
     
     let makeAbroad: MakeContactsViewModel
+    let makeAnotherCard: MakeAnotherCard
     let makeContacts: MakeContactsViewModel
     let makeMeToMe: MakeMeToMe
 }
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     
+    typealias MakeAnotherCard = () -> Node<PaymentsViewModel>
     typealias MakeContactsViewModel = () -> Node<ContactsViewModel>
     typealias MakeMeToMe = () -> PaymentsMeToMeViewModel?
 }
@@ -51,6 +54,9 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case .abroad:
             return .contacts(nanoServices.makeAbroad())
             
+        case .anotherCard:
+               return .payments(nanoServices.makeAnotherCard())
+            
         case .betweenSelf:
             return nanoServices.makeMeToMe().map { .meToMe($0) }
             
@@ -75,6 +81,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let (sut, spies) = makeSUT()
         
         XCTAssertEqual(spies.makeAbroad.callCount, 0)
+        XCTAssertEqual(spies.makeAnotherCard.callCount, 0)
         XCTAssertEqual(spies.makeContacts.callCount, 0)
         XCTAssertEqual(spies.makeMeToMe.callCount, 0)
         XCTAssertNotNil(sut)
@@ -91,7 +98,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     func test_abroad_shouldDeliverContacts() {
         
-        let abroad = makeContactsViewModel()
+        let abroad = makeAbroad()
         let (sut, _) = makeSUT(abroad: abroad)
         
         let navigation = sut.compose(.abroad)
@@ -102,6 +109,31 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             
         default:
             XCTFail("Expected abroad contacts, got \(String(describing: navigation)) instead.")
+        }
+    }
+    
+    func test_anotherCard_shouldCallMakeAnotherCard() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.anotherCard)
+        
+        XCTAssertEqual(spies.makeAnotherCard.callCount, 1)
+    }
+    
+    func test_anotherCard_shouldDeliverAnotherCard() {
+        
+        let anotherCard = makeAnotherCard()
+        let (sut, _) = makeSUT(anotherCard: anotherCard)
+        
+        let navigation = sut.compose(.anotherCard)
+        
+        switch navigation {
+        case let .payments(received):
+            XCTAssert(anotherCard === received.model)
+            
+        default:
+            XCTFail("Expected another card, got \(String(describing: navigation)) instead.")
         }
     }
     
@@ -173,17 +205,20 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
+    private typealias MakeAnotherCard = CallSpy<Void, Node<PaymentsViewModel>>
     private typealias MakeContacts = CallSpy<Void, Node<ContactsViewModel>>
     private typealias MakeMeToMe = CallSpy<Void, PaymentsMeToMeViewModel?>
     
     private struct Spies {
         
         let makeAbroad: MakeContacts
+        let makeAnotherCard: MakeAnotherCard
         let makeContacts: MakeContacts
         let makeMeToMe: MakeMeToMe
     }
     
     private func makeSUT(
+        anotherCard: PaymentsViewModel? = nil,
         abroad: ContactsViewModel? = nil,
         contacts: ContactsViewModel? = nil,
         meToMe: PaymentsMeToMeViewModel? = nil,
@@ -199,6 +234,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
                     abroad ?? makeContactsViewModel()
                 )
             ]),
+            makeAnotherCard: .init(stubs: [
+                makePaymentsViewModelNode(
+                    anotherCard ?? makeAnotherCard()
+                )
+            ]),
             makeContacts: .init(stubs: [
                 makeContactsViewModelNode(
                     contacts ?? makeContactsViewModel()
@@ -208,6 +248,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         )
         let sut = SUT(nanoServices: .init(
             makeAbroad: spies.makeAbroad.call,
+            makeAnotherCard: spies.makeAnotherCard.call,
             makeContacts: spies.makeContacts.call,
             makeMeToMe: spies.makeMeToMe.call
         ))
@@ -215,6 +256,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, spies)
+    }
+    
+    private func makeAbroad() -> ContactsViewModel {
+        
+        return .sampleFastContacts
     }
     
     private func makeContactsViewModel() -> ContactsViewModel {
@@ -238,6 +284,18 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         try model.addMeToMeProduct(file: file, line: line)
         
         return try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
+    }
+    
+    private func makeAnotherCard() -> PaymentsViewModel {
+        
+        return .sample
+    }
+    
+    private func makePaymentsViewModelNode(
+        _ model: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
+        
+        return .init(model: model ?? makeAnotherCard(), cancellables: [])
     }
 }
 
