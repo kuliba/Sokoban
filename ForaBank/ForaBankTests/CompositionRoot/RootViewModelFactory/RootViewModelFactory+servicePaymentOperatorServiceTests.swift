@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+composeServicePaymentOperatorServiceTests.swift
+//  RootViewModelFactory+servicePaymentOperatorServiceTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 13.09.2024.
@@ -9,7 +9,7 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class RootViewModelFactory_composeServicePaymentOperatorServiceTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_servicePaymentOperatorServiceTests: RootViewModelFactoryTests {
     
     // MARK: - compose
     
@@ -234,10 +234,9 @@ final class RootViewModelFactory_composeServicePaymentOperatorServiceTests: Root
             localAgent: localAgent
         )
         let (sut, httpClient, _) = makeSUT(model: model)
+        let batchService = sut.servicePaymentOperatorService
         
-        let batchService = sut.composeServicePaymentOperatorService()
-        
-        trackForMemoryLeaks(localAgent, file: file, line: line)
+        // trackForMemoryLeaks(localAgent, file: file, line: line)
         
         return (sut, httpClient, localAgent, batchService)
     }
