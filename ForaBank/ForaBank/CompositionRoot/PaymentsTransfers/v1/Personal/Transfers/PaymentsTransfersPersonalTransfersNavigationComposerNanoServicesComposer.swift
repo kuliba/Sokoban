@@ -6,15 +6,20 @@
 //
 
 import Combine
+import CombineSchedulers
 import Foundation
 
 final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
     private let model: Model
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    init(model: Model) {
-        
+    init(
+        model: Model,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
         self.model = model
+        self.scheduler = scheduler
     }
 }
 
@@ -38,12 +43,51 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     
     func makeAbroad() -> Node<ContactsViewModel> {
         
-        fatalError()
+        let abroad = model.makeContactsViewModel(forMode: .abroad)
+        let cancellable = bind(abroad)
+        
+        return .init(model: abroad, cancellable: cancellable)
     }
     
-    func makeAnotherCard() -> Node<PaymentsViewModel>{
+    func makeAnotherCard() -> Node<ClosePaymentsViewModelWrapper>{
         
-        fatalError()
+        model.action.send(ModelAction.ProductTemplate.List.Request())
+        
+        let anotherCard = ClosePaymentsViewModelWrapper(
+            model: model,
+            service: .toAnotherCard,
+            scheduler: scheduler
+        )
+        let cancellable = bind(anotherCard)
+        
+        return .init(model: anotherCard, cancellable: cancellable)
+    }
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1338
+    private func bind(
+        _ wrapper: ClosePaymentsViewModelWrapper
+    ) -> AnyCancellable {
+        
+        wrapper.paymentsViewModel.action
+            .sink { action in
+                
+                switch action {
+                case _ as PaymentsViewModelAction.ScanQrCode:
+#warning("FIXME using notify")
+                    //    self.event(.dismiss(.destination))
+                    //    self.delay(for: .milliseconds(800)) {
+                    //        self.openScanner()
+                    //    }
+                    
+                case let payload as PaymentsViewModelAction.ContactAbroad:
+#warning("FIXME using notify")
+                    _ = payload
+                    //    handleContactAbroad(source: payload.source)
+                    
+                default: break
+                }
+            }
     }
     
     func makeContacts() -> Node<ContactsViewModel> {
@@ -56,6 +100,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: contacts, cancellable: cancellable)
     }
     
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1457
     private func bind(
         _ contacts: ContactsViewModel
     ) -> AnyCancellable {
@@ -65,12 +111,12 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
-                    #warning("FIXME using notify")
+#warning("FIXME using notify")
                     _ = payload
                     // requestContactsPayment(source: payload.source)
                     
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                    #warning("FIXME using notify")
+#warning("FIXME using notify")
                     _ = payload
                     // handleCountriesItemTapped(source: payload.source)
                     
@@ -80,13 +126,66 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             }
     }
     
-    func makeDetailPayment() -> Node<PaymentsViewModel> {
+    func makeDetailPayment() -> Node<ClosePaymentsViewModelWrapper> {
         
-        fatalError()
+        let detailPayment = ClosePaymentsViewModelWrapper(
+            model: model,
+            service: .requisites,
+            scheduler: scheduler
+        )
+        let cancellable = bind(detailPayment)
+        
+        return .init(model: detailPayment, cancellable: cancellable)
     }
     
-    func makeMeToMe() -> PaymentsMeToMeViewModel? {
+    func makeMeToMe() -> Node<PaymentsMeToMeViewModel>? {
         
-        fatalError()
+        guard let meToMe = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
+        else { return nil }
+        
+        let cancellable = bind(meToMe)
+        
+        return .init(model: meToMe, cancellable: cancellable)
+    }
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1379
+    private func bind(
+        _ meToMe: PaymentsMeToMeViewModel
+    ) -> AnyCancellable {
+        
+        meToMe.action
+            .sink { [weak meToMe] action in
+                
+                switch action {
+                case let payload as PaymentsMeToMeAction.Response.Success:
+#warning("FIXME using notify")
+                    _ = payload
+                    //    handleSuccessResponseMeToMe(
+                    //        meToMeViewModel: meToMe,
+                    //        successViewModel: payload.viewModel
+                    //    )
+                    
+                case _ as PaymentsMeToMeAction.Response.Failed:
+#warning("FIXME using notify")
+                    //    makeAlert("Перевод выполнен")
+                    //    self.event(.dismiss(.modal))
+                    
+                case _ as PaymentsMeToMeAction.Close.BottomSheet:
+#warning("FIXME using notify")
+                    //    self.event(.dismiss(.modal))
+                    
+                case let payload as PaymentsMeToMeAction.InteractionEnabled:
+#warning("FIXME using notify")
+                    _ = payload
+                    //    guard case let .bottomSheet(bottomSheet) = route.modal
+                    //    else { return }
+                    //
+                    //    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
+                    
+                default:
+                    break
+                }
+            }
     }
 }

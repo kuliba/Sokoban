@@ -13,16 +13,32 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makeTransfers(
-        elements: [PaymentsTransfersPersonalTransfersDomain.Element],
-        scheduler: AnySchedulerOf<DispatchQueue>,
-        interactiveScheduler: AnySchedulerOf<DispatchQueue>
+        elements: [PaymentsTransfersPersonalTransfersDomain.Element]
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
+        
+        let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
+            model: model, 
+            scheduler: mainScheduler
+        )
+        
+        let navigationComposer = PaymentsTransfersPersonalTransfersNavigationComposer(
+            nanoServices: nanoServicesComposer.compose()
+        )
         
         let composer = PaymentsTransfersPersonalTransfersDomain.BinderComposer(
             microServices: .init(
-                getNavigation: { _,_,_ in () }
+                getNavigation: { element, notify, completion in
+                    
+                    guard let navigation = navigationComposer.compose(element)
+                    else {
+                        #warning("return without navigation")
+                        return
+                    }
+                    
+                    completion(navigation)
+                }
             ),
-            scheduler: scheduler,
+            scheduler: mainScheduler,
             interactiveScheduler: interactiveScheduler
         )
         

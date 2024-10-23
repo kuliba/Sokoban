@@ -98,14 +98,14 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     func test_betweenSelf_shouldDeliverMeToMe() throws {
         
-        let meToMe = try makePaymentsMeToMeViewModel()
+        let meToMe = try makeMeToMe()
         let (sut, _) = makeSUT(meToMe: meToMe)
         
         let navigation = sut.compose(.betweenSelf)
         
         switch navigation {
         case let .meToMe(received):
-            XCTAssert(meToMe === received)
+            XCTAssert(meToMe.model === received.model)
             
         default:
             XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
@@ -165,11 +165,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
-    private typealias MakeAnotherCard = CallSpy<Void, Node<PaymentsViewModel>>
-    private typealias MakeDetailPayment = CallSpy<Void, Node<PaymentsViewModel>>
+    private typealias MakeAnotherCard = CallSpy<Void, Node<ClosePaymentsViewModelWrapper>>
+    private typealias MakeDetailPayment = CallSpy<Void, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeAbroad = CallSpy<Void, Node<ContactsViewModel>>
     private typealias MakeContacts = CallSpy<Void, Node<ContactsViewModel>>
-    private typealias MakeMeToMe = CallSpy<Void, PaymentsMeToMeViewModel?>
+    private typealias MakeMeToMe = CallSpy<Void, Node<PaymentsMeToMeViewModel>?>
     
     private struct Spies {
         
@@ -181,11 +181,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     }
     
     private func makeSUT(
-        anotherCard: PaymentsViewModel? = nil,
+        anotherCard: ClosePaymentsViewModelWrapper? = nil,
         abroad: ContactsViewModel? = nil,
         contacts: ContactsViewModel? = nil,
-        detailPayment: PaymentsViewModel? = nil,
-        meToMe: PaymentsMeToMeViewModel? = nil,
+        detailPayment: ClosePaymentsViewModelWrapper? = nil,
+        meToMe: Node<PaymentsMeToMeViewModel>? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -244,46 +244,53 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         return .init(model: model, cancellables: [])
     }
     
-    private func makePaymentsMeToMeViewModel(
+    private func makeMeToMe(
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> PaymentsMeToMeViewModel {
+    ) throws -> Node<PaymentsMeToMeViewModel> {
         
         let model: Model = .mockWithEmptyExcept()
         try model.addMeToMeProduct(file: file, line: line)
-        
-        return try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
+        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
+
+        return .init(model: meToMe, cancellables: [])
     }
     
-    private func makeAnotherCard() -> PaymentsViewModel {
+    private func makeAnotherCard() -> ClosePaymentsViewModelWrapper {
         
-        return .sample
+        return makePayments()
     }
     
     private func makeAnotherCard(
-        _ model: PaymentsViewModel? = nil
-    ) -> Node<PaymentsViewModel> {
+        _ wrapper: ClosePaymentsViewModelWrapper? = nil
+    ) -> Node<ClosePaymentsViewModelWrapper> {
         
-        return makePaymentsViewModelNode(model)
+        return makePaymentsNode(wrapper)
     }
     
-    private func makeDetailPayment() -> PaymentsViewModel {
+    private func makeDetailPayment() -> ClosePaymentsViewModelWrapper {
         
-        return .sample
+        return makePayments()
     }
     
     private func makeDetailPayment(
-        _ model: PaymentsViewModel? = nil
-    ) -> Node<PaymentsViewModel> {
+        _ wrapper: ClosePaymentsViewModelWrapper? = nil
+    ) -> Node<ClosePaymentsViewModelWrapper> {
         
-        return makePaymentsViewModelNode(model)
+        return makePaymentsNode(wrapper)
     }
     
-    private func makePaymentsViewModelNode(
-        _ model: PaymentsViewModel? = nil
-    ) -> Node<PaymentsViewModel> {
+    private func makePayments(
+    ) -> ClosePaymentsViewModelWrapper {
         
-        return .init(model: model ?? makeAnotherCard(), cancellables: [])
+        return .init(model: .emptyMock, service: .c2b, scheduler: .immediate)
+    }
+    
+    private func makePaymentsNode(
+        _ model: ClosePaymentsViewModelWrapper? = nil
+    ) -> Node<ClosePaymentsViewModelWrapper> {
+        
+        return .init(model: model ?? makePayments(), cancellables: [])
     }
 }
 

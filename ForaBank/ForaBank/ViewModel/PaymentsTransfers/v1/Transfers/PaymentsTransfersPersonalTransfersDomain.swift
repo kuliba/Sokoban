@@ -17,8 +17,8 @@ enum PaymentsTransfersPersonalTransfersDomain {
         var id: Int { 1 }
         
         case contacts(Node<ContactsViewModel>)
-        case meToMe(PaymentsMeToMeViewModel)
-        case payments(Node<PaymentsViewModel>)
+        case meToMe(Node<PaymentsMeToMeViewModel>)
+        case payments(Node<ClosePaymentsViewModelWrapper>)
     }
     
     typealias Binder = PlainPickerBinder<Element, Navigation>

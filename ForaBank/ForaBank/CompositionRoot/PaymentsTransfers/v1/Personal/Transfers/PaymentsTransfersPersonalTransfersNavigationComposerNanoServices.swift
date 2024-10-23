@@ -16,8 +16,8 @@ struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     
-    typealias MakeAnotherCard = () -> Node<PaymentsViewModel>
+    typealias MakeAnotherCard = () -> Node<ClosePaymentsViewModelWrapper>
     typealias MakeContactsViewModel = () -> Node<ContactsViewModel>
-    typealias MakeDetailPayment = () -> Node<PaymentsViewModel>
-    typealias MakeMeToMe = () -> PaymentsMeToMeViewModel?
+    typealias MakeDetailPayment = () -> Node<ClosePaymentsViewModelWrapper>
+    typealias MakeMeToMe = () -> Node<PaymentsMeToMeViewModel>?
 }
