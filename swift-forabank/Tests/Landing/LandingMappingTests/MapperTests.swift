@@ -88,7 +88,7 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing.header, [
             .pageTitle(.init(
                 text: "a",
-                subtitle: nil,
+                subtitle: "За 790 ₽",
                 transparency: true))
         ])
     }
@@ -707,6 +707,7 @@ private extension String {
             "type":"PAGE_TITLE",
             "data":{
                "title":"a",
+               "subtitle": "За 790 ₽",
                "transparency":true
             }
          }
