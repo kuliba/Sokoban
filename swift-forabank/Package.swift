@@ -1230,7 +1230,8 @@ private extension Target {
         name: .collateralLoanLandingDraftBackendTests,
         dependencies: [
             .collateralLoanLandingDraftBackend,
-            .customDump
+            .customDump,
+            .foraTools
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingDraftName)/Backend"
     )
