@@ -10,21 +10,16 @@ import Foundation
 
 final class ModelRootFactory {
     
-    private var bindings: Set<AnyCancellable>
     private let httpClient: HTTPClient
     private let logger: LoggerAgentProtocol
     private let model: Model
     
     init(
-        bindings: inout Set<AnyCancellable>,
+        httpClientFactory: HTTPClientFactory,
         logger: LoggerAgentProtocol,
         model: Model
     ) {
-        self.bindings = bindings
-        self.httpClient = HTTPClientFactory.makeHTTPClient(
-            with: model,
-            logger: logger
-        )
+        self.httpClient = httpClientFactory.makeHTTPClient()
         self.logger = logger
         self.model = model
     }
@@ -33,7 +28,8 @@ final class ModelRootFactory {
 extension ModelRootFactory: RootFactory {
     
     func makeRootViewModel(
-        _ featureFlags: FeatureFlags
+        _ featureFlags: FeatureFlags,
+        bindings: inout Set<AnyCancellable>
     ) -> RootViewModel {
         
         let factory = RootViewModelFactory(
@@ -55,6 +51,14 @@ extension ModelRootFactory: RootFactory {
             updateInfoStatusFlag: .init(.active)
         )
         
+        let binder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: rootViewModel,
+            scheduler: .main
+        )
+
+        bindings.formUnion(binder.bind())
+
         return rootViewModel
     }
     

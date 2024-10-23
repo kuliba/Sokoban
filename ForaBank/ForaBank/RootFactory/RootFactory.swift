@@ -5,8 +5,16 @@
 //  Created by Igor Malyarov on 21.10.2024.
 //
 
+import Combine
+
 protocol RootFactory {
     
-    func makeRootViewModel(_: FeatureFlags) -> RootViewModel
-    func makeRootViewFactory(_: FeatureFlags) -> RootViewFactory
+    func makeRootViewModel(
+        _: FeatureFlags,
+        bindings: inout Set<AnyCancellable>
+    ) -> RootViewModel
+    
+    func makeRootViewFactory(
+        _: FeatureFlags
+    ) -> RootViewFactory
 }
