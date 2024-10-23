@@ -48,6 +48,7 @@ struct C2BSubscription: Decodable, Equatable {
             let brandIcon: String
             let brandName: String
             let subscriptionPurpose: String
+            let subscriptionServiceName: String
             let cancelAlert: String
             
         }
