@@ -257,7 +257,7 @@ extension Services.Endpoint {
 
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
-        version: .v1,
+        version: .v2,
         serviceName: .getC2BSub
     )
     
