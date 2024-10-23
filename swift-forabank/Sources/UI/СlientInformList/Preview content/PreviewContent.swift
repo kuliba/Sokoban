@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension PlainClientInformConfig.Colors {
+extension ClientInformListConfig.Colors {
     
     static let preview: Self = .init(
 
@@ -22,15 +22,15 @@ extension Image {
     static let infoCircle: Self = .init(systemName: "info.circle")
 }
 
-extension PlainClientInformConfig.Strings {
+extension ClientInformListConfig.Strings {
     
     static let preview: Self = .init(titlePlaceholder: "Информация")
 }
 
 @available(iOS 15, *)
-extension ClientInformDataState {
+extension ClientInformListDataState {
     
-    static let preview: Self = ClientInformDataState.multiple(.init(
+    static let preview: Self = ClientInformListDataState.multiple(.init(
         title: Label(image: .infoCircle, title: "Информация"),
         items: [
             Label(image: .clock, title: "Время работы изменилось на 13:00 - 15:00"),
@@ -39,7 +39,7 @@ extension ClientInformDataState {
     ))
 }
 
-extension PlainClientInformConfig {
+extension ClientInformListConfig {
     
     static let `default`: Self = .init(
         colors: .preview,

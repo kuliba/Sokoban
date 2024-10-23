@@ -70,6 +70,7 @@ let package = Package(
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .calendarUI,
+        .сlientInformList,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -83,7 +84,6 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
-        .plainClientInform,
         // UI Components
         .carouselComponent,
         .paymentComponents,
@@ -236,6 +236,8 @@ let package = Package(
         .c2bSubscriptionUI,
         .cardGuardianUI,
         .cardGuardianUITests,
+        .сlientInformList,
+        .сlientInformListTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -264,8 +266,6 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
-        .plainClientInform,
-        .plainClientInformTests,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -452,6 +452,13 @@ private extension Product {
         ]
     )
     
+    static let сlientInformList = library(
+        name: .сlientInformList,
+        targets: [
+            .сlientInformList
+        ]
+    )
+
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
@@ -581,13 +588,6 @@ private extension Product {
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
-        ]
-    )
-    
-    static let plainClientInform = library(
-        name: .plainClientInform,
-        targets: [
-            .plainClientInform
         ]
     )
 
@@ -2233,6 +2233,22 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
+    static let сlientInformList = target(
+        name: .сlientInformList,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/\(String.сlientInformList)"
+    )
+    
+    static let сlientInformListTests = testTarget(
+        name: .сlientInformListTests,
+        dependencies: [
+            .сlientInformList
+        ],
+        path: "Tests/UI/\(String.сlientInformListTests)"
+    )
+
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -2469,22 +2485,6 @@ private extension Target {
             .userAccountNavigationComponent,
         ],
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
-    )
-    
-    static let plainClientInform = target(
-        name: .plainClientInform,
-        dependencies: [
-            .sharedConfigs
-        ],
-        path: "Sources/UI/\(String.plainClientInform)"
-    )
-    
-    static let plainClientInformTests = testTarget(
-        name: .plainClientInformTests,
-        dependencies: [
-            .plainClientInform
-        ],
-        path: "Tests/UI/\(String.plainClientInformTests)"
     )
     
     // MARK: - UI Components
@@ -2977,6 +2977,10 @@ private extension Target.Dependency {
         name: .cardGuardianUI
     )
     
+    static let сlientInformList = byName(
+        name: .сlientInformList
+    )
+
     static let linkableText = byName(
         name: .linkableText
     )
@@ -3027,10 +3031,6 @@ private extension Target.Dependency {
     
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
-    )
-    
-    static let plainClientInform = byName(
-        name: .plainClientInform
     )
 
     // MARK: - UI Components
@@ -3356,6 +3356,9 @@ private extension String {
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
     
+    static let сlientInformList = "СlientInformList"
+    static let сlientInformListTests = "СlientInformListTests"
+
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
     
@@ -3405,9 +3408,6 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-    
-    static let plainClientInform = "PlainClientInform"
-    static let plainClientInformTests = "PlainClientInformTests"
 
     // MARK: - UI Components
     

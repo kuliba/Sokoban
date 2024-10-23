@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PlainClientInform"
-               BuildableName = "PlainClientInform"
-               BlueprintName = "PlainClientInform"
+               BlueprintIdentifier = "&#x421;lientInformList"
+               BuildableName = "&#x421;lientInformList"
+               BlueprintName = "&#x421;lientInformList"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,9 +50,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PlainClientInform"
-            BuildableName = "PlainClientInform"
-            BlueprintName = "PlainClientInform"
+            BlueprintIdentifier = "&#x421;lientInformList"
+            BuildableName = "&#x421;lientInformList"
+            BlueprintName = "&#x421;lientInformList"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

@@ -1,5 +1,5 @@
 //
-//  InfoModel.swift
+//  ClientInformListDataState.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 10.10.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15, *)
-public enum ClientInformDataState {
+public enum ClientInformListDataState {
     
     case single(Single)
     case multiple(Multiple)
@@ -49,7 +49,7 @@ public enum ClientInformDataState {
 }
 
 @available(iOS 15, *)
-extension ClientInformDataState {
+extension ClientInformListDataState {
     
     func navBarTitle() -> String {
         

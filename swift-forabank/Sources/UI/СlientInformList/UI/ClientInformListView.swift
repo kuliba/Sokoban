@@ -1,5 +1,5 @@
 //
-//  PlainClientInformView.swift
+//  ClientInformListView.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 04.10.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15, *)
-public struct PlainClientInformView: View {
+public struct ClientInformListView: View {
 
     @State private var isShowNavBar = false
     @State private var shouldScroll = true
@@ -132,7 +132,7 @@ public struct PlainClientInformView: View {
                 
                 ForEach(multipleInfo.items) { item in
                     
-                    PlainClientInformRowView(
+                    ClientInformRowView(
                         logo: item.image,
                         text: item.title,
                         config: config
@@ -176,10 +176,10 @@ public struct PlainClientInformView: View {
 }
 
 @available(iOS 15, *)
-public extension PlainClientInformView {
+public extension ClientInformListView {
     
-    typealias Config = PlainClientInformConfig
-    typealias Info = ClientInformDataState
+    typealias Config = ClientInformListConfig
+    typealias Info = ClientInformListDataState
 }
 
 // MARK: - Preview
@@ -188,7 +188,7 @@ struct PlainClientInformView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PlainClientInformView(
+        ClientInformListView(
             config: .default, 
             info: .preview
         )

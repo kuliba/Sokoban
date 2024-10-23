@@ -1,5 +1,5 @@
 //
-//  PlainClientInformViewItem.swift
+//  ClientInformRowView.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 07.10.2024.
@@ -8,16 +8,16 @@
 import SwiftUI
 
 @available(iOS 15, *)
-struct PlainClientInformRowView: View {
+struct ClientInformRowView: View {
     
     let logo: Image?
     let text: String
-    let config: PlainClientInformConfig
+    let config: ClientInformListConfig
     
     init(
         logo: Image? = nil,
         text: AttributedString,
-        config: PlainClientInformConfig
+        config: ClientInformListConfig
     ) {
         self.logo = logo
         self.text = NSAttributedString(text).string
