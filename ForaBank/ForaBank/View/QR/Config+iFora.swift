@@ -7,6 +7,7 @@
 
 import PaymentComponents
 import SberQR
+import ManageSubscriptionsUI
 
 extension SberQR.Config {
     
@@ -118,4 +119,15 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
             config: .iFora
         )
     }
+}
+
+extension ManageSubscriptionsUI.ProductViewConfig {
+    
+    static let iFora: Self = .init(
+        titleFont: .textBodyMR14180(),
+        titleColor: .textPlaceholder,
+        nameFont: .textH4M16240(),
+        nameColor: .mainColorsBlack,
+        descriptionFont: .textBodyMR14180()
+    )
 }
