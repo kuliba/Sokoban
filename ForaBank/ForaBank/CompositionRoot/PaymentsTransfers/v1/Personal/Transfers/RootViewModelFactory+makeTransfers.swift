@@ -29,15 +29,3 @@ extension RootViewModelFactory {
         return composer.compose(elements: elements)
     }
 }
-
-enum PaymentsTransfersPersonalTransfersDomain {
-    
-    typealias Element = PTSectionTransfersView.ViewModel.TransfersButtonType
-    struct Navigation: Identifiable {
-        
-        let id = UUID()
-    }
-    
-    typealias Binder = PlainPickerBinder<Element, Navigation>
-    typealias BinderComposer = PlainPickerBinderComposer<Element, Navigation>
-}
