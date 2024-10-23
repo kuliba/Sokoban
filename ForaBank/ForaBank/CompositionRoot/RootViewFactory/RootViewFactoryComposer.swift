@@ -381,7 +381,8 @@ private extension RootViewFactoryComposer {
         NavigationView {
             
             RootViewModelFactory(
-                model: model, httpClient: model.authenticatedHTTPClient(), 
+                model: model, 
+                httpClient: model.authenticatedHTTPClient(), 
                 logger: LoggerAgent()
             ).makeNavigationOperationView(dismissAll: dismissAll)()
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)

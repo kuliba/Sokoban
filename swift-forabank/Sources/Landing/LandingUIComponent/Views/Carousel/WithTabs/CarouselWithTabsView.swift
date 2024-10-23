@@ -125,11 +125,11 @@ public struct CarouselWithTabsView: View {
     
     private func widthForItem() -> CGFloat {
         
-        let screenWidth = UIScreen.main.bounds.width
         if carousel.tabs.count == 1, carousel.tabs.first?.list.count == 1 {
-            let paddings = config.paddings.horizontal * 2
-            return (screenWidth - paddings).rounded(.toNearestOrEven)
+            return CGFloat(carousel.size.width)
         } else {
+            
+            let screenWidth = UIScreen.main.bounds.width
             return ((screenWidth - config.paddings.horizontal - config.spacing) / 2 + config.offset).rounded(.toNearestOrEven)
         }
     }
