@@ -569,6 +569,13 @@
         "identifier" : "СlientInformListTests",
         "name" : "СlientInformListTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
+      }
     }
   ],
   "version" : 1
