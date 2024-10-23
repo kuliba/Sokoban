@@ -761,23 +761,25 @@ private extension RootView {
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        ComposedPlainPickerView(
-            binder: transfers,
-            makeContentView: { state, event in
+        RxWrapperView(model: transfers.flow) {
+            
+            PaymentsTransfersPersonalTransfersFlowView(state: $0,  event: $1) {
                 
-                VStack {
+                RxWrapperView(model: transfers.content) { state, event in
                     
-                    PTSectionTransfersButtonsView(
-                        title: PaymentsTransfersSectionType.transfers.name,
-                        buttons: state.elements.map { type in
-                            
-                            return .init(type: type) { event(.select(type)) }
-                        }
-                    )
+                    VStack {
+                        
+                        PTSectionTransfersButtonsView(
+                            title: PaymentsTransfersSectionType.transfers.name,
+                            buttons: state.elements.map { type in
+                                
+                                return .init(type: type) { event(.select(type)) }
+                            }
+                        )
+                    }
                 }
-            },
-            makeDestinationView: { _ in EmptyView() }
-        )
+            }
+        }
     }
     
     private func itemLabel(

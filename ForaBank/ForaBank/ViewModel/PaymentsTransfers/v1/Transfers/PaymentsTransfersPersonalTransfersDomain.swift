@@ -11,10 +11,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     typealias Element = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-    #warning("temporary conformance to Identifiable")
-    enum Navigation: Identifiable {
-        
-        var id: Int { 1 }
+    enum Navigation {
         
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
@@ -23,4 +20,10 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     typealias Binder = PlainPickerBinder<Element, Navigation>
     typealias BinderComposer = PlainPickerBinderComposer<Element, Navigation>
+    
+    typealias FlowDomain = PayHubUI.FlowDomain<Element, Navigation>
+    
+    typealias FlowState = FlowDomain.State
+    typealias FlowEvent = FlowDomain.Event
+    typealias FlowEffect = FlowDomain.Effect
 }
