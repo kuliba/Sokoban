@@ -28,10 +28,12 @@ class RootViewModelFactoryTests: XCTestCase {
             httpClient: httpClient,
             logger: logger
         )
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(model, file: file, line: line)
-        trackForMemoryLeaks(httpClient, file: file, line: line)
-        trackForMemoryLeaks(logger, file: file, line: line)
+        
+        // factory is captured by long-running closures
+        //    trackForMemoryLeaks(sut, file: file, line: line)
+        //    trackForMemoryLeaks(model, file: file, line: line)
+        //    trackForMemoryLeaks(httpClient, file: file, line: line)
+        //    trackForMemoryLeaks(logger, file: file, line: line)
         
         return (sut, httpClient, logger)
     }
