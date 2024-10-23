@@ -22,21 +22,21 @@ extension RootViewModelFactory {
         }
         
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
-            model: model, 
+            model: model,
             scheduler: mainScheduler
-        )
-        
-        let navigationComposer = PaymentsTransfersPersonalTransfersNavigationComposer(
-            nanoServices: nanoServicesComposer.compose()
         )
         
         let composer = PaymentsTransfersPersonalTransfersDomain.BinderComposer(
             microServices: .init(
                 getNavigation: { element, notify, completion in
                     
+                    let navigationComposer = PaymentsTransfersPersonalTransfersNavigationComposer(
+                        nanoServices: nanoServicesComposer.compose(notify: notify)
+                    )
+                    
                     guard let navigation = navigationComposer.compose(element, notify: notify)
                     else {
-                        #warning("return without navigation")
+#warning("return without navigation")
                         return
                     }
                     

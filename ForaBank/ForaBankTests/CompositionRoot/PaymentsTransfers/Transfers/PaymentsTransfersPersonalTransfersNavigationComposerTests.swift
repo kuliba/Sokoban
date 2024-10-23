@@ -165,11 +165,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
-    private typealias MakeAnotherCard = CallSpy<Void, Node<ClosePaymentsViewModelWrapper>>
-    private typealias MakeDetailPayment = CallSpy<Void, Node<ClosePaymentsViewModelWrapper>>
-    private typealias MakeAbroad = CallSpy<Void, Node<ContactsViewModel>>
-    private typealias MakeContacts = CallSpy<Void, Node<ContactsViewModel>>
-    private typealias MakeMeToMe = CallSpy<Void, Node<PaymentsMeToMeViewModel>?>
+    private typealias Notify = (SUT.Domain.FlowEvent) -> Void
+    private typealias MakeAnotherCard = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
+    private typealias MakeDetailPayment = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
+    private typealias MakeAbroad = CallSpy<Notify, Node<ContactsViewModel>>
+    private typealias MakeContacts = CallSpy<Notify, Node<ContactsViewModel>>
+    private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
     
     private struct Spies {
         

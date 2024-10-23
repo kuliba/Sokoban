@@ -25,23 +25,30 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
-    func compose() -> NanoServices {
+    func compose(
+        notify: @escaping Notify
+    ) -> NanoServices {
         
         return .init(
-            makeAbroad: makeAbroad,
-            makeAnotherCard: makeAnotherCard,
-            makeContacts: makeContacts,
-            makeDetailPayment: makeDetailPayment,
-            makeMeToMe: makeMeToMe
+            makeAbroad: { self.makeAbroad(notify: $0) },
+            makeAnotherCard: { self.makeAnotherCard(notify: $0) },
+            makeContacts: { self.makeContacts(notify: $0) },
+            makeDetailPayment: { self.makeDetailPayment(notify: $0) },
+            makeMeToMe: { self.makeMeToMe(notify: $0) }
         )
     }
-    
+
+    typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
+    typealias Notify = (Event) -> Void
+
     typealias NanoServices = PaymentsTransfersPersonalTransfersNavigationComposerNanoServices
 }
 
 private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
-    func makeAbroad() -> Node<ContactsViewModel> {
+    func makeAbroad(
+        notify: @escaping Notify
+    ) -> Node<ContactsViewModel> {
         
         let abroad = model.makeContactsViewModel(forMode: .abroad)
         let cancellable = bind(abroad)
@@ -49,7 +56,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: abroad, cancellable: cancellable)
     }
     
-    func makeAnotherCard() -> Node<ClosePaymentsViewModelWrapper>{
+    func makeAnotherCard(
+        notify: @escaping Notify
+    ) -> Node<ClosePaymentsViewModelWrapper>{
         
         model.action.send(ModelAction.ProductTemplate.List.Request())
         
@@ -90,7 +99,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             }
     }
     
-    func makeContacts() -> Node<ContactsViewModel> {
+    func makeContacts(
+        notify: @escaping Notify
+    ) -> Node<ContactsViewModel> {
         
         let contacts = model.makeContactsViewModel(
             forMode: .fastPayments(.contacts)
@@ -100,33 +111,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: contacts, cancellable: cancellable)
     }
     
-    // PaymentsTransfersViewModel.bind(_:)
-    // PaymentsTransfersViewModel.swift:1457
-    private func bind(
-        _ contacts: ContactsViewModel
-    ) -> AnyCancellable {
-        
-        contacts.action
-            .sink { action in
-                
-                switch action {
-                case let payload as ContactsViewModelAction.PaymentRequested:
-#warning("FIXME using notify")
-                    _ = payload
-                    // requestContactsPayment(source: payload.source)
-                    
-                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-#warning("FIXME using notify")
-                    _ = payload
-                    // handleCountriesItemTapped(source: payload.source)
-                    
-                default:
-                    break
-                }
-            }
-    }
-    
-    func makeDetailPayment() -> Node<ClosePaymentsViewModelWrapper> {
+    func makeDetailPayment(
+        notify: @escaping Notify
+    ) -> Node<ClosePaymentsViewModelWrapper> {
         
         let detailPayment = ClosePaymentsViewModelWrapper(
             model: model,
@@ -138,7 +125,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         return .init(model: detailPayment, cancellable: cancellable)
     }
     
-    func makeMeToMe() -> Node<PaymentsMeToMeViewModel>? {
+    func makeMeToMe(
+        notify: @escaping Notify
+    ) -> Node<PaymentsMeToMeViewModel>? {
         
         guard let meToMe = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
         else { return nil }
@@ -188,4 +177,37 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 }
             }
     }
+}
+
+// MARK: - bindings
+
+private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
+    
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1457
+    private func bind(
+        _ contacts: ContactsViewModel
+    ) -> AnyCancellable {
+        
+        contacts.action
+            .sink { action in
+                
+                switch action {
+                case let payload as ContactsViewModelAction.PaymentRequested:
+#warning("FIXME using notify")
+                    _ = payload
+                    // requestContactsPayment(source: payload.source)
+                    
+                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
+#warning("FIXME using notify")
+                    _ = payload
+                    // handleCountriesItemTapped(source: payload.source)
+                    
+                default:
+                    break
+                }
+            }
+    }
+
 }

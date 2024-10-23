@@ -29,29 +29,32 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return compose(for: buttonType, notify: notify)
         }
     }
-     
-    private func compose(
+    
+    typealias Domain = PaymentsTransfersPersonalTransfersDomain
+}
+
+private extension PaymentsTransfersPersonalTransfersNavigationComposer {
+    
+    func compose(
         for buttonType: Domain.ButtonType,
         notify: @escaping (Domain.FlowEvent) -> Void
     ) -> Domain.Navigation? {
         
         switch buttonType {
         case .abroad:
-            return .contacts(nanoServices.makeAbroad())
+            return .contacts(nanoServices.makeAbroad(notify))
             
         case .anotherCard:
-            return .payments(nanoServices.makeAnotherCard())
+            return .payments(nanoServices.makeAnotherCard(notify))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe().map { .meToMe($0) }
+            return nanoServices.makeMeToMe(notify).map { .meToMe($0) }
             
         case .byPhoneNumber:
-            return .contacts(nanoServices.makeContacts())
+            return .contacts(nanoServices.makeContacts(notify))
             
         case .requisites:
-            return .payments(nanoServices.makeDetailPayment())
+            return .payments(nanoServices.makeDetailPayment(notify))
         }
     }
-    
-    typealias Domain = PaymentsTransfersPersonalTransfersDomain
 }
