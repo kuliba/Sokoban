@@ -49,7 +49,7 @@ final class OTPInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .countdown(.start), on: state) {
-            $0.status = .failure(.connectivityError)
+            $0.status = failureOtpInputNilСonnectivityError()
         }
     }
     
@@ -74,7 +74,7 @@ final class OTPInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .countdown(.start), on: state) {
-            $0.status = .failure(.serverError(message))
+            $0.status = failureServerError(message: message)
         }
     }
     
@@ -91,7 +91,7 @@ final class OTPInputReducerTests: XCTestCase {
     
     func test_countdownEvent_shouldNotChangeStateOnFailure() {
         
-        let state = makeState(.failure(.connectivityError))
+        let state = makeState(.failure(.init(countdown: .running(remaining: 55), otpField: .init()), .connectivityError))
         let sut = makeSUT(
             countdownReducerStub: (running(55), .init(.initiate))
         )
@@ -101,9 +101,9 @@ final class OTPInputReducerTests: XCTestCase {
     
     func test_countdownEvent_shouldNotDeliverCountdownReduceEffectOnFailure() {
         
-        let state = makeState(.failure(.connectivityError))
+        let state = makeState(.failure(.completeOTP, .connectivityError))
         let sut = makeSUT(
-            countdownReducerStub: (connectivityError(), .init(.initiate))
+            countdownReducerStub: (connectivityError(), nil)
         )
         
         assert(sut: sut, .countdown(.start), on: state, effect: nil)
@@ -167,7 +167,11 @@ final class OTPInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.status = .failure(.connectivityError)
+            $0.status = .failure(.init(
+                countdown: .completed,
+                otpField: .init(text: "", isInputComplete: false, status: .failure(.connectivityError))
+            ), .connectivityError
+            )
         }
     }
     
@@ -193,7 +197,11 @@ final class OTPInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.status = .failure(.serverError(message))
+            $0.status = .failure(.init(
+                countdown: .completed,
+                otpField: .init(text: "", isInputComplete: false, status: .failure(.serverError(message)))
+            ), .serverError(message)
+            )
         }
     }
     
@@ -237,9 +245,9 @@ final class OTPInputReducerTests: XCTestCase {
     
     func test_otpFieldEvent_shouldNotChangeStateOnFailure() {
         
-        let state = makeState(.failure(.connectivityError))
+        let state = makeState(.input(.init(countdown: .running(remaining: 23), otpField: .init(text: "123456", isInputComplete: true, status: nil))))
         let sut = makeSUT(
-            otpFieldReducerStub: (.init(), .submitOTP(anyMessage()))
+            otpFieldReducerStub: (.init(text: "123456", isInputComplete: true, status: nil), .submitOTP(anyMessage()))
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state)
@@ -247,9 +255,9 @@ final class OTPInputReducerTests: XCTestCase {
     
     func test_otpFieldEvent_shouldNotDeliverCountdownReduceEffectOnFailure() {
         
-        let state = makeState(.failure(.connectivityError))
+        let state = makeState(.failure(.completeOTP, .connectivityError))
         let sut = makeSUT(
-            otpFieldReducerStub: (.init(), .submitOTP(anyMessage()))
+            otpFieldReducerStub: (.init(), nil)
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state, effect: nil)

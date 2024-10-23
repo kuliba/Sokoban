@@ -360,7 +360,8 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
             handleConsentListEffect: consentListEffectHandler.handleEffect(_:_:),
             handleContractEffect: contractEffectHandler.handleEffect(_:_:), 
             getC2BSub: getC2BSubSpy.process(completion:),
-            getSettings: getSettingsSpy.process(completion:),
+            getSettings: getSettingsSpy.process(completion:), 
+            prepareDeleteDefaultBank: { _ in },
             prepareSetBankDefault: prepareSetBankDefaultSpy.process(completion:),
             updateProduct: updateProductSpy.process(_:completion:)
         )
