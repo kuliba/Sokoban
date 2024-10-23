@@ -792,9 +792,9 @@ extension OperationStateViewModel {
 
 // MARK: - Adapters
 
-private extension AuthorizedInformDataType {
+private extension ClientInformAuthorizedZoneDataState {
     
-    var client: PlainClientInformBottomSheet.ClientInformZoneDataState {
+    var client: PlainClientInformBottomSheet.ClientInformAuthorizedZoneDataState {
         
         switch self {
         case let .single(single):

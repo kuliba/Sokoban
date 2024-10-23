@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 15, *)
-public enum ClientInformZoneDataState {
+public enum ClientInformAuthorizedZoneDataState {
     
     case single(Single)
     case multiple(Multiple)
@@ -54,7 +54,7 @@ public enum ClientInformZoneDataState {
 }
 
 @available(iOS 15, *)
-extension ClientInformZoneDataState {
+extension ClientInformAuthorizedZoneDataState {
     
     func navBarTitle() -> String {
         

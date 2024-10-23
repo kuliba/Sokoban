@@ -10,11 +10,11 @@ import SwiftUI
 @available(iOS 15, *)
 struct PlainClientInformBottomSheetWrapperView: View {
     
-    private let info: ClientInformZoneDataState
+    private let info: ClientInformAuthorizedZoneDataState
     private let config: PlainClientInformBottomSheetConfig
     
     public init(
-        info: ClientInformZoneDataState,
+        info: ClientInformAuthorizedZoneDataState,
         config: PlainClientInformBottomSheetConfig
     ) {
         self.info = info

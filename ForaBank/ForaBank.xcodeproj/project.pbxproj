@@ -1379,7 +1379,7 @@
 		2AAB56F92C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F82C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift */; };
 		2AAB56FB2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56FA2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift */; };
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
-		2AAC45D62CB987640096DD71 /* Model+runOnceWhenAuthorised.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */; };
+		2AAC45D62CB987640096DD71 /* Model+runOnceWhenAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorized.swift */; };
 		2AACA45D2CA168DD007BD0C6 /* BatchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AACA45C2CA168DD007BD0C6 /* BatchService.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AAF3E242BF37C1800A623DA /* CacheSberOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAF3E232BF37C1800A623DA /* CacheSberOperator.swift */; };
@@ -3166,7 +3166,10 @@
 		EC651CAF2CB02558000E4FB5 /* PlainClientInformBottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */; };
 		EC9711232CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift */; };
 		EC9711252CC6457D00C4537D /* ClientInformZoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */; };
-		EC9711292CC6471800C4537D /* AuthorizedInformDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* AuthorizedInformDataTypes.swift */; };
+		EC9711292CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */; };
+		ECCFA40B2CC7D7200009099E /* ClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */; };
+		ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */; };
+		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
@@ -4896,7 +4899,7 @@
 		2AAB56F82C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2AAB56FA2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift; sourceTree = "<group>"; };
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
-		2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+runOnceWhenAuthorised.swift"; sourceTree = "<group>"; };
+		2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+runOnceWhenAuthorized.swift"; sourceTree = "<group>"; };
 		2AAC905A2C6CCD5400AD32AF /* PayHub.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHub.xctestplan; sourceTree = "<group>"; };
 		2AACA45C2CA168DD007BD0C6 /* BatchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchService.swift; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
@@ -6624,7 +6627,10 @@
 		EC651CAD2CB024F6000E4FB5 /* PlainClientInformBottomSheet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PlainClientInformBottomSheet.xctestplan; sourceTree = "<group>"; };
 		EC9711222CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlainClientInformBottomSheetConfig+iFora.swift"; sourceTree = "<group>"; };
 		EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformZoneData.swift; sourceTree = "<group>"; };
-		EC9711282CC6471800C4537D /* AuthorizedInformDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizedInformDataTypes.swift; sourceTree = "<group>"; };
+		EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformAuthorizedZoneDataState.swift; sourceTree = "<group>"; };
+		ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformDataAdapter.swift; sourceTree = "<group>"; };
+		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
+		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
@@ -12713,6 +12719,7 @@
 		2AF1774D2AC476B600D100DD /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
+				ECCFA4092CC7D6FF0009099E /* ClientInformData */,
 				83F775D22CA4744E00A05F69 /* MarketShowcase */,
 				838C09222C8B59C400E894AC /* LoadBannersList */,
 				2A0A3F652C2A0AA400029854 /* HTTPClientFactory.swift */,
@@ -12725,7 +12732,8 @@
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
-				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
+				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorized.swift */,
+				ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */,
 				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
 				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
@@ -15030,7 +15038,7 @@
 				C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */,
 				C1DE211E2919531500ED0F8D /* AppSettings.swift */,
 				0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */,
-				EC9711282CC6471800C4537D /* AuthorizedInformDataTypes.swift */,
+				EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */,
 				C165DDF32A160F0E003CE3DA /* CountryCodeReplace.swift */,
 				83A9C6DB2C060010005EAF62 /* UpdateInfo.swift */,
 			);
@@ -16643,6 +16651,15 @@
 				2A87848A29DC18020067DE04 /* UIFont+Assets.swift */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		ECCFA4092CC7D6FF0009099E /* ClientInformData */ = {
+			isa = PBXGroup;
+			children = (
+				ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */,
+				ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */,
+			);
+			path = ClientInformData;
 			sourceTree = "<group>";
 		};
 		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
@@ -21062,6 +21079,7 @@
 				77E1803127AC02170006ACC9 /* ServerCommands+Notification.swift in Sources */,
 				834D7C302ACC2BD40000E02E /* Model+cachelessAuthorizedHTTPClient.swift in Sources */,
 				EDE70909279865B00048CA94 /* TemplatesListView.swift in Sources */,
+				ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */,
 				772027802891B7EB0098C4F8 /* ClientNameData.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */,
@@ -21403,7 +21421,7 @@
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
 				2A3624822C5EB4D500174C50 /* AnywayFlowState.swift in Sources */,
 				2AD15D152C19D1AC003329C7 /* PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel+ext.swift in Sources */,
-				2AAC45D62CB987640096DD71 /* Model+runOnceWhenAuthorised.swift in Sources */,
+				2AAC45D62CB987640096DD71 /* Model+runOnceWhenAuthorized.swift in Sources */,
 				83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
 				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
@@ -21485,6 +21503,7 @@
 				2A3624A12C5F4BD200174C50 /* AnywayServicePickerFlowView.swift in Sources */,
 				774EECDC29A638B800CCE94A /* PaymentsSpoilerGroupView.swift in Sources */,
 				833A44B22CA1696400121346 /* TabsViewModel.swift in Sources */,
+				ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */,
 				2AE259E42C63417A00B4088B /* AnywayTransactionComposer.swift in Sources */,
 				2A1E76BF2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift in Sources */,
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
@@ -21671,7 +21690,7 @@
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
 				8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */,
-				EC9711292CC6471800C4537D /* AuthorizedInformDataTypes.swift in Sources */,
+				EC9711292CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */,
@@ -21732,6 +21751,7 @@
 				2A0EF2F22C1DB7B0003F094D /* SelectorViewConfig+iFora.swift in Sources */,
 				ED2D8A01286DB4AA0000B391 /* ImageGalleryAgent.swift in Sources */,
 				2ABD78372AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift in Sources */,
+				ECCFA40B2CC7D7200009099E /* ClientInformDataAdapter.swift in Sources */,
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */,
 				C1097D9029438242002459F6 /* PaymentCheckViewComponent.swift in Sources */,

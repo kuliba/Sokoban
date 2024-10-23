@@ -145,7 +145,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         // add notAuthorized when it will be ready
                         
-                        guard let authorized = self.model.___client.value.authorized else { return }
+                        guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
                     }
@@ -484,7 +484,6 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-//            clientInformMessage: Empty()
             clientInformMessage: clientInform
                 .filter { [self] _ in
                     

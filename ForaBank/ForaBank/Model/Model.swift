@@ -76,7 +76,7 @@ class Model {
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
-    let ___client: CurrentValueSubject<___Client, Never>
+    let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -243,7 +243,7 @@ class Model {
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
-        self.___client = .init(.init(authorized: nil, notAuthorized: nil))
+        self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }

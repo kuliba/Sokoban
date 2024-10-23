@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct ___Client {
+struct ClientAuthorizationState {
     
-    var authorized: AuthorizedInformDataType?
+    var authorized: ClientInformAuthorizedZoneDataState?
     var notAuthorized: Void?
 }
 
-enum AuthorizedInformDataType {
+enum ClientInformAuthorizedZoneDataState {
     
     case single(Single)
     case multiple(Multiple)

@@ -1752,7 +1752,7 @@ extension MainViewModel {
         enum BottomSheetType {
             
             case openAccount(OpenAccountViewModel)
-            case clientInform(AuthorizedInformDataType)
+            case clientInform(ClientInformAuthorizedZoneDataState)
         }
     }
     
