@@ -484,17 +484,17 @@ private extension Model {
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: Empty()
-//            clientInformMessage: clientInform
-//                .filter { [self] _ in
-//                    
-//                    !clientInformStatus.isShowNotAuthorized
-//                }
-//                .compactMap(\.data?.notAuthorized)
-//                .handleEvents(receiveOutput: { [self] _ in
-//                    
-//                    clientInformStatus.isShowNotAuthorized = true
-//                })
+//            clientInformMessage: Empty()
+            clientInformMessage: clientInform
+                .filter { [self] _ in
+                    
+                    !clientInformStatus.isShowNotAuthorized
+                }
+                .compactMap(\.data?.notAuthorized)
+                .handleEvents(receiveOutput: { [self] _ in
+                    
+                    clientInformStatus.isShowNotAuthorized = true
+                })
                 .eraseToAnyPublisher(),
             
             checkClientResponse: action

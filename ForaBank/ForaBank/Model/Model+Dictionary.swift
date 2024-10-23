@@ -2128,37 +2128,36 @@ extension Model {
     
     // ClientInform
     func handleClientInform(_ serial: String?) {
-        return
-//        guard let token = token else {
-//            handledUnauthorizedCommandAttempt()
-//            return
-//        }
-//        
-//        let typeDict: DictionaryType = .clientInform
-//        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
-//        self.dictionariesUpdating.value.insert(typeDict)
-//        
-//        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: nil)   //befor refactoring back -  <nil>, after serial)
-//        serverAgent.executeCommand(command: command) {[unowned self] result in
-//            
-//            self.dictionariesUpdating.value.remove(typeDict)
-//            
-//            switch result {
-//            case .success(let response):
-//                switch response.statusCode {
-//                case .ok:
-//                    self.clientInform.value = .result(response.data)
-//                    
-//                default:
-//                    self.clientInform.value = .result(nil)
-//                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-//                }
-//                
-//            case .failure(let error):
-//                self.clientInform.value = .result(nil)
-//                handleServerCommandError(error: error, command: command)
-//            }
-//        }
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let typeDict: DictionaryType = .clientInform
+        guard !self.dictionariesUpdating.value.contains(typeDict) else { return }
+        self.dictionariesUpdating.value.insert(typeDict)
+        
+        let command = ServerCommands.DictionaryController.GetClientInformData(token: token, serial: nil)   //befor refactoring back -  <nil>, after serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            self.dictionariesUpdating.value.remove(typeDict)
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    self.clientInform.value = .result(response.data)
+                    
+                default:
+                    self.clientInform.value = .result(nil)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.clientInform.value = .result(nil)
+                handleServerCommandError(error: error, command: command)
+            }
+        }
     }
     
     //DownloadImages
