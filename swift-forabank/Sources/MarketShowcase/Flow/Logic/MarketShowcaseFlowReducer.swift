@@ -46,7 +46,7 @@ public extension MarketShowcaseFlowReducer {
             case let .openURL(url):
                 state.status = .outside(.openURL(url))
             case let .landing(type):
-                effect = .select(.landing(type))
+                state.status = .outside(.landing(type))
             }
         }
         

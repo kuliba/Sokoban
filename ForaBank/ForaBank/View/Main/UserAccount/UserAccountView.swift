@@ -518,7 +518,7 @@ extension FastPaymentsFactory {
                 initialState: .init(),
                 reduce: { state, _ in (state, nil) },
                 handleEffect: { _,_ in },
-                scheduler: $0
+                scheduler: .main
             )
         })
     )

@@ -14,7 +14,9 @@ class LoadablePickerTests: XCTestCase {
     
     typealias ID = UUID
     typealias Reducer = LoadablePickerReducer<ID, Element>
-    
+    typealias EffectHandler = LoadablePickerEffectHandler<Element>
+    typealias LoadSpy = Spy<Void, [Element]?>
+
     func makeItem(
         id: ID = .init(),
         _ element: Element? = nil
@@ -43,5 +45,53 @@ class LoadablePickerTests: XCTestCase {
     ) -> Element {
         
         return .init(value: value)
+    }
+    
+    func makeEffectHandler(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: EffectHandler,
+        loadSpy: LoadSpy,
+        reloadSpy: LoadSpy
+    ) {
+        let loadSpy = LoadSpy()
+        let reloadSpy = LoadSpy()
+        let sut = EffectHandler(
+            microServices: .init(
+                load: loadSpy.process,
+                reload: reloadSpy.process
+            )
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loadSpy, file: file, line: line)
+        
+        return (sut, loadSpy, reloadSpy)
+    }
+    
+    func expect(
+        _ sut: EffectHandler,
+        with effect: EffectHandler.Effect,
+        toDeliver expectedEvents: EffectHandler.Event...,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        exp.expectedFulfillmentCount = expectedEvents.count
+        var events = [EffectHandler.Event]()
+        
+        sut.handleEffect(effect) {
+            
+            events.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
+        
+        wait(for: [exp], timeout: 1)
     }
 }

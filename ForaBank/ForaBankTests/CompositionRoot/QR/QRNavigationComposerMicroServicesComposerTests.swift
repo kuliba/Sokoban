@@ -354,6 +354,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
         )
         
         let sut = SUT(
+            httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             model: model,
             createSberQRPayment: spies.createSberQRPayment.process(_:completion:),

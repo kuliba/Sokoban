@@ -194,10 +194,12 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let load = LoadSpy()
+        let reload = LoadSpy()
         let getNavigationSpy = GetNavigationSpy()
         let scheduler = DispatchQueue.test
         let composer = Composer(
             load: load.process(completion:), 
+            reload: reload.process(completion:),
             microServices: .init(
                 getNavigation: getNavigationSpy.process
             ),
@@ -209,6 +211,7 @@ final class CategoryPickerSectionBinderComposerTests: XCTestCase {
         
         trackForMemoryLeaks(composer, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(reload, file: file, line: line)
         trackForMemoryLeaks(load, file: file, line: line)
         trackForMemoryLeaks(getNavigationSpy, file: file, line: line)
         

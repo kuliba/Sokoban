@@ -5,9 +5,9 @@
 //  Created by Igor Malyarov on 12.09.2024.
 //
 
-import ForaTools
 import Foundation
 import RemoteServices
+import SerialComponents
 
 /// A composer responsible for creating loaders that handle serial-stamped data, supporting both local and remote data sources with caching capabilities.
 final class SerialLoaderComposer {

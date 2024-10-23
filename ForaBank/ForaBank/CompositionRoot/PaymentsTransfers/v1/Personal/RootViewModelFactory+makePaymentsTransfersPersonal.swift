@@ -12,29 +12,19 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    static func makePaymentsTransfersPersonal(
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
-        model: Model,
+    func makePaymentsTransfersPersonal(
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        pageSize: Int
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
-            httpClient: httpClient,
-            logger: logger,
-            model: model,
             nanoServices: nanoServices,
             pageSize: pageSize,
-            placeholderCount: categoryPickerPlaceholderCount,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            placeholderCount: categoryPickerPlaceholderCount
         )
         
         // MARK: - OperationPicker
@@ -92,8 +82,8 @@ extension RootViewModelFactory {
             toolbar: toolbar,
             reload: {
                 
-                categoryPicker.content.event(.load)
-                operationPicker.content.event(.load)
+                categoryPicker.content.event(.reload)
+                operationPicker.content.event(.reload)
             }
         )
         

@@ -42,6 +42,13 @@ extension HTTPClientSpy {
     }
     
     func complete(
+        with success: (data: Data, response: HTTPURLResponse),
+        at index: Int = 0
+    ) {
+        complete(with: .success((success.data, success.response)), at: index)
+    }
+    
+    func complete(
         with data: Data,
         at index: Int = 0
     ) {
