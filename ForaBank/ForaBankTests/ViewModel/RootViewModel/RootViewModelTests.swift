@@ -220,7 +220,7 @@ final class RootViewModelTests: XCTestCase {
     func test_orderSticker_onlyCorporateCard_shouldSetAlertToDisableForCorporateCard() {
         
         let (sut, _, _, alertSpy) = makeSUT(
-            product: makeCardProduct(cardType: .individualBusinessman))
+            product: makeCardProduct(cardType: .individualBusinessman), selected: .market)
         
         XCTAssertNoDiff(alertSpy.values, [nil])
         
@@ -231,7 +231,7 @@ final class RootViewModelTests: XCTestCase {
 
     func test_orderSticker_withCard_shouldSetLinkToPaymentSticker() {
         
-        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -244,7 +244,7 @@ final class RootViewModelTests: XCTestCase {
 
     func test_openOrderCard_shouldSetLinkToOpenCard() {
         
-        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -257,12 +257,12 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_shouldSetLinkToLanding() {
         
-        let (sut, _, linkSpy, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.handleOutside(.landing(type), .immediate)
+        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
         
         XCTAssertNoDiff(linkSpy.values, [nil, .landing])
         
@@ -271,10 +271,10 @@ final class RootViewModelTests: XCTestCase {
     
     func test_handleOutside_goToMain_shouldSetSelectedToMain() {
         
-        let (sut, _, _, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
-        sut.handleOutside(.main, .immediate)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        sut.handleOutside(.main, scheduler.eraseToAnyScheduler())
+        scheduler.advance(by: .milliseconds(400))
         
         XCTAssertNil(sut.link)
         XCTAssertNoDiff(sut.selected, .main)
@@ -284,12 +284,12 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_cardActionGoToMain_shouldSelectedToMain() {
         
-        let (sut, _, _, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
-        sut.handleOutside(.landing(type), .immediate)
+        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
         sut.landingViewModel?.action(.card(.goToMain))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        scheduler.advance(by: .milliseconds(400))
 
         XCTAssertNil(sut.link)
         XCTAssertNoDiff(sut.selected, .main)
@@ -299,12 +299,12 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_stickerActionGoToMain_shouldSelectedToMain() {
 
-        let (sut, _, _, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
         sut.handleOutside(.landing(type), .immediate)
         sut.landingViewModel?.action(.sticker(.goToMain))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        scheduler.advance(by: .milliseconds(400))
 
         XCTAssertNil(sut.link)
         XCTAssertNoDiff(sut.selected, .main)
@@ -312,12 +312,12 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_stickerActionOrder_shouldLinkToPaymentSticker() {
 
-        let (sut, _, linkSpy, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
         XCTAssertNoDiff(linkSpy.values, [nil])
 
-        sut.handleOutside(.landing(type), .immediate)
+        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
         sut.landingViewModel?.action(.sticker(.order))
         
         XCTAssertNoDiff(linkSpy.values, [nil, .landing, .paymentSticker])
@@ -327,10 +327,10 @@ final class RootViewModelTests: XCTestCase {
     
     func test_handleOutside_landing_goToBack_shouldSelectedToBack() {
         
-        let (sut, _, _, _) = makeSUTMarketShowcase(product: .cardActiveMainDebitOnlyRub)
+        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
-        sut.handleOutside(.landing(type), .immediate)
+        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
         sut.landingViewModel?.action(.goToBack)
         
         XCTAssertNil(sut.link)
@@ -340,8 +340,6 @@ final class RootViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        product: ProductData? = nil,
-        selected: RootViewModel.TabType = .main,
         appVersion: String? = "1",
         file: StaticString = #file,
         line: UInt = #line
@@ -352,10 +350,6 @@ final class RootViewModelTests: XCTestCase {
         alertSpy: ValueSpy<Alert.ViewModel.View?>
     ) {
         let model: Model = .mockWithEmptyExcept()
-        if let product {
-            
-            model.products.value.append(element: product, toValueOfKey: product.productType)
-        }
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
@@ -398,7 +392,6 @@ final class RootViewModelTests: XCTestCase {
             mainScheduler: .immediate
         )
         
-        sut.selected = selected
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         
@@ -413,18 +406,77 @@ final class RootViewModelTests: XCTestCase {
         return (sut, model, linkSpy, alertSpy)
     }
     
-    private func makeSUTMarketShowcase(
+    private func makeSUT(
         product: ProductData? = nil,
-        appVersion: String? = "1",
+        selected: RootViewModel.TabType,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: RootViewModel,
-        model: Model,
+        scheduler: TestSchedulerOf<DispatchQueue>,
         linkSpy: ValueSpy<RootViewModel.Link.Case?>,
         alertSpy: ValueSpy<Alert.ViewModel.View?>
     ) {
-        makeSUT(product: product, selected: .market)
+        let model: Model = .mockWithEmptyExcept()
+        if let product {
+            
+            model.products.value.append(element: product, toValueOfKey: product.productType)
+        }
+
+        let scheduler = DispatchQueue.test
+
+        let sut = RootViewModel(
+            fastPaymentsFactory: .legacy,
+            navigationStateManager: .preview,
+            productNavigationStateManager: .preview,
+            tabsViewModel: .init(
+                mainViewModel: .init(
+                    model,
+                    makeProductProfileViewModel: { _,_,_ in nil },
+                    navigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    landingServices: .empty(),
+                    paymentsTransfersFactory: .preview,
+                    updateInfoStatusFlag: .init(.inactive),
+                    onRegister: {},
+                    bannersBinder: .preview
+                ),
+                paymentsModel: .legacy(.init(
+                    model: model,
+                    makeFlowManager: { _ in .preview },
+                    userAccountNavigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    paymentsTransfersFactory: .preview
+                )),
+                chatViewModel: .init(),
+                marketShowcaseBinder: .preview
+            ),
+            informerViewModel: .init(model),
+            infoDictionary: nil,
+            model,
+            showLoginAction: { _ in
+                
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            },
+            landingServices: .empty(),
+            mainScheduler: scheduler.eraseToAnyScheduler()
+        )
+        
+        sut.selected = selected
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        // TODO: restore model memory tracking after model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
+        
+        trackForMemoryLeaks(linkSpy, file: file, line: line)
+        trackForMemoryLeaks(alertSpy, file: file, line: line)
+        
+        return (sut, scheduler, linkSpy, alertSpy)
     }
     
     private func makeCardProduct(
