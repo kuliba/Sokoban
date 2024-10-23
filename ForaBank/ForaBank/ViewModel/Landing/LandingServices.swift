@@ -42,6 +42,6 @@ extension Landing {
     
     static func empty() -> Self {
         
-        .init(header: [], main: [], footer: [], details: [], serial: nil, statusCode: 200, errorMessage: nil)
+        .init(header: [], main: [.pageTitle(.init(text: "Title", subtitle: nil, transparency: false))], footer: [], details: [], serial: nil, statusCode: 200, errorMessage: nil)
     }
 }

@@ -75,7 +75,7 @@ extension ResponseMapper {
             case transport
         }
         
-        public enum PaymentFlow: Equatable {
+        public enum PaymentFlow: CaseIterable, Equatable {
             
             case mobile
             case qr

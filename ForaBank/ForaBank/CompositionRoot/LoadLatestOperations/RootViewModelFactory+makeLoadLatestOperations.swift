@@ -25,7 +25,7 @@ extension RootViewModelFactory {
                 
                 switch categorySet {
                 case .all:
-                    getAllLoadedCategories { getLatestPayments($0, completion) }
+                    getAllLoadedCategories { getLatestPayments($0 ?? [], completion) }
                     
                 case let .list(list):
                     getLatestPayments(list, completion)
@@ -36,7 +36,7 @@ extension RootViewModelFactory {
     
     typealias LatestPaymentServiceCategoryName = String
     
-    typealias LoadServiceCategoriesCompletion = ([ServiceCategory]) -> Void
+    typealias LoadServiceCategoriesCompletion = ([ServiceCategory]?) -> Void
     typealias LoadServiceCategories = (@escaping LoadServiceCategoriesCompletion) -> Void
     
     @available(*, deprecated, message: "Use RootViewModelFactory.makeLoadLatestOperations with strong `getLatestPayments` API after hard-code for `isOutsidePayments` and `isPhonePayments` deprecation")
@@ -63,6 +63,14 @@ extension RootViewModelFactory {
                 }
             }
         }
+    }
+}
+
+private extension Optional where Wrapped == Array<RemoteServices.ResponseMapper.ServiceCategory> {
+    
+    var latestPaymentsCategoryNames: [String] {
+        
+        (self ?? []).compactMap(\.latestPaymentsCategoryName)
     }
 }
 

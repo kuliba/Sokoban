@@ -113,14 +113,17 @@ final class MarketShowcaseFlowReducerTests: XCTestCase {
         
         let landingType = anyMessage()
 
-        assertState(.select(.landing(landingType)), on: .init())
+        assertState(.select(.landing(landingType)), on: .init()) {
+            
+            $0.status = .outside(.landing(landingType))
+        }
     }
     
-    func test_reduce_select_landing_shouldDeliverLandingEffect() {
+    func test_reduce_select_landing_shouldDeliverNoEffect() {
         
         let landingType = anyMessage()
         
-        assert(.select(.landing(landingType)), on: .init(), effect: .select(.landing(landingType)))
+        assert(.select(.landing(landingType)), on: .init(), effect: nil)
     }
 
     // MARK: - Helpers
