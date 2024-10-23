@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ListDropdownTextsUIView: View {
     
-    @State private (set) var selectedItem: UILanding.List.DropDownTexts.Item?
     private let model: UILanding.List.DropDownTexts
     private let config: UILanding.List.DropDownTexts.Config
     
@@ -23,7 +22,7 @@ struct ListDropdownTextsUIView: View {
     
     public var body: some View {
         
-        ListView(model: model, config: config, selectedItem: $selectedItem)
+        ListView(model: model, config: config)
             .padding(.horizontal, config.paddings.horizontal)
             .padding(.vertical, config.paddings.vertical)
     }
@@ -36,24 +35,25 @@ extension ListDropdownTextsUIView {
         let model: UILanding.List.DropDownTexts
         let config: UILanding.List.DropDownTexts.Config
         
-        @Binding var selectedItem: UILanding.List.DropDownTexts.Item?
+        @State private(set) var selectedItem: UILanding.List.DropDownTexts.Item?
         
         var body: some View {
             
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                
                 headerView
                 
                 ForEach(model.list, content: itemView)
             }
-            .frame(maxWidth: .infinity)
             .background(config.backgroundColor)
             .cornerRadius(config.cornerRadius)
         }
         
+        @ViewBuilder
         private var headerView: some View {
             
-            VStack(alignment: .leading) {
                 if let title = model.title, !title.isEmpty {
+                    
                     Text(title.rawValue)
                         .font(config.fonts.title)
                         .foregroundColor(config.colors.title)
@@ -65,46 +65,48 @@ extension ListDropdownTextsUIView {
                     config.divider
                         .frame(height: 0.5)
                 }
-            }
         }
         
-        @ViewBuilder
         private func itemView(item: UILanding.List.DropDownTexts.Item) -> some View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                HStack {
-                    Text(item.title)
-                        .font(config.fonts.itemTitle)
-                        .foregroundColor(config.colors.itemTitle)
-                        .accessibilityIdentifier("ListDropdownItemTitle")
+                VStack(alignment: .leading, spacing: 0) {
                     
-                    Spacer()
+                    HStack {
+                        
+                        Text(item.title)
+                            .font(config.fonts.itemTitle)
+                            .foregroundColor(config.colors.itemTitle)
+                            .accessibilityIdentifier("ListDropdownItemTitle")
+                        
+                        Spacer()
+                        
+                        config.chevronDownImage
+                            .rotationEffect(selectedItem == item ? .degrees(180) : .degrees(0))
+                            .accessibilityIdentifier("ListDropdownItemChevronDown")
+                    }
+                    .frame(height: config.heights.item)
+                    .onTapGesture {
+                        withAnimation {
+                            selectedItem = selectedItem == item ? nil : item
+                        }
+                    }
                     
-                    config.chevronDownImage
-                        .rotationEffect(selectedItem == item ? .degrees(180) : .degrees(0))
-                        .accessibilityIdentifier("ListDropdownItemChevronDown")
-                }
-                .frame(height: config.heights.item)
-                .onTapGesture {
-                    withAnimation {
-                        selectedItem = selectedItem == item ? nil : item
+                    if selectedItem == item {
+                        Text(item.description)
+                            .font(config.fonts.itemDescription)
+                            .foregroundColor(config.colors.itemDescription)
+                            .padding(.bottom, config.paddings.itemVertical)
+                            .multilineTextAlignment(.leading)
+                            .accessibilityIdentifier("ListDropdownItemText")
                     }
                 }
+                .padding(.horizontal, config.paddings.itemHorizontal)
                 
-                if selectedItem == item {
-                    Text(item.description)
-                        .font(config.fonts.itemDescription)
-                        .foregroundColor(config.colors.itemDescription)
-                        .padding(.bottom, config.paddings.itemVertical)
-                        .multilineTextAlignment(.leading)
-                        .accessibilityIdentifier("ListDropdownItemText")
-                }
+                config.divider
+                    .frame(height: 0.5)
             }
-            .padding(.horizontal, config.paddings.itemHorizontal)
-            
-            config.divider
-                .frame(height: 0.5)
         }
     }
 }
