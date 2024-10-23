@@ -274,6 +274,13 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_listDropDownTextsWithEmptyList_notDeliversListDropDownTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.listDropDownTextsWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listDropDownTexts, [])
+    }
+    
     func test_map_deliversSpacingInMain() throws {
         
         let landing = try XCTUnwrap(map())
@@ -3503,6 +3510,27 @@ private extension String {
     ],
     "serial": ""
     }
+    }
+
+"""
+    
+    static let listDropDownTextsWithEmptyList = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [],
+        "main": [
+          {
+            "type": "LIST_DROP_DOWN_TEXTS",
+            "data": {
+              "title": "title",
+              "list": []
+            }
+          }
+        ],
+        "serial": ""
+      }
     }
 
 """
