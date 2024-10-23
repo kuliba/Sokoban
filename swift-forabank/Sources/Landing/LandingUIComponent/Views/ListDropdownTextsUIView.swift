@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ListDropdownTextsUIView: View {
     
-    @State private var selectedItem: UILanding.List.DropDownTexts.Item?
+    @State private (set) var selectedItem: UILanding.List.DropDownTexts.Item?
     private let model: UILanding.List.DropDownTexts
     private let config: UILanding.List.DropDownTexts.Config
     
@@ -23,13 +23,9 @@ struct ListDropdownTextsUIView: View {
     
     public var body: some View {
         
-        VStack(spacing: 0){
-            ScrollView(showsIndicators: false) {
-                ListView(model: model, config: config, selectedItem: $selectedItem)
-            }
-        }
-        .padding(.horizontal, config.paddings.horizontal)
-        .padding(.vertical, config.paddings.vertical)
+        ListView(model: model, config: config, selectedItem: $selectedItem)
+            .padding(.horizontal, config.paddings.horizontal)
+            .padding(.vertical, config.paddings.vertical)
     }
 }
 
