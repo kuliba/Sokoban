@@ -7,7 +7,7 @@
 
 import AnywayPaymentBackend
 import CodableLanding
-import CollateralLoanLanding
+import CollateralLoanLandingShowCaseBackend
 import Combine
 import Fetcher
 import Fetcher

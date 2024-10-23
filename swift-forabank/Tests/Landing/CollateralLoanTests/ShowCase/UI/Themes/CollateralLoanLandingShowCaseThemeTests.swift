@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import CollateralLoanLandingUI
+import CollateralLoanLandingShowCaseUI
 
 final class CollateralLoanLandingShowCaseThemeTests: XCTestCase {
     
