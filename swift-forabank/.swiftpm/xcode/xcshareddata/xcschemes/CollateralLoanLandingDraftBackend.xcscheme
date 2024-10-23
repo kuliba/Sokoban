@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CollateralLoanLanding"
-               BuildableName = "CollateralLoanLanding"
-               BlueprintName = "CollateralLoanLanding"
+               BlueprintIdentifier = "CollateralLoanLandingDraftBackend"
+               BuildableName = "CollateralLoanLandingDraftBackend"
+               BlueprintName = "CollateralLoanLandingDraftBackend"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,9 +50,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CollateralLoanLanding"
-            BuildableName = "CollateralLoanLanding"
-            BlueprintName = "CollateralLoanLanding"
+            BlueprintIdentifier = "CollateralLoanLandingDraftBackend"
+            BuildableName = "CollateralLoanLandingDraftBackend"
+            BlueprintName = "CollateralLoanLandingDraftBackend"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

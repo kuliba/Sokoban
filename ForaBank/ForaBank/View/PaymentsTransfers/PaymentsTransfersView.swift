@@ -180,7 +180,7 @@ extension PaymentsTransfersView {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            UserAccountView(viewModel: userAccountViewModel)
+            UserAccountView(viewModel: userAccountViewModel, config: .iFora)
             
         case let .exampleDetail(title):
             ExampleDetailMock(title: title)
