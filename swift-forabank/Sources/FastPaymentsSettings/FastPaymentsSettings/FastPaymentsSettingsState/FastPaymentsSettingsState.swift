@@ -43,7 +43,10 @@ public extension FastPaymentsSettingsState {
         case missingProduct
         case updateContractFailure
         case setBankDefault
+        case deleteBankDefault(String)
         case setBankDefaultFailure(String)
+        case deleteDefaultBankFailure(String)
+        case makeDeleteDefaultBankSuccess
         case setBankDefaultSuccess
         case confirmSetBankDefault//(phoneNumberMask) from contract details
         case getC2BSubResponse(GetC2BSubResponse)

@@ -8,26 +8,27 @@
 import SwiftUI
 import UIPrimitives
 
-public struct OTPInputView: View {
+public struct OTPInputView<HeaderView: View>: View {
     
     private let state: OTPInputState.Status.Input
     private let phoneNumber: String
     private let event: (OTPInputEvent) -> Void
     private let config: OTPInputConfig
-    
+    private let headerView: () -> HeaderView
+
     public init(
         state: OTPInputState.Status.Input,
         phoneNumber: String,
         event: @escaping (OTPInputEvent) -> Void,
-        config: OTPInputConfig
+        config: OTPInputConfig,
+        headerView: @escaping () -> HeaderView
     ) {
         self.state = state
         self.phoneNumber = phoneNumber
         self.event = event
         self.config = config
+        self.headerView = headerView
     }
-    
-    private let title = "Введите код из сообщения"
     
     private var subtitle: String {
         
@@ -42,7 +43,7 @@ public struct OTPInputView: View {
         
         VStack(spacing: 40) {
             
-            title.text(withConfig: config.title)
+            headerView()
             
             ZStack(alignment: .top) {
                 
@@ -232,7 +233,10 @@ struct OTPInputView_Previews: PreviewProvider {
             state: state,
             phoneNumber: "+7 ... ... 54 15",
             event: { _ in },
-            config: .preview
+            config: .preview,
+            headerView: {
+                Text("HeaderView")
+            }
         )
     }
 }

@@ -6,6 +6,8 @@
 //
 
 @testable import ForaBank
+import CombineSchedulers
+import LandingUIComponent
 import SberQR
 import XCTest
 
@@ -189,9 +191,136 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertSpy.values, [nil, .newVersion, nil])
     }
     
+    // MARK: - OpenCard
+
+    func test_openCard_shouldSetLinkToOpenCard() {
+        
+        let (sut, model, linkSpy, _) = makeSUT()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.openCard()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .openCard])
+    }
+    
+    // MARK: - OrderSticker
+
+    func test_orderSticker_noCard_shouldSetAlertToNeedOrderCard() {
+        
+        let (sut, _, _, alertSpy) = makeSUT()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil, .needOrderCard])
+    }
+    
+    func test_orderSticker_onlyCorporateCard_shouldSetAlertToDisableForCorporateCard() {
+        
+        let (sut, _, _, alertSpy) = makeSUT(
+            product: makeCardProduct(cardType: .individualBusinessman))
+        
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
+    }
+
+    func test_orderSticker_withCard_shouldSetLinkToPaymentSticker() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.orderSticker()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
+    }
+
+    // MARK: - OpenOrderCard
+
+    func test_openOrderCard_shouldSetLinkToOpenCard() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.openOrderCard()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .openCard])
+    }
+    
+    // MARK: - handleOutside
+
+    func test_handleOutside_landing_shouldSetLinkToLanding() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let type = anyMessage()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.handleOutside(.landing(type), .immediate)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing])
+        
+        sut.resetLink()
+    }
+    
+    func test_handleOutside_goToMain_shouldSetSelectedToMain() {
+        
+        let (sut, _, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        
+        sut.handleOutside(.main, .immediate)
+        
+        XCTAssertNoDiff(sut.selected, .main)
+    }
+
+    // MARK: - cardAction
+
+    func test_handleOutside_landing_cardActionGoToMain_shouldSelectedToMain() {
+        
+        let (sut, _, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let type = anyMessage()
+        
+        sut.handleOutside(.landing(type), .immediate)
+        sut.landingViewModel?.action(.card(.goToMain))
+        
+        XCTAssertNoDiff(sut.selected, .main)
+    }
+    
+    // MARK: - stickerAction
+
+    func test_handleOutside_landing_stickerActionGoToMain_shouldSelectedToMain() {
+
+        let (sut, _, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let type = anyMessage()
+        
+        sut.handleOutside(.landing(type), .immediate)
+        sut.landingViewModel?.action(.sticker(.goToMain))
+        
+        XCTAssertNoDiff(sut.selected, .main)
+    }
+
+    func test_handleOutside_landing_stickerActionOrder_shouldLinkToPaymentSticker() {
+
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub)
+        let type = anyMessage()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+
+        sut.handleOutside(.landing(type), .immediate)
+        sut.landingViewModel?.action(.sticker(.order))
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing, .paymentSticker])
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(
+        product: ProductData? = nil,
         appVersion: String? = "1",
         file: StaticString = #file,
         line: UInt = #line
@@ -202,6 +331,10 @@ final class RootViewModelTests: XCTestCase {
         alertSpy: ValueSpy<Alert.ViewModel.View?>
     ) {
         let model: Model = .mockWithEmptyExcept()
+        if let product {
+            
+            model.products.value.append(element: product, toValueOfKey: product.productType)
+        }
         let infoDictionary: [String : Any]? = appVersion.map {
             ["CFBundleShortVersionString": $0]
         }
@@ -239,7 +372,9 @@ final class RootViewModelTests: XCTestCase {
             showLoginAction: { _ in
                 
                     .init(viewModel: .init(authLoginViewModel: .preview))
-            }
+            }, 
+            landingServices: .empty(),
+            mainScheduler: .immediate
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
@@ -254,6 +389,134 @@ final class RootViewModelTests: XCTestCase {
         trackForMemoryLeaks(alertSpy, file: file, line: line)
         
         return (sut, model, linkSpy, alertSpy)
+    }
+    
+    private func makeSUT1(
+        product: ProductData? = nil,
+        appVersion: String? = "1",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: RootViewModel,
+        model: Model,
+        linkSpy: ValueSpy<RootViewModel.Link.Case?>,
+        alertSpy: ValueSpy<Alert.ViewModel.View?>
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        if let product {
+            
+            model.products.value.append(element: product, toValueOfKey: product.productType)
+        }
+        let infoDictionary: [String : Any]? = appVersion.map {
+            ["CFBundleShortVersionString": $0]
+        }
+        
+        let sut = RootViewModel(
+            fastPaymentsFactory: .legacy,
+            navigationStateManager: .preview,
+            productNavigationStateManager: .preview,
+            tabsViewModel: .init(
+                mainViewModel: .init(
+                    model,
+                    makeProductProfileViewModel: { _,_,_ in nil },
+                    navigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    landingServices: .empty(),
+                    paymentsTransfersFactory: .preview,
+                    updateInfoStatusFlag: .init(.inactive),
+                    onRegister: {},
+                    bannersBinder: .preview
+                ),
+                paymentsModel: .legacy(.init(
+                    model: model,
+                    makeFlowManager: { _ in .preview },
+                    userAccountNavigationStateManager: .preview,
+                    sberQRServices: .empty(),
+                    qrViewModelFactory: .preview(),
+                    paymentsTransfersFactory: .preview
+                )),
+                chatViewModel: .init(),
+                marketShowcaseBinder: .preview
+            ),
+            informerViewModel: .init(model),
+            infoDictionary: infoDictionary,
+            model,
+            showLoginAction: { _ in
+                
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            },
+            landingServices: .empty(),
+            mainScheduler: .immediate
+        )
+        
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        // TODO: restore model memory tracking after model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
+        
+        trackForMemoryLeaks(linkSpy, file: file, line: line)
+        trackForMemoryLeaks(alertSpy, file: file, line: line)
+        
+        return (sut, model, linkSpy, alertSpy)
+    }
+    
+    private func makeCardProduct(
+        cardType: ProductCardData.CardType,
+        status: ProductCardData.StatusCard = .active
+    ) -> ProductCardData {
+        
+        .init(
+            id: 1,
+            productType: .card,
+            number: "1111",
+            numberMasked: "****",
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: "RUB",
+            mainField: "Card",
+            additionalField: nil,
+            customName: nil,
+            productName: "Card",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: .test,
+            largeDesign: .test,
+            mediumDesign: .test,
+            smallDesign: .test,
+            fontDesignColor: .init(description: ""),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "CARD",
+            validThru: Date(),
+            status: .active,
+            expireDate: "01/01/01",
+            holderName: "Иванов",
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: nil,
+            statusPc: nil,
+            isMain: nil,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            statusCard: status,
+            cardType: cardType,
+            idParent: nil
+        )
     }
 }
 
@@ -286,6 +549,18 @@ private extension RootViewModel {
         action.send(closeAlertAction)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    var landingViewModel: LandingWrapperViewModel? {
+        
+        switch link {
+            
+        case let .landing(viewModel, _):
+            return viewModel
+            
+        default:
+            return nil
+        }
     }
 }
 
@@ -364,12 +639,19 @@ private extension RootViewModel.Link {
             return .userAccount
         case .payments:
             return .payments
+        case .landing:
+            return .landing
+        case .openCard:
+            return .openCard
+        case .paymentSticker:
+            return .paymentSticker
         }
     }
     
     enum Case {
         
         case messages, me2me, userAccount, payments
+        case landing, openCard, paymentSticker
     }
 }
 
@@ -429,4 +711,8 @@ private extension Alert.ViewModel.View {
             title: "Обновить"
         )
     )
+    
+    static let needOrderCard: Self = Alert.ViewModel.needOrderCard(primaryAction: {}).view
+    static let disableForCorporateCard: Self = Alert.ViewModel.disableForCorporateCard(primaryAction: {}).view
+    
 }

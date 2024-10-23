@@ -41,7 +41,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         
         XCTAssertNoDiff(stateSpy.values.map(\.status), [
             completed(),
-            .failure(.connectivityError)
+            failureOtpInputNilСonnectivityError()
         ])
         
         XCTAssertNotNil(sut)
@@ -70,7 +70,10 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
             running(31, otpField: text("12345")),
             running(31, otpField: completed("654321")),
             runningInflight(31, "654321"),
-            .failure(.connectivityError)
+            .failure(.init(
+                countdown: .running(remaining: 31),
+                otpField: .init(text: "", isInputComplete: false, status: .failure(.connectivityError))), .connectivityError
+            )
         ])
         
         XCTAssertNotNil(sut)

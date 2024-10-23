@@ -164,7 +164,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel)
+            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
@@ -617,7 +617,7 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:config:)
         )
     }
 }
