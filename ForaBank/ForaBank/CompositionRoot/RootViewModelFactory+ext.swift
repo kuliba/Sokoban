@@ -51,6 +51,12 @@ extension RootViewModelFactory {
             bindings.insert(model.performOrWaitForActive(work))
         }
         
+        func performOrWaitForAuthorized(
+            _ work: @escaping () -> Void
+        ) {
+            bindings.insert(model.performOrWaitForAuthorized(work))
+        }
+        
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
         if getProductListByTypeV6Flag.isActive {
@@ -482,29 +488,36 @@ extension RootViewModelFactory {
             createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
         )
-        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (___Client?) -> Void) in
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAuthorizedZoneDataState?) -> Void) in
             
             _createGetAuthorizedZoneClientInformData(()) { result in
                 
-                print("Hello ✅")
-                completion(___Client.init(authorized: nil, notAuthorized: nil))
-//                completion(.init(
-//                    $0,
-//                    infoLabel: .init(image: .ic24Info, title: "Информация")
-//                ))
+                switch result {
+                case .failure:
+                    completion(nil)
+                    
+                case let .success(response):
+                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
+                    completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
+                }
+                
+                _ = _createGetAuthorizedZoneClientInformData
             }
         }
-        performOrWaitForActive {
+        
+        performOrWaitForAuthorized {
             
-            createGetAuthorizedZoneClientInformData {
-                
-                if let info = $0 {
-                    self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                    self.model.___client.value = info
-                } else {
-                    self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
+                createGetAuthorizedZoneClientInformData {
+                    
+                    if let info = $0 {
+                        self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                        self.model.сlientAuthorizationState.value.authorized = info
+                    } else {
+                        self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
+                    }
+                    
+                    _ = createGetAuthorizedZoneClientInformData
                 }
-            }
         }
         
         return make(
@@ -988,3 +1001,5 @@ private extension Error {
         }
     }
 }
+
+
