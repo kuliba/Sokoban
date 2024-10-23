@@ -771,9 +771,15 @@ private extension RootView {
                         
                         PTSectionTransfersButtonsView(
                             title: PaymentsTransfersSectionType.transfers.name,
-                            buttons: state.elements.map { type in
+                            buttons: state.elements.compactMap { element in
                                 
-                                return .init(type: type) { event(.select(type)) }
+                                switch element {
+                                case let .buttonType(buttonType):
+                                    return .init(type: buttonType) {
+                                        
+                                        event(.select(.buttonType(buttonType)))
+                                    }
+                                }
                             }
                         )
                     }

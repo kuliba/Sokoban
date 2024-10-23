@@ -307,3 +307,13 @@ extension Model {
         _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
     }
 }
+
+private extension PaymentsTransfersPersonalTransfersNavigationComposer {
+    
+    func compose(
+        _ buttonType: Domain.ButtonType
+    ) -> Domain.Navigation? {
+        
+        self.compose(.buttonType(buttonType), notify: { _ in })
+    }
+}

@@ -13,8 +13,13 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makeTransfers(
-        elements: [PaymentsTransfersPersonalTransfersDomain.Element]
+        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType]
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
+        
+        let elements = buttonTypes.map {
+            
+            PaymentsTransfersPersonalTransfersDomain.Element.buttonType($0)
+        }
         
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
             model: model, 
@@ -29,7 +34,7 @@ extension RootViewModelFactory {
             microServices: .init(
                 getNavigation: { element, notify, completion in
                     
-                    guard let navigation = navigationComposer.compose(element)
+                    guard let navigation = navigationComposer.compose(element, notify: notify)
                     else {
                         #warning("return without navigation")
                         return

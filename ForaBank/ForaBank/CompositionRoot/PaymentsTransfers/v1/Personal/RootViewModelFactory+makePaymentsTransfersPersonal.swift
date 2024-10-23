@@ -47,8 +47,10 @@ extension RootViewModelFactory {
         
         // MARK: - Transfers
         
+        typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
+        
         let transfers = makeTransfers(
-            elements: PaymentsTransfersPersonalTransfersDomain.Element.allCases
+            buttonTypes: TransfersDomain.ButtonType.allCases
         )
         
         // MARK: - PaymentsTransfers

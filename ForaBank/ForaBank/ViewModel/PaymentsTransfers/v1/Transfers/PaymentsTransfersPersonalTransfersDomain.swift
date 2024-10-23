@@ -9,7 +9,12 @@ import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
     
-    typealias Element = PTSectionTransfersView.ViewModel.TransfersButtonType
+    typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
+    
+    enum Element {
+        
+        case buttonType(ButtonType)
+    }
     
     enum Navigation {
         

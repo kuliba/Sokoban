@@ -20,10 +20,22 @@ final class PaymentsTransfersPersonalTransfersNavigationComposer {
 extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
-        _ element: Domain.Element
+        _ element: Domain.Element,
+        notify: @escaping (Domain.FlowEvent) -> Void
     ) -> Domain.Navigation? {
         
         switch element {
+        case let .buttonType(buttonType):
+            return compose(for: buttonType, notify: notify)
+        }
+    }
+     
+    private func compose(
+        for buttonType: Domain.ButtonType,
+        notify: @escaping (Domain.FlowEvent) -> Void
+    ) -> Domain.Navigation? {
+        
+        switch buttonType {
         case .abroad:
             return .contacts(nanoServices.makeAbroad())
             
