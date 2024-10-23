@@ -90,6 +90,8 @@ struct SubscriptionView: View {
                     
                     VStack(spacing: 8) {
                         
+                        purposeTitle(font: viewModel.config.subtitle)
+                        
                         header(font: viewModel.config.headerFont)
                         
                         subtitle(font: viewModel.config.subtitle)
@@ -104,6 +106,20 @@ struct SubscriptionView: View {
                 .padding(.trailing, 16)
             }
             .frame(height: 72)
+        }
+    }
+    
+    private func purposeTitle(font: Font) -> some View {
+        
+        HStack {
+            
+            Text(viewModel.purposeTitle)
+                .font(font)
+                .foregroundColor(.gray)
+                .frame(alignment: .leading)
+                .lineLimit(1)
+            
+            Spacer()
         }
     }
     
