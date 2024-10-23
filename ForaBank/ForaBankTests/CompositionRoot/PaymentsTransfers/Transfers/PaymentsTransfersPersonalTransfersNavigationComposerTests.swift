@@ -22,6 +22,7 @@ struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
     let makeAbroad: MakeContactsViewModel
     let makeAnotherCard: MakeAnotherCard
     let makeContacts: MakeContactsViewModel
+    let makeDetailPayment: MakeDetailPayment
     let makeMeToMe: MakeMeToMe
 }
 
@@ -29,6 +30,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     
     typealias MakeAnotherCard = () -> Node<PaymentsViewModel>
     typealias MakeContactsViewModel = () -> Node<ContactsViewModel>
+    typealias MakeDetailPayment = () -> Node<PaymentsViewModel>
     typealias MakeMeToMe = () -> PaymentsMeToMeViewModel?
 }
 
@@ -55,7 +57,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .contacts(nanoServices.makeAbroad())
             
         case .anotherCard:
-               return .payments(nanoServices.makeAnotherCard())
+            return .payments(nanoServices.makeAnotherCard())
             
         case .betweenSelf:
             return nanoServices.makeMeToMe().map { .meToMe($0) }
@@ -63,8 +65,8 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case .byPhoneNumber:
             return .contacts(nanoServices.makeContacts())
             
-        default:
-            fatalError()
+        case .requisites:
+            return .payments(nanoServices.makeDetailPayment())
         }
     }
     
@@ -83,6 +85,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeAbroad.callCount, 0)
         XCTAssertEqual(spies.makeAnotherCard.callCount, 0)
         XCTAssertEqual(spies.makeContacts.callCount, 0)
+        XCTAssertEqual(spies.makeDetailPayment.callCount, 0)
         XCTAssertEqual(spies.makeMeToMe.callCount, 0)
         XCTAssertNotNil(sut)
     }
@@ -202,18 +205,46 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
+    func test_requisites_shouldCallMakeDetailPayment() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.requisites)
+        
+        XCTAssertEqual(spies.makeDetailPayment.callCount, 1)
+    }
+    
+    func test_requisites_shouldDeliverContacts() {
+        
+        let detailPayment = makeDetailPayment()
+        let (sut, _) = makeSUT(detailPayment: detailPayment)
+        
+        let navigation = sut.compose(.requisites)
+        
+        switch navigation {
+        case let .payments(received):
+            XCTAssert(detailPayment === received.model)
+            
+        default:
+            XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
     private typealias MakeAnotherCard = CallSpy<Void, Node<PaymentsViewModel>>
+    private typealias MakeDetailPayment = CallSpy<Void, Node<PaymentsViewModel>>
+    private typealias MakeAbroad = CallSpy<Void, Node<ContactsViewModel>>
     private typealias MakeContacts = CallSpy<Void, Node<ContactsViewModel>>
     private typealias MakeMeToMe = CallSpy<Void, PaymentsMeToMeViewModel?>
     
     private struct Spies {
         
-        let makeAbroad: MakeContacts
+        let makeAbroad: MakeAbroad
         let makeAnotherCard: MakeAnotherCard
         let makeContacts: MakeContacts
+        let makeDetailPayment: MakeDetailPayment
         let makeMeToMe: MakeMeToMe
     }
     
@@ -221,6 +252,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         anotherCard: PaymentsViewModel? = nil,
         abroad: ContactsViewModel? = nil,
         contacts: ContactsViewModel? = nil,
+        detailPayment: PaymentsViewModel? = nil,
         meToMe: PaymentsMeToMeViewModel? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -230,19 +262,16 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     ) {
         let spies = Spies(
             makeAbroad: .init(stubs: [
-                makeContactsViewModelNode(
-                    abroad ?? makeContactsViewModel()
-                )
+                makeAbroad(abroad ?? makeContactsViewModel())
             ]),
             makeAnotherCard: .init(stubs: [
-                makePaymentsViewModelNode(
-                    anotherCard ?? makeAnotherCard()
-                )
+                makeAnotherCard(anotherCard ?? makeAnotherCard())
             ]),
             makeContacts: .init(stubs: [
-                makeContactsViewModelNode(
-                    contacts ?? makeContactsViewModel()
-                )
+                makeContacts(contacts ?? makeContactsViewModel())
+            ]),
+            makeDetailPayment: .init(stubs: [
+                makeDetailPayment(detailPayment)
             ]),
             makeMeToMe: .init(stubs: [meToMe])
         )
@@ -250,6 +279,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             makeAbroad: spies.makeAbroad.call,
             makeAnotherCard: spies.makeAnotherCard.call,
             makeContacts: spies.makeContacts.call,
+            makeDetailPayment: spies.makeDetailPayment.call,
             makeMeToMe: spies.makeMeToMe.call
         ))
         
@@ -268,7 +298,14 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         return .sampleFastContacts
     }
     
-    private func makeContactsViewModelNode(
+    private func makeAbroad(
+        _ model: ContactsViewModel = .sampleFastContacts
+    ) -> Node<ContactsViewModel> {
+        
+        return .init(model: model, cancellables: [])
+    }
+    
+    private func makeContacts(
         _ model: ContactsViewModel = .sampleFastContacts
     ) -> Node<ContactsViewModel> {
         
@@ -289,6 +326,25 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     private func makeAnotherCard() -> PaymentsViewModel {
         
         return .sample
+    }
+    
+    private func makeAnotherCard(
+        _ model: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
+        
+        return makePaymentsViewModelNode(model)
+    }
+    
+    private func makeDetailPayment() -> PaymentsViewModel {
+        
+        return .sample
+    }
+    
+    private func makeDetailPayment(
+        _ model: PaymentsViewModel? = nil
+    ) -> Node<PaymentsViewModel> {
+        
+        return makePaymentsViewModelNode(model)
     }
     
     private func makePaymentsViewModelNode(
