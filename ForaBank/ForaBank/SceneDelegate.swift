@@ -8,42 +8,40 @@
 import Combine
 import CombineSchedulers
 import UIKit
+import MarketShowcase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    private lazy var model: Model = AppDelegate.shared.model
-    private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
-        with: model, 
-        logger: logger
-    )
-    private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
-    private lazy var featureFlags = loadFeatureFlags()
-    private lazy var rootViewModel = RootViewModelFactory(
-        model: model,
-        httpClient: httpClient,
-        logger: logger
-    ).make(
+    private lazy var factory: RootFactory = ModelRootFactory(
         bindings: &bindings,
-        qrResolverFeatureFlag: .init(.active),
-        fastPaymentsSettingsFlag: .init(.active(.live)),
-        utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
-        historyFilterFlag: featureFlags.historyFilterFlag,
-        changeSVCardLimitsFlag: .init(.active),
-        getProductListByTypeV6Flag: .init(.active),
-        marketplaceFlag: featureFlags.marketplaceFlag,
-        paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-        updateInfoStatusFlag: .init(.active)
+        logger: LoggerAgent.shared,
+        model: AppDelegate.shared.model
     )
-    private lazy var rootViewFactory = RootViewFactoryComposer(
-        model: model,
-        httpClient: httpClient,
-        historyFeatureFlag: featureFlags.historyFilterFlag,
-        marketFeatureFlag: featureFlags.marketplaceFlag
-    ).compose()
 
+    private lazy var featureFlags = loadFeatureFlags()
+    
+    private lazy var rootViewModel = {
+        
+        let rootViewModel = factory.makeRootViewModel(featureFlags)
+        
+        bind(rootViewModel: rootViewModel)
+        
+        let binder = MarketShowcaseToRootViewModelBinder(
+            marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
+            rootViewModel: rootViewModel,
+            scheduler: .main
+        )
+
+        bindings.formUnion(binder.bind())
+        
+        return rootViewModel
+    }()
+
+    private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -56,8 +54,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
-        bind(rootViewModel: rootViewModel)
-
         //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,
@@ -116,8 +112,8 @@ extension SceneDelegate {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func legacyNavigationBarBackground() {

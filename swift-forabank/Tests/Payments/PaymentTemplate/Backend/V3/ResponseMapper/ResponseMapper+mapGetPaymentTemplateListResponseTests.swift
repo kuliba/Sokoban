@@ -86,13 +86,13 @@ final class ResponseMapper_mapGetPaymentTemplateListResponseTests: XCTestCase {
         }
     }
     
-    func test_map_shouldDeliverInvalidFailureOnEmptyList() {
+    func test_map_shouldDeliverEmptyTemplateListOnEmptyList() {
         
         let emptyDataResponse: Data = .emptyListResponse
         
         XCTAssertNoDiff(
             map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            .success(.init(serial: "1bebd140bc2660211fbba306105479ae", templates: []))
         )
     }
     
