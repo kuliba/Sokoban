@@ -58,9 +58,7 @@ public struct ClientInformListView: View {
             config.colors.grayBackground
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
-            
-            grabberView()
-            
+                        
             navBarTitle(info.navBarTitle())
         }
     }
@@ -79,9 +77,7 @@ public struct ClientInformListView: View {
     private func contentStack() -> some View {
         
         VStack(spacing: config.sizes.spacing) {
-            
-            if !isShowNavBar { grabberView() }
-            
+                        
             switch info {
             case .single(let singleInfo):
                 singleInfoView(singleInfo)
@@ -90,19 +86,6 @@ public struct ClientInformListView: View {
                 multipleInfoView(multipleInfo)
             }
         }
-    }
-    
-    private func grabberView() -> some View {
-        
-        config.colors.grayGrabber
-            .frame(
-                width: config.sizes.grabberWidth,
-                height: config.sizes.grabberHeight,
-                alignment: .top
-            )
-            .cornerRadius(config.sizes.grabberCornerRadius)
-            .padding(.top, config.paddings.topGrabber)
-            .ignoresSafeArea()
     }
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
