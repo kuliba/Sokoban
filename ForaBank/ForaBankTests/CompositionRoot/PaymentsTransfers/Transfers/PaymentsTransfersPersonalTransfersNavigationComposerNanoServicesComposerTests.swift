@@ -434,6 +434,28 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    func test_makeSource_shouldCallNotifyWithAbroadOnDirectSourceOnCloseAction() {
+        
+        let direct = makeDirectSource()
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(direct, spy.call(payload:))
+        
+        source.model.closeAction()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.abroad))])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithByPhoneNumberOnSFPSourceOnCloseAction() {
+        
+        let sfp = makeSFPSource()
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(sfp, spy.call(payload:))
+        
+        source.model.closeAction()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.byPhoneNumber))])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
@@ -474,6 +496,23 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertTrue(model.contains(latestData), "Expected model with LatestPaymentData \(latestData).", file: file, line: line)
         
         return model
+    }
+    
+    private func makeDirectSource(
+        phone: String? = nil,
+        countryId: CountryData.ID = anyMessage(),
+        serviceData: PaymentServiceData? = nil
+    ) -> Payments.Operation.Source {
+        
+        return .direct(phone: phone, countryId: countryId, serviceData: serviceData)
+    }
+    
+    private func makeSFPSource(
+        phone: String = anyMessage(),
+        bankId: BankData.ID = anyMessage()
+    ) -> Payments.Operation.Source {
+        
+        return .sfp(phone: phone, bankId: bankId)
     }
 }
 
@@ -592,8 +631,8 @@ private extension PaymentsViewModel {
 }
 
 // MARK: - reusable helpers
-// TODO: - move to a different place
 
+// TODO: - move to a different place
 extension XCTestCase {
     
     func makeLatestPaymentData(

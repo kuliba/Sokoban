@@ -128,10 +128,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let paymentsViewModel = PaymentsViewModel(
             source: source,
             model: model
-        ) { [weak self] in
-            
-            guard let self else { return }
-            
+        ) {
             switch source {
             case .direct:
                 notify(.select(.buttonType(.abroad)))
