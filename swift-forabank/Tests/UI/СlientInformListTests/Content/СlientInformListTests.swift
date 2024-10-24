@@ -5,5 +5,5 @@
 //  Created by Nikolay Pochekuev on 04.10.2024.
 //
 
-import PlainClientInformBottomSheet
+import СlientInformList
 import XCTest
