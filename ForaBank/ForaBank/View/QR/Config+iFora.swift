@@ -48,6 +48,24 @@ extension InfoComponent.InfoConfig {
     )
 }
 
+extension UserAccountConfig {
+    
+    static let iFora: Self = .init(
+        fpsConfig: .init(
+            title: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            )
+        ),
+        infoVerificationConfig: .init(
+            title: "При переводе через СБП отправителю не будет предложен банк по умолчанию для получения переводов",
+            titleConfig: .init(textFont: .textBodyMR14200(), textColor: .textSecondary),
+            icon: Image("smsColor"),
+            backgroundColor: .mainColorsGrayLightest
+        )
+    )
+}
+
 extension ProductSelectComponent.ProductSelectConfig {
     
     static let iFora: Self = .init(

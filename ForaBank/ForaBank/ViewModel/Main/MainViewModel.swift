@@ -47,7 +47,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
-    private let landingServices: LandingServices
+    let landingServices: LandingServices
 
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
@@ -1799,8 +1799,8 @@ extension MainViewModel {
                         result: landing,
                         config: .default,
                         landingActions: landingActions(for:),
-                        contentActions: {_ in }
-                    )
+                        outsideAction: {_ in }, 
+                        orderCard: {})
                     
                     route.destination = .landing(viewModel, false)
                 }

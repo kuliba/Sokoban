@@ -17,6 +17,7 @@ import UIPrimitives
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
+    let config: UserAccountConfig
     
     var body: some View {
         
@@ -281,7 +282,8 @@ struct UserAccountView: View {
     private func fpsDestinationView(
         fpsDestination: UserAccountRoute.FPSDestination
     ) -> some View {
-        
+         
+
         ZStack {
             
             switch fpsDestination {
@@ -297,14 +299,59 @@ struct UserAccountView: View {
                 )
                 
             case let .confirmSetBankDefault(timedOTPInputViewModel, _):
-                OTPInputWrapperView(viewModel: timedOTPInputViewModel)
-                    .navigationBar(with: .fastPayments(
-                        action: { viewModel.event(.dismiss(.fpsDestination)) }
-                    ))
+                let title = "Введите код из сообщения"
+
+                OTPInputWrapperView(
+                    viewModel: timedOTPInputViewModel,
+                    headerView: {
+                        
+                        title.text(withConfig: config.fpsConfig.title)
+                    }
+                )
+                .navigationBar(with: .fastPayments(
+                    action: { viewModel.event(.dismiss(.fpsDestination)) }
+                ))
+            case let .confirmDeleteDefaultBank(timedOTPInputViewModel, _):
+                
+                OTPInputWrapperView(
+                    viewModel: timedOTPInputViewModel,
+                    headerView: {
+                        
+                        infoView(config.infoVerificationConfig)
+                    }
+                )
+                .navigationBar(with: .fastPaymentsDeleteBank(
+                    action: { viewModel.event(.dismiss(.fpsDestination)) }
+                ))
             }
             
             viewModel.route.spinner.map(SpinnerView.init(viewModel:))
         }
+    }
+    
+    func infoView(
+        _ config: UserAccountConfig.InfoVerificationConfig
+    ) -> some View {
+    
+        HStack(spacing: 12) {
+            
+            ZStack {
+                
+                Circle()
+                    .frame(width: 32, height: 32)
+                    .foregroundColor(.white)
+                    
+                config.icon
+            }
+            
+            config.title.text(withConfig: config.titleConfig)
+                .padding(.vertical, 8)
+                .padding(.trailing, 16)
+            
+        }
+        .padding(.horizontal, 16)
+        .background(config.backgroundColor)
+        .cornerRadius(90)
     }
     
     @ViewBuilder
@@ -374,30 +421,24 @@ private extension UserAccountRoute {
     }
 }
 
-private struct OTPInputWrapperView: View {
+private struct OTPInputWrapperView<HeaderView: View>: View {
     
-    @ObservedObject private var viewModel: TimedOTPInputViewModel
-    
-    init(viewModel: TimedOTPInputViewModel) {
-        
-        self.viewModel = viewModel
-    }
+    @ObservedObject var viewModel: TimedOTPInputViewModel
+    let headerView: () -> HeaderView
     
     var body: some View {
-        
-        switch viewModel.state.status {
-        case .failure:
-            EmptyView()
+
+        if let input = viewModel.state.status.input {
             
-        case let .input(input):
             OTPInputView(
                 state: input,
                 phoneNumber: viewModel.state.phoneNumber.rawValue,
                 event: viewModel.event(_:),
-                config: .iFora
+                config: .iFora,
+                headerView: headerView
             )
+        } else {
             
-        case .validOTP:
             EmptyView()
         }
     }
@@ -411,6 +452,18 @@ private extension NavigationBarView.ViewModel {
         
         .init(
             title: "Настройки СБП",
+            subtitle: "Система быстрых платежей",
+            icon: "ic32Sbp",
+            action: action
+        )
+    }
+    
+    static func fastPaymentsDeleteBank(
+        action: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: "Удаление банка по умолчанию",
             subtitle: "Система быстрых платежей",
             icon: "ic32Sbp",
             action: action
@@ -443,7 +496,10 @@ struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        UserAccountView(viewModel: .sample)
+        UserAccountView(
+            viewModel: .sample,
+            config: .preview
+        )
     }
 }
 

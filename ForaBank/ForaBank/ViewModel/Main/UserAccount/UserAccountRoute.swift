@@ -158,8 +158,9 @@ extension UserAccountRoute {
     
     enum FPSDestination: Equatable, Identifiable {
         
+        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)
+        case confirmDeleteDefaultBank(TimedOTPInputViewModel, AnyCancellable)
         case accountLink
-        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
         
         public var id: Case {
             
@@ -168,6 +169,8 @@ extension UserAccountRoute {
                 return .accountLink
             case .confirmSetBankDefault:
                 return .confirmSetBankDefault
+            case .confirmDeleteDefaultBank:
+                return .confirmDeleteDefaultBank
             }
         }
         
@@ -176,6 +179,7 @@ extension UserAccountRoute {
             case accountLink
             case c2BSub
             case confirmSetBankDefault
+            case confirmDeleteDefaultBank
         }
     }
 }
@@ -191,6 +195,10 @@ extension UserAccountRoute.FPSDestination: Hashable {
             return true
         case let (.confirmSetBankDefault(lhs, _), .confirmSetBankDefault(rhs, _)):
             return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+        case (_, .confirmDeleteDefaultBank(_, _)):
+            return false
+        case (.confirmDeleteDefaultBank(_, _), .confirmSetBankDefault(_, _)):
+            return false
         default:
             return true
         }
@@ -203,6 +211,9 @@ extension UserAccountRoute.FPSDestination: Hashable {
             hasher.combine(0)
         case let .confirmSetBankDefault(viewModel, _):
             hasher.combine(ObjectIdentifier(viewModel))
+        case let .confirmDeleteDefaultBank(viewModel, _):
+            hasher.combine(ObjectIdentifier(viewModel))
+
         }
     }
 }
