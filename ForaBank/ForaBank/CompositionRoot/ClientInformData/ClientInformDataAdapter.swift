@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import PlainClientInformBottomSheet
+//import ClientInformList
 
 struct GetAuthorizedZoneClientInformData: Equatable {
     
@@ -17,11 +17,11 @@ struct GetAuthorizedZoneClientInformData: Equatable {
     let url: URL?
 }
 
-extension ClientInformAuthorizedZoneDataState {
+extension ClientInformListDataState {
     
     init?(
         _ array: [GetAuthorizedZoneClientInformData],
-        infoLabel: ClientInformAuthorizedZoneDataState.Label<String>
+        infoLabel: ClientInformListDataState.Label<String>
     ) {
         
         switch (array.count, array.first) {

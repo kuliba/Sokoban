@@ -5,9 +5,9 @@
 //  Created by Nikolay Pochekuev on 14.10.2024.
 //
 
-import PlainClientInformBottomSheet
+import ClientInformList
 
-extension PlainClientInformBottomSheetConfig {
+extension ClientInformListConfig {
     
     static let iFora: Self = .init(
         colors: .init(

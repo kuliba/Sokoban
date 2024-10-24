@@ -11,7 +11,6 @@ import ForaTools
 import PayHub
 import SwiftUI
 import MarketShowcase
-import PlainClientInformBottomSheet
 import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
@@ -153,7 +152,7 @@ class RootViewModel: ObservableObject, Resetable {
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [unowned self] in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2600)) { [unowned self] in
                         
                         // add notAuthorized when it will be ready
                         

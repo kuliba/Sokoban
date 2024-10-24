@@ -15,7 +15,7 @@ import SymmetricEncryption
 import UserModel
 import GetProductListByTypeService
 import GetProductListByTypeV6Service
-import PlainClientInformBottomSheet
+//import ClientInformList
 
 class Model {
     let action: PassthroughSubject<Action, Never>

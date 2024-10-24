@@ -17,7 +17,7 @@ import SberQR
 import ScrollViewProxy
 import SwiftUI
 import UIPrimitives
-import PlainClientInformBottomSheet
+import ClientInformList
 
 struct MainView<NavigationOperationView: View>: View {
     
@@ -305,7 +305,7 @@ struct MainView<NavigationOperationView: View>: View {
             OpenAccountView(viewModel: openAccountViewModel)
             
         case let .clientInform(clientInform):
-            PlainClientInformBottomSheetView(config: .iFora, info: clientInform.client)
+            ClientInformListView(config: .iFora, info: clientInform.client)
         }
     }
     
@@ -792,9 +792,9 @@ extension OperationStateViewModel {
 
 // MARK: - Adapters
 
-private extension ClientInformAuthorizedZoneDataState {
+private extension ClientInformListDataState {
     
-    var client: PlainClientInformBottomSheet.ClientInformAuthorizedZoneDataState {
+    var client: ClientInformList.ClientInformListDataState {
         
         switch self {
         case let .single(single):

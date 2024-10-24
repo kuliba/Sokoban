@@ -3184,15 +3184,14 @@
 		EC554A422CC92919002A8C3A /* RootViewModelFactory+logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */; };
 		EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */; };
 		EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */ = {isa = PBXBuildFile; productRef = EC5994402CA5B0820050CA05 /* GetClientInformDataServices */; };
-		EC651CAF2CB02558000E4FB5 /* PlainClientInformBottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = EC651CAE2CB02558000E4FB5 /* PlainClientInformBottomSheet */; };
-		EC9711232CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift */; };
+		EC9711232CC6418900C4537D /* ClientInformListConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711222CC6418900C4537D /* ClientInformListConfig+iFora.swift */; };
 		EC9711252CC6457D00C4537D /* ClientInformZoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */; };
-		EC9711292CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */; };
+		EC9711292CC6471800C4537D /* ClientInformListDataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9711282CC6471800C4537D /* ClientInformListDataState.swift */; };
 		ECCFA40B2CC7D7200009099E /* ClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */; };
 		ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */; };
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
+		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
-		EC7A0A262CC9350300FA652F /* СlientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = EC7A0A252CC9350300FA652F /* СlientInformList */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
 		ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */; };
@@ -6667,15 +6666,14 @@
 		EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+logging.swift"; sourceTree = "<group>"; };
 		EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+Load.swift"; sourceTree = "<group>"; };
 		EC5994432CA5B0FF0050CA05 /* GetClientInformDataServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetClientInformDataServices.xctestplan; sourceTree = "<group>"; };
-		EC651CAD2CB024F6000E4FB5 /* PlainClientInformBottomSheet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PlainClientInformBottomSheet.xctestplan; sourceTree = "<group>"; };
-		EC9711222CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlainClientInformBottomSheetConfig+iFora.swift"; sourceTree = "<group>"; };
+		EC7A0A272CC9356B00FA652F /* ClientInformList.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ClientInformList.xctestplan; sourceTree = "<group>"; };
+		EC9711222CC6418900C4537D /* ClientInformListConfig+iFora.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClientInformListConfig+iFora.swift"; sourceTree = "<group>"; };
 		EC9711242CC6457D00C4537D /* ClientInformZoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformZoneData.swift; sourceTree = "<group>"; };
-		EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformAuthorizedZoneDataState.swift; sourceTree = "<group>"; };
+		EC9711282CC6471800C4537D /* ClientInformListDataState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformListDataState.swift; sourceTree = "<group>"; };
 		ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
-		EC7A0A272CC9356B00FA652F /* ClientInformList.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ClientInformList.xctestplan; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -7257,6 +7255,7 @@
 				A7B401FA2CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI in Frameworks */,
 				2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */,
 				2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */,
+				ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */,
 				2AF720232C74841D00919CAF /* PayHub in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
@@ -7303,7 +7302,6 @@
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
-				EC7A0A262CC9350300FA652F /* СlientInformList in Frameworks */,
 				2A392BD82B934B3800029790 /* PrePaymentPicker in Frameworks */,
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
@@ -8692,7 +8690,7 @@
 		2A1F5E802C26E9FF002B3F65 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
-				EC9711222CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift */,
+				EC9711222CC6418900C4537D /* ClientInformListConfig+iFora.swift */,
 				2A1F5E812C26EA0D002B3F65 /* ButtonStateConfig+ext.swift */,
 				2A6679E42C58B0FD003ACA31 /* PaymentCompleteViewConfig+iFora.swift */,
 				2A6679E02C58AD0F003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift */,
@@ -15158,7 +15156,7 @@
 				C169920D28F486F20035CF15 /* ServerAgentEnviroment.swift */,
 				C1DE211E2919531500ED0F8D /* AppSettings.swift */,
 				0C227A9829956C9000FDDDC6 /* ClientInformTypes.swift */,
-				EC9711282CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift */,
+				EC9711282CC6471800C4537D /* ClientInformListDataState.swift */,
 				C165DDF32A160F0E003CE3DA /* CountryCodeReplace.swift */,
 				83A9C6DB2C060010005EAF62 /* UpdateInfo.swift */,
 			);
@@ -19053,7 +19051,7 @@
 				A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */,
 				A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */,
 				A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */,
-				EC7A0A252CC9350300FA652F /* СlientInformList */,
+				ECDE23262CCA633E001BB212 /* ClientInformList */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -21759,7 +21757,7 @@
 				777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift in Sources */,
 				68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
-				EC9711232CC6418900C4537D /* PlainClientInformBottomSheetConfig+iFora.swift in Sources */,
+				EC9711232CC6418900C4537D /* ClientInformListConfig+iFora.swift in Sources */,
 				7752F51F293522FA0097B2A6 /* PaymentsHeaderViewComponent.swift in Sources */,
 				2A7B5EE42AB068C9002F2D00 /* ComposedLoginView.swift in Sources */,
 				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,
@@ -21820,7 +21818,7 @@
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
 				8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */,
-				EC9711292CC6471800C4537D /* ClientInformAuthorizedZoneDataState.swift in Sources */,
+				EC9711292CC6471800C4537D /* ClientInformListDataState.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */,
@@ -28849,9 +28847,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = GetClientInformDataServices;
 		};
-		EC7A0A252CC9350300FA652F /* СlientInformList */ = {
+		ECDE23262CCA633E001BB212 /* ClientInformList */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = "СlientInformList";
+			productName = ClientInformList;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;

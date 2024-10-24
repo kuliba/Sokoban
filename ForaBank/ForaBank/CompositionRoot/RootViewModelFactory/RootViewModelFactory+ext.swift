@@ -27,7 +27,7 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
-import PlainClientInformBottomSheet
+//import ClientInformList
 import GetClientInformDataServices
 
 extension RootViewModelFactory {
@@ -421,7 +421,7 @@ extension RootViewModelFactory {
             createRequest: RequestFactory.createGetAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetAuthorizedZoneClientInformDataResponse
         )
-        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAuthorizedZoneDataState?) -> Void) in
+        let createGetAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformListDataState?) -> Void) in
             
             _createGetAuthorizedZoneClientInformData(()) { result in
                 

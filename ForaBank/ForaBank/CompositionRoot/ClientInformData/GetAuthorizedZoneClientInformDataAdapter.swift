@@ -8,7 +8,7 @@
 import GetClientInformDataServices
 import RemoteServices
 import UIKitHelpers
-import PlainClientInformBottomSheet
+//import ClientInformList
 import SwiftUI
 
 extension GetAuthorizedZoneClientInformData {

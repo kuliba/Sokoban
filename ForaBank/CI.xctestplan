@@ -566,15 +566,15 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "СlientInformListTests",
-        "name" : "СlientInformListTests"
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CollateralLoanLandingDraftBackendTests",
-        "name" : "CollateralLoanLandingDraftBackendTests"
+        "containerPath" : "container:",
+        "identifier" : "ClientInformListTests",
+        "name" : "ClientInformListTests"
       }
     }
   ],

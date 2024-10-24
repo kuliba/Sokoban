@@ -15,7 +15,7 @@ import SberQR
 import SwiftUI
 import LandingUIComponent
 import PaymentSticker
-import PlainClientInformBottomSheet
+//import ClientInformList
 
 class MainViewModel: ObservableObject, Resetable {
     
@@ -1752,7 +1752,7 @@ extension MainViewModel {
         enum BottomSheetType {
             
             case openAccount(OpenAccountViewModel)
-            case clientInform(ClientInformAuthorizedZoneDataState)
+            case clientInform(ClientInformListDataState)
         }
     }
     
