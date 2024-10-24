@@ -14,7 +14,8 @@ public extension FastPaymentsSettingsConfig {
         backgroundColor: .orange.opacity(0.5),
         bankDefault: .preview,
         carousel: .preview,
-        consentList: .preview,
+        consentList: .preview, 
+        deleteDefaultBank: .preview,
         paymentContract: .preview,
         productSelect: .preview
     )

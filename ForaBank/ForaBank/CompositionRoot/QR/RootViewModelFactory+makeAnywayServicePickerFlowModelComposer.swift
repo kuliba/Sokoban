@@ -10,26 +10,22 @@ import Foundation
 
 extension RootViewModelFactory {
     
-    static func makeAnywayServicePickerFlowModelComposer(
-        httpClient: HTTPClient,
-        log: @escaping Log,
-        model: Model,
+    func makeAnywayServicePickerFlowModelComposer(
         pageSize: Int = 50,
-        flag: StubbedFeatureFlag.Option,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        flag: StubbedFeatureFlag.Option
     ) -> AnywayServicePickerFlowModelComposer {
         
         let transactionModelComposer = AnywayTransactionViewModelComposer(
             flag: flag,
             model: model,
             httpClient: httpClient,
-            log: log,
-            scheduler: scheduler
+            log: logger.log,
+            scheduler: mainScheduler
         )
         let anywayComposer = AnywayFlowComposer(
             makeAnywayTransactionViewModel: transactionModelComposer.compose(transaction:),
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             flag: flag,
@@ -45,7 +41,7 @@ extension RootViewModelFactory {
             flag: flag,
             model: model,
             httpClient: httpClient,
-            log: log,
+            log: logger.log,
             loadOperators: loadOperators
         )
         let pickerMicroServicesComposer = AsyncPickerEffectHandlerMicroServicesComposer(
@@ -58,7 +54,7 @@ extension RootViewModelFactory {
             makeAnywayFlowModel: anywayComposer.compose(transaction:),
             microServices: pickerMicroServicesComposer.compose(),
             model: model,
-            scheduler: scheduler
+            scheduler: mainScheduler
         )
     }
 }

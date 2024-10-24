@@ -28,7 +28,7 @@ extension Model {
     }
 }
 
-private extension ProductData {
+extension ProductData {
     
     var isActive: Bool {
         

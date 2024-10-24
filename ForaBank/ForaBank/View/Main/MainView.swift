@@ -164,7 +164,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel)
+            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
@@ -315,13 +315,7 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            NavigationView {
-                
-                QRView(viewModel: node.model.qrModel)
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
+            QRView(viewModel: node.model.qrModel)
             
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
@@ -623,100 +617,47 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:config:)
         )
     }
+}
+
+extension ProductProfileViewModel  {
+    
+    static let makeProductProfileViewModel = ProductProfileViewModel.make(
+        with: .emptyMock,
+        fastPaymentsFactory: .legacy,
+        makeUtilitiesViewModel: { _,_ in },
+        makeTemplates: { _ in .sampleComplete },
+        makePaymentsTransfersFlowManager: { _ in .preview },
+        userAccountNavigationStateManager: .preview,
+        sberQRServices: .empty(),
+        landingServices: .empty(),
+        productProfileServices: .preview,
+        qrViewModelFactory: .preview(),
+        cvvPINServicesClient: HappyCVVPINServicesClient(),
+        productNavigationStateManager: .preview,
+        makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+        makeSubscriptionsViewModel: { _,_ in .preview },
+        updateInfoStatusFlag: .init(.active),
+        makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
+        makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
+        makeServicePaymentBinder: ServicePaymentBinder.preview
+    )
 }
 
 extension MainViewModel {
     
     static let sample = MainViewModel(
         .emptyMock,
-        makeProductProfileViewModel: ProductProfileViewModel.make(
-            with: .emptyMock,
-            fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
-            makeTemplates: { _ in .sampleComplete },
-            makePaymentsTransfersFlowManager: { _ in .preview },
-            userAccountNavigationStateManager: .preview,
-            sberQRServices: .empty(),
-            productProfileServices: .preview,
-            qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview,
-            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
-            makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active), 
-            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
-            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
-        ),
+        makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
-        paymentsTransfersFactory: .preview, 
+        landingServices: .empty(), 
+        paymentsTransfersFactory: .preview,
         updateInfoStatusFlag: .init(.active),
         onRegister: {}, 
-        bannersBinder: .preview
-    )
-    
-    static let sampleProducts = MainViewModel(
-        .emptyMock,
-        makeProductProfileViewModel: ProductProfileViewModel.make(
-            with: .emptyMock,
-            fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
-            makeTemplates: { _ in .sampleComplete },
-            makePaymentsTransfersFlowManager: { _ in .preview },
-            userAccountNavigationStateManager: .preview,
-            sberQRServices: .empty(),
-            productProfileServices: .preview,
-            qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview,
-            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
-            makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
-            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
-        ),
-        navigationStateManager: .preview,
-        sberQRServices: .empty(),
-        qrViewModelFactory: .preview(),
-        paymentsTransfersFactory: .preview,
-        updateInfoStatusFlag: .init(.active),
-        onRegister: {},
-        bannersBinder: .preview
-    )
-    
-    static let sampleOldCurrency = MainViewModel(
-        .emptyMock,
-        makeProductProfileViewModel: ProductProfileViewModel.make(
-            with: .emptyMock,
-            fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
-            makeTemplates: { _ in .sampleComplete },
-            makePaymentsTransfersFlowManager: { _ in .preview },
-            userAccountNavigationStateManager: .preview,
-            sberQRServices: .empty(),
-            productProfileServices: .preview,
-            qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview,
-            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
-            makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active),
-            makePaymentProviderPickerFlowModel: SegmentedPaymentProviderPickerFlowModel.preview,
-            makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
-            makeServicePaymentBinder: ServicePaymentBinder.preview
-        ),
-        navigationStateManager: .preview,
-        sberQRServices: .empty(),
-        qrViewModelFactory: .preview(),
-        paymentsTransfersFactory: .preview,
-        updateInfoStatusFlag: .init(.active),
-        onRegister: {},
         bannersBinder: .preview
     )
 }

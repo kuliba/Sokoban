@@ -13,11 +13,9 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    static func makePaymentsTransfersCorporate(
+    func makePaymentsTransfersCorporate(
         bannerPickerPlaceholderCount: Int,
-        nanoServices: PaymentsTransfersCorporateNanoServices,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        nanoServices: PaymentsTransfersCorporateNanoServices
     ) -> PaymentsTransfersCorporate {
         
         // MARK: - BannerPicker

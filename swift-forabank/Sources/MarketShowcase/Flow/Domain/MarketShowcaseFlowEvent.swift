@@ -30,6 +30,7 @@ public extension MarketShowcaseFlowEvent {
         case goToMain
         case orderCard
         case orderSticker
+        case landing(String)
         case openURL(String)
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GenericLoader
 
 public final class LoggingStoreDecorator<T> {
     

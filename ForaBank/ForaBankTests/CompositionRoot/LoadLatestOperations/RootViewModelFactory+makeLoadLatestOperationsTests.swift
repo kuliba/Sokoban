@@ -146,27 +146,6 @@ final class RootViewModelFactory_makeLoadLatestOperationsTests: XCTestCase {
         return (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy)
     }
     
-    private func makeServiceCategory(
-        latestPaymentsCategory: ServiceCategory.LatestPaymentsCategory? = nil,
-        md5Hash: String = anyMessage(),
-        name: String = anyMessage(),
-        ord: Int = 1,
-        paymentFlow: ServiceCategory.PaymentFlow = .standard,
-        hasSearch: Bool = false,
-        type: ServiceCategory.CategoryType = .housingAndCommunalService
-    ) -> ServiceCategory {
-        
-        return .init(
-            latestPaymentsCategory: latestPaymentsCategory, 
-            md5Hash: md5Hash,
-            name: name,
-            ord: ord,
-            paymentFlow: paymentFlow,
-            hasSearch: hasSearch,
-            type: type
-        )
-    }
-    
     private func makeCategories(
         count: Int
     ) -> [ServiceCategory] {

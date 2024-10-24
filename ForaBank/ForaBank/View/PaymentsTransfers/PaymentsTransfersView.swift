@@ -180,7 +180,7 @@ extension PaymentsTransfersView {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            UserAccountView(viewModel: userAccountViewModel)
+            UserAccountView(viewModel: userAccountViewModel, config: .iFora)
             
         case let .exampleDetail(title):
             ExampleDetailMock(title: title)
@@ -448,13 +448,7 @@ extension PaymentsTransfersView {
         
         switch fullScreenCover.type {
         case let .qrScanner(node):
-            NavigationView {
-                
-                QRView(viewModel: node.model.qrModel)
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
+            QRView(viewModel: node.model.qrModel)
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)

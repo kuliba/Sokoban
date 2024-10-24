@@ -179,13 +179,21 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
         let getLatestPaymentsSpy = GetLatestPaymentsSpy()
         let sut: SUT
         if let hardcoded {
-            sut = RootViewModelFactory.makeLoadLatestOperations(
+            sut = RootViewModelFactory(
+                model: .mockWithEmptyExcept(),
+                httpClient: HTTPClientSpy(),
+                logger: LoggerSpy()
+            ).makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:),
                 hardcoded: hardcoded
             )
         } else {
-            sut = RootViewModelFactory.makeLoadLatestOperations(
+            sut = RootViewModelFactory(
+                model: .mockWithEmptyExcept(),
+                httpClient: HTTPClientSpy(),
+                logger: LoggerSpy()
+            ).makeLoadLatestOperations(
                 getAllLoadedCategories: getAllLoadedCategoriesSpy.process(completion:),
                 getLatestPayments: getLatestPaymentsSpy.process(_:completion:)
             )
@@ -195,27 +203,6 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
         trackForMemoryLeaks(getLatestPaymentsSpy, file: file, line: line)
         
         return (sut, getAllLoadedCategoriesSpy, getLatestPaymentsSpy)
-    }
-    
-    private func makeServiceCategory(
-        latestPaymentsCategory: ServiceCategory.LatestPaymentsCategory? = nil,
-        md5Hash: String = anyMessage(),
-        name: String = anyMessage(),
-        ord: Int = 1,
-        paymentFlow: ServiceCategory.PaymentFlow = .standard,
-        hasSearch: Bool = false,
-        type: ServiceCategory.CategoryType = .housingAndCommunalService
-    ) -> ServiceCategory {
-        
-        return .init(
-            latestPaymentsCategory: latestPaymentsCategory,
-            md5Hash: md5Hash,
-            name: name,
-            ord: ord,
-            paymentFlow: paymentFlow,
-            hasSearch: hasSearch,
-            type: type
-        )
     }
     
     private func makeCategories(

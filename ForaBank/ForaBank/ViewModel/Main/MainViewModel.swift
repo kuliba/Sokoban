@@ -47,6 +47,8 @@ class MainViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
+    let landingServices: LandingServices
+
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
@@ -65,6 +67,7 @@ class MainViewModel: ObservableObject, Resetable {
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        landingServices: LandingServices,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void,
@@ -81,6 +84,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
+        self.landingServices = landingServices
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
         self.onRegister = onRegister
@@ -1784,7 +1788,27 @@ extension MainViewModel {
     
     func handleLandingAction(_ abroadType: String) {
         
-        // TODO: add data from bannersBinder
+        landingServices.loadLandingByType(abroadType) {
+            switch $0 {
+            case let .success(landing):
+                Task { @MainActor [weak self] in
+                    
+                    guard let self else { return }
+
+                    let viewModel = model.landingViewModelFactory(
+                        result: landing,
+                        config: .default,
+                        landingActions: landingActions(for:),
+                        outsideAction: {_ in }, 
+                        orderCard: {})
+                    
+                    route.destination = .landing(viewModel, false)
+                }
+                
+            case .failure:
+                break
+            }
+        }
     }
 
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -1813,6 +1837,15 @@ extension MainViewModel {
                     MainViewModel.openLinkURL(url)
                 }
             }
+        }
+    }
+    
+    private func landingActions(for landingEvent: LandingEvent) -> Void {
+        
+        switch landingEvent {
+        case let .card(event): return landingAction(for: event)()
+        case let .sticker(event): return landingAction(for: event)()
+        default: return {}()
         }
     }
         

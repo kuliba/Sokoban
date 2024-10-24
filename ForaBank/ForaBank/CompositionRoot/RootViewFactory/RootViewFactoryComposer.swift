@@ -16,6 +16,7 @@ import SberQR
 import SwiftUI
 import UIPrimitives
 import MarketShowcase
+import LandingUIComponent
 
 final class RootViewFactoryComposer {
     
@@ -56,7 +57,8 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketShowcaseView: makeMarketShowcaseView
+            makeMarketShowcaseView: makeMarketShowcaseView, 
+            makeNavigationOperationView: makeNavigationOperationView
         )
     }
 }
@@ -120,10 +122,14 @@ private extension RootViewFactoryComposer {
     }
     
     func makeUserAccountView(
-        viewModel: UserAccountViewModel
+        viewModel: UserAccountViewModel,
+        config: UserAccountConfig
     ) -> UserAccountView {
         
-        UserAccountView.init(viewModel: viewModel)
+        UserAccountView(
+            viewModel: viewModel,
+            config: config
+        )
     }
     
     func makeAnywayPaymentFactory(
@@ -295,31 +301,100 @@ private extension RootViewFactoryComposer {
         }
     }
     
+    func makeLandingView(
+        _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
+        _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
+        _ landing: MarketShowcaseDomain.Landing,
+        _ orderCard: @escaping () -> Void
+    ) -> LandingWrapperView {
+        
+        if landing.errorMessage != nil {
+            
+            contentEvent(.failure(.alert("Попробуйте позже.")))
+        }
+        
+        let landingViewModel = model.landingViewModelFactory(
+            result: landing,
+            config: .default,
+            landingActions: {
+            
+            // TODO: add case
+            switch $0 {
+                
+            case let .card(action):
+                switch action {
+                    
+                case .goToMain:
+                    flowEvent(.select(.goToMain))
+                case let .openUrl(url):
+                    flowEvent(.select(.openURL(url)))
+                default:
+                    break
+                }
+            case let .sticker(action):
+                switch action {
+                case .goToMain:
+                    flowEvent(.select(.goToMain))
+                default:
+                    break
+                }
+            default:break
+            }
+            }, 
+            outsideAction: { flowEvent(.select(.landing($0))) },
+            orderCard: orderCard
+        )
+        
+       return LandingWrapperView(viewModel: landingViewModel)
+    }
+    
     func makeMarketShowcaseView(
-        viewModel: MarketShowcaseDomain.Binder
+        viewModel: MarketShowcaseDomain.Binder,
+        orderCard: @escaping () -> Void
     ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
         
             .init(
                 model: viewModel.flow,
-                makeContentView: {
+                makeContentView: { flowState, flowEvent in
                     MarketShowcaseFlowView(
-                        state: $0,
-                        event: $1) {
+                        state: flowState,
+                        event: flowEvent) {
                             MarketShowcaseContentWrapperView(
                                 model: viewModel.content,
-                                makeContentView: {
+                                makeContentView: { contentState, contentEvent in
                                     MarketShowcaseContentView(
-                                        state: $0,
-                                        event: $1,
+                                        state: contentState,
+                                        event: contentEvent,
                                         config: .iFora,
                                         factory: .init(
-                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) })
+                                            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0, orderCard) }
+                                        )
                                     )
                                 })
                         }
                 })
         : nil
+    }
+    
+    func makeNavigationOperationView(
+        dismissAll: @escaping() -> Void
+    ) -> some View {
+        
+        NavigationView {
+            
+            RootViewModelFactory(
+                model: model, 
+                httpClient: model.authenticatedHTTPClient(), 
+                logger: LoggerAgent()
+            ).makeNavigationOperationView(dismissAll: dismissAll)()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
+                .foregroundColor(.textSecondary)
+        }
     }
 }
 

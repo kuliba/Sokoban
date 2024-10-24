@@ -527,6 +527,55 @@
         "identifier" : "GetClientInformDataServicesTests",
         "name" : "GetClientInformDataServicesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "EphemeralStoresTests",
+        "name" : "EphemeralStoresTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GenericLoaderTests",
+        "name" : "GenericLoaderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SerialComponentsTests",
+        "name" : "SerialComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingShowCaseUITests",
+        "name" : "CollateralLoanLandingShowCaseUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingShowCaseBackendTests",
+        "name" : "CollateralLoanLandingShowCaseBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "СlientInformListTests",
+        "name" : "СlientInformListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
+      }
     }
   ],
   "version" : 1

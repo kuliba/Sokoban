@@ -17,21 +17,11 @@ public extension ResponseMapper {
         
         map(data, httpURLResponse, mapOrThrow: GetServiceCategoryListResponse.init)
     }
-    
-    enum GetServiceCategoryListError: Error {
-        
-        case emptyCategoryList
-    }
 }
 
 private extension ResponseMapper.GetServiceCategoryListResponse {
     
     init(_ data: ResponseMapper._Data) throws {
-        
-        guard !data.categoryGroupList.isEmpty
-        else {
-            throw ResponseMapper.GetServiceCategoryListError.emptyCategoryList
-        }
         
         self.init(
             list: data.categoryGroupList.map(ResponseMapper.ServiceCategory.init),

@@ -12,61 +12,26 @@ import PayHubUI
 
 extension RootViewModelFactory {
     
-    static func makePaymentsTransfersPersonal(
-        model: Model,
+    func makePaymentsTransfersPersonal(
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int = 50,
-        mainScheduler: AnySchedulerOf<DispatchQueue>,
-        backgroundScheduler: AnySchedulerOf<DispatchQueue>
+        pageSize: Int
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
-            model: model,
             nanoServices: nanoServices,
             pageSize: pageSize,
-            placeholderCount: categoryPickerPlaceholderCount,
-            mainScheduler: mainScheduler,
-            backgroundScheduler: backgroundScheduler
+            placeholderCount: categoryPickerPlaceholderCount
         )
         
         // MARK: - OperationPicker
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
-            load: { completion in
-                
-                nanoServices.loadAllLatest {
-                    
-                    completion(((try? $0.get()) ?? []).map { .latest($0) })
-                }
-            },
-            scheduler: mainScheduler
-        )
-        let operationPickerContent = operationPickerContentComposer.compose(
-            prefix: [
-                .element(.init(.templates)),
-                .element(.init(.exchange))
-            ],
-            suffix: [],
-            placeholderCount: operationPickerPlaceholderCount
-        )
-        let operationPickerFlowComposer = OperationPickerFlowComposer(
-            model: model,
-            scheduler: mainScheduler
-        )
-        let operationPickerFlow = operationPickerFlowComposer.compose()
-        let operationPicker = OperationPickerBinder(
-            content: operationPickerContent,
-            flow: operationPickerFlow,
-            bind: { content, flow in
-                
-                content.$state
-                    .compactMap(\.selected)
-                    .sink { flow.event(.select($0)) }
-            }
+        let operationPicker = makeOperationPicker(
+            operationPickerPlaceholderCount: operationPickerPlaceholderCount,
+            nanoServices: nanoServices
         )
         
         // MARK: - Toolbar
@@ -88,8 +53,8 @@ extension RootViewModelFactory {
             toolbar: toolbar,
             reload: {
                 
-                categoryPicker.content.event(.load)
-                operationPicker.content.event(.load)
+                categoryPicker.content.event(.reload)
+                operationPicker.content.event(.reload)
             }
         )
         

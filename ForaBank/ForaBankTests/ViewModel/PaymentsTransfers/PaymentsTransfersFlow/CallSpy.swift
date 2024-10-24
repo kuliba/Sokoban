@@ -42,6 +42,12 @@ extension CallSpy {
         
         self.call(payload: (a, b))
     }
+    
+    func call<A, B, C>(_ a: A, _ b: B, _ c: C) -> Response
+    where Payload == (A, B, C) {
+        
+        self.call(payload: (a, b, c))
+    }
 }
 
 extension CallSpy where Response == Result<Void, Error> {

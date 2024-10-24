@@ -23,9 +23,15 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        .collateralLoanLandingShowCaseBackend,
+        .collateralLoanLandingShowCaseUI,
+        .collateralLoanLandingDraftBackend,
         // Infra
+        .ephemeralStores,
         .fetcher,
+        .genericLoader,
         .keyChainStore,
+        .serialComponents,
         // Payments
         .anywayPayment,
         .latestPaymentsBackendV2,
@@ -64,6 +70,7 @@ let package = Package(
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .calendarUI,
+        .сlientInformList,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -125,11 +132,23 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        .collateralLoanLandingShowCaseBackend,
+        .collateralLoanLandingShowCaseBackendTests,
+        .collateralLoanLandingShowCaseUI,
+        .collateralLoanLandingShowCaseUITests,
+        .collateralLoanLandingDraftBackend,
+        .collateralLoanLandingDraftBackendTests,
         // Infra
+        .ephemeralStores,
+        .ephemeralStoresTests,
         .fetcher,
         .fetcherTests,
+        .genericLoader,
+        .genericLoaderTests,
         .keyChainStore,
         .keyChainStoreTests,
+        .serialComponents,
+        .serialComponentsTests,
         // Payments
         .anywayPaymentAdapters,
         .anywayPaymentAdaptersTests,
@@ -217,6 +236,8 @@ let package = Package(
         .c2bSubscriptionUI,
         .cardGuardianUI,
         .cardGuardianUITests,
+        .сlientInformList,
+        .сlientInformListTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -379,6 +400,27 @@ private extension Product {
         ]
     )
     
+    static let collateralLoanLandingShowCaseBackend = library(
+        name: .collateralLoanLandingShowCaseBackend,
+        targets: [
+            .collateralLoanLandingShowCaseBackend
+        ]
+    )
+    
+    static let collateralLoanLandingShowCaseUI = library(
+        name: .collateralLoanLandingShowCaseUI,
+        targets: [
+            .collateralLoanLandingShowCaseUI
+        ]
+    )
+    
+    static let collateralLoanLandingDraftBackend = library(
+        name: .collateralLoanLandingDraftBackend,
+        targets: [
+            .collateralLoanLandingDraftBackend
+        ]
+    )
+    
     // MARK: - UI
     
     static let activateSlider = library(
@@ -410,6 +452,13 @@ private extension Product {
         ]
     )
     
+    static let сlientInformList = library(
+        name: .сlientInformList,
+        targets: [
+            .сlientInformList
+        ]
+    )
+
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
@@ -541,7 +590,7 @@ private extension Product {
             .userAccountNavigationComponent,
         ]
     )
-    
+
     // MARK: - UI Components
     
     static let carouselComponent = library(
@@ -605,6 +654,13 @@ private extension Product {
     
     // MARK: - Infra
     
+    static let ephemeralStores = library(
+        name: .ephemeralStores,
+        targets: [
+            .ephemeralStores
+        ]
+    )
+    
     static let fetcher = library(
         name: .fetcher,
         targets: [
@@ -612,10 +668,24 @@ private extension Product {
         ]
     )
     
+    static let genericLoader = library(
+        name: .genericLoader,
+        targets: [
+            .genericLoader
+        ]
+    )
+    
     static let keyChainStore = library(
         name: .keyChainStore,
         targets: [
             .keyChainStore
+        ]
+    )
+    
+    static let serialComponents = library(
+        name: .serialComponents,
+        targets: [
+            .serialComponents
         ]
     )
     
@@ -1117,7 +1187,75 @@ private extension Target {
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
     
+    static let collateralLoanLandingShowCaseBackend = target(
+        name: .collateralLoanLandingShowCaseBackend,
+        dependencies: [
+            .remoteServices,
+            .sharedConfigs
+        ],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingShowCaseName)/Backend"
+    )
+    
+    static let collateralLoanLandingShowCaseBackendTests = testTarget(
+        name: .collateralLoanLandingShowCaseBackendTests,
+        dependencies: [
+            .collateralLoanLandingShowCaseBackend,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingShowCaseName)/Backend"
+    )
+    
+    static let collateralLoanLandingShowCaseUI = target(
+        name: .collateralLoanLandingShowCaseUI,
+        dependencies: [],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingShowCaseName)/UI"
+    )
+    
+    static let collateralLoanLandingShowCaseUITests = testTarget(
+        name: .collateralLoanLandingShowCaseUITests,
+        dependencies: [
+            .collateralLoanLandingShowCaseUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingShowCaseName)/UI"
+    )
+    
+    static let collateralLoanLandingDraftBackend = target(
+        name: .collateralLoanLandingDraftBackend,
+        dependencies: [],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingDraftName)/Backend"
+    )
+    
+    static let collateralLoanLandingDraftBackendTests = testTarget(
+        name: .collateralLoanLandingDraftBackendTests,
+        dependencies: [
+            .collateralLoanLandingDraftBackend,
+            .customDump,
+            .foraTools
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingDraftName)/Backend"
+    )
+    
     // MARK: - Infra
+    
+    static let ephemeralStores = target(
+        name: .ephemeralStores,
+        dependencies: [
+            .foraTools,
+            .genericLoader,
+        ],
+        path: "Sources/Infra/\(String.ephemeralStores)"
+    )
+    static let ephemeralStoresTests = testTarget(
+        name: .ephemeralStoresTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+        ],
+        path: "Tests/Infra/\(String.ephemeralStoresTests)"
+    )
     
     static let fetcher = target(
         name: .fetcher,
@@ -1134,6 +1272,21 @@ private extension Target {
         path: "Tests/Infra/\(String.fetcherTests)"
     )
     
+    static let genericLoader = target(
+        name: .genericLoader,
+        path: "Sources/Infra/\(String.genericLoader)"
+    )
+    static let genericLoaderTests = testTarget(
+        name: .genericLoaderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .genericLoader,
+        ],
+        path: "Tests/Infra/\(String.genericLoaderTests)"
+    )
+    
     static let keyChainStore = target(
         name: .keyChainStore,
         path: "Sources/Infra/\(String.keyChainStore)"
@@ -1147,6 +1300,27 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    static let serialComponents = target(
+        name: .serialComponents,
+        dependencies: [
+            .foraTools,
+        ],
+        path: "Sources/Infra/\(String.serialComponents)"
+    )
+    static let serialComponentsTests = testTarget(
+        name: .serialComponentsTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralStores,
+            .foraTools,
+            .genericLoader,
+            .serialComponents,
+        ],
+        path: "Tests/Infra/\(String.serialComponentsTests)"
     )
     
     // MARK: - Payments
@@ -1678,6 +1852,9 @@ private extension Target {
     
     static let cvvPINServices = target(
         name: .cvvPINServices,
+        dependencies: [
+            .genericLoader
+        ],
         path: "Sources/Services/\(String.cvvPINServices)"
     )
     static let cvvPINServicesTests = testTarget(
@@ -2057,6 +2234,22 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
+    static let сlientInformList = target(
+        name: .сlientInformList,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/\(String.сlientInformList)"
+    )
+    
+    static let сlientInformListTests = testTarget(
+        name: .сlientInformListTests,
+        dependencies: [
+            .сlientInformList
+        ],
+        path: "Tests/UI/\(String.сlientInformListTests)"
+    )
+
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -2632,9 +2825,13 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .ephemeralStores,
+            .fetcher,
             .foraTools,
+            .genericLoader,
             .genericRemoteService,
             .rxViewModel,
+            .serialComponents,
         ]
     )
     
@@ -2731,6 +2928,18 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
+    static let collateralLoanLandingShowCaseBackend = byName(
+        name: .collateralLoanLandingShowCaseBackend
+    )
+    
+    static let collateralLoanLandingShowCaseUI = byName(
+        name: .collateralLoanLandingShowCaseUI
+    )
+    
+    static let collateralLoanLandingDraftBackend = byName(
+        name: .collateralLoanLandingDraftBackend
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -2769,6 +2978,10 @@ private extension Target.Dependency {
         name: .cardGuardianUI
     )
     
+    static let сlientInformList = byName(
+        name: .сlientInformList
+    )
+
     static let linkableText = byName(
         name: .linkableText
     )
@@ -2820,7 +3033,7 @@ private extension Target.Dependency {
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
     )
-    
+
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -2895,12 +3108,24 @@ private extension Target.Dependency {
     
     // MARK: - Infra
     
+    static let ephemeralStores = byName(
+        name: .ephemeralStores
+    )
+    
     static let fetcher = byName(
         name: .fetcher
     )
     
+    static let genericLoader = byName(
+        name: .genericLoader
+    )
+    
     static let keyChainStore = byName(
         name: .keyChainStore
+    )
+    
+    static let serialComponents = byName(
+        name: .serialComponents
     )
     
     // MARK: - Payments
@@ -3097,11 +3322,27 @@ private extension String {
     // MARK: - Landing
     
     static let codableLanding = "CodableLanding"
+    
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"
+    
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
     
+    static let collateralLoan = "CollateralLoan"
+    static let collateralLoanTests = "CollateralLoanTests"
+
+    static let collateralLoanLandingShowCaseBackend = "CollateralLoanLandingShowCaseBackend"
+    static let collateralLoanLandingShowCaseName = "ShowCase"
+    static let collateralLoanLandingShowCaseBackendTests = "CollateralLoanLandingShowCaseBackendTests"
+    
+    static let collateralLoanLandingShowCaseUI = "CollateralLoanLandingShowCaseUI"
+    static let collateralLoanLandingShowCaseUITests = "CollateralLoanLandingShowCaseUITests"
+    
+    static let collateralLoanLandingDraftBackend = "CollateralLoanLandingDraftBackend"
+    static let collateralLoanLandingDraftName = "Draft"
+    static let collateralLoanLandingDraftBackendTests = "CollateralLoanLandingDraftBackendTests"
+
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
@@ -3116,6 +3357,9 @@ private extension String {
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
     
+    static let сlientInformList = "СlientInformList"
+    static let сlientInformListTests = "СlientInformListTests"
+
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
     
@@ -3165,7 +3409,7 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-    
+
     // MARK: - UI Components
     
     static let amountComponent = "AmountComponent"
@@ -3219,11 +3463,20 @@ private extension String {
     
     // MARK: - Infra
     
+    static let ephemeralStores = "EphemeralStores"
+    static let ephemeralStoresTests = "EphemeralStoresTests"
+    
     static let fetcher = "Fetcher"
     static let fetcherTests = "FetcherTests"
     
+    static let genericLoader = "GenericLoader"
+    static let genericLoaderTests = "GenericLoaderTests"
+    
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
+    
+    static let serialComponents = "SerialComponents"
+    static let serialComponentsTests = "SerialComponentsTests"
     
     // MARK: - Payments
     

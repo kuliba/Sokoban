@@ -14,12 +14,12 @@ public typealias BlockHorizontalRectangularViewModel = RxViewModel<BlockHorizont
 struct BlockHorizontalRectangularWrappedView: View {
     
     @ObservedObject var viewModel: BlockHorizontalRectangularViewModel
-    let factory: ViewFactory
+    let factory: ImageViewFactory
     let config: UILanding.BlockHorizontalRectangular.Config
     
     public init(
         viewModel: BlockHorizontalRectangularViewModel,
-        factory: ViewFactory,
+        factory: ImageViewFactory,
         config: UILanding.BlockHorizontalRectangular.Config
     ) {
         self.viewModel = viewModel

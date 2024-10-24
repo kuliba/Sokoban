@@ -15,6 +15,7 @@ public extension ActiveContractConfig {
         bankDefault: .preview,
         carousel: .preview,
         consentList: .preview,
+        deleteDefaultBank: .preview,
         paymentContract: .preview,
         productSelect: .preview
     )
