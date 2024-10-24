@@ -11,7 +11,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-    enum Element {
+    enum Element: Equatable {
         
         case buttonType(ButtonType)
         case contacts(Payments.Operation.Source)

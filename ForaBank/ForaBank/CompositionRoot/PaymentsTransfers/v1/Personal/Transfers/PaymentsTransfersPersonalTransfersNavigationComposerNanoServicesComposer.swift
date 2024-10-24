@@ -25,9 +25,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
-    func compose(
-        notify: @escaping Notify
-    ) -> NanoServices {
+    func compose() -> NanoServices {
         
         return .init(
             makeAbroad: { self.makeAbroad(notify: $0) },
@@ -253,7 +251,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
 
                     self.scheduler.delay(for: .milliseconds(300)) {
                         
-                        self.handle(source: payload.source, notify: notify)
+                        self.notify(with: payload.source, using: notify)
                     }
                     
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
@@ -267,9 +265,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             }
     }
 
-    private func handle(
-        source: Payments.Operation.Source,
-        notify: @escaping Notify
+    private func notify(
+        with source: Payments.Operation.Source,
+        using notify: @escaping Notify
     ) {
         switch source {
         case let .latestPayment(latestPaymentID):
