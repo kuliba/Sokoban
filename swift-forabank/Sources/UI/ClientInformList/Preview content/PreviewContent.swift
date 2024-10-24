@@ -70,7 +70,6 @@ extension ClientInformListConfig {
             horizontal: 20,
             vertical: 12
         ),
-        image: .infoCircle,
-        rowImage: nil
+        image: .infoCircle
     )
 }

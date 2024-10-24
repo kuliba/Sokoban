@@ -107,7 +107,7 @@ public struct ClientInformListView: View {
         VStack(spacing: config.sizes.spacing) {
             
             if !isShowNavBar {
-                iconView(multipleInfo.title.image)
+                iconView()
                 titleView(multipleInfo.title.title)
             }
             
@@ -127,15 +127,26 @@ public struct ClientInformListView: View {
         }
     }
     
-    private func iconView(_ image: Image) -> some View {
+    private func iconView(_ image: Image? = nil) -> some View {
         
-        image
-            .resizable()
-            .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
-            .foregroundColor(.white)
-            .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
-            .foregroundColor(config.colors.bgIconRedLight))
-            .padding(.top, config.paddings.topImage)
+        if let image = image {
+            return AnyView(
+                image
+                    .resizable()
+                    .frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                    .padding(.top, config.paddings.topImage)
+            )
+        } else {
+            return AnyView(
+                config.image
+                    .resizable()
+                    .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
+                    .foregroundColor(.white)
+                    .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                    .foregroundColor(config.colors.bgIconRedLight))
+                    .padding(.top, config.paddings.topImage)
+            )
+        }
     }
     
     private func titleView(_ text: String) -> some View {

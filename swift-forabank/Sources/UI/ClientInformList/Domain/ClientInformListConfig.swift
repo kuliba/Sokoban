@@ -16,6 +16,7 @@ public struct ClientInformListConfig {
     let textConfig: TextConfig
     let sizes: Sizes
     let paddings: Paddings
+    let image: Image
 
     public struct Colors {
         
@@ -106,8 +107,7 @@ public struct ClientInformListConfig {
         textConfig: TextConfig,
         sizes: Sizes,
         paddings: Paddings,
-        image: Image?,
-        rowImage: Image?
+        image: Image
     ) {
         self.colors = colors
         self.strings = strings
@@ -115,5 +115,6 @@ public struct ClientInformListConfig {
         self.textConfig = textConfig
         self.sizes = sizes
         self.paddings = paddings
+        self.image = image
     }
 }
