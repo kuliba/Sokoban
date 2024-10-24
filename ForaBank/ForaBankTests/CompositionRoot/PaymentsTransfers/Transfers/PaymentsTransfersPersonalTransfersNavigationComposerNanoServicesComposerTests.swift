@@ -22,6 +22,14 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     // MARK: - abroad
     
+    func test_makeAbroad_shouldDeliverAbroadWithAbroadMode() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let abroad = nanoServices.makeAbroad(spy.call(payload:))
+        
+        XCTAssertNoDiff(abroad.model.mode, .abroad)
+    }
+    
     func test_makeAbroad_shouldCallNotifyWithDismissOnPaymentRequest() {
         
         let (_, nanoServices, _, spy) = makeSUT()
@@ -163,6 +171,14 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     }
     
     // MARK: - makeContacts
+    
+    func test_makeContacts_shouldDeliverContactsWithContactsFastPaymentsMode() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        XCTAssertNoDiff(contacts.model.mode, .fastPayments(.contacts))
+    }
     
     func test_makeContacts_shouldCallNotifyWithDismissOnPaymentRequest() {
         
