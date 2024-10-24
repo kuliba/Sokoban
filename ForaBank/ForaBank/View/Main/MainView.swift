@@ -435,44 +435,6 @@ private extension MainView {
     }
 }
 
-// MARK: - payment flow
-
-/*private extension MainView {
-    
-    @ViewBuilder
-    func makeAnywayFlowView(
-        flowModel: AnywayFlowModel
-    ) -> some View {
-        
-        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
-            
-            flowModel.state.content.event(.payment($0))
-        }
-        
-        AnywayFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeElementView: anywayPaymentFactory.makeElementView,
-                makeFooterView: anywayPaymentFactory.makeFooterView
-            ),
-            makePaymentCompleteView: {
-                
-                viewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        merchantIcon: $0.merchantIcon,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { flowModel.event(.goTo(.main)) }
-                )
-            }
-        )
-    }
-}*/
-
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
     var id: String { state.content.state.payload.provider.origin.id }
