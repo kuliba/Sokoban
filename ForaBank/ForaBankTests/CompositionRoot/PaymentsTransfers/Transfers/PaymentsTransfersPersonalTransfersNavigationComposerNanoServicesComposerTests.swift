@@ -62,6 +62,31 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    func test_makeAbroad_shouldCallNotifyWithDismissOnCountriesItemTap() throws {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let abroad = nanoServices.makeAbroad(spy.call(payload:))
+        
+        abroad.countriesItemTap(with: .avtodor)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeAbroad_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() throws {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let abroad = nanoServices.makeAbroad(spy.call(payload:))
+        
+        abroad.countriesItemTap(with: .avtodor)
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(300))
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.countries(.avtodor))
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
@@ -136,6 +161,13 @@ extension Node where Model == ContactsViewModel {
         with source: Payments.Operation.Source
     ) {
         let action = ContactsViewModelAction.PaymentRequested(source: source)
+        model.action.send(action)
+    }
+    
+    func countriesItemTap(
+        with source: Payments.Operation.Source
+    ) {
+        let action = ContactsSectionViewModelAction.Countries.ItemDidTapped(source: source)
         model.action.send(action)
     }
 }

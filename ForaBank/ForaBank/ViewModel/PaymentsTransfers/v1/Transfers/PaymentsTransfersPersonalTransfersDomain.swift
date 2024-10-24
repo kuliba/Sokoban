@@ -15,6 +15,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         
         case buttonType(ButtonType)
         case contacts(Payments.Operation.Source)
+        case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
     }
     

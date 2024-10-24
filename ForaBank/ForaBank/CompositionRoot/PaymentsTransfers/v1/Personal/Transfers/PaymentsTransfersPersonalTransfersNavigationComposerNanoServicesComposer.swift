@@ -244,23 +244,20 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         contacts.action
             .sink { action in
                 
-                switch action {
-                case let payload as ContactsViewModelAction.PaymentRequested:
-                    // requestContactsPayment(source: payload.source)
-                    notify(.dismiss)
-
-                    self.scheduler.delay(for: .milliseconds(300)) {
-                        
+                notify(.dismiss)
+                
+                self.scheduler.delay(for: .milliseconds(300)) {
+                    
+                    switch action {
+                    case let payload as ContactsViewModelAction.PaymentRequested:
                         self.notify(with: payload.source, using: notify)
+                        
+                    case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
+                        notify(.select(.countries(payload.source)))
+                        
+                    default:
+                        break
                     }
-                    
-                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-#warning("FIXME using notify")
-                    _ = payload
-                    // handleCountriesItemTapped(source: payload.source)
-                    
-                default:
-                    break
                 }
             }
     }
