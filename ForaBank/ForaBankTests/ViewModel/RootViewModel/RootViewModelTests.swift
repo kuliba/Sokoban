@@ -231,11 +231,12 @@ final class RootViewModelTests: XCTestCase {
 
     func test_orderSticker_withCard_shouldSetLinkToPaymentSticker() {
         
-        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.orderSticker()
+        scheduler.advance(by: .milliseconds(100))
         
         XCTAssertNoDiff(linkSpy.values, [nil, .paymentSticker])
     }
@@ -244,12 +245,13 @@ final class RootViewModelTests: XCTestCase {
 
     func test_openOrderCard_shouldSetLinkToOpenCard() {
         
-        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.openOrderCard()
-        
+        scheduler.advance(by: .milliseconds(100))
+
         XCTAssertNoDiff(linkSpy.values, [nil, .openCard])
     }
     
@@ -257,12 +259,15 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_shouldSetLinkToLanding() {
         
-        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .main)
         let type = anyMessage()
+        
+        sut.selected = .market
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
+        sut.handleOutside(.landing(type))
+        scheduler.advance(by: .milliseconds(310))
         
         XCTAssertNoDiff(linkSpy.values, [nil, .landing])
         
@@ -271,10 +276,10 @@ final class RootViewModelTests: XCTestCase {
     
     func test_handleOutside_goToMain_shouldSetSelectedToMain() {
         
-        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, _, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         
-        sut.handleOutside(.main, scheduler.eraseToAnyScheduler())
-        scheduler.advance(by: .milliseconds(400))
+        sut.handleOutside(.main)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
         
         XCTAssertNil(sut.link)
         XCTAssertNoDiff(sut.selected, .main)
@@ -284,14 +289,15 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_cardActionGoToMain_shouldSelectedToMain() {
         
-        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
-        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
+        sut.handleOutside(.landing(type))
+        scheduler.advance(by: .milliseconds(310))
         sut.landingViewModel?.action(.card(.goToMain))
-        scheduler.advance(by: .milliseconds(400))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
 
-        XCTAssertNil(sut.link)
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing, nil])
         XCTAssertNoDiff(sut.selected, .main)
     }
     
@@ -299,14 +305,17 @@ final class RootViewModelTests: XCTestCase {
 
     func test_handleOutside_landing_stickerActionGoToMain_shouldSelectedToMain() {
 
-        let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        let (sut, scheduler, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
-        sut.handleOutside(.landing(type), .immediate)
+        sut.handleOutside(.landing(type))
+        scheduler.advance(by: .milliseconds(310))
+        
         sut.landingViewModel?.action(.sticker(.goToMain))
-        scheduler.advance(by: .milliseconds(400))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
 
-        XCTAssertNil(sut.link)
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing, nil])
+
         XCTAssertNoDiff(sut.selected, .main)
     }
 
@@ -317,9 +326,12 @@ final class RootViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(linkSpy.values, [nil])
 
-        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
+        sut.handleOutside(.landing(type))
+        scheduler.advance(by: .milliseconds(400))
+
         sut.landingViewModel?.action(.sticker(.order))
-        
+        scheduler.advance(by: .milliseconds(400))
+
         XCTAssertNoDiff(linkSpy.values, [nil, .landing, .paymentSticker])
     }
 
@@ -330,7 +342,9 @@ final class RootViewModelTests: XCTestCase {
         let (sut, scheduler, _, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         let type = anyMessage()
         
-        sut.handleOutside(.landing(type), scheduler.eraseToAnyScheduler())
+        sut.handleOutside(.landing(type))
+        scheduler.advance(by: .milliseconds(400))
+
         sut.landingViewModel?.action(.goToBack)
         
         XCTAssertNil(sut.link)
