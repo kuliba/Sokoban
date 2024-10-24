@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "395E2DC0-6950-4FD1-95BC-E20CC5A6429B",
+      "id" : "21DA346E-BCBB-4D9A-8D6A-B3A511619D07",
       "name" : "Configuration 1",
       "options" : {
 
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PlainClientInformBottomSheetTests",
-        "name" : "PlainClientInformBottomSheetTests"
+        "identifier" : "СlientInformListTests",
+        "name" : "СlientInformListTests"
       }
     }
   ],

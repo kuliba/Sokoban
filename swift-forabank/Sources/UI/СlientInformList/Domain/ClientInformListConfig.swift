@@ -1,5 +1,5 @@
 //
-//  PlainClientInformBottomSheetConfig.swift
+//  ClientInformListConfig.swift
 //  ForaBank
 //
 //  Created by Nikolay Pochekuev on 08.10.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SharedConfigs
 
-public struct PlainClientInformBottomSheetConfig {
+public struct ClientInformListConfig {
     
     let colors: Colors
     let strings: Strings
