@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.10.2024.
 //
 
+import Combine
 @testable import ForaBank
 import XCTest
 
@@ -84,12 +85,55 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    // MARK: - makeAnotherCard
+    
+    func test_makeAnotherCard_shouldRequestTemplatesList() {
+        
+        let model: Model = .mockWithEmptyExcept()
+        let productTemplateListRequestSpy = ValueSpy(model.productTemplateListRequest)
+        XCTAssertEqual(productTemplateListRequestSpy.values.count, 0)
+        
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        _ = nanoServices.makeAnotherCard(spy.call(payload:))
+        
+        XCTAssertEqual(productTemplateListRequestSpy.values.count, 1)
+    }
+    
+    func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQRCode() throws {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
+        
+        anotherCard.scanQRCode()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeAnotherCard_shouldCallNotifyWithDelayOnPaymentRequestWithSource() throws {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
+        
+        anotherCard.scanQRCode()
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(799))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(800))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.scanQR)
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
     private typealias NotifySpy = CallSpy<SUT.Event, Void>
     
     private func makeSUT(
+        model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -98,8 +142,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler: TestSchedulerOfDispatchQueue,
         spy: NotifySpy
     ) {
-        
-        let model: Model = .mockWithEmptyExcept()
         let scheduler = DispatchQueue.test
         let sut = SUT(model: model, scheduler: scheduler.eraseToAnyScheduler())
         let spy = NotifySpy(stubs: .init(repeating: (), count: 9))
@@ -160,7 +202,17 @@ where Payload == PaymentsTransfersPersonalTransfersDomain.FlowEvent {
 
 // MARK: - DSL
 
-extension Node where Model == ContactsViewModel {
+private extension Model {
+    
+    var productTemplateListRequest: AnyPublisher<ModelAction.ProductTemplate.List.Request, Never> {
+        
+        action
+            .compactMap { $0 as? ModelAction.ProductTemplate.List.Request }
+            .eraseToAnyPublisher()
+    }
+}
+
+private extension Node where Model == ContactsViewModel {
     
     func requestPayment(
         with source: Payments.Operation.Source
@@ -174,5 +226,14 @@ extension Node where Model == ContactsViewModel {
     ) {
         let action = ContactsSectionViewModelAction.Countries.ItemDidTapped(source: source)
         model.action.send(action)
+    }
+}
+
+private extension Node where Model == ClosePaymentsViewModelWrapper {
+    
+    func scanQRCode() {
+        
+        let action = PaymentsViewModelAction.ScanQrCode()
+        model.paymentsViewModel.action.send(action)
     }
 }

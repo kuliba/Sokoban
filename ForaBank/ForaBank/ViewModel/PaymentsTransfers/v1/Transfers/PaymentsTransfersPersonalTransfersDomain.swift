@@ -17,6 +17,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
+        case scanQR
     }
     
     enum Navigation {

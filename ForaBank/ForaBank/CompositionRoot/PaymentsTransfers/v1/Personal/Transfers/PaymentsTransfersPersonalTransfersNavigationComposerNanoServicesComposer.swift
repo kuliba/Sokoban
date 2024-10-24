@@ -37,10 +37,10 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
             makeSource: { self.makeSource(source: $0, notify: $1) }
         )
     }
-
+    
     typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
     typealias Notify = (Event) -> Void
-
+    
     typealias NanoServices = PaymentsTransfersPersonalTransfersNavigationComposerNanoServices
 }
 
@@ -67,36 +67,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             service: .toAnotherCard,
             scheduler: scheduler
         )
-        let cancellable = bind(anotherCard.paymentsViewModel)
+        let cancellables = bind(anotherCard.paymentsViewModel, using: notify)
         
-        return .init(model: anotherCard, cancellable: cancellable)
-    }
-    
-    // PaymentsTransfersViewModel.bind(_:)
-    // PaymentsTransfersViewModel.swift:1338
-    private func bind(
-        _ paymentsViewModel: PaymentsViewModel
-    ) -> AnyCancellable {
-        
-        paymentsViewModel.action
-            .sink { action in
-                
-                switch action {
-                case _ as PaymentsViewModelAction.ScanQrCode:
-#warning("FIXME using notify")
-                    //    self.event(.dismiss(.destination))
-                    //    self.delay(for: .milliseconds(800)) {
-                    //        self.openScanner()
-                    //    }
-                    
-                case let payload as PaymentsViewModelAction.ContactAbroad:
-#warning("FIXME using notify")
-                    _ = payload
-                    //    handleContactAbroad(source: payload.source)
-                    
-                default: break
-                }
-            }
+        return .init(model: anotherCard, cancellables: cancellables)
     }
     
     func makeContacts(
@@ -120,9 +93,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             service: .requisites,
             scheduler: scheduler
         )
-        let cancellable = bind(detailPayment.paymentsViewModel)
+        let cancellables = bind(detailPayment.paymentsViewModel, using: notify)
         
-        return .init(model: detailPayment, cancellable: cancellable)
+        return .init(model: detailPayment, cancellables: cancellables)
     }
     
     func makeLatest(
@@ -133,7 +106,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         guard let latest = model.latestPayments.value.first(where: { $0.id == latest }),
               // pasted from PaymentsTransfersViewModel.swift:341
               // but might need updated approach with payment flow?
-              [LatestPaymentData.Kind.internet, .service, .mobile, .outside, .phone, .transport, .taxAndStateService].contains(latest.type)
+                [LatestPaymentData.Kind.internet, .service, .mobile, .outside, .phone, .transport, .taxAndStateService].contains(latest.type)
         else { return nil }
         
         let wrapper = ClosePaymentsViewModelWrapper(
@@ -142,9 +115,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             scheduler: scheduler
         )
         
-        let cancellable = bind(wrapper.paymentsViewModel)
+        let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
-        return .init(model: wrapper, cancellable: cancellable)
+        return .init(model: wrapper, cancellables: cancellables)
     }
     
     func makeSource(
@@ -170,9 +143,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             }
         }
         
-        let cancellable = bind(paymentsViewModel)
+        let cancellables = bind(paymentsViewModel, using: notify)
         
-        return .init(model: paymentsViewModel, cancellable: cancellable)
+        return .init(model: paymentsViewModel, cancellables: cancellables)
     }
     
     func makeMeToMe(
@@ -227,6 +200,35 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 }
             }
     }
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1338
+    private func bind(
+        _ paymentsViewModel: PaymentsViewModel,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let scanQR = paymentsViewModel.action
+            .compactMap(\.scanQR)
+            .handleEvents(receiveOutput: { _ in notify(.dismiss) })
+            .delay(for: .milliseconds(800), scheduler: scheduler)
+            .sink { _ in notify(.select(.scanQR)) }
+        
+        let contactAbroad = paymentsViewModel.action
+            .sink { action in
+                
+                switch action {
+                case let payload as PaymentsViewModelAction.ContactAbroad:
+#warning("FIXME using notify")
+                    _ = payload
+                    //    handleContactAbroad(source: payload.source)
+                    
+                default: break
+                }
+            }
+        
+        return [scanQR, contactAbroad]
+    }
 }
 
 // MARK: - bindings
@@ -262,5 +264,13 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                     break
                 }
             }
+    }
+}
+
+private extension Action {
+    
+    var scanQR: PaymentsViewModelAction.ScanQrCode? {
+        
+        self as? PaymentsViewModelAction.ScanQrCode
     }
 }

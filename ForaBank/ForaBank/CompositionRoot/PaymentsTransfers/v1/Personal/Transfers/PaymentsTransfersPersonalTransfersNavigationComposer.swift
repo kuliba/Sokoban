@@ -34,11 +34,16 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
             // PaymentsTransfersViewModel.swift:1528
-            #warning("FIXME")
+#warning("FIXME")
             return { fatalError() }()
             
         case let .latest(latest):
             return nanoServices.makeLatest(latest, notify).map { .payments($0) }
+            
+        case .scanQR:
+#warning("FIXME")
+            // PaymentsTransfersViewModel.swift:1348
+            return { fatalError() }()
         }
     }
     
