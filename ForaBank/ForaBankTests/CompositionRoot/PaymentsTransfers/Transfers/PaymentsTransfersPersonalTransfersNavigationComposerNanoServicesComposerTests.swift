@@ -37,8 +37,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .avtodor)
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(300))
+        advance(by: .milliseconds(300), on: scheduler)
         
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
@@ -53,8 +52,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .latestPayment(latestID))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(300))
+        advance(by: .milliseconds(300), on: scheduler)
         
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
@@ -78,8 +76,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.countriesItemTap(with: .avtodor)
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(300))
+        advance(by: .milliseconds(300), on: scheduler)
         
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
@@ -114,6 +111,14 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         //    trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, nanoServices, scheduler, spy)
+    }
+    
+    private func advance(
+        by interval: DispatchQueue.SchedulerTimeType.Stride,
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: interval)
     }
 }
 
