@@ -136,11 +136,21 @@ private extension UserAccountNavigationFPSReducer {
         case let .serverError(message):
             state.spinner = nil
             // non-final => closeAlert
-            state.fpsRoute?.alert = .error(
-                message: message,
-                event: .dismiss(.alert)
-            )
-            
+            let tryMessage = "Превышено количество попыток ввода OTP. Попробуйте повторить позже."
+            if tryMessage == message {
+                state.fpsRoute?.alert = .error(
+                    message: message,
+                    event: .dismiss(.fpsDestination)
+                )
+                state.informer = .failure("Банк по умолчанию не удален")
+                effect = .navigation(.dismissInformer(3))
+
+            } else {
+                state.fpsRoute?.destination = nil
+                state.informer = .failure("Ошибка изменения настроек СБП.\nПопробуйте позже.")
+                effect = .navigation(.dismissInformer())
+            }
+
         case .missingProduct:
             state.spinner = nil
             state.fpsRoute?.alert = .missingProduct(event: .dismiss(.route))
@@ -155,6 +165,15 @@ private extension UserAccountNavigationFPSReducer {
                 event: .otp(.prepareSetBankDefault),
                 secondaryEvent: .dismiss(.fpsAlert)
             )
+        case let .deleteBankDefault(phoneNumber):
+            state.spinner = nil
+            effect = .navigation(.otp(.prepareDeleteDefaultBank(.init(phoneNumber))))
+            
+        case .makeDeleteDefaultBankSuccess:
+            state.spinner = nil
+            state.fpsRoute?.destination = nil
+            state.informer = .success("Банк по умолчанию удален.")
+            effect = .navigation(.dismissInformer())
             
         case let .setBankDefaultFailure(message):
             state.spinner = nil
@@ -162,6 +181,33 @@ private extension UserAccountNavigationFPSReducer {
             state.informer = .failure(message)
             effect = .navigation(.dismissInformer())
 #warning("effect = .fps(.resetStatus)")
+           
+        case let .deleteDefaultBankFailure(message):
+            state.spinner = nil
+            state.informer = .failure(message)
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
+
+            if message == tryAgain {
+                state.fpsRoute?.alert = .init(
+                    title: "Ошибка",
+                    message: message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "Ok",
+                        event: .dismiss(.alert)
+                    ))
+
+            } else {
+                state.fpsRoute?.alert = .init(
+                    title: "Ошибка",
+                    message: message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "Ok",
+                        event: .dismiss(.fpsDestination))
+                )
+            }
+            effect = .navigation(.dismissInformer())
             
         case .setBankDefaultSuccess:
             state.spinner = nil

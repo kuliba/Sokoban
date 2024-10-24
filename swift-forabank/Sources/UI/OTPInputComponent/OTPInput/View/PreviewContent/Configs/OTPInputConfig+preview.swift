@@ -20,10 +20,6 @@ public extension OTPInputConfig {
         timer: .init(
             textFont: .headline,
             textColor: .orange
-        ),
-        title: .init(
-            textFont: .title3.bold(),
-            textColor: .pink
         )
     )
 }

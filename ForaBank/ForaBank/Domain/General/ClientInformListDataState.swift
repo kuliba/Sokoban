@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ClientAuthorizationState {
     
-    var authorized: ClientInformAuthorizedZoneDataState?
+    var authorized: ClientInformListDataState?
     var notAuthorized: Void?
 }
 
-enum ClientInformAuthorizedZoneDataState {
+enum ClientInformListDataState {
     
     case single(Single)
     case multiple(Multiple)

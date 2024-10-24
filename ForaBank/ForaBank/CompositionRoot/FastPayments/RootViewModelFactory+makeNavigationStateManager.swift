@@ -22,6 +22,7 @@ extension RootViewModelFactory {
     func makeNavigationStateManager(
         modelEffectHandler: UserAccountModelEffectHandler,
         otpServices: FastPaymentsSettingsOTPServices,
+        otpDeleteBankServices: FastPaymentsSettingsOTPServices,
         fastPaymentsFactory: FastPaymentsFactory,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         duration: Int,
@@ -61,6 +62,24 @@ extension RootViewModelFactory {
                     scheduler: $1
                 )
             },
+            makeTimedOTPInputDeleteDefaultBankViewModel: {
+                
+                .init(
+                    viewModel: .default(
+                        initialState: .starting(
+                            phoneNumber: $0,
+                            duration: duration
+                        ),
+                        duration: duration,
+                        length: length,
+                        initiateOTP: otpDeleteBankServices.initiateOTP,
+                        submitOTP: otpDeleteBankServices.submitOTP,
+                        scheduler: $1
+                    ),
+                    codeObserver: codeObserver,
+                    scheduler: $1
+                )
+            },
             prepareSetBankDefault: otpServices.prepareSetBankDefault,
             scheduler: mainScheduler
         )
@@ -88,10 +107,70 @@ struct FastPaymentsSettingsOTPServices {
 
 // MARK: - Live Service
 
+extension LoggingRemoteNanoServiceComposer {
+
+    typealias ServiceFailure = OTPInputComponent.ServiceFailure
+
+    typealias ForaRequestFactory = ForaBank.RequestFactory
+    typealias FastResponseMapper = RemoteServices.ResponseMapper
+    
+    func composeFastInitiateOTP() -> CountdownEffectHandler.InitiateOTP {
+        
+        let initiateOTP = self.compose(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: OTPInputComponent.ServiceFailure.init(error:)
+        )
+        
+        return { completion in initiateOTP((), completion) }
+    }
+    
+    func composeFastSubmitOTP() -> OTPFieldEffectHandler.SubmitOTP {
+        
+        let submitOTP = self.compose(
+            createRequest: ForaRequestFactory.createMakeSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapMakeSetBankDefaultResponse,
+            mapError: ServiceFailure.init(error:)
+        )
+        
+        return { otp, completion in submitOTP(.init(otp.rawValue), completion) }
+    }
+    
+    func composeFastSetBankDefault() -> UserAccountNavigationOTPEffectHandler.PrepareSetBankDefault {
+        
+        let prepareSetBankDefault = self.compose(
+            createRequest: ForaRequestFactory.createPrepareSetBankDefaultRequest,
+            mapResponse: FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            mapError: FastPaymentsSettings.ServiceFailure.init(error:)
+        )
+        
+        return { completion in prepareSetBankDefault((), completion) }
+    }
+}
+
 /*private*/ extension FastPaymentsSettingsOTPServices {
     
     init(
         _ httpClient: HTTPClient,
+        _ logger: any LoggerAgentProtocol
+    ) {
+        let composer = LoggingRemoteNanoServiceComposer(
+            httpClient: httpClient,
+            logger: logger
+        )
+        
+        self.init(
+            initiateOTP: composer.composeFastInitiateOTP(),
+            submitOTP: composer.composeFastSubmitOTP(),
+            prepareSetBankDefault: composer.composeFastSetBankDefault()
+        )
+    }
+}
+
+extension FastPaymentsSettingsOTPServices {
+    
+    init(
+        for httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) {
         typealias ServiceFailure = OTPInputComponent.ServiceFailure
@@ -100,15 +179,15 @@ struct FastPaymentsSettingsOTPServices {
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         
         let initiateOTP = adaptedLoggingFetch(
-            ForaRequestFactory.createPrepareSetBankDefaultRequest,
-            FastResponseMapper.mapPrepareSetBankDefaultResponse,
+            ForaRequestFactory.createPrepareDeleteDefaultBankRequest,
+            FastResponseMapper.mapPrepareDeleteBankDefaultResponse(_:_:),
             mapError: OTPInputComponent.ServiceFailure.init(error:)
         )
         
         let submitOTP: OTPFieldEffectHandler.SubmitOTP = adaptedLoggingFetch(
             mapPayload: { .init($0.rawValue) },
-            ForaRequestFactory.createMakeSetBankDefaultRequest,
-            FastResponseMapper.mapMakeSetBankDefaultResponse,
+            ForaRequestFactory.createMakeDeleteBankDefaultRequest(payload:),
+            FastResponseMapper.mapMakeDeleteBankDefaultResponse(_:_:),
             mapError: ServiceFailure.init(error:)
         )
         
