@@ -29,38 +29,9 @@ extension RootViewModelFactory {
         
         // MARK: - OperationPicker
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
-            load: { completion in
-                
-                nanoServices.loadAllLatest {
-                    
-                    completion(((try? $0.get()) ?? []).map { .latest($0) })
-                }
-            },
-            scheduler: mainScheduler
-        )
-        let operationPickerContent = operationPickerContentComposer.compose(
-            prefix: [
-                .element(.init(.templates)),
-                .element(.init(.exchange))
-            ],
-            suffix: [],
-            placeholderCount: operationPickerPlaceholderCount
-        )
-        let operationPickerFlowComposer = OperationPickerFlowComposer(
-            model: model,
-            scheduler: mainScheduler
-        )
-        let operationPickerFlow = operationPickerFlowComposer.compose()
-        let operationPicker = OperationPickerBinder(
-            content: operationPickerContent,
-            flow: operationPickerFlow,
-            bind: { content, flow in
-                
-                content.$state
-                    .compactMap(\.selected)
-                    .sink { flow.event(.select($0)) }
-            }
+        let operationPicker = makeOperationPicker(
+            operationPickerPlaceholderCount: operationPickerPlaceholderCount,
+            nanoServices: nanoServices
         )
         
         // MARK: - Toolbar

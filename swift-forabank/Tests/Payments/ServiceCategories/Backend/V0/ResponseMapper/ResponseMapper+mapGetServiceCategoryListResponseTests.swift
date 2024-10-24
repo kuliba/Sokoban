@@ -85,13 +85,13 @@ final class ResponseMapper_mapGetServiceCategoryListResponseTests: XCTestCase {
         }
     }
     
-    func test_map_shouldDeliverInvalidFailureOnEmptyList() {
+    func test_map_shouldDeliverEmptyOnEmptyList() {
         
         let emptyDataResponse: Data = .emptyListResponse
         
         XCTAssertNoDiff(
             map(emptyDataResponse),
-            .failure(.invalid(statusCode: 200, data: emptyDataResponse))
+            .success(.init(list: [], serial: "1bebd140bc2660211fbba306105479ae"))
         )
     }
     
