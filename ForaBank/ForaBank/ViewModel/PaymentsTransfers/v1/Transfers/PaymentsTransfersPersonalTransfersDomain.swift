@@ -23,10 +23,12 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     enum Navigation {
         
+        case alert(String)
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
+        case successMeToMe(PaymentsSuccessViewModel)
     }
     
     typealias Binder = PlainPickerBinder<Element, Navigation>

@@ -467,11 +467,44 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeMeToMe_shouldDeliverMeToMeWithDemandDepositMode() throws {
         
-        let model: Model = .mockWithEmptyExcept()
-        try model.addMeToMeProduct()
+        let model = try makeModelWithMeToMeProduct()
         let (_, nanoServices, _, spy) = makeSUT(model: model)
         
         XCTAssertNotNil(nanoServices.makeMeToMe(spy.call(payload:)))
+    }
+    
+    func test_makeMeToMe_shouldDeliverSuccessOnEmitResponseSuccess() throws {
+        
+        let success: PaymentsSuccessViewModel = .sample1
+        let model = try makeModelWithMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
+        
+        makeMeToMe.emitResponseSuccess(with: success)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.successMeToMe(.init(success)))])
+    }
+    
+    func test_makeMeToMe_shouldDeliverAlertOnEmitResponseFailure() throws {
+        
+        let model = try makeModelWithMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
+        
+        makeMeToMe.emitResponseFailure()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.alert("Перевод выполнен"))])
+    }
+    
+    func test_makeMeToMe_shouldDeliverDismissOnCloseBottomSheet() throws {
+        
+        let model = try makeModelWithMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
+        
+        makeMeToMe.closeBottomSheet()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
     // MARK: - Helpers
@@ -516,6 +549,17 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         return model
     }
     
+    private func makeModelWithMeToMeProduct(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Model {
+        
+        let model: Model = .mockWithEmptyExcept()
+        try model.addMeToMeProduct(file: file, line: line)
+        
+        return model
+    }
+    
     private func makeDirectSource(
         phone: String? = nil,
         countryId: CountryData.ID = anyMessage(),
@@ -545,7 +589,16 @@ private extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
             return .dismiss
             
         case let .receive(receive):
-            return unimplemented("\(receive) is not used in tests.")
+            switch receive {
+            case let .alert(alert):
+                return .receive(.alert(alert))
+                
+            case let .successMeToMe(successMeToMe):
+                return .receive(.successMeToMe(.init(successMeToMe)))
+                
+            default:
+                return unimplemented("\(receive) is not used in tests.")
+            }
             
         case let .select(select):
             return .select(select)
@@ -555,7 +608,14 @@ private extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
     enum EquatableEvent: Equatable {
         
         case dismiss
+        case receive(Receive)
         case select(PaymentsTransfersPersonalTransfersDomain.Element)
+        
+        enum Receive: Equatable {
+            
+            case alert(String)
+            case successMeToMe(ObjectIdentifier)
+        }
     }
 }
 
@@ -645,6 +705,47 @@ private extension PaymentsViewModel {
     ) {
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
         self.action.send(action)
+    }
+}
+
+private extension PaymentsMeToMeViewModel {
+    
+    func closeBottomSheet() {
+        
+        let action = PaymentsMeToMeAction.Close.BottomSheet()
+        self.action.send(action)
+    }
+    
+    func emitResponseFailure() {
+        
+        let action = PaymentsMeToMeAction.Response.Failed()
+        self.action.send(action)
+    }
+    
+    func emitResponseSuccess(
+        with viewModel: PaymentsSuccessViewModel
+    ) {
+        let action = PaymentsMeToMeAction.Response.Success(viewModel: viewModel)
+        self.action.send(action)
+    }
+}
+
+private extension Node where Model == PaymentsMeToMeViewModel {
+    
+    func closeBottomSheet() {
+        
+        model.closeBottomSheet()
+    }
+    
+    func emitResponseFailure() {
+        
+        model.emitResponseFailure()
+    }
+    
+    func emitResponseSuccess(
+        with viewModel: PaymentsSuccessViewModel
+    ) {
+        model.emitResponseSuccess(with: viewModel)
     }
 }
 

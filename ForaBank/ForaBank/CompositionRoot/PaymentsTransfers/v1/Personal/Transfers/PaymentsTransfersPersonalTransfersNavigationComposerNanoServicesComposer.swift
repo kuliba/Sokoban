@@ -51,7 +51,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     ) -> Node<ContactsViewModel> {
         
         let abroad = model.makeContactsViewModel(forMode: .abroad)
-        let cancellables = bind(abroad, notify: notify)
+        let cancellables = bind(abroad, using: notify)
         
         return .init(model: abroad, cancellables: cancellables)
     }
@@ -79,7 +79,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let contacts = model.makeContactsViewModel(
             forMode: .fastPayments(.contacts)
         )
-        let cancellables = bind(contacts, notify: notify)
+        let cancellables = bind(contacts, using: notify)
         
         return .init(model: contacts, cancellables: cancellables)
     }
@@ -152,50 +152,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         guard let meToMe = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
         else { return nil }
         
-        let cancellable = bind(meToMe)
+        let cancellables = bind(meToMe, using: notify)
         
-        return .init(model: meToMe, cancellable: cancellable)
-    }
-    
-    // PaymentsTransfersViewModel.bind(_:)
-    // PaymentsTransfersViewModel.swift:1379
-    private func bind(
-        _ meToMe: PaymentsMeToMeViewModel
-    ) -> AnyCancellable {
-        
-        meToMe.action
-            .sink { [weak meToMe] action in
-                
-                switch action {
-                case let payload as PaymentsMeToMeAction.Response.Success:
-#warning("FIXME using notify")
-                    _ = payload
-                    //    handleSuccessResponseMeToMe(
-                    //        meToMeViewModel: meToMe,
-                    //        successViewModel: payload.viewModel
-                    //    )
-                    
-                case _ as PaymentsMeToMeAction.Response.Failed:
-#warning("FIXME using notify")
-                    //    makeAlert("Перевод выполнен")
-                    //    self.event(.dismiss(.modal))
-                    
-                case _ as PaymentsMeToMeAction.Close.BottomSheet:
-#warning("FIXME using notify")
-                    //    self.event(.dismiss(.modal))
-                    
-                case let payload as PaymentsMeToMeAction.InteractionEnabled:
-#warning("FIXME using notify")
-                    _ = payload
-                    //    guard case let .bottomSheet(bottomSheet) = route.modal
-                    //    else { return }
-                    //
-                    //    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
-                    
-                default:
-                    break
-                }
-            }
+        return .init(model: meToMe, cancellables: cancellables)
     }
 }
 
@@ -207,7 +166,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     // PaymentsTransfersViewModel.swift:1457
     private func bind(
         _ contacts: ContactsViewModel,
-        notify: @escaping Notify
+        using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
         let share = contacts.action
@@ -257,6 +216,54 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         
         return [scanQR, contactAbroad]
     }
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1379
+    private func bind(
+        _ meToMe: PaymentsMeToMeViewModel,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let share = meToMe.action.share()
+        
+        let success = share
+            .compactMap(\.meToMeResponseSuccess)
+            .sink {
+                //    handleSuccessResponseMeToMe(
+                //        meToMeViewModel: meToMe,
+                //        successViewModel: payload.viewModel
+                //    )
+                notify(.receive(.successMeToMe($0)))
+            }
+        
+        let failure = share
+            .compactMap(\.meToMeResponseFailed)
+            .sink { _ in
+                //    makeAlert("Перевод выполнен")
+                //    self.event(.dismiss(.modal))
+                notify(.receive(.alert("Перевод выполнен")))
+            }
+        
+        let closeBottomSheet = share
+            .compactMap(\.meToMeCloseBottomSheet)
+            .sink { _ in
+                //    self.event(.dismiss(.modal))
+                notify(.dismiss)
+            }
+        
+        let enable = share
+            .compactMap(\.meToMeInteractionEnabled)
+            .sink {
+                //    guard case let .bottomSheet(bottomSheet) = route.modal
+                //    else { return }
+                //
+                //    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
+                #warning("unimplemented")
+                _ = $0
+            }
+        
+        return [success, failure, closeBottomSheet, enable]
+    }
 }
 
 private extension Action {
@@ -269,6 +276,32 @@ private extension Action {
     var countriesItemTap: ContactsSectionViewModelAction.Countries.ItemDidTapped? {
         
         self as? ContactsSectionViewModelAction.Countries.ItemDidTapped
+    }
+    
+    var meToMeResponseSuccess: PaymentsSuccessViewModel? {
+        
+        guard let success = self as? PaymentsMeToMeAction.Response.Success
+        else { return nil }
+        
+        return success.viewModel
+    }
+    
+    var meToMeResponseFailed: PaymentsMeToMeAction.Response.Failed? {
+        
+        self as? PaymentsMeToMeAction.Response.Failed
+    }
+    
+    var meToMeCloseBottomSheet: PaymentsMeToMeAction.Close.BottomSheet? {
+        
+        self as? PaymentsMeToMeAction.Close.BottomSheet
+    }
+    
+    var meToMeInteractionEnabled: Bool? {
+        
+        guard let enabled = self as? PaymentsMeToMeAction.InteractionEnabled
+        else { return nil }
+        
+        return enabled.isUserInteractionEnabled
     }
     
     var paymentRequested: ContactsViewModelAction.PaymentRequested? {
