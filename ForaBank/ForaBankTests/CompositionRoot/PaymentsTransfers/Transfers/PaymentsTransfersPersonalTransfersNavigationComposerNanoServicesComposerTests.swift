@@ -258,6 +258,56 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    // MARK: - makeDetail
+    
+    func test_makeDetail_shouldCallNotifyWithDismissOnScanQR() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let detail = nanoServices.makeDetail(spy.call(payload:))
+        
+        detail.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeDetail_shouldCallNotifyWithDelayOnScanQR() {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let detail = nanoServices.makeDetail(spy.call(payload:))
+        
+        detail.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(799))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(800))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.scanQR)
+        ])
+    }
+    
+    func test_makeDetail_shouldCallNotifyWithDelayOnContactAbroad() throws {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let detail = nanoServices.makeDetail(spy.call(payload:))
+        
+        detail.contactAbroad(source: source)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(699))
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(700))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.contactAbroad(source))
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
