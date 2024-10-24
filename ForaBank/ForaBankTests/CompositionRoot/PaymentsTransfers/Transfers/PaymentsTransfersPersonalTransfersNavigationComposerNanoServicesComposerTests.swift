@@ -38,8 +38,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .avtodor)
-        advance(by: .milliseconds(300), on: scheduler)
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
             .select(.contacts(.avtodor))
@@ -53,8 +57,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .latestPayment(latestID))
-        advance(by: .milliseconds(300), on: scheduler)
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
             .select(.latest(latestID))
@@ -77,8 +85,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.countriesItemTap(with: .avtodor)
-        advance(by: .milliseconds(300), on: scheduler)
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
             .select(.countries(.avtodor))
@@ -99,7 +111,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertEqual(productTemplateListRequestSpy.values.count, 1)
     }
     
-    func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQRCode() throws {
+    func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQR() throws {
         
         let (_, nanoServices, _, spy) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
@@ -109,7 +121,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
-    func test_makeAnotherCard_shouldCallNotifyWithDelayOnPaymentRequestWithSource() throws {
+    func test_makeAnotherCard_shouldCallNotifyWithDelayOnScanQR() throws {
         
         let (_, nanoServices, scheduler, spy) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
@@ -153,14 +165,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         //    trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, nanoServices, scheduler, spy)
-    }
-    
-    private func advance(
-        by interval: DispatchQueue.SchedulerTimeType.Stride,
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: interval)
     }
 }
 
