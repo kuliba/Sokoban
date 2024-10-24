@@ -162,6 +162,86 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    // MARK: - makeContacts
+    
+    func test_makeContacts_shouldCallNotifyWithDismissOnPaymentRequest() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        contacts.requestPayment(with: .avtodor)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeContacts_shouldCallNotifyWithDelayOnPaymentRequestWithSource() throws {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        contacts.requestPayment(with: .avtodor)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.contacts(.avtodor))
+        ])
+    }
+    
+    func test_makeContacts_shouldCallNotifyWithDelayOnPaymentRequestWithLatest() throws {
+        
+        let latestID: LatestPaymentData.ID = .random(in: 1...100)
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        contacts.requestPayment(with: .latestPayment(latestID))
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.latest(latestID))
+        ])
+    }
+    
+    func test_makeContacts_shouldCallNotifyWithDismissOnCountriesItemTap() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        contacts.countriesItemTap(with: .avtodor)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeContacts_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() throws {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let contacts = nanoServices.makeContacts(spy.call(payload:))
+        
+        contacts.countriesItemTap(with: .avtodor)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(299))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(1))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.countries(.avtodor))
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
