@@ -531,13 +531,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PlainClientInformBottomSheetTests",
-        "name" : "PlainClientInformBottomSheetTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "EphemeralStoresTests",
         "name" : "EphemeralStoresTests"
       }
@@ -568,6 +561,20 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CollateralLoanLandingShowCaseBackendTests",
         "name" : "CollateralLoanLandingShowCaseBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "СlientInformListTests",
+        "name" : "СlientInformListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
       }
     }
   ],
