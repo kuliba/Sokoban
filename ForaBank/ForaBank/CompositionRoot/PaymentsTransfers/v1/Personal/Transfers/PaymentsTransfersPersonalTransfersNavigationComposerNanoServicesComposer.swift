@@ -200,35 +200,6 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 }
             }
     }
-    
-    // PaymentsTransfersViewModel.bind(_:)
-    // PaymentsTransfersViewModel.swift:1338
-    private func bind(
-        _ paymentsViewModel: PaymentsViewModel,
-        using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
-        
-        let scanQR = paymentsViewModel.action
-            .compactMap(\.scanQR)
-            .handleEvents(receiveOutput: { _ in notify(.dismiss) })
-            .delay(for: .milliseconds(800), scheduler: scheduler)
-            .sink { _ in notify(.select(.scanQR)) }
-        
-        let contactAbroad = paymentsViewModel.action
-            .sink { action in
-                
-                switch action {
-                case let payload as PaymentsViewModelAction.ContactAbroad:
-#warning("FIXME using notify")
-                    _ = payload
-                    //    handleContactAbroad(source: payload.source)
-                    
-                default: break
-                }
-            }
-        
-        return [scanQR, contactAbroad]
-    }
 }
 
 // MARK: - bindings
@@ -265,9 +236,35 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 }
             }
     }
+    
+    // PaymentsTransfersViewModel.bind(_:)
+    // PaymentsTransfersViewModel.swift:1338
+    private func bind(
+        _ paymentsViewModel: PaymentsViewModel,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let scanQR = paymentsViewModel.action
+            .compactMap(\.scanQR)
+            .handleEvents(receiveOutput: { _ in notify(.dismiss) })
+            .delay(for: .milliseconds(800), scheduler: scheduler)
+            .sink { _ in notify(.select(.scanQR)) }
+        
+        let contactAbroad = paymentsViewModel.action
+            .compactMap(\.contactAbroad)
+            .delay(for: .milliseconds(700), scheduler: scheduler)
+            .sink { notify(.select(.contactAbroad($0.source))) }
+        
+        return [scanQR, contactAbroad]
+    }
 }
 
 private extension Action {
+    
+    var contactAbroad: PaymentsViewModelAction.ContactAbroad? {
+        
+        self as? PaymentsViewModelAction.ContactAbroad
+    }
     
     var scanQR: PaymentsViewModelAction.ScanQrCode? {
         

@@ -22,7 +22,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     // MARK: - abroad
     
-    func test_makeAbroad_shouldCallNotifyWithDismissOnPaymentRequest() throws {
+    func test_makeAbroad_shouldCallNotifyWithDismissOnPaymentRequest() {
         
         let (_, nanoServices, _, spy) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
@@ -38,6 +38,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .avtodor)
+        
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
         scheduler.advance(by: .milliseconds(299))
@@ -57,6 +58,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .latestPayment(latestID))
+        
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
         scheduler.advance(by: .milliseconds(299))
@@ -69,7 +71,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
-    func test_makeAbroad_shouldCallNotifyWithDismissOnCountriesItemTap() throws {
+    func test_makeAbroad_shouldCallNotifyWithDismissOnCountriesItemTap() {
         
         let (_, nanoServices, _, spy) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
@@ -85,6 +87,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.countriesItemTap(with: .avtodor)
+        
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
         scheduler.advance(by: .milliseconds(299))
@@ -111,22 +114,23 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertEqual(productTemplateListRequestSpy.values.count, 1)
     }
     
-    func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQR() throws {
+    func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQR() {
         
         let (_, nanoServices, _, spy) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
         
-        anotherCard.scanQRCode()
+        anotherCard.scanQR()
         
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
-    func test_makeAnotherCard_shouldCallNotifyWithDelayOnScanQR() throws {
+    func test_makeAnotherCard_shouldCallNotifyWithDelayOnScanQR() {
         
         let (_, nanoServices, scheduler, spy) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
         
-        anotherCard.scanQRCode()
+        anotherCard.scanQR()
+        
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
         
         scheduler.advance(by: .milliseconds(799))
@@ -136,6 +140,25 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
             .select(.scanQR)
+        ])
+    }
+    
+    func test_makeAnotherCard_shouldCallNotifyWithDelayOnContactAbroad() throws {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
+        
+        anotherCard.contactAbroad(source: source)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(699))
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(700))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.contactAbroad(source))
         ])
     }
     
@@ -235,9 +258,16 @@ private extension Node where Model == ContactsViewModel {
 
 private extension Node where Model == ClosePaymentsViewModelWrapper {
     
-    func scanQRCode() {
+    func scanQR() {
         
         let action = PaymentsViewModelAction.ScanQrCode()
+        model.paymentsViewModel.action.send(action)
+    }
+    
+    func contactAbroad(
+        source: Payments.Operation.Source
+    ) {
+        let action = PaymentsViewModelAction.ContactAbroad(source: source)
         model.paymentsViewModel.action.send(action)
     }
 }

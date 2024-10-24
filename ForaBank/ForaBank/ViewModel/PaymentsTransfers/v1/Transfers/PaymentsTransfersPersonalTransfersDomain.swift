@@ -14,6 +14,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     enum Element: Equatable {
         
         case buttonType(ButtonType)
+        case contactAbroad(Payments.Operation.Source)
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
