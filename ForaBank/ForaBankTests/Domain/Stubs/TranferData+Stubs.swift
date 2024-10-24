@@ -14,6 +14,7 @@ extension TransferGeneralData.PayeeExternal {
         inn: String = "7733126977",
         kpp: String = "773301001",
         accountNumber: String = "40702810238170103538",
+        bankBIC: String = "044525225",
         name: String = "ForaService"
     ) -> TransferGeneralData.PayeeExternal {
         
@@ -22,7 +23,7 @@ extension TransferGeneralData.PayeeExternal {
                 kpp: kpp,
                 accountId: nil,
                 accountNumber: accountNumber,
-                bankBIC: nil,
+                bankBIC: bankBIC,
                 cardId: nil,
                 cardNumber: nil,
                 compilerStatus: nil,

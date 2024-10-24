@@ -276,6 +276,9 @@ final class ModelSuccessTests: XCTestCase {
                 id: Payments.Parameter.Identifier.requisitsName.rawValue,
                 value: "ForaService"),
             Payments.ParameterMock(
+                id: Payments.Parameter.Identifier.requisitsBankBic.rawValue,
+                value: "044525225"),
+            Payments.ParameterMock(
                 id: Payments.Parameter.Identifier.requisitsMessage.rawValue,
                 value: "comment")
         ]
