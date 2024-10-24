@@ -233,7 +233,6 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
 
 private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
-    
     // PaymentsTransfersViewModel.bind(_:)
     // PaymentsTransfersViewModel.swift:1457
     private func bind(
@@ -242,36 +241,26 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     ) -> AnyCancellable {
         
         contacts.action
+            .handleEvents(receiveOutput: { _ in notify(.dismiss) })
+            .delay(for: .milliseconds(300), scheduler: scheduler)
             .sink { action in
                 
-                notify(.dismiss)
-                
-                self.scheduler.delay(for: .milliseconds(300)) {
-                    
-                    switch action {
-                    case let payload as ContactsViewModelAction.PaymentRequested:
-                        self.notify(with: payload.source, using: notify)
-                        
-                    case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                        notify(.select(.countries(payload.source)))
+                switch action {
+                case let payload as ContactsViewModelAction.PaymentRequested:
+                    switch payload.source {
+                    case let .latestPayment(latestPaymentID):
+                        notify(.select(.latest(latestPaymentID)))
                         
                     default:
-                        break
+                        notify(.select(.contacts(payload.source)))
                     }
+                    
+                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
+                    notify(.select(.countries(payload.source)))
+                    
+                default:
+                    break
                 }
             }
-    }
-
-    private func notify(
-        with source: Payments.Operation.Source,
-        using notify: @escaping Notify
-    ) {
-        switch source {
-        case let .latestPayment(latestPaymentID):
-            notify(.select(.latest(latestPaymentID)))
-            
-        default:
-            notify(.select(.contacts(source)))
-        }
     }
 }
