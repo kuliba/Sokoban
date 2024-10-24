@@ -151,7 +151,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
-    func test_makeAnotherCard_shouldCallNotifyWithDelayOnContactAbroad() throws {
+    func test_makeAnotherCard_shouldCallNotifyWithDelayOnContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
         let (_, nanoServices, scheduler, spy) = makeSUT()
@@ -239,7 +239,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
-    func test_makeContacts_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() throws {
+    func test_makeContacts_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() {
         
         let (_, nanoServices, scheduler, spy) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
@@ -289,7 +289,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
-    func test_makeDetail_shouldCallNotifyWithDelayOnContactAbroad() throws {
+    func test_makeDetail_shouldCallNotifyWithDelayOnContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
         let (_, nanoServices, scheduler, spy) = makeSUT()
@@ -306,6 +306,89 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [
             .select(.contactAbroad(source))
         ])
+    }
+    
+    // MARK: - makeLatest
+    
+    func test_makeLatest_shouldDeliverNilForMissingLatest() {
+        
+        let latestData = makeLatestPaymentData(type: .internet)
+        let model: Model = .mockWithEmptyExcept()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        
+        XCTAssertNil(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
+        XCTAssertFalse(model.contains(latestData))
+    }
+    
+    func test_makeLatest_shouldDeliverNilForNonEligibleType() {
+        
+        let latestData = makeLatestPaymentData(type: .unknown)
+        let model: Model = .mockWithEmptyExcept()
+        model.latestPayments.value.append(latestData)
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        
+        XCTAssertNil(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
+        XCTAssertTrue(model.contains(latestData))
+    }
+    
+    func test_makeLatest_shouldCallNotifyWithDismissOnScanQR() throws {
+        
+        let latestData = makeLatestPaymentData(type: .internet)
+        let model: Model = .mockWithEmptyExcept()
+        model.latestPayments.value.append(latestData)
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
+        
+        latest.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        XCTAssertTrue(model.contains(latestData))
+    }
+    
+    func test_makeLatest_shouldCallNotifyWithDelayOnScanQR() throws {
+        
+        let latestData = makeLatestPaymentData(type: .internet)
+        let model: Model = .mockWithEmptyExcept()
+        model.latestPayments.value.append(latestData)
+        let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
+        let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
+
+        latest.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(799))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(800))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.scanQR)
+        ])
+        XCTAssertTrue(model.contains(latestData))
+    }
+    
+    func test_makeLatest_shouldCallNotifyWithDelayOnContactAbroad() throws {
+        
+        let latestData = makeLatestPaymentData(type: .internet)
+        let source: Payments.Operation.Source = .avtodor
+        let model: Model = .mockWithEmptyExcept()
+        model.latestPayments.value.append(latestData)
+        let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
+        let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
+
+        latest.contactAbroad(source: source)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(699))
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(700))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.contactAbroad(source))
+        ])
+        XCTAssertTrue(model.contains(latestData))
     }
     
     // MARK: - Helpers
@@ -383,6 +466,11 @@ private extension Model {
             .compactMap { $0 as? ModelAction.ProductTemplate.List.Request }
             .eraseToAnyPublisher()
     }
+    
+    func contains(_ latestData: LatestPaymentData) -> Bool {
+        
+        latestPayments.value.map(\.id).contains(latestData.id)
+    }
 }
 
 private extension Node where Model == ContactsViewModel {
@@ -415,5 +503,21 @@ private extension Node where Model == ClosePaymentsViewModelWrapper {
     ) {
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
         model.paymentsViewModel.action.send(action)
+    }
+}
+
+// MARK: - reusable helpers
+// TODO: - move to a different place
+
+extension XCTestCase {
+    
+    func makeLatestPaymentData(
+        id: Int = .random(in: 1...1_000),
+        date: Date = .init(),
+        paymentDate: String = anyMessage(),
+        type: LatestPaymentData.Kind = .unknown
+    ) -> LatestPaymentData {
+        
+        return .init(id: id, date: date, paymentDate: paymentDate, type: type)
     }
 }
