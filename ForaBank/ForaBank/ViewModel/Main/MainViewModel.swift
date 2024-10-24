@@ -15,7 +15,6 @@ import SberQR
 import SwiftUI
 import LandingUIComponent
 import PaymentSticker
-//import ClientInformList
 
 class MainViewModel: ObservableObject, Resetable {
     

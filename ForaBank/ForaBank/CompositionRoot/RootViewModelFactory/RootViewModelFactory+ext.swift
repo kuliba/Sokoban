@@ -27,7 +27,6 @@ import SberQR
 import SerialComponents
 import SharedAPIInfra
 import SwiftUI
-//import ClientInformList
 import GetClientInformDataServices
 
 extension RootViewModelFactory {
@@ -430,9 +429,9 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .success(response):
-//                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
-//                    completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
-                    break
+                    
+                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
+                    completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
                 }
                 
                 _ = _createGetAuthorizedZoneClientInformData
@@ -444,9 +443,11 @@ extension RootViewModelFactory {
                 createGetAuthorizedZoneClientInformData {
                     
                     if let info = $0 {
+                        
                         self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
                         self.model.сlientAuthorizationState.value.authorized = info
                     } else {
+                        
                         self.logger.log(level: .error, category: .network, message: "failed to fetch authorizedZoneClientInformData", file: #file, line: #line)
                     }
                     
