@@ -48,8 +48,10 @@ public struct CarouselWithDotsView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             .frame(height: carousel.size.newHeight(config.paddings.horizontal))
             
-            pageControl()
-                .frame(maxWidth: .infinity)
+            if carousel.list.count > 1 {
+                pageControl()
+                    .frame(maxWidth: .infinity)
+            }
         }
     }
         

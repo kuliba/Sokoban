@@ -16,6 +16,7 @@ import SwiftUI
 import MarketShowcase
 import UIPrimitives
 import UtilityServicePrepaymentUI
+import LandingUIComponent
 
 struct RootView: View {
     
@@ -112,7 +113,7 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -142,13 +143,34 @@ struct RootView: View {
             
         case .userAccount(let viewModel):
             NavigationView {
-                UserAccountView(viewModel: viewModel)
+                UserAccountView(
+                    viewModel: viewModel,
+                    config: .iFora
+                )
             }
             
         case let .payments(paymentsViewModel):
             NavigationView {
                 PaymentsView(viewModel: paymentsViewModel)
             }
+            
+        case let .landing(viewModel, needIgnoringSafeArea):
+            NavigationView {
+                LandingWrapperView(viewModel: viewModel)
+                    .modifier(IgnoringSafeArea(needIgnoringSafeArea, .bottom))
+            }
+            .accentColor(.textSecondary)
+                        
+        case let .openCard(viewModel):
+            NavigationView {
+                AuthProductsView(viewModel: viewModel)
+            }
+            
+        case .paymentSticker:
+            
+            AnyView(
+                rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
+            )
         }
     }
 }
@@ -994,7 +1016,8 @@ struct RootView_Previews: PreviewProvider {
                 showLoginAction: { _ in
                     
                         .init(viewModel: .init(authLoginViewModel: .preview))
-                }
+                }, 
+                landingServices: .empty()
             ),
             rootViewFactory: .preview
         )
@@ -1032,7 +1055,7 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:)
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -1045,8 +1068,31 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _ in .none }
+            makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
+            makeMarketShowcaseView: { _,_  in .none },
+            makeNavigationOperationView: { _ in EmptyView() }
         )
+    }
+}
+
+private struct IgnoringSafeArea: ViewModifier {
+    
+    let needIgnoringSafeArea: Bool
+    let edgeSet: Edge.Set
+    
+    init(
+        _ needIgnoringSafeArea: Bool,
+        _ edgeSet: Edge.Set
+    ) {
+        self.needIgnoringSafeArea = needIgnoringSafeArea
+        self.edgeSet = edgeSet
+    }
+        
+    func body(content: Content) -> some View {
+        
+        if needIgnoringSafeArea {
+            content
+                .edgesIgnoringSafeArea(edgeSet)
+        } else { content }
     }
 }

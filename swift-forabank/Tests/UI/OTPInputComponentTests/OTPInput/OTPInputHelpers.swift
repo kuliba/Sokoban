@@ -68,6 +68,48 @@ func completed(
     ))
 }
 
+func failureСonnectivityError(
+    otpField: OTPFieldState = .init()
+) -> OTPInputState.Status {
+    
+    .input(.init(
+        countdown: .failure(.connectivityError),
+        otpField: .init(status: .failure(.connectivityError))
+    ))
+}
+
+func failureOtpInputNilСonnectivityError(
+    otpField: OTPFieldState = .init()
+) -> OTPInputState.Status {
+    
+    .input(.init(
+        countdown: .failure(.connectivityError),
+        otpField: .init(status: nil)
+    ))
+}
+
+func failureRunningСonnectivityError(
+    otpField: OTPFieldState = .init()
+) -> OTPInputState.Status {
+    
+    .input(.init(
+        countdown: .running(remaining: 31),
+        otpField: .init(status: .failure(.connectivityError))
+    ))
+}
+
+func failureServerError(
+    otpField: OTPFieldState = .init(),
+    message: String
+) -> OTPInputState.Status {
+    
+    .input(.init(
+        countdown: .failure(.serverError(message)),
+        otpField: otpField
+    ))
+}
+
+
 func running(
     _ remaining: Int,
     otpField: OTPFieldState = .init()
