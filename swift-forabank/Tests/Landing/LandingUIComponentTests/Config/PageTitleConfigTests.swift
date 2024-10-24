@@ -7,6 +7,7 @@
 
 @testable import LandingUIComponent
 import XCTest
+import SharedConfigs
 
 final class PageTitleConfigTests: XCTestCase {
     
@@ -15,13 +16,13 @@ final class PageTitleConfigTests: XCTestCase {
     func test_init_config_shouldSetAllValue() {
         
         let config = makeSUT(
-            title: .init(color: .black, font: .body),
-            subtitle: .init(color: .blue, font: .caption))
+            title: .init(textFont: .body, textColor: .black),
+            subtitle: .init(textFont: .caption, textColor: .blue))
         
-        XCTAssertEqual(config.title.color, .black)
-        XCTAssertEqual(config.title.font, .body)
-        XCTAssertEqual(config.subtitle.color, .blue)
-        XCTAssertEqual(config.subtitle.font, .caption)
+        XCTAssertEqual(config.title.textFont, .body)
+        XCTAssertEqual(config.title.textColor, .black)
+        XCTAssertEqual(config.subtitle.textFont, .caption)
+        XCTAssertEqual(config.subtitle.textColor, .blue)
     }
     
     func test_background_transparencyTrue_shouldSetToClear() {
@@ -46,8 +47,8 @@ final class PageTitleConfigTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        title: Config.Title = .init(color: .black, font: .body),
-        subtitle: Config.Subtitle = .init(color: .blue, font: .caption)
+        title: TextConfig = .init(textFont: .title, textColor: .white),
+        subtitle: TextConfig = .init(textFont: .body, textColor: .gray)
     ) -> Config {
         
         return .init(

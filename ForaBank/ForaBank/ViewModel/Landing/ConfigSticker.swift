@@ -23,7 +23,7 @@ extension UILanding.Component.Config {
         multiMarkersText: .stickerDefault,
         multiButtons: .stickerDefault,
         multiTypeButtons: .stickerDefault,
-        pageTitle: .stickerDefault,
+        pageTitle: .iFora,
         textWithIconHorizontal: .stickerDefault,
         iconWithTwoTextLines: .stickerDefault,
         image: .stickerDefault,
@@ -141,20 +141,6 @@ extension UILanding.Multi.Texts.Config {
         ),
         cornerRadius: 12,
         spacing: 16
-    )
-}
-
-extension UILanding.PageTitle.Config {
-    
-    static let stickerDefault: Self = .init(
-        title: .init(
-            color: .textSecondary,
-            font: .textH3M18240()
-        ),
-        subtitle: .init(
-            color: .textPlaceholder,
-            font: .textBodyMR14180()
-        )
     )
 }
 

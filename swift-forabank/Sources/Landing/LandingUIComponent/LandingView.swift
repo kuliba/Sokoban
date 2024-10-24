@@ -14,7 +14,8 @@ import UIPrimitives
 public struct LandingView: View {
     
     @StateObject private var viewModel: LandingViewModel
-    @State private var position: CGFloat = 0
+    @State private(set) var isShowHeader = false
+
     @State private var scrollViewContentSize: CGSize = .zero
     
     private let action: (LandingEvent) -> Void
@@ -62,9 +63,7 @@ public struct LandingView: View {
     var backButton : some View {
         
         Button(action: {
-            // TODO: Me, Struct
-            action(.card(.goToMain))
-            action(.sticker(.goToMain))
+            action(.goToBack)
         }) { Image(systemName: "chevron.backward") }
     }
     
@@ -74,17 +73,20 @@ public struct LandingView: View {
             
             ScrollView(.vertical, showsIndicators: false) {
                 
-                VStack(spacing: 0) { componentsView(viewModel.landing.main) }
-                    .background(
-                        GeometryReader {
-                            Color.clear.preference(
-                                key: ViewOffsetKey.self,
-                                value: -$0.frame(in: .named("scroll")).origin.y)
-                        }
-                    )
-                    .onPreferenceChange(ViewOffsetKey.self) {
-                        position = $0
+                VStack(spacing: 0) {
+                    
+                    componentsView(viewModel.landing.main)
+                }
+                .background(
+                    GeometryReader {
+                        Color.clear.preference(
+                            key: ViewOffsetKey.self,
+                            value: -$0.frame(in: .named("scroll")).origin.y)
                     }
+                )
+            }
+            .onPreferenceChange(ViewOffsetKey.self) { value in
+                isShowHeader = value > viewModel.config.offsetForDisplayHeader
             }
             .coordinateSpace(name: "scroll")
             
@@ -100,22 +102,38 @@ public struct LandingView: View {
         .toolbar {
             
             ToolbarItem(placement: .principal) {
-
-                    if viewModel.landing.shouldShowNavigationTitle(
-                        offset: position,
-                        offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
-                        componentsView(viewModel.landing.header)
-                    } else {
-                        Text(viewModel.landing.titleInMain().text)
-                            .font(.system(size: 18, weight: .medium))
-                    }
+                header()
             }
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 backButton
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+    }
+    
+    @ViewBuilder
+    private func header() -> some View {
+         
+        
+        if viewModel.landing.shouldShowNavigationTitle(
+            isShowHeader) {
+            
+            componentsView(viewModel.landing.header)
+        } else {
+            
+            VStack {
+                
+                let pageTitle = viewModel.landing.titleInMain()
+                
+                pageTitle.text.text(withConfig: viewModel.config.pageTitle.title)
+                
+                pageTitle.subTitle.map {
+                    $0.text(withConfig: viewModel.config.pageTitle.subtitle)
+                }
+            }
+        }
     }
     
     private func componentsView(
