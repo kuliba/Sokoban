@@ -1055,7 +1055,8 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:config:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:),
+                        makeAnywayFlowView: { _ in fatalError() }
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -1070,7 +1071,8 @@ private extension RootViewFactory {
             makeInfoViews: .default,
             makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
             makeMarketShowcaseView: { _,_  in .none },
-            makeNavigationOperationView: { _ in EmptyView() }
+            makeNavigationOperationView: { _ in EmptyView() },
+            makeAnywayFlowView: { _ in fatalError() }
         )
     }
 }

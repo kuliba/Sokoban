@@ -58,7 +58,8 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeNavigationOperationView: makeNavigationOperationView
+            makeNavigationOperationView: makeNavigationOperationView, 
+            makeAnywayFlowView: makeAnywayFlowView
         )
     }
 }
@@ -88,7 +89,8 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
-                makeUserAccountView: makeUserAccountView
+                makeUserAccountView: makeUserAccountView, 
+                makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) }
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -143,6 +145,39 @@ private extension RootViewFactoryComposer {
         
         return composer.compose(event: event)
     }
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> AnywayFlowView<PaymentCompleteView> {
+        
+        let anywayPaymentFactory = makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                self.makePaymentCompleteView(
+                result: .init(
+                    formattedAmount: $0.formattedAmount,
+                    merchantIcon: $0.merchantIcon,
+                    result: $0.result.mapError {
+                        
+                        return .init(hasExpired: $0.hasExpired)
+                    }
+                ),
+                goToMain: { flowModel.event(.goTo(.main)) })
+            }
+        )
+    }
+    
     
     private func currencyOfProduct(
         product: ProductSelect.Product

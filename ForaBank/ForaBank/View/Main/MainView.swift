@@ -189,7 +189,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .templates(node):
             TemplatesListFlowView(
                 model: node.model,
-                makeAnywayFlowView: makeAnywayFlowView,
+                makeAnywayFlowView: viewFactory.makeAnywayFlowView,
                 makeIconView: {
                     
                     viewFactory.makeIconView($0.map { .svg($0) })
@@ -400,7 +400,7 @@ private extension MainView {
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
-            makeAnywayFlowView: makeAnywayFlowView
+            makeAnywayFlowView: viewFactory.makeAnywayFlowView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
@@ -421,7 +421,7 @@ private extension MainView {
         AnywayServicePickerFlowView(
             flowModel: flowModel,
             factory: .init(
-                makeAnywayFlowView: makeAnywayFlowView,
+                makeAnywayFlowView: viewFactory.makeAnywayFlowView,
                 makeIconView: viewFactory.makeIconView
             )
         )
@@ -437,7 +437,7 @@ private extension MainView {
 
 // MARK: - payment flow
 
-private extension MainView {
+/*private extension MainView {
     
     @ViewBuilder
     func makeAnywayFlowView(
@@ -471,7 +471,7 @@ private extension MainView {
             }
         )
     }
-}
+}*/
 
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
@@ -617,7 +617,8 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:config:)
+            makeUserAccountView: UserAccountView.init(viewModel:config:),
+            makeAnywayFlowView: { _ in fatalError() }
         )
     }
 }
