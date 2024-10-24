@@ -233,7 +233,12 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 //        meToMeViewModel: meToMe,
                 //        successViewModel: payload.viewModel
                 //    )
-                notify(.receive(.successMeToMe($0)))
+                let cancellables = self.bind($0, using: notify)
+                
+                notify(.receive(.successMeToMe(.init(
+                    model: $0,
+                    cancellables: cancellables
+                ))))
             }
         
         let failure = share
@@ -258,11 +263,29 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 //    else { return }
                 //
                 //    bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
-                #warning("unimplemented")
+#warning("unimplemented")
                 _ = $0
             }
         
         return [success, failure, closeBottomSheet, enable]
+    }
+    
+    private func bind(
+        _ success: PaymentsSuccessViewModel,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let share = success.action.share()
+        
+        let close = share
+            .compactMap(\.successButtonClose)
+            .sink { _ in notify(.dismiss) }
+        
+        let `repeat` = share
+            .compactMap(\.successButtonRepeat)
+            .sink { _ in notify(.dismiss) }
+        
+        return [close, `repeat`]
     }
 }
 
@@ -312,5 +335,15 @@ private extension Action {
     var scanQR: PaymentsViewModelAction.ScanQrCode? {
         
         self as? PaymentsViewModelAction.ScanQrCode
+    }
+    
+    var successButtonClose: PaymentsSuccessAction.Button.Close? {
+        
+        self as? PaymentsSuccessAction.Button.Close
+    }
+    
+    var successButtonRepeat: PaymentsSuccessAction.Button.Repeat? {
+        
+        self as? PaymentsSuccessAction.Button.Repeat
     }
 }

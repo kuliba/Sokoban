@@ -28,7 +28,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
-        case successMeToMe(PaymentsSuccessViewModel)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
     typealias Binder = PlainPickerBinder<Element, Navigation>

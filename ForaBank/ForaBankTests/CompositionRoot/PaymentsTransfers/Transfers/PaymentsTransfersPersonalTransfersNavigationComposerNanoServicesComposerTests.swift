@@ -485,6 +485,38 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.receive(.successMeToMe(.init(success)))])
     }
     
+    func test_makeMeToMe_shouldBindSuccessDismissOnEmitClose() throws {
+        
+        let success: PaymentsSuccessViewModel = .sample2
+        let model = try makeModelWithMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
+        
+        makeMeToMe.emitResponseSuccess(with: success)
+        success.action.send(PaymentsSuccessAction.Button.Close())
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .receive(.successMeToMe(.init(success))),
+            .dismiss
+        ])
+    }
+    
+    func test_makeMeToMe_shouldBindSuccessDismissOnEmitRepeat() throws {
+        
+        let success: PaymentsSuccessViewModel = .sample2
+        let model = try makeModelWithMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
+        
+        makeMeToMe.emitResponseSuccess(with: success)
+        success.action.send(PaymentsSuccessAction.Button.Repeat())
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .receive(.successMeToMe(.init(success))),
+            .dismiss
+        ])
+    }
+    
     func test_makeMeToMe_shouldDeliverAlertOnEmitResponseFailure() throws {
         
         let model = try makeModelWithMeToMeProduct()
@@ -594,7 +626,7 @@ private extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
                 return .receive(.alert(alert))
                 
             case let .successMeToMe(successMeToMe):
-                return .receive(.successMeToMe(.init(successMeToMe)))
+                return .receive(.successMeToMe(.init(successMeToMe.model)))
                 
             default:
                 return unimplemented("\(receive) is not used in tests.")
