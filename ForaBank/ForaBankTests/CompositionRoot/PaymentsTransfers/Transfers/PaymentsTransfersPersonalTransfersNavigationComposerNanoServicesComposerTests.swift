@@ -323,8 +323,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeLatest_shouldDeliverNilForNonEligibleType() {
         
         let latestData = makeLatestPaymentData(type: .unknown)
-        let model: Model = .mockWithEmptyExcept()
-        model.latestPayments.value.append(latestData)
+        let model = makeModel(with: latestData)
         let (_, nanoServices, _, spy) = makeSUT(model: model)
         
         XCTAssertNil(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
@@ -334,25 +333,22 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeLatest_shouldCallNotifyWithDismissOnScanQR() throws {
         
         let latestData = makeLatestPaymentData(type: .internet)
-        let model: Model = .mockWithEmptyExcept()
-        model.latestPayments.value.append(latestData)
+        let model = makeModel(with: latestData)
         let (_, nanoServices, _, spy) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         
         latest.scanQR()
         
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
-        XCTAssertTrue(model.contains(latestData))
     }
     
     func test_makeLatest_shouldCallNotifyWithDelayOnScanQR() throws {
         
         let latestData = makeLatestPaymentData(type: .internet)
-        let model: Model = .mockWithEmptyExcept()
-        model.latestPayments.value.append(latestData)
+        let model = makeModel(with: latestData)
         let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
-
+        
         latest.scanQR()
         
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
@@ -365,18 +361,16 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
             .dismiss,
             .select(.scanQR)
         ])
-        XCTAssertTrue(model.contains(latestData))
     }
     
     func test_makeLatest_shouldCallNotifyWithDelayOnContactAbroad() throws {
         
         let latestData = makeLatestPaymentData(type: .internet)
         let source: Payments.Operation.Source = .avtodor
-        let model: Model = .mockWithEmptyExcept()
-        model.latestPayments.value.append(latestData)
+        let model = makeModel(with: latestData)
         let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
-
+        
         latest.contactAbroad(source: source)
         
         XCTAssertNoDiff(spy.equatablePayloads, [])
@@ -388,7 +382,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [
             .select(.contactAbroad(source))
         ])
-        XCTAssertTrue(model.contains(latestData))
     }
     
     // MARK: - Helpers
@@ -417,6 +410,20 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         //    trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, nanoServices, scheduler, spy)
+    }
+    
+    private func makeModel(
+        with latestData: LatestPaymentData,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Model {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.latestPayments.value.append(latestData)
+        
+        XCTAssertTrue(model.contains(latestData), "Expected model with LatestPaymentData \(latestData).", file: file, line: line)
+        
+        return model
     }
 }
 
