@@ -289,6 +289,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     }
 }
 
+// MARK: - Helpers
+
 private extension Action {
     
     var contactAbroad: PaymentsViewModelAction.ContactAbroad? {
