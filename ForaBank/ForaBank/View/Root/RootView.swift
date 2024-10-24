@@ -782,6 +782,9 @@ private extension RootView {
                                         
                                         event(.select(.buttonType(buttonType)))
                                     }
+                                    
+                                default:
+                                    return nil
                                 }
                             }
                         )

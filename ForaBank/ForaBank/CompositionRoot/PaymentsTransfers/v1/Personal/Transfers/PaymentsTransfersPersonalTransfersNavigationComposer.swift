@@ -27,6 +27,12 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         switch element {
         case let .buttonType(buttonType):
             return compose(for: buttonType, notify: notify)
+            
+        case let .contacts(source):
+            return nanoServices.makeSource(source, notify).map { .paymentsViewModel($0) }
+            
+        case let .latest(latest):
+            return nanoServices.makeLatest(latest, notify).map { .payments($0) }
         }
     }
     
@@ -54,7 +60,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .contacts(nanoServices.makeContacts(notify))
             
         case .requisites:
-            return .payments(nanoServices.makeDetailPayment(notify))
+            return .payments(nanoServices.makeDetail(notify))
         }
     }
 }

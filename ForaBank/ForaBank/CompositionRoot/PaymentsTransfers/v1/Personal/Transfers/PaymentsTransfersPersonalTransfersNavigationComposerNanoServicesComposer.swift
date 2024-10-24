@@ -33,8 +33,10 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
             makeAbroad: { self.makeAbroad(notify: $0) },
             makeAnotherCard: { self.makeAnotherCard(notify: $0) },
             makeContacts: { self.makeContacts(notify: $0) },
-            makeDetailPayment: { self.makeDetailPayment(notify: $0) },
-            makeMeToMe: { self.makeMeToMe(notify: $0) }
+            makeDetail: { self.makeDetail(notify: $0) },
+            makeLatest: { self.makeLatest(latest: $0, notify: $1) },
+            makeMeToMe: { self.makeMeToMe(notify: $0) },
+            makeSource: { self.makeSource(source: $0, notify: $1) }
         )
     }
 
@@ -51,7 +53,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     ) -> Node<ContactsViewModel> {
         
         let abroad = model.makeContactsViewModel(forMode: .abroad)
-        let cancellable = bind(abroad)
+        let cancellable = bind(abroad, notify: notify)
         
         return .init(model: abroad, cancellable: cancellable)
     }
@@ -67,7 +69,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             service: .toAnotherCard,
             scheduler: scheduler
         )
-        let cancellable = bind(anotherCard)
+        let cancellable = bind(anotherCard.paymentsViewModel)
         
         return .init(model: anotherCard, cancellable: cancellable)
     }
@@ -75,10 +77,10 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     // PaymentsTransfersViewModel.bind(_:)
     // PaymentsTransfersViewModel.swift:1338
     private func bind(
-        _ wrapper: ClosePaymentsViewModelWrapper
+        _ paymentsViewModel: PaymentsViewModel
     ) -> AnyCancellable {
         
-        wrapper.paymentsViewModel.action
+        paymentsViewModel.action
             .sink { action in
                 
                 switch action {
@@ -106,12 +108,12 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let contacts = model.makeContactsViewModel(
             forMode: .fastPayments(.contacts)
         )
-        let cancellable = bind(contacts)
+        let cancellable = bind(contacts, notify: notify)
         
         return .init(model: contacts, cancellable: cancellable)
     }
     
-    func makeDetailPayment(
+    func makeDetail(
         notify: @escaping Notify
     ) -> Node<ClosePaymentsViewModelWrapper> {
         
@@ -120,9 +122,59 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             service: .requisites,
             scheduler: scheduler
         )
-        let cancellable = bind(detailPayment)
+        let cancellable = bind(detailPayment.paymentsViewModel)
         
         return .init(model: detailPayment, cancellable: cancellable)
+    }
+    
+    func makeLatest(
+        latest: LatestPaymentData.ID,
+        notify: @escaping Notify
+    ) -> Node<ClosePaymentsViewModelWrapper>? {
+        
+        guard let latest = model.latestPayments.value.first(where: { $0.id == latest }),
+              // pasted from PaymentsTransfersViewModel.swift:341
+              // but might need updated approach with payment flow?
+              [LatestPaymentData.Kind.internet, .service, .mobile, .outside, .phone, .transport, .taxAndStateService].contains(latest.type)
+        else { return nil }
+        
+        let wrapper = ClosePaymentsViewModelWrapper(
+            model: model,
+            source: .latestPayment(latest.id),
+            scheduler: scheduler
+        )
+        
+        let cancellable = bind(wrapper.paymentsViewModel)
+        
+        return .init(model: wrapper, cancellable: cancellable)
+    }
+    
+    func makeSource(
+        source: Payments.Operation.Source,
+        notify: @escaping Notify
+    ) -> Node<PaymentsViewModel>? {
+        
+        let paymentsViewModel = PaymentsViewModel(
+            source: source,
+            model: model
+        ) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch source {
+            case .direct:
+                notify(.select(.buttonType(.abroad)))
+                
+            case .sfp:
+                notify(.select(.buttonType(.byPhoneNumber)))
+                
+            default: break
+            }
+        }
+        
+        let cancellable = bind(paymentsViewModel)
+        
+        return .init(model: paymentsViewModel, cancellable: cancellable)
     }
     
     func makeMeToMe(
@@ -187,7 +239,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     // PaymentsTransfersViewModel.bind(_:)
     // PaymentsTransfersViewModel.swift:1457
     private func bind(
-        _ contacts: ContactsViewModel
+        _ contacts: ContactsViewModel,
+        notify: @escaping Notify
     ) -> AnyCancellable {
         
         contacts.action
@@ -195,9 +248,13 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
-#warning("FIXME using notify")
-                    _ = payload
                     // requestContactsPayment(source: payload.source)
+                    notify(.dismiss)
+
+                    self.scheduler.delay(for: .milliseconds(300)) {
+                        
+                        self.handle(source: payload.source, notify: notify)
+                    }
                     
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
 #warning("FIXME using notify")
@@ -210,4 +267,16 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             }
     }
 
+    private func handle(
+        source: Payments.Operation.Source,
+        notify: @escaping Notify
+    ) {
+        switch source {
+        case let .latestPayment(latestPaymentID):
+            notify(.select(.latest(latestPaymentID)))
+            
+        default:
+            notify(.select(.contacts(source)))
+        }
+    }
 }

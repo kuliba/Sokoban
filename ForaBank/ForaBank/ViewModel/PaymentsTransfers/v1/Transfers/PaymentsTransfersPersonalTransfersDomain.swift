@@ -14,6 +14,8 @@ enum PaymentsTransfersPersonalTransfersDomain {
     enum Element {
         
         case buttonType(ButtonType)
+        case contacts(Payments.Operation.Source)
+        case latest(LatestPaymentData.ID)
     }
     
     enum Navigation {
@@ -21,6 +23,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
+        case paymentsViewModel(Node<PaymentsViewModel>)
     }
     
     typealias Binder = PlainPickerBinder<Element, Navigation>
