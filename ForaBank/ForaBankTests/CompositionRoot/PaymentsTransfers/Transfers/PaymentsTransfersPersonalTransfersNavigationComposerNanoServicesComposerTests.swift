@@ -384,6 +384,56 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
+    // MARK: - makeSource
+    
+    func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithDelayOnScanQR() {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(799))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(800))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.scanQR)
+        ])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithDelayOnContactAbroad() {
+        
+        let operationSource: Payments.Operation.Source = .avtodor
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.contactAbroad(source: operationSource)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(699))
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(700))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.contactAbroad(operationSource))
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
@@ -501,15 +551,43 @@ private extension Node where Model == ClosePaymentsViewModelWrapper {
     
     func scanQR() {
         
+        model.paymentsViewModel.scanQR()
+    }
+    
+    func contactAbroad(
+        source: Payments.Operation.Source
+    ) {
+        model.paymentsViewModel.contactAbroad(source: source)
+    }
+}
+
+private extension Node where Model == PaymentsViewModel {
+    
+    func scanQR() {
+        
+        model.scanQR()
+    }
+    
+    func contactAbroad(
+        source: Payments.Operation.Source
+    ) {
+        model.contactAbroad(source: source)
+    }
+}
+
+private extension PaymentsViewModel {
+    
+    func scanQR() {
+        
         let action = PaymentsViewModelAction.ScanQrCode()
-        model.paymentsViewModel.action.send(action)
+        self.action.send(action)
     }
     
     func contactAbroad(
         source: Payments.Operation.Source
     ) {
         let action = PaymentsViewModelAction.ContactAbroad(source: source)
-        model.paymentsViewModel.action.send(action)
+        self.action.send(action)
     }
 }
 
