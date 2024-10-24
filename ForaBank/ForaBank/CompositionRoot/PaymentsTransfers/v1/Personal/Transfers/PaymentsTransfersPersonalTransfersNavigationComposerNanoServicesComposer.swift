@@ -123,7 +123,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     func makeSource(
         source: Payments.Operation.Source,
         notify: @escaping Notify
-    ) -> Node<PaymentsViewModel>? {
+    ) -> Node<PaymentsViewModel> {
         
         let paymentsViewModel = PaymentsViewModel(
             source: source,

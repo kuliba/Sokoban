@@ -179,14 +179,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
-    
-    func test_contacts_shouldDeliverNilOnNil() {
         
-        let (sut, _) = makeSUT(sourcePayment: nil)
-        
-        XCTAssertNil(sut.compose(.contacts(.avtodor)) { _ in })
-    }
-    
     func test_contacts_shouldDeliverSourcePayment() throws {
         
         let source = makeSourcePayment()
@@ -248,7 +241,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
-    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>?>
+    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
         
@@ -290,7 +283,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
-            makeSource: .init(stubs: [sourcePayment])
+            makeSource: .init(stubs: [
+                sourcePayment ?? makeSourcePayment()
+            ])
         )
         let sut = SUT(nanoServices: .init(
             makeAbroad: spies.makeAbroad.call,

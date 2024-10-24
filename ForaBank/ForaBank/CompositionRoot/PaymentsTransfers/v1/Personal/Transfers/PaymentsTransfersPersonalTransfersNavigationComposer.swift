@@ -35,7 +35,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return { fatalError("unimplemented contactAbroad with \(source)") }()
             
         case let .contacts(source):
-            return nanoServices.makeSource(source, notify).map { .paymentsViewModel($0) }
+            return .paymentsViewModel(nanoServices.makeSource(source, notify))
             
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
