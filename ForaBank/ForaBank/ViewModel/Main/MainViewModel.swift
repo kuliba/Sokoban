@@ -1134,7 +1134,7 @@ extension MainViewModel {
             model: model,
             closeAction: { [weak self] in
                 
-                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                self?.rootActions?.dismissAll()
             }
         )
         let cancellable = bind(paymentsViewModel)
