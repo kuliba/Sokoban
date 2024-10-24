@@ -51,9 +51,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     ) -> Node<ContactsViewModel> {
         
         let abroad = model.makeContactsViewModel(forMode: .abroad)
-        let cancellable = bind(abroad, notify: notify)
+        let cancellables = bind(abroad, notify: notify)
         
-        return .init(model: abroad, cancellable: cancellable)
+        return .init(model: abroad, cancellables: cancellables)
     }
     
     func makeAnotherCard(
@@ -79,9 +79,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let contacts = model.makeContactsViewModel(
             forMode: .fastPayments(.contacts)
         )
-        let cancellable = bind(contacts, notify: notify)
+        let cancellables = bind(contacts, notify: notify)
         
-        return .init(model: contacts, cancellable: cancellable)
+        return .init(model: contacts, cancellables: cancellables)
     }
     
     func makeDetail(
@@ -211,30 +211,31 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     private func bind(
         _ contacts: ContactsViewModel,
         notify: @escaping Notify
-    ) -> AnyCancellable {
+    ) -> Set<AnyCancellable> {
         
-        contacts.action
+        let share = contacts.action
             .handleEvents(receiveOutput: { _ in notify(.dismiss) })
             .delay(for: .milliseconds(300), scheduler: scheduler)
-            .sink { action in
+            .share()
+        
+        let paymentRequested = share
+            .compactMap(\.paymentRequested)
+            .sink { payload in
                 
-                switch action {
-                case let payload as ContactsViewModelAction.PaymentRequested:
-                    switch payload.source {
-                    case let .latestPayment(latestPaymentID):
-                        notify(.select(.latest(latestPaymentID)))
-                        
-                    default:
-                        notify(.select(.contacts(payload.source)))
-                    }
-                    
-                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                    notify(.select(.countries(payload.source)))
+                switch payload.source {
+                case let .latestPayment(latestPaymentID):
+                    notify(.select(.latest(latestPaymentID)))
                     
                 default:
-                    break
+                    notify(.select(.contacts(payload.source)))
                 }
             }
+        
+        let countriesItemTap = share
+            .compactMap(\.countriesItemTap)
+            .sink { notify(.select(.countries($0.source))) }
+        
+        return [paymentRequested, countriesItemTap]
     }
     
     // PaymentsTransfersViewModel.bind(_:)
@@ -244,13 +245,15 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let scanQR = paymentsViewModel.action
+        let share = paymentsViewModel.action.share()
+        
+        let scanQR = share
             .compactMap(\.scanQR)
             .handleEvents(receiveOutput: { _ in notify(.dismiss) })
             .delay(for: .milliseconds(800), scheduler: scheduler)
             .sink { _ in notify(.select(.scanQR)) }
         
-        let contactAbroad = paymentsViewModel.action
+        let contactAbroad = share
             .compactMap(\.contactAbroad)
             .delay(for: .milliseconds(700), scheduler: scheduler)
             .sink { notify(.select(.contactAbroad($0.source))) }
@@ -264,6 +267,16 @@ private extension Action {
     var contactAbroad: PaymentsViewModelAction.ContactAbroad? {
         
         self as? PaymentsViewModelAction.ContactAbroad
+    }
+    
+    var countriesItemTap: ContactsSectionViewModelAction.Countries.ItemDidTapped? {
+        
+        self as? ContactsSectionViewModelAction.Countries.ItemDidTapped
+    }
+    
+    var paymentRequested: ContactsViewModelAction.PaymentRequested? {
+        
+        self as? ContactsViewModelAction.PaymentRequested
     }
     
     var scanQR: PaymentsViewModelAction.ScanQrCode? {
