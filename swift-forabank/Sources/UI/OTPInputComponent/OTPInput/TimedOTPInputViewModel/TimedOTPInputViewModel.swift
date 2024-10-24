@@ -39,9 +39,22 @@ public final class TimedOTPInputViewModel: ObservableObject {
                 self?.state = state
                 
                 switch state.status {
-                case .failure, .validOTP:
+                case .validOTP:
                     timer.stop()
-                    
+                case let .failure(input, failure):
+                    switch input.countdown {
+                    case .failure, .completed:
+                        timer.stop()
+                        
+                    case .starting:
+                        timer.start(
+                            every: 1,
+                            onRun: { viewModel.event(.countdown(.tick)) }
+                        )
+                        
+                    case .running:
+                        break
+                    }
                 case let .input(input):
                     switch input.countdown {
                     case .failure, .completed:

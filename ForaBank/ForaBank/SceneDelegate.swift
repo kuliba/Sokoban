@@ -15,54 +15,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    private lazy var model: Model = AppDelegate.shared.model
-    private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
-        with: model, 
-        logger: logger
-    )
-    private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
+    private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
+    
     private lazy var rootViewModel = {
         
-        let factory = RootViewModelFactory(
-            model: model,
-            httpClient: httpClient,
-            logger: logger
-        )
-            
-        let viewModel = factory.make(
-            bindings: &bindings,
-            qrResolverFeatureFlag: .init(.active),
-            fastPaymentsSettingsFlag: .init(.active(.live)),
-            utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
-            historyFilterFlag: featureFlags.historyFilterFlag,
-            changeSVCardLimitsFlag: .init(.active),
-            getProductListByTypeV6Flag: .init(.active),
-            marketplaceFlag: featureFlags.marketplaceFlag,
-            paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .init(.active)
+        let rootViewModel = factory.makeRootViewModel(
+            featureFlags,
+            bindings: &bindings
         )
         
-        bind(rootViewModel: viewModel)
+        bind(rootViewModel: rootViewModel)
         
-        let binder = MarketShowcaseToRootViewModelBinder(
-            marketShowcase: viewModel.tabsViewModel.marketShowcaseBinder,
-            rootViewModel: viewModel,
-            scheduler: .main
-        )
-
-        bindings.formUnion(binder.bind())
-        
-        return viewModel
+        return rootViewModel
     }()
-    
-    private lazy var rootViewFactory = RootViewFactoryComposer(
-        model: model,
-        httpClient: httpClient,
-        historyFeatureFlag: featureFlags.historyFilterFlag,
-        marketFeatureFlag: featureFlags.marketplaceFlag
-    ).compose()
 
+    private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -133,8 +102,8 @@ extension SceneDelegate {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func legacyNavigationBarBackground() {
