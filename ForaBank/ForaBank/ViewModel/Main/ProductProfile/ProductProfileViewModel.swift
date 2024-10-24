@@ -537,25 +537,29 @@ private extension ProductProfileViewModel {
             }.store(in: &bindings)
         
         action
-            .receive(on: DispatchQueue.main)
+            .compactMap { $0 as? ProductProfileViewModelAction.PullToRefresh }
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                if let productType = productData?.productType {
+                    model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+                }
+                model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
+                switch product.productType {
+                case .deposit:
+                    model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
+                case .loan:
+                    model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
+                default:
+                    break
+                }
+            }
+            .store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case _ as ProductProfileViewModelAction.PullToRefresh:
-                    
-                    if let productType = productData?.productType {
-                        model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
-                    }
-                    model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
-                    switch product.productType {
-                    case .deposit:
-                        model.action.send(ModelAction.Deposits.Info.Single.Request(productId: product.activeProductId))
-                    case .loan:
-                        model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
-                        
-                    default:
-                        break
-                    }
                     
                 case let payload as ProductProfileViewModelAction.Show.OptionsPannel:
                     bind(optionsPannel: payload.viewModel)
