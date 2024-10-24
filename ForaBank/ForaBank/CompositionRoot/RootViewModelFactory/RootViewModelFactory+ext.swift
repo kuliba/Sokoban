@@ -430,8 +430,9 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .success(response):
-                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
-                    completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
+//                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
+//                    completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
+                    break
                 }
                 
                 _ = _createGetAuthorizedZoneClientInformData

@@ -11,6 +11,7 @@ import ForaTools
 import PayHub
 import SwiftUI
 import MarketShowcase
+import ClientInformList
 import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
