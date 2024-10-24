@@ -456,6 +456,24 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.byPhoneNumber))])
     }
     
+    // MARK: - makeMeToMe
+    
+    func test_makeMeToMe_shouldDeliverNilOnMissingProduct() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        
+        XCTAssertNil(nanoServices.makeMeToMe(spy.call(payload:)))
+    }
+    
+    func test_makeMeToMe_shouldDeliverMeToMeWithDemandDepositMode() throws {
+        
+        let model: Model = .mockWithEmptyExcept()
+        try model.addMeToMeProduct()
+        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        
+        XCTAssertNotNil(nanoServices.makeMeToMe(spy.call(payload:)))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
@@ -643,5 +661,17 @@ extension XCTestCase {
     ) -> LatestPaymentData {
         
         return .init(id: id, date: date, paymentDate: paymentDate, type: type)
+    }
+    
+    func makeMeToMe(
+        with model: Model = .mockWithEmptyExcept(),
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PaymentsMeToMeViewModel {
+        
+        try model.addMeToMeProduct(file: file, line: line)
+        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
+        
+        return meToMe
     }
 }

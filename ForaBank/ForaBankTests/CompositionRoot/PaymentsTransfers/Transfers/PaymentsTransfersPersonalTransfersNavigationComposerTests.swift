@@ -104,7 +104,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     func test_betweenSelf_shouldDeliverMeToMe() throws {
         
-        let meToMe = try makeMeToMe()
+        let meToMe = try makeMeToMeNode()
         let (sut, _) = makeSUT(meToMe: meToMe)
         
         let navigation = sut.compose(.betweenSelf)
@@ -326,16 +326,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         return .init(model: model, cancellables: [])
     }
     
-    private func makeMeToMe(
+    private func makeMeToMeNode(
+        with model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Node<PaymentsMeToMeViewModel> {
         
-        let model: Model = .mockWithEmptyExcept()
-        try model.addMeToMeProduct(file: file, line: line)
-        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
-        
-        return .init(model: meToMe, cancellables: [])
+        return try.init(model: makeMeToMe(with: model), cancellables: [])
     }
     
     private func makeAnotherCard() -> ClosePaymentsViewModelWrapper {
