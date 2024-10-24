@@ -22,7 +22,7 @@ extension ClientInformListConfig {
             textColor: .textSecondary
         ),
         textConfig: .init(
-            textFont: .textH3Sb18240(),
+            textFont: .textBodyMR14200(),
             textColor: .textSecondary
         ),
         sizes: .init(
@@ -41,7 +41,7 @@ extension ClientInformListConfig {
             horizontal: 20,
             vertical: 12
         ),
-        image: .cardPlaceholder,
-        rowImage: .checkImage
+        image: nil,
+        rowImage: nil
     )
 }

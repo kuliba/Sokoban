@@ -152,8 +152,8 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2600)) { [unowned self] in
+                    #warning("insert .milliseconds(600)")
+                    DispatchQueue.main.delay(for: .milliseconds(2600)) { [unowned self] in
                         
                         // add notAuthorized when it will be ready
                         
