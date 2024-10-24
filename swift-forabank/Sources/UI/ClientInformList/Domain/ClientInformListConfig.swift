@@ -21,19 +21,23 @@ public struct ClientInformListConfig {
         
         let grayGrabber: Color
         let grayBackground: Color
+        let bgIconRedLight: Color
         
         public init(
             grayGrabber: Color,
-            grayBackground: Color
+            grayBackground: Color,
+            bgIconRedLight: Color
         ) {
             self.grayGrabber = grayGrabber
             self.grayBackground = grayBackground
+            self.bgIconRedLight = bgIconRedLight
         }
     }
     
     public struct Sizes {
         
         let iconSize: CGFloat
+        let iconBackgroundSize: CGFloat
         let rowIconSize: CGFloat
         let navBarHeight: CGFloat
         let navBarMaxWidth: CGFloat
@@ -44,6 +48,7 @@ public struct ClientInformListConfig {
 
         public init(
             iconSize: CGFloat,
+            iconBackgroundSize: CGFloat,
             rowIconSize: CGFloat,
             navBarHeight: CGFloat,
             navBarMaxWidth: CGFloat,
@@ -54,6 +59,7 @@ public struct ClientInformListConfig {
         ) {
             
             self.iconSize = iconSize
+            self.iconBackgroundSize = iconBackgroundSize
             self.rowIconSize = rowIconSize
             self.navBarHeight = navBarHeight
             self.navBarMaxWidth = navBarMaxWidth

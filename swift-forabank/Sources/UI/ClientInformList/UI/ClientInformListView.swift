@@ -132,6 +132,9 @@ public struct ClientInformListView: View {
         image
             .resizable()
             .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
+            .foregroundColor(.white)
+            .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+            .foregroundColor(config.colors.bgIconRedLight))
             .padding(.top, config.paddings.topImage)
     }
     
