@@ -41,12 +41,6 @@ struct ActiveContractView: View {
                 config: config.paymentContract
             )
             
-            BankDefaultView(
-                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                action: { event(.bankDefault(.setBankDefault)) },
-                config: config.bankDefault
-            )
-            
             ConsentListView(
                 state: contractDetails.consentList.uiState,
                 event: { event(.consentList($0)) },
@@ -66,6 +60,21 @@ struct ActiveContractView: View {
                 isSelected: contractDetails.productSelect.selected?.id == $0.id
             )
         }
+        
+        Group {
+            
+            BankDefaultView(
+                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
+                action: { event(.bankDefault(.setBankDefault)) },
+                config: config.bankDefault
+            )
+            
+            DeleteDefaultBankView(
+                action: { event(.bankDefault(.deleteDefaultBank)) },
+                config: config.deleteDefaultBank
+            )
+        }
+        .padding()
     }
 }
 
