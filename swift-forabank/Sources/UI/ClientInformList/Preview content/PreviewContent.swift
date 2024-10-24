@@ -69,6 +69,6 @@ extension ClientInformListConfig {
             vertical: 12
         ),
         image: .infoCircle,
-        rowImage: .clock
+        rowImage: nil
     )
 }

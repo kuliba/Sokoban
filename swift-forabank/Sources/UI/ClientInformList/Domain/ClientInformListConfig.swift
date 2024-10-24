@@ -100,8 +100,8 @@ public struct ClientInformListConfig {
         textConfig: TextConfig,
         sizes: Sizes,
         paddings: Paddings,
-        image: Image,
-        rowImage: Image
+        image: Image?,
+        rowImage: Image?
     ) {
         self.colors = colors
         self.strings = strings
