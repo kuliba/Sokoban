@@ -296,7 +296,8 @@ private extension RootView {
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
                             makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView
+                            makeToolbarView: makePaymentsTransfersToolbarView,
+                            makeTransfersView: makePaymentsTransfersTransfersView
                         ),
                         config: .iFora
                     )
@@ -757,6 +758,40 @@ private extension RootView {
                 }
             )
         )
+    }
+    
+    private func makePaymentsTransfersTransfersView(
+        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(model: transfers.flow) {
+            
+            PaymentsTransfersPersonalTransfersFlowView(state: $0,  event: $1) {
+                
+                RxWrapperView(model: transfers.content) { state, event in
+                    
+                    VStack {
+                        
+                        PTSectionTransfersButtonsView(
+                            title: PaymentsTransfersSectionType.transfers.name,
+                            buttons: state.elements.compactMap { element in
+                                
+                                switch element {
+                                case let .buttonType(buttonType):
+                                    return .init(type: buttonType) {
+                                        
+                                        event(.select(.buttonType(buttonType)))
+                                    }
+                                    
+                                default:
+                                    return nil
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
     
     private func itemLabel(
