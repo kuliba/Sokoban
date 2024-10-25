@@ -7,7 +7,7 @@
 
 import Foundation
  
-struct Month {
+public struct Month {
     
     let month: Date
     let items: [[Date]]
@@ -15,8 +15,8 @@ struct Month {
 
 // MARK: - Generating Array
 extension [Month] {
-    
-    static func generate() -> Self {
+    //TODO: extract generate and MCalendar
+    public static func generate(startDate: Date?) -> Self {
         
         do {
             
@@ -33,17 +33,19 @@ extension [Month] {
 extension [Month] {
     
     static func createDatesRange() throws -> ClosedRange<Int> {
-        let startDate = MCalendar.startDate, endDate = MCalendar.endDate
-        guard startDate <= endDate else { 
+        let startDate = MCalendar().startDate, endDate = MCalendar.endDate
+        guard startDate <= endDate else {
             throw MonthErrors.monthGenerate
         }
 
         let numberOfMonthsBetweenDates = startDate.distance(to: endDate, in: .month)
-        return 0...Swift.min(numberOfMonthsBetweenDates, 10)
+        return 0...numberOfMonthsBetweenDates+2
     }
     
     static func createMonthDate(_ index: Int) -> Date {
-        MCalendar.startDate.adding(index, .month)
+        
+        let date = MCalendar().startDate.adding(index, .month)
+        return date
     }
     
     static func createMonthViewData(_ monthStart: Date) -> Month {
@@ -129,4 +131,25 @@ extension Month {
 
 enum MonthErrors: Error {
     case monthGenerate
+}
+
+extension Date {
+    
+    static func createStartDate(startDate: Date) -> Date {
+        var dateComponents = DateComponents()
+        dateComponents.year = 1992
+        dateComponents.month = 5
+        dateComponents.day = 1
+        dateComponents.timeZone = TimeZone(secondsFromGMT: 0) // Japan Standard Time
+        dateComponents.hour = 0
+        dateComponents.minute = 00
+
+        // Create date from components
+        var userCalendar = Calendar(identifier: .gregorian)
+        userCalendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        
+        let someDateTime = userCalendar.date(from: dateComponents)
+        
+        return someDateTime!
+    }
 }

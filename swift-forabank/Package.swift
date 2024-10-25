@@ -632,6 +632,7 @@ private extension Product {
             .cardGuardianUI,
             .productProfileComponents,
             .topUpCardUI,
+            .calendarUI
         ]
     )
     
@@ -2701,6 +2702,7 @@ private extension Target {
             .productDetailsUI,
             .cardGuardianUI,
             .topUpCardUI,
+            .calendarUI
         ],
         path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )

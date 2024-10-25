@@ -7,7 +7,7 @@
 
 import CardStatementAPI
 
-typealias Result = Swift.Result<[ProductStatementData], MappingError>
+typealias Result = Swift.Result<ProductStatementWithExtendedInfo, MappingError>
 
 func сardStatementError(
     _ message: String

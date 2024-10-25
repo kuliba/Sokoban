@@ -1165,7 +1165,7 @@ extension Payments {
                 
                 switch source {
                     
-                    case .sfp(_, BankID.foraBankID.rawValue):
+                    case .sfp(_, BankID.foraBankID.rawValue, _, _):
                         return nil
                     
                     default:

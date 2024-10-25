@@ -15,12 +15,13 @@ import SberQR
 import SwiftUI
 import LandingUIComponent
 import PaymentSticker
+import CalendarUI
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -327,8 +328,9 @@ private extension MainViewModel {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.resetDestination() })
-                    else { return }
+                            .defaultFilterComponents(product: product),
+                            { [weak self] in self?.resetDestination() }
+                          ) else { return }
                     
                     productProfileViewModel.rootActions = rootActions
                     productProfileViewModel.contactsAction = { [weak self] in self?.showContacts() }
@@ -834,7 +836,7 @@ private extension MainViewModel {
                         guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
                             return nil
                         }
-                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
+                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId, amount: latestPayment.amount, productId: nil)
                         
                     default:
                         return payloadSource

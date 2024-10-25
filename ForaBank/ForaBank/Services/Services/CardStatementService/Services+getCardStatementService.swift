@@ -12,7 +12,7 @@ import CardStatementAPI
 extension Services {
     
     typealias GetCardStatementPayload = CardStatementAPI.CardStatementForPeriodPayload
-    typealias GetCardStatementResult = Swift.Result<[CardStatementAPI.ProductStatementData], CardStatementAPI.MappingError>
+    typealias GetCardStatementResult = Swift.Result<CardStatementAPI.ProductStatementWithExtendedInfo, CardStatementAPI.MappingError>
     typealias GetCardStatementService = RemoteServiceOf<GetCardStatementPayload, GetCardStatementResult>
     
     static func getCardStatementForPeriod(
