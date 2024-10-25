@@ -384,78 +384,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         ])
     }
     
-    // MARK: - makeSource
-    
-    func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
-        
-        let (_, nanoServices, _, spy) = makeSUT()
-        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
-        
-        source.scanQR()
-        
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
-    }
-    
-    func test_makeSource_shouldCallNotifyWithDelayOnScanQR() {
-        
-        let (_, nanoServices, scheduler, spy) = makeSUT()
-        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
-        
-        source.scanQR()
-        
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
-        
-        scheduler.advance(by: .milliseconds(799))
-        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
-        
-        scheduler.advance(by: .milliseconds(800))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .dismiss,
-            .select(.scanQR)
-        ])
-    }
-    
-    func test_makeSource_shouldCallNotifyWithDelayOnContactAbroad() {
-        
-        let operationSource: Payments.Operation.Source = .avtodor
-        let (_, nanoServices, scheduler, spy) = makeSUT()
-        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
-        
-        source.contactAbroad(source: operationSource)
-        
-        XCTAssertNoDiff(spy.equatablePayloads, [])
-        
-        scheduler.advance(by: .milliseconds(699))
-        XCTAssertNoDiff(spy.equatablePayloads, [])
-        
-        scheduler.advance(by: .milliseconds(700))
-        XCTAssertNoDiff(spy.equatablePayloads, [
-            .select(.contactAbroad(operationSource))
-        ])
-    }
-    
-    func test_makeSource_shouldCallNotifyWithAbroadOnDirectSourceOnCloseAction() {
-        
-        let direct = makeDirectSource()
-        let (_, nanoServices, _, spy) = makeSUT()
-        let source = nanoServices.makeSource(direct, spy.call(payload:))
-        
-        source.model.closeAction()
-        
-        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.abroad))])
-    }
-    
-    func test_makeSource_shouldCallNotifyWithByPhoneNumberOnSFPSourceOnCloseAction() {
-        
-        let sfp = makeSFPSource()
-        let (_, nanoServices, _, spy) = makeSUT()
-        let source = nanoServices.makeSource(sfp, spy.call(payload:))
-        
-        source.model.closeAction()
-        
-        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.byPhoneNumber))])
-    }
-    
     // MARK: - makeMeToMe
     
     func test_makeMeToMe_shouldDeliverNilOnMissingProduct() {
@@ -537,6 +465,78 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         makeMeToMe.closeBottomSheet()
         
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    // MARK: - makeSource
+    
+    func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
+        
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithDelayOnScanQR() {
+        
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.scanQR()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(799))
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
+        
+        scheduler.advance(by: .milliseconds(800))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .dismiss,
+            .select(.scanQR)
+        ])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithDelayOnContactAbroad() {
+        
+        let operationSource: Payments.Operation.Source = .avtodor
+        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
+        
+        source.contactAbroad(source: operationSource)
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(699))
+        XCTAssertNoDiff(spy.equatablePayloads, [])
+        
+        scheduler.advance(by: .milliseconds(700))
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.contactAbroad(operationSource))
+        ])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithAbroadOnDirectSourceOnCloseAction() {
+        
+        let direct = makeDirectSource()
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(direct, spy.call(payload:))
+        
+        source.model.closeAction()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.abroad))])
+    }
+    
+    func test_makeSource_shouldCallNotifyWithByPhoneNumberOnSFPSourceOnCloseAction() {
+        
+        let sfp = makeSFPSource()
+        let (_, nanoServices, _, spy) = makeSUT()
+        let source = nanoServices.makeSource(sfp, spy.call(payload:))
+        
+        source.model.closeAction()
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.buttonType(.byPhoneNumber))])
     }
     
     // MARK: - Helpers
