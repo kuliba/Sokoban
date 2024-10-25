@@ -13,6 +13,7 @@ struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
     let makeDetail: MakeDetail
     let makeLatest: MakeLatest
     let makeMeToMe: MakeMeToMe
+    let makeScanQR: MakeScanQR
     let makeSource: MakeSource
 }
 
@@ -27,5 +28,6 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     typealias MakeDetail = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
     typealias MakeLatest = (LatestPaymentData.ID, @escaping Notify) -> Node<ClosePaymentsViewModelWrapper>?
     typealias MakeMeToMe = (@escaping Notify) -> Node<PaymentsMeToMeViewModel>?
+    typealias MakeScanQR = (@escaping Notify) -> Node<QRModel>
     typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>
 }

@@ -45,9 +45,8 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return nanoServices.makeLatest(latest, notify).map { .payments($0) }
             
         case .scanQR:
-#warning("FIXME")
             // PaymentsTransfersViewModel.swift:1348
-            return { fatalError() }()
+            return .scanQR(nanoServices.makeScanQR(notify))
         }
     }
     

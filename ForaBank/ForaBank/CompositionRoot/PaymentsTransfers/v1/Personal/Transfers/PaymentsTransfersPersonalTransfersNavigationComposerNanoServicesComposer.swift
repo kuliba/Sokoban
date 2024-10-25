@@ -34,6 +34,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
             makeDetail: { self.makeDetail(notify: $0) },
             makeLatest: { self.makeLatest(latest: $0, notify: $1) },
             makeMeToMe: { self.makeMeToMe(notify: $0) },
+            makeScanQR: { fatalError(String(describing: $0)) },
             makeSource: { self.makeSource(source: $0, notify: $1) }
         )
     }

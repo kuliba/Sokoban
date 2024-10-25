@@ -287,6 +287,33 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
+    // MARK: - scanQR
+    
+    func test_scanQR_shouldCallMakeQR() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.scanQR) { _ in }
+        
+        XCTAssertNoDiff(spies.makeScanQR.payloads.count, 1)
+    }
+    
+    func test_scanQR_shouldDeliverSourcePayment() throws {
+        
+        let scanQR = makeScanQRNode()
+        let (sut, _) = makeSUT(scanQR: scanQR)
+        
+        let navigation = sut.compose(.scanQR) { _ in }
+        
+        switch navigation {
+        case let .scanQR(received):
+            try XCTAssert(XCTUnwrap(scanQR.model) === XCTUnwrap(received.model))
+            
+        default:
+            XCTFail("Expected scanQR, got \(String(describing: navigation)) instead.")
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
@@ -297,6 +324,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
+    private typealias MakeScanQR = CallSpy<Notify, Node<QRModel>>
     private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
@@ -307,6 +335,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let makeDetail: MakeDetail
         let makeLatest: MakeLatest
         let makeMeToMe: MakeMeToMe
+        let makeScanQR: MakeScanQR
         let makeSource: MakeSource
     }
     
@@ -317,6 +346,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         detail: ClosePaymentsViewModelWrapper? = nil,
         latestPayment: Node<ClosePaymentsViewModelWrapper>? = nil,
         meToMe: Node<PaymentsMeToMeViewModel>? = nil,
+        scanQR: Node<QRModel>? = nil,
         sourcePayment: Node<PaymentsViewModel>? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -339,6 +369,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
+            makeScanQR: .init(stubs: [
+                scanQR ?? makeScanQRNode()
+            ]),
             makeSource: .init(stubs: [
                 sourcePayment ?? makeSourcePayment()
             ])
@@ -350,6 +383,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             makeDetail: spies.makeDetail.call,
             makeLatest: spies.makeLatest.call,
             makeMeToMe: spies.makeMeToMe.call,
+            makeScanQR: spies.makeScanQR.call,
             makeSource: spies.makeSource.call
         ))
         
@@ -433,6 +467,22 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     ) -> Node<ClosePaymentsViewModelWrapper> {
         
         return .init(model: model ?? makePayments(), cancellables: [])
+    }
+    
+    private func makeScanQR() -> QRModel {
+        
+        return .init(
+            mapScanResult: { _,_ in },
+            makeQRModel: { .preview(closeAction: $0) },
+            scheduler: .immediate
+        )
+    }
+    
+    private func makeScanQRNode(
+        _ qrModel: QRModel? = nil
+    ) -> Node<QRModel> {
+        
+        return .init(model: qrModel ?? makeScanQR(), cancellables: [])
     }
     
     @_disfavoredOverload

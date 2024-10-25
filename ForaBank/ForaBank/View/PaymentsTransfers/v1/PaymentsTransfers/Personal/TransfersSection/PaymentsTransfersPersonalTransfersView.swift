@@ -97,7 +97,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
         case let .meToMe(meToMe):
             return .meToMe(meToMe)
             
-        case .none, .alert, .contacts, .payments, .paymentsViewModel, .successMeToMe:
+        case .none, .alert, .contacts, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
             return nil
         }
     }
@@ -111,7 +111,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
         case let .payments(payments):
             return .payments(payments)
             
-        case .none, .alert, .contacts, .meToMe, .paymentsViewModel, .successMeToMe:
+        case .none, .alert, .contacts, .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
             return nil
         }
     }
@@ -122,7 +122,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
         case let .contacts(contacts):
             return .contacts(contacts)
             
-        case .none, .alert, .meToMe, .payments, .paymentsViewModel, .successMeToMe:
+        case .none, .alert, .meToMe, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
             return nil
         }
     }
