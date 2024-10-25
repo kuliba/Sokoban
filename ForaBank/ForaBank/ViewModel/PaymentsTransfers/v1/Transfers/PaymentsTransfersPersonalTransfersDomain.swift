@@ -19,6 +19,12 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
         case scanQR
+        case qr(QR)
+        
+        enum QR: Equatable {
+            
+            case cancelled
+        }
     }
     
     enum Navigation {

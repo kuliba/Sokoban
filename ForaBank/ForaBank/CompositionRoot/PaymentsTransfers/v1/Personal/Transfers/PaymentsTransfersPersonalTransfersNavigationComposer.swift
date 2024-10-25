@@ -47,6 +47,12 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case .scanQR:
             // PaymentsTransfersViewModel.swift:1348
             return .scanQR(nanoServices.makeScanQR(notify))
+            
+        case let .qr(qr):
+            switch qr {
+            case .cancelled:
+                return nil
+            }
         }
     }
     

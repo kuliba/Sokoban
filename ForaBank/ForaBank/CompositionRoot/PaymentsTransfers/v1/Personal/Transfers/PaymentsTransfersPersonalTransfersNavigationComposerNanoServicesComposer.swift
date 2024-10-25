@@ -131,9 +131,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         // openScanner
         // PaymentsTransfersViewModel.swift:173
         let scanQR = makeQRModel()
-        let cancellables = bind(scanQR, using: notify)
+        let cancellable = bind(scanQR, using: notify)
         
-        return .init(model: scanQR, cancellables: cancellables)
+        return .init(model: scanQR, cancellable: cancellable)
     }
     
     func makeSource(
@@ -307,9 +307,21 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
     private func bind(
         _ scanQR: QRModel,
         using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
+    ) -> AnyCancellable {
         
-        return []
+        // PaymentsTransfersViewModel.bind(_:)
+        // PaymentsTransfersViewModel.swift:1567
+        return scanQR.$state
+            .sink {
+                
+                switch $0 {
+                case .cancelled:
+                    notify(.select(.qr(.cancelled)))
+                    
+                default:
+                    break
+                }
+            }
     }
 }
 
