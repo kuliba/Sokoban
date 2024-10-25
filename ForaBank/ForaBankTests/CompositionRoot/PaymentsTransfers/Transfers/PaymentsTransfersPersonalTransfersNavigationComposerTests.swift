@@ -104,7 +104,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     func test_betweenSelf_shouldDeliverMeToMe() throws {
         
-        let meToMe = try makeMeToMe()
+        let meToMe = try makeMeToMeNode()
         let (sut, _) = makeSUT(meToMe: meToMe)
         
         let navigation = sut.compose(.betweenSelf)
@@ -179,14 +179,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
-    
-    func test_contacts_shouldDeliverNilOnNil() {
         
-        let (sut, _) = makeSUT(sourcePayment: nil)
-        
-        XCTAssertNil(sut.compose(.contacts(.avtodor)) { _ in })
-    }
-    
     func test_contacts_shouldDeliverSourcePayment() throws {
         
         let source = makeSourcePayment()
@@ -248,7 +241,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
-    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>?>
+    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
         
@@ -290,7 +283,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
-            makeSource: .init(stubs: [sourcePayment])
+            makeSource: .init(stubs: [
+                sourcePayment ?? makeSourcePayment()
+            ])
         )
         let sut = SUT(nanoServices: .init(
             makeAbroad: spies.makeAbroad.call,
@@ -331,16 +326,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         return .init(model: model, cancellables: [])
     }
     
-    private func makeMeToMe(
+    private func makeMeToMeNode(
+        with model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Node<PaymentsMeToMeViewModel> {
         
-        let model: Model = .mockWithEmptyExcept()
-        try model.addMeToMeProduct(file: file, line: line)
-        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
-        
-        return .init(model: meToMe, cancellables: [])
+        return try.init(model: makeMeToMe(with: model), cancellables: [])
     }
     
     private func makeAnotherCard() -> ClosePaymentsViewModelWrapper {

@@ -11,19 +11,24 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-    enum Element {
+    enum Element: Equatable {
         
         case buttonType(ButtonType)
+        case contactAbroad(Payments.Operation.Source)
         case contacts(Payments.Operation.Source)
+        case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
+        case scanQR
     }
     
     enum Navigation {
         
+        case alert(String)
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
         case paymentsViewModel(Node<PaymentsViewModel>)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
     typealias Binder = PlainPickerBinder<Element, Navigation>

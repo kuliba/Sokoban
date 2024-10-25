@@ -27,5 +27,5 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     typealias MakeDetail = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
     typealias MakeLatest = (LatestPaymentData.ID, @escaping Notify) -> Node<ClosePaymentsViewModelWrapper>?
     typealias MakeMeToMe = (@escaping Notify) -> Node<PaymentsMeToMeViewModel>?
-    typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>?
+    typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>
 }

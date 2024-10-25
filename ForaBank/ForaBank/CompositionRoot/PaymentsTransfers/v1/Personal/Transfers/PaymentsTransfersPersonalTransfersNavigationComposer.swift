@@ -28,11 +28,28 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .buttonType(buttonType):
             return compose(for: buttonType, notify: notify)
             
+        case let .contactAbroad(source):
+#warning("FIXME")
+            // handleContactAbroad
+            // PaymentsTransfersViewModel.swift:1359
+            return { fatalError("unimplemented contactAbroad with \(source)") }()
+            
         case let .contacts(source):
-            return nanoServices.makeSource(source, notify).map { .paymentsViewModel($0) }
+            return .paymentsViewModel(nanoServices.makeSource(source, notify))
+            
+        case let .countries(source):
+            // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
+            // PaymentsTransfersViewModel.swift:1528
+#warning("FIXME")
+            return { fatalError() }()
             
         case let .latest(latest):
             return nanoServices.makeLatest(latest, notify).map { .payments($0) }
+            
+        case .scanQR:
+#warning("FIXME")
+            // PaymentsTransfersViewModel.swift:1348
+            return { fatalError() }()
         }
     }
     
