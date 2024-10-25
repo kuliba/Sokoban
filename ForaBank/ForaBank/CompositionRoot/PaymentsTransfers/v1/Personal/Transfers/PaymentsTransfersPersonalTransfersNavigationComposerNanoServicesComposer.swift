@@ -312,14 +312,18 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         // PaymentsTransfersViewModel.bind(_:)
         // PaymentsTransfersViewModel.swift:1567
         return scanQR.$state
+            .compactMap { $0 }
             .sink {
                 
                 switch $0 {
                 case .cancelled:
                     notify(.select(.qr(.cancelled)))
                     
-                default:
-                    break
+                case .inflight:
+                    notify(.select(.qr(.inflight)))
+                    
+                case let .qrResult(qrResult):
+                    notify(.select(.qr(.qrResult(qrResult))))
                 }
             }
     }

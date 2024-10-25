@@ -497,8 +497,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
 
     func test_makeScanQR_shouldNotCallNotify() {
         
-        let qrModel = makeQRModel()
-        let (_, nanoServices, _, spy, _) = makeSUT(qrModel: qrModel)
+        let (_, nanoServices, _, spy, _) = makeSUT()
 
         _ = nanoServices.makeScanQR(spy.call(payload:))
 
@@ -507,13 +506,36 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
 
     func test_makeScanQR_shouldCallNotifyWithCancelledOnQRCancelled() {
         
-        let qrModel = makeQRModel()
-        let (_, nanoServices, _, spy, _) = makeSUT(qrModel: qrModel)
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let scanQR = nanoServices.makeScanQR(spy.call(payload:))
 
         scanQR.model.event(.cancel)
         
         XCTAssertNoDiff(spy.equatablePayloads, [.select(.qr(.cancelled))])
+    }
+
+    func test_makeScanQR_shouldCallNotifyWithInflightOnQRInflight() {
+        
+        let scanResult = QRViewModel.ScanResult.unknown
+        let (_, nanoServices, _, spy, _) = makeSUT()
+        let scanQR = nanoServices.makeScanQR(spy.call(payload:))
+
+        scanQR.model.event(.scanResult(scanResult))
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [.select(.qr(.inflight))])
+    }
+
+    func test_makeScanQR_shouldCallNotifyWithQRResultOnQRResult() {
+        
+        let qrResult = QRModelResult.unknown
+        let (_, nanoServices, _, spy, _) = makeSUT()
+        let scanQR = nanoServices.makeScanQR(spy.call(payload:))
+
+        scanQR.model.event(.qrResult(qrResult))
+        
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.qr(.qrResult(qrResult)))
+        ])
     }
 
     // MARK: - makeSource

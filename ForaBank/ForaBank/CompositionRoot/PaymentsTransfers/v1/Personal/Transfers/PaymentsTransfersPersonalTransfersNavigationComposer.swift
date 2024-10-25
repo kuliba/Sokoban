@@ -86,6 +86,15 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case .cancelled:
             return nil
             
+        case .inflight:
+            #warning("fixme")
+            return nil
+            
+        case let .qrResult(qrResult):
+            #warning("fixme")
+            _ = qrResult
+            return nil
+            
         case .scan:
             // PaymentsTransfersViewModel.swift:1348
             return .scanQR(nanoServices.makeScanQR(notify))
