@@ -21,8 +21,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeContacts.callCount, 0)
         XCTAssertEqual(spies.makeDetail.callCount, 0)
         XCTAssertEqual(spies.makeLatest.callCount, 0)
-        XCTAssertEqual(spies.makeSource.callCount, 0)
         XCTAssertEqual(spies.makeMeToMe.callCount, 0)
+        XCTAssertEqual(spies.makeSource.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -168,6 +168,34 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
+    // MARK: - contactAbroad
+    
+    func test_contactAbroad_shouldCallMakeSourcePayment() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.contactAbroad(source)) { _ in }
+        
+        XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
+    }
+    
+    func test_contactAbroad_shouldDeliverSourcePayment() throws {
+        
+        let source = makeSourcePayment()
+        let (sut, _) = makeSUT(sourcePayment: source)
+        
+        let navigation = sut.compose(.contactAbroad(.avtodor)) { _ in }
+        
+        switch navigation {
+        case let .paymentsViewModel(received):
+            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
+            
+        default:
+            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
+        }
+    }
+    
     // MARK: - contacts
     
     func test_contacts_shouldCallMakeSourcePayment() {
@@ -179,7 +207,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
-        
+    
     func test_contacts_shouldDeliverSourcePayment() throws {
         
         let source = makeSourcePayment()
@@ -358,7 +386,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         return makePaymentsNode(wrapper)
     }
-        
+    
     private func makeLatestPayment(
         _ wrapper: ClosePaymentsViewModelWrapper? = nil
     ) -> Node<ClosePaymentsViewModelWrapper> {

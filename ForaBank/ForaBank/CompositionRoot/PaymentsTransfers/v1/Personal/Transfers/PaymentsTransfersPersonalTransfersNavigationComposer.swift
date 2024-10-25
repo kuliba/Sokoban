@@ -29,10 +29,9 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return compose(for: buttonType, notify: notify)
             
         case let .contactAbroad(source):
-#warning("FIXME")
             // handleContactAbroad
             // PaymentsTransfersViewModel.swift:1359
-            return { fatalError("unimplemented contactAbroad with \(source)") }()
+            return .paymentsViewModel(nanoServices.makeSource(source, notify))
             
         case let .contacts(source):
             return .paymentsViewModel(nanoServices.makeSource(source, notify))
