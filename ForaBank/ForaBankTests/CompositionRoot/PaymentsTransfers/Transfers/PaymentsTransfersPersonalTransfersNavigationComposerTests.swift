@@ -143,7 +143,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
-    func test_requisites_shouldCallMakeDetailPayment() {
+    func test_requisites_shouldCallMakeDetail() {
         
         let (sut, spies) = makeSUT()
         
@@ -152,7 +152,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeDetail.callCount, 1)
     }
     
-    func test_requisites_shouldDeliverContacts() {
+    func test_requisites_shouldDeliverDetail() {
         
         let detail = makeDetailPayment()
         let (sut, _) = makeSUT(detail: detail)
@@ -170,7 +170,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     // MARK: - contactAbroad
     
-    func test_contactAbroad_shouldCallMakeSourcePayment() {
+    func test_contactAbroad_shouldCallMakeSource() {
         
         let source: Payments.Operation.Source = .avtodor
         let (sut, spies) = makeSUT()
@@ -180,7 +180,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
     
-    func test_contactAbroad_shouldDeliverSourcePayment() throws {
+    func test_contactAbroad_shouldDeliverSource() throws {
         
         let source = makeSourcePayment()
         let (sut, _) = makeSUT(sourcePayment: source)
@@ -198,7 +198,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     // MARK: - contacts
     
-    func test_contacts_shouldCallMakeSourcePayment() {
+    func test_contacts_shouldCallMakeSource() {
         
         let source: Payments.Operation.Source = .avtodor
         let (sut, spies) = makeSUT()
@@ -208,7 +208,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
     
-    func test_contacts_shouldDeliverSourcePayment() throws {
+    func test_contacts_shouldDeliverSource() throws {
         
         let source = makeSourcePayment()
         let (sut, _) = makeSUT(sourcePayment: source)
@@ -226,7 +226,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     
     // MARK: - countries
     
-    func test_countries_shouldCallMakeSourcePayment() {
+    func test_countries_shouldCallMakeSource() {
         
         let source: Payments.Operation.Source = .avtodor
         let (sut, spies) = makeSUT()
@@ -236,7 +236,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
     
-    func test_countries_shouldDeliverSourcePayment() throws {
+    func test_countries_shouldDeliverSource() throws {
         
         let source = makeSourcePayment()
         let (sut, _) = makeSUT(sourcePayment: source)
