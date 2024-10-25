@@ -15,6 +15,12 @@ extension DecodableLanding.Data {
         let subTitle: String?
 
         let transparency: Bool
+        
+        
+        private enum CodingKeys : String, CodingKey {
+            case title, transparency
+            case subTitle = "subtitle"
+        }
     }
 }
 
