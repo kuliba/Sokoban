@@ -77,6 +77,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
         }
     }
     
+    // bind QRModel
+    // PaymentsTransfersViewModel.swift:1567
     func compose(
         for qr: Domain.Element.QR,
         using notify: @escaping (Domain.FlowEvent) -> Void
