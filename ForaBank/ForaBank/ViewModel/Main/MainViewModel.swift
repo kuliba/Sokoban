@@ -1803,7 +1803,8 @@ extension MainViewModel {
                         config: .default,
                         landingActions: landingActions(for:),
                         outsideAction: {_ in }, 
-                        orderCard: {})
+                        orderCard: {}, 
+                        payment: {_ in })
                     
                     route.destination = .landing(viewModel, false)
                 }

@@ -55,6 +55,17 @@ final class MarketShowcaseToRootViewModelBinder {
 
 extension RootViewModel {
     
+    func payment(_ type: String) {
+        
+        if model.onlyCorporateCards {
+            alert = .disableForCorporateCard { [weak self] in
+                self?.action.send(RootViewModelAction.CloseAlert())
+            }
+        } else {
+            rootActions.openUtilityPayment(type)
+        }
+    }
+    
     func openCard() {
         
         if model.onlyCorporateCards {
@@ -131,7 +142,12 @@ private extension RootViewModel {
                     config: type == "abroadSticker" ? .stickerDefault : .default,
                     landingActions: { self.landingActions($0) },
                     outsideAction: {_ in },
-                    orderCard: openCard
+                    orderCard: openCard, 
+                    payment: { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        openUtilityPayment(category: $0, switchTab: rootActions.switchTab) }
                 )
                 
                 setLink(to: .landing(viewModel, type == "abroadSticker"))
