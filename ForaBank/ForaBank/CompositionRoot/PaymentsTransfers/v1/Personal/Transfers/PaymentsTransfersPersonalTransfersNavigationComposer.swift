@@ -39,8 +39,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
             // PaymentsTransfersViewModel.swift:1528
-#warning("FIXME")
-            return { fatalError() }()
+            return .paymentsViewModel(nanoServices.makeSource(source, notify))
             
         case let .latest(latest):
             return nanoServices.makeLatest(latest, notify).map { .payments($0) }

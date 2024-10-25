@@ -224,6 +224,34 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
+    // MARK: - countries
+    
+    func test_countries_shouldCallMakeSourcePayment() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.countries(source)) { _ in }
+        
+        XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
+    }
+    
+    func test_countries_shouldDeliverSourcePayment() throws {
+        
+        let source = makeSourcePayment()
+        let (sut, _) = makeSUT(sourcePayment: source)
+        
+        let navigation = sut.compose(.countries(.avtodor)) { _ in }
+        
+        switch navigation {
+        case let .paymentsViewModel(received):
+            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
+            
+        default:
+            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
+        }
+    }
+    
     // MARK: - latest
     
     func test_latest_shouldCallMakeLatestPayment() {
