@@ -15,16 +15,23 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_init_shouldNotCallNotify() {
         
-        let (_,_,_, spy) = makeSUT()
+        let (_,_,_, spy, _) = makeSUT()
         
         XCTAssertEqual(spy.callCount, 0)
+    }
+    
+    func test_init_shouldNotCallMakeQRModel() {
+        
+        let (_,_,_,_, makeQRModel) = makeSUT()
+        
+        XCTAssertEqual(makeQRModel.callCount, 0)
     }
     
     // MARK: - abroad
     
     func test_makeAbroad_shouldDeliverAbroadWithAbroadMode() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         XCTAssertNoDiff(abroad.model.mode, .abroad)
@@ -32,7 +39,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAbroad_shouldCallNotifyWithDismissOnPaymentRequest() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .avtodor)
@@ -42,7 +49,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAbroad_shouldCallNotifyWithDelayOnPaymentRequestWithSource() throws {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .avtodor)
@@ -62,7 +69,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeAbroad_shouldCallNotifyWithDelayOnPaymentRequestWithLatest() throws {
         
         let latestID: LatestPaymentData.ID = .random(in: 1...100)
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.requestPayment(with: .latestPayment(latestID))
@@ -81,7 +88,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAbroad_shouldCallNotifyWithDismissOnCountriesItemTap() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.countriesItemTap(with: .avtodor)
@@ -91,7 +98,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAbroad_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() throws {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let abroad = nanoServices.makeAbroad(spy.call(payload:))
         
         abroad.countriesItemTap(with: .avtodor)
@@ -116,7 +123,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let productTemplateListRequestSpy = ValueSpy(model.productTemplateListRequest)
         XCTAssertEqual(productTemplateListRequestSpy.values.count, 0)
         
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         _ = nanoServices.makeAnotherCard(spy.call(payload:))
         
         XCTAssertEqual(productTemplateListRequestSpy.values.count, 1)
@@ -124,7 +131,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAnotherCard_shouldCallNotifyWithDismissOnScanQR() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
         
         anotherCard.scanQR()
@@ -134,7 +141,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeAnotherCard_shouldCallNotifyWithDelayOnScanQR() {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
         
         anotherCard.scanQR()
@@ -154,7 +161,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeAnotherCard_shouldCallNotifyWithDelayOnContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let anotherCard = nanoServices.makeAnotherCard(spy.call(payload:))
         
         anotherCard.contactAbroad(source: source)
@@ -174,7 +181,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeContacts_shouldDeliverContactsWithContactsFastPaymentsMode() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         XCTAssertNoDiff(contacts.model.mode, .fastPayments(.contacts))
@@ -182,7 +189,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeContacts_shouldCallNotifyWithDismissOnPaymentRequest() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         contacts.requestPayment(with: .avtodor)
@@ -192,7 +199,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeContacts_shouldCallNotifyWithDelayOnPaymentRequestWithSource() throws {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         contacts.requestPayment(with: .avtodor)
@@ -212,7 +219,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeContacts_shouldCallNotifyWithDelayOnPaymentRequestWithLatest() throws {
         
         let latestID: LatestPaymentData.ID = .random(in: 1...100)
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         contacts.requestPayment(with: .latestPayment(latestID))
@@ -231,7 +238,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeContacts_shouldCallNotifyWithDismissOnCountriesItemTap() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         contacts.countriesItemTap(with: .avtodor)
@@ -241,7 +248,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeContacts_shouldCallNotifyWithDelayOnCountriesItemTapWithSource() {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let contacts = nanoServices.makeContacts(spy.call(payload:))
         
         contacts.countriesItemTap(with: .avtodor)
@@ -262,7 +269,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeDetail_shouldCallNotifyWithDismissOnScanQR() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let detail = nanoServices.makeDetail(spy.call(payload:))
         
         detail.scanQR()
@@ -272,7 +279,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeDetail_shouldCallNotifyWithDelayOnScanQR() {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let detail = nanoServices.makeDetail(spy.call(payload:))
         
         detail.scanQR()
@@ -292,7 +299,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeDetail_shouldCallNotifyWithDelayOnContactAbroad() {
         
         let source: Payments.Operation.Source = .avtodor
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let detail = nanoServices.makeDetail(spy.call(payload:))
         
         detail.contactAbroad(source: source)
@@ -314,7 +321,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let latestData = makeLatestPaymentData(type: .internet)
         let model: Model = .mockWithEmptyExcept()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         
         XCTAssertNil(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         XCTAssertFalse(model.contains(latestData))
@@ -324,7 +331,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let latestData = makeLatestPaymentData(type: .unknown)
         let model = makeModel(with: latestData)
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         
         XCTAssertNil(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         XCTAssertTrue(model.contains(latestData))
@@ -334,7 +341,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let latestData = makeLatestPaymentData(type: .internet)
         let model = makeModel(with: latestData)
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         
         latest.scanQR()
@@ -346,7 +353,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let latestData = makeLatestPaymentData(type: .internet)
         let model = makeModel(with: latestData)
-        let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
+        let (_, nanoServices, scheduler, spy, _) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         
         latest.scanQR()
@@ -368,7 +375,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let latestData = makeLatestPaymentData(type: .internet)
         let source: Payments.Operation.Source = .avtodor
         let model = makeModel(with: latestData)
-        let (_, nanoServices, scheduler, spy) = makeSUT(model: model)
+        let (_, nanoServices, scheduler, spy, _) = makeSUT(model: model)
         let latest = try XCTUnwrap(nanoServices.makeLatest(latestData.id, spy.call(payload:)))
         
         latest.contactAbroad(source: source)
@@ -388,7 +395,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeMeToMe_shouldDeliverNilOnMissingProduct() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         
         XCTAssertNil(nanoServices.makeMeToMe(spy.call(payload:)))
     }
@@ -396,7 +403,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeMeToMe_shouldDeliverMeToMeWithDemandDepositMode() throws {
         
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         
         XCTAssertNotNil(nanoServices.makeMeToMe(spy.call(payload:)))
     }
@@ -405,7 +412,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let success: PaymentsSuccessViewModel = .sample1
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
         
         makeMeToMe.emitResponseSuccess(with: success)
@@ -417,7 +424,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let success: PaymentsSuccessViewModel = .sample2
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
         
         makeMeToMe.emitResponseSuccess(with: success)
@@ -433,7 +440,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         let success: PaymentsSuccessViewModel = .sample2
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
         
         makeMeToMe.emitResponseSuccess(with: success)
@@ -448,7 +455,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeMeToMe_shouldDeliverAlertOnEmitResponseFailure() throws {
         
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
         
         makeMeToMe.emitResponseFailure()
@@ -459,7 +466,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeMeToMe_shouldDeliverDismissOnCloseBottomSheet() throws {
         
         let model = try makeModelWithMeToMeProduct()
-        let (_, nanoServices, _, spy) = makeSUT(model: model)
+        let (_, nanoServices, _, spy, _) = makeSUT(model: model)
         let makeMeToMe = try XCTUnwrap(nanoServices.makeMeToMe(spy.call(payload:)))
         
         makeMeToMe.closeBottomSheet()
@@ -471,19 +478,28 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeScanQR_shouldCallMakeQRModel() {
         
-        func test() { XCTFail("unimplemented") }
+        let (_, nanoServices, _,_, makeQRModel) = makeSUT()
+        
+        _ = nanoServices.makeScanQR() { _ in }
+        
+        XCTAssertEqual(makeQRModel.callCount, 1)
     }
 
     func test_makeScanQR_shouldDeliverScanQR() {
         
-        func test() { XCTFail("unimplemented") }
+        let qrModel = makeQRModel()
+        let (_, nanoServices, _,_,_) = makeSUT(qrModel: qrModel)
+        
+        let scanQR = nanoServices.makeScanQR() { _ in }
+        
+        XCTAssert(scanQR.model === qrModel)
     }
 
     // MARK: - makeSource
     
     func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
         
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
         
         source.scanQR()
@@ -493,7 +509,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     func test_makeSource_shouldCallNotifyWithDelayOnScanQR() {
         
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
         
         source.scanQR()
@@ -513,7 +529,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeSource_shouldCallNotifyWithDelayOnContactAbroad() {
         
         let operationSource: Payments.Operation.Source = .avtodor
-        let (_, nanoServices, scheduler, spy) = makeSUT()
+        let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let source = nanoServices.makeSource(.avtodor, spy.call(payload:))
         
         source.contactAbroad(source: operationSource)
@@ -532,7 +548,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeSource_shouldCallNotifyWithAbroadOnDirectSourceOnCloseAction() {
         
         let direct = makeDirectSource()
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let source = nanoServices.makeSource(direct, spy.call(payload:))
         
         source.model.closeAction()
@@ -543,7 +559,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     func test_makeSource_shouldCallNotifyWithByPhoneNumberOnSFPSourceOnCloseAction() {
         
         let sfp = makeSFPSource()
-        let (_, nanoServices, _, spy) = makeSUT()
+        let (_, nanoServices, _, spy, _) = makeSUT()
         let source = nanoServices.makeSource(sfp, spy.call(payload:))
         
         source.model.closeAction()
@@ -558,6 +574,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
 
     private func makeSUT(
+        qrModel: QRModel? = nil,
         model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
@@ -565,9 +582,10 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         sut: SUT,
         nanoServices: SUT.NanoServices,
         scheduler: TestSchedulerOfDispatchQueue,
-        spy: NotifySpy
+        spy: NotifySpy,
+        makeQRModelSpy: MakeQRModelSpy
     ) {
-        let makeQRModelSpy = MakeQRModelSpy()
+        let makeQRModelSpy = MakeQRModelSpy(stubs: [qrModel ?? makeQRModel()])
         let scheduler = DispatchQueue.test
         let sut = SUT(
             makeQRModel: makeQRModelSpy.call, 
@@ -581,8 +599,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         //    trackForMemoryLeaks(model, file: file, line: line)
         //    trackForMemoryLeaks(scheduler, file: file, line: line)
         //    trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(makeQRModelSpy, file: file, line: line)
         
-        return (sut, nanoServices, scheduler, spy)
+        return (sut, nanoServices, scheduler, spy, makeQRModelSpy)
     }
     
     private func makeModel(
@@ -625,6 +644,19 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     ) -> Payments.Operation.Source {
         
         return .sfp(phone: phone, bankId: bankId)
+    }
+    
+    private func makeQRModel(
+        mapScanResult: @escaping (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void = { _,_ in },
+        makeQRModel: @escaping (@escaping () -> Void) -> QRViewModel = { return .init(closeAction: $0, qrResolve: { _ in .unknown }) },
+        scheduler: AnySchedulerOfDispatchQueue = .immediate
+    ) -> QRModel {
+        
+        return .init(
+            mapScanResult: mapScanResult,
+            makeQRModel: makeQRModel,
+            scheduler: scheduler
+        )
     }
 }
 

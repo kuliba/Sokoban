@@ -128,6 +128,8 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         notify: @escaping Notify
     ) -> Node<QRModel> {
         
+        // openScanner
+        // PaymentsTransfersViewModel.swift:173
         let scanQR = makeQRModel()
         let cancellables = bind(scanQR, using: notify)
         
