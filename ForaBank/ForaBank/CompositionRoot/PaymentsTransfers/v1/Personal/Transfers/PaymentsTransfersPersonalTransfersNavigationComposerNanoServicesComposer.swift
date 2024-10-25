@@ -223,7 +223,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .compactMap(\.scanQR)
             .handleEvents(receiveOutput: { _ in notify(.dismiss) })
             .delay(for: .milliseconds(800), scheduler: scheduler)
-            .sink { _ in notify(.select(.scanQR)) }
+            .sink { _ in notify(.select(.qr(.scan))) }
         
         let contactAbroad = share
             .compactMap(\.contactAbroad)

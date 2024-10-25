@@ -26,7 +26,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         
         switch element {
         case let .buttonType(buttonType):
-            return compose(for: buttonType, notify: notify)
+            return compose(for: buttonType, using: notify)
             
         case let .contactAbroad(source):
             // handleContactAbroad
@@ -44,15 +44,8 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .latest(latest):
             return nanoServices.makeLatest(latest, notify).map { .payments($0) }
             
-        case .scanQR:
-            // PaymentsTransfersViewModel.swift:1348
-            return .scanQR(nanoServices.makeScanQR(notify))
-            
         case let .qr(qr):
-            switch qr {
-            case .cancelled:
-                return nil
-            }
+            return compose(for: qr, using: notify)
         }
     }
     
@@ -63,7 +56,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         for buttonType: Domain.ButtonType,
-        notify: @escaping (Domain.FlowEvent) -> Void
+        using notify: @escaping (Domain.FlowEvent) -> Void
     ) -> Domain.Navigation? {
         
         switch buttonType {
@@ -81,6 +74,21 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             
         case .requisites:
             return .payments(nanoServices.makeDetail(notify))
+        }
+    }
+    
+    func compose(
+        for qr: Domain.Element.QR,
+        using notify: @escaping (Domain.FlowEvent) -> Void
+    ) -> Domain.Navigation? {
+        
+        switch qr {
+        case .cancelled:
+            return nil
+            
+        case .scan:
+            // PaymentsTransfersViewModel.swift:1348
+            return .scanQR(nanoServices.makeScanQR(notify))
         }
     }
 }

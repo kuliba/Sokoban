@@ -154,7 +154,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler.advance(by: .milliseconds(800))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
-            .select(.scanQR)
+            .select(.qr(.scan))
         ])
     }
     
@@ -292,7 +292,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler.advance(by: .milliseconds(800))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
-            .select(.scanQR)
+            .select(.qr(.scan))
         ])
     }
     
@@ -366,7 +366,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler.advance(by: .milliseconds(800))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
-            .select(.scanQR)
+            .select(.qr(.scan))
         ])
     }
     
@@ -543,7 +543,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler.advance(by: .milliseconds(800))
         XCTAssertNoDiff(spy.equatablePayloads, [
             .dismiss,
-            .select(.scanQR)
+            .select(.qr(.scan))
         ])
     }
     

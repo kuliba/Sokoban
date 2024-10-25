@@ -293,7 +293,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let (sut, spies) = makeSUT()
         
-        _ = sut.compose(.scanQR) { _ in }
+        _ = sut.compose(.qr(.scan)) { _ in }
         
         XCTAssertNoDiff(spies.makeScanQR.payloads.count, 1)
     }
@@ -303,7 +303,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let scanQR = makeScanQRNode()
         let (sut, _) = makeSUT(scanQR: scanQR)
         
-        let navigation = sut.compose(.scanQR) { _ in }
+        let navigation = sut.compose(.qr(.scan)) { _ in }
         
         switch navigation {
         case let .scanQR(received):
