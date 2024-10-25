@@ -313,6 +313,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         // PaymentsTransfersViewModel.swift:1567
         return scanQR.$state
             .compactMap { $0 }
+            .debounce(for: 0.1, scheduler: scheduler)
             .sink {
                 
                 switch $0 {
