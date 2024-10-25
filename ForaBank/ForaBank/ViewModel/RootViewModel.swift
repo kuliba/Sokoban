@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import ForaTools
 import PayHub
+import RemoteServices
 import SwiftUI
 import MarketShowcase
 import LandingUIComponent
@@ -405,49 +406,6 @@ class RootViewModel: ObservableObject, Resetable {
         
         let openUtilityPayment: (String) -> Void = { [weak self] in
             
-            /*switch self?.tabsViewModel.paymentsModel {
-            case .none:
-                break
-                
-            case let .legacy(legacy):
-                
-                withAnimation {
-                    switchTab(.payments)
-                    
-                    if let section = legacy.sections.compactMap({ $0 as? PTSectionPaymentsView.ViewModel }).first {
-                        
-                        section.action.send( PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
-                        
-                    }
-                }
-                
-            case let .v1(switcher):
-                switch switcher.state {
-                case .none:
-                    break
-                    
-                case .corporate:
-                    break
-                    
-                case let .personal(payments):
-                    
-                    let picker = payments.content.categoryPicker.content
-                    
-                    let category = picker.state.elements.first {
-                        
-                        $0.element.type == .housingAndCommunalService
-                    }
-                    
-                    guard let category else { return }
-                    
-                    withAnimation {
-                        
-                        switchTab(.payments)
-                        
-                        payments.content.categoryPicker.flow.event(.select(.category(category.element)))
-                    }
-                }
-            }*/
             self?.openUtilityPayment(category: $0, switchTab: switchTab)
         }
         
@@ -469,12 +427,14 @@ class RootViewModel: ObservableObject, Resetable {
             
         case let .legacy(legacy):
             
+            guard let payment = legacyPayment(by: category) else { return }
+            
             withAnimation {
                 switchTab(.payments)
                 
                 if let section = legacy.sections.compactMap({ $0 as? PTSectionPaymentsView.ViewModel }).first {
                     
-                    section.action.send( PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
+                    section.action.send( PTSectionPaymentsViewAction.ButtonTapped.Payment(type: payment))
                 }
             }
             
@@ -488,11 +448,13 @@ class RootViewModel: ObservableObject, Resetable {
                 
             case let .personal(payments):
                 
+                guard let payment = payment(by: category) else { return }
+
                 let picker = payments.content.categoryPicker.content
                 
                 let category = picker.state.elements.first {
                     
-                    $0.element.type == .housingAndCommunalService
+                    $0.element.type == payment
                 }
                 
                 guard let category else { return }
@@ -505,8 +467,32 @@ class RootViewModel: ObservableObject, Resetable {
                 }
             }
         }
-
     }
+    
+    private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
+        
+        switch name {
+            
+        case "HOUSING_AND_COMMUNAL_SERVICE":
+            return .service
+            
+        default:
+            return nil
+        }
+    }
+    
+    private func payment(by name: String) -> RemoteServices.ResponseMapper.ServiceCategory.CategoryType? {
+        
+        switch name {
+            
+        case "HOUSING_AND_COMMUNAL_SERVICE":
+            return .housingAndCommunalService
+            
+        default:
+            return nil
+        }
+    }
+
     func createAlertAppVersion(
         _ appInfo: AppInfo
     ) -> Alert.ViewModel {

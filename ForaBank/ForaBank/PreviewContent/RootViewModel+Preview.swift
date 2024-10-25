@@ -14,5 +14,5 @@ extension RootViewModel.RootActions {
         spinner: .init(show: {}, hide: {}), 
         switchTab: { _ in },
         dismissAll: {},
-        openUtilityPayment: {})
+        openUtilityPayment: {_ in })
 }
