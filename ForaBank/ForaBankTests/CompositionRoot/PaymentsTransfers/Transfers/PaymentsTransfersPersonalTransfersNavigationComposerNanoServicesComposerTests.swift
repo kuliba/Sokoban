@@ -467,6 +467,18 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
+    // MARK: - makeScanQR
+    
+    func test_makeScanQR_shouldCallMakeQRModel() {
+        
+        func test() { XCTFail("unimplemented") }
+    }
+
+    func test_makeScanQR_shouldDeliverScanQR() {
+        
+        func test() { XCTFail("unimplemented") }
+    }
+
     // MARK: - makeSource
     
     func test_makeSource_shouldCallNotifyWithDismissOnScanQR() {
@@ -543,7 +555,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
     private typealias NotifySpy = CallSpy<SUT.Event, Void>
-    
+    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
+
     private func makeSUT(
         model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
@@ -554,8 +567,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         scheduler: TestSchedulerOfDispatchQueue,
         spy: NotifySpy
     ) {
+        let makeQRModelSpy = MakeQRModelSpy()
         let scheduler = DispatchQueue.test
-        let sut = SUT(model: model, scheduler: scheduler.eraseToAnyScheduler())
+        let sut = SUT(
+            makeQRModel: makeQRModelSpy.call, 
+            model: model,
+            scheduler: scheduler.eraseToAnyScheduler()
+        )
         let spy = NotifySpy(stubs: .init(repeating: (), count: 9))
         let nanoServices = sut.compose()
         

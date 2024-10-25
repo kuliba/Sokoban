@@ -13,7 +13,8 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makeTransfers(
-        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType]
+        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
+        makeQRModel: @escaping () -> QRModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
         let elements = buttonTypes.map {
@@ -22,6 +23,7 @@ extension RootViewModelFactory {
         }
         
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
+            makeQRModel: makeQRModel,
             model: model,
             scheduler: mainScheduler
         )

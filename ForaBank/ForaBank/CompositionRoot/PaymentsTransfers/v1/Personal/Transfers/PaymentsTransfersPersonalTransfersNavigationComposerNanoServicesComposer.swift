@@ -11,13 +11,16 @@ import Foundation
 
 final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
+    private let makeQRModel: MakeQRScannerModel
     private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        makeQRModel: @escaping MakeQRScannerModel,
         model: Model,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.makeQRModel = makeQRModel
         self.model = model
         self.scheduler = scheduler
     }
@@ -34,7 +37,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
             makeDetail: { self.makeDetail(notify: $0) },
             makeLatest: { self.makeLatest(latest: $0, notify: $1) },
             makeMeToMe: { self.makeMeToMe(notify: $0) },
-            makeScanQR: { fatalError(String(describing: $0)) },
+            makeScanQR: { self.makeScanQR(notify: $0) },
             makeSource: { self.makeSource(source: $0, notify: $1) }
         )
     }
@@ -119,6 +122,16 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
         return .init(model: wrapper, cancellables: cancellables)
+    }
+    
+    func makeScanQR(
+        notify: @escaping Notify
+    ) -> Node<QRModel> {
+        
+        let scanQR = makeQRModel()
+        let cancellables = bind(scanQR, using: notify)
+        
+        return .init(model: scanQR, cancellables: cancellables)
     }
     
     func makeSource(
@@ -287,6 +300,14 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .sink { _ in notify(.dismiss) }
         
         return [close, `repeat`]
+    }
+    
+    private func bind(
+        _ scanQR: QRModel,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        return []
     }
 }
 

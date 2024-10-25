@@ -329,6 +329,13 @@ extension RootViewModelFactory {
         let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
+        let qrScannerComposer = QRScannerComposer(
+            model: model,
+            qrResolverFeatureFlag: qrResolverFeatureFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: mainScheduler
+        )
+        
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: 6,
             operationPickerPlaceholderCount: 4,
@@ -338,7 +345,8 @@ extension RootViewModelFactory {
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            pageSize: 50
+            pageSize: 50,
+            makeQRModel: qrScannerComposer.compose
         )
         
         if paymentsTransfersFlag.isActive {
