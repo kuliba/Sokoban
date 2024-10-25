@@ -750,7 +750,12 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-            
+          
+        case let payload:
+            if payload.type == .payment {
+                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+            }
+
         default:
             break
         }

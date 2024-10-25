@@ -403,9 +403,110 @@ class RootViewModel: ObservableObject, Resetable {
             self?.action.send(RootViewModelAction.DismissAll())
         }
         
-        return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
+        let openUtilityPayment: (String) -> Void = { [weak self] in
+            
+            /*switch self?.tabsViewModel.paymentsModel {
+            case .none:
+                break
+                
+            case let .legacy(legacy):
+                
+                withAnimation {
+                    switchTab(.payments)
+                    
+                    if let section = legacy.sections.compactMap({ $0 as? PTSectionPaymentsView.ViewModel }).first {
+                        
+                        section.action.send( PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
+                        
+                    }
+                }
+                
+            case let .v1(switcher):
+                switch switcher.state {
+                case .none:
+                    break
+                    
+                case .corporate:
+                    break
+                    
+                case let .personal(payments):
+                    
+                    let picker = payments.content.categoryPicker.content
+                    
+                    let category = picker.state.elements.first {
+                        
+                        $0.element.type == .housingAndCommunalService
+                    }
+                    
+                    guard let category else { return }
+                    
+                    withAnimation {
+                        
+                        switchTab(.payments)
+                        
+                        payments.content.categoryPicker.flow.event(.select(.category(category.element)))
+                    }
+                }
+            }*/
+            self?.openUtilityPayment(category: $0, switchTab: switchTab)
+        }
+        
+        return .init(
+            dismissCover: dismissCover,
+            spinner: .init(show: spinnerShow, hide: spinnerHide),
+            switchTab: switchTab,
+            dismissAll: dismissAll,
+            openUtilityPayment: openUtilityPayment
+        )
     }()
     
+    func openUtilityPayment(
+        category: String,
+        switchTab: (RootViewModel.TabType) -> Void
+    ) {
+        
+        switch tabsViewModel.paymentsModel {
+            
+        case let .legacy(legacy):
+            
+            withAnimation {
+                switchTab(.payments)
+                
+                if let section = legacy.sections.compactMap({ $0 as? PTSectionPaymentsView.ViewModel }).first {
+                    
+                    section.action.send( PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .service))
+                }
+            }
+            
+        case let .v1(switcher):
+            switch switcher.state {
+            case .none:
+                break
+                
+            case .corporate:
+                break
+                
+            case let .personal(payments):
+                
+                let picker = payments.content.categoryPicker.content
+                
+                let category = picker.state.elements.first {
+                    
+                    $0.element.type == .housingAndCommunalService
+                }
+                
+                guard let category else { return }
+                
+                withAnimation {
+                    
+                    switchTab(.payments)
+                    
+                    payments.content.categoryPicker.flow.event(.select(.category(category.element)))
+                }
+            }
+        }
+
+    }
     func createAlertAppVersion(
         _ appInfo: AppInfo
     ) -> Alert.ViewModel {
@@ -530,6 +631,7 @@ extension RootViewModel {
         let spinner: Spinner
         let switchTab: (RootViewModel.TabType) -> Void
         let dismissAll: () -> Void
+        let openUtilityPayment: (String) -> Void
         
         struct Spinner {
             
