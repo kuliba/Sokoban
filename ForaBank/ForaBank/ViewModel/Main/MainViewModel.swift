@@ -752,12 +752,10 @@ private extension MainViewModel {
             }
           
         case let payload:
+#warning("need change after analyst creates a new action type")
             if payload.type == .payment {
                 rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
             }
-
-        default:
-            break
         }
     }
     
