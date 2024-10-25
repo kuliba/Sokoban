@@ -20,17 +20,17 @@ where ContentView: View {
         contentView()
             .bottomSheet(
                 sheet: state.bottomSheet,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeBottomSheetView
             )
             .navigationDestination(
                 destination: state.destination,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeDestinationView
             )
             .sheet(
                 modal: state.sheet,
-                dismiss: {},
+                dismiss: { event(.dismiss) },
                 content: makeSheetView
             )
     }
