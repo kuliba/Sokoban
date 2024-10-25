@@ -504,7 +504,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertEqual(spy.callCount, 0)
     }
     
-    func test_makeScanQR_shouldCallNotifyWithDelayWithCancelledOnQRCancelled() {
+    func test_makeScanQR_shouldCallNotifyWithDelayWithDismissOnQRCancelled() {
         
         let (_, nanoServices, scheduler, spy, _) = makeSUT()
         let scanQR = nanoServices.makeScanQR(spy.call(payload:))
@@ -515,7 +515,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [])
         
         scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(spy.equatablePayloads, [.select(.qr(.cancelled))])
+        XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
     func test_makeScanQR_shouldCallNotifyWithDelayWithInflightOnQRInflight() {

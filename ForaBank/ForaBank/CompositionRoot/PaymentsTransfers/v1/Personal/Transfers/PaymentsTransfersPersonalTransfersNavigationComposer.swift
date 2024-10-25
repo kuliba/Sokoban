@@ -85,15 +85,12 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     ) -> Domain.Navigation? {
         
         switch qr {
-        case .cancelled:
-            return nil
-            
         case .inflight:
-            #warning("fixme")
+#warning("fixme")
             return nil
             
         case let .qrResult(qrResult):
-            #warning("fixme")
+#warning("fixme")
             _ = qrResult
             return nil
             

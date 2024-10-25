@@ -22,7 +22,6 @@ enum PaymentsTransfersPersonalTransfersDomain {
         
         enum QR: Equatable {
             
-            case cancelled
             case inflight
             case qrResult(QRModelResult)
             case scan

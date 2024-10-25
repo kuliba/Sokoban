@@ -318,7 +318,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 
                 switch $0 {
                 case .cancelled:
-                    notify(.select(.qr(.cancelled)))
+                    notify(.dismiss)
                     
                 case .inflight:
                     notify(.select(.qr(.inflight)))

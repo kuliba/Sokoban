@@ -287,16 +287,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         }
     }
     
-    // MARK: - qr: cancel
-    
-    func test_scanQR_shouldDeliverNilOnQRCancelled() throws {
-        
-        let scanQR = makeScanQRNode()
-        let (sut, _) = makeSUT(scanQR: scanQR)
-        
-        XCTAssertNil(sut.compose(.qr(.cancelled)) { _ in })
-    }
-    
     // MARK: - qr: inflight
     
     func test_scanQR_shouldDeliverNilOnQRInflight() throws {
