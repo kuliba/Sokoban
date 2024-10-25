@@ -143,11 +143,7 @@ private extension RootViewModel {
                     landingActions: { self.landingActions($0) },
                     outsideAction: {_ in },
                     orderCard: openCard, 
-                    payment: { [weak self] in
-                        
-                        guard let self else { return }
-                        
-                        openUtilityPayment(category: $0, switchTab: rootActions.switchTab) }
+                    payment: payment
                 )
                 
                 setLink(to: .landing(viewModel, type == "abroadSticker"))
