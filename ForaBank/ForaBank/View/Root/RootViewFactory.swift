@@ -26,8 +26,6 @@ typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeO
 typealias MakeOrderCard = () -> Void
 typealias MakePaymentByType = (String) -> Void
 
-typealias MakeNavigationOperationView = (@escaping() -> Void) -> any View
-
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
@@ -44,7 +42,6 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeNavigationOperationView: MakeNavigationOperationView
     let makeAnywayFlowView: MakeAnywayFlowView
 }
 

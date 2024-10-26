@@ -58,7 +58,6 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeNavigationOperationView: makeNavigationOperationView, 
             makeAnywayFlowView: makeAnywayFlowView
         )
     }
@@ -416,25 +415,6 @@ private extension RootViewFactoryComposer {
                         }
                 })
         : nil
-    }
-    
-    func makeNavigationOperationView(
-        dismissAll: @escaping() -> Void
-    ) -> some View {
-        
-        NavigationView {
-            
-            RootViewModelFactory(
-                model: model, 
-                httpClient: model.authenticatedHTTPClient(), 
-                logger: LoggerAgent()
-            ).makeNavigationOperationView(dismissAll: dismissAll)()
-                .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
-                .foregroundColor(.textSecondary)
-        }
     }
 }
 
