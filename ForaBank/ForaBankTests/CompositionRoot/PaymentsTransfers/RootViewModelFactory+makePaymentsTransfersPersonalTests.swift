@@ -55,9 +55,6 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
     
     private func makeSUT(
-        categoryPickerPlaceholderCount: Int = 6,
-        operationPickerPlaceholderCount: Int = 4,
-        pageSize: Int = 10,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -78,15 +75,12 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
             backgroundScheduler: .immediate
         )
         let sut = factory.makePaymentsTransfersPersonal(
-            categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
-            operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             nanoServices: .init(
                 loadCategories: loadCategoriesSpy.process(completion:),
                 reloadCategories: reloadCategoriesSpy.process(completion:),
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
             ),
-            pageSize: pageSize,
             makeQRModel: makeQRModelSpy.call
         )
         

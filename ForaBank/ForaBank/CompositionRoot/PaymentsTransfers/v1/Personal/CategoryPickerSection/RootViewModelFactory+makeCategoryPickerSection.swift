@@ -15,10 +15,11 @@ import SberQR
 extension RootViewModelFactory {
     
     func makeCategoryPickerSection(
-        nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int,
-        placeholderCount: Int
+        nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
+        
+        let pageSize = settings.pageSize
+        let placeholderCount = settings.categoryPickerPlaceholderCount
         
         func loadOperators(
             payload: UtilityPrepaymentNanoServices<PaymentServiceOperator>.LoadOperatorsPayload,

@@ -14,27 +14,19 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makePaymentsTransfersPersonal(
-        categoryPickerPlaceholderCount: Int,
-        operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int,
         makeQRModel: @escaping () -> QRModel
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
-            nanoServices: nanoServices,
-            pageSize: pageSize,
-            placeholderCount: categoryPickerPlaceholderCount
+            nanoServices: nanoServices
         )
         
         // MARK: - OperationPicker
         
-        let operationPicker = makeOperationPicker(
-            operationPickerPlaceholderCount: operationPickerPlaceholderCount,
-            nanoServices: nanoServices
-        )
+        let operationPicker = makeOperationPicker(nanoServices: nanoServices)
         
         // MARK: - Toolbar
         
