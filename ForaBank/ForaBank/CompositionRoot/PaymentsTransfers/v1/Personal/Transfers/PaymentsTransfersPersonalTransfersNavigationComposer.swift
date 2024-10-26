@@ -67,8 +67,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe(notify).map { .success(.meToMe($0)) }
-            ?? .failure(.makeMeToMeFailure)
+            return .makeMeToMe(nanoServices.makeMeToMe(notify))
             
         case .byPhoneNumber:
             return .success(.contacts(nanoServices.makeContacts(notify)))
@@ -105,5 +104,12 @@ private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
     ) -> Self {
         
         node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
+    }
+    
+    static func makeMeToMe(
+        _ node: Node<PaymentsMeToMeViewModel>?
+    ) -> Self {
+        
+        node.map { .success(.meToMe($0)) } ?? .failure(.makeMeToMeFailure)
     }
 }
