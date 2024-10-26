@@ -417,7 +417,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         makeMeToMe.emitResponseSuccess(with: success)
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.successMeToMe(.init(success)))])
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .receive(.success(.successMeToMe(.init(success))))
+        ])
     }
     
     func test_makeMeToMe_shouldBindSuccessDismissOnEmitClose() throws {
@@ -431,7 +433,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         success.action.send(PaymentsSuccessAction.Button.Close())
         
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .receive(.successMeToMe(.init(success))),
+            .receive(.success(.successMeToMe(.init(success)))),
             .dismiss
         ])
     }
@@ -447,7 +449,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         success.action.send(PaymentsSuccessAction.Button.Repeat())
         
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .receive(.successMeToMe(.init(success))),
+            .receive(.success(.successMeToMe(.init(success)))),
             .dismiss
         ])
     }
@@ -460,7 +462,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         makeMeToMe.emitResponseFailure()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.alert("Перевод выполнен"))])
+        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.failure(.alert("Перевод выполнен")))])
     }
     
     func test_makeMeToMe_shouldDeliverDismissOnCloseBottomSheet() throws {
@@ -712,58 +714,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
             makeQRModel: makeQRModel,
             scheduler: scheduler
         )
-    }
-}
-
-// MARK: - Equatable
-
-private extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
-    
-    var equatable: EquatableEvent {
-        
-        switch self {
-        case .dismiss:
-            return .dismiss
-            
-        case let .receive(receive):
-            switch receive {
-            case let .alert(alert):
-                return .receive(.alert(alert))
-                
-            case let .successMeToMe(successMeToMe):
-                return .receive(.successMeToMe(.init(successMeToMe.model)))
-                
-            default:
-                return unimplemented("\(receive) is not used in tests.")
-            }
-            
-        case let .select(select):
-            return .select(select)
-        }
-    }
-    
-    enum EquatableEvent: Equatable {
-        
-        case dismiss
-        case receive(Receive)
-        case select(PaymentsTransfersPersonalTransfersDomain.Element)
-        
-        enum Receive: Equatable {
-            
-            case alert(String)
-            case successMeToMe(ObjectIdentifier)
-        }
-    }
-}
-
-private extension CallSpy
-where Payload == PaymentsTransfersPersonalTransfersDomain.FlowEvent {
-    
-    typealias EquatablePayload = PaymentsTransfersPersonalTransfersDomain.FlowEvent.EquatableEvent
-    
-    var equatablePayloads: [EquatablePayload] {
-        
-        return payloads.map(\.equatable)
     }
 }
 

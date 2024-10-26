@@ -36,12 +36,7 @@ extension RootViewModelFactory {
             microServices: .init(
                 getNavigation: { element, notify, completion in
                     
-                    guard let navigation = navigationComposer.compose(element, notify: notify)
-                    else {
-#warning("return without navigation")
-                        return
-                    }
-                    
+                    let navigation = navigationComposer.compose(element, notify: notify)
                     completion(navigation)
                 }
             ),

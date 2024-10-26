@@ -9,8 +9,18 @@ import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
     
+    typealias Binder = PlainPickerBinder<Element, NavigationResult>
+    typealias BinderComposer = PlainPickerBinderComposer<Element, NavigationResult>
+    
+    typealias FlowDomain = PayHubUI.FlowDomain<Element, NavigationResult>
+    
+    typealias FlowState = FlowDomain.State
+    typealias FlowEvent = FlowDomain.Event
+    typealias FlowEffect = FlowDomain.Effect
+    
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
+#warning("rename to Select")
     enum Element: Equatable {
         
         case buttonType(ButtonType)
@@ -28,9 +38,10 @@ enum PaymentsTransfersPersonalTransfersDomain {
         }
     }
     
+    typealias NavigationResult = Result<Navigation, NavigationFailure>
+    
     enum Navigation {
         
-        case alert(String)
         case contacts(Node<ContactsViewModel>)
         case meToMe(Node<PaymentsMeToMeViewModel>)
         case payments(Node<ClosePaymentsViewModelWrapper>)
@@ -39,12 +50,10 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
-    typealias Binder = PlainPickerBinder<Element, Navigation>
-    typealias BinderComposer = PlainPickerBinderComposer<Element, Navigation>
-    
-    typealias FlowDomain = PayHubUI.FlowDomain<Element, Navigation>
-    
-    typealias FlowState = FlowDomain.State
-    typealias FlowEvent = FlowDomain.Event
-    typealias FlowEffect = FlowDomain.Effect
+    enum NavigationFailure: Error {
+        
+        case alert(String)
+        case makeLatestFailure
+        case makeMeToMeFailure
+    }
 }

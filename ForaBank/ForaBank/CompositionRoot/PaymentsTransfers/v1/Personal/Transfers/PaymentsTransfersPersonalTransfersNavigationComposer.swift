@@ -22,7 +22,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         _ element: Domain.Element,
         notify: @escaping (Domain.FlowEvent) -> Void
-    ) -> Domain.Navigation? {
+    ) -> Domain.NavigationResult {
         
         switch element {
         case let .buttonType(buttonType):
@@ -31,18 +31,18 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
         case let .contactAbroad(source):
             // handleContactAbroad
             // PaymentsTransfersViewModel.swift:1359
-            return .paymentsViewModel(nanoServices.makeSource(source, notify))
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .contacts(source):
-            return .paymentsViewModel(nanoServices.makeSource(source, notify))
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .countries(source):
             // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
             // PaymentsTransfersViewModel.swift:1528
-            return .paymentsViewModel(nanoServices.makeSource(source, notify))
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
-            return nanoServices.makeLatest(latest, notify).map { .payments($0) }
+            return nanoServices.makeLatest(latest, notify).map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
             
         case let .qr(qr):
             return compose(for: qr, using: notify)
@@ -57,23 +57,24 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         for buttonType: Domain.ButtonType,
         using notify: @escaping (Domain.FlowEvent) -> Void
-    ) -> Domain.Navigation? {
+    ) -> Domain.NavigationResult {
         
         switch buttonType {
         case .abroad:
-            return .contacts(nanoServices.makeAbroad(notify))
+            return .success(.contacts(nanoServices.makeAbroad(notify)))
             
         case .anotherCard:
-            return .payments(nanoServices.makeAnotherCard(notify))
+            return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe(notify).map { .meToMe($0) }
+            return nanoServices.makeMeToMe(notify).map { .success(.meToMe($0)) } 
+            ?? .failure(.makeMeToMeFailure)
             
         case .byPhoneNumber:
-            return .contacts(nanoServices.makeContacts(notify))
+            return .success(.contacts(nanoServices.makeContacts(notify)))
             
         case .requisites:
-            return .payments(nanoServices.makeDetail(notify))
+            return .success(.payments(nanoServices.makeDetail(notify)))
         }
     }
     
@@ -82,21 +83,21 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     func compose(
         for qr: Domain.Element.QR,
         using notify: @escaping (Domain.FlowEvent) -> Void
-    ) -> Domain.Navigation? {
+    ) -> Domain.NavigationResult {
         
         switch qr {
         case .inflight:
 #warning("fixme")
-            return nil
+            return { fatalError() }()
             
         case let .qrResult(qrResult):
 #warning("fixme")
             _ = qrResult
-            return nil
+            return { fatalError() }()
             
         case .scan:
             // PaymentsTransfersViewModel.swift:1348
-            return .scanQR(nanoServices.makeScanQR(notify))
+            return .success(.scanQR(nanoServices.makeScanQR(notify)))
         }
     }
 }

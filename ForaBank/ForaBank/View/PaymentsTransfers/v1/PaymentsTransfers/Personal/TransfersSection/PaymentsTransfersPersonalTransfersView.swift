@@ -93,41 +93,57 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowState {
     var bottomSheet: PaymentsTransfersPersonalTransfersDomain.BottomSheet? {
         
         switch navigation {
-            
-        case let .meToMe(meToMe):
-            return .meToMe(meToMe)
-            
-        case .none, .alert, .contacts, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+            case let .meToMe(meToMe):
+                return .meToMe(meToMe)
+                
+            case .contacts, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
     
     var destination: PaymentsTransfersPersonalTransfersDomain.Destination? {
         
         switch navigation {
-            //    case let .anotherCard(anotherCard):
-            //        return .anotherCard(anotherCard)
-            
-        case let .payments(payments):
-            return .payments(payments)
-            
-        case .none, .alert, .contacts, .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+                //    case let .anotherCard(anotherCard):
+                //        return .anotherCard(anotherCard)
+                
+            case let .payments(payments):
+                return .payments(payments)
+                
+            case .contacts, .meToMe, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
     
     var sheet: PaymentsTransfersPersonalTransfersDomain.Sheet? {
         
         switch navigation {
-        case let .contacts(contacts):
-            return .contacts(contacts)
-            
-        case .none, .alert, .meToMe, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+        case .failure, .none:
             return nil
+            
+        case let .success(navigation):
+            switch navigation {
+            case let .contacts(contacts):
+                return .contacts(contacts)
+                
+            case .meToMe, .payments, .paymentsViewModel, .scanQR, .successMeToMe:
+                return nil
+            }
         }
     }
 }
-
 extension PaymentsTransfersPersonalTransfersDomain {
     
     enum BottomSheet: BottomSheetCustomizable {

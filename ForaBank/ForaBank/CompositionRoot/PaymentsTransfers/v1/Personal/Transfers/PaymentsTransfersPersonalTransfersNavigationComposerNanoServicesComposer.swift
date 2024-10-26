@@ -251,10 +251,10 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 //    )
                 let cancellables = self.bind($0, using: notify)
                 
-                notify(.receive(.successMeToMe(.init(
+                notify(.receive(.success(.successMeToMe(.init(
                     model: $0,
                     cancellables: cancellables
-                ))))
+                )))))
             }
         
         let failure = share
@@ -262,7 +262,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .sink { _ in
                 //    makeAlert("Перевод выполнен")
                 //    self.event(.dismiss(.modal))
-                notify(.receive(.alert("Перевод выполнен")))
+                notify(.receive(.failure(.alert("Перевод выполнен"))))
             }
         
         let closeBottomSheet = share
