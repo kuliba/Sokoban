@@ -50,7 +50,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         case successMeToMe(Node<PaymentsSuccessViewModel>)
     }
     
-    enum NavigationFailure: Error {
+    enum NavigationFailure: Error, Equatable {
         
         case alert(String)
         case makeLatestFailure

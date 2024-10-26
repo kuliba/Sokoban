@@ -9,7 +9,7 @@ import Combine
 @testable import ForaBank
 import XCTest
 
-final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposerTests: XCTestCase {
+final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposerTests: PaymentsTransfersPersonalTransfersTests {
     
     // MARK: - init
     

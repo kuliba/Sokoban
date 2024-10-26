@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCase {
+final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsTransfersPersonalTransfersTests {
     
     // MARK: - init
     
@@ -44,13 +44,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.abroad)
         
-        switch navigation {
-        case let .success(.contacts(received)):
-            XCTAssert(abroad === received.model)
-            
-        default:
-            XCTFail("Expected abroad contacts, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .contacts(.init(abroad)))
     }
     
     func test_anotherCard_shouldCallMakeAnotherCard() {
@@ -69,13 +63,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.anotherCard)
         
-        switch navigation {
-        case let .success(.payments(received)):
-            XCTAssert(anotherCard === received.model)
-            
-        default:
-            XCTFail("Expected another card, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(anotherCard)))
     }
     
     func test_betweenSelf_shouldCallMakeContacts() {
@@ -93,13 +81,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.betweenSelf)
         
-        switch navigation {
-        case .failure(.makeMeToMeFailure):
-            break
-            
-        default:
-            XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .makeMeToMeFailure)
     }
     
     func test_betweenSelf_shouldDeliverMeToMe() throws {
@@ -109,13 +91,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.betweenSelf)
         
-        switch navigation {
-        case let .success(.meToMe(received)):
-            XCTAssert(meToMe.model === received.model)
-            
-        default:
-            XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .meToMe(.init(meToMe.model)))
     }
     
     func test_byPhoneNumber_shouldCallMakeContacts() {
@@ -133,14 +109,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let (sut, _) = makeSUT(contacts: contacts)
         
         let navigation = sut.compose(.byPhoneNumber)
-#warning("assert equatableNavigation - add mapping to Equatable test helper type")
-        switch navigation {
-        case let .success(.contacts(received)):
-            XCTAssert(contacts === received.model)
-            
-        default:
-            XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
-        }
+        
+        assert(navigation, .contacts(.init(contacts)))
     }
     
     func test_requisites_shouldCallMakeDetail() {
@@ -159,13 +129,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.requisites)
         
-        switch navigation {
-        case let .success(.payments(received)):
-            XCTAssert(detail === received.model)
-            
-        default:
-            XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(detail)))
     }
     
     // MARK: - contactAbroad
@@ -187,13 +151,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.contactAbroad(.avtodor)) { _ in }
         
-        switch navigation {
-        case let .success(.paymentsViewModel(received)):
-            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .paymentsViewModel(.init(source.model)))
     }
     
     // MARK: - contacts
@@ -215,13 +173,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.contacts(.avtodor)) { _ in }
         
-        switch navigation {
-        case let .success(.paymentsViewModel(received)):
-            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .paymentsViewModel(.init(source.model)))
     }
     
     // MARK: - countries
@@ -243,13 +195,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.countries(.avtodor)) { _ in }
         
-        switch navigation {
-        case let .success(.paymentsViewModel(received)):
-            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .paymentsViewModel(.init(source.model)))
     }
     
     // MARK: - latest
@@ -270,13 +216,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
         
-        switch navigation {
-        case .failure(.makeLatestFailure):
-            break
-            
-        default:
-            XCTFail("Expected makeLatestFailure failure, got \(navigation) instead.")
-        }
+        assert(navigation, .makeLatestFailure)
     }
     
     func test_latest_shouldDeliverLatestPayment() throws {
@@ -286,13 +226,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
         
-        switch navigation {
-        case let .success(.payments(received)):
-            try XCTAssert(XCTUnwrap(latest.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(latest.model)))
     }
     
     // MARK: - qr: inflight
@@ -322,14 +256,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let (sut, _) = makeSUT(scanQR: scanQR)
         
         let navigation = sut.compose(.qr(.scan)) { _ in }
-        
-        switch navigation {
-        case let .success(.scanQR(received)):
-            try XCTAssert(XCTUnwrap(scanQR.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected scanQR, got \(String(describing: navigation)) instead.")
-        }
+  
+        assert(navigation, .scanQR(.init(scanQR.model)))
     }
     
     // MARK: - Helpers
