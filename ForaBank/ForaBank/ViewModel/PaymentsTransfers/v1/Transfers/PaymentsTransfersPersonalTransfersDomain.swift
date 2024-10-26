@@ -9,10 +9,10 @@ import PayHubUI
 
 enum PaymentsTransfersPersonalTransfersDomain {
     
-    typealias Binder = PlainPickerBinder<Element, NavigationResult>
-    typealias BinderComposer = PlainPickerBinderComposer<Element, NavigationResult>
+    typealias Binder = PlainPickerBinder<Select, NavigationResult>
+    typealias BinderComposer = PlainPickerBinderComposer<Select, NavigationResult>
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Element, NavigationResult>
+    typealias FlowDomain = PayHubUI.FlowDomain<Select, NavigationResult>
     
     typealias FlowState = FlowDomain.State
     typealias FlowEvent = FlowDomain.Event
@@ -20,8 +20,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-#warning("rename to Select")
-    enum Element: Equatable {
+    enum Select: Equatable {
         
         case buttonType(ButtonType)
         case contactAbroad(Payments.Operation.Source)

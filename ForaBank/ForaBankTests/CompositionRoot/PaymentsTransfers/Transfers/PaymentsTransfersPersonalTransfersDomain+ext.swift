@@ -29,7 +29,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
         
         case dismiss
         case receive(PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult)
-        case select(PaymentsTransfersPersonalTransfersDomain.Element)
+        case select(PaymentsTransfersPersonalTransfersDomain.Select)
     }
 }
 

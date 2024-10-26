@@ -19,7 +19,7 @@ extension RootViewModelFactory {
         
         let elements = buttonTypes.map {
             
-            PaymentsTransfersPersonalTransfersDomain.Element.buttonType($0)
+            PaymentsTransfersPersonalTransfersDomain.Select.buttonType($0)
         }
         
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(

@@ -20,11 +20,11 @@ final class PaymentsTransfersPersonalTransfersNavigationComposer {
 extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
-        _ element: Domain.Element,
+        _ select: Domain.Select,
         notify: @escaping (Domain.FlowEvent) -> Void
     ) -> Domain.NavigationResult {
         
-        switch element {
+        switch select {
         case let .buttonType(buttonType):
             return compose(for: buttonType, using: notify)
             
@@ -81,7 +81,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     // bind QRModel
     // PaymentsTransfersViewModel.swift:1567
     func compose(
-        for qr: Domain.Element.QR,
+        for qr: Domain.Select.QR,
         using notify: @escaping (Domain.FlowEvent) -> Void
     ) -> Domain.NavigationResult {
         
