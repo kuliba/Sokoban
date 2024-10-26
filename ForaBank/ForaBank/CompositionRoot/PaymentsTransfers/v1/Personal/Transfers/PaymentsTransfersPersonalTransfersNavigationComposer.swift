@@ -42,7 +42,7 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
-            return nanoServices.makeLatest(latest, notify).map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
+            return .makeLatest(nanoServices.makeLatest(latest, notify))
             
         case let .qr(qr):
             return compose(for: qr, using: notify)
@@ -95,5 +95,15 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             // PaymentsTransfersViewModel.swift:1348
             return .success(.scanQR(nanoServices.makeScanQR(notify)))
         }
+    }
+}
+
+private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+    
+    static func makeLatest(
+        _ node: Node<ClosePaymentsViewModelWrapper>?
+    ) -> Self {
+        
+        node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
     }
 }
