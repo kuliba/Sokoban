@@ -418,7 +418,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         makeMeToMe.emitResponseSuccess(with: success)
         
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .receive(.success(.successMeToMe(.init(success))))
+            .select(.successMeToMe(.init(success)))
         ])
     }
     
@@ -433,7 +433,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         success.action.send(PaymentsSuccessAction.Button.Close())
         
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .receive(.success(.successMeToMe(.init(success)))),
+            .select(.successMeToMe(.init(success))),
             .dismiss
         ])
     }
@@ -449,7 +449,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         success.action.send(PaymentsSuccessAction.Button.Repeat())
         
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .receive(.success(.successMeToMe(.init(success)))),
+            .select(.successMeToMe(.init(success))),
             .dismiss
         ])
     }
@@ -462,7 +462,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         makeMeToMe.emitResponseFailure()
         
-        XCTAssertNoDiff(spy.equatablePayloads, [.receive(.failure(.alert("Перевод выполнен")))])
+        XCTAssertNoDiff(spy.equatablePayloads, [
+            .select(.alert("Перевод выполнен"))
+        ])
     }
     
     func test_makeMeToMe_shouldDeliverDismissOnCloseBottomSheet() throws {
@@ -612,7 +614,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer
-    private typealias NotifySpy = CallSpy<SUT.Event, Void>
+    private typealias NotifySpy = CallSpy<SUT.NotifyEvent, Void>
     private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
     
     private func makeSUT(

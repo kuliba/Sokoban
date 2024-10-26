@@ -19,12 +19,17 @@ final class PaymentsTransfersPersonalTransfersNavigationComposer {
 
 extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
+    typealias Notify = (Domain.NotifyEvent) -> Void
+    
     func compose(
         _ select: Domain.Select,
-        notify: @escaping (Domain.FlowEvent) -> Void
+        notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch select {
+        case let .alert(message):
+            return .failure(.alert(message))
+            
         case let .buttonType(buttonType):
             return compose(for: buttonType, using: notify)
             
@@ -42,10 +47,13 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
-            return nanoServices.makeLatest(latest, notify).map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
+            return .makeLatest(nanoServices.makeLatest(latest, notify))
             
         case let .qr(qr):
             return compose(for: qr, using: notify)
+            
+        case let .successMeToMe(node):
+            return .success(.successMeToMe(node))
         }
     }
     
@@ -56,7 +64,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         for buttonType: Domain.ButtonType,
-        using notify: @escaping (Domain.FlowEvent) -> Void
+        using notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch buttonType {
@@ -67,8 +75,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe(notify).map { .success(.meToMe($0)) }
-            ?? .failure(.makeMeToMeFailure)
+            return .makeMeToMe(nanoServices.makeMeToMe(notify))
             
         case .byPhoneNumber:
             return .success(.contacts(nanoServices.makeContacts(notify)))
@@ -82,7 +89,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     // PaymentsTransfersViewModel.swift:1567
     func compose(
         for qr: Domain.Select.QR,
-        using notify: @escaping (Domain.FlowEvent) -> Void
+        using notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch qr {
@@ -95,5 +102,22 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             // PaymentsTransfersViewModel.swift:1348
             return .success(.scanQR(nanoServices.makeScanQR(notify)))
         }
+    }
+}
+
+private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+    
+    static func makeLatest(
+        _ node: Node<ClosePaymentsViewModelWrapper>?
+    ) -> Self {
+        
+        node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
+    }
+    
+    static func makeMeToMe(
+        _ node: Node<PaymentsMeToMeViewModel>?
+    ) -> Self {
+        
+        node.map { .success(.meToMe($0)) } ?? .failure(.makeMeToMeFailure)
     }
 }

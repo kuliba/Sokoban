@@ -17,17 +17,21 @@ enum PaymentsTransfersPersonalTransfersDomain {
     typealias FlowState = FlowDomain.State
     typealias FlowEvent = FlowDomain.Event
     typealias FlowEffect = FlowDomain.Effect
+
+    typealias NotifyEvent = FlowDomain.NotifyEvent
     
     typealias ButtonType = PTSectionTransfersView.ViewModel.TransfersButtonType
     
-    enum Select: Equatable {
+    enum Select {
         
+        case alert(String)
         case buttonType(ButtonType)
         case contactAbroad(Payments.Operation.Source)
         case contacts(Payments.Operation.Source)
         case countries(Payments.Operation.Source)
         case latest(LatestPaymentData.ID)
         case qr(QR)
+        case successMeToMe(Node<PaymentsSuccessViewModel>)
         
         enum QR: Equatable {
             

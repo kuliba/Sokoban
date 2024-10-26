@@ -257,7 +257,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
-    private typealias Notify = (SUT.Domain.FlowEvent) -> Void
+    private typealias Notify = (SUT.Domain.NotifyEvent) -> Void
     private typealias MakeAbroad = CallSpy<Notify, Node<ContactsViewModel>>
     private typealias MakeAnotherCard = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeContacts = CallSpy<Notify, Node<ContactsViewModel>>

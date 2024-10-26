@@ -42,8 +42,8 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
         )
     }
     
-    typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
-    typealias Notify = (Event) -> Void
+    typealias NotifyEvent = PaymentsTransfersPersonalTransfersDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
     typealias NanoServices = PaymentsTransfersPersonalTransfersNavigationComposerNanoServices
 }
@@ -118,7 +118,6 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             source: .latestPayment(latest.id),
             scheduler: scheduler
         )
-        
         let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
         return .init(model: wrapper, cancellables: cancellables)
@@ -251,10 +250,10 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 //    )
                 let cancellables = self.bind($0, using: notify)
                 
-                notify(.receive(.success(.successMeToMe(.init(
+                notify(.select(.successMeToMe(.init(
                     model: $0,
                     cancellables: cancellables
-                )))))
+                ))))
             }
         
         let failure = share
@@ -262,7 +261,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .sink { _ in
                 //    makeAlert("Перевод выполнен")
                 //    self.event(.dismiss(.modal))
-                notify(.receive(.failure(.alert("Перевод выполнен"))))
+                notify(.select(.alert("Перевод выполнен")))
             }
         
         let closeBottomSheet = share
