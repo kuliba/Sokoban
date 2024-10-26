@@ -16,7 +16,8 @@ extension RootViewModelFactory {
         categoryPickerPlaceholderCount: Int,
         operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int
+        pageSize: Int,
+        makeQRModel: @escaping () -> QRModel
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
@@ -50,7 +51,8 @@ extension RootViewModelFactory {
         typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
         
         let transfers = makeTransfers(
-            buttonTypes: TransfersDomain.ButtonType.allCases
+            buttonTypes: TransfersDomain.ButtonType.allCases,
+            makeQRModel: makeQRModel
         )
         
         // MARK: - PaymentsTransfers

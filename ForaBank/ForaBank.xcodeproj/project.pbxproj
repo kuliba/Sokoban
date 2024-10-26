@@ -388,6 +388,7 @@
 		2A09E6F82BCBCC3B001A7089 /* AnywayPaymentElementWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A09E6F72BCBCC3B001A7089 /* AnywayPaymentElementWidgetView.swift */; };
 		2A09E6FA2BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A09E6F92BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift */; };
 		2A0A3F662C2A0AA400029854 /* ModelHTTPClientFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0A3F652C2A0AA400029854 /* ModelHTTPClientFactory.swift */; };
+		2A0AD19C2CCB90C900705D27 /* QRScannerComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0AD19B2CCB90C900705D27 /* QRScannerComposer.swift */; };
 		2A0D9B7B2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7A2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift */; };
 		2A0D9B7D2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7C2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift */; };
 		2A0D9B7F2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7E2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift */; };
@@ -573,6 +574,8 @@
 		2A2E3FD52BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD42BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift */; };
 		2A2E3FD72BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD62BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift */; };
 		2A2E3FD92BB3FCEE00730D37 /* NanoServices+makeCreateAnywayTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E3FD82BB3FCEE00730D37 /* NanoServices+makeCreateAnywayTransfer.swift */; };
+		2A2E96A42CCCB56F00CB79CA /* PaymentsTransfersPersonalTransfersDomain+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E96A32CCCB56F00CB79CA /* PaymentsTransfersPersonalTransfersDomain+ext.swift */; };
+		2A2E96A62CCCB96400CB79CA /* PaymentsTransfersPersonalTransfersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E96A52CCCB96400CB79CA /* PaymentsTransfersPersonalTransfersTests.swift */; };
 		2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBBC2AE5242000F3C946 /* ResponseMapper.swift */; };
 		2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */; };
 		2A2ECBC22AE5267400F3C946 /* ResponseMapper+mapGetCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2ECBC12AE5267400F3C946 /* ResponseMapper+mapGetCodeResponse.swift */; };
@@ -3924,6 +3927,7 @@
 		2A09E6F72BCBCC3B001A7089 /* AnywayPaymentElementWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetView.swift; sourceTree = "<group>"; };
 		2A09E6F92BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment.UIComponent.Widget+preview.swift"; sourceTree = "<group>"; };
 		2A0A3F652C2A0AA400029854 /* ModelHTTPClientFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelHTTPClientFactory.swift; sourceTree = "<group>"; };
+		2A0AD19B2CCB90C900705D27 /* QRScannerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerComposer.swift; sourceTree = "<group>"; };
 		2A0D9B7A2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequestTests.swift"; sourceTree = "<group>"; };
 		2A0D9B7C2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequest.swift"; sourceTree = "<group>"; };
 		2A0D9B7E2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetPrintFormResponseTests.swift"; sourceTree = "<group>"; };
@@ -4120,6 +4124,8 @@
 		2A2E3FD42BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferNewRequest.swift"; sourceTree = "<group>"; };
 		2A2E3FD62BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateAnywayTransferRequest.swift"; sourceTree = "<group>"; };
 		2A2E3FD82BB3FCEE00730D37 /* NanoServices+makeCreateAnywayTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeCreateAnywayTransfer.swift"; sourceTree = "<group>"; };
+		2A2E96A32CCCB56F00CB79CA /* PaymentsTransfersPersonalTransfersDomain+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersPersonalTransfersDomain+ext.swift"; sourceTree = "<group>"; };
+		2A2E96A52CCCB96400CB79CA /* PaymentsTransfersPersonalTransfersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalTransfersTests.swift; sourceTree = "<group>"; };
 		2A2ECBBC2AE5242000F3C946 /* ResponseMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMapper.swift; sourceTree = "<group>"; };
 		2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeGetProcessingSessionCode.swift"; sourceTree = "<group>"; };
 		2A2ECBC12AE5267400F3C946 /* ResponseMapper+mapGetCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetCodeResponse.swift"; sourceTree = "<group>"; };
@@ -8961,6 +8967,8 @@
 				2A2836EE2CC7B9E300694241 /* SimpleTransfersButtonVMFactoryTests.swift */,
 				2A8DF0DD2CC8B33200FB76D4 /* PaymentsTransfersPersonalTransfersNavigationComposerTests.swift */,
 				2A766AE52CCA42650076ABE7 /* PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposerTests.swift */,
+				2A2E96A52CCCB96400CB79CA /* PaymentsTransfersPersonalTransfersTests.swift */,
+				2A2E96A32CCCB56F00CB79CA /* PaymentsTransfersPersonalTransfersDomain+ext.swift */,
 			);
 			path = Transfers;
 			sourceTree = "<group>";
@@ -12133,6 +12141,7 @@
 				2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */,
 				2A1A8E532B26FE5F008B896D /* RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift */,
 				2A1A8E552B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift */,
+				2A0AD19B2CCB90C900705D27 /* QRScannerComposer.swift */,
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
@@ -22405,6 +22414,7 @@
 				ED4B54422703450800C87A1A /* CardsScrollView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
 				8376C1262C08CF0100B482FC /* MyProductsViewFactory.swift in Sources */,
+				2A0AD19C2CCB90C900705D27 /* QRScannerComposer.swift in Sources */,
 				503CF6AD282BE12B0069253E /* TextField.swift in Sources */,
 				2A92EA632C666F0D001452E7 /* TemplatesListFlowEffect.swift in Sources */,
 				774E318B27A050DB005A067B /* Model+Preview.swift in Sources */,
@@ -22653,6 +22663,7 @@
 				C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */,
 				2AF5E28D29BB4517004D69F3 /* NSObject+Extension.swift in Sources */,
 				2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */,
+				2A2E96A62CCCB96400CB79CA /* PaymentsTransfersPersonalTransfersTests.swift in Sources */,
 				2A31446E29FA46E500AB062D /* OrderProductViewComponentTests.swift in Sources */,
 				77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */,
 				2AAB56FB2C7D9D45002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposerTests.swift in Sources */,
@@ -23048,6 +23059,7 @@
 				2A35DDAB2C02287B00EFF0EB /* RootViewFactoryComposerTests.swift in Sources */,
 				2AE886372AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift in Sources */,
 				C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */,
+				2A2E96A42CCCB56F00CB79CA /* PaymentsTransfersPersonalTransfersDomain+ext.swift in Sources */,
 				2AFD59DD2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift in Sources */,
 				2A1F08662A794C0300C5B11B /* Services+EndpointFormSessionKeyTests.swift in Sources */,
 				2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */,
@@ -25925,7 +25937,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -26473,7 +26484,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -27535,7 +27545,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -27573,7 +27582,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
