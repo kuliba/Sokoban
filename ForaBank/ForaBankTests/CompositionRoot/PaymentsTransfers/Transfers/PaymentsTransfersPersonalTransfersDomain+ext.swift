@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import PayHub
 
 // MARK: - Equatable
 
@@ -21,7 +22,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
             return .receive(receive.equatable)
             
         case let .select(select):
-            return .select(select)
+            return .select(select.equatable)
         }
     }
     
@@ -29,7 +30,7 @@ extension PaymentsTransfersPersonalTransfersDomain.FlowEvent {
         
         case dismiss
         case receive(PaymentsTransfersPersonalTransfersDomain.EquatableNavigationResult)
-        case select(PaymentsTransfersPersonalTransfersDomain.Select)
+        case select(PaymentsTransfersPersonalTransfersDomain.EquatableSelect)
     }
 }
 
@@ -73,6 +74,38 @@ extension PaymentsTransfersPersonalTransfersDomain.Navigation {
     }
 }
 
+extension PaymentsTransfersPersonalTransfersDomain.Select {
+    
+    var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableSelect {
+        
+        switch self {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .buttonType(buttonType):
+            return .buttonType(buttonType)
+            
+        case let .contactAbroad(contactAbroad):
+            return .contactAbroad(contactAbroad)
+            
+        case let .contacts(contacts):
+            return .contacts(contacts)
+            
+        case let .countries(countries):
+            return .countries(countries)
+            
+        case let .latest(latest):
+            return .latest(latest)
+            
+        case let .qr(qr):
+            return .qr(qr)
+            
+        case let .successMeToMe(successMeToMe):
+            return .successMeToMe(.init(successMeToMe.model))
+        }
+    }
+}
+
 extension PaymentsTransfersPersonalTransfersDomain {
     
     typealias EquatableNavigationResult = Result<EquatableNavigation, NavigationFailure>
@@ -91,12 +124,40 @@ extension PaymentsTransfersPersonalTransfersDomain {
         
         case alert(String)
     }
+    
+    enum EquatableSelect: Equatable {
+        
+        case alert(String)
+        case buttonType(ButtonType)
+        case contactAbroad(Payments.Operation.Source)
+        case contacts(Payments.Operation.Source)
+        case countries(Payments.Operation.Source)
+        case latest(LatestPaymentData.ID)
+        case qr(PaymentsTransfersPersonalTransfersDomain.Select.QR)
+        case successMeToMe(ObjectIdentifier)
+    }
+    
+    typealias EquatableNotifyEvent = PayHub.FlowEvent<EquatableSelect, Never>
+}
+
+extension PaymentsTransfersPersonalTransfersDomain.NotifyEvent {
+    
+    var equatable: PaymentsTransfersPersonalTransfersDomain.EquatableNotifyEvent {
+        
+        switch self {
+        case .dismiss:
+            return .dismiss
+            
+        case let .select(select):
+            return .select(select.equatable)
+        }
+    }
 }
 
 extension CallSpy
-where Payload == PaymentsTransfersPersonalTransfersDomain.FlowEvent {
+where Payload == PaymentsTransfersPersonalTransfersDomain.NotifyEvent {
     
-    typealias EquatablePayload = PaymentsTransfersPersonalTransfersDomain.FlowEvent.EquatableEvent
+    typealias EquatablePayload = PaymentsTransfersPersonalTransfersDomain.EquatableNotifyEvent
     
     var equatablePayloads: [EquatablePayload] {
         

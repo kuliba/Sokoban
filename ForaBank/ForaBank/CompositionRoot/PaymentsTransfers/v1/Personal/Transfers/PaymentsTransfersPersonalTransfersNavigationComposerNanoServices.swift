@@ -19,8 +19,8 @@ struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     
-    typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
-    typealias Notify = (Event) -> Void
+    typealias NotifyEvent = PaymentsTransfersPersonalTransfersDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
     typealias MakeAbroad = MakeContacts
     typealias MakeAnotherCard = MakePaymentsWrapper

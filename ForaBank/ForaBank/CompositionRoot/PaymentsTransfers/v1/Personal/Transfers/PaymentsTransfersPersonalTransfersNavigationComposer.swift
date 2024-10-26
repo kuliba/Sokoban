@@ -19,12 +19,17 @@ final class PaymentsTransfersPersonalTransfersNavigationComposer {
 
 extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
+    typealias Notify = (Domain.NotifyEvent) -> Void
+    
     func compose(
         _ select: Domain.Select,
-        notify: @escaping (Domain.FlowEvent) -> Void
+        notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch select {
+        case let .alert(message):
+            return .failure(.alert(message))
+            
         case let .buttonType(buttonType):
             return compose(for: buttonType, using: notify)
             
@@ -46,6 +51,9 @@ extension PaymentsTransfersPersonalTransfersNavigationComposer {
             
         case let .qr(qr):
             return compose(for: qr, using: notify)
+            
+        case let .successMeToMe(node):
+            return .success(.successMeToMe(node))
         }
     }
     
@@ -56,7 +64,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         for buttonType: Domain.ButtonType,
-        using notify: @escaping (Domain.FlowEvent) -> Void
+        using notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch buttonType {
@@ -81,7 +89,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     // PaymentsTransfersViewModel.swift:1567
     func compose(
         for qr: Domain.Select.QR,
-        using notify: @escaping (Domain.FlowEvent) -> Void
+        using notify: @escaping Notify
     ) -> Domain.NavigationResult {
         
         switch qr {
