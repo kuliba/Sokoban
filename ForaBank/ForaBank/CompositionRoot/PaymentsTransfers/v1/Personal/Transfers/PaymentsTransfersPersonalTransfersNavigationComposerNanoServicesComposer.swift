@@ -118,7 +118,6 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             source: .latestPayment(latest.id),
             scheduler: scheduler
         )
-        
         let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
         return .init(model: wrapper, cancellables: cancellables)
