@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 20.09.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
@@ -80,6 +81,17 @@ extension RootViewModelFactory {
             scheduler: mainScheduler
         )
         
-        return .init(content: content, flow: flow, bind: { _,_ in [] })
+        return .init(content: content, flow: flow, bind: bind)
+    }
+}
+
+private extension RootViewModelFactory {
+    
+    func bind(
+        content: PaymentsTransfersPersonalContent,
+        flow: PaymentsTransfersPersonalFlow
+    ) -> Set<AnyCancellable> {
+        
+        []
     }
 }

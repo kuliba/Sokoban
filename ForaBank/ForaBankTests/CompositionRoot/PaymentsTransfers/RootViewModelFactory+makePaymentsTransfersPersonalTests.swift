@@ -19,7 +19,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         XCTAssertEqual(spy.callCount, 0)
         XCTAssertNotNil(sut)
     }
-
+    
     func test_init_shouldCallLoadOnLoad() {
         
         let (sut, _,_, spy) = makeSUT()
@@ -29,7 +29,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         XCTAssertEqual(spy.callCount, 1)
         XCTAssertNotNil(sut)
     }
-
+    
     func test_shouldSetTemplatesAndExchangePrefix() {
         
         let sut = makeSUT().sut
@@ -38,14 +38,14 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         
         XCTAssertNoDiff(prefix, [.templates, .exchange])
     }
-
+    
     func test_shouldSetCategoryPickerContentStateToLoading() {
         
         let state = makeSUT().sut.content.categoryPicker.content.state
         
         XCTAssertTrue(state.isLoading)
     }
-
+    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonal
@@ -53,7 +53,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
     private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
-
+    
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,
         operationPickerPlaceholderCount: Int = 4,
@@ -70,13 +70,14 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
         let makeQRModelSpy = MakeQRModelSpy()
-        let sut = RootViewModelFactory(
+        let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             mainScheduler: .immediate,
             backgroundScheduler: .immediate
-        ).makePaymentsTransfersPersonal(
+        )
+        let sut = factory.makePaymentsTransfersPersonal(
             categoryPickerPlaceholderCount: categoryPickerPlaceholderCount,
             operationPickerPlaceholderCount: operationPickerPlaceholderCount,
             nanoServices: .init(
