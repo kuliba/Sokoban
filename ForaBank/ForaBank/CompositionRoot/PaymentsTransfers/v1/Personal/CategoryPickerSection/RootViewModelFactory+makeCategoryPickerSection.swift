@@ -92,7 +92,7 @@ extension RootViewModelFactory {
             nanoServices: .init(
                 makeMobile: makeMobile,
                 makeQR: makeQR,
-                makeQRNavigation: makeQRNavigation,
+                makeQRNavigation: getQRNavigation,
                 makeStandard: makeStandard,
                 makeTax: makeTax,
                 makeTransport: makeTransport
@@ -184,7 +184,7 @@ extension RootViewModelFactory {
             completion(servicePickerComposer.compose(payload: payload))
         }
         
-        func makeQRNavigation(
+        func getQRNavigation(
             qrResult: QRModelResult,
             notify: @escaping QRNavigationComposer.Notify,
             completion: @escaping (QRNavigation) -> Void
@@ -202,7 +202,7 @@ extension RootViewModelFactory {
             let microServices = microServicesComposer.compose()
             let composer = QRNavigationComposer(microServices: microServices)
             
-            composer.compose(
+            composer.getNavigation(
                 payload: .qrResult(qrResult),
                 notify: notify,
                 completion: completion)

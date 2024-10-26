@@ -23,7 +23,7 @@ final class QRNavigationComposer {
 
 extension QRNavigationComposer {
     
-    func compose(
+    func getNavigation(
         payload: Payload,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
