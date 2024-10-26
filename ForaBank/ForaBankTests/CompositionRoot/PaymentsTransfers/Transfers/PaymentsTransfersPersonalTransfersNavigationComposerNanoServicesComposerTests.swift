@@ -520,21 +520,6 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         XCTAssertNoDiff(spy.equatablePayloads, [.dismiss])
     }
     
-    func test_makeScanQR_shouldCallNotifyWithDelayWithInflightOnQRInflight() {
-        
-        let scanResult = QRViewModel.ScanResult.unknown
-        let (_, nanoServices, scheduler, spy, _) = makeSUT()
-        let scanQR = nanoServices.makeScanQR(spy.call(payload:))
-        
-        scanQR.model.event(.scanResult(scanResult))
-        
-        scheduler.advance(by: .milliseconds(99))
-        XCTAssertNoDiff(spy.equatablePayloads, [])
-        
-        scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(spy.equatablePayloads, [.select(.qr(.inflight))])
-    }
-    
     func test_makeScanQR_shouldCallNotifyWithDelayWithQRResultOnQRResult() {
         
         let qrResult = QRModelResult.unknown
@@ -548,7 +533,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         
         scheduler.advance(by: .milliseconds(1))
         XCTAssertNoDiff(spy.equatablePayloads, [
-            .select(.qr(.qrResult(qrResult)))
+            .select(.qr(.result(qrResult)))
         ])
     }
     

@@ -67,7 +67,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
             return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe(notify).map { .success(.meToMe($0)) } 
+            return nanoServices.makeMeToMe(notify).map { .success(.meToMe($0)) }
             ?? .failure(.makeMeToMeFailure)
             
         case .byPhoneNumber:
@@ -86,13 +86,9 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     ) -> Domain.NavigationResult {
         
         switch qr {
-        case .inflight:
+        case let .result(result):
 #warning("fixme")
-            return { fatalError() }()
-            
-        case let .qrResult(qrResult):
-#warning("fixme")
-            _ = qrResult
+            _ = result
             return { fatalError() }()
             
         case .scan:

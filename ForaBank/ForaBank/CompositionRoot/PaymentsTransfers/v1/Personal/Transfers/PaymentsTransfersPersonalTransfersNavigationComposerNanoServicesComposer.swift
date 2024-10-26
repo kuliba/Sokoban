@@ -321,10 +321,11 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                     notify(.dismiss)
                     
                 case .inflight:
-                    notify(.select(.qr(.inflight)))
+                    // no need in inflight case - flow would flip it state isLoading to true on any select
+                    break
                     
                 case let .qrResult(qrResult):
-                    notify(.select(.qr(.qrResult(qrResult))))
+                    notify(.select(.qr(.result(qrResult))))
                 }
             }
     }

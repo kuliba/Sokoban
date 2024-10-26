@@ -229,15 +229,9 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsT
         assert(navigation, .payments(.init(latest.model)))
     }
     
-    // MARK: - qr: inflight
+    // MARK: - qr: result
     
-//    func test_scanQR_shouldDeliverNilOnQRInflight() throws {
-//        
-//        let scanQR = makeScanQRNode()
-//        let (sut, _) = makeSUT(scanQR: scanQR)
-//        
-//        XCTAssertNil(sut.compose(.qr(.inflight)) { _ in })
-//    }
+    // TODO: - add tests
     
     // MARK: - qr: scan
     

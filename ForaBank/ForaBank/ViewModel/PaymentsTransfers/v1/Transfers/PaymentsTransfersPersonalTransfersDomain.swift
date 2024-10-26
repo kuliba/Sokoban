@@ -31,8 +31,7 @@ enum PaymentsTransfersPersonalTransfersDomain {
         
         enum QR: Equatable {
             
-            case inflight
-            case qrResult(QRModelResult)
+            case result(QRModelResult)
             case scan
         }
     }
