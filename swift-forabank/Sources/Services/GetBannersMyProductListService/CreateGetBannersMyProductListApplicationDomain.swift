@@ -11,14 +11,14 @@ extension ResponseMapper {
     
     public struct CreateGetBannersMyProductListApplicationDomain: Equatable {
         
-        public let loanBannerList: [Banner]
         public let cardBannerList: [Banner]
+        public let loanBannerList: [Banner]
 
-        public init(loanBannerList: [Banner], cardBannerList: [Banner]) {
-            self.loanBannerList = loanBannerList
+        public init(cardBannerList: [Banner], loanBannerList: [Banner]) {
             self.cardBannerList = cardBannerList
+            self.loanBannerList = loanBannerList
         }
-
+        
         public struct Banner: Equatable {
             
             public let productName: String
@@ -37,23 +37,23 @@ extension ResponseMapper {
             public struct Action: Equatable {
                 
                 public let actionType: ActionType
-                public let landingDate: String?
+                public let landingData: String?
                 public let target: String?
                 
-                public init(actionType: ActionType, landingDate: String?, target: String?) {
+                public init(actionType: ActionType, landingData: String?, target: String?) {
                     self.actionType = actionType
-                    self.landingDate = landingDate
+                    self.landingData = landingData
                     self.target = target
                 }
                 
-                public enum ActionType: String, CaseIterable {
-                    case openDeposit = "DEPOSIT_OPEN"
-                    case depositList = "DEPOSITS"
-                    case migTransfer = "MIG_TRANSFER"
-                    case migAuthTransfer = "MIG_AUTH_TRANSFER"
-                    case contact = "CONTACT_TRANSFER"
-                    case depositTransfer = "DEPOSIT_TRANSFER"
-                    case landing = "LANDING"
+                public enum ActionType {
+                    case openDeposit
+                    case depositList
+                    case migTransfer
+                    case migAuthTransfer
+                    case contact
+                    case depositTransfer
+                    case landing
                     case unknown
                 }
             }
