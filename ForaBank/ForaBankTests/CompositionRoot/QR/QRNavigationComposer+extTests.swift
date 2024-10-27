@@ -103,7 +103,7 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, spies) = makeSUT()
         
-        sut.compose(with: .mapped(.provider(payload)))
+        sut.getNavigation(with: .mapped(.provider(payload)))
         
         XCTAssertNoDiff(spies.makeServicePicker.payloads, [payload])
     }
@@ -183,7 +183,7 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.compose(
+        sut.getNavigation(
             payload: .qrResult(qrResult),
             notify: { _ in },
             completion: {
