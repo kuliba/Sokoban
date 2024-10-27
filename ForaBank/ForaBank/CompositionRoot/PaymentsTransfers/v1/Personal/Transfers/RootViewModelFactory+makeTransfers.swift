@@ -13,15 +13,17 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makeTransfers(
-        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType]
+        buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType],
+        makeQRModel: @escaping () -> QRModel
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
         let elements = buttonTypes.map {
             
-            PaymentsTransfersPersonalTransfersDomain.Element.buttonType($0)
+            PaymentsTransfersPersonalTransfersDomain.Select.buttonType($0)
         }
         
         let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
+            makeQRModel: makeQRModel,
             model: model,
             scheduler: mainScheduler
         )
@@ -34,12 +36,7 @@ extension RootViewModelFactory {
             microServices: .init(
                 getNavigation: { element, notify, completion in
                     
-                    guard let navigation = navigationComposer.compose(element, notify: notify)
-                    else {
-#warning("return without navigation")
-                        return
-                    }
-                    
+                    let navigation = navigationComposer.compose(element, notify: notify)
                     completion(navigation)
                 }
             ),

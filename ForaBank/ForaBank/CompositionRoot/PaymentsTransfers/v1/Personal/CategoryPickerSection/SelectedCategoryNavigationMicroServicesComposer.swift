@@ -44,7 +44,7 @@ extension SelectedCategoryNavigationMicroServicesComposer {
 
 private extension SelectedCategoryNavigationMicroServicesComposer {
     
-    typealias Notify = (FlowDomain.Event) -> Void
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     func getNavigation(
         payload: Select,
@@ -109,23 +109,24 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     private func notifyPublisher(
         result: QRModelWrapperState<QRModelResult>,
         notify: @escaping (QRNavigationComposer.NotifyEvent) -> Void
-    ) -> AnyPublisher<FlowDomain.Event, Never> {
+    ) -> AnyPublisher<FlowDomain.NotifyEvent, Never> {
         
-        switch result {            
+        switch result {
         case .cancelled:
             return Just(.dismiss).eraseToAnyPublisher()
             
         case .inflight:
-            return Empty<FlowDomain.Event, Never>().eraseToAnyPublisher()
+            return Empty<FlowDomain.NotifyEvent, Never>().eraseToAnyPublisher()
             
         case let .qrResult(qrResult):
             return AnyPublisher { completion in
                 
                 self.nanoServices.makeQRNavigation(qrResult, notify) {
                     
-                    completion(.receive(.qrNavigation($0)))
+                    completion(.select(.qrSelect(.qrNavigation($0))))
                 }
-            }.eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
         }
     }
     
@@ -133,7 +134,7 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
     
     func getNavigation(
         qrSelect payload: QRNavigationComposer.NotifyEvent,
-        _ notify: @escaping (FlowDomain.Event) -> Void,
+        _ notify: @escaping (FlowDomain.NotifyEvent) -> Void,
         _ completion: @escaping (SelectedCategoryNavigation) -> Void
     ) {
         switch payload {
@@ -173,27 +174,30 @@ private extension SelectedCategoryNavigationMicroServicesComposer {
             }
             
         case .dismiss:
-            #warning("completion is not called")
+#warning("completion is not called")
             notify(.dismiss)
             
         case let .isLoading(isLoading):
-            #warning("completion is not called")
+#warning("completion is not called")
             
         case let .outside(outside):
-            #warning("completion is not called")
+#warning("completion is not called")
+            
+        case let .qrNavigation(qrNavigation):
+            completion(.qrNavigation(qrNavigation))
             
         case let .sberPay(state):
-            #warning("completion is not called")
+#warning("completion is not called")
             
         case .scanQR:
-            #warning("completion is not called")
+#warning("completion is not called")
             notify(.select(.qrSelect(.scanQR)))
         }
     }
     
     private func bind(
         _ wrapper: ClosePaymentsViewModelWrapper,
-        notify: @escaping (FlowDomain.Event) -> Void
+        notify: @escaping (FlowDomain.NotifyEvent) -> Void
     ) -> AnyCancellable {
         
         wrapper.$isClosed
