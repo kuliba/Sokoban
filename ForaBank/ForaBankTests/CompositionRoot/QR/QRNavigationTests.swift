@@ -291,44 +291,44 @@ class QRNavigationTests: XCTestCase {
 
 extension QRNavigationComposer {
     
-    func compose(
+    func getNavigation(
         with qrResult: QRModelResult
     ) {
-        compose(
+        getNavigation(
             payload: .qrResult(qrResult),
             notify: { _ in },
             completion: { _ in }
         )
     }
     
-    func compose(
+    func getNavigation(
         url: URL,
         state: SberQRConfirmPaymentState
     ) {
-        compose(
+        getNavigation(
             payload: .sberPay(url, state),
             notify: { _ in },
             completion: { _ in }
         )
     }
     
-    func compose(
+    func getNavigation(
         with qrResult: QRModelResult,
         notify: @escaping Notify
     ) {
-        compose(
+        getNavigation(
             payload: .qrResult(qrResult),
             notify: notify,
             completion: { _ in }
         )
     }
     
-    func compose(
+    func getNavigation(
         with qrResult: QRModelResult,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
     ) {
-        compose(
+        getNavigation(
             payload: .qrResult(qrResult),
             notify: notify,
             completion: completion

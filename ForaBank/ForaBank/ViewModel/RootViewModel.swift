@@ -87,7 +87,9 @@ class RootViewModel: ObservableObject, Resetable {
     
     func setLink(to newValue: Link) {
         
-        link = newValue
+        mainScheduler.schedule { [weak self] in
+            self?.link = newValue
+        }
     }
     
     private func bindAuth() {

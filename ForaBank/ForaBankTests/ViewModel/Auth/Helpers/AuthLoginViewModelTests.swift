@@ -121,6 +121,7 @@ class AuthLoginViewModelTests: XCTestCase {
         private(set) var cardOrders = [CardOrder]()
         private(set) var stickerOrders = [Int]()
         private(set) var goToMainCount = 0
+        private(set) var goToBack = 0
         private(set) var openUrl = 0
         private(set) var bannerAction = 0
         private(set) var listAction = 0
@@ -184,6 +185,9 @@ class AuthLoginViewModelTests: XCTestCase {
                         
                     case .listVerticalRoundImageAction:
                         self?.listAction += 1
+                        
+                    case .goToBack:
+                        self?.goToBack += 1
                     }
                 }
         }
