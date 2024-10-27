@@ -15,8 +15,8 @@ struct OTPInputStatusView<InputView: View>: View {
     var body: some View {
         
         switch state {
-        case .failure:
-            EmptyView()
+        case let .failure(input, failure):
+            inputView(input)
             
         case let .input(input):
             inputView(input)
@@ -42,8 +42,8 @@ struct OTPInputStatusView_Previews: PreviewProvider {
         
         List {
             
-            view(.failure(.connectivityError))
-            view(.failure(.serverError("Error!")))
+            view(.failure(.timerStarting, .connectivityError))
+            view(.failure(.timerStarting, .serverError("Error!")))
             view(.validOTP)
             view(.input(.completeOTP))
             view(.input(.incompleteOTP))

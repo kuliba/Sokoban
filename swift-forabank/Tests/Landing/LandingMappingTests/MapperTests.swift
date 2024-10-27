@@ -88,7 +88,7 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing.header, [
             .pageTitle(.init(
                 text: "a",
-                subtitle: nil,
+                subtitle: "За 790 ₽",
                 transparency: true))
         ])
     }
@@ -272,6 +272,13 @@ final class MapperTests: XCTestCase {
                     .init(title: "c", description: "d")
                 ])
         ])
+    }
+    
+    func test_map_listDropDownTextsWithEmptyList_notDeliversListDropDownTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.listDropDownTextsWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listDropDownTexts, [])
     }
     
     func test_map_deliversSpacingInMain() throws {
@@ -707,6 +714,7 @@ private extension String {
             "type":"PAGE_TITLE",
             "data":{
                "title":"a",
+               "subtitle": "За 790 ₽",
                "transparency":true
             }
          }
@@ -3502,6 +3510,27 @@ private extension String {
     ],
     "serial": ""
     }
+    }
+
+"""
+    
+    static let listDropDownTextsWithEmptyList = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [],
+        "main": [
+          {
+            "type": "LIST_DROP_DOWN_TEXTS",
+            "data": {
+              "title": "title",
+              "list": []
+            }
+          }
+        ],
+        "serial": ""
+      }
     }
 
 """

@@ -24,7 +24,7 @@ extension UILanding.Component.Config {
         multiMarkersText: .default,
         multiButtons: .default,
         multiTypeButtons: .default,
-        pageTitle: .default,
+        pageTitle: .iFora,
         textWithIconHorizontal: .default,
         iconWithTwoTextLines: .default,
         image: .default,
@@ -163,14 +163,13 @@ extension UILanding.Multi.Texts.Config {
 
 extension UILanding.PageTitle.Config {
     
-    static let `default`: Self = .init(
+    static let iFora: Self = .init(
         title: .init(
-            color: .textSecondary,
-            font: .textH3M18240()
-        ),
+            textFont: .textH3M18240(),
+            textColor: .textSecondary),
         subtitle: .init(
-            color: .textPlaceholder,
-            font: .textBodyMR14180()
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
         )
     )
 }

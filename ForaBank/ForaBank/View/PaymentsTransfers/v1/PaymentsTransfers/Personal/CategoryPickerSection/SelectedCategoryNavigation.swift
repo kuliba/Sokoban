@@ -27,7 +27,7 @@ enum SelectedCategoryNavigation {
     typealias QRNavigation = ForaBank.QRNavigation
 }
 
-struct SelectedCategoryFailure: Error, Identifiable {
+struct SelectedCategoryFailure: Error, Equatable, Identifiable {
     
     let id: UUID
     let message: String

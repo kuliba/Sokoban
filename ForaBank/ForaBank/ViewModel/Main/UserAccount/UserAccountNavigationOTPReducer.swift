@@ -22,7 +22,6 @@ extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
         switch state.link {
-            // case let .fastPaymentSettings(.new(fpsRoute)):
         case .fastPaymentSettings(.new):
             
             switch event {
@@ -30,13 +29,32 @@ extension UserAccountNavigationOTPReducer {
                 state.fpsRoute?.destination = .confirmSetBankDefault(route.viewModel, route.cancellable)
                 
             case let .otpInput(otpInput):
-                (state, effect) = reduce(state, otpInput)
-                
+                switch state.link {
+                case let .fastPaymentSettings(settings):
+                    switch settings {
+                    case let .new(route):
+                        if route.destination?.id == .confirmDeleteDefaultBank {
+                            
+                            (state, effect) = reduceDeleteBank(state, otpInput)
+
+                        } else {
+                            
+                            (state, effect) = reduce(state, otpInput)
+                        }
+                    default: break
+                    }
+                default: break
+                }
             case .prepareSetBankDefault:
                 (state, effect) = prepareSetBankDefault(state)
                 
             case let .prepareSetBankDefaultResponse(response):
                 (state, effect) = update(state, with: response)
+                
+            case let .createDeleteBank(route):
+                state.spinner = nil
+                state.fpsRoute?.destination = .confirmDeleteDefaultBank(route.viewModel, route.cancellable)
+
             }
             
         default:
@@ -82,6 +100,56 @@ private extension UserAccountNavigationOTPReducer {
         return (state, effect)
     }
     
+    func reduceDeleteBank(
+        _ state: State,
+        _ otpInput: OTPInputStateProjection
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch otpInput {
+        case let .failure(failure):
+            (state, effect) = reduceDeleteBank(state, failure)
+            
+        case .inflight:
+            state.spinner = .init()
+            
+        case .validOTP:
+            state.spinner = nil
+            state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.success)))
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduceDeleteBank(
+        _ state: State,
+        _ failure: OTPInputComponent.ServiceFailure
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        state.spinner = nil
+        
+        switch failure {
+        case .connectivityError:
+            state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.connectivityError))))
+            
+        case let .serverError(message):
+            let tryAgain = "Введен некорректный код. Попробуйте еще раз."
+            if message == tryAgain {
+                state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.incorrectOTP(tryAgain))))
+                
+            } else {
+                state.fpsRoute?.viewModel.event(.bankDefault(.deleteBankDefaultResult(.serviceFailure(.serverError(message)))))
+            }
+        }
+        
+        return (state, effect)
+    }
+    
     func reduce(
         _ state: State,
         _ failure: OTPInputComponent.ServiceFailure
@@ -100,7 +168,7 @@ private extension UserAccountNavigationOTPReducer {
         case let .serverError(message):
             let tryAgain = "Введен некорректный код. Попробуйте еще раз."
             if message == tryAgain {
-                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP("Банк по умолчанию не установлен"))))
+                state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.incorrectOTP(tryAgain)))) //message: "Банк по умолчанию не установлен"
                 
             } else {
                 state.fpsRoute?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message)))))
@@ -150,6 +218,7 @@ private extension UserAccountNavigationOTPReducer {
         case let .serverError(message):
             state.fpsRoute?.destination = nil
             state.fpsRoute?.alert = .error(message: message, event: .dismiss(.alert))
+            effect = .navigation(.dismissInformer())
         }
         
         return (state, effect)

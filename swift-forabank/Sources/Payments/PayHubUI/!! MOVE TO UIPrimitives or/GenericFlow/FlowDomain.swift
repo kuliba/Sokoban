@@ -16,6 +16,8 @@ public extension FlowDomain {
     typealias State = FlowState<Navigation>
     typealias Event = FlowEvent<Select, Navigation>
     typealias Effect = FlowEffect<Select>
+
+    typealias NotifyEvent = FlowEvent<Select, Never>
     
     typealias Reducer = FlowReducer<Select, Navigation>
     typealias EffectHandler = FlowEffectHandler<Select, Navigation>

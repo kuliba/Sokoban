@@ -99,7 +99,8 @@ extension RootViewModelFactory {
         
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
-            otpServices: .init(fpsHTTPClient, infoNetworkLog),
+            otpServices: .init(fpsHTTPClient, logger),
+            otpDeleteBankServices: .init(for: fpsHTTPClient, infoNetworkLog),
             fastPaymentsFactory: fastPaymentsFactory,
             makeSubscriptionsViewModel: makeSubscriptionsViewModel(
                 getProducts: getSubscriptionProducts,
@@ -219,7 +220,7 @@ extension RootViewModelFactory {
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
-            fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
+            fraudDelay: settings.fraudDelay,
             flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
@@ -298,10 +299,8 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
-        let operatorsService = composeServicePaymentOperatorService()
-        
         // threading
-        let _operatorsService = backgroundScheduler.scheduled(operatorsService)
+        let operatorsService = backgroundScheduler.scheduled(servicePaymentOperatorService)
         
         let (serviceCategoryListLoad, serviceCategoryListReload) = composeServiceCategoryListLoaders()
         
@@ -311,9 +310,10 @@ extension RootViewModelFactory {
                 
                 let payloads = self.makeGetOperatorsListByParamPayloads(from: categories)
                 
-                _operatorsService(payloads) { failed in
+                operatorsService(payloads) { failed in
                     
                     completion(failed.map(\.category))
+                    _ = operatorsService
                 }
             }
         )
@@ -329,16 +329,21 @@ extension RootViewModelFactory {
         let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
+        let qrScannerComposer = QRScannerComposer(
+            model: model,
+            qrResolverFeatureFlag: qrResolverFeatureFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: mainScheduler
+        )
+        
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            categoryPickerPlaceholderCount: 6,
-            operationPickerPlaceholderCount: 4,
             nanoServices: .init(
                 loadCategories: loadCategories,
                 reloadCategories: reloadCategories,
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            pageSize: 50
+            makeQRModel: qrScannerComposer.compose
         )
         
         if paymentsTransfersFlag.isActive {

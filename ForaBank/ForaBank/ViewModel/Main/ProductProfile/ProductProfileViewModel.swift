@@ -2289,6 +2289,8 @@ extension ProductProfileViewModel {
             case .openSubscriptions:
                 openSubscriptions()
             }
+        case .goToBack:
+            handleCloseLinkAction()
         }
     }
 }

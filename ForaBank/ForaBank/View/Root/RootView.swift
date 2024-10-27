@@ -143,7 +143,10 @@ struct RootView: View {
             
         case .userAccount(let viewModel):
             NavigationView {
-                UserAccountView(viewModel: viewModel)
+                UserAccountView(
+                    viewModel: viewModel,
+                    config: .iFora
+                )
             }
             
         case let .payments(paymentsViewModel):
@@ -293,7 +296,8 @@ private extension RootView {
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
                             makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView
+                            makeToolbarView: makePaymentsTransfersToolbarView,
+                            makeTransfersView: makePaymentsTransfersTransfersView
                         ),
                         config: .iFora
                     )
@@ -756,6 +760,40 @@ private extension RootView {
         )
     }
     
+    private func makePaymentsTransfersTransfersView(
+        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(model: transfers.flow) {
+            
+            PaymentsTransfersPersonalTransfersFlowView(state: $0,  event: $1) {
+                
+                RxWrapperView(model: transfers.content) { state, event in
+                    
+                    VStack {
+                        
+                        PTSectionTransfersButtonsView(
+                            title: PaymentsTransfersSectionType.transfers.name,
+                            buttons: state.elements.compactMap { element in
+                                
+                                switch element {
+                                case let .buttonType(buttonType):
+                                    return .init(type: buttonType) {
+                                        
+                                        event(.select(.buttonType(buttonType)))
+                                    }
+                                    
+                                default:
+                                    return nil
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
     private func itemLabel(
         item: CategoryPickerSectionDomain.ContentDomain.State.Item
     ) -> some View {
@@ -1052,7 +1090,7 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:)
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -1065,8 +1103,8 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeMarketShowcaseView: { _,_  in .none }, 
+            makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
+            makeMarketShowcaseView: { _,_  in .none },
             makeNavigationOperationView: { _ in EmptyView() }
         )
     }

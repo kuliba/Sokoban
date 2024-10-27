@@ -16,6 +16,8 @@ final class RootViewModelFactory {
     let httpClient: HTTPClient
     let logger: LoggerAgentProtocol
     
+    let settings: RootViewModelFactorySettings
+    
     let mainScheduler: AnySchedulerOf<DispatchQueue>
     let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     let backgroundScheduler: AnySchedulerOf<DispatchQueue>
@@ -30,6 +32,7 @@ final class RootViewModelFactory {
         model: Model,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        settings: RootViewModelFactorySettings = .iFora,
         mainScheduler: AnySchedulerOf<DispatchQueue> = .main,
         interactiveScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive),
         backgroundScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInitiated)
@@ -37,6 +40,7 @@ final class RootViewModelFactory {
         self.model = model
         self.httpClient = httpClient
         self.logger = logger
+        self.settings = settings
         self.mainScheduler = mainScheduler
         self.interactiveScheduler = interactiveScheduler
         self.backgroundScheduler = backgroundScheduler

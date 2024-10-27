@@ -93,7 +93,6 @@ private extension UserAccountNavigationOTPReducer {
         var effect: Effect?
         
         state.isLoading = false
-        state.destination?.destination = nil
         switch failure {
         case .connectivityError:
             state.destination?.viewModel.event(.bankDefault(.setBankDefaultResult(.serviceFailure(.connectivityError))))
