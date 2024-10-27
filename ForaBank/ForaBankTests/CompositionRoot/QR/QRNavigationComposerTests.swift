@@ -38,7 +38,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .c2bSubscribeURL(url))
+        sut.getNavigation(with: .c2bSubscribeURL(url))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.source(.c2bSubscribe(url))])
     }
@@ -103,7 +103,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .c2bURL(url))
+        sut.getNavigation(with: .c2bURL(url))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.source(.c2b(url))])
     }
@@ -168,7 +168,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let qrCode = makeQR()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .failure(qrCode))
+        sut.getNavigation(with: .failure(qrCode))
         
         XCTAssertNoDiff(microServices.makeQRFailureWithQR.payloads.map(\.qrCode), [qrCode])
     }
@@ -191,7 +191,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .failure(makeQR()), notify: { events.append($0) })
+        sut.getNavigation(with: .failure(makeQR()), notify: { events.append($0) })
         microServices.makeQRFailureWithQR.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
@@ -203,7 +203,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .failure(makeQR()), notify: { events.append($0) })
+        sut.getNavigation(with: .failure(makeQR()), notify: { events.append($0) })
         microServices.makeQRFailureWithQR.payloads.first.map(\.detailPayment)?(qrCode)
         
         XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(qrCode)])
@@ -215,7 +215,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.missingINN))
+        sut.getNavigation(with: .mapped(.missingINN))
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
@@ -238,7 +238,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
@@ -249,7 +249,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
@@ -263,7 +263,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: result)
+        sut.getNavigation(with: result)
         
         XCTAssertNoDiff(microServices.makeProviderPicker.payloads, [
             .init(mixed: mixed, qrCode: qrCode, qrMapping: qrMapping)
@@ -370,7 +370,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: result)
+        sut.getNavigation(with: result)
         
         let payloads = microServices.makeOperatorSearch.payloads
         XCTAssertNoDiff(payloads.map(\.multiple), [multiple])
@@ -402,7 +402,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let qrCode = makeQR()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.none(qrCode)))
+        sut.getNavigation(with: .mapped(.none(qrCode)))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.qrCode(qrCode)])
     }
@@ -467,7 +467,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.provider(payload)))
+        sut.getNavigation(with: .mapped(.provider(payload)))
         
         XCTAssertNoDiff(microServices.makeServicePicker.payloads, [payload])
     }
@@ -576,7 +576,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.single(
+        sut.getNavigation(with: .mapped(.single(
             makeSegmentedOperatorData(), qrCode, qrMapping
         )))
         
@@ -602,7 +602,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.source(.avtodor)))
+        sut.getNavigation(with: .mapped(.source(.avtodor)))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.operationSource(.avtodor)])
     }
@@ -667,7 +667,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .sberQR(url))
+        sut.getNavigation(with: .sberQR(url))
         
         XCTAssertEqual(microServices.makeSberQR.payloads.map(\.url), [url])
     }
@@ -678,7 +678,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var receivedEvents = [SUT.NotifyEvent]()
         
-        sut.compose(
+        sut.getNavigation(
             with: .sberQR(anyURL()),
             notify: { receivedEvents.append($0) }
         )
@@ -721,7 +721,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .url(anyURL()))
+        sut.getNavigation(with: .url(anyURL()))
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
@@ -744,7 +744,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .url(anyURL()), notify: { events.append($0) })
+        sut.getNavigation(with: .url(anyURL()), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
@@ -755,7 +755,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .url(anyURL()), notify: { events.append($0) })
+        sut.getNavigation(with: .url(anyURL()), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
@@ -767,7 +767,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .unknown)
+        sut.getNavigation(with: .unknown)
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
@@ -790,7 +790,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .unknown, notify: { events.append($0) })
+        sut.getNavigation(with: .unknown, notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
@@ -801,7 +801,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .unknown, notify: { events.append($0) })
+        sut.getNavigation(with: .unknown, notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
         XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
@@ -814,7 +814,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (url, state) = (anyURL(), makeSberQRConfirmPaymentState())
         let (sut, microServices) = makeSUT()
         
-        sut.compose(url: url, state: state)
+        sut.getNavigation(url: url, state: state)
         
         XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.0), [url])
         XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.1), [state])
@@ -1037,7 +1037,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let sut = sut ?? makeSUT().sut
         let exp = expectation(description: "wait for completion")
         
-        sut.compose(payload: payload, notify: notify) {
+        sut.getNavigation(payload: payload, notify: notify) {
             
             XCTAssertNoDiff($0.equatable, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
@@ -1060,7 +1060,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         var receivedEvent: SUT.NotifyEvent?
         let exp = expectation(description: "wait for completion")
         
-        sut.compose(
+        sut.getNavigation(
             with: qrResult,
             notify: { receivedEvent = $0 }
         ) {
