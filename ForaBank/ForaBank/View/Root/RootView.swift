@@ -63,11 +63,7 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory(
-                    model: viewModel.model,
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    logger: LoggerAgent()
-                ).makeNavigationOperationView(
+                navigationOperationView: viewModel.stickerViewFactory.makeNavigationOperationView(
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
@@ -170,11 +166,9 @@ struct RootView: View {
             
             NavigationView {
                 
-                RootViewModelFactory(
-                    model: viewModel.model,
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    logger: LoggerAgent()
-                ).makeNavigationOperationView(dismissAll: viewModel.resetLink)()
+                viewModel.stickerViewFactory.makeNavigationOperationView(
+                    dismissAll: viewModel.rootActions.dismissAll
+                )()
                     .navigationBarTitle("Оформление заявки", displayMode: .inline)
                     .edgesIgnoringSafeArea(.bottom)
                     .navigationBarBackButtonHidden(true)
@@ -1052,7 +1046,8 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy,
+                fastPaymentsFactory: .legacy, 
+                stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
