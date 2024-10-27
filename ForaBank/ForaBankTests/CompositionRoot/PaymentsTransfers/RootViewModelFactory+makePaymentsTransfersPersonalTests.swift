@@ -52,6 +52,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
     private typealias LoadLatestSpy = Spy<Void, Result<[Latest], Error>, Never>
     private typealias ContentDomain = CategoryPickerSectionDomain.ContentDomain
     private typealias LoadCategoriesSpy = Spy<Void, [ServiceCategory], Never>
+    private typealias MakeQRModelSpy = CallSpy<Void, QRModel>
 
     private func makeSUT(
         categoryPickerPlaceholderCount: Int = 6,
@@ -68,6 +69,7 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
         let loadCategoriesSpy = LoadCategoriesSpy()
         let reloadCategoriesSpy = LoadCategoriesSpy()
         let loadLatestSpy = LoadLatestSpy()
+        let makeQRModelSpy = MakeQRModelSpy()
         let sut = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
@@ -83,7 +85,8 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalTests: XCTestCase 
                 loadAllLatest: loadLatestSpy.process(completion:),
                 loadLatestForCategory: { _,_ in }
             ),
-            pageSize: pageSize
+            pageSize: pageSize,
+            makeQRModel: makeQRModelSpy.call
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
