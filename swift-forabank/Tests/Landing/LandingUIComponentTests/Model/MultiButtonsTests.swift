@@ -142,6 +142,8 @@ final class MultiButtonsTests: XCTestCase {
                     break
                 case .listVerticalRoundImageAction:
                     break
+                case .goToBack:
+                    received.append(.goToBack)
                 }
             }
         )
@@ -165,6 +167,7 @@ final class MultiButtonsTests: XCTestCase {
         
         case initinalValue
         case goMain
+        case goToBack
         case openLink
         case orderCard
         case selectDetail
