@@ -23,7 +23,7 @@ final class QRNavigationComposer {
 
 extension QRNavigationComposer {
     
-    func compose(
+    func getNavigation(
         payload: Payload,
         notify: @escaping Notify,
         completion: @escaping QRNavigationCompletion
@@ -45,13 +45,14 @@ extension QRNavigationComposer {
         case sberPay(URL, SberQRConfirmPaymentState)
     }
     
-    enum NotifyEvent: Equatable {
+    enum NotifyEvent {
         
         case contactAbroad(Payments.Operation.Source)
         case detailPayment(QRCode?)
         case dismiss
         case isLoading(Bool)
         case outside(Outside)
+        case qrNavigation(QRNavigation)
         case sberPay(SberQRConfirmPaymentState)
         case scanQR
         

@@ -101,8 +101,10 @@ extension Services {
             case getSVCardLimits
             case getSvgImageList
             case getVerificationCode
+            case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
+            case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
             case showCVV
@@ -369,6 +371,12 @@ extension Services.Endpoint {
         serviceName: .getVerificationCode
     )
     
+    static let makeDeleteBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .makeDeleteBankDefault
+    )
+    
     static let makeSetBankDefault: Self = .init(
         pathPrefix: .rest,
         version: .none,
@@ -385,6 +393,12 @@ extension Services.Endpoint {
         pathPrefix: .transfer,
         version: .v2,
         serviceName: .makeTransfer
+    )
+    
+    static let prepareDeleteBankDefault: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .prepareDeleteBankDefault
     )
     
     static let prepareSetBankDefault: Self = .init(

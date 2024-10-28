@@ -204,7 +204,7 @@ extension DecodableLanding.Data {
                 }
                 
             case .listDropDownTexts:
-                if let data = try? container.decode(ListDropDownTexts.self, forKey: .data) {
+                if let data = try? container.decode(ListDropDownTexts.self, forKey: .data), !data.list.isEmpty {
                     self = .list(.dropDownTexts(data))
                 }
                 else {

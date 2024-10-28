@@ -204,12 +204,12 @@ extension UILanding.PageTitle {
 extension UILanding.PageTitle.Config {
     
     static let defaultValue1: Self = .init(
-        title: .init(color: .black, font: .title),
-        subtitle: .init(color: .gray, font: .subheadline))
+        title: .init(textFont: .title, textColor: .black),
+        subtitle: .init(textFont: .subheadline, textColor: .gray))
     
     static let defaultValue2: Self = .init(
-        title: .init(color: .black, font: .title),
-        subtitle: .init(color: .gray, font: .subheadline))
+        title: .init(textFont: .title, textColor: .green),
+        subtitle: .init(textFont: .subheadline, textColor: .blue))
 }
 
 extension UILanding {
@@ -868,7 +868,8 @@ extension CarouselActions {
     static let `default`: Self = .init(
         openUrl: {_ in },
         goToMain: {},
-        orderSticker: {}
+        orderCard: {}, 
+        landing: {_ in }
     )
 }
 

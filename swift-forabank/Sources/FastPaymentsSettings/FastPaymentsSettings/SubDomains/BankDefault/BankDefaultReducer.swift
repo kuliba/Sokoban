@@ -22,6 +22,12 @@ public extension BankDefaultReducer {
         var effect: Effect?
         
         switch event {
+        case .deleteDefaultBank:
+            (state, effect) = deleteDefaultBank(state)
+          
+        case let .prepareDeleteBank(response):
+            state = prepareDeleteDefaultBank(state, with: response)
+  
         case .prepareSetBankDefault:
             (state, effect) = prepareSetBankDefault(state)
             
@@ -30,6 +36,9 @@ public extension BankDefaultReducer {
             
         case let .setBankDefaultResult(result):
             state = update(state, with: result)
+            
+        case let .deleteBankDefaultResult(result):
+            state = makeDeleteDefaultBankResult(state, with: result)
         }
         
         return (state, effect)
@@ -45,6 +54,32 @@ public extension BankDefaultReducer {
 }
 
 private extension BankDefaultReducer {
+    
+    func prepareDeleteDefaultBank(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        guard let details = state.activeDetails
+        else { return (state, nil) }
+        
+        var state = state
+        state.status = .inflight
+        
+        return (state, .prepareDeleteDefaultBank)
+    }
+    
+    func deleteDefaultBank(
+        _ state: State
+    ) -> (State, Effect?) {
+        
+        guard let details = state.activeDetails
+        else { return (state, nil) }
+        
+        var state = state
+        state.status = .inflight
+        
+        return (state, .prepareDeleteDefaultBank)
+    }
     
     func prepareSetBankDefault(
         _ state: State
@@ -97,6 +132,71 @@ private extension BankDefaultReducer {
         case let .incorrectOTP(message):
             var state = state
             state.status = .setBankDefaultFailure(message)
+            return state
+            
+        case .serviceFailure(.connectivityError):
+            var state = state
+            state.status = .connectivityError
+            return state
+            
+        case let .serviceFailure(.serverError(message)):
+            var state = state
+            state.status = .serverError(message)
+            return state
+        }
+    }
+    
+    func prepareDeleteDefaultBank(
+        _ state: State,
+        with result: BankDefaultEvent.SetBankDefaultResult
+    ) -> State {
+        
+        guard let details = state.activeDetails
+        else { return state }
+   
+        switch result {
+        case .success:
+            return .init(
+                settingsResult: .success(.contracted(details)),
+                status: .deleteBankDefault(details.paymentContract.phoneNumberMasked.rawValue)
+            )
+            
+        case let .incorrectOTP(message):
+            var state = state
+            state.status = .deleteDefaultBankFailure(message)
+            return state
+            
+        case .serviceFailure(.connectivityError):
+            var state = state
+            state.status = .connectivityError
+            return state
+            
+        case let .serviceFailure(.serverError(message)):
+            var state = state
+            state.status = .serverError(message)
+            return state
+        }
+    }
+    
+    func makeDeleteDefaultBankResult(
+        _ state: State,
+        with result: BankDefaultEvent.SetBankDefaultResult
+    ) -> State {
+        
+        guard var details = state.activeDetails
+        else { return state }
+        details.bankDefaultResponse = .init(bankDefault: .offEnabled)
+        
+        switch result {
+        case .success:
+            return .init(
+                settingsResult: .success(.contracted(details)),
+                status: .makeDeleteDefaultBankSuccess
+            )
+            
+        case let .incorrectOTP(message):
+            var state = state
+            state.status = .deleteDefaultBankFailure(message)
             return state
             
         case .serviceFailure(.connectivityError):

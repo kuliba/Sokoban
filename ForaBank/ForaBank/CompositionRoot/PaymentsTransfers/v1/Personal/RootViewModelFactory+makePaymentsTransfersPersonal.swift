@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 20.09.2024.
 //
 
+import Combine
 import CombineSchedulers
 import Foundation
 import PayHub
@@ -13,55 +14,19 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makePaymentsTransfersPersonal(
-        categoryPickerPlaceholderCount: Int,
-        operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices,
-        pageSize: Int
+        makeQRModel: @escaping () -> QRModel
     ) -> PaymentsTransfersPersonal {
         
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
-            nanoServices: nanoServices,
-            pageSize: pageSize,
-            placeholderCount: categoryPickerPlaceholderCount
+            nanoServices: nanoServices
         )
         
         // MARK: - OperationPicker
         
-        let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
-            load: { completion in
-                
-                nanoServices.loadAllLatest {
-                    
-                    completion(((try? $0.get()) ?? []).map { .latest($0) })
-                }
-            },
-            scheduler: mainScheduler
-        )
-        let operationPickerContent = operationPickerContentComposer.compose(
-            prefix: [
-                .element(.init(.templates)),
-                .element(.init(.exchange))
-            ],
-            suffix: [],
-            placeholderCount: operationPickerPlaceholderCount
-        )
-        let operationPickerFlowComposer = OperationPickerFlowComposer(
-            model: model,
-            scheduler: mainScheduler
-        )
-        let operationPickerFlow = operationPickerFlowComposer.compose()
-        let operationPicker = OperationPickerBinder(
-            content: operationPickerContent,
-            flow: operationPickerFlow,
-            bind: { content, flow in
-                
-                content.$state
-                    .compactMap(\.selected)
-                    .sink { flow.event(.select($0)) }
-            }
-        )
+        let operationPicker = makeOperationPicker(nanoServices: nanoServices)
         
         // MARK: - Toolbar
         
@@ -74,12 +39,22 @@ extension RootViewModelFactory {
         )
         let toolbar = toolbarComposer.compose()
         
+        // MARK: - Transfers
+        
+        typealias TransfersDomain = PaymentsTransfersPersonalTransfersDomain
+        
+        let transfers = makeTransfers(
+            buttonTypes: TransfersDomain.ButtonType.allCases,
+            makeQRModel: makeQRModel
+        )
+        
         // MARK: - PaymentsTransfers
         
         let content = PaymentsTransfersPersonalContent(
             categoryPicker: categoryPicker,
             operationPicker: operationPicker,
             toolbar: toolbar,
+            transfers: transfers,
             reload: {
                 
                 categoryPicker.content.event(.reload)
@@ -98,6 +73,17 @@ extension RootViewModelFactory {
             scheduler: mainScheduler
         )
         
-        return .init(content: content, flow: flow, bind: { _,_ in [] })
+        return .init(content: content, flow: flow, bind: bind)
+    }
+}
+
+private extension RootViewModelFactory {
+    
+    func bind(
+        content: PaymentsTransfersPersonalContent,
+        flow: PaymentsTransfersPersonalFlow
+    ) -> Set<AnyCancellable> {
+        
+        []
     }
 }

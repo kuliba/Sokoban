@@ -36,4 +36,5 @@ public extension OTPInputState.Status.Input {
         countdown: .running(remaining: 23),
         otpField: .init(text: "123456", isInputComplete: true)
     )
+    static let failure: Self = .init(countdown: .failure(.connectivityError), otpField: .init())
 }

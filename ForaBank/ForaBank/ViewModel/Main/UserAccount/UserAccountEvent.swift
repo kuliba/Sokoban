@@ -61,6 +61,7 @@ extension UserAccountEvent {
     enum OTPEvent: Equatable {
         
         case create(TimedOTPRoute)
+        case createDeleteBank(TimedOTPRoute)
         case otpInput(OTPInputStateProjection)
         case prepareSetBankDefault
         case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)

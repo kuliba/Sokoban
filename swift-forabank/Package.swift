@@ -23,8 +23,9 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
-        .collateralLoanLanding,
-        .collateralLoanLandingUI,
+        .collateralLoanLandingShowCaseBackend,
+        .collateralLoanLandingShowCaseUI,
+        .collateralLoanLandingDraftBackend,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -69,6 +70,7 @@ let package = Package(
         .buttonWithSheet,
         .c2bSubscriptionUI,
         .calendarUI,
+        .сlientInformList,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -82,7 +84,6 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
-        .plainClientInformBottomSheet,
         // UI Components
         .carouselComponent,
         .paymentComponents,
@@ -131,10 +132,12 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
-        .collateralLoanLanding,
-        .collateralLoanLandingTests,
-        .collateralLoanLandingUI,
-        .collateralLoanLandingUITests,
+        .collateralLoanLandingShowCaseBackend,
+        .collateralLoanLandingShowCaseBackendTests,
+        .collateralLoanLandingShowCaseUI,
+        .collateralLoanLandingShowCaseUITests,
+        .collateralLoanLandingDraftBackend,
+        .collateralLoanLandingDraftBackendTests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -233,6 +236,8 @@ let package = Package(
         .c2bSubscriptionUI,
         .cardGuardianUI,
         .cardGuardianUITests,
+        .сlientInformList,
+        .сlientInformListTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -261,8 +266,6 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
-        .plainClientInformBottomSheet,
-        .plainClientInformBottomSheetTests,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -397,17 +400,24 @@ private extension Product {
         ]
     )
     
-    static let collateralLoanLanding = library(
-        name: .collateralLoanLanding,
+    static let collateralLoanLandingShowCaseBackend = library(
+        name: .collateralLoanLandingShowCaseBackend,
         targets: [
-            .collateralLoanLanding
+            .collateralLoanLandingShowCaseBackend
         ]
     )
     
-    static let collateralLoanLandingUI = library(
-        name: .collateralLoanLandingUI,
+    static let collateralLoanLandingShowCaseUI = library(
+        name: .collateralLoanLandingShowCaseUI,
         targets: [
-            .collateralLoanLandingUI
+            .collateralLoanLandingShowCaseUI
+        ]
+    )
+    
+    static let collateralLoanLandingDraftBackend = library(
+        name: .collateralLoanLandingDraftBackend,
+        targets: [
+            .collateralLoanLandingDraftBackend
         ]
     )
     
@@ -442,6 +452,13 @@ private extension Product {
         ]
     )
     
+    static let сlientInformList = library(
+        name: .сlientInformList,
+        targets: [
+            .сlientInformList
+        ]
+    )
+
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
@@ -571,13 +588,6 @@ private extension Product {
         name: .userAccountNavigationComponent,
         targets: [
             .userAccountNavigationComponent,
-        ]
-    )
-    
-    static let plainClientInformBottomSheet = library(
-        name: .plainClientInformBottomSheet,
-        targets: [
-            .plainClientInformBottomSheet
         ]
     )
 
@@ -1174,41 +1184,58 @@ private extension Target {
             .customDump,
             // internal modules
             .landingUIComponent,
+            .sharedConfigs
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
     
-    static let collateralLoanLanding = target(
-        name: .collateralLoanLanding,
+    static let collateralLoanLandingShowCaseBackend = target(
+        name: .collateralLoanLandingShowCaseBackend,
         dependencies: [
             .remoteServices,
             .sharedConfigs
         ],
-        path: "Sources/Landing/\(String.collateralLoanLanding)"
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingShowCaseName)/Backend"
     )
     
-    static let collateralLoanLandingTests = testTarget(
-        name: .collateralLoanLandingTests,
+    static let collateralLoanLandingShowCaseBackendTests = testTarget(
+        name: .collateralLoanLandingShowCaseBackendTests,
         dependencies: [
-            .collateralLoanLanding,
+            .collateralLoanLandingShowCaseBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanLandingTests)"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingShowCaseName)/Backend"
     )
     
-    static let collateralLoanLandingUI = target(
-        name: .collateralLoanLandingUI,
+    static let collateralLoanLandingShowCaseUI = target(
+        name: .collateralLoanLandingShowCaseUI,
         dependencies: [],
-        path: "Sources/Landing/\(String.collateralLoanLandingUI)"
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingShowCaseName)/UI"
     )
     
-    static let collateralLoanLandingUITests = testTarget(
-        name: .collateralLoanLandingUITests,
+    static let collateralLoanLandingShowCaseUITests = testTarget(
+        name: .collateralLoanLandingShowCaseUITests,
         dependencies: [
-            .collateralLoanLandingUI,
+            .collateralLoanLandingShowCaseUI,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanLandingUITests)"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingShowCaseName)/UI"
+    )
+    
+    static let collateralLoanLandingDraftBackend = target(
+        name: .collateralLoanLandingDraftBackend,
+        dependencies: [],
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingDraftName)/Backend"
+    )
+    
+    static let collateralLoanLandingDraftBackendTests = testTarget(
+        name: .collateralLoanLandingDraftBackendTests,
+        dependencies: [
+            .collateralLoanLandingDraftBackend,
+            .customDump,
+            .foraTools
+        ],
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingDraftName)/Backend"
     )
     
     // MARK: - Infra
@@ -2209,6 +2236,22 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
+    static let сlientInformList = target(
+        name: .сlientInformList,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/\(String.сlientInformList)"
+    )
+    
+    static let сlientInformListTests = testTarget(
+        name: .сlientInformListTests,
+        dependencies: [
+            .сlientInformList
+        ],
+        path: "Tests/UI/\(String.сlientInformListTests)"
+    )
+
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -2445,22 +2488,6 @@ private extension Target {
             .userAccountNavigationComponent,
         ],
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
-    )
-    
-    static let plainClientInformBottomSheet = target(
-        name: .plainClientInformBottomSheet,
-        dependencies: [
-            .sharedConfigs
-        ],
-        path: "Sources/UI/\(String.plainClientInformBottomSheet)"
-    )
-    
-    static let plainClientInformBottomSheetTests = testTarget(
-        name: .plainClientInformBottomSheetTests,
-        dependencies: [
-            .plainClientInformBottomSheet
-        ],
-        path: "Tests/UI/\(String.plainClientInformBottomSheetTests)"
     )
     
     // MARK: - UI Components
@@ -2904,12 +2931,16 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
-    static let collateralLoanLanding = byName(
-        name: .collateralLoanLanding
+    static let collateralLoanLandingShowCaseBackend = byName(
+        name: .collateralLoanLandingShowCaseBackend
     )
     
-    static let collateralLoanLandingUI = byName(
-        name: .collateralLoanLandingUI
+    static let collateralLoanLandingShowCaseUI = byName(
+        name: .collateralLoanLandingShowCaseUI
+    )
+    
+    static let collateralLoanLandingDraftBackend = byName(
+        name: .collateralLoanLandingDraftBackend
     )
     
     static let serverAgent = byName(
@@ -2950,6 +2981,10 @@ private extension Target.Dependency {
         name: .cardGuardianUI
     )
     
+    static let сlientInformList = byName(
+        name: .сlientInformList
+    )
+
     static let linkableText = byName(
         name: .linkableText
     )
@@ -3000,10 +3035,6 @@ private extension Target.Dependency {
     
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
-    )
-    
-    static let plainClientInformBottomSheet = byName(
-        name: .plainClientInformBottomSheet
     )
 
     // MARK: - UI Components
@@ -3301,12 +3332,20 @@ private extension String {
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
     
-    static let collateralLoanLanding = "CollateralLoanLanding"
-    static let collateralLoanLandingTests = "CollateralLoanLandingTests"
+    static let collateralLoan = "CollateralLoan"
+    static let collateralLoanTests = "CollateralLoanTests"
+
+    static let collateralLoanLandingShowCaseBackend = "CollateralLoanLandingShowCaseBackend"
+    static let collateralLoanLandingShowCaseName = "ShowCase"
+    static let collateralLoanLandingShowCaseBackendTests = "CollateralLoanLandingShowCaseBackendTests"
     
-    static let collateralLoanLandingUI = "CollateralLoanLandingUI"
-    static let collateralLoanLandingUITests = "CollateralLoanLandingUITests"
+    static let collateralLoanLandingShowCaseUI = "CollateralLoanLandingShowCaseUI"
+    static let collateralLoanLandingShowCaseUITests = "CollateralLoanLandingShowCaseUITests"
     
+    static let collateralLoanLandingDraftBackend = "CollateralLoanLandingDraftBackend"
+    static let collateralLoanLandingDraftName = "Draft"
+    static let collateralLoanLandingDraftBackendTests = "CollateralLoanLandingDraftBackendTests"
+
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
@@ -3321,6 +3360,9 @@ private extension String {
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
     
+    static let сlientInformList = "СlientInformList"
+    static let сlientInformListTests = "СlientInformListTests"
+
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
     
@@ -3370,9 +3412,6 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-    
-    static let plainClientInformBottomSheet = "PlainClientInformBottomSheet"
-    static let plainClientInformBottomSheetTests = "PlainClientInformBottomSheetTests"
 
     // MARK: - UI Components
     

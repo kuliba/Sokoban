@@ -17,21 +17,11 @@ public extension ResponseMapper {
         
         map(data, httpURLResponse, mapOrThrow: GetPaymentTemplateListResponse.init)
     }
-    
-    enum GetPaymentTemplateListError: Error {
-        
-        case emptyCategoryList
-    }
 }
 
 private extension ResponseMapper.GetPaymentTemplateListResponse {
     
     init(_ data: ResponseMapper._Data) throws {
-        
-        guard !data.templateList.isEmpty else {
-            
-            throw ResponseMapper.GetPaymentTemplateListError.emptyCategoryList
-        }
         
         self.init(
             serial: data.serial,

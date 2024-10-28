@@ -19,9 +19,11 @@ typealias MakeIconView = IconDomain.MakeIconView
 typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
-typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig) -> UserAccountView
 
-typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder) -> MarketShowcaseWrapperView?
+typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping () -> Void) -> MarketShowcaseWrapperView?
+
+typealias MakeNavigationOperationView = (@escaping() -> Void) -> any View
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
@@ -39,6 +41,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
+    let makeNavigationOperationView: MakeNavigationOperationView
 }
 
 extension RootViewFactory {
