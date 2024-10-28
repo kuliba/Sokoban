@@ -107,6 +107,7 @@ extension Services {
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
+            case saveConsents
             case showCVV
             case updateFastPaymentContract
             case unblockCard
@@ -465,5 +466,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .getInfoForRepeatPayment
+    )
+    
+    static let saveConsents: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .saveConsents
     )
 }

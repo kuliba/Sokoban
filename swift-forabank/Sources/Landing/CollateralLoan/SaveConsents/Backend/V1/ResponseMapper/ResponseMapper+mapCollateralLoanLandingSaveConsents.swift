@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapCreateSaveConsentsCollateralLoanApplicationResponse.swift
+//  ResponseMapper+mapCollateralLoanLandingSaveConsents.swift
 //
 //
 //  Created by Valentin Ozerov on 24.10.2024.
@@ -10,10 +10,10 @@ import RemoteServices
 
 public extension ResponseMapper {
     
-    static func mapCreateSaveConsentsCollateralLoanApplicationResponse(
+    static func mapCollateralLoanLandingSaveConsents(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<CreateSaveConsentsCollateralLoanApplicationResponse> {
+    ) -> MappingResult<CollateralLoanLandingSaveConsentsResponse> {
 
         map(
             data, httpURLResponse,
@@ -23,7 +23,7 @@ public extension ResponseMapper {
     
     private static func map(
         _ data: _Data
-    ) throws -> CreateSaveConsentsCollateralLoanApplicationResponse {
+    ) throws -> CollateralLoanLandingSaveConsentsResponse {
 
         try data.getCollateralLoanLandingConsents()
     }
@@ -34,7 +34,7 @@ public extension ResponseMapper {
 private extension ResponseMapper._Data {
     
     func getCollateralLoanLandingConsents() throws
-        -> ResponseMapper.CreateSaveConsentsCollateralLoanApplicationResponse {
+        -> ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         
         guard
             let applicationId = self.applicationId,

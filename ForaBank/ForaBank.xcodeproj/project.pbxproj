@@ -3004,6 +3004,8 @@
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
 		A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */; };
+		A7875EF72CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */; };
+		A7875EF92CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */; };
 		A7B401F62CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */; };
 		A7B401F82CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */; };
 		A7B401FA2CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */; };
@@ -6512,6 +6514,7 @@
 		A73961782CC26589004E99ED /* CollateralLoanLandingShowCaseUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingShowCaseUI.xctestplan; sourceTree = "<group>"; };
 		A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CollateralLoanLanding.xctestplan; path = ../CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A7875EF52CCFB3F200D43E20 /* CollateralLoanLandingSaveConsentsBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingSaveConsentsBackend.xctestplan; sourceTree = "<group>"; };
+		A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift"; sourceTree = "<group>"; };
 		A79AAED72CB64D3200B5ABE0 /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanLandingShowCaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+CollateralLoanLandingShowCaseRequest.swift"; sourceTree = "<group>"; };
 		C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeBounceView.swift; sourceTree = "<group>"; };
@@ -7305,6 +7308,7 @@
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
 				2A373A3A2CBA64520057A602 /* EphemeralStores in Frameworks */,
 				2AF720252C74841D00919CAF /* PayHubUI in Frameworks */,
+				A7875EF92CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend in Frameworks */,
 				2A9CB0812BEFC2CB00DA5EF3 /* UtilityServicePrepayment in Frameworks */,
 				2A3011E62A6AB53B00560B98 /* CvvPin in Frameworks */,
 				830C91BB2AAF9051005EC90C /* CodableLanding in Frameworks */,
@@ -10073,6 +10077,7 @@
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
 				2A58FABE2AD7355700BD1967 /* SessionID.swift */,
 				A7C41FC92CB5990600EFE68D /* RequestFactory+CollateralLoanLandingShowCaseRequest.swift */,
+				A7875EF62CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift */,
 				83F686392B98D4DF00B87AAB /* RequestFactory+getProductDetailsRequest.swift */,
 				2A5190352A7E10AC0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest.swift */,
 				2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */,
@@ -19083,6 +19088,7 @@
 				A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */,
 				A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */,
 				EC7A0A252CC9350300FA652F /* СlientInformList */,
+				A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -21333,6 +21339,7 @@
 				2A35DDAF2C02405E00EFF0EB /* Model+paymentProducts.swift in Sources */,
 				2AC2F08C2CC44B62006FCFBC /* LoggingRemoteNanoServiceComposer+composeGetLatestPayments.swift in Sources */,
 				ED288CAA2874C95F00B9ABC6 /* AlertTextFieldComponent.swift in Sources */,
+				A7875EF72CCFBB8800D43E20 /* RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift in Sources */,
 				5047487228566C130007128F /* OpenAccountButtonViewComponent.swift in Sources */,
 				778E26A42875AF4D00D0ED60 /* RootViewModel+Preview.swift in Sources */,
 				77448C03286DF2A9009EEEA8 /* OperationDetailHeaderViewComponent.swift in Sources */,
@@ -28792,6 +28799,10 @@
 		83F775CA2CA2CE0700A05F69 /* MarketShowcase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MarketShowcase;
+		};
+		A7875EF82CCFC0EE00D43E20 /* CollateralLoanLandingSaveConsentsBackend */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CollateralLoanLandingSaveConsentsBackend;
 		};
 		A7B401F52CC26D1E0031C2AE /* CollateralLoanLandingDraftBackend */ = {
 			isa = XCSwiftPackageProductDependency;

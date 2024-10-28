@@ -1,6 +1,6 @@
 //
-//  RequestFactory+createGetCollateralLoanLandingConsentsRequest.swift
-//  
+//  RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift
+//
 //
 //  Created by Valentin Ozerov on 24.10.2024.
 //
@@ -21,7 +21,7 @@ public extension RequestFactory {
         }
     }
 
-    static func createGetCollateralLoanLandingSaveConsentsRequest(
+    static func createCollateralLoanLandingSaveConsentsRequest(
         url: URL,
         payload: CreateSaveConsentsCollateralLoanApplicationPayload
     ) throws -> URLRequest {

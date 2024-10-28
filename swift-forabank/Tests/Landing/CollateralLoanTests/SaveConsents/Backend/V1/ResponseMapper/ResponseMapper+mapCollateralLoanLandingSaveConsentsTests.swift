@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapCollateralLoanLandingSaveConsentsResponseTests.swift
+//  ResponseMapper+mapCollateralLoanLandingSaveConsentsTests.swift
 //
 //
 //  Created by Valentin Ozerov on 24.10.2024.
@@ -94,7 +94,7 @@ final class ResponseMapper_mapCollateralLoanLandingSaveConsentsResponseTests: XC
     // MARK: - Helpers
     
     private typealias MappingResult = Swift.Result<
-        ResponseMapper.CreateSaveConsentsCollateralLoanApplicationResponse,
+        ResponseMapper.CollateralLoanLandingSaveConsentsResponse,
         ResponseMapper.MappingError
     >
     
@@ -102,7 +102,7 @@ final class ResponseMapper_mapCollateralLoanLandingSaveConsentsResponseTests: XC
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
-        ResponseMapper.mapCreateSaveConsentsCollateralLoanApplicationResponse(data, httpURLResponse)
+        ResponseMapper.mapCollateralLoanLandingSaveConsents(data, httpURLResponse)
     }
 }
 
@@ -185,7 +185,7 @@ private extension String {
 """
 }
 
-private extension ResponseMapper.CreateSaveConsentsCollateralLoanApplicationResponse {
+private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
     static let stub: Self = .init(
         applicationId: 123456,

@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetCollateralLoanLandingSaveConsentsRequestTests.swift
+//  RequestFactory+createCollateralLoanLandingSaveConsentsRequestTests.swift
 //
 //
 //  Created by Valentin Ozerov on 24.10.2024.
@@ -9,7 +9,7 @@ import RemoteServices
 import XCTest
 import CollateralLoanLandingSaveConsentsBackend
 
-final class RequestFactory_createGetCollateralLoanLandingSaveConsentsRequestTests: XCTestCase {
+final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetHTTPMethodToPOST() throws {
         
@@ -41,7 +41,7 @@ final class RequestFactory_createGetCollateralLoanLandingSaveConsentsRequestTest
     }
 }
 
-extension RequestFactory_createGetCollateralLoanLandingSaveConsentsRequestTests {
+extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
     
     typealias Payload = RequestFactory.CreateSaveConsentsCollateralLoanApplicationPayload
 }

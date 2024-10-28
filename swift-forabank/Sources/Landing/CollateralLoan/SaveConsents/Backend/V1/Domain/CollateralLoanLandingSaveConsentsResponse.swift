@@ -1,5 +1,5 @@
 //
-//  CreateSaveConsentsCollateralLoanApplicationResponse.swift
+//  CollateralLoanLandingSaveConsentsResponse.swift
 //
 //
 //  Created by Valentin Ozerov on 24.10.2024.
@@ -9,7 +9,7 @@ import RemoteServices
 
 extension ResponseMapper {
     
-    public struct CreateSaveConsentsCollateralLoanApplicationResponse: Equatable {
+    public struct CollateralLoanLandingSaveConsentsResponse: Equatable {
         
         public let applicationId: UInt
         public let name: String
