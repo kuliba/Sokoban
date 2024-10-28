@@ -34,11 +34,14 @@ extension QRDomain {
 
 struct QRBinderComposerMicroServices<QR> {
     
+    let bind: Bind
     let getNavigation: GetNavigation
     let makeQR: MakeQR
 }
 
 extension QRBinderComposerMicroServices {
+    
+    typealias Bind = (Domain.Content, Domain.Flow) -> Set<AnyCancellable>
     
     typealias NavigationCompletion = (Domain.Navigation) -> Void
     typealias GetNavigation = (Domain.Select, @escaping Domain.Notify, @escaping NavigationCompletion) -> Void
@@ -86,7 +89,7 @@ extension QRBinderComposer {
         return .init(
             content: microServices.makeQR(),
             flow: composer.compose(),
-            bind: { _,_ in [] }
+            bind: microServices.bind
         )
     }
     
@@ -102,20 +105,33 @@ final class QRBinderComposerTests: XCTestCase {
         
         let (sut, spies) = makeSUT()
         
+        XCTAssertEqual(spies.bindSpy.callCount, 0)
         XCTAssertEqual(spies.getNavigationSpy.callCount, 0)
         XCTAssertEqual(spies.makeQRSpy.callCount, 0)
         XCTAssertNotNil(sut)
+    }
+    
+    func test_compose_shouldCallBindAndMakeQR() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose()
+        
+        XCTAssertEqual(spies.bindSpy.callCount, 1)
+        XCTAssertEqual(spies.makeQRSpy.callCount, 1)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = QRBinderComposer<QRModel>
     private typealias Domain = SUT.Domain
+    private typealias BindSpy = CallSpy<(Domain.Content, Domain.Flow), Set<AnyCancellable>>
     private typealias GetNavigationSpy = Spy<(Domain.Select, Domain.Notify), Domain.Navigation>
     private typealias MakeQRSpy = CallSpy<Void, QRModel>
     
     private struct Spies {
         
+        let bindSpy: BindSpy
         let getNavigationSpy: GetNavigationSpy
         let makeQRSpy: MakeQRSpy
     }
@@ -128,11 +144,13 @@ final class QRBinderComposerTests: XCTestCase {
         spies: Spies
     ) {
         let spies = Spies(
+            bindSpy: .init(stubs: [[]]),
             getNavigationSpy: .init(),
-            makeQRSpy: .init()
+            makeQRSpy: .init(stubs: [.init()])
         )
         let sut = SUT(
             microServices: .init(
+                bind: spies.bindSpy.call,
                 getNavigation: spies.getNavigationSpy.process,
                 makeQR: spies.makeQRSpy.call
             ),
