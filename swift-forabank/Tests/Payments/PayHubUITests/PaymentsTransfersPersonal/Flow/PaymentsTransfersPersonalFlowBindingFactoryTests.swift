@@ -21,13 +21,13 @@ final class PaymentsTransfersPersonalFlowBindingFactoryTests: XCTestCase {
         
         emitter.send(())
         
-        XCTAssertNoDiff(notifySpy.payloads, [])
+        XCTAssertEqual(notifySpy.callCount, 0)
         
         scheduler.advance(by: .milliseconds(199))
-        XCTAssertNoDiff(notifySpy.payloads, [])
+        XCTAssertEqual(notifySpy.callCount, 0)
         
         scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(notifySpy.payloads, [.select(.scanQR)])
+        XCTAssertEqual(notifySpy.callCount, 1)
         
         XCTAssertNotNil(cancellable)
     }
@@ -42,23 +42,22 @@ final class PaymentsTransfersPersonalFlowBindingFactoryTests: XCTestCase {
         
         emitter.send(qrNavigation)
         
-        XCTAssertNoDiff(notifySpy.payloads, [])
+        XCTAssertEqual(notifySpy.callCount, 0)
         
         scheduler.advance(by: .milliseconds(199))
-        XCTAssertNoDiff(notifySpy.payloads, [])
+        XCTAssertEqual(notifySpy.callCount, 0)
         
         scheduler.advance(by: .milliseconds(1))
-        XCTAssertNoDiff(notifySpy.payloads, [.select(.qrNavigation(qrNavigation))])
+        XCTAssertNoDiff(notifySpy.payloads, [qrNavigation])
         
         XCTAssertNotNil(cancellable)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersPersonalFlowBindingFactory<QRNavigation, ScanQR>
-    private typealias Domain = PaymentsTransfersPersonalDomain<QRNavigation, ScanQR>
-    private typealias Flow = Domain.FlowDomain.Flow
-    private typealias NotifySpy = CallSpy<Domain.NotifyEvent, Void>
+    private typealias SUT = PaymentsTransfersPersonalFlowBindingFactory<QRNavigation>
+    private typealias VoidNotifySpy = CallSpy<Void, Void>
+    private typealias QRNavigationNotifySpy = CallSpy<QRNavigation, Void>
     private typealias Emitter<T> = PassthroughSubject<T, Never>
     
     private func makeSUT(
@@ -86,11 +85,11 @@ final class PaymentsTransfersPersonalFlowBindingFactoryTests: XCTestCase {
         _ scheduler: TestSchedulerOf<DispatchQueue>
     ) -> (
         emitter: Emitter<Void>,
-        notifySpy: NotifySpy,
+        notifySpy: VoidNotifySpy,
         cancellable: AnyCancellable
     ) {
-        let notifySpy = NotifySpy(stubs: [()])
         let emitter = Emitter<Void>()
+        let notifySpy = VoidNotifySpy(stubs: [()])
         
         let cancellable = sut.bindScanQR(
             emitter: emitter,
@@ -106,11 +105,11 @@ final class PaymentsTransfersPersonalFlowBindingFactoryTests: XCTestCase {
         _ scheduler: TestSchedulerOf<DispatchQueue>
     ) -> (
         emitter: Emitter<QRNavigation>,
-        notifySpy: NotifySpy,
+        notifySpy: QRNavigationNotifySpy,
         cancellable: AnyCancellable
     ) {
-        let notifySpy = NotifySpy(stubs: [()])
         let emitter = Emitter<QRNavigation>()
+        let notifySpy = QRNavigationNotifySpy(stubs: [()])
         
         let cancellable = sut.bindQRNavigation(
             emitter: emitter,
@@ -132,6 +131,4 @@ final class PaymentsTransfersPersonalFlowBindingFactoryTests: XCTestCase {
         
         return .init(value: value)
     }
-    
-    private struct ScanQR: Equatable {}
 }

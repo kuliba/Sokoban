@@ -9,7 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-public final class PaymentsTransfersPersonalFlowBindingFactory<QRNavigation, ScanQR> {
+public final class PaymentsTransfersPersonalFlowBindingFactory<QRNavigation> {
     
     private let delay: Delay
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -27,27 +27,25 @@ public final class PaymentsTransfersPersonalFlowBindingFactory<QRNavigation, Sca
 
 public extension PaymentsTransfersPersonalFlowBindingFactory {
     
-    typealias Domain = PaymentsTransfersPersonalDomain<QRNavigation, ScanQR>
-    
     func bindScanQR<Emitter>(
         emitter: Emitter,
-        to receiver: @escaping (Domain.NotifyEvent) -> Void,
+        to receive: @escaping () -> Void,
         using witness: (Emitter) -> AnyPublisher<Void, Never>
     ) -> AnyCancellable {
         
         witness(emitter)
             .delay(for: delay, scheduler: scheduler)
-            .sink { receiver(.select(.scanQR)) }
+            .sink { receive() }
     }
     
     func bindQRNavigation<Emitter>(
         emitter: Emitter,
-        to receiver: @escaping (Domain.NotifyEvent) -> Void,
+        to receive: @escaping (QRNavigation) -> Void,
         using witness: (Emitter) -> AnyPublisher<QRNavigation, Never>
     ) -> AnyCancellable {
         
         witness(emitter)
             .delay(for: delay, scheduler: scheduler)
-            .sink { receiver(.select(.qrNavigation($0))) }
+            .sink { receive($0) }
     }
 }
