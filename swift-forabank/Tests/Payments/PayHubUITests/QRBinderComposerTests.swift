@@ -8,7 +8,7 @@
 import PayHub
 
 /// A namespace/
-enum QRDomain<QR> {}
+enum QRDomain<Navigation, QR, QRResult> {}
 
 extension QRDomain {
     
@@ -27,12 +27,10 @@ extension QRDomain {
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {}
-    
-    enum Navigation {}
+    typealias Select = QRResult
 }
 
-struct QRBinderComposerMicroServices<QR> {
+struct QRBinderComposerMicroServices<Navigation, QR, QRResult> {
     
     let bind: Bind
     let getNavigation: GetNavigation
@@ -43,19 +41,19 @@ extension QRBinderComposerMicroServices {
     
     typealias Bind = (Domain.Content, Domain.Flow) -> Set<AnyCancellable>
     
-    typealias NavigationCompletion = (Domain.Navigation) -> Void
+    typealias NavigationCompletion = (Navigation) -> Void
     typealias GetNavigation = (Domain.Select, @escaping Domain.Notify, @escaping NavigationCompletion) -> Void
     
     typealias MakeQR = () -> QR
     
-    typealias Domain = QRDomain<QR>
+    typealias Domain = QRDomain<Navigation, QR, QRResult>
 }
 
 import Combine
 import CombineSchedulers
 import Foundation
 
-final class QRBinderComposer<QR> {
+final class QRBinderComposer<Navigation, QR, QRResult> {
     
     let microServices: MicroServices
     let mainScheduler: AnySchedulerOf<DispatchQueue>
@@ -71,7 +69,7 @@ final class QRBinderComposer<QR> {
         self.interactiveScheduler = interactiveScheduler
     }
     
-    typealias MicroServices = QRBinderComposerMicroServices<QR>
+    typealias MicroServices = QRBinderComposerMicroServices<Navigation, QR, QRResult>
 }
 
 extension QRBinderComposer {
@@ -93,7 +91,7 @@ extension QRBinderComposer {
         )
     }
     
-    typealias Domain = QRDomain<QR>
+    typealias Domain = QRDomain<Navigation, QR, QRResult>
 }
 
 import PayHubUI
@@ -121,12 +119,50 @@ final class QRBinderComposerTests: XCTestCase {
         XCTAssertEqual(spies.makeQRSpy.callCount, 1)
     }
     
+    func test_composed_shouldCallGetNavigationOnSelectWithQRResult() {
+        
+        let qrResult = makeQRResult()
+        let (sut, spies) = makeSUT()
+        let composed = sut.compose()
+        
+        composed.flow.event(.select(qrResult))
+        
+        XCTAssertNoDiff(spies.getNavigationSpy.payloads.map(\.0), [qrResult])
+    }
+    
+    func test_composed_shouldCallGetNavigationOnSelectWithNotify() {
+        
+        let qrResult = makeQRResult()
+        let (sut, spies) = makeSUT()
+        let composed = sut.compose()
+        XCTAssertNil(composed.flow.state.navigation)
+        
+        composed.flow.event(.select(qrResult))
+        spies.getNavigationSpy.complete(with: makeNavigation())
+        XCTAssertNotNil(composed.flow.state.navigation)
+        
+        spies.getNavigationSpy.payloads.first?.1(.dismiss)
+        XCTAssertNil(composed.flow.state.navigation)
+    }
+    
+    func test_composed_shouldDeliverNavigationOnSelect() {
+        
+        let navigation = makeNavigation()
+        let (sut, spies) = makeSUT()
+        let composed = sut.compose()
+        XCTAssertNil(composed.flow.state.navigation)
+        
+        composed.flow.event(.select(makeQRResult()))
+        spies.getNavigationSpy.complete(with: navigation)
+        XCTAssertNoDiff(composed.flow.state.navigation, navigation)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderComposer<QRModel>
+    private typealias SUT = QRBinderComposer<Navigation, QRModel, QRResult>
     private typealias Domain = SUT.Domain
     private typealias BindSpy = CallSpy<(Domain.Content, Domain.Flow), Set<AnyCancellable>>
-    private typealias GetNavigationSpy = Spy<(Domain.Select, Domain.Notify), Domain.Navigation>
+    private typealias GetNavigationSpy = Spy<(Domain.Select, Domain.Notify), Navigation>
     private typealias MakeQRSpy = CallSpy<Void, QRModel>
     
     private struct Spies {
@@ -163,5 +199,34 @@ final class QRBinderComposerTests: XCTestCase {
         return (sut, spies)
     }
     
+    private struct Navigation: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeNavigation(
+        _ value: String = anyMessage()
+    ) -> Navigation {
+        
+        return .init(value: value)
+    }
+    
     private final class QRModel {}
+    
+    private struct QRResult: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeQRResult(
+        _ value: String = anyMessage()
+    ) -> QRResult {
+        
+        return .init(value: value)
+    }
+    
+    private enum EquatableSelect: Equatable {
+        
+        case qrResult(QRResult)
+    }
 }
