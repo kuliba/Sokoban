@@ -1948,7 +1948,7 @@ fileprivate extension NavigationBarView.ViewModel {
         self.title = ProductViewModel.name(
             product: product,
             style: .profile,
-            creditProductName: .productView
+            creditProductName: .productViewNavTitle
         )
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)

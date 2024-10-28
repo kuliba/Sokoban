@@ -245,9 +245,42 @@ extension ProductData {
         }
     }
     
+    private var customNameIfValid: String? {
+        
+        if let name = customName, !name.trimmingCharacters(in: .whitespaces).isEmpty {
+            return name
+        }
+        
+        return nil
+    }
+    private var defaultCardName: String {
+        
+        if let card = self.asCard, card.isCreditCard {
+            return "Кредитная карта"
+        }
+        
+        return mainField
+    }
+    
     var displayName: String { customName ?? mainField }
-    var navigationBarName: String { customName ?? additionalField ?? mainField }
-    var navigationTitleForControlPanel: String { "\(navigationBarName)  •\(displayNumber ?? "")" }
+    var sectionItemName: String {
+        return customNameIfValid ?? additionalField ?? mainField
+    }
+    var mainTitleName: String {
+        return customNameIfValid ?? defaultCardName
+    }
+    var profileCardTitleName: String {
+        
+        let secondLine = customNameIfValid ?? mainField
+        
+        if let card = self.asCard, card.isCreditCard {
+            return "Кредитная\n\(secondLine)"
+        }
+        
+        return secondLine
+    }
+    var navigationBarTitle: String { customName ?? additionalField ?? mainField }
+    var navigationTitleForControlPanel: String { "\(navigationBarTitle)  •\(displayNumber ?? "")" }
     var balanceValue: Double { balance ?? 0 }
     var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
     var overlayImageColor: Color {
@@ -415,7 +448,7 @@ extension ProductData {
         
         switch self {
         case let cardProduct as ProductCardData:
-            return cardProduct.additionalField
+            return cardProduct.defaultCardName
             
         case let depositProduct as ProductDepositData:
             return "Ставка \(depositProduct.interestRate)%"

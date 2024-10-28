@@ -135,7 +135,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.navigationBarName, "CustomName")
+        XCTAssertNoDiff(sut.navigationBarTitle, "CustomName")
     }
 
     func test_navigationBarName_shouldReturnAdditionalField_whenCustomNameIsNil() throws {
@@ -147,7 +147,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.navigationBarName, "AdditionalField")
+        XCTAssertNoDiff(sut.navigationBarTitle, "AdditionalField")
     }
 
     func test_navigationBarName_shouldReturnMainField_whenCustomNameAndAdditionalFieldAreNil() throws {
@@ -158,7 +158,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.navigationBarName, "MainField")
+        XCTAssertNoDiff(sut.navigationBarTitle, "MainField")
     }
 
     
@@ -189,21 +189,30 @@ class ProductDataTests: XCTestCase {
     func test_subtitle_card_shouldReturnDescription() throws {
         
         let sut = makeSUT(
-            additionalField: "Зарплатная",
+            mainField: "Дебетовая",
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Зарплатная")
+        XCTAssertNoDiff(sut.subtitle, "Дебетовая")
     }
     
     func test_subtitle_card_shouldReturnNil() throws {
         
         let sut = makeSUT(
-            additionalField: nil,
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.subtitle, nil)
+        XCTAssertNoDiff(sut.subtitle, "Card")
+    }
+    
+    func test_subtitle_card_shouldReturnDefaultString() throws {
+        
+        let sut = makeSUT(
+            productType: .card,
+            loanBaseParam: .loanStub
+        )
+
+        XCTAssertNoDiff(sut.subtitle, "Кредитная карта")
     }
     
     func test_subtitle_deposit_shouldReturnInterestRate() throws {
@@ -243,7 +252,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.description, ["1234", "Зарплатная"])
+        XCTAssertNoDiff(sut.description, ["1234", "Card"])
     }
     
     func test_description_deposit_shouldReturnDescription() throws {
@@ -360,7 +369,8 @@ extension ProductDataTests {
         accountNumber: String? = "1234",
         number: String? = "1234",
         expireDate: String? = "expireDate",
-        productType: ProductType
+        productType: ProductType,
+        loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil
     ) -> ProductData {
         
         switch productType {
@@ -402,7 +412,7 @@ extension ProductDataTests {
                 miniStatement: nil,
                 paymentSystemName: nil,
                 paymentSystemImage: nil,
-                loanBaseParam: nil,
+                loanBaseParam: loanBaseParam,
                 statusPc: nil,
                 isMain: nil,
                 externalId: nil,
@@ -534,4 +544,25 @@ extension ProductDataTests {
             )
         }
     }
+}
+
+private extension ProductCardData.LoanBaseParamInfoData {
+    
+    static let loanStub: Self = .init(
+        
+        loanId: 20000059293,
+        clientId: 10002053887,
+        number: "БК-240305/5200/1",
+        currencyId: 2,
+        currencyNumber: 810,
+        currencyCode: "RUB",
+        minimumPayment: 0.0,
+        gracePeriodPayment: 0.0,
+        overduePayment: 0.0,
+        availableExceedLimit: 0.0,
+        ownFunds: 280027.57,
+        debtAmount: -280027.57,
+        totalAvailableAmount: 100000.0,
+        totalDebtAmount: -280027.57
+    )
 }
