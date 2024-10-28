@@ -37,7 +37,11 @@ extension ContentFlowBindingFactory {
             .delay(for: delay, scheduler: scheduler)
             .sink { witnesses.flowReceiving(flow)($0) }
         
-        let dismiss = witnesses.flowEmitting(flow)
+        let flowEmitting = witnesses.flowEmitting(flow)
+        let dismiss = flowEmitting
+            .prepend(nil)
+            .zip(flowEmitting)
+            .filter { $0.0 != nil && $0.1 == nil }
             .delay(for: delay, scheduler: scheduler)
             .sink { _ in witnesses.contentReceiving(content)() }
         
@@ -77,11 +81,26 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         XCTAssertNotNil(cancellables)
     }
     
-    func test_flowNavigation_shouldCallContentOnNilNavigation() {
+    func test_flowNavigation_shouldCallContentOnlyWhenNavigationFlipsFromNonNilToNil() {
         
         let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
         let (content, flow, cancellables) = bindNavigation(sut, scheduler)
-
+        
+        flow.send(nil)
+        
+        scheduler.advance(by: .milliseconds(200))
+        XCTAssertEqual(content.callCount, 0)
+        
+        flow.send(nil)
+        
+        scheduler.advance(by: .milliseconds(200))
+        XCTAssertEqual(content.callCount, 0)
+        
+        flow.send(makeNavigation())
+        
+        scheduler.advance(by: .milliseconds(200))
+        XCTAssertEqual(content.callCount, 0)
+        
         flow.send(nil)
         
         XCTAssertEqual(content.callCount, 0)
@@ -91,7 +110,12 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         
         scheduler.advance(by: .milliseconds(1))
         XCTAssertEqual(content.callCount, 1)
-
+        
+        flow.send(nil)
+        
+        scheduler.advance(by: .milliseconds(200))
+        XCTAssertEqual(content.callCount, 1)
+        
         XCTAssertNotNil(cancellables)
     }
     
