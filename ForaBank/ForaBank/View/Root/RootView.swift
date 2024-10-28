@@ -1111,8 +1111,7 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
-            makeMarketShowcaseView: { _,_  in .none },
-            makeNavigationOperationView: { _ in EmptyView() }
+            makeMarketShowcaseView: { _,_  in .none }
         )
     }
 }

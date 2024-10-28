@@ -23,8 +23,6 @@ typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig) -> Use
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping () -> Void) -> MarketShowcaseWrapperView?
 
-typealias MakeNavigationOperationView = (@escaping() -> Void) -> any View
-
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
@@ -41,7 +39,6 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeNavigationOperationView: MakeNavigationOperationView
 }
 
 extension RootViewFactory {
