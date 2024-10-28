@@ -23,11 +23,14 @@ private extension ResponseMapper.GetProductListByTypeV7Response {
     
     init(data: ResponseMapper._Data) throws {
         
-        guard let products = data.products,
-              let serial = data.serial
+        guard let serial = data.serial
         else { throw ResponseFailure() }
         
-        self.init(list: products.compactMap(ResponseMapper.GetProductListByTypeV7Data.init), serial: serial)
+        if let products = data.productList {
+            self.init(list: products.compactMap(ResponseMapper.GetProductListByTypeV7Data.init), serial: serial)
+        } else {
+            self.init(list: [], serial: serial)
+        }
     }
     
     struct ResponseFailure: Error {}
@@ -38,7 +41,7 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let serial: String?
-        let products: [ProductDTO]?
+        let productList: [ProductDTO]?
         
         struct ProductDTO: Decodable {
             

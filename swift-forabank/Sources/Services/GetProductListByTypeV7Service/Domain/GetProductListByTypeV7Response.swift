@@ -28,7 +28,6 @@ extension ResponseMapper {
             self.uniqueProperties = uniqueProperties
         }
         
-        
         public enum UniqueProperties: Equatable {
             
             case card(Card)
@@ -70,6 +69,36 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let xlDesignMd5Hash: String
         public let smallBackgroundDesignHash: String
         public let background: [String]
+        
+        public init(id: Int, productType: ProductType, productState: [ProductState], order: Int, visibility: Bool, number: String?, numberMasked: String?, accountNumber: String?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, balance: Decimal?, balanceRUB: Decimal?, openDate: Int?, ownerId: Int, branchId: Int?, allowDebit: Bool, allowCredit: Bool, fontDesignColor: String, smallDesignMd5Hash: String, mediumDesignMd5Hash: String, largeDesignMd5Hash: String, xlDesignMd5Hash: String, smallBackgroundDesignHash: String, background: [String]) {
+            self.id = id
+            self.productType = productType
+            self.productState = productState
+            self.order = order
+            self.visibility = visibility
+            self.number = number
+            self.numberMasked = numberMasked
+            self.accountNumber = accountNumber
+            self.currency = currency
+            self.mainField = mainField
+            self.additionalField = additionalField
+            self.customName = customName
+            self.productName = productName
+            self.balance = balance
+            self.balanceRUB = balanceRUB
+            self.openDate = openDate
+            self.ownerId = ownerId
+            self.branchId = branchId
+            self.allowDebit = allowDebit
+            self.allowCredit = allowCredit
+            self.fontDesignColor = fontDesignColor
+            self.smallDesignMd5Hash = smallDesignMd5Hash
+            self.mediumDesignMd5Hash = mediumDesignMd5Hash
+            self.largeDesignMd5Hash = largeDesignMd5Hash
+            self.xlDesignMd5Hash = xlDesignMd5Hash
+            self.smallBackgroundDesignHash = smallBackgroundDesignHash
+            self.background = background
+        }
     }
 }
 
@@ -93,6 +122,25 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let branch: String
         public let paymentSystemName: String
         public let paymentSystemImageMd5Hash: String
+        
+        public init(cardID: Int, idParent: Int?, accountID: Int, cardType: CardType, statusCard: StatusCard, loanBaseParam: LoanBaseParam?, statusPC: StatusPC, name: String, validThru: Int, status: Status, expireDate: String, holderName: String, product: String, branch: String, paymentSystemName: String, paymentSystemImageMd5Hash: String) {
+            self.cardID = cardID
+            self.idParent = idParent
+            self.accountID = accountID
+            self.cardType = cardType
+            self.statusCard = statusCard
+            self.loanBaseParam = loanBaseParam
+            self.statusPC = statusPC
+            self.name = name
+            self.validThru = validThru
+            self.status = status
+            self.expireDate = expireDate
+            self.holderName = holderName
+            self.product = product
+            self.branch = branch
+            self.paymentSystemName = paymentSystemName
+            self.paymentSystemImageMd5Hash = paymentSystemImageMd5Hash
+        }
     }
     
     struct LoanBaseParam: Equatable {
@@ -111,6 +159,23 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let debtAmount: Decimal?
         public let totalAvailableAmount: Decimal?
         public let totalDebtAmount: Decimal?
+        
+        public init(loanID: Int, clientID: Int, number: String, currencyID: Int?, currencyNumber: Int?, currencyCode: String?, minimumPayment: Decimal?, gracePeriodPayment: Decimal?, overduePayment: Decimal?, availableExceedLimit: Decimal?, ownFunds: Decimal?, debtAmount: Decimal?, totalAvailableAmount: Decimal?, totalDebtAmount: Decimal?) {
+            self.loanID = loanID
+            self.clientID = clientID
+            self.number = number
+            self.currencyID = currencyID
+            self.currencyNumber = currencyNumber
+            self.currencyCode = currencyCode
+            self.minimumPayment = minimumPayment
+            self.gracePeriodPayment = gracePeriodPayment
+            self.overduePayment = overduePayment
+            self.availableExceedLimit = availableExceedLimit
+            self.ownFunds = ownFunds
+            self.debtAmount = debtAmount
+            self.totalAvailableAmount = totalAvailableAmount
+            self.totalDebtAmount = totalDebtAmount
+        }
     }
 }
 
@@ -130,6 +195,21 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let settlementAccountId: Int
         public let dateLong: Int
         public let strDateLong: String
+        
+        public init(currencyNumber: Int?, bankProductID: Int, amount: Decimal, currentInterestRate: Double, principalDebt: Decimal?, defaultPrincipalDebt: Decimal?, totalAmountDebt: Decimal?, principalDebtAccount: String, settlementAccount: String, settlementAccountId: Int, dateLong: Int, strDateLong: String) {
+            self.currencyNumber = currencyNumber
+            self.bankProductID = bankProductID
+            self.amount = amount
+            self.currentInterestRate = currentInterestRate
+            self.principalDebt = principalDebt
+            self.defaultPrincipalDebt = defaultPrincipalDebt
+            self.totalAmountDebt = totalAmountDebt
+            self.principalDebtAccount = principalDebtAccount
+            self.settlementAccount = settlementAccount
+            self.settlementAccountId = settlementAccountId
+            self.dateLong = dateLong
+            self.strDateLong = strDateLong
+        }
     }
 }
 
@@ -147,6 +227,19 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let endDateNF: Bool
         public let demandDeposit: Bool
         public let isDebitInterestAvailable: Bool
+        
+        public init(depositProductID: Int, depositID: Int, interestRate: Double, accountID: Int, creditMinimumAmount: Decimal?, minimumBalance: Decimal?, endDate: Int?, endDateNF: Bool, demandDeposit: Bool, isDebitInterestAvailable: Bool) {
+            self.depositProductID = depositProductID
+            self.depositID = depositID
+            self.interestRate = interestRate
+            self.accountID = accountID
+            self.creditMinimumAmount = creditMinimumAmount
+            self.minimumBalance = minimumBalance
+            self.endDate = endDate
+            self.endDateNF = endDateNF
+            self.demandDeposit = demandDeposit
+            self.isDebitInterestAvailable = isDebitInterestAvailable
+        }
     }
 }
 
@@ -163,6 +256,18 @@ public extension ResponseMapper.GetProductListByTypeV7Data {
         public let detailedConditionUrl: String
         public let isSavingAccount: Bool
         public let interestRate: String
+        
+        public init(name: String, externalID: Int, dateOpen: Int, status: Status, branchName: String, detailedRatesUrl: String, detailedConditionUrl: String, isSavingAccount: Bool, interestRate: String) {
+            self.name = name
+            self.externalID = externalID
+            self.dateOpen = dateOpen
+            self.status = status
+            self.branchName = branchName
+            self.detailedRatesUrl = detailedRatesUrl
+            self.detailedConditionUrl = detailedConditionUrl
+            self.isSavingAccount = isSavingAccount
+            self.interestRate = interestRate
+        }
     }
 }
 
