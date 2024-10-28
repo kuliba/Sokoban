@@ -65,6 +65,7 @@ let package = Package(
         .urlRequestFactory,
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
+        .getProductListByTypeV7Service,
         .getClientInformDataServices,
         // UI
         .buttonWithSheet,
@@ -219,6 +220,8 @@ let package = Package(
         .getProductListByTypeServiceTests,
         .getProductListByTypeV6Service,
         .getProductListByTypeV6ServiceTests,
+        .getProductListByTypeV7Service,
+        .getProductListByTypeV7ServiceTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         // UI
@@ -907,6 +910,13 @@ private extension Product {
         ]
     )
     
+    static let getProductListByTypeV7Service = library(
+        name: .getProductListByTypeV7Service,
+        targets: [
+            .getProductListByTypeV7Service
+        ]
+    )
+
     static let getClientInformDataServices = library(
         name: .getClientInformDataServices,
         targets: [
@@ -2043,6 +2053,27 @@ private extension Target {
             .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
     )
+    
+    static let getProductListByTypeV7Service = target(
+        name: .getProductListByTypeV7Service,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeV7Service)"
+    )
+    
+    static let getProductListByTypeV7ServiceTests = testTarget(
+        name: .getProductListByTypeV7ServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeV7Service
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeV7ServiceTests)"
+    )
+
 
     static let getClientInformDataServices = target(
         name: .getClientInformDataServices,
@@ -3269,6 +3300,10 @@ private extension Target.Dependency {
         name: .getProductListByTypeV6Service
     )
     
+    static let getProductListByTypeV7Service = byName(
+        name: .getProductListByTypeV7Service
+    )
+
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
     )
@@ -3584,6 +3619,9 @@ private extension String {
     static let getProductListByTypeV6Service = "GetProductListByTypeV6Service"
     static let getProductListByTypeV6ServiceTests = "GetProductListByTypeV6ServiceTests"
     
+    static let getProductListByTypeV7Service = "GetProductListByTypeV7Service"
+    static let getProductListByTypeV7ServiceTests = "GetProductListByTypeV7ServiceTests"
+
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
     
