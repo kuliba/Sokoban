@@ -41,22 +41,31 @@ extension RootViewModel {
                 
             case let .personal(payments):
                 
-                guard let payment = payment(by: category) else { return }
+                guard let payment = payment(by: category) 
+                else {
+                    
+                    LoggerAgent.shared.log(category: .payments, message: "Payment type by \(category) not found")
+                    return
+                }
 
                 let picker = payments.content.categoryPicker.content
                 
-                let category = picker.state.elements.first {
+                let categoryPicker = picker.state.elements.first {
                     
                     $0.element.type == payment
                 }
                 
-                guard let category else { return }
+                guard let categoryPicker else {
+                    
+                    LoggerAgent.shared.log(category: .payments, message: "Element by \(category) not found")
+                    return
+                }
                 
                 withAnimation {
                     
                     switchTab(.payments)
                     
-                    payments.content.categoryPicker.flow.event(.select(.category(category.element)))
+                    payments.content.categoryPicker.flow.event(.select(.category(categoryPicker.element)))
                 }
             }
         }
@@ -64,26 +73,11 @@ extension RootViewModel {
     
     private func legacyPayment(by name: String) -> PTSectionPaymentsView.ViewModel.PaymentsType? {
         
-        switch name {
-            
-        case "HOUSING_AND_COMMUNAL_SERVICE":
-            return .service
-            
-        default:
-            return nil
-        }
+        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .service : nil
     }
     
     private func payment(by name: String) -> RemoteServices.ResponseMapper.ServiceCategory.CategoryType? {
         
-        switch name {
-            
-        case "HOUSING_AND_COMMUNAL_SERVICE":
-            return .housingAndCommunalService
-            
-        default:
-            return nil
-        }
+        return name == "HOUSING_AND_COMMUNAL_SERVICE" ? .housingAndCommunalService : nil
     }
-
 }
