@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCase {
+final class PaymentsTransfersPersonalTransfersNavigationComposerTests: PaymentsTransfersPersonalTransfersTests {
     
     // MARK: - init
     
@@ -21,8 +21,8 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeContacts.callCount, 0)
         XCTAssertEqual(spies.makeDetail.callCount, 0)
         XCTAssertEqual(spies.makeLatest.callCount, 0)
-        XCTAssertEqual(spies.makeSource.callCount, 0)
         XCTAssertEqual(spies.makeMeToMe.callCount, 0)
+        XCTAssertEqual(spies.makeSource.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -44,13 +44,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.abroad)
         
-        switch navigation {
-        case let .contacts(received):
-            XCTAssert(abroad === received.model)
-            
-        default:
-            XCTFail("Expected abroad contacts, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .contacts(.init(abroad)))
     }
     
     func test_anotherCard_shouldCallMakeAnotherCard() {
@@ -69,13 +63,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.anotherCard)
         
-        switch navigation {
-        case let .payments(received):
-            XCTAssert(anotherCard === received.model)
-            
-        default:
-            XCTFail("Expected another card, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(anotherCard)))
     }
     
     func test_betweenSelf_shouldCallMakeContacts() {
@@ -87,35 +75,23 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeMeToMe.callCount, 1)
     }
     
-    func test_betweenSelf_shouldDeliverNilOnNil() {
+    func test_betweenSelf_shouldDeliverMakeMeToMeFailureOnNil() {
         
         let (sut, _) = makeSUT(meToMe: nil)
         
         let navigation = sut.compose(.betweenSelf)
         
-        switch navigation {
-        case .none:
-            break
-            
-        default:
-            XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .makeMeToMeFailure)
     }
     
     func test_betweenSelf_shouldDeliverMeToMe() throws {
         
-        let meToMe = try makeMeToMe()
+        let meToMe = try makeMeToMeNode()
         let (sut, _) = makeSUT(meToMe: meToMe)
         
         let navigation = sut.compose(.betweenSelf)
         
-        switch navigation {
-        case let .meToMe(received):
-            XCTAssert(meToMe.model === received.model)
-            
-        default:
-            XCTFail("Expected nil navigation, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .meToMe(.init(meToMe.model)))
     }
     
     func test_byPhoneNumber_shouldCallMakeContacts() {
@@ -134,16 +110,10 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.byPhoneNumber)
         
-        switch navigation {
-        case let .contacts(received):
-            XCTAssert(contacts === received.model)
-            
-        default:
-            XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .contacts(.init(contacts)))
     }
     
-    func test_requisites_shouldCallMakeDetailPayment() {
+    func test_requisites_shouldCallMakeDetail() {
         
         let (sut, spies) = makeSUT()
         
@@ -152,25 +122,41 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertEqual(spies.makeDetail.callCount, 1)
     }
     
-    func test_requisites_shouldDeliverContacts() {
+    func test_requisites_shouldDeliverDetail() {
         
         let detail = makeDetailPayment()
         let (sut, _) = makeSUT(detail: detail)
         
         let navigation = sut.compose(.requisites)
         
-        switch navigation {
-        case let .payments(received):
-            XCTAssert(detail === received.model)
-            
-        default:
-            XCTFail("Expected contacts, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(detail)))
+    }
+    
+    // MARK: - contactAbroad
+    
+    func test_contactAbroad_shouldCallMakeSource() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.contactAbroad(source)) { _ in }
+        
+        XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
+    }
+    
+    func test_contactAbroad_shouldDeliverSource() throws {
+        
+        let source = makeSourcePayment()
+        let (sut, _) = makeSUT(sourcePayment: source)
+        
+        let navigation = sut.compose(.contactAbroad(.avtodor)) { _ in }
+        
+        assert(navigation, .paymentsViewModel(.init(source.model)))
     }
     
     // MARK: - contacts
     
-    func test_contacts_shouldCallMakeSourcePayment() {
+    func test_contacts_shouldCallMakeSource() {
         
         let source: Payments.Operation.Source = .avtodor
         let (sut, spies) = makeSUT()
@@ -180,27 +166,36 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
     }
     
-    func test_contacts_shouldDeliverNilOnNil() {
-        
-        let (sut, _) = makeSUT(sourcePayment: nil)
-        
-        XCTAssertNil(sut.compose(.contacts(.avtodor)) { _ in })
-    }
-    
-    func test_contacts_shouldDeliverSourcePayment() throws {
+    func test_contacts_shouldDeliverSource() throws {
         
         let source = makeSourcePayment()
         let (sut, _) = makeSUT(sourcePayment: source)
         
         let navigation = sut.compose(.contacts(.avtodor)) { _ in }
         
-        switch navigation {
-        case let .paymentsViewModel(received):
-            try XCTAssert(XCTUnwrap(source.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .paymentsViewModel(.init(source.model)))
+    }
+    
+    // MARK: - countries
+    
+    func test_countries_shouldCallMakeSource() {
+        
+        let source: Payments.Operation.Source = .avtodor
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.countries(source)) { _ in }
+        
+        XCTAssertNoDiff(spies.makeSource.payloads.map(\.0), [source])
+    }
+    
+    func test_countries_shouldDeliverSource() throws {
+        
+        let source = makeSourcePayment()
+        let (sut, _) = makeSUT(sourcePayment: source)
+        
+        let navigation = sut.compose(.countries(.avtodor)) { _ in }
+        
+        assert(navigation, .paymentsViewModel(.init(source.model)))
     }
     
     // MARK: - latest
@@ -215,11 +210,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         XCTAssertNoDiff(spies.makeLatest.payloads.map(\.0), [latestID])
     }
     
-    func test_latest_shouldDeliverNilOnNil() {
+    func test_latest_shouldDeliverMakeLatestFailureOnNil() {
         
         let (sut, _) = makeSUT(latestPayment: nil)
         
-        XCTAssertNil(sut.compose(.latest(.random(in: 1...100))) { _ in })
+        let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
+        
+        assert(navigation, .makeLatestFailure)
     }
     
     func test_latest_shouldDeliverLatestPayment() throws {
@@ -229,26 +226,46 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         let navigation = sut.compose(.latest(.random(in: 1...100))) { _ in }
         
-        switch navigation {
-        case let .payments(received):
-            try XCTAssert(XCTUnwrap(latest.model) === XCTUnwrap(received.model))
-            
-        default:
-            XCTFail("Expected payments, got \(String(describing: navigation)) instead.")
-        }
+        assert(navigation, .payments(.init(latest.model)))
+    }
+    
+    // MARK: - qr: result
+    
+    // TODO: - add tests
+    
+    // MARK: - qr: scan
+    
+    func test_scanQR_shouldCallMakeQR() {
+        
+        let (sut, spies) = makeSUT()
+        
+        _ = sut.compose(.qr(.scan)) { _ in }
+        
+        XCTAssertNoDiff(spies.makeScanQR.payloads.count, 1)
+    }
+    
+    func test_scanQR_shouldDeliverSourcePayment() throws {
+        
+        let scanQR = makeScanQRNode()
+        let (sut, _) = makeSUT(scanQR: scanQR)
+        
+        let navigation = sut.compose(.qr(.scan)) { _ in }
+  
+        assert(navigation, .scanQR(.init(scanQR.model)))
     }
     
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersPersonalTransfersNavigationComposer
-    private typealias Notify = (SUT.Domain.FlowEvent) -> Void
+    private typealias Notify = (SUT.Domain.NotifyEvent) -> Void
     private typealias MakeAbroad = CallSpy<Notify, Node<ContactsViewModel>>
     private typealias MakeAnotherCard = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeContacts = CallSpy<Notify, Node<ContactsViewModel>>
     private typealias MakeDetail = CallSpy<Notify, Node<ClosePaymentsViewModelWrapper>>
     private typealias MakeLatest = CallSpy<(LatestPaymentData.ID, Notify), Node<ClosePaymentsViewModelWrapper>?>
     private typealias MakeMeToMe = CallSpy<Notify, Node<PaymentsMeToMeViewModel>?>
-    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>?>
+    private typealias MakeScanQR = CallSpy<Notify, Node<QRModel>>
+    private typealias MakeSource = CallSpy<(Payments.Operation.Source, Notify), Node<PaymentsViewModel>>
     
     private struct Spies {
         
@@ -258,6 +275,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         let makeDetail: MakeDetail
         let makeLatest: MakeLatest
         let makeMeToMe: MakeMeToMe
+        let makeScanQR: MakeScanQR
         let makeSource: MakeSource
     }
     
@@ -268,6 +286,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         detail: ClosePaymentsViewModelWrapper? = nil,
         latestPayment: Node<ClosePaymentsViewModelWrapper>? = nil,
         meToMe: Node<PaymentsMeToMeViewModel>? = nil,
+        scanQR: Node<QRModel>? = nil,
         sourcePayment: Node<PaymentsViewModel>? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -290,7 +309,12 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             ]),
             makeLatest: .init(stubs: [latestPayment]),
             makeMeToMe: .init(stubs: [meToMe]),
-            makeSource: .init(stubs: [sourcePayment])
+            makeScanQR: .init(stubs: [
+                scanQR ?? makeScanQRNode()
+            ]),
+            makeSource: .init(stubs: [
+                sourcePayment ?? makeSourcePayment()
+            ])
         )
         let sut = SUT(nanoServices: .init(
             makeAbroad: spies.makeAbroad.call,
@@ -299,6 +323,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
             makeDetail: spies.makeDetail.call,
             makeLatest: spies.makeLatest.call,
             makeMeToMe: spies.makeMeToMe.call,
+            makeScanQR: spies.makeScanQR.call,
             makeSource: spies.makeSource.call
         ))
         
@@ -331,16 +356,13 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         return .init(model: model, cancellables: [])
     }
     
-    private func makeMeToMe(
+    private func makeMeToMeNode(
+        with model: Model = .mockWithEmptyExcept(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Node<PaymentsMeToMeViewModel> {
         
-        let model: Model = .mockWithEmptyExcept()
-        try model.addMeToMeProduct(file: file, line: line)
-        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
-        
-        return .init(model: meToMe, cancellables: [])
+        return try.init(model: makeMeToMe(with: model), cancellables: [])
     }
     
     private func makeAnotherCard() -> ClosePaymentsViewModelWrapper {
@@ -366,7 +388,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
         
         return makePaymentsNode(wrapper)
     }
-        
+    
     private func makeLatestPayment(
         _ wrapper: ClosePaymentsViewModelWrapper? = nil
     ) -> Node<ClosePaymentsViewModelWrapper> {
@@ -385,6 +407,22 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerTests: XCTestCas
     ) -> Node<ClosePaymentsViewModelWrapper> {
         
         return .init(model: model ?? makePayments(), cancellables: [])
+    }
+    
+    private func makeScanQR() -> QRModel {
+        
+        return .init(
+            mapScanResult: { _,_ in },
+            makeQRModel: { .preview(closeAction: $0) },
+            scheduler: .immediate
+        )
+    }
+    
+    private func makeScanQRNode(
+        _ qrModel: QRModel? = nil
+    ) -> Node<QRModel> {
+        
+        return .init(model: qrModel ?? makeScanQR(), cancellables: [])
     }
     
     @_disfavoredOverload
@@ -419,7 +457,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         _ buttonType: Domain.ButtonType
-    ) -> Domain.Navigation? {
+    ) -> Domain.NavigationResult {
         
         self.compose(.buttonType(buttonType), notify: { _ in })
     }

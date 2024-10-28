@@ -19,20 +19,41 @@ final class PaymentsTransfersPersonalTransfersNavigationComposer {
 
 extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
+    typealias Notify = (Domain.NotifyEvent) -> Void
+    
     func compose(
-        _ element: Domain.Element,
-        notify: @escaping (Domain.FlowEvent) -> Void
-    ) -> Domain.Navigation? {
+        _ select: Domain.Select,
+        notify: @escaping Notify
+    ) -> Domain.NavigationResult {
         
-        switch element {
+        switch select {
+        case let .alert(message):
+            return .failure(.alert(message))
+            
         case let .buttonType(buttonType):
-            return compose(for: buttonType, notify: notify)
+            return compose(for: buttonType, using: notify)
+            
+        case let .contactAbroad(source):
+            // handleContactAbroad
+            // PaymentsTransfersViewModel.swift:1359
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .contacts(source):
-            return nanoServices.makeSource(source, notify).map { .paymentsViewModel($0) }
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
+            
+        case let .countries(source):
+            // PaymentsTransfersViewModel.handleCountriesItemTapped(source:)
+            // PaymentsTransfersViewModel.swift:1528
+            return .success(.paymentsViewModel(nanoServices.makeSource(source, notify)))
             
         case let .latest(latest):
-            return nanoServices.makeLatest(latest, notify).map { .payments($0) }
+            return .makeLatest(nanoServices.makeLatest(latest, notify))
+            
+        case let .qr(qr):
+            return compose(for: qr, using: notify)
+            
+        case let .successMeToMe(node):
+            return .success(.successMeToMe(node))
         }
     }
     
@@ -43,24 +64,60 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposer {
     
     func compose(
         for buttonType: Domain.ButtonType,
-        notify: @escaping (Domain.FlowEvent) -> Void
-    ) -> Domain.Navigation? {
+        using notify: @escaping Notify
+    ) -> Domain.NavigationResult {
         
         switch buttonType {
         case .abroad:
-            return .contacts(nanoServices.makeAbroad(notify))
+            return .success(.contacts(nanoServices.makeAbroad(notify)))
             
         case .anotherCard:
-            return .payments(nanoServices.makeAnotherCard(notify))
+            return .success(.payments(nanoServices.makeAnotherCard(notify)))
             
         case .betweenSelf:
-            return nanoServices.makeMeToMe(notify).map { .meToMe($0) }
+            return .makeMeToMe(nanoServices.makeMeToMe(notify))
             
         case .byPhoneNumber:
-            return .contacts(nanoServices.makeContacts(notify))
+            return .success(.contacts(nanoServices.makeContacts(notify)))
             
         case .requisites:
-            return .payments(nanoServices.makeDetail(notify))
+            return .success(.payments(nanoServices.makeDetail(notify)))
         }
+    }
+    
+    // bind QRModel
+    // PaymentsTransfersViewModel.swift:1567
+    func compose(
+        for qr: Domain.Select.QR,
+        using notify: @escaping Notify
+    ) -> Domain.NavigationResult {
+        
+        switch qr {
+        case let .result(result):
+#warning("fixme")
+            _ = result
+            return { fatalError() }()
+            
+        case .scan:
+            // PaymentsTransfersViewModel.swift:1348
+            return .success(.scanQR(nanoServices.makeScanQR(notify)))
+        }
+    }
+}
+
+private extension PaymentsTransfersPersonalTransfersDomain.NavigationResult {
+    
+    static func makeLatest(
+        _ node: Node<ClosePaymentsViewModelWrapper>?
+    ) -> Self {
+        
+        node.map { .success(.payments($0)) } ?? .failure(.makeLatestFailure)
+    }
+    
+    static func makeMeToMe(
+        _ node: Node<PaymentsMeToMeViewModel>?
+    ) -> Self {
+        
+        node.map { .success(.meToMe($0)) } ?? .failure(.makeMeToMeFailure)
     }
 }

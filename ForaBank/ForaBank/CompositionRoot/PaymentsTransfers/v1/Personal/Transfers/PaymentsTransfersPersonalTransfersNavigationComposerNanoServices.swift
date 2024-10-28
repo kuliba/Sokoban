@@ -13,19 +13,23 @@ struct PaymentsTransfersPersonalTransfersNavigationComposerNanoServices {
     let makeDetail: MakeDetail
     let makeLatest: MakeLatest
     let makeMeToMe: MakeMeToMe
+    let makeScanQR: MakeScanQR
     let makeSource: MakeSource
 }
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServices{
     
-    typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
-    typealias Notify = (Event) -> Void
+    typealias NotifyEvent = PaymentsTransfersPersonalTransfersDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
-    typealias MakeAbroad = (@escaping Notify) -> Node<ContactsViewModel>
-    typealias MakeAnotherCard = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
+    typealias MakeAbroad = MakeContacts
+    typealias MakeAnotherCard = MakePaymentsWrapper
     typealias MakeContacts = (@escaping Notify) -> Node<ContactsViewModel>
-    typealias MakeDetail = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
+    typealias MakeDetail = MakePaymentsWrapper
     typealias MakeLatest = (LatestPaymentData.ID, @escaping Notify) -> Node<ClosePaymentsViewModelWrapper>?
     typealias MakeMeToMe = (@escaping Notify) -> Node<PaymentsMeToMeViewModel>?
-    typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>?
+    typealias MakeScanQR = (@escaping Notify) -> Node<QRModel>
+    typealias MakeSource = (Payments.Operation.Source, @escaping Notify) -> Node<PaymentsViewModel>
+
+    typealias MakePaymentsWrapper = (@escaping Notify) -> Node<ClosePaymentsViewModelWrapper>
 }
