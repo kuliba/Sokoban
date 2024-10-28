@@ -35,6 +35,8 @@ class RootViewModel: ObservableObject, Resetable {
     private let productNavigationStateManager: ProductProfileFlowManager
     let landingServices: LandingServices
     private let mainScheduler: AnySchedulerOfDispatchQueue
+    
+    let stickerViewFactory: StickerViewFactory
 
     let model: Model
     private let infoDictionary: [String : Any]?
@@ -44,6 +46,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
+        stickerViewFactory: StickerViewFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
@@ -55,6 +58,7 @@ class RootViewModel: ObservableObject, Resetable {
         mainScheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
+        self.stickerViewFactory = stickerViewFactory
         self.navigationStateManager = navigationStateManager
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main

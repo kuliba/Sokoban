@@ -393,8 +393,9 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview, 
+            fastPaymentsFactory: .legacy, 
+            stickerViewFactory: .preview,
+            navigationStateManager: .preview,
             productNavigationStateManager: .preview,
             tabsViewModel: .init(
                 mainViewModel: .init(
@@ -465,7 +466,8 @@ final class RootViewModelTests: XCTestCase {
         let scheduler = DispatchQueue.test
 
         let sut = RootViewModel(
-            fastPaymentsFactory: .legacy,
+            fastPaymentsFactory: .legacy, 
+            stickerViewFactory: .preview,
             navigationStateManager: .preview,
             productNavigationStateManager: .preview,
             tabsViewModel: .init(

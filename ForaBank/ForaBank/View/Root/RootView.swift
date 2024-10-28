@@ -63,11 +63,7 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory(
-                    model: viewModel.model,
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    logger: LoggerAgent()
-                ).makeNavigationOperationView(
+                navigationOperationView: viewModel.stickerViewFactory.makeNavigationOperationView(
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
@@ -168,9 +164,17 @@ struct RootView: View {
             
         case .paymentSticker:
             
-            AnyView(
-                rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
-            )
+            NavigationView {
+                
+                viewModel.stickerViewFactory.makeNavigationOperationView(
+                    dismissAll: viewModel.rootActions.dismissAll
+                )()
+                    .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: Button(action: viewModel.resetLink) { Image("ic24ChevronLeft") })
+                    .foregroundColor(.textSecondary)
+            }
         }
     }
 }
@@ -1042,7 +1046,8 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy,
+                fastPaymentsFactory: .legacy, 
+                stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
@@ -1106,7 +1111,6 @@ private extension RootViewFactory {
             makeInfoViews: .default,
             makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
             makeMarketShowcaseView: { _,_,_   in .none },
-            makeNavigationOperationView: { _ in EmptyView() },
             makeAnywayFlowView: { _ in fatalError() }
         )
     }
