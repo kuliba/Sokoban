@@ -15,7 +15,7 @@ final class ContentFlowBindingFactory {
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
-        delay: Delay,
+        delay: Delay = .milliseconds(100),
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.delay = delay
@@ -56,16 +56,7 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         
         let select = makeSelect()
         let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
-        let content = PassthroughSubject<Select, Never>()
-        let flow = CallSpy<Select, Void>(stubs: [()])
-        let cancellables = sut.bind(
-            content: content,
-            flow: flow,
-            witnesses: .init(
-                contentWitness: { $0.eraseToAnyPublisher() },
-                flowWitness: { flow in { flow.call(payload: $0) }}
-            )
-        )
+        let (content, flow, cancellables) = bind(sut, scheduler)
         
         content.send(select)
         
@@ -83,6 +74,8 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ContentFlowBindingFactory
+    private typealias Content = PassthroughSubject<Select, Never>
+    private typealias FlowSpy = CallSpy<Select, Void>
     
     private func makeSUT(
         delay: SUT.Delay,
@@ -102,6 +95,29 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, scheduler)
+    }
+    
+    private func bind(
+        _ sut: SUT,
+        _ scheduler: TestSchedulerOf<DispatchQueue>
+    ) -> (
+        content: Content,
+        flow: FlowSpy,
+        cancellables: Set<AnyCancellable>
+    ) {
+        let content = Content()
+        let flow = FlowSpy(stubs: [()])
+        
+        let cancellables = sut.bind(
+            content: content,
+            flow: flow,
+            witnesses: .init(
+                contentWitness: { $0.eraseToAnyPublisher() },
+                flowWitness: { flow in { flow.call(payload: $0) }}
+            )
+        )
+        
+        return (content, flow, cancellables)
     }
     
     private struct Select: Equatable {
