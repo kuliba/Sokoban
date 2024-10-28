@@ -40,5 +40,6 @@ extension UserAccountEffect.NavigationEffect {
         
         case create(OTPInputState.PhoneNumberMask)
         case prepareSetBankDefault(OTPInputState.PhoneNumberMask)
+        case prepareDeleteDefaultBank(OTPInputState.PhoneNumberMask)
     }
 }

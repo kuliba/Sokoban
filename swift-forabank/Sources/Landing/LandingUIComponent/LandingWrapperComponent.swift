@@ -165,6 +165,9 @@ public final class LandingWrapperViewModel: ObservableObject {
             
         case let .listVerticalRoundImageAction(action):
             self.landingActions(.listVerticalRoundImageAction(action))
+            
+        case .goToBack:
+            self.landingActions(.goToBack)
         }
     }
     

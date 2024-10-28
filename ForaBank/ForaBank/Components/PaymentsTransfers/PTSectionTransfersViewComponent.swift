@@ -70,29 +70,46 @@ extension PTSectionTransfersView {
 
 struct PTSectionTransfersView: View {
     
-    @ObservedObject
-    var viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
-        Text(viewModel.title) 
+        
+        PTSectionTransfersButtonsView(
+            title: viewModel.title,
+            buttons: viewModel.transfersButtons
+        )
+    }
+}
+
+struct PTSectionTransfersButtonsView: View {
+    
+    let title: String
+    let buttons: [PTSectionTransfersView.ViewModel.TransfersButtonVM]
+    
+    var body: some View {
+        
+        Text(title)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.textH2Sb20282())
             .foregroundColor(.textSecondary)
             .padding(.top, 30)
             .padding(.bottom, 14)
             .padding(.leading, 20)
-    
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
         
-                ForEach(viewModel.transfersButtons) { buttonVM in
-                    TransfersButtonView(viewModel: buttonVM)
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: 8) {
+                
+                ForEach(buttons) {
+                    
+                    PTSectionTransfersView.TransfersButtonView(viewModel: $0)
                 }
+                    
                 Spacer(minLength: 15)
-            }.padding(.leading, 20)
+            }
+            .padding(.leading, 20)
         }
     }
-    
 }
 
 //MARK: - TransfersButtonView

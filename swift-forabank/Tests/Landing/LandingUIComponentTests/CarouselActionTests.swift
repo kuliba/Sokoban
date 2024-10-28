@@ -37,23 +37,44 @@ final class CarouselActionTests: XCTestCase {
             link: link,
             [.goMain])
     }
+    
+    func test_itemAction_actionLanding_LinkNil_shouldCallLanding() {
+         
+        let target = anyMessage()
 
-    func test_itemAction_actionGoToOrderSticker_LinkNil_shouldCallGoOrderSticker() {
-                
         assertItemAction(
-            for: .init(type: "goToOrderSticker", target: nil),
+            for: .init(type: "LANDING", target: target),
             link: nil,
-            [.orderSticker])
+            [.landing(target)])
     }
 
-    func test_itemAction_actionGoToOrderSticker_LinkNotNil_shouldCallGoOrderSticker() {
+    func test_itemAction_actionGoToMain_LinkNotNil_shouldCallLanding() {
+        
+        let link = anyMessage()
+        let target = anyMessage()
+
+        assertItemAction(
+            for: .init(type: "LANDING", target: target),
+            link: link,
+            [.landing(target)])
+    }
+
+    func test_itemAction_actionCardOrderList_LinkNil_shouldCallOrderCard() {
+                
+        assertItemAction(
+            for: .init(type: "cardOrderList", target: nil),
+            link: nil,
+            [.orderCard])
+    }
+
+    func test_itemAction_actionCardOrderList_LinkNotNil_shouldCallOrderCard() {
         
         let link = anyMessage()
 
         assertItemAction(
-            for: .init(type: "goToOrderSticker", target: nil),
+            for: .init(type: "cardOrderList", target: nil),
             link: link,
-            [.orderSticker])
+            [.orderCard])
     }
 
     func test_itemAction_actionNil_linkNotNil_shouldCallOpenUrl() {
@@ -87,6 +108,24 @@ final class CarouselActionTests: XCTestCase {
             [.openLink])
     }
 
+    func test_itemAction_actionOrderCard_LinkNil_shouldNotCallAction() {
+                
+        assertItemAction(
+            for: .init(type: "orderCard", target: nil),
+            link: nil,
+            [])
+    }
+
+    func test_itemAction_actionOrderCard_LinkNotNil_shouldCallOpenLink() {
+        
+        let link = anyMessage()
+
+        assertItemAction(
+            for: .init(type: "orderCard", target: nil),
+            link: link,
+            [.openLink])
+    }
+
     // MARK: - Helpers
    
     private typealias Carousel = UILanding.Carousel
@@ -105,15 +144,18 @@ final class CarouselActionTests: XCTestCase {
             actions: .init(
                 openUrl: { _ in received.append(.openLink) },
                 goToMain: { received.append(.goMain) }, 
-                orderSticker: { received.append(.orderSticker) }))()
+                orderCard: { received.append(.orderCard) },
+                landing: { received.append(.landing($0)) }
+            ))()
         
         XCTAssertEqual(received, expectedActionTypes)
     }
 
-    enum ActionType {
+    enum ActionType: Equatable {
         
         case goMain
+        case landing(String?)
         case openLink
-        case orderSticker
+        case orderCard
     }
 }

@@ -53,21 +53,21 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverQRWithNotifyOnCancel() {
         
-        var notifications = [SUT.FlowDomain.Event]()
+        var notifyEvents = [SUT.FlowDomain.NotifyEvent]()
         
-        getNavigation(flow: .qr, notify: { notifications.append($0) }) {
+        getNavigation(flow: .qr, notify: { notifyEvents.append($0) }) {
             
             switch $0 {
             case let .paymentFlow(.qr(qr)):
                 qr.model.event(.cancel)
                 
-                XCTAssertEqual(notifications.count, 1)
-                switch notifications.first {
+                XCTAssertEqual(notifyEvents.count, 1)
+                switch notifyEvents.first {
                 case .dismiss:
                     break
                     
                 default:
-                    XCTFail("Expected dismiss event, got \(String(describing: notifications.first)) instead.")
+                    XCTFail("Expected dismiss event, got \(String(describing: notifyEvents.first)) instead.")
                 }
                 
             default:
@@ -96,25 +96,25 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverQRNavigationOnQRResult() {
         
-        var notifications = [SUT.FlowDomain.Event]()
+        var notifyEvents = [SUT.FlowDomain.NotifyEvent]()
         let complete = makePaymentComplete()
         let (sut, makeQRNavigation) = makeSUT()
         
-        getNavigation(sut, flow: .qr, notify: { notifications.append($0) }) {
+        getNavigation(sut, flow: .qr, notify: { notifyEvents.append($0) }) {
             
             switch $0 {
             case let .paymentFlow(.qr(qr)):
                 qr.model.event(.qrResult(.c2bURL(anyURL())))
                 makeQRNavigation.complete(with: .paymentComplete(.success(complete)))
                 
-                XCTAssertEqual(notifications.count, 1)
+                XCTAssertEqual(notifyEvents.count, 1)
                 
-                switch notifications.first {
-                case let .receive(.qrNavigation(.paymentComplete(.success(receivedComplete)))):
+                switch notifyEvents.first {
+                case let .select(.qrSelect(.qrNavigation(.paymentComplete(.success(receivedComplete))))):
                     XCTAssert(receivedComplete === complete)
                     
                 default:
-                    XCTFail("Expected complete, got \(String(describing: notifications.first)) instead.")
+                    XCTFail("Expected complete, got \(String(describing: notifyEvents.first)) instead.")
                 }
                 
             default:
@@ -300,7 +300,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     private func getNavigation(
         _ sut: SUT? = nil,
         flow: ServiceCategory.PaymentFlow,
-        notify: @escaping (SUT.FlowDomain.Event) -> Void = { _ in },
+        notify: @escaping (SUT.FlowDomain.NotifyEvent) -> Void = { _ in },
         completion: @escaping (SUT.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -317,7 +317,7 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
     private func getNavigation(
         _ sut: SUT? = nil,
         with select: SUT.Select,
-        notify: @escaping (SUT.FlowDomain.Event) -> Void = { _ in },
+        notify: @escaping (SUT.FlowDomain.NotifyEvent) -> Void = { _ in },
         completion: @escaping (SUT.Navigation) -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -388,27 +388,6 @@ final class SelectedCategoryNavigationMicroServicesComposerTests: XCTestCase {
             operators: [],
             latestPayments: .sample,
             makePaymentsViewModel: { _ in .sample }
-        )
-    }
-    
-    private func makeServiceCategory(
-        latestPaymentsCategory: ServiceCategory.LatestPaymentsCategory? = nil,
-        md5Hash: String = anyMessage(),
-        name: String = anyMessage(),
-        ord: Int = .random(in: 1...100),
-        flow paymentFlow: ServiceCategory.PaymentFlow = .mobile,
-        hasSearch: Bool = false,
-        type: ServiceCategory.CategoryType = .networkMarketing
-    ) -> ServiceCategory {
-        
-        return .init(
-            latestPaymentsCategory: latestPaymentsCategory,
-            md5Hash: md5Hash,
-            name: name,
-            ord: ord,
-            paymentFlow: paymentFlow,
-            hasSearch: hasSearch,
-            type: type
         )
     }
 }

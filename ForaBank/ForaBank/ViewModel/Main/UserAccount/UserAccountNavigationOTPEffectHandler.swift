@@ -12,15 +12,18 @@ import OTPInputComponent
 final class UserAccountNavigationOTPEffectHandler {
     
     private let makeTimedOTPInputViewModel: MakeTimedOTPInputViewModel
+    private let makeTimedOTPInputDeleteDefaultBankViewModel: MakeTimedOTPInputDeleteDefaultBankViewModel
     private let prepareSetBankDefault: PrepareSetBankDefault
     private let scheduler: AnySchedulerOfDispatchQueue
     
     init(
         makeTimedOTPInputViewModel: @escaping MakeTimedOTPInputViewModel,
+        makeTimedOTPInputDeleteDefaultBankViewModel: @escaping MakeTimedOTPInputDeleteDefaultBankViewModel,
         prepareSetBankDefault: @escaping PrepareSetBankDefault,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.makeTimedOTPInputViewModel = makeTimedOTPInputViewModel
+        self.makeTimedOTPInputDeleteDefaultBankViewModel = makeTimedOTPInputDeleteDefaultBankViewModel
         self.prepareSetBankDefault = prepareSetBankDefault
         self.scheduler = scheduler
     }
@@ -50,6 +53,9 @@ extension UserAccountNavigationOTPEffectHandler {
                     dispatch(.prepareSetBankDefaultResponse(.serverError(message)))
                 }
             }
+            
+        case let .prepareDeleteDefaultBank(phoneNumber):
+            dispatch(makeDeleteBankDestination(phoneNumber, dispatch))
         }
     }
 }
@@ -57,7 +63,9 @@ extension UserAccountNavigationOTPEffectHandler {
 extension UserAccountNavigationOTPEffectHandler {
     
     typealias MakeTimedOTPInputViewModel = (OTPInputState.PhoneNumberMask, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
+    typealias MakeTimedOTPInputDeleteDefaultBankViewModel = (OTPInputState.PhoneNumberMask, AnySchedulerOfDispatchQueue) -> TimedOTPInputViewModel
     typealias PrepareSetBankDefault = FastPaymentsSettingsEffectHandler.PrepareSetBankDefault
+    typealias PrepareDeleteDefaultBank = FastPaymentsSettingsEffectHandler.PrepareDeleteDefaultBank
     typealias Dispatch = (Event) -> Void
     
     typealias Effect = UserAccountEffect.NavigationEffect.OTP
@@ -82,6 +90,23 @@ private extension UserAccountNavigationOTPEffectHandler {
         
         return .create(.init(otpInputViewModel, cancellable))
     }
+    
+    func makeDeleteBankDestination(
+        _ phoneNumber: OTPInputState.PhoneNumberMask,
+        _ dispatch: @escaping Dispatch
+    ) -> Event {
+        
+        let otpInputViewModel = makeTimedOTPInputDeleteDefaultBankViewModel(phoneNumber, scheduler)
+        let cancellable = otpInputViewModel.$state
+            .dropFirst()
+            .compactMap(\.projection)
+            .removeDuplicates()
+            .map(Event.otpInput)
+            .receive(on: scheduler)
+            .sink { dispatch($0) }
+        
+        return .createDeleteBank((.init(otpInputViewModel, cancellable)))
+    }
 }
 
 // MARK: - OTP for Fast Payments Settings
@@ -91,7 +116,7 @@ private extension OTPInputState {
     var projection: OTPInputStateProjection? {
         
         switch status {
-        case let .failure(otpFieldFailure):
+        case let .failure(input, otpFieldFailure):
             switch otpFieldFailure {
             case .connectivityError:
                 return .failure(.connectivityError)
