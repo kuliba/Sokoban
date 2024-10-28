@@ -113,7 +113,7 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.payment).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.openPayment).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }

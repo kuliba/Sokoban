@@ -351,27 +351,27 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.selected, .market)
     }
     
-    // MARK: - payment
+    // MARK: - openPayment
 
-    func test_payment_housingAndCommumalService_shouldSelectedPayment() {
+    func test_openPayment_housingAndCommumalService_shouldSelectedPayment() {
         
         let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
-        sut.payment(.housingAndCommumalService)
+        sut.openPayment(.housingAndCommumalService)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
         XCTAssertNoDiff(linkSpy.values, [nil])
         XCTAssertNoDiff(sut.selected, .payments)
     }
 
-    func test_payment_housingAndCommumalService_onlyCorporate_shouldShowAlertDisableForCorporateCard() {
+    func test_openPayment_housingAndCommumalService_onlyCorporate_shouldShowAlertDisableForCorporateCard() {
         
         let (sut, _, _, alertSpy) = makeSUT(product: makeCardProduct(cardType: .individualBusinessman), selected: .market)
 
         XCTAssertNoDiff(alertSpy.values, [nil])
         
-        sut.payment(.housingAndCommumalService)
+        sut.openPayment(.housingAndCommumalService)
                 
         XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
     }
