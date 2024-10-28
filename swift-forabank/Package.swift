@@ -2057,6 +2057,7 @@ private extension Target {
     static let getProductListByTypeV7Service = target(
         name: .getProductListByTypeV7Service,
         dependencies: [
+            .foraTools,
             .remoteServices
         ],
         path: "Sources/Services/\(String.getProductListByTypeV7Service)"
