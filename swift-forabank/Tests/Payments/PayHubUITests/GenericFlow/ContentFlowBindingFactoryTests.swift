@@ -27,24 +27,30 @@ final class ContentFlowBindingFactory {
 
 extension ContentFlowBindingFactory {
     
-    func bind<Content, Flow, Select>(
+    func bind<Content, Flow, Select, Navigation>(
         content: Content,
         flow: Flow,
-        witnesses: ContentFlowWitnesses<Content, Flow, Select>
+        witnesses: ContentFlowWitnesses<Content, Flow, Select, Navigation>
     ) -> Set<AnyCancellable> {
         
-        let select = witnesses.contentWitness(content)
+        let select = witnesses.contentEmitting(content)
             .delay(for: delay, scheduler: scheduler)
-            .sink { witnesses.flowWitness(flow)($0) }
+            .sink { witnesses.flowReceiving(flow)($0) }
         
-        return [select]
+        let dismiss = witnesses.flowEmitting(flow)
+            .delay(for: delay, scheduler: scheduler)
+            .sink { _ in witnesses.contentReceiving(content)() }
+        
+        return [select, dismiss]
     }
 }
 
-struct ContentFlowWitnesses<Content, Flow, Select> {
+struct ContentFlowWitnesses<Content, Flow, Select, Navigation> {
     
-    let contentWitness: (Content) -> AnyPublisher<Select, Never>
-    let flowWitness: (Flow) -> (Select) -> Void
+    let contentEmitting: (Content) -> AnyPublisher<Select, Never>
+    let contentReceiving: (Content) -> () -> Void
+    let flowEmitting: (Flow) -> AnyPublisher<Navigation?, Never>
+    let flowReceiving: (Flow) -> (Select) -> Void
 }
 
 import XCTest
@@ -56,7 +62,7 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         
         let select = makeSelect()
         let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
-        let (content, flow, cancellables) = bind(sut, scheduler)
+        let (content, flow, cancellables) = bindSelect(sut, scheduler)
         
         content.send(select)
         
@@ -71,10 +77,30 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         XCTAssertNotNil(cancellables)
     }
     
+    func test_flowNavigation_shouldCallContentOnNilNavigation() {
+        
+        let (sut, scheduler) = makeSUT(delay: .milliseconds(200))
+        let (content, flow, cancellables) = bindNavigation(sut, scheduler)
+
+        flow.send(nil)
+        
+        XCTAssertEqual(content.callCount, 0)
+        
+        scheduler.advance(by: .milliseconds(199))
+        XCTAssertEqual(content.callCount, 0)
+        
+        scheduler.advance(by: .milliseconds(1))
+        XCTAssertEqual(content.callCount, 1)
+
+        XCTAssertNotNil(cancellables)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ContentFlowBindingFactory
     private typealias Content = PassthroughSubject<Select, Never>
+    private typealias ContentSpy = CallSpy<Void, Void>
+    private typealias Flow = PassthroughSubject<Navigation?, Never>
     private typealias FlowSpy = CallSpy<Select, Void>
     
     private func makeSUT(
@@ -97,7 +123,7 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         return (sut, scheduler)
     }
     
-    private func bind(
+    private func bindSelect(
         _ sut: SUT,
         _ scheduler: TestSchedulerOf<DispatchQueue>
     ) -> (
@@ -106,19 +132,50 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         cancellables: Set<AnyCancellable>
     ) {
         let content = Content()
-        let flow = FlowSpy(stubs: [()])
+        let flow = FlowSpy(stubs: [(), ()])
         
         let cancellables = sut.bind(
             content: content,
             flow: flow,
-            witnesses: .init(
-                contentWitness: { $0.eraseToAnyPublisher() },
-                flowWitness: { flow in { flow.call(payload: $0) }}
-            )
+            witnesses: selectWitnesses
         )
         
         return (content, flow, cancellables)
     }
+    
+    private func bindNavigation(
+        _ sut: SUT,
+        _ scheduler: TestSchedulerOf<DispatchQueue>
+    ) -> (
+        content: ContentSpy,
+        flow: Flow,
+        cancellables: Set<AnyCancellable>
+    ) {
+        let content = ContentSpy(stubs: [(), ()])
+        let flow = Flow()
+        
+        let cancellables = sut.bind(
+            content: content,
+            flow: flow,
+            witnesses: navigationWitnesses
+        )
+        
+        return (content, flow, cancellables)
+    }
+    
+    private let selectWitnesses = ContentFlowWitnesses<Content, FlowSpy, Select, Navigation>(
+        contentEmitting: { $0.eraseToAnyPublisher() },
+        contentReceiving: { _ in {}},
+        flowEmitting: { _ in Empty().eraseToAnyPublisher() },
+        flowReceiving: { flow in { flow.call(payload: $0) }}
+    )
+    
+    private let navigationWitnesses = ContentFlowWitnesses<ContentSpy, Flow, Select, Navigation>(
+        contentEmitting: { _ in Empty().eraseToAnyPublisher() },
+        contentReceiving: { $0.call },
+        flowEmitting: { $0.eraseToAnyPublisher() },
+        flowReceiving: { _ in { _ in }}
+    )
     
     private struct Select: Equatable {
         
@@ -128,6 +185,18 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
     private func makeSelect(
         _ value: String = anyMessage()
     ) -> Select {
+        
+        return .init(value: value)
+    }
+    
+    private struct Navigation: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeNavigation(
+        _ value: String = anyMessage()
+    ) -> Navigation {
         
         return .init(value: value)
     }
