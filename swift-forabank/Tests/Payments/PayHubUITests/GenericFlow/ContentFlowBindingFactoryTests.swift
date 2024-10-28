@@ -7,58 +7,8 @@
 
 import Combine
 import CombineSchedulers
-import Foundation
-
-final class ContentFlowBindingFactory {
-    
-    private let delay: Delay
-    private let scheduler: AnySchedulerOf<DispatchQueue>
-    
-    init(
-        delay: Delay = .milliseconds(100),
-        scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        self.delay = delay
-        self.scheduler = scheduler
-    }
-    
-    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
-}
-
-extension ContentFlowBindingFactory {
-    
-    func bind<Content, Flow, Select, Navigation>(
-        content: Content,
-        flow: Flow,
-        witnesses: ContentFlowWitnesses<Content, Flow, Select, Navigation>
-    ) -> Set<AnyCancellable> {
-        
-        let select = witnesses.contentEmitting(content)
-            .delay(for: delay, scheduler: scheduler)
-            .sink { witnesses.flowReceiving(flow)($0) }
-        
-        let flowEmitting = witnesses.flowEmitting(flow)
-        let dismiss = flowEmitting
-            .prepend(nil)
-            .zip(flowEmitting)
-            .filter { $0.0 != nil && $0.1 == nil }
-            .delay(for: delay, scheduler: scheduler)
-            .sink { _ in witnesses.contentReceiving(content)() }
-        
-        return [select, dismiss]
-    }
-}
-
-struct ContentFlowWitnesses<Content, Flow, Select, Navigation> {
-    
-    let contentEmitting: (Content) -> AnyPublisher<Select, Never>
-    let contentReceiving: (Content) -> () -> Void
-    let flowEmitting: (Flow) -> AnyPublisher<Navigation?, Never>
-    let flowReceiving: (Flow) -> (Select) -> Void
-}
-
+import PayHubUI
 import XCTest
-import CombineSchedulers
 
 final class ContentFlowBindingFactoryTests: XCTestCase {
     
