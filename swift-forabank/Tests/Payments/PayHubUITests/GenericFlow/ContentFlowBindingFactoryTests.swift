@@ -29,17 +29,22 @@ extension ContentFlowBindingFactory {
     
     func bind<Content, Flow, Select>(
         content: Content,
-        contentWitness: @escaping (Content) -> AnyPublisher<Select, Never>,
         flow: Flow,
-        flowWitness: @escaping (Flow) -> (Select) -> Void
+        witnesses: ContentFlowWitnesses<Content, Flow, Select>
     ) -> Set<AnyCancellable> {
         
-        let select = contentWitness(content)
+        let select = witnesses.contentWitness(content)
             .delay(for: delay, scheduler: scheduler)
-            .sink { flowWitness(flow)($0) }
+            .sink { witnesses.flowWitness(flow)($0) }
         
         return [select]
     }
+}
+
+struct ContentFlowWitnesses<Content, Flow, Select> {
+    
+    let contentWitness: (Content) -> AnyPublisher<Select, Never>
+    let flowWitness: (Flow) -> (Select) -> Void
 }
 
 import XCTest
@@ -55,9 +60,11 @@ final class ContentFlowBindingFactoryTests: XCTestCase {
         let flow = CallSpy<Select, Void>(stubs: [()])
         let cancellables = sut.bind(
             content: content,
-            contentWitness: { $0.eraseToAnyPublisher() },
             flow: flow,
-            flowWitness: { flow in { flow.call(payload: $0) }}
+            witnesses: .init(
+                contentWitness: { $0.eraseToAnyPublisher() },
+                flowWitness: { flow in { flow.call(payload: $0) }}
+            )
         )
         
         content.send(select)
