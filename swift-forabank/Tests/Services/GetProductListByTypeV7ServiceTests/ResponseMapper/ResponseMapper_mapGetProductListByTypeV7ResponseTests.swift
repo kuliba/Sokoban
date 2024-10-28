@@ -15,7 +15,7 @@ final class ResponseMapper_mapGetProductListByTypeV7ResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.emptyData.utf8)),
-            getProductListByTypeV7InvalidError(dataString: String.emptyData)
+            .failure(.invalid(statusCode: 200, data: Data(String.emptyData.utf8)))
         )
     }
     
@@ -23,70 +23,40 @@ final class ResponseMapper_mapGetProductListByTypeV7ResponseTests: XCTestCase {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.errorData.utf8)),
-            getProductListByTypeV7InvalidError(dataString: String.errorData)
-        )
+            .failure(.invalid(statusCode: 200, data: Data(String.errorData.utf8))))
     }
     
     func test_map_returnServer404WithMessageOnDataWithError404() {
         
         XCTAssertNoDiff(
             map(statusCode: 200, data: Data(String.error404.utf8)),
-            getProductListByTypeV7ServerError(
-                statusCode: 404,
-                errorMessage: "404: Не найден запрос к серверу"
-            )
+            .failure(.server(statusCode: 404, errorMessage: "404: Не найден запрос к серверу"))
         )
     }
     
     func test_map_returnEmptyProductsOnEmptyList() throws {
-       
-        let result = try mapResult(Data(String.emptyList.utf8))
         
-        XCTAssertNoDiff(result, .init(list: [], serial: "04ba222dd6021a0e41582c669cb8e9a4"))
+        XCTAssertNoDiff(try mapResult(Data(String.emptyList.utf8)), .init(list: [], serial: "04ba222dd6021a0e41582c669cb8e9a4"))
     }
     
     func test_map_returnAccountOnAccountData() throws {
         
-        let results = try mapResult(json(for: .account))
-        var expectedResults: [Response] = [.init(list: .accounts, serial: "111")]
-        
-        assert([results], equals: &expectedResults)
+        XCTAssertNoDiff(try mapResult(json(for: .account)), .init(list: .accounts, serial: "111"))
     }
     
     func test_map_returnCardsOnCardsData() throws {
         
-        let results = try mapResult(json(for: .card))
-        var expectedResults: [Response] = [
-            .init(
-                list: .cards,
-                serial: "111"
-            )]
-        assert([results], equals: &expectedResults)
+        XCTAssertNoDiff(try mapResult(json(for: .card)), .init(list: .cards, serial: "111"))
     }
-
+    
     func test_map_returnDepositOnDepositData() throws {
         
-        let results = try mapResult(json(for: .deposit))
-        var expectedResults: [Response] = [
-            .init(
-                list: .deposits,
-                serial: "111")
-            ]
-
-        assert([results], equals: &expectedResults)
+        XCTAssertNoDiff(try mapResult(json(for: .deposit)), .init(list: .deposits, serial: "111"))
     }
     
     func test_map_returnLoanOnLoanData() throws {
         
-        let results = try mapResult(json(for: .loan))
-                
-        var expectedResults: [Response] = [
-            .init(
-                list: .loans,
-                serial: "111")
-            ]
-
-        assert([results], equals: &expectedResults)
+        XCTAssertNoDiff(try mapResult(json(for: .loan)), .init(list: .loans, serial: "111"))
     }
     
     // MARK: - Helpers
@@ -110,7 +80,7 @@ final class ResponseMapper_mapGetProductListByTypeV7ResponseTests: XCTestCase {
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) throws -> Response {
-
+        
         try ResponseMapper.mapGetProductListByTypeV7Response(data, httpURLResponse).get()
     }
     
@@ -119,13 +89,13 @@ final class ResponseMapper_mapGetProductListByTypeV7ResponseTests: XCTestCase {
         switch productType {
         case .account:
             return try Data(contentsOf: XCTUnwrap(accountJson))
-
+            
         case .card:
             return try Data(contentsOf: XCTUnwrap(cardJson))
-
+            
         case .deposit:
             return try Data(contentsOf: XCTUnwrap(depositJson))
-
+            
         case .loan:
             return try Data(contentsOf: XCTUnwrap(loanJson))
         }
@@ -135,25 +105,7 @@ final class ResponseMapper_mapGetProductListByTypeV7ResponseTests: XCTestCase {
         
         return Data(string.utf8)
     }
-    
-    private func getProductListByTypeV7InvalidError(dataString: String?) -> MappingResult {
         
-        guard let dataString else {
-            
-            return .failure(.invalid(statusCode: 200, data: Data()))
-        }
-        
-        return .failure(.invalid(statusCode: 200, data: Data(dataString.utf8)))
-    }
-    
-    private func getProductListByTypeV7ServerError(
-        statusCode: Int,
-        errorMessage: String
-    ) -> MappingResult {
-        
-        return .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-    }
-    
     private let accountJson = Bundle.module.url(forResource: "GetProductListByType_Account_Response", withExtension: "json")!
     private let cardJson = Bundle.module.url(forResource: "GetProductListByType_Card_Response", withExtension: "json")!
     private let depositJson = Bundle.module.url(forResource: "GetProductListByType_Deposit_Response", withExtension: "json")!
@@ -197,7 +149,7 @@ private extension String {
     }
 """
     static func createJson(with statusPC: String) -> Self {
-      
+        
         return
 """
         {
@@ -329,7 +281,7 @@ private extension ResponseMapper.GetProductListByTypeV7Data {
 }
 
 extension ResponseMapper.GetProductListByTypeV7Data.UniqueProperties {
-   
+    
     static func account() -> Self {
         
         .account(
