@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeDocumentButton.swift
+//  StickerViewFactory+makeDocumentButton.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 22.11.2023.
@@ -16,7 +16,7 @@ import Tagged
 typealias DocumentID = Tagged<_DocumentID, Int>
 enum _DocumentID {}
 
-extension RootViewModelFactory {
+extension StickerViewFactory {
     
     func makeDocumentButton(
         printFormType: RequestFactory.PrintFormType
