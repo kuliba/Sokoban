@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import UIPrimitives
 import PayHubUI
+import RxViewModel
+import UIPrimitives
 
 struct ContentView: View {
     
@@ -24,12 +25,50 @@ struct ContentView: View {
         .fullScreenCover(
             cover: model.fullScreen,
             dismiss: { model.event(.dismiss) },
-            content: {
+            content: { fullScreen in
                 
-                switch $0 {
-                case let .qr(qr):
-                    Button("c2b Subscribe") {
-                        
+                NavigationView {
+                    
+                    switch fullScreen {
+                    case let .qr(qr):
+                        RxWrapperView(model: qr.flow) { state, event in
+                            
+                            QRFlowView(
+                                state: state,
+                                event: event,
+                                contentView: {
+                                    
+                                    VStack {
+                                        
+                                        Text("Select scan result")
+                                            .foregroundColor(.secondary)
+                                            .padding(.vertical)
+                                        
+                                        Button("c2b Subscribe") {
+                                            
+                                            qr.content.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Button("Cancel") {
+                                            
+                                            // in the app QRModelWrapper has state case `cancelled` - which should be observed
+                                            model.event(.dismiss)
+                                        }
+                                        .foregroundColor(.red)
+                                    }
+                                    .navigationTitle("QR Scanner")
+                                },
+                                destinationView: {
+                                    
+                                    switch $0 {
+                                    case let .payments(payments):
+                                        Text("TBD: Payments View \(String(describing: payments))")
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }

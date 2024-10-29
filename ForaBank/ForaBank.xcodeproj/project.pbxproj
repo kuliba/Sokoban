@@ -1015,6 +1015,7 @@
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
 		2A649E0C2A1CE2F900B7EA8B /* RegularTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */; };
 		2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */; };
+		2A65AADD2CD12263001AB123 /* QRFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AADC2CD12263001AB123 /* QRFlowView.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
 		2A65D8AB2A333123003B3FEA /* TaxCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AA2A333123003B3FEA /* TaxCodes.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
@@ -4585,6 +4586,7 @@
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
 		2A649E0A2A1CE2F900B7EA8B /* RegularTextFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularTextFieldView.swift; sourceTree = "<group>"; };
 		2A649E0B2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldComponentTextFieldConfig+Extension.swift"; sourceTree = "<group>"; };
+		2A65AADC2CD12263001AB123 /* QRFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFlowView.swift; sourceTree = "<group>"; };
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
 		2A65D8AA2A333123003B3FEA /* TaxCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxCodes.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
@@ -10628,6 +10630,7 @@
 			children = (
 				2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */,
 				2A632C702CD1203100AF3B6B /* QRModel.swift */,
+				2A65AADC2CD12263001AB123 /* QRFlowView.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -20259,6 +20262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */,
+				2A65AADD2CD12263001AB123 /* QRFlowView.swift in Sources */,
 				2A632C6D2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift in Sources */,
 				2A30B09A2CCE2BA4006697E1 /* ContentView.swift in Sources */,
 				2A632C712CD1203100AF3B6B /* QRModel.swift in Sources */,
