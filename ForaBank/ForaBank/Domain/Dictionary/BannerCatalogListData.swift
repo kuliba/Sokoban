@@ -81,8 +81,10 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
             case .depositTransfer:
                 let action = try? container.decodeIfPresent(BannerActionDepositTransfer.self, forKey: .action)
                 self.action = action
+                
+            case .payment:
+                self.action = action
             }
-            
         } else {
             
             self.action = nil
@@ -110,6 +112,7 @@ enum BannerActionType: String, Codable, Equatable {
     case contact = "CONTACT_TRANSFER"
     case depositTransfer = "DEPOSIT_TRANSFER"
     case landing = "LANDING"
+    case payment = "HOUSING_AND_COMMUNAL_SERVICE"
 }
 
 class BannerAction: Codable, Equatable, Hashable {

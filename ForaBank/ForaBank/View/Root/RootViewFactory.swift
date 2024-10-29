@@ -17,13 +17,14 @@ typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryB
 typealias MakeRepeatButtonView = (@escaping () -> Void) -> RepeatButtonView?
 typealias MakeIconView = IconDomain.MakeIconView
 typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
+typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig) -> UserAccountView
 
-typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping () -> Void) -> MarketShowcaseWrapperView?
-
-typealias MakeNavigationOperationView = (@escaping() -> Void) -> any View
+typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
+typealias MakeOrderCard = () -> Void
+typealias MakePaymentByType = (String) -> Void
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
@@ -41,7 +42,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeNavigationOperationView: MakeNavigationOperationView
+    let makeAnywayFlowView: MakeAnywayFlowView
 }
 
 extension RootViewFactory {
@@ -69,7 +70,8 @@ extension RootViewFactory {
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView, 
+            makeAnywayFlowView: makeAnywayFlowView
         )
     }
 }
