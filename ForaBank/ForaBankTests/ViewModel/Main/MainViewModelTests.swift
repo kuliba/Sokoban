@@ -543,7 +543,7 @@ final class MainViewModelTests: XCTestCase {
     
     // MARK: - handleLandingAction
     
-    func test_handleLandingAction_shouldSetModalToLanding() {
+    func test_handleLandingAction_shouldSetDestinationToLanding() {
         
         let (sut, _) = makeSUT()
         let type = anyMessage()
