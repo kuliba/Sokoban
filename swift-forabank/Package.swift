@@ -1183,6 +1183,7 @@ private extension Target {
             .customDump,
             // internal modules
             .landingUIComponent,
+            .sharedConfigs
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )

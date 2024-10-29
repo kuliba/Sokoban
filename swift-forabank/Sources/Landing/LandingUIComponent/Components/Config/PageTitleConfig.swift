@@ -6,42 +6,21 @@
 //
 
 import SwiftUI
+import SharedConfigs
 
 public extension UILanding.PageTitle {
     
     struct Config {
         
-        public let title: Title
-        public let subtitle: Subtitle
-                
-        public struct Title {
-            
-            public let color: Color
-            public let font: Font
-            
-            public init(color: Color, font: Font) {
-                self.color = color
-                self.font = font
-            }
-        }
-        
-        public struct Subtitle {
-            
-            public let color: Color
-            public let font: Font
-            
-            public init(color: Color, font: Font) {
-                self.color = color
-                self.font = font
-            }
-        }
-        
+        public let title: TextConfig
+        public let subtitle: TextConfig
+                            
         func background(_ transparency: Bool) -> Color {
             
             transparency ? .clear : .white
         }
         
-        public init(title: Title, subtitle: Subtitle) {
+        public init(title: TextConfig, subtitle: TextConfig) {
             self.title = title
             self.subtitle = subtitle
         }

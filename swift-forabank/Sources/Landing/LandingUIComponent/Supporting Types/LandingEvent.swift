@@ -5,14 +5,13 @@
 //  Created by Igor Malyarov on 04.09.2023.
 //
 
-// TODO: - add cases for limits
-
 public enum LandingEvent: Equatable {
     
-    case card(Card)
-    case sticker(Sticker)
     case bannerAction(BannerAction)
+    case card(Card)
+    case goToBack
     case listVerticalRoundImageAction(ListVerticalRoundImageAction)
+    case sticker(Sticker)
 
     public enum Card: Equatable {
         

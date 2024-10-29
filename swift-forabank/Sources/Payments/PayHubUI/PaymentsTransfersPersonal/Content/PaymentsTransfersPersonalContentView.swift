@@ -8,10 +8,11 @@
 import PayHub
 import SwiftUI
 
-public struct PaymentsTransfersPersonalContentView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>: View
+public struct PaymentsTransfersPersonalContentView<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>: View
 where CategoryPickerView: View,
       OperationPickerView: View,
-      ToolbarView: View {
+      ToolbarView: View,
+      TransfersView: View {
     
     @ObservedObject private var content: Content
     
@@ -39,41 +40,19 @@ where CategoryPickerView: View,
                 factory.makeOperationPickerView(content.operationPicker)
             }
             
-            transfersView()
+            factory.makeTransfersView(content.transfers)
             
             factory.makeCategoryPickerView(content.categoryPicker)
         }
-        .padding(.top)
-        .padding(.horizontal)
-        .background(factory.makeToolbarView(content.toolbar))
+        .toolbar { factory.makeToolbarView(content.toolbar) }
     }
 }
 
 public extension PaymentsTransfersPersonalContentView {
     
-    typealias Content = PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar>
-    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView>
+    typealias Content = PaymentsTransfersPersonalContent<CategoryPicker, OperationPicker, Toolbar, Transfers>
+    typealias Factory = PaymentsTransfersPersonalViewFactory<CategoryPicker, CategoryPickerView, OperationPicker, OperationPickerView, Toolbar, ToolbarView, Transfers, TransfersView>
     typealias Config = PaymentsTransfersPersonalViewConfig
-}
-
-private extension PaymentsTransfersPersonalContentView {
-    
-    func transfersView() -> some View {
-        
-        VStack(spacing: 32) {
-            
-            ZStack {
-                
-                Color.black.opacity(0.75)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                
-                Text("TBD: Transfers")
-                    .foregroundColor(.white)
-                    .font(.headline.bold())
-            }
-            .frame(height: 124)
-        }
-    }
 }
 
 // MARK: - Previews
@@ -99,6 +78,22 @@ private extension PaymentsTransfersPersonalContentView {
             makeToolbarView: {
                 
                 Text("Toolbar \(String(describing: $0))")
+            },
+            makeTransfersView: { transfers in
+                
+                VStack(spacing: 32) {
+                    
+                    ZStack {
+                        
+                        Color.black.opacity(0.75)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        
+                        Text("TBD: Transfers \(String(describing: transfers))")
+                            .foregroundColor(.white)
+                            .font(.headline.bold())
+                    }
+                    .frame(height: 124)
+                }
             }
         ),
         config: .preview
@@ -108,7 +103,8 @@ private extension PaymentsTransfersPersonalContentView {
 private extension PaymentsTransfersPersonalContent
 where CategoryPicker == PreviewCategoryPicker,
       OperationPicker == PreviewPayHub,
-      Toolbar == PreviewToolbar {
+      Toolbar == PreviewToolbar,
+      Transfers == PreviewTransfers {
     
     static var preview: PaymentsTransfersPersonalContent {
         
@@ -116,6 +112,7 @@ where CategoryPicker == PreviewCategoryPicker,
             categoryPicker: .init(),
             operationPicker: .init(),
             toolbar: .init(),
+            transfers: .init(),
             reload: {}
         )
     }
@@ -126,3 +123,5 @@ private final class PreviewCategoryPicker {}
 private final class PreviewPayHub {}
 
 private final class PreviewToolbar {}
+
+private final class PreviewTransfers {}
