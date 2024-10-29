@@ -73,5 +73,6 @@ public struct GetBannerCatalogListResponse: Equatable {
         case contact(String)
         case depositTransfer(String)
         case landing(String)
+        case payment(String)
     }
 }
