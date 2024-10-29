@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
+import Foundation
 import PayHubUI
 
 extension ContentViewDomain.Flow {
@@ -17,8 +19,17 @@ extension ContentViewDomain.Flow {
             getNavigation: { select, notify, completion in
                 
                 switch select {
+                case let .qrNavigation(qrNavigation):
+                    completion(.qrNavigation(qrNavigation))
+                    
                 case .scanQR:
-                    completion(.qr(qrComposer.compose()))
+                    let qr = qrComposer.compose()
+                    let cancellable = qr.flow.$state
+                        .compactMap { $0.navigation }
+                        .delay(for: .milliseconds(100), scheduler: DispatchQueue.main)
+                        .sink { notify(.select(.qrNavigation($0))) }
+                    
+                    completion(.qr(Node(model: qr, cancellable: cancellable)))
                 }
             },
             scheduler: .main,

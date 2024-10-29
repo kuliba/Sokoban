@@ -23,7 +23,8 @@ struct ContentViewFullScreenView: View {
                         
                         Color.clear
                         
-                        QRBinderView(binder: binder)
+                        QRContentView(model: binder.content)
+                            .navigationTitle("QR Scanner")
                     }
                     
                     Button("Cancel* - see print") {
