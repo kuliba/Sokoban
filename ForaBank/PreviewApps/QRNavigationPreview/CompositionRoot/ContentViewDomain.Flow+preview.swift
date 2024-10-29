@@ -11,18 +11,16 @@ extension ContentViewDomain.Flow {
     
     static var preview: ContentViewDomain.Flow {
         
-        let qrComposer = QRBinderComposer<QRNavigation, QRModel, QRResult>.preview
+        let qrComposer: QRBinderComposer<QRNavigation, QRModel, QRResult> = .preview
         
         let composer = ContentViewDomain.Composer(
-            microServices: .init(
-                getNavigation: { select, notify, completion in
-                    
-                    switch select {
-                    case .scanQR:
-                        completion(.qr(qrComposer.compose()))
-                    }
+            getNavigation: { select, notify, completion in
+                
+                switch select {
+                case .scanQR:
+                    completion(.qr(qrComposer.compose()))
                 }
-            ),
+            },
             scheduler: .main,
             interactiveScheduler: .global(qos: .userInteractive)
         )
