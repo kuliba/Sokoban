@@ -15,7 +15,7 @@ struct QRBinderGetNavigationComposerMicroServices<Payments> {
 extension QRBinderGetNavigationComposerMicroServices {
     
     typealias MakePayments = (MakePaymentsPayload) -> Payments
-
+    
     enum MakePaymentsPayload: Equatable {
         
         case c2bSubscribe(URL)
@@ -37,11 +37,12 @@ extension QRBinderGetNavigationComposer {
     
     func getNavigation(
         qrResult: QRResult,
-        completion: @escaping (QRNavigation) -> Void
+        completion: @escaping (Navigation) -> Void
     ) {
         switch qrResult {
         case let .c2bSubscribeURL(url):
-            _ = microServices.makePayments(.c2bSubscribe(url))
+            let payments = microServices.makePayments(.c2bSubscribe(url))
+            completion(.payments(payments))
             
         default:
             fatalError()
@@ -49,11 +50,12 @@ extension QRBinderGetNavigationComposer {
     }
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+    typealias Navigation = QRNavigation<Payments>
+}
+
+enum QRNavigation<Payments> {
     
-    enum QRNavigation {
-        
-        case payments(Payments)
-    }
+    case payments(Payments)
 }
 
 import XCTest
@@ -72,7 +74,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     
     // MARK: - c2bSubscribeURL
     
-    func test_getNavigation_shouldCallMakePaymentsOnC2BSubscribeURL() {
+    func test_getNavigation_shouldCallMakePaymentsWithURLOnC2BSubscribe() {
         
         let url = anyURL()
         let (sut, spies) = makeSUT()
@@ -82,11 +84,22 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
         XCTAssertNoDiff(spies.makePayments.payloads, [.c2bSubscribe(url)])
     }
     
+    func test_getNavigation_shouldDeliverPaymentsOnC2BSubscribe() {
+        
+        let payments = makePaymentsModel()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .c2bSubscribeURL(anyURL()),
+            toDeliver: .payments(payments)
+        )
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
+    private typealias SUT = QRBinderGetNavigationComposer<Operator, Provider, PaymentsModel, QRCode, QRMapping, Source>
     private typealias MakePaymentsPayload = SUT.MicroServices.MakePaymentsPayload
-    private typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
+    private typealias MakePayments = CallSpy<MakePaymentsPayload, PaymentsModel>
     
     private struct Spies {
         
@@ -94,7 +107,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     }
     
     private func makeSUT(
-        payments: Payments = .init(),
+        payments: PaymentsModel = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -173,7 +186,49 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private final class Payments {}
+    private final class PaymentsModel {}
+    
+    private func makePaymentsModel() -> PaymentsModel {
+        
+        return .init()
+    }
+    
+    private enum EquatableNavigation: Equatable {
+        
+        case payments(ObjectIdentifier)
+    }
+    
+    private func equatable(
+        _ navigation: SUT.Navigation
+    ) -> EquatableNavigation {
+        
+        switch navigation {
+        case let .payments(payments):
+            return .payments(.init(payments))
+        }
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with qrResult: SUT.QRResult,
+        toDeliver expectedNavigation: SUT.Navigation,
+        on action: () -> Void = {},
+        timeout: TimeInterval = 1.0,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getNavigation(qrResult: qrResult) {
+            
+            XCTAssertNoDiff(self.equatable($0), self.equatable(expectedNavigation), "Expected \(expectedNavigation), but got \($0) instead.", file: file, line: line)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
+    }
 }
 
 // MARK: - DSL
