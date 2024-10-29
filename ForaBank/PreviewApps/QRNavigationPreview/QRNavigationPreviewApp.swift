@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct QRNavigationPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            ContentView(model: .preview)
         }
     }
 }
