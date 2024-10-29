@@ -2087,6 +2087,7 @@ private extension Target {
     static let getProductListByTypeV7Service = target(
         name: .getProductListByTypeV7Service,
         dependencies: [
+            .foraTools,
             .remoteServices
         ],
         path: "Sources/Services/\(String.getProductListByTypeV7Service)"
@@ -2101,7 +2102,13 @@ private extension Target {
             .urlRequestFactory,
             .getProductListByTypeV7Service
         ],
-        path: "Tests/Services/\(String.getProductListByTypeV7ServiceTests)"
+        path: "Tests/Services/\(String.getProductListByTypeV7ServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
     )
 
 
