@@ -40,14 +40,7 @@ struct ContentView: View {
                                     
                                     VStack {
                                         
-                                        Text("Select scan result")
-                                            .foregroundColor(.secondary)
-                                            .padding(.vertical)
-                                        
-                                        Button("c2b Subscribe") {
-                                            
-                                            qr.content.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
-                                        }
+                                        QRContentView(model: qr.content)
                                         
                                         Spacer()
                                         
