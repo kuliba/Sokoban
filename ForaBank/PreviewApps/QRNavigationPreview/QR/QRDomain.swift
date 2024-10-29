@@ -12,8 +12,6 @@ typealias QRDomain = PayHubUI.QRDomain<QRNavigation, QRModel, QRResult>
 
 typealias QRNavigation = PayHubUI.QRNavigation<Payments>
 
-final class Payments {}
-
 typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
 
 struct Operator: Equatable {}

@@ -57,7 +57,7 @@ struct ContentView: View {
                                     
                                     switch $0 {
                                     case let .payments(payments):
-                                        Text("TBD: Payments View \(String(describing: payments))")
+                                        PaymentsView(model: payments)
                                     }
                                 }
                             )
