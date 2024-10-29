@@ -52,6 +52,7 @@ let package = Package(
         .cardStatementAPI,
         .svCardLimitAPI,
         .getBannerCatalogListAPI,
+        .getBannersMyProductListService,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -194,6 +195,8 @@ let package = Package(
         .svCardLimitAPITests,
         .getBannerCatalogListAPI,
         .getBannerCatalogListAPITests,
+        .getBannersMyProductListService,
+        .getBannersMyProductListServiceTests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -815,6 +818,13 @@ private extension Product {
         name: .getBannerCatalogListAPI,
         targets: [
             .getBannerCatalogListAPI,
+        ]
+    )
+    
+    static let getBannersMyProductListService = library(
+        name: .getBannersMyProductListService,
+        targets: [
+            .getBannersMyProductListService
         ]
     )
     
@@ -1806,7 +1816,27 @@ private extension Target {
         path: "Tests/Services/\(String.getBannerCatalogListAPITests)"
         //TODO: add resources
     )
-    
+
+    static let getBannersMyProductListService = target(
+        name: .getBannersMyProductListService,
+        dependencies: [
+            .remoteServices,
+            .foraTools
+        ],
+        path: "Sources/Services/\(String.getBannersMyProductListService)"
+    )
+    static let getBannersMyProductListServiceTests = testTarget(
+        name: .getBannersMyProductListServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getBannersMyProductListService,
+            .remoteServices
+        ],
+        path: "Tests/Services/\(String.getBannersMyProductListServiceTests)"
+    )
+
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -3249,6 +3279,10 @@ private extension Target.Dependency {
         name: .getBannerCatalogListAPI
     )
     
+    static let getBannersMyProductListService = byName(
+        name: .getBannersMyProductListService
+    )
+    
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
     )
@@ -3577,6 +3611,9 @@ private extension String {
     
     static let getBannerCatalogListAPI = "GetBannerCatalogListAPI"
     static let getBannerCatalogListAPITests = "GetBannerCatalogListAPITests"
+    
+    static let getBannersMyProductListService = "GetBannersMyProductListService"
+    static let getBannersMyProductListServiceTests = "GetBannersMyProductListServiceTests"
     
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"

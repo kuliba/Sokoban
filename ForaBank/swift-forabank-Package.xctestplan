@@ -571,6 +571,13 @@
         "identifier" : "CollateralLoanLandingSaveConsentsBackendTests",
         "name" : "CollateralLoanLandingSaveConsentsBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetBannersMyProductListServiceTests",
+        "name" : "GetBannersMyProductListServiceTests"
+      }
     }
   ],
   "version" : 1
