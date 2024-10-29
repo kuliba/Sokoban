@@ -102,6 +102,7 @@ extension Services {
             case getSvgImageList
             case getVerificationCode
             case getAuthorizedZoneClientInformData
+            case getNotAuthorizedZoneClientInformData
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
@@ -376,6 +377,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .getAuthorizedZoneClientInformData
+    )
+    
+    static let getNotAuthorizedZoneClientInform: Self = .init(
+        pathPrefix: .dict,
+        version: .v1,
+        serviceName: .getNotAuthorizedZoneClientInformData
     )
     
     static let makeDeleteBankDefault: Self = .init(

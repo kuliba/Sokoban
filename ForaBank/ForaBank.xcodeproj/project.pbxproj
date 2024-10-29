@@ -3205,6 +3205,8 @@
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
 		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
+		EC7A0A262CC9350300FA652F /* СlientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = EC7A0A252CC9350300FA652F /* СlientInformList */; };
+		ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
 		ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */; };
@@ -6700,6 +6702,7 @@
 		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
+		ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -10111,6 +10114,7 @@
 				8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */,
 				83CC9D2D2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift */,
 				ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */,
+				ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -21263,6 +21267,7 @@
 				0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */,
 				68FE3986286A878B0026CBD7 /* GIBDDFineDetailsView+Legacy.swift in Sources */,
 				2A1E76B62AEE9B2500B33AF7 /* CVVPINJSONMaker.swift in Sources */,
+				ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */,
 				775875472798C87B0080115D /* Option.swift in Sources */,
 				2ACFD6512C5CC700003F08AE /* QRModelWrapper.swift in Sources */,
 				2ACFD6692C5CE84F003F08AE /* QRScanResultMapperMicroServices.swift in Sources */,
