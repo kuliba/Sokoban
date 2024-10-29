@@ -11,13 +11,16 @@ import Foundation
 
 final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
     
+    private let makeQRModel: MakeQRScannerModel
     private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
+        makeQRModel: @escaping MakeQRScannerModel,
         model: Model,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
+        self.makeQRModel = makeQRModel
         self.model = model
         self.scheduler = scheduler
     }
@@ -34,12 +37,13 @@ extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesCompos
             makeDetail: { self.makeDetail(notify: $0) },
             makeLatest: { self.makeLatest(latest: $0, notify: $1) },
             makeMeToMe: { self.makeMeToMe(notify: $0) },
+            makeScanQR: { self.makeScanQR(notify: $0) },
             makeSource: { self.makeSource(source: $0, notify: $1) }
         )
     }
     
-    typealias Event = PaymentsTransfersPersonalTransfersDomain.FlowEvent
-    typealias Notify = (Event) -> Void
+    typealias NotifyEvent = PaymentsTransfersPersonalTransfersDomain.NotifyEvent
+    typealias Notify = (NotifyEvent) -> Void
     
     typealias NanoServices = PaymentsTransfersPersonalTransfersNavigationComposerNanoServices
 }
@@ -114,10 +118,21 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             source: .latestPayment(latest.id),
             scheduler: scheduler
         )
-        
         let cancellables = bind(wrapper.paymentsViewModel, using: notify)
         
         return .init(model: wrapper, cancellables: cancellables)
+    }
+    
+    func makeScanQR(
+        notify: @escaping Notify
+    ) -> Node<QRModel> {
+        
+        // openScanner
+        // PaymentsTransfersViewModel.swift:173
+        let scanQR = makeQRModel()
+        let cancellable = bind(scanQR, using: notify)
+        
+        return .init(model: scanQR, cancellable: cancellable)
     }
     
     func makeSource(
@@ -207,7 +222,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .compactMap(\.scanQR)
             .handleEvents(receiveOutput: { _ in notify(.dismiss) })
             .delay(for: .milliseconds(800), scheduler: scheduler)
-            .sink { _ in notify(.select(.scanQR)) }
+            .sink { _ in notify(.select(.qr(.scan))) }
         
         let contactAbroad = share
             .compactMap(\.contactAbroad)
@@ -235,7 +250,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
                 //    )
                 let cancellables = self.bind($0, using: notify)
                 
-                notify(.receive(.successMeToMe(.init(
+                notify(.select(.successMeToMe(.init(
                     model: $0,
                     cancellables: cancellables
                 ))))
@@ -246,7 +261,7 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .sink { _ in
                 //    makeAlert("Перевод выполнен")
                 //    self.event(.dismiss(.modal))
-                notify(.receive(.alert("Перевод выполнен")))
+                notify(.select(.alert("Перевод выполнен")))
             }
         
         let closeBottomSheet = share
@@ -286,6 +301,32 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
             .sink { _ in notify(.dismiss) }
         
         return [close, `repeat`]
+    }
+    
+    private func bind(
+        _ scanQR: QRModel,
+        using notify: @escaping Notify
+    ) -> AnyCancellable {
+        
+        // PaymentsTransfersViewModel.bind(_:)
+        // PaymentsTransfersViewModel.swift:1567
+        return scanQR.$state
+            .compactMap { $0 }
+            .debounce(for: 0.1, scheduler: scheduler)
+            .sink {
+                
+                switch $0 {
+                case .cancelled:
+                    notify(.dismiss)
+                    
+                case .inflight:
+                    // no need in inflight case - flow would flip it state isLoading to true on any select
+                    break
+                    
+                case let .qrResult(qrResult):
+                    notify(.select(.qr(.result(qrResult))))
+                }
+            }
     }
 }
 
