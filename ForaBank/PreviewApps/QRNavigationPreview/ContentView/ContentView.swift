@@ -26,7 +26,6 @@ struct ContentView: View {
             }
             .fullScreenCover(
                 cover: model.fullScreen,
-                dismiss: { model.event(.dismiss) },
                 content: ContentViewFullScreenView.init
             )
             .navigationDestination(
