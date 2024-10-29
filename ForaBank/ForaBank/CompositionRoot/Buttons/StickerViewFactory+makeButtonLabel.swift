@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeButtonLabel.swift
+//  StickerViewFactory+makeButtonLabel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 22.11.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension RootViewModelFactory {
+extension StickerViewFactory {
     
     func makeSuccessButtonLabel(
         option: Payments.ParameterSuccessOptionButtons.Option
