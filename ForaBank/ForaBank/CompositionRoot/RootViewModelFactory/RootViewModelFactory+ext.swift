@@ -460,6 +460,31 @@ extension RootViewModelFactory {
                 }
         }
         
+        let _createGetNotAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
+        )
+        
+        let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (Alerts?) -> Void) in
+            
+            _createGetNotAuthorizedZoneClientInformData(()) { result in
+                
+                switch result {
+                case .failure:
+                    completion(nil)
+                
+                case let .success(response):
+                
+                    let list = response.list.compactMap { $0 }
+                }
+                
+            }
+        }
+        
+        createGetNotAuthorizedZoneClientInformData { _ in
+            
+        }
+        
         return make(
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
