@@ -13,10 +13,6 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        Text("TBD: Payments View \(String(describing: model))")
+        Text("TBD: Payments View for \(model.url.relativeString)")
     }
-}
-
-#Preview {
-    PaymentsView(model: .init())
 }

@@ -30,7 +30,13 @@ extension QRBinderComposer {
         
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
-                makePayments: { payload in Payments() }
+                makePayments: {
+                
+                    switch $0 {
+                    case let .c2bSubscribe(url):
+                        Payments(url: url)
+                    }
+                }
             )
         )
         
