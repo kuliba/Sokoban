@@ -41,7 +41,7 @@ extension ClientInformListConfig {
             horizontal: 20,
             vertical: 12
         ),
-        image: nil,
-        rowImage: nil
+        image: .cardPlaceholder,
+        rowImage: .cardPlaceholder
     )
 }
