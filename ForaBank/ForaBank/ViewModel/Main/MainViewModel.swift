@@ -1847,6 +1847,8 @@ extension MainViewModel {
         switch landingEvent {
         case let .card(event): return landingAction(for: event)()
         case let .sticker(event): return landingAction(for: event)()
+        case .goToBack:
+            return handleCloseLinkAction()
         default: return {}()
         }
     }
