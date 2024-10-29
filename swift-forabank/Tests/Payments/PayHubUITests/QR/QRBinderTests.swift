@@ -1,10 +1,11 @@
 //
 //  QRBinderTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import PayHub
 import PayHubUI
 import XCTest
@@ -96,7 +97,27 @@ class QRBinderTests: XCTestCase {
         }
     }
     
-    final class QR {}
+    final class QR {
+        
+        private let subject = PassthroughSubject<QRResult, Never>()
+        
+        private(set) var callCount = 0
+        
+        var publisher: AnyPublisher<QRResult, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ value: QRResult) {
+            
+            self.subject.send(value)
+        }
+        
+        func receive() {
+            
+            callCount += 1
+        }
+    }
     
     func makeQR() -> QR {
         
