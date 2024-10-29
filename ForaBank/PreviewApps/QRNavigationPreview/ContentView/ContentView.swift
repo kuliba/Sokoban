@@ -25,46 +25,7 @@ struct ContentView: View {
         .fullScreenCover(
             cover: model.fullScreen,
             dismiss: { model.event(.dismiss) },
-            content: { fullScreen in
-                
-                NavigationView {
-                    
-                    switch fullScreen {
-                    case let .qr(qr):
-                        RxWrapperView(model: qr.flow) { state, event in
-                            
-                            QRFlowView(
-                                state: state,
-                                event: event,
-                                contentView: {
-                                    
-                                    VStack {
-                                        
-                                        QRContentView(model: qr.content)
-                                        
-                                        Spacer()
-                                        
-                                        Button("Cancel") {
-                                            
-                                            // in the app QRModelWrapper has state case `cancelled` - which should be observed
-                                            model.event(.dismiss)
-                                        }
-                                        .foregroundColor(.red)
-                                    }
-                                    .navigationTitle("QR Scanner")
-                                },
-                                destinationView: {
-                                    
-                                    switch $0 {
-                                    case let .payments(payments):
-                                        PaymentsView(model: payments)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+            content: ContentViewFullScreenView.init
         )
     }
 }
