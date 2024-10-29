@@ -23,7 +23,7 @@ struct ContentViewFullScreenView: View {
                         
                         Color.clear
                         
-                        QRView(binder: binder)
+                        QRBinderView(binder: binder)
                     }
                     
                     Button("Cancel* - see print") {

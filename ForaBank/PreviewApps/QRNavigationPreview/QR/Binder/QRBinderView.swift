@@ -1,5 +1,5 @@
 //
-//  QRView.swift
+//  QRBinderView.swift
 //  QRNavigationPreview
 //
 //  Created by Igor Malyarov on 29.10.2024.
@@ -8,7 +8,7 @@
 import RxViewModel
 import SwiftUI
 
-struct QRView: View {
+struct QRBinderView: View {
     
     let binder: QRDomain.Binder
     
