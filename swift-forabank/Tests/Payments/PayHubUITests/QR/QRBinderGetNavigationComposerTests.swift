@@ -37,6 +37,7 @@ extension QRBinderGetNavigationComposer {
     
     func getNavigation(
         qrResult: QRResult,
+        notify: @escaping Notify,
         completion: @escaping (Navigation) -> Void
     ) {
         switch qrResult {
@@ -49,6 +50,9 @@ extension QRBinderGetNavigationComposer {
         }
     }
     
+    typealias FlowDomain = PayHubUI.FlowDomain<QRResult, Navigation>
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
+    
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Navigation = QRNavigation<Payments>
 }
@@ -58,9 +62,10 @@ enum QRNavigation<Payments> {
     case payments(Payments)
 }
 
+import PayHubUI
 import XCTest
 
-final class QRBinderGetNavigationComposerTests: XCTestCase {
+final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     // MARK: - init
     
@@ -86,7 +91,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     
     func test_getNavigation_shouldDeliverPaymentsOnC2BSubscribe() {
         
-        let payments = makePaymentsModel()
+        let payments = makePayments()
         
         expect(
             makeSUT(payments: payments).sut,
@@ -97,9 +102,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderGetNavigationComposer<Operator, Provider, PaymentsModel, QRCode, QRMapping, Source>
-    private typealias MakePaymentsPayload = SUT.MicroServices.MakePaymentsPayload
-    private typealias MakePayments = CallSpy<MakePaymentsPayload, PaymentsModel>
+    private typealias SUT = NavigationComposer
     
     private struct Spies {
         
@@ -107,7 +110,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     }
     
     private func makeSUT(
-        payments: PaymentsModel = .init(),
+        payments: Payments = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -126,92 +129,10 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
         return (sut, spies)
     }
     
-    private struct Operator: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeOperator(
-        _ value: String = anyMessage()
-    ) -> Operator {
-        
-        return .init(value: value)
-    }
-    
-    private struct Provider: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeProvider(
-        _ value: String = anyMessage()
-    ) -> Provider {
-        
-        return .init(value: value)
-    }
-    
-    private struct QRCode: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeQRCode(
-        _ value: String = anyMessage()
-    ) -> QRCode {
-        
-        return .init(value: value)
-    }
-    
-    private struct QRMapping: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeQRMapping(
-        _ value: String = anyMessage()
-    ) -> QRMapping {
-        
-        return .init(value: value)
-    }
-    
-    private struct Source: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeSource(
-        _ value: String = anyMessage()
-    ) -> Source {
-        
-        return .init(value: value)
-    }
-    
-    private final class PaymentsModel {}
-    
-    private func makePaymentsModel() -> PaymentsModel {
-        
-        return .init()
-    }
-    
-    private enum EquatableNavigation: Equatable {
-        
-        case payments(ObjectIdentifier)
-    }
-    
-    private func equatable(
-        _ navigation: SUT.Navigation
-    ) -> EquatableNavigation {
-        
-        switch navigation {
-        case let .payments(payments):
-            return .payments(.init(payments))
-        }
-    }
-    
     private func expect(
         _ sut: SUT,
         with qrResult: SUT.QRResult,
-        toDeliver expectedNavigation: SUT.Navigation,
+        toDeliver expectedNavigation: Navigation,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -219,7 +140,7 @@ final class QRBinderGetNavigationComposerTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.getNavigation(qrResult: qrResult) {
+        sut.getNavigation(qrResult: qrResult, notify: { _ in }) {
             
             XCTAssertNoDiff(self.equatable($0), self.equatable(expectedNavigation), "Expected \(expectedNavigation), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
@@ -238,6 +159,6 @@ private extension QRBinderGetNavigationComposer {
     func getNavigation(
         qrResult: QRResult
     ) {
-        self.getNavigation(qrResult: qrResult, completion: { _ in })
+        self.getNavigation(qrResult: qrResult, notify: { _ in }, completion: { _ in })
     }
 }
