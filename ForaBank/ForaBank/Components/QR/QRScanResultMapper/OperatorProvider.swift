@@ -5,10 +5,6 @@
 //  Created by Igor Malyarov on 02.08.2024.
 //
 
-enum OperatorProvider<Operator, Provider> {
-    
-    case `operator`(Operator)
-    case provider(Provider)
-}
+import PayHub
 
-extension OperatorProvider: Equatable where Operator: Equatable, Provider: Equatable {}
+typealias OperatorProvider = PayHub.OperatorProvider
