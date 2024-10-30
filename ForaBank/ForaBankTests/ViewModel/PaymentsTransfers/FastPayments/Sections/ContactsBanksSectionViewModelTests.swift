@@ -538,12 +538,13 @@ extension ContactsBanksSectionViewModel {
     
     func typeAndWait(
         _ text: String?,
+        timeout: TimeInterval = 0.5,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
         let searchTextField = try XCTUnwrap(searchTextField, file: file, line: line)
         searchTextField.setText(to: text)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
