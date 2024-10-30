@@ -750,9 +750,12 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-            
-        default:
-            break
+          
+        case let payload:
+#warning("need change after analyst creates a new action type")
+            if payload.type == .payment {
+                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
+            }
         }
     }
     
@@ -1800,7 +1803,8 @@ extension MainViewModel {
                         config: .default,
                         landingActions: landingActions(for:),
                         outsideAction: {_ in }, 
-                        orderCard: {})
+                        orderCard: {}, 
+                        payment: {_ in })
                     
                     route.destination = .landing(viewModel, false)
                 }
@@ -1845,6 +1849,8 @@ extension MainViewModel {
         switch landingEvent {
         case let .card(event): return landingAction(for: event)()
         case let .sticker(event): return landingAction(for: event)()
+        case .goToBack:
+            return handleCloseLinkAction()
         default: return {}()
         }
     }

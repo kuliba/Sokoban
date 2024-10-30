@@ -67,11 +67,6 @@ private extension ResponseMapper {
             let title: String?
             let svgImage: String?
             let text: String?
-            
-            enum CodingKeys: String, CodingKey {
-                case category, title, text
-                case svgImage = "svg_image"
-            }
         }
     }
 }

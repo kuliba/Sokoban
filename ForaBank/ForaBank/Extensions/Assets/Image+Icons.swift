@@ -501,6 +501,7 @@ public extension Image {
     static var ic24CreditCard: Image { Image(#function) }
     static var ic24CreditCardValidity: Image { Image(#function) }
     static var ic24CreditColor: Image { Image(#function) }
+    static var ic24CreditPayment: Image { Image(#function) }
     static var ic24Crop: Image { Image(#function) }
     static var ic24Crosshair: Image { Image(#function) }
     static var ic24Crosshair1: Image { Image(#function) }
@@ -546,6 +547,7 @@ public extension Image {
     static var ic24FilePlus: Image { Image(#function) }
     static var ic24FileText: Image { Image(#function) }
     static var ic24FilePluseColor: Image { Image(#function) }
+    static var ic24FilePluseColorProcent: Image { Image(#function) }
     static var ic24Film: Image { Image(#function) }
     static var ic24Filter: Image { Image(#function) }
     static var ic24FireColor: Image { Image(#function) }
@@ -591,6 +593,7 @@ public extension Image {
     static var ic24Kids: Image { Image(#function) }
     static var ic24Layers: Image { Image(#function) }
     static var ic24Layout: Image { Image(#function) }
+    static var ic24Leaf: Image { Image(#function) }
     static var ic24LifeBuoy: Image { Image(#function) }
     static var ic24Limits: Image { Image(#function) }
     static var ic24Link: Image { Image(#function) }
@@ -810,7 +813,6 @@ public extension Image {
     static var ic32Location: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
     static var ic32Office: Image { Image(#function) }
-    static var ic32Rectangle: Image { Image(#function) }
     static var ic32Sbp: Image { Image(#function) }
     static var ic32SbpLine: Image { Image(#function) }
     static var ic32Search: Image { Image(#function) }

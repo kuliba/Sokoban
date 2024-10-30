@@ -63,11 +63,7 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory(
-                    model: viewModel.model,
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    logger: LoggerAgent()
-                ).makeNavigationOperationView(
+                navigationOperationView: viewModel.stickerViewFactory.makeNavigationOperationView(
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
@@ -113,7 +109,7 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.openPayment).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -168,9 +164,17 @@ struct RootView: View {
             
         case .paymentSticker:
             
-            AnyView(
-                rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
-            )
+            NavigationView {
+                
+                viewModel.stickerViewFactory.makeNavigationOperationView(
+                    dismissAll: viewModel.rootActions.dismissAll
+                )()
+                    .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: Button(action: viewModel.resetLink) { Image("ic24ChevronLeft") })
+                    .foregroundColor(.textSecondary)
+            }
         }
     }
 }
@@ -1042,7 +1046,8 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy,
+                fastPaymentsFactory: .legacy, 
+                stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
@@ -1090,7 +1095,8 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:config:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:),
+                        makeAnywayFlowView: { _ in fatalError() }
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -1104,8 +1110,8 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
-            makeMarketShowcaseView: { _,_  in .none },
-            makeNavigationOperationView: { _ in EmptyView() }
+            makeMarketShowcaseView: { _,_,_   in .none },
+            makeAnywayFlowView: { _ in fatalError() }
         )
     }
 }

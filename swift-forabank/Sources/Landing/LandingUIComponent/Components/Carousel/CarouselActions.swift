@@ -13,17 +13,20 @@ public struct CarouselActions {
     let goToMain: () -> Void
     let orderCard: () -> Void
     let landing: (String?) -> Void
+    let payment: (String) -> Void
     
     public init(
         openUrl: @escaping (String) -> Void,
         goToMain: @escaping () -> Void,
         orderCard: @escaping () -> Void,
-        landing: @escaping (String?) -> Void
+        landing: @escaping (String?) -> Void,
+        payment: @escaping (String) -> Void
     ) {
         self.openUrl = openUrl
         self.goToMain = goToMain
         self.orderCard = orderCard
         self.landing = landing
+        self.payment = payment
     }
 }
 
@@ -68,7 +71,11 @@ extension UILanding.Carousel {
             switch itemAction.type {
             case "LANDING":
                 return { actions.landing(itemAction.target) }
-                
+
+#warning("need change after analyst creates a new action type")
+            case "HOUSING_AND_COMMUNAL_SERVICE":
+                return { actions.payment(itemAction.type) }
+
             case "cardOrderList":
                 return { actions.orderCard() }
                 
