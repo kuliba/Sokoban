@@ -31,7 +31,9 @@ extension ContentView {
                 QRButtonView(
                     state: $0,
                     event: $1,
-                    factory: .init()
+                    factory: .init(
+                        makeFullScreenCoverContent: QRButtonFullScreenView.init
+                    )
                 )
             }
         )

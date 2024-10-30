@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct QRButtonView: View {
+struct QRButtonView<FullScreenCoverContent>: View
+where FullScreenCoverContent: View {
     
     let state: State
     let event: (Event) -> Void
@@ -24,7 +25,7 @@ struct QRButtonView: View {
         .fullScreenCover(
             cover: state.fullScreen,
             dismiss: { event(.dismiss) },
-            content: QRButtonFullScreenView.init
+            content: factory.makeFullScreenCoverContent
         )
         .navigationDestination(
             destination: state.destination,
@@ -48,7 +49,7 @@ extension QRButtonView {
     typealias State = QRButtonDomain.FlowDomain.State
     typealias Event = QRButtonDomain.FlowDomain.Event
     
-    typealias Factory = QRButtonViewFactory
+    typealias Factory = QRButtonViewFactory<FullScreenCoverContent>
 }
 
 extension QRButtonDomain.FlowDomain.State {
@@ -137,8 +138,10 @@ extension QRButtonDomain.FlowDomain.State.FullScreen: Identifiable {
 #Preview {
     
     QRButtonView(
-        state: .init(), 
+        state: .init(),
         event: { print($0) },
-        factory: .init()
+        factory: .init(
+            makeFullScreenCoverContent: { _ in Text("FullScreenCoverContent") }
+        )
     )
 }
