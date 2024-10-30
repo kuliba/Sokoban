@@ -248,6 +248,7 @@ extension Payments {
             
             case primary = "red"
             case secondary = "white"
+            case gray = "gray"
         }
         
         enum Action: String, Decodable {
@@ -1278,7 +1279,12 @@ extension Payments {
         let icon: String
         let placement: Payments.Parameter.Placement = .bottom
         
-        init(id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue, value: Payments.Parameter.Value = nil, buttons: [Button], icon: String) {
+        init(
+            id: Payments.Parameter.ID = Payments.Parameter.Identifier.subscribe.rawValue,
+            value: Payments.Parameter.Value = nil,
+            buttons: [Button],
+            icon: String
+        ) {
             
             self.parameter = .init(id: id, value: value)
             self.buttons = buttons
@@ -1286,6 +1292,11 @@ extension Payments {
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+            
+            ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
+        }
+        
+        func updated(buttons: [ParameterSubscribe.Button]) -> PaymentsParameterRepresentable {
             
             ParameterSubscribe(id: parameter.id, value: value, buttons: buttons, icon: icon)
         }
@@ -1301,6 +1312,7 @@ extension Payments {
                 
                 case confirm
                 case deny
+                case main
             }
             
             enum Style {
