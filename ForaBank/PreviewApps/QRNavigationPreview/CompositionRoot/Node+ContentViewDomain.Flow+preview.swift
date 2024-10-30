@@ -37,15 +37,14 @@ extension Node where Model == ContentViewDomain.Flow {
                     qr.flow.$state
                         .compactMap { $0.navigation }
                         .prefix(1) // Take only the first navigation value, safe to store forever
-                        .flatMap { navigation -> AnyPublisher<QRNavigation?, Never> in
+                        .map { [QRNavigation?.none, $0] } // emit nil first to dismiss navigation
+                        .flatMap {
                             
-                            let nilPublisher = Just<QRNavigation?>(nil)
-                            let delayedNavigationPublisher = Just<QRNavigation?>(navigation)
-                                .delay(for: delay, scheduler: mainScheduler)
-                            
-                            return nilPublisher
-                                .append(delayedNavigationPublisher)
-                                .eraseToAnyPublisher()
+                            $0.publisher.flatMap {
+                                
+                                Just($0)
+                                    .delay(for: $0 == nil ? 0 : delay, scheduler: mainScheduler) // emit real navigation with delay
+                            }
                         }
                         .sink { navigation in
                             
