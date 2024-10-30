@@ -24,33 +24,26 @@ extension ContentView {
     
     func qrButton() -> some View {
         
-        RxWrapperView(
-            model: flow,
-            makeContentView: {
-                
-                QRButtonView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeButtonLabel: {
-                            
-                            Label("Scan QR", systemImage: "qrcode.viewfinder")
-                                .imageScale(.large)
-                        },
-                        makeDestinationContent: {
-                            
-                            switch $0 {
-                            case let .qrNavigation(qrNavigation):
-                                switch qrNavigation {
-                                case let .payments(payments):
-                                    PaymentsView(model: payments)
-                                }
-                            }
-                        },
-                        makeFullScreenCoverContent: QRButtonFullScreenView.init
-                    )
-                )
-            }
+        QRButton(
+            flow: flow,
+            factory: .init(
+                makeButtonLabel: {
+                    
+                    Label("Scan QR", systemImage: "qrcode.viewfinder")
+                        .imageScale(.large)
+                },
+                makeDestinationContent: {
+                    
+                    switch $0 {
+                    case let .qrNavigation(qrNavigation):
+                        switch qrNavigation {
+                        case let .payments(payments):
+                            PaymentsView(model: payments)
+                        }
+                    }
+                },
+                makeFullScreenCoverContent: QRButtonFullScreenView.init
+            )
         )
     }
 }
