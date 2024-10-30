@@ -9,6 +9,25 @@ import PayHubUI
 import RxViewModel
 import SwiftUI
 
+struct QRButtonFactory {
+    
+    let flow: () -> QRButtonDomain.FlowDomain.Flow
+    
+    func makeQRButton<V: View>(
+        label: @escaping () -> V
+    ) -> some View {
+        
+        QRButton(
+            flow: flow(),
+            factory: .init(
+                makeButtonLabel: label,
+                makeDestinationContent: { _ in Text("") },
+                makeFullScreenCoverContent: { _ in Text("") }
+            )
+        )
+    }
+}
+
 struct QRButton<ButtonLabel, DestinationContent, FullScreenCoverContent>: View
 where ButtonLabel: View,
       DestinationContent: View,
@@ -18,6 +37,8 @@ where ButtonLabel: View,
     let factory: Factory
     
     var body: some View {
+        
+        QRButtonFactory(flow: { flow }).makeQRButton(label: { Text("ScanQR") })
         
         RxWrapperView(
             model: flow,
