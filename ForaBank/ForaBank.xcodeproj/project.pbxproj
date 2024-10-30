@@ -1020,6 +1020,7 @@
 		2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE32CD128AE001AB123 /* PaymentsView.swift */; };
 		2A65AAE82CD12B7D001AB123 /* ContentViewFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */; };
 		2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAEC2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift */; };
+		2A65AAF22CD23CA3001AB123 /* QRButtonStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAF12CD23CA3001AB123 /* QRButtonStateWrapperView.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
 		2A65D8AB2A333123003B3FEA /* TaxCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AA2A333123003B3FEA /* TaxCodes.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
@@ -4598,6 +4599,7 @@
 		2A65AAE32CD128AE001AB123 /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
 		2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewFullScreenView.swift; sourceTree = "<group>"; };
 		2A65AAEC2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+emitNilThenValueWithDelay.swift"; sourceTree = "<group>"; };
+		2A65AAF12CD23CA3001AB123 /* QRButtonStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRButtonStateWrapperView.swift; sourceTree = "<group>"; };
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
 		2A65D8AA2A333123003B3FEA /* TaxCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxCodes.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
@@ -10701,6 +10703,7 @@
 			isa = PBXGroup;
 			children = (
 				2A632C672CD1179B00AF3B6B /* QRButtonDomain.swift */,
+				2A65AAF12CD23CA3001AB123 /* QRButtonStateWrapperView.swift */,
 			);
 			path = QRButton;
 			sourceTree = "<group>";
@@ -20326,6 +20329,7 @@
 				2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */,
 				2A30B0982CCE2BA4006697E1 /* QRNavigationPreviewApp.swift in Sources */,
 				2A632C6F2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift in Sources */,
+				2A65AAF22CD23CA3001AB123 /* QRButtonStateWrapperView.swift in Sources */,
 				2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */,
 				2A65AAE82CD12B7D001AB123 /* ContentViewFullScreenView.swift in Sources */,
 			);
