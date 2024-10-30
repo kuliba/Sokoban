@@ -2231,11 +2231,8 @@ extension ProductProfileViewModel {
             } else {
                 
                 if let rootActions {
-                    let view: any View = RootViewModelFactory(
-                        model: model,
-                        httpClient: model.authenticatedHTTPClient(),
-                        logger: LoggerAgent()
-                    ).makeNavigationOperationView(
+                    
+                    let view = productProfileViewModelFactory.makeNavigationOperationView(
                         dismissAll: rootActions.dismissAll
                     )()
 
@@ -2353,6 +2350,9 @@ extension ProductProfileViewModel {
                 
             case let .openDeposit(deposit):
                 openDeposit(deposit.depositID)
+                
+            case .payment:
+                rootActions?.openUtilityPayment("HOUSING_AND_COMMUNAL_SERVICE")
             }
         case let .listVerticalRoundImageAction(action):
             switch action {

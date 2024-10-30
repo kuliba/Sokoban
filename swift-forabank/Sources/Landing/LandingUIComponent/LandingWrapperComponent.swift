@@ -161,6 +161,9 @@ public final class LandingWrapperViewModel: ObservableObject {
                 
             case let .openDeposit(deposit):
                 self.landingActions(.bannerAction(.openDeposit(deposit)))
+                
+            case let .payment(type):
+                self.landingActions(.bannerAction(.payment(type)))
             }
             
         case let .listVerticalRoundImageAction(action):

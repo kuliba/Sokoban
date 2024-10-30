@@ -66,7 +66,7 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeNavigationOperationView: makeNavigationOperationView
+            makeAnywayFlowView: makeAnywayFlowView
         )
     }
 }
@@ -96,7 +96,8 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
-                makeUserAccountView: makeUserAccountView
+                makeUserAccountView: makeUserAccountView, 
+                makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) }
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -159,6 +160,39 @@ private extension RootViewFactoryComposer {
         
         return composer.compose(event: event)
     }
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> AnywayFlowView<PaymentCompleteView> {
+        
+        let anywayPaymentFactory = makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                self.makePaymentCompleteView(
+                result: .init(
+                    formattedAmount: $0.formattedAmount,
+                    merchantIcon: $0.merchantIcon,
+                    result: $0.result.mapError {
+                        
+                        return .init(hasExpired: $0.hasExpired)
+                    }
+                ),
+                goToMain: { flowModel.event(.goTo(.main)) })
+            }
+        )
+    }
+    
     
     private func currencyOfProduct(
         product: ProductSelect.Product
@@ -320,7 +354,8 @@ private extension RootViewFactoryComposer {
         _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
         _ landing: MarketShowcaseDomain.Landing,
-        _ orderCard: @escaping () -> Void
+        _ orderCard: @escaping () -> Void,
+        _ payment: @escaping (String) -> Void
     ) -> LandingWrapperView {
         
         if landing.errorMessage != nil {
@@ -357,7 +392,8 @@ private extension RootViewFactoryComposer {
             }
             }, 
             outsideAction: { flowEvent(.select(.landing($0))) },
-            orderCard: orderCard
+            orderCard: orderCard, 
+            payment: payment
         )
         
        return LandingWrapperView(viewModel: landingViewModel)
@@ -365,7 +401,8 @@ private extension RootViewFactoryComposer {
     
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseDomain.Binder,
-        orderCard: @escaping () -> Void
+        orderCard: @escaping () -> Void,
+        payment: @escaping (String) -> Void
     ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
         
@@ -384,32 +421,15 @@ private extension RootViewFactoryComposer {
                                         config: .iFora,
                                         factory: .init(
                                             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0, orderCard) }
+                                            makeLandingView: {
+                                                self.makeLandingView(contentEvent, flowEvent, $0, orderCard, payment)
+                                            }
                                         )
                                     )
                                 })
                         }
                 })
         : nil
-    }
-    
-    func makeNavigationOperationView(
-        dismissAll: @escaping() -> Void
-    ) -> some View {
-        
-        NavigationView {
-            
-            RootViewModelFactory(
-                model: model, 
-                httpClient: model.authenticatedHTTPClient(), 
-                logger: LoggerAgent()
-            ).makeNavigationOperationView(dismissAll: dismissAll)()
-                .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
-                .foregroundColor(.textSecondary)
-        }
     }
 }
 
