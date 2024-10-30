@@ -129,5 +129,5 @@ extension ContentViewDomain.Flow.FullScreen: Identifiable {
 }
 
 #Preview {
-    ContentView(model: Node.preview.model)
+    ContentView(model: Node.preview().model)
 }

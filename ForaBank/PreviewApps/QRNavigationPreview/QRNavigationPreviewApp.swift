@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct QRNavigationPreviewApp: App {
     
-    let node: Node = .preview
+    let node: Node = .preview()
     
     var body: some Scene {
         

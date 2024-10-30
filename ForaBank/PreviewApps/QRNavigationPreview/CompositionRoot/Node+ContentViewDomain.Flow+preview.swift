@@ -6,12 +6,19 @@
 //
 
 import Combine
+import CombineSchedulers
 import Foundation
 import PayHubUI
 
 extension Node where Model == ContentViewDomain.Flow {
     
-    static var preview: Self {
+    typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+    
+    static func preview(
+        delay: Delay = .milliseconds(500),
+        mainScheduler: AnySchedulerOf<DispatchQueue> = .main,
+        interactiveScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
+    ) -> Self {
         
         let qrComposer: QRBinderComposer<QRNavigation, QRModel, QRResult> = .preview
         
@@ -29,12 +36,13 @@ extension Node where Model == ContentViewDomain.Flow {
                     
                     qr.flow.$state
                         .compactMap { $0.navigation }
-                        .prefix(1) // Take only the first navigation value, safe to store
+                        .prefix(1) // Take only the first navigation value, safe to store forever
                         .flatMap { navigation -> AnyPublisher<QRNavigation?, Never> in
                             
                             let nilPublisher = Just<QRNavigation?>(nil)
                             let delayedNavigationPublisher = Just<QRNavigation?>(navigation)
-                                .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+                                .delay(for: delay, scheduler: mainScheduler)
+                            
                             return nilPublisher
                                 .append(delayedNavigationPublisher)
                                 .eraseToAnyPublisher()
@@ -52,8 +60,8 @@ extension Node where Model == ContentViewDomain.Flow {
                     completion(.qr(qr))
                 }
             },
-            scheduler: .main,
-            interactiveScheduler: .global(qos: .userInteractive)
+            scheduler: mainScheduler,
+            interactiveScheduler: interactiveScheduler
         )
         
         return .init(model:composer.compose(), cancellables: cancellables)
