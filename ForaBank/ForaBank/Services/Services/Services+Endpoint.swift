@@ -69,6 +69,7 @@ extension Services {
             case changeClientConsentMe2MePull
             case changePIN
             case changeSVCardLimit
+            case сollateralLoanLandingSaveConsents = "SaveConsents"
             case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
@@ -107,7 +108,6 @@ extension Services {
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
-            case saveConsents
             case showCVV
             case updateFastPaymentContract
             case unblockCard
@@ -471,6 +471,6 @@ extension Services.Endpoint {
     static let saveConsents: Self = .init(
         pathPrefix: .rest,
         version: .v1,
-        serviceName: .saveConsents
+        serviceName: .сollateralLoanLandingSaveConsents
     )
 }

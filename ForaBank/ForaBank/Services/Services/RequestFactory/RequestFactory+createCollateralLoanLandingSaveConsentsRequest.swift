@@ -10,6 +10,7 @@ import RemoteServices
 import CollateralLoanLandingSaveConsentsBackend
 
 extension RequestFactory {
+    
     static func createCollateralLoanLandingSaveConsentsRequest(
         with payload: RemoteServices.RequestFactory.CreateSaveConsentsCollateralLoanApplicationPayload
     ) throws -> URLRequest {
