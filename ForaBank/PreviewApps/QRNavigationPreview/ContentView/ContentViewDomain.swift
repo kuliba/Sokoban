@@ -17,6 +17,6 @@ enum ContentViewSelect {
 
 enum ContentViewNavigation {
     
-    case qr(Node<QRDomain.Binder>)
+    case qr(QRDomain.Binder)
     case qrNavigation(QRNavigation)
 }

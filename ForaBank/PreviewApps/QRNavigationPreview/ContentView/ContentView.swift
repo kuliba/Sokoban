@@ -26,6 +26,7 @@ struct ContentView: View {
             }
             .fullScreenCover(
                 cover: model.fullScreen,
+                dismiss: { model.event(.dismiss) },
                 content: ContentViewFullScreenView.init
             )
             .navigationDestination(
@@ -73,8 +74,8 @@ extension ContentViewDomain.Flow {
         case .none:
             return nil
             
-        case let .qr(node):
-            return .qr(node.model)
+        case let .qr(qr):
+            return .qr(qr)
             
         case .qrNavigation:
             return nil
@@ -128,5 +129,5 @@ extension ContentViewDomain.Flow.FullScreen: Identifiable {
 }
 
 #Preview {
-    ContentView(model: .preview)
+    ContentView(model: Node.preview.model)
 }
