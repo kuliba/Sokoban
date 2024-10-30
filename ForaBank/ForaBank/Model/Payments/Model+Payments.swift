@@ -898,7 +898,11 @@ extension Model {
             return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
             
         case .c2b:
-            return paymentsProcessDependencyReducerC2B(parameterId: parameterId, parameters: parameters)
+            return paymentsProcessDependencyReducerC2B(
+                parameterId: parameterId,
+                parameters: parameters,
+                operation: operation
+            )
 
         case .abroad:
             return paymentsProcessDependencyReducerAbroad(
