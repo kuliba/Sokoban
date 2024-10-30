@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct QRButtonView<DestinationContent, FullScreenCoverContent>: View
-where DestinationContent: View,
+struct QRButtonView<ButtonLabel, DestinationContent, FullScreenCoverContent>: View
+where ButtonLabel: View,
+      DestinationContent: View,
       FullScreenCoverContent: View {
     
     let state: State
@@ -17,12 +18,10 @@ where DestinationContent: View,
     
     var body: some View {
         
-        Button {
-            event(.select(.scanQR))
-        } label: {
-            Label("Scan QR", systemImage: "qrcode.viewfinder")
-                .imageScale(.large)
-        }
+        Button(
+            action: { event(.select(.scanQR)) },
+            label: factory.makeButtonLabel
+        )
         .fullScreenCover(
             cover: state.fullScreen,
             dismiss: { event(.dismiss) },
@@ -41,7 +40,7 @@ extension QRButtonView {
     typealias State = QRButtonDomain.FlowDomain.State
     typealias Event = QRButtonDomain.FlowDomain.Event
     
-    typealias Factory = QRButtonViewFactory<DestinationContent, FullScreenCoverContent>
+    typealias Factory = QRButtonViewFactory<ButtonLabel, DestinationContent, FullScreenCoverContent>
 }
 
 extension QRButtonDomain.FlowDomain.State {
@@ -133,6 +132,7 @@ extension QRButtonDomain.FlowDomain.State.FullScreen: Identifiable {
         state: .init(),
         event: { print($0) },
         factory: .init(
+            makeButtonLabel: { Text("Scan QR") },
             makeDestinationContent: { _ in Text("DestinationContent") },
             makeFullScreenCoverContent: { _ in Text("FullScreenCoverContent") }
         )

@@ -32,6 +32,11 @@ extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
+                        makeButtonLabel: {
+                            
+                            Label("Scan QR", systemImage: "qrcode.viewfinder")
+                                .imageScale(.large)
+                        },
                         makeDestinationContent: {
                             
                             switch $0 {
