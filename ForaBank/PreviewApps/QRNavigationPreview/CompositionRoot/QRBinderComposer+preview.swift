@@ -37,6 +37,9 @@ extension QRBinderComposer {
                         Payments(url: url)
                     }
                 }
+            ),
+            witnesses: .init(
+                isClosed: { $0.isClosedPublisher }
             )
         )
         

@@ -5,17 +5,24 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import PayHub
 
 public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source> {
     
     private let microServices: MicroServices
+    private let witnesses: Witnesses
     
-    public init(microServices: MicroServices) {
+    public init(
+        microServices: MicroServices,
+        witnesses: Witnesses
+    ) {
         self.microServices = microServices
+        self.witnesses = witnesses
     }
     
     public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -28,7 +35,10 @@ public extension QRBinderGetNavigationComposer {
         switch qrResult {
         case let .c2bSubscribeURL(url):
             let payments = microServices.makePayments(.c2bSubscribe(url))
-            completion(.payments(payments))
+            completion(.payments(.init(
+                model: payments,
+                cancellables: bind(payments, with: notify)
+            )))
             
         default:
             fatalError()
@@ -40,4 +50,20 @@ public extension QRBinderGetNavigationComposer {
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Navigation = QRNavigation<Payments>
+}
+
+private extension QRBinderGetNavigationComposer {
+    
+    func bind(
+        _ payments: Payments,
+        with notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let share = witnesses.isClosed(payments).share()
+        
+        let close = share
+            .sink { if $0 { notify(.dismiss) }}
+        
+        return [close]
+    }
 }

@@ -61,8 +61,8 @@ extension QRDomain.FlowDomain.State {
         case .none:
             return nil
             
-        case let .payments(payments):
-            return .payments(payments)
+        case let .payments(node):
+            return .payments(node.model)
         }
     }
     
