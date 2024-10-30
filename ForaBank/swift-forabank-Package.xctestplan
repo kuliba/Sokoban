@@ -568,6 +568,13 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV7ServiceTests",
+        "name" : "GetProductListByTypeV7ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "GetBannersMyProductListServiceTests",
         "name" : "GetBannersMyProductListServiceTests"
       }

@@ -91,8 +91,7 @@ private extension ResponseMapper._DTO._Item._BannerAction {
             return .init(type: .landing(target))
             
         case "HOUSING_AND_COMMUNAL_SERVICE":
-            // TODO: add new action
-            return nil
+            return .init(type: .payment("HOUSING_AND_COMMUNAL_SERVICE"))
             
         case .none, .some:
             return nil
