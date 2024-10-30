@@ -1279,6 +1279,7 @@ private extension PaymentsTransfersViewModel {
         
         templates.$state
             .map(\.external)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
@@ -1290,7 +1291,7 @@ private extension PaymentsTransfersViewModel {
 
         switch external.outside {
         case .none:
-            rootActions?.spinner.hide()
+            break
 
         case let .productID(productID):
             rootActions?.spinner.hide()

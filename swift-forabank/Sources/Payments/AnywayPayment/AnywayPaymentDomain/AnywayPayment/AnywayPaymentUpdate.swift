@@ -299,10 +299,15 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
     enum DataType: Equatable {
 
         case _backendReserved
+        case integer
         case number
+        case numeric
         case pairs(Pair?, [Pair])
         case string
-        
+        case string2
+        case string2Rus
+        case stringEn
+
         public struct Pair: Equatable {
             
             public let key: String
