@@ -12,13 +12,13 @@ import PayHubUI
 extension QRBinderComposer {
     
     typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
-
+    
     typealias Composer = QRBinderComposer<QRNavigation, QRModel, QRNavigationPreview.QRResult>
     
-    static var preview: Composer {
-        
-        let mainScheduler: AnySchedulerOf<DispatchQueue> = .immediate
-        let interactiveScheduler: AnySchedulerOf<DispatchQueue> = .immediate
+    static func preview(
+        mainScheduler: AnySchedulerOf<DispatchQueue> = .immediate,
+        interactiveScheduler: AnySchedulerOf<DispatchQueue> = .immediate
+    ) -> Composer {
         
         let factory = ContentFlowBindingFactory(scheduler: mainScheduler)
         let witnesses = QRDomain.Witnesses(
@@ -31,7 +31,7 @@ extension QRBinderComposer {
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
                 makePayments: {
-                
+                    
                     switch $0 {
                     case let .c2bSubscribe(url):
                         Payments(url: url)

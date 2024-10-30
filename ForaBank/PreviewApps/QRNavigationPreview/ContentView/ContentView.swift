@@ -27,46 +27,29 @@ struct ContentView: View {
             .fullScreenCover(
                 cover: model.fullScreen,
                 dismiss: { model.event(.dismiss) },
-                content: ContentViewFullScreenView.init
-            )
-            .navigationDestination(
-                destination: model.destination,
-                dismiss: { model.event(.dismiss) },
-                content: {
-                    
-                    switch $0 {
-                    case let .qrNavigation(qrNavigation):
-                        switch qrNavigation {
-                        case let .payments(payments):
-                            PaymentsView(model: payments)
-                        }
-                    }
-                }
+                content: fullScreenCoverContent
             )
         }
     }
 }
 
-extension ContentViewDomain.Flow {
+private extension ContentView {
     
-    var destination: Destination? {
+    func fullScreenCoverContent(
+        fullScreen: ContentViewDomain.Flow.FullScreen
+    ) -> some View {
         
-        switch state.navigation {
-        case .none:
-            return nil
-            
-        case .qr:
-            return nil
-            
-        case let .qrNavigation(qrNavigation):
-            return .qrNavigation(qrNavigation)
+        switch fullScreen {
+        case let .qr(binder):
+            NavigationView {
+                
+                QRBinderView(binder: binder)
+            }
         }
     }
-    
-    enum Destination {
-        
-        case qrNavigation(QRNavigation)
-    }
+}
+
+extension ContentViewDomain.Flow {
     
     var fullScreen: FullScreen? {
         
@@ -74,41 +57,14 @@ extension ContentViewDomain.Flow {
         case .none:
             return nil
             
-        case let .qr(qr):
-            return .qr(qr)
-            
-        case .qrNavigation:
-            return nil
+        case let .qr(node):
+            return .qr(node.model)
         }
     }
     
     enum FullScreen {
         
         case qr(QRDomain.Binder)
-    }
-}
-
-extension ContentViewDomain.Flow.Destination: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case let .qrNavigation(qrNavigation):
-            switch qrNavigation {
-            case let .payments(payments):
-                return .qrNavigation(.payments(.init(payments)))
-            }
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case qrNavigation(QRNavigation)
-        
-        enum QRNavigation: Hashable {
-            
-            case payments(ObjectIdentifier)
-        }
     }
 }
 
@@ -128,6 +84,9 @@ extension ContentViewDomain.Flow.FullScreen: Identifiable {
     }
 }
 
+// MARK: - Previews
+
 #Preview {
-    ContentView(model: Node.preview().model)
+    
+    ContentView(model: .preview())
 }

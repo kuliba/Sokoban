@@ -11,13 +11,13 @@ import SwiftUI
 @main
 struct QRNavigationPreviewApp: App {
     
-    let node: Node = .preview()
+    let flow: ContentViewDomain.Flow = .preview()
     
     var body: some Scene {
         
         WindowGroup {
             
-            ContentView(model: node.model)
+            ContentView(model: flow)
         }
     }
 }
