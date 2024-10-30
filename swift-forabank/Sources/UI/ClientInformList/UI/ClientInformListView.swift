@@ -127,25 +127,22 @@ public struct ClientInformListView: View {
         }
     }
     
+    @ViewBuilder
     private func iconView(_ image: Image? = nil) -> some View {
         
-        if let image = image {
-            return AnyView(
-                image
-                    .resizable()
-                    .frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
-                    .padding(.top, config.paddings.topImage)
-            )
+        if let image {
+            image
+                .resizable()
+                .frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                .padding(.top, config.paddings.topImage)
         } else {
-            return AnyView(
-                config.image
-                    .resizable()
-                    .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
-                    .foregroundColor(.white)
-                    .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
-                    .foregroundColor(config.colors.bgIconRedLight))
-                    .padding(.top, config.paddings.topImage)
-            )
+            config.image
+                .resizable()
+                .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
+                .foregroundColor(.white)
+                .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                .foregroundColor(config.colors.bgIconRedLight))
+                .padding(.top, config.paddings.topImage)
         }
     }
     
