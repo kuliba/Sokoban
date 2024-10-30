@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeOperationDetailButton.swift
+//  StickerViewFactory+makeOperationDetailButton.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 21.11.2023.
@@ -15,7 +15,7 @@ import Tagged
 typealias PaymentID = Tagged<_PaymentID, String>
 enum _PaymentID {}
 
-extension RootViewModelFactory {
+extension StickerViewFactory {
     
     func makeOperationDetailButton() -> (PaymentID) -> some View {
         
