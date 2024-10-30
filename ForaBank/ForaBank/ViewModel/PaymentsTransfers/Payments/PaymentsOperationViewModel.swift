@@ -292,6 +292,8 @@ class PaymentsOperationViewModel: ObservableObject {
                         case .continue:
                             self.action.send(PaymentsOperationViewModelAction.Continue())
                             
+                        case .main :
+                            self.rootActions?.dismiss()
                         default:
                             //TODO: implement other actions if required
                             break
