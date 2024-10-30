@@ -1,5 +1,5 @@
 //
-//  QRButtonFullScreenView.swift
+//  ContentViewFullScreenView.swift
 //  QRNavigationPreview
 //
 //  Created by Igor Malyarov on 29.10.2024.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct QRButtonFullScreenView: View {
+struct ContentViewFullScreenView: View {
     
-    let fullScreen: QRButtonDomain.FlowDomain.State.FullScreen
+    let fullScreen: ContentViewDomain.Flow.FullScreen
     
     var body: some View {
         
