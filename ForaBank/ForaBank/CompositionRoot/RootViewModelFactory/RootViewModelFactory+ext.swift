@@ -465,7 +465,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
         )
         
-        let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (Alerts?) -> Void) in
+        let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAlerts?) -> Void) in
             
             _createGetNotAuthorizedZoneClientInformData(()) { result in
                 

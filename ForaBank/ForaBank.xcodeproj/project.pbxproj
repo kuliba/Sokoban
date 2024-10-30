@@ -3205,9 +3205,8 @@
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
 		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
-		EC7A0A262CC9350300FA652F /* СlientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = EC7A0A252CC9350300FA652F /* СlientInformList */; };
 		ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */; };
-		ECF42BD82CD126A800020AB3 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD72CD126A800020AB3 /* Alerts.swift */; };
+		ECF42BD82CD126A800020AB3 /* ClientInformAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD72CD126A800020AB3 /* ClientInformAlerts.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */; };
 		ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */; };
@@ -6704,7 +6703,7 @@
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
-		ECF42BD72CD126A800020AB3 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		ECF42BD72CD126A800020AB3 /* ClientInformAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformAlerts.swift; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsConfirmViewModel.swift; sourceTree = "<group>"; };
 		ED08C70C28426FA900A49889 /* DocumentDelailCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDelailCellViewComponent.swift; sourceTree = "<group>"; };
@@ -15183,7 +15182,7 @@
 		77E1805027AC6B790006ACC9 /* General */ = {
 			isa = PBXGroup;
 			children = (
-				ECF42BD72CD126A800020AB3 /* Alerts.swift */,
+				ECF42BD72CD126A800020AB3 /* ClientInformAlerts.swift */,
 				0CA1CDE02840720200021671 /* AddressBookContact.swift */,
 				83BD07182C75F6340074F444 /* DisableForCorCards.swift */,
 				0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */,
@@ -20687,7 +20686,7 @@
 				68CD24A728BE85A1002E5D08 /* ServerCommands+SBPay.swift in Sources */,
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				2AC2FB102C5103FC001972CB /* PaymentProviderServicePickerFlowState.swift in Sources */,
-				ECF42BD82CD126A800020AB3 /* Alerts.swift in Sources */,
+				ECF42BD82CD126A800020AB3 /* ClientInformAlerts.swift in Sources */,
 				2AD54D342B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift in Sources */,
 				2A8A8FA42C00D5CD001ECAA3 /* OtherConfigs.swift in Sources */,
 				83CFA29B2C2D7302003B5E49 /* ControlPanelViewConfig.swift in Sources */,

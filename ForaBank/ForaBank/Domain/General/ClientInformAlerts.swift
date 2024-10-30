@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Alerts {
+struct ClientInformAlerts {
     
     var notRequered: [NotReuqeredAlert] = []
     var requered: ReuqeredAlert?
