@@ -349,13 +349,13 @@ private extension String {
       {
         "category": "Техннические работы",
         "title": "Перерыв на обед",
-        "svg_image": "svg",
+        "svgImage": "svg",
         "text": "С 01:00 по 03:00 11.11.2023 возможны технические работы. Задержки с переводами за границу"
       },
       {
         "category": "Информационные",
         "title": "Приятного аппетита",
-        "svg_image": "svg",
+        "svgImage": "svg",
         "text": "Специальное предложение для тех кто любит поострей. Вклад в аргентинских песо - 300% годовых. Открыть https://link_click."
       }
     ]
@@ -373,7 +373,7 @@ private extension String {
       {
         "category": null,
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -391,7 +391,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": null,
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -408,7 +408,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": null,
+        "svgImage": null,
         "text": "TEXT"
       }
     ]
@@ -426,7 +426,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": null
       }
     ]
@@ -444,7 +444,7 @@ private extension String {
       {
         "category": "",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -462,7 +462,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -480,7 +480,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "",
+        "svgImage": "",
         "text": "TEXT"
       }
     ]
@@ -498,7 +498,7 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": ""
       }
     ]
@@ -516,13 +516,13 @@ private extension String {
       {
         "category": null,
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       },
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -540,13 +540,13 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": null,
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       },
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -564,13 +564,13 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": null,
+        "svgImage": null,
         "text": "TEXT"
       },
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
@@ -588,13 +588,13 @@ private extension String {
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": null
       },
       {
         "category": "CATEGORY",
         "title": "TITLE",
-        "svg_image": "SVG",
+        "svgImage": "SVG",
         "text": "TEXT"
       }
     ]
