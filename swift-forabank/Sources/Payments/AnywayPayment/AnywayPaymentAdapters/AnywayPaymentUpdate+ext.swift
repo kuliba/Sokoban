@@ -241,14 +241,29 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType {
         case ._backendReserved:
             self = ._backendReserved
             
+        case .integer:
+            self = .integer
+            
         case .number:
             self = .number
+            
+        case .numeric:
+            self = .numeric
             
         case let .pairs(pair, pairs):
             self = .pairs(pair?.pair, pairs.map(\.pair))
 
         case .string:
             self = .string
+
+        case .string2:
+            self = .string2
+
+        case .string2Rus:
+            self = .string2Rus
+
+        case .stringEn:
+            self = .stringEn
         }
     }
 }
