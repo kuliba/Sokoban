@@ -1003,7 +1003,7 @@
 		2A62E9EC2BDA65330044EB39 /* PaymentViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9EB2BDA65330044EB39 /* PaymentViewFactory+preview.swift */; };
 		2A62E9F02BDA838D0044EB39 /* PaymentManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9EF2BDA838D0044EB39 /* PaymentManager+preview.swift */; };
 		2A632C652CD1168E00AF3B6B /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A632C642CD1168E00AF3B6B /* UIPrimitives */; };
-		2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */; };
+		2A632C682CD1179B00AF3B6B /* QRButtonDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C672CD1179B00AF3B6B /* QRButtonDomain.swift */; };
 		2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */; };
 		2A632C6D2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */; };
 		2A632C6F2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6E2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift */; };
@@ -4581,7 +4581,7 @@
 		2A62E9E92BDA65050044EB39 /* PaymentViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewFactory.swift; sourceTree = "<group>"; };
 		2A62E9EB2BDA65330044EB39 /* PaymentViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2A62E9EF2BDA838D0044EB39 /* PaymentManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentManager+preview.swift"; sourceTree = "<group>"; };
-		2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewDomain.swift; sourceTree = "<group>"; };
+		2A632C672CD1179B00AF3B6B /* QRButtonDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRButtonDomain.swift; sourceTree = "<group>"; };
 		2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDomain.swift; sourceTree = "<group>"; };
 		2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRBinderComposer+preview.swift"; sourceTree = "<group>"; };
 		2A632C6E2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Node+ContentViewDomain.Flow+preview.swift"; sourceTree = "<group>"; };
@@ -9361,6 +9361,7 @@
 				2A30B0972CCE2BA4006697E1 /* QRNavigationPreviewApp.swift */,
 				2A632C722CD1206300AF3B6B /* CompositionRoot */,
 				2A632C662CD1179000AF3B6B /* ContentView */,
+				2A65AAEE2CD23B4B001AB123 /* QRButton */,
 				2A632C692CD118DF00AF3B6B /* QR */,
 				2A65AAE02CD1287B001AB123 /* Payments */,
 				2A30B09B2CCE2BA4006697E1 /* Assets.xcassets */,
@@ -10636,7 +10637,6 @@
 		2A632C662CD1179000AF3B6B /* ContentView */ = {
 			isa = PBXGroup;
 			children = (
-				2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */,
 				2A30B0992CCE2BA4006697E1 /* ContentView.swift */,
 				2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */,
 			);
@@ -10695,6 +10695,14 @@
 				2A65AADE2CD127A8001AB123 /* QRContentView.swift */,
 			);
 			path = Content;
+			sourceTree = "<group>";
+		};
+		2A65AAEE2CD23B4B001AB123 /* QRButton */ = {
+			isa = PBXGroup;
+			children = (
+				2A632C672CD1179B00AF3B6B /* QRButtonDomain.swift */,
+			);
+			path = QRButton;
 			sourceTree = "<group>";
 		};
 		2A65D8AE2A333144003B3FEA /* SupportingTypes */ = {
@@ -20309,7 +20317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */,
-				2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */,
+				2A632C682CD1179B00AF3B6B /* QRButtonDomain.swift in Sources */,
 				2A65AADF2CD127A8001AB123 /* QRContentView.swift in Sources */,
 				2A632C6D2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift in Sources */,
 				2A30B09A2CCE2BA4006697E1 /* ContentView.swift in Sources */,

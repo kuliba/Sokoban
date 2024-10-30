@@ -17,7 +17,7 @@ struct QRNavigationPreviewApp: App {
         
         WindowGroup {
             
-            ContentView(model: node.model)
+            ContentView(flow: node.model)
         }
     }
 }

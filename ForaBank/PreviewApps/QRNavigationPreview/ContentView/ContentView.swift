@@ -12,26 +12,26 @@ import UIPrimitives
 
 struct ContentView: View {
     
-    @StateObject var model: ContentViewDomain.Flow
+    @StateObject var flow: QRButtonDomain.FlowDomain.Flow
     
     var body: some View {
         
         NavigationView {
             
             Button {
-                model.event(.select(.scanQR))
+                flow.event(.select(.scanQR))
             } label: {
                 Label("Scan QR", systemImage: "qrcode.viewfinder")
                     .imageScale(.large)
             }
             .fullScreenCover(
-                cover: model.fullScreen,
-                dismiss: { model.event(.dismiss) },
+                cover: flow.fullScreen,
+                dismiss: { flow.event(.dismiss) },
                 content: ContentViewFullScreenView.init
             )
             .navigationDestination(
-                destination: model.destination,
-                dismiss: { model.event(.dismiss) },
+                destination: flow.destination,
+                dismiss: { flow.event(.dismiss) },
                 content: {
                     
                     switch $0 {
@@ -47,7 +47,7 @@ struct ContentView: View {
     }
 }
 
-extension ContentViewDomain.Flow {
+extension QRButtonDomain.FlowDomain.Flow {
     
     var destination: Destination? {
         
@@ -88,7 +88,7 @@ extension ContentViewDomain.Flow {
     }
 }
 
-extension ContentViewDomain.Flow.Destination: Identifiable {
+extension QRButtonDomain.FlowDomain.Flow.Destination: Identifiable {
     
     var id: ID {
         
@@ -112,7 +112,7 @@ extension ContentViewDomain.Flow.Destination: Identifiable {
     }
 }
 
-extension ContentViewDomain.Flow.FullScreen: Identifiable {
+extension QRButtonDomain.FlowDomain.Flow.FullScreen: Identifiable {
     
     var id: ID {
         
@@ -129,5 +129,5 @@ extension ContentViewDomain.Flow.FullScreen: Identifiable {
 }
 
 #Preview {
-    ContentView(model: Node.preview().model)
+    ContentView(flow: Node.preview().model)
 }

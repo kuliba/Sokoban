@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHubUI
 
-extension Node where Model == ContentViewDomain.Flow {
+extension Node where Model == QRButtonDomain.FlowDomain.Flow {
     
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
@@ -24,7 +24,7 @@ extension Node where Model == ContentViewDomain.Flow {
         
         var cancellables = Set<AnyCancellable>()
         
-        let composer = ContentViewDomain.Composer(
+        let composer = QRButtonDomain.FlowDomain.Composer(
             getNavigation: { select, notify, completion in
                 
                 switch select {

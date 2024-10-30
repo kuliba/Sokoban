@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentViewFullScreenView: View {
     
-    let fullScreen: ContentViewDomain.Flow.FullScreen
+    let fullScreen: QRButtonDomain.FlowDomain.Flow.FullScreen
     
     var body: some View {
         
