@@ -86,7 +86,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
         
         self.init(
             fieldName: additional.fieldName,
-            fieldValue: additional.fieldValue,
+            fieldValue: additional.fieldValue ?? "",
             fieldTitle: additional.fieldTitle ?? additional.fieldName,
             md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
@@ -182,11 +182,26 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
     init?(_ string: String, value: String?) {
         
         switch string {
-        case "%Number", "%Numeric":
+        case "%Integer":
+            self = .integer
+            
+        case "%Number":
             self = .number
+            
+        case "%Numeric":
+            self = .numeric
             
         case "%String":
             self = .string
+            
+        case "%String2":
+            self = .string2
+            
+        case "%String2Rus":
+            self = .string2Rus
+            
+        case "%String(En)":
+            self = .stringEn
             
         default:
             guard let split = try? string.splitDataType(),
@@ -288,7 +303,7 @@ private extension ResponseMapper._Data {
     struct _Additional: Decodable {
         
         let fieldName: String
-        let fieldValue: String
+        let fieldValue: String?
         let fieldTitle: String?
         let md5hash: String?
         let recycle: Bool?

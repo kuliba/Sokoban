@@ -10,7 +10,6 @@ import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
 import Fetcher
-import Fetcher
 import ForaTools
 import Foundation
 import GenericRemoteService
