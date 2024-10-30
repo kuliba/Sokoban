@@ -42,13 +42,14 @@ private extension ResponseMapper.GetAuthorizedZoneClientInformData {
         
         guard let category = authorizedData.category,
               let title = authorizedData.title,
+              let svgImage = authorizedData.svgImage,
               let text = authorizedData.text
         else { return nil }
         
         self.init(
             category: category,
             title: title,
-            svgImage: authorizedData.svgImage ?? "",
+            svgImage: svgImage,
             text: text
         )
     }
