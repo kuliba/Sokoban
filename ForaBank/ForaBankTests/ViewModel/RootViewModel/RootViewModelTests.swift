@@ -350,6 +350,31 @@ final class RootViewModelTests: XCTestCase {
         XCTAssertNil(sut.link)
         XCTAssertNoDiff(sut.selected, .market)
     }
+    
+    // MARK: - openPayment
+
+    func test_openPayment_housingAndCommumalService_shouldSelectedPayment() {
+        
+        let (sut, _, linkSpy, _) = makeSUT(product: .cardActiveMainDebitOnlyRub, selected: .market)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        sut.openPayment(.housingAndCommumalService)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        XCTAssertNoDiff(sut.selected, .payments)
+    }
+
+    func test_openPayment_housingAndCommumalService_onlyCorporate_shouldShowAlertDisableForCorporateCard() {
+        
+        let (sut, _, _, alertSpy) = makeSUT(product: makeCardProduct(cardType: .individualBusinessman), selected: .market)
+
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        sut.openPayment(.housingAndCommumalService)
+                
+        XCTAssertNoDiff(alertSpy.values, [nil, .disableForCorporateCard])
+    }
 
     // MARK: - Helpers
     
@@ -368,8 +393,9 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview, 
+            fastPaymentsFactory: .legacy, 
+            stickerViewFactory: .preview,
+            navigationStateManager: .preview,
             productNavigationStateManager: .preview,
             tabsViewModel: .init(
                 mainViewModel: .init(
@@ -440,7 +466,8 @@ final class RootViewModelTests: XCTestCase {
         let scheduler = DispatchQueue.test
 
         let sut = RootViewModel(
-            fastPaymentsFactory: .legacy,
+            fastPaymentsFactory: .legacy, 
+            stickerViewFactory: .preview,
             navigationStateManager: .preview,
             productNavigationStateManager: .preview,
             tabsViewModel: .init(
@@ -744,4 +771,9 @@ private extension Alert.ViewModel.View {
     static let needOrderCard: Self = Alert.ViewModel.needOrderCard(primaryAction: {}).view
     static let disableForCorporateCard: Self = Alert.ViewModel.disableForCorporateCard(primaryAction: {}).view
     
+}
+
+private extension String {
+    
+    static let housingAndCommumalService = "HOUSING_AND_COMMUNAL_SERVICE"
 }
