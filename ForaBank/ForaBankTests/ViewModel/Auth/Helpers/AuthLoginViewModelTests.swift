@@ -37,7 +37,8 @@ class AuthLoginViewModelTests: XCTestCase {
                     }
                 ),
                 switchTab: { _ in },
-                dismissAll: {}
+                dismissAll: {}, 
+                openUtilityPayment: {_ in }
             )
         }
         
