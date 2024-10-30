@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct QRButtonView<FullScreenCoverContent>: View
-where FullScreenCoverContent: View {
+struct QRButtonView<DestinationContent, FullScreenCoverContent>: View
+where DestinationContent: View,
+      FullScreenCoverContent: View {
     
     let state: State
     let event: (Event) -> Void
@@ -30,16 +31,7 @@ where FullScreenCoverContent: View {
         .navigationDestination(
             destination: state.destination,
             dismiss: { event(.dismiss) },
-            content: {
-                
-                switch $0 {
-                case let .qrNavigation(qrNavigation):
-                    switch qrNavigation {
-                    case let .payments(payments):
-                        PaymentsView(model: payments)
-                    }
-                }
-            }
+            content: factory.makeDestinationContent
         )
     }
 }
@@ -49,7 +41,7 @@ extension QRButtonView {
     typealias State = QRButtonDomain.FlowDomain.State
     typealias Event = QRButtonDomain.FlowDomain.Event
     
-    typealias Factory = QRButtonViewFactory<FullScreenCoverContent>
+    typealias Factory = QRButtonViewFactory<DestinationContent, FullScreenCoverContent>
 }
 
 extension QRButtonDomain.FlowDomain.State {
@@ -141,6 +133,7 @@ extension QRButtonDomain.FlowDomain.State.FullScreen: Identifiable {
         state: .init(),
         event: { print($0) },
         factory: .init(
+            makeDestinationContent: { _ in Text("DestinationContent") },
             makeFullScreenCoverContent: { _ in Text("FullScreenCoverContent") }
         )
     )

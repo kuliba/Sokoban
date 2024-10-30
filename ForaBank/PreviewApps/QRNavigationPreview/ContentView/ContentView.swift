@@ -32,6 +32,16 @@ extension ContentView {
                     state: $0,
                     event: $1,
                     factory: .init(
+                        makeDestinationContent: {
+                            
+                            switch $0 {
+                            case let .qrNavigation(qrNavigation):
+                                switch qrNavigation {
+                                case let .payments(payments):
+                                    PaymentsView(model: payments)
+                                }
+                            }
+                        },
                         makeFullScreenCoverContent: QRButtonFullScreenView.init
                     )
                 )
