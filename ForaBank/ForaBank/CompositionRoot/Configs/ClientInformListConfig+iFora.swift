@@ -27,8 +27,8 @@ extension ClientInformListConfig {
             textColor: .textSecondary
         ),
         sizes: .init(
-            iconSize: 24,
-            iconBackgroundSize: 40,
+            iconSize: 40,
+            iconBackgroundSize: 64,
             rowIconSize: 40,
             navBarHeight: 59,
             navBarMaxWidth: 48,
