@@ -11,6 +11,7 @@ struct QRButtonView: View {
     
     let state: State
     let event: (Event) -> Void
+    let factory: Factory
     
     var body: some View {
         
@@ -46,6 +47,8 @@ extension QRButtonView {
     
     typealias State = QRButtonDomain.FlowDomain.State
     typealias Event = QRButtonDomain.FlowDomain.Event
+    
+    typealias Factory = QRButtonViewFactory
 }
 
 extension QRButtonDomain.FlowDomain.State {
@@ -133,5 +136,9 @@ extension QRButtonDomain.FlowDomain.State.FullScreen: Identifiable {
 
 #Preview {
     
-    QRButtonView(state: .init(), event: { print($0) })
+    QRButtonView(
+        state: .init(), 
+        event: { print($0) },
+        factory: .init()
+    )
 }

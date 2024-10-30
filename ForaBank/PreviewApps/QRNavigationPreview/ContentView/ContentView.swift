@@ -16,10 +16,25 @@ struct ContentView: View {
     
     var body: some View {
         
-        NavigationView {
-            
-            QRButtonStateWrapperView(flow: flow)
-        }
+        NavigationView(content: qrButton)
+    }
+}
+
+extension ContentView {
+    
+    func qrButton() -> some View {
+        
+        RxWrapperView(
+            model: flow,
+            makeContentView: {
+                
+                QRButtonView(
+                    state: $0,
+                    event: $1,
+                    factory: .init()
+                )
+            }
+        )
     }
 }
 
