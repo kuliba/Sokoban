@@ -76,6 +76,7 @@ class Model {
     var images: CurrentValueSubject<[String: ImageData], Never>
     let clientInform: CurrentValueSubject<ClientInformDataState, Never>
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
+    let clientNotAuthorizationAlerts: CurrentValueSubject<ClientInformAlerts, Never>
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -243,6 +244,7 @@ class Model {
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
         self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
+        self.clientNotAuthorizationAlerts = .init(.init())
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
