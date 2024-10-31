@@ -20,23 +20,26 @@ struct ClientInformAlerts {
     struct ReuqeredAlert: Identifiable {
         
         var id = UUID()
+        var title: String
+        var text: String
         
-        var alert: Alert
+        var alert: Alert { .init(id: id, isRequered: true, title: title, text: text ) }
     }
     
     struct NotReuqeredAlert: Identifiable {
         
         let id = UUID()
+        let title: String
+        let text: String
         
-        var alert: Alert
+        var alert: Alert { .init(id: id, isRequered: false, title: title, text: text) }
     }
     
     struct Alert: Identifiable {
         
         let id: UUID
         let isRequered: Bool
-        
-        var title: String
-        var text: String
+        let title: String
+        let text: String
     }
 }

@@ -466,7 +466,7 @@ extension RootViewModelFactory {
         )
         
         let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAlerts?) -> Void) in
-            
+                    
             _createGetNotAuthorizedZoneClientInformData(()) { result in
                 
                 switch result {
@@ -475,27 +475,39 @@ extension RootViewModelFactory {
                 
                 case let .success(response):
                     
-                    var alerts: ClientInformAlerts
-                    let list = response.list.compactMap { message in
-                        
-                        switch alerts {
-                        case .NotReuqeredAlert:
-                            if message.update == nil {
-                                alerts.notRequered = 
-                            }
+                    var alerts = ClientInformAlerts(notRequered: [], requered: nil)
+                    
+                    response.list.forEach { message in
+                        if message.update != nil, message.update?.platform == "iOS" {
+                            alerts.notRequered.append(
+                                ClientInformAlerts.NotReuqeredAlert(
+                                    title: message.title,
+                                    text: message.text
+                                )
+                            )
+                        } else {
+                            alerts.requered = ClientInformAlerts.ReuqeredAlert(
+                                title: message.title,
+                                text: message.text
+                            )
                         }
-                        
-//                        if message.update {
-//
-//                        }
                     }
+                    
+                    completion(alerts)
                 }
-                
             }
         }
         
-        createGetNotAuthorizedZoneClientInformData { _ in
+        createGetNotAuthorizedZoneClientInformData {
             
+            if let info = $0 {
+                
+                self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
+                self.model.clientNotAuthorizationAlerts.value = info
+            } else {
+                
+                self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
+            }
         }
         
         return make(
