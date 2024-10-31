@@ -23,7 +23,14 @@ struct ClientInformAlerts {
         let title: String
         let text: String
         
-        var alert: Alert { .init(id: id, isRequered: true, title: title, text: text ) }
+        var alert: Alert {
+            .init(
+                id: id,
+                isRequered: true,
+                title: title,
+                text: text
+            )
+        }
     }
     
     struct NotReuqeredAlert: Identifiable {
@@ -32,7 +39,14 @@ struct ClientInformAlerts {
         let title: String
         let text: String
         
-        var alert: Alert { .init(id: id, isRequered: false, title: title, text: text) }
+        var alert: Alert {
+            .init(
+                id: id,
+                isRequered: false,
+                title: title,
+                text: text
+            )
+        }
     }
     
     struct Alert: Identifiable {

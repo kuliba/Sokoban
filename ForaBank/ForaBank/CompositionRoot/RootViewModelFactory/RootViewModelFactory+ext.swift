@@ -478,17 +478,21 @@ extension RootViewModelFactory {
                     var alerts = ClientInformAlerts(notRequered: [], requered: nil)
                     
                     response.list.forEach { message in
-                        if message.update != nil, message.update?.platform == "iOS" {
+                        if !message.authBlocking,
+                           message.update != nil,
+                           message.update?.platform == "iOS" {
+                            
+                            alerts.requered = .init(
+                                title: message.title,
+                                text: message.text
+                            )
+                        } else {
+                            
                             alerts.notRequered.append(
-                                ClientInformAlerts.NotReuqeredAlert(
+                                .init(
                                     title: message.title,
                                     text: message.text
                                 )
-                            )
-                        } else {
-                            alerts.requered = ClientInformAlerts.ReuqeredAlert(
-                                title: message.title,
-                                text: message.text
                             )
                         }
                     }
