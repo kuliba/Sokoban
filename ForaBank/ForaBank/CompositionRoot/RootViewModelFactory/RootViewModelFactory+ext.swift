@@ -475,30 +475,36 @@ extension RootViewModelFactory {
                 
                 case let .success(response):
                     
-                    var alerts = ClientInformAlerts(notRequered: [], requered: nil)
+                    var alerts = ClientInformAlerts(notRequired: [], required: nil)
                     
-                    response.list.forEach { message in
-                        if !message.authBlocking,
-                           message.update != nil,
-                           message.update?.platform == "iOS" {
-                            
-                            alerts.requered = .init(
+                    if let required = response.list.first(where: {
+                       
+                        $0.authBlocking && 
+                        $0.update != nil &&
+                        $0.update?.platform == "iOS"
+                    }) {
+                        
+                         alerts.required = .init(
+                             title: required.title,
+                             text: required.text
+                         )
+                    }
+                     
+                    alerts.notRequired = response.list.filter { message in
+                        
+                        message.authBlocking == false && 
+                        message.update == nil
+                    }.map { message in
+                            .init(
                                 title: message.title,
                                 text: message.text
                             )
-                        } else {
-                            
-                            alerts.notRequered.append(
-                                .init(
-                                    title: message.title,
-                                    text: message.text
-                                )
-                            )
-                        }
                     }
                     
                     completion(alerts)
                 }
+                
+                _ = _createGetNotAuthorizedZoneClientInformData
             }
         }
         
@@ -512,6 +518,8 @@ extension RootViewModelFactory {
                 
                 self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
             }
+            
+            _ = _createGetNotAuthorizedZoneClientInformData
         }
         
         return make(

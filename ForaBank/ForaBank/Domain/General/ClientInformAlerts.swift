@@ -9,15 +9,15 @@ import Foundation
 
 struct ClientInformAlerts {
     
-    var notRequered: [NotReuqeredAlert] = []
-    var requered: ReuqeredAlert?
+    var notRequired: [NotRequiredAlert] = []
+    var required: RequiredAlert?
     
     var alert: Alert? {
         
-        notRequered.first?.alert ?? requered?.alert
+        notRequired.first?.alert ?? required?.alert
     }
     
-    struct ReuqeredAlert: Identifiable {
+    struct RequiredAlert: Identifiable {
         
         let id = UUID()
         let title: String
@@ -26,14 +26,14 @@ struct ClientInformAlerts {
         var alert: Alert {
             .init(
                 id: id,
-                isRequered: true,
+                isRequired: true,
                 title: title,
                 text: text
             )
         }
     }
     
-    struct NotReuqeredAlert: Identifiable {
+    struct NotRequiredAlert: Identifiable {
         
         let id = UUID()
         let title: String
@@ -42,7 +42,7 @@ struct ClientInformAlerts {
         var alert: Alert {
             .init(
                 id: id,
-                isRequered: false,
+                isRequired: false,
                 title: title,
                 text: text
             )
@@ -52,7 +52,7 @@ struct ClientInformAlerts {
     struct Alert: Identifiable {
         
         let id: UUID
-        let isRequered: Bool
+        let isRequired: Bool
         let title: String
         let text: String
     }
