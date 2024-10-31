@@ -21,16 +21,14 @@ struct ClientInformAlerts {
         
         var id = UUID()
         
-        var title: String { .init(id.uuidString.prefix(4)) }
-        var alert: Alert { .init(id: id, isRequered: true) }
+        var alert: Alert
     }
     
     struct NotReuqeredAlert: Identifiable {
         
         let id = UUID()
         
-        var title: String { .init(id.uuidString.prefix(4)) }
-        var alert: Alert { .init(id: id, isRequered: false) }
+        var alert: Alert
     }
     
     struct Alert: Identifiable {
@@ -38,6 +36,7 @@ struct ClientInformAlerts {
         let id: UUID
         let isRequered: Bool
         
-        var title: String { .init(id.uuidString.prefix(4)) }
+        var title: String
+        var text: String
     }
 }

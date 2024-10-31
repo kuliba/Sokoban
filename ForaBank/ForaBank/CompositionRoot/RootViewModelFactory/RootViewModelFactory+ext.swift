@@ -474,8 +474,21 @@ extension RootViewModelFactory {
                     completion(nil)
                 
                 case let .success(response):
-                
-                    let list = response.list.compactMap { $0 }
+                    
+                    var alerts: ClientInformAlerts
+                    let list = response.list.compactMap { message in
+                        
+                        switch alerts {
+                        case .NotReuqeredAlert:
+                            if message.update == nil {
+                                alerts.notRequered = 
+                            }
+                        }
+                        
+//                        if message.update {
+//
+//                        }
+                    }
                 }
                 
             }
