@@ -22,9 +22,9 @@ struct AnywayPaymentParameterView: View {
         case .hidden:
             EmptyView()
             
-        case .nonEditable:
-#warning("replace with real components")
-            Text("TBD: nonEditable parameter view")
+        case let .nonEditable(node):
+            inputView(keyboard: .decimal, model: node.model)
+                .disabled(true)
             
         case let .numberInput(node):
             inputView(keyboard: .decimal, model: node.model)
