@@ -2821,6 +2821,7 @@
 		83676AF22BFBA30F004B614C /* MyProductsSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83676AF12BFBA30F004B614C /* MyProductsSectionViewModelTests.swift */; };
 		836801532CC553B700DB8197 /* RootViewModelFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */; };
 		836801542CC553B700DB8197 /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801522CC553B700DB8197 /* RootViewModelFactory.swift */; };
+		836B81CB2CCFACEB006FACE3 /* GetProductListByTypeV7Service in Frameworks */ = {isa = PBXBuildFile; productRef = 836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */; };
 		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
 		836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */; };
@@ -6335,6 +6336,7 @@
 		83676AF12BFBA30F004B614C /* MyProductsSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionViewModelTests.swift; sourceTree = "<group>"; };
 		836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+ext.swift"; sourceTree = "<group>"; };
 		836801522CC553B700DB8197 /* RootViewModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
+		836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV7Service.xctestplan; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ProductData.swift"; sourceTree = "<group>"; };
 		836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
@@ -7292,6 +7294,7 @@
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */,
 				835D0DF72BEA667A00FFE90B /* ProductProfile in Frameworks */,
+				836B81CB2CCFACEB006FACE3 /* GetProductListByTypeV7Service in Frameworks */,
 				C14F85532AF537B000749534 /* PaymentSticker in Frameworks */,
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
@@ -10240,6 +10243,7 @@
 				D4B798262BA2409400896BA4 /* GetProductListByTypeService.xctestplan */,
 				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
 				EC5994432CA5B0FF0050CA05 /* GetClientInformDataServices.xctestplan */,
+				836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
@@ -19097,6 +19101,7 @@
 				A7B401F72CC26D1E0031C2AE /* CollateralLoanLandingShowCaseBackend */,
 				A7B401F92CC26D1E0031C2AE /* CollateralLoanLandingShowCaseUI */,
 				EC7A0A252CC9350300FA652F /* СlientInformList */,
+				836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -28755,6 +28760,10 @@
 		835D0DF62BEA667A00FFE90B /* ProductProfile */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ProductProfile;
+		};
+		836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GetProductListByTypeV7Service;
 		};
 		836DE2EB2AC72A7C00D4C754 /* Tagged */ = {
 			isa = XCSwiftPackageProductDependency;
