@@ -1502,7 +1502,7 @@ private extension PaymentsTransfersViewModel {
                         action: PaymentsTransfersViewModelAction.Show.Countries())
                     )
                     
-                case .sfp:
+                case .sfp, .mock(_):
                     self.action.send(DelayWrappedAction(
                         delayMS: 300,
                         action: PaymentsTransfersViewModelAction.Show.Contacts())
