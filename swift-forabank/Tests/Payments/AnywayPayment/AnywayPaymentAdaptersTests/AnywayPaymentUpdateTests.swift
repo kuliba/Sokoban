@@ -734,7 +734,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     ) throws -> AnywayPaymentUpdate? {
         
         do {
-            let response = try decode(string)
+            let response = try map(string)
             return .init(response)
         } catch {
             XCTFail(error.localizedDescription, file: file, line: line)
@@ -742,7 +742,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         }
     }
     
-    private func decode(
+    private func map(
         _ string: String
     ) throws -> ResponseMapper.CreateAnywayTransferResponse {
         
