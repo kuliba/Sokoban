@@ -58,6 +58,8 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
+        let notAuthorizedHTTPClient = HTTPFactory.cachelessLoggingNoSharedCookiesURLSessionHTTPClient()
+        
         if getProductListByTypeV6Flag.isActive {
             model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
         } else {
@@ -460,48 +462,48 @@ extension RootViewModelFactory {
                 }
         }
         
-        let _createGetNotAuthorizedZoneClientInformData = nanoServiceComposer.compose(
+        let _createGetNotAuthorizedZoneClientInformData = LoggingRemoteNanoServiceComposer(httpClient: notAuthorizedHTTPClient, logger: logger).compose(
             createRequest: RequestFactory.createGetNotAuthorizedZoneClientInformDataRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetNotAuthorizedZoneClientInformDataResponse
         )
         
         let createGetNotAuthorizedZoneClientInformData = { (completion: @escaping (ClientInformAlerts?) -> Void) in
-                    
             _createGetNotAuthorizedZoneClientInformData(()) { result in
                 
                 switch result {
                 case .failure:
                     completion(nil)
-                
+                    
                 case let .success(response):
                     
-                    var alerts = ClientInformAlerts(notRequired: [], required: nil)
+                    var list = ClientInformAlerts(notRequired: [], required: nil)
                     
                     if let required = response.list.first(where: {
-                       
-                        $0.authBlocking && 
+                        
+                        $0.authBlocking &&
                         $0.update != nil &&
                         $0.update?.platform == "iOS"
                     }) {
                         
-                         alerts.required = .init(
-                             title: required.title,
-                             text: required.text
-                         )
-                    }
-                     
-                    alerts.notRequired = response.list.filter { message in
-                        
-                        message.authBlocking == false && 
-                        message.update == nil
-                    }.map { message in
-                            .init(
-                                title: message.title,
-                                text: message.text
-                            )
+                        list.required = .init(
+                            title: required.title,
+                            text: required.text
+                        )
                     }
                     
-                    completion(alerts)
+                    list.notRequired = response.list.filter {
+                        
+                        $0.authBlocking == false &&
+                        $0.update == nil
+                    }.map {
+                        
+                        .init(
+                            title: $0.title,
+                            text: $0.text
+                        )
+                    }
+                    
+                    completion(list)
                 }
                 
                 _ = _createGetNotAuthorizedZoneClientInformData
@@ -519,7 +521,7 @@ extension RootViewModelFactory {
                 self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
             }
             
-            _ = _createGetNotAuthorizedZoneClientInformData
+            _ = createGetNotAuthorizedZoneClientInformData
         }
         
         return make(
