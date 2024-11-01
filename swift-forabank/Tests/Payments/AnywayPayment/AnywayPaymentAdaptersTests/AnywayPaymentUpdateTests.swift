@@ -582,7 +582,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     ),
                     uiAttributes: makeParameterUIAttributes(
                         dataType: .pairs(
-                            nil,
+                            .init(key: "ПАСПОРТ РФ", value: "ПАСПОРТ РФ"),
                             [.init(key: "ПАСПОРТ РФ", value: "ПАСПОРТ РФ"),
                              .init(key: "СВИД О РОЖДЕНИИ", value: "СВИД О РОЖДЕНИИ")]
                         ),
