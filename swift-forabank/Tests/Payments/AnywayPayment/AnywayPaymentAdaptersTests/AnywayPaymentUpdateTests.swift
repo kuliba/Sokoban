@@ -568,7 +568,51 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         ))
     }
     
+    func test_init_selectorConstant() throws {
+        
+        try assert(.selectorConstant, mapsTo: makeUpdate(
+            parameters: [
+                .init(
+                    field: makeParameterField(id: "1"),
+                    icon: nil,
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(
+                        isRequired: false,
+                        regExp: ""
+                    ),
+                    uiAttributes: makeParameterUIAttributes(
+                        dataType: .pairs(
+                            nil,
+                            [.init(key: "ПАСПОРТ РФ", value: "ПАСПОРТ РФ"),
+                             .init(key: "СВИД О РОЖДЕНИИ", value: "СВИД О РОЖДЕНИИ")]
+                        ),
+                        title: "Селектор c viewType = CONSTANT",
+                        type: .select,
+                        viewType: .constant
+                    )
+                )
+            ]
+        ))
+    }
+    
     // MARK: - Helpers
+    
+    private func makeUpdate(
+        details: AnywayPaymentUpdate.Details? = nil,
+        fields: [AnywayPaymentUpdate.Field] = [],
+        parameters: [AnywayPaymentUpdate.Parameter] = []
+    ) -> AnywayPaymentUpdate {
+        
+        return .init(
+            details: details ?? .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(),
+                info: makeDetailsInfo()
+            ),
+            fields: fields,
+            parameters: parameters
+        )
+    }
     
     private func makeDetailsAmounts(
         amount: Decimal? = nil,
@@ -864,7 +908,7 @@ private extension String {
                 "fieldTitle": "t4",
                 "md5hash": "md5hash4",
                 "svgImage": "svgImage4"
-            }     
+            }
         ],
         "parameterListForNextStep": [
             {
@@ -1646,7 +1690,7 @@ private extension String {
 </svg>
 
 """
-
+    
     static let withSumSTrs = """
 {
     "statusCode": 0,
@@ -1663,6 +1707,39 @@ private extension String {
         ],
         "parameterListForNextStep": []
     }
+}
+"""
+    
+    static let selectorConstant = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "parameterListForNextStep": [
+      {
+        "id": "1",
+        "title": "Селектор c viewType = CONSTANT",
+        "viewType": "CONSTANT",
+        "dataType": "=;ПАСПОРТ РФ=ПАСПОРТ РФ;СВИД О РОЖДЕНИИ=СВИД О РОЖДЕНИИ",
+        "type": "Select",
+        "isRequired": false,
+        "readOnly": false,
+        "visible": true
+      },
+      {
+        "id": "##ID##",
+        "viewType": "OUTPUT",
+        "content": "7e2fbb3f-680b-484e-97be-31a1cd03b74e",
+        "visible": false
+      },
+      {
+        "id": "##STEP##",
+        "viewType": "OUTPUT",
+        "content": "1",
+        "visible": false
+      }
+    ]
+  }
 }
 """
 }
