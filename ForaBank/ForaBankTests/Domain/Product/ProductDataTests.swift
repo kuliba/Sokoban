@@ -193,7 +193,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Дебетовая")
+        XCTAssertNoDiff(sut.sectionItemSubtitle, "Дебетовая")
     }
     
     func test_subtitle_card_shouldReturnNil() throws {
@@ -202,7 +202,7 @@ class ProductDataTests: XCTestCase {
             productType: .card
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Card")
+        XCTAssertNoDiff(sut.sectionItemSubtitle, "Card")
     }
     
     func test_subtitle_card_shouldReturnDefaultString() throws {
@@ -212,7 +212,7 @@ class ProductDataTests: XCTestCase {
             loanBaseParam: .loanStub
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Кредитная карта")
+        XCTAssertNoDiff(sut.sectionItemSubtitle, "Кредитная карта")
     }
     
     func test_subtitle_deposit_shouldReturnInterestRate() throws {
@@ -222,7 +222,7 @@ class ProductDataTests: XCTestCase {
             productType: .deposit
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Ставка 0.0%")
+        XCTAssertNoDiff(sut.sectionItemSubtitle, "Ставка 0.0%")
     }
     
     func test_subtitle_loan_shouldReturnCurrentInterestRate() throws {
@@ -232,7 +232,7 @@ class ProductDataTests: XCTestCase {
             productType: .loan
         )
 
-        XCTAssertNoDiff(sut.subtitle, "Ставка 0.18%")
+        XCTAssertNoDiff(sut.sectionItemSubtitle, "Ставка 0.18%")
     }
     
     func test_subtitle_account_shouldReturnNil() throws {
@@ -241,7 +241,7 @@ class ProductDataTests: XCTestCase {
             productType: .account
         )
 
-        XCTAssertNoDiff(sut.subtitle, nil)
+        XCTAssertNoDiff(sut.sectionItemSubtitle, nil)
     }
     
     //MARK: Description Helper

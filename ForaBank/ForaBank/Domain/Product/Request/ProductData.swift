@@ -262,8 +262,8 @@ extension ProductData {
         return mainField
     }
     
-    var displayName: String { customName ?? mainField }
-    var sectionItemName: String {
+    var displayName: String { customNameIfValid ?? mainField }
+    var sectionItemTitle: String {
         return customNameIfValid ?? additionalField ?? mainField
     }
     var mainTitleName: String {
@@ -279,7 +279,7 @@ extension ProductData {
         
         return secondLine
     }
-    var navigationBarTitle: String { customName ?? additionalField ?? mainField }
+    var navigationBarTitle: String { customNameIfValid ?? additionalField ?? mainField }
     var navigationTitleForControlPanel: String { "\(navigationBarTitle)  •\(displayNumber ?? "")" }
     var balanceValue: Double { balance ?? 0 }
     var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
@@ -439,12 +439,12 @@ extension ProductData {
         
         [
             displayNumber,
-            subtitle,
+            sectionItemSubtitle,
             dateLongString
         ].compactMap { $0 }
     }
     
-    var subtitle: String? {
+    var sectionItemSubtitle: String? {
         
         switch self {
         case let cardProduct as ProductCardData:

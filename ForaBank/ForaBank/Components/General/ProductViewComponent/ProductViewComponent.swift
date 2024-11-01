@@ -294,8 +294,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
                 case .cardTitle:
                     return cardProduct.profileCardTitleName
                     
-                case .myProductsSectionItem:
-                    return cardProduct.sectionItemName
+                case .myProductsSectionItemTitle:
+                    return cardProduct.sectionItemTitle
                     
                 case .productViewNavTitle:
                     return cardProduct.navigationBarTitle
