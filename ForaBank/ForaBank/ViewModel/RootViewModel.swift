@@ -157,8 +157,6 @@ class RootViewModel: ObservableObject, Resetable {
                     #warning("insert .milliseconds(600)")
                     DispatchQueue.main.delay(for: .milliseconds(2600)) { [unowned self] in
                         
-                        // add notAuthorized when it will be ready
-                        
                         guard let authorized = self.model.сlientAuthorizationState.value.authorized else { return }
 
                         self.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
@@ -300,7 +298,7 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     
                 case let payload as ModelAction.AppVersion.Response:
-                    
+                    #warning("remove if possible after new notification integration")
                     withAnimation {
                         
                         switch payload.result {
@@ -446,20 +444,16 @@ class RootViewModel: ObservableObject, Resetable {
 }
 
 private extension Model {
-    #warning("rebuild according new response")
+#warning("todo handleVersionAppStore not finished")
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
+            clientInformAlerts: clientNotAuthorizationAlerts
+                .compactMap { $0 }
+                .eraseToAnyPublisher(),
+            
+            handleVersionAppStore: action
+                .compactMap { $0 as? ModelAction.AppVersion.Response }
                 .eraseToAnyPublisher(),
             
             checkClientResponse: action
