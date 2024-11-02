@@ -478,6 +478,18 @@ extension RootViewModelFactory {
                     
                     var list = ClientInformAlerts(notRequired: [], required: nil)
                     
+                    list.notRequired = response.list.filter {
+                        
+                        $0.authBlocking == false &&
+                        ($0.update == nil || $0.update?.type == "not_required")
+                    }.map {
+                        
+                        .init(
+                            title: $0.title,
+                            text: $0.text
+                        )
+                    }
+                    
                     if let required = response.list.first(where: {
                         
                         $0.authBlocking &&
@@ -485,22 +497,24 @@ extension RootViewModelFactory {
                         $0.update?.platform == "iOS"
                     }) {
                         
-                        list.required = .init(
-                            title: required.title,
-                            text: required.text
-                        )
-                    }
-                    
-                    list.notRequired = response.list.filter {
-                        
-                        $0.authBlocking == false &&
-                        $0.update == nil
-                    }.map {
-                        
-                        .init(
-                            title: $0.title,
-                            text: $0.text
-                        )
+                        if required.update?.type == "required" {
+                            list.required = .init(
+                                title: required.title,
+                                text: required.text,
+                                type: .required, 
+                                link: required.update?.link,
+                                version: required.update?.version
+                            )
+                        }
+                        if required.update?.type == "optional" {
+                            list.required = .init(
+                                title: required.title,
+                                text: required.text,
+                                type: .optional,
+                                link: required.update?.link,
+                                version: required.update?.version
+                            )
+                        }
                     }
                     
                     completion(list)
