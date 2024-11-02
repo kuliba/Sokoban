@@ -50,9 +50,21 @@ struct AuthPinCodeView: View {
         }
         .background(Color.white)
         .navigationBarHidden(true)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .alert(item: viewModel.clientInformAlerts?.alert) { alert in
+            
+            return alert.swiftUIAlert {
+               
+                if let link = viewModel.clientInformAlerts?.alert?.link,
+                   let version = viewModel.clientInformAlerts?.alert?.version,
+                   let url = URL(string: "https://" + link) {
+                    print("Attempting to open URL: \(url.absoluteString)")
+
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            
+                viewModel.showNextAlert(action: $0)
+            }
+        }
         .onAppear {
             viewModel.action.send(AuthPinCodeViewModelAction.Appear())
         }

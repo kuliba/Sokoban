@@ -28,6 +28,7 @@ class AuthPinCodeViewModel: ObservableObject {
     
     @Published var alert: Alert.ViewModel?
     @Published var mistakes: Int
+    @Published var clientInformAlerts: ClientInformAlerts?
     
     private var sensorAutoEvaluationStatus: SensorAutoEvaluationStatus?
     private var viewDidAppear: CurrentValueSubject<Bool, Never>
@@ -36,7 +37,7 @@ class AuthPinCodeViewModel: ObservableObject {
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
+
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
     init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0, sensorAutoEvaluationStatus: SensorAutoEvaluationStatus? = nil, isViewDidAppear: Bool = false, spinner: SpinnerView.ViewModel? = nil) {
@@ -109,40 +110,13 @@ class AuthPinCodeViewModel: ObservableObject {
     func bind() {
         
         model.sessionState
-            .combineLatest(model.clientInform, self.viewDidAppear)
+            .combineLatest(model.clientNotAuthorizedAlerts, self.viewDidAppear)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state, clientInformData, isViewDidAppear in
+            .sink { [weak self] sessionState, clientInformAlerts, viewDidAppear in
                 
-                guard let self else { return }
-        
-                switch state {
-                
-                case .active:
-                    
-                    guard clientInformData != nil, isViewDidAppear else { return }
-                    
-                    withAnimation {
-                        self.spinner = nil
-                    }
-                        
-                    if !self.model.clientInformStatus.isShowNotAuthorized,
-                       let message = clientInformData.data?.notAuthorized  {
-                       
-                        self.action.send(AuthPinCodeViewModelAction.Show.AlertClientInform(message: message))
-                    
-                    } else {
-                    
-                        tryAutoEvaluateSensor()
-                    }
-                    
-                default:
-                    withAnimation {
-                        self.spinner = .init()
-                    }
-                }
-                
-            }.store(in: &bindings)
-        
+                self?.clientInformAlerts = clientInformAlerts
+            }
+            .store(in: &bindings)
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
@@ -659,6 +633,43 @@ class AuthPinCodeViewModel: ObservableObject {
     }
 }
 
+// MARK: - Alert Handling
+
+extension AuthPinCodeViewModel {
+    
+    func showNextAlert(action: ClientInformActionType) {
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        
+        DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
+            
+            switch action {
+            case .notRequired:
+                self?.clientInformAlerts?.dropFirst()
+                
+            case .required, .optional:
+                
+                guard let alert = self?.clientInformAlerts?.required else { return }
+                self?.clientInformAlerts?.showAgain(requiredAlert: alert)
+            }
+        }
+    }
+    
+    private func handleAppVersionResponse(_ response: ModelAction.AppVersion.Response) {
+        
+        switch response.result {
+        case .success(let appInfo):
+            
+            let appVersion = appInfo.version
+            print("App Version: \(appVersion)")
+            
+        case .failure(let error):
+            
+            print("Failed to fetch app version: \(error.localizedDescription)")
+        }
+    }
+}
+
 //MARK: - Types
 
 extension AuthPinCodeViewModel {
@@ -930,6 +941,7 @@ enum AuthPinCodeViewModelAction {
         
         struct AlertClientInform: Action {
             
+            let title: String
             let message: String
         }
     }

@@ -79,7 +79,6 @@ class Model {
     let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
     let clientNotAuthorizedAlerts: CurrentValueSubject<ClientInformAlerts, Never>
-    
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     

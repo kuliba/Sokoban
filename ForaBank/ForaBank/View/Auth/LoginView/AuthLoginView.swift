@@ -13,7 +13,6 @@ import UIPrimitives
 struct AuthLoginView: View {
     
     @ObservedObject var viewModel: AuthLoginViewModel
-    @Environment(\.openURL) var openURL
     
     var body: some View {
         
