@@ -74,7 +74,7 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
-    let clientInform: CurrentValueSubject<ClientInformDataState, Never>
+    let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
     let clientNotAuthorizationAlerts: CurrentValueSubject<ClientInformAlerts, Never>
 
