@@ -74,9 +74,12 @@ class Model {
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
+    
+    // MARK: Client Inform Alerts and Notifications
     let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let сlientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
-    let clientNotAuthorizationAlerts: CurrentValueSubject<ClientInformAlerts, Never>
+    let clientNotAuthorizedAlerts: CurrentValueSubject<ClientInformAlerts, Never>
+    
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
     
@@ -244,7 +247,7 @@ class Model {
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
         self.сlientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
-        self.clientNotAuthorizationAlerts = .init(.init())
+        self.clientNotAuthorizedAlerts = .init(.init())
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }

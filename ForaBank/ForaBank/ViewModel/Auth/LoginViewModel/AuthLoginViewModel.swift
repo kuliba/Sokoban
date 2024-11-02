@@ -115,6 +115,7 @@ extension AuthLoginViewModel {
             
             let appVersion = appInfo.version
             print("App Version: \(appVersion)")
+            
         case .failure(let error):
             
             print("Failed to fetch app version: \(error.localizedDescription)")

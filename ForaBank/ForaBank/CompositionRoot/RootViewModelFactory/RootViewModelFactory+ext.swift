@@ -529,7 +529,7 @@ extension RootViewModelFactory {
             if let info = $0 {
                 
                 self.logger.log(level: .info, category: .network, message: "notifications \(info)", file: #file, line: #line)
-                self.model.clientNotAuthorizationAlerts.value = info
+                self.model.clientNotAuthorizedAlerts.value = info
             } else {
                 
                 self.logger.log(level: .error, category: .network, message: "failed to fetch NOTauthorizedZoneClientInformData", file: #file, line: #line)
