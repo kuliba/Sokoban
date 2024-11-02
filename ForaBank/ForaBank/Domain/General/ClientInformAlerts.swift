@@ -122,7 +122,7 @@ extension ClientInformAlerts.Alert {
                 return Alert(
                     title: Text(title),
                     message: Text(text),
-                    primaryButton: .cancel(Text("Позже")) { action(.optional) },
+                    primaryButton: .cancel(Text("Позже")),
                     secondaryButton: .default(Text("Обновить"), action: { action(.optional) })
                 )
             
