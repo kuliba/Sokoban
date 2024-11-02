@@ -856,25 +856,38 @@ struct ProductProfileHistoryView: View {
             )
             .padding(.bottom, 15)
             
-            switch viewModel.content {
-            case .empty(let emptyListViewModel):
-                EmptyListView(viewModel: emptyListViewModel)
-                    .padding(.top, 20)
-                
-            case let .list(listViewModel):
-                
-                if let segmentedVM = viewModel.segmentBarViewModel {
-                    
-                    SegmentedBarView(viewModel: segmentedVM)
-                        .padding(.vertical, 5)
-                        .padding(.bottom, 64)
-                }
-                
-                ListView(viewModel: listViewModel)
-                
-            case .loading:
-                LoadingView()
-            }
+            content()
+        }
+    }
+}
+
+private extension ProductProfileHistoryView {
+
+    @ViewBuilder
+    func content() -> some View {
+        
+        switch viewModel.content {
+        case let .empty(emptyListViewModel):
+            EmptyListView(viewModel: emptyListViewModel)
+                .padding(.top, 20)
+            
+        case let .list(listViewModel):
+            segmentedBarView()
+            ListView(viewModel: listViewModel)
+            
+        case .loading:
+            LoadingView()
+        }
+    }
+    
+    @ViewBuilder
+    private func segmentedBarView() -> some View {
+        
+        viewModel.segmentBarViewModel.map {
+            
+            SegmentedBarView(viewModel: $0)
+                .padding(.vertical, 5)
+                .padding(.bottom, 64)
         }
     }
 }
