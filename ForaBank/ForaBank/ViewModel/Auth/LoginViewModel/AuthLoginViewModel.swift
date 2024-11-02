@@ -21,15 +21,15 @@ class AuthLoginViewModel: ObservableObject {
     
     @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
-    
     @Published var buttons: [ButtonAuthView.ViewModel]
-    
+    @Published var clientInformAlerts: ClientInformAlerts?
+
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
-    
+
     lazy var card: CardViewModel = CardViewModel(
         scanButton: .init(
             action: { [weak self] in
@@ -83,6 +83,42 @@ class AuthLoginViewModel: ObservableObject {
     
     func showProducts() {
         handleLandingAction(.orderCard)
+    }
+}
+
+// MARK: Alert Handling
+
+extension AuthLoginViewModel {
+    
+    func showNextAlert(action: ClientInformActionType) {
+                
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        
+        DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
+            
+            switch action {
+            case .notRequired:
+                self?.clientInformAlerts?.dropFirst()
+
+            case .required, .optional:
+                
+                guard let alert = self?.clientInformAlerts?.required else { return }
+                self?.clientInformAlerts?.showAgain(requiredAlert: alert)
+            }
+        }
+    }
+    
+    private func handleAppVersionResponse(_ response: ModelAction.AppVersion.Response) {
+        
+        switch response.result {
+        case .success(let appInfo):
+            
+            let appVersion = appInfo.version
+            print("App Version: \(appVersion)")
+        case .failure(let error):
+            
+            print("Failed to fetch app version: \(error.localizedDescription)")
+        }
     }
 }
 
@@ -148,14 +184,22 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
-        eventPublishers.clientInformMessage
+        eventPublishers.clientInformAlerts
             .receive(on: scheduler)
-            .sink { [weak self] message in
+            .sink { [weak self] in
                 
-                self?.showClientInformAlert(withMessage: message)
+                self?.clientInformAlerts = $0
             }
             .store(in: &bindings)
-        
+#warning("todo handleVersionAppStore not finished")
+        eventPublishers.handleVersionAppStore
+            .receive(on: scheduler)
+            .sink { [weak self] response in
+                
+                self?.handleAppVersionResponse(response)
+            }
+            .store(in: &bindings)
+
         eventPublishers.checkClientResponse
             .receive(on: scheduler)
             .sink { [weak self] payload in
@@ -336,24 +380,6 @@ private extension AuthLoginViewModel {
             
             self.cardScanner = nil
         })
-    }
-    
-    func showClientInformAlert(
-        withMessage message: String
-    ) {
-        LoggerAgent.shared.log(category: .ui, message: "AuthLoginViewModelAction.Show.AlertClientInform: \(message)")
-        
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
-        
-        alert = .init(
-            title: "Ошибка",
-            message: message,
-            primary: .init(
-                type: .default,
-                title: "Ok",
-                action: { [weak self] in self?.alert = nil }
-            )
-        )
     }
     
     func handleCloseLinkAction() {
@@ -542,7 +568,8 @@ extension AuthLoginViewModel {
     
     struct EventPublishers {
         
-        let clientInformMessage: AnyPublisher<String, Never>
+        let clientInformAlerts: AnyPublisher<ClientInformAlerts, Never>
+        let handleVersionAppStore: AnyPublisher<ModelAction.AppVersion.Response, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
         let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>

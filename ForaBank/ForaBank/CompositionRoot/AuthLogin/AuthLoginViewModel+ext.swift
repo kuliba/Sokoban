@@ -33,20 +33,16 @@ extension AuthLoginViewModel {
 }
 
 private extension Model {
-    #warning("fix and update")
+
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
+            clientInformAlerts: clientNotAuthorizationAlerts
+                .compactMap { $0 }
+                .eraseToAnyPublisher(),
+            
+            handleVersionAppStore: action
+                .compactMap { $0 as? ModelAction.AppVersion.Response }
                 .eraseToAnyPublisher(),
             
             checkClientResponse: action

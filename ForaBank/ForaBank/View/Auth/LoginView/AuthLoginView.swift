@@ -5,13 +5,15 @@
 //  Created by Дмитрий on 09.02.2022.
 //
 
-import SwiftUI
 import Combine
 import Presentation
+import SwiftUI
+import UIPrimitives
 
 struct AuthLoginView: View {
     
     @ObservedObject var viewModel: AuthLoginViewModel
+    @Environment(\.openURL) var openURL
     
     var body: some View {
         
@@ -20,7 +22,21 @@ struct AuthLoginView: View {
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
         }
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
+        .alert(item: viewModel.clientInformAlerts?.alert) { alert in
+            
+            return alert.swiftUIAlert {
+               
+                if let link = viewModel.clientInformAlerts?.alert?.link,
+                   let version = viewModel.clientInformAlerts?.alert?.version,
+                   let url = URL(string: "https://" + link) {
+                    print("Attempting to open URL: \(url.absoluteString)")
+
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            
+                viewModel.showNextAlert(action: $0)
+            }
+        }
         .present(item: $viewModel.cardScanner, style: .fullScreen) {
             
             CardScannerView(viewModel: $0)
