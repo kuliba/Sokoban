@@ -444,13 +444,14 @@ extension ProductsSwapView.ViewModel {
 struct ProductsSwapView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: 8) {
             
             ForEach(viewModel.items) { item in
-                ProductSelectorView(viewModel: item)
+                ProductSelectorView(viewModel: item, viewFactory: viewFactory)
                     .padding(.top, 4)
                 
                 if let from = viewModel.from, item.id == from.id {
@@ -596,7 +597,8 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
     ) -> ProductsSwapView {
         
         ProductsSwapView(
-            viewModel: .init(model: .emptyMock, items: items, divider: .sample)
+            viewModel: .init(model: .emptyMock, items: items, divider: .sample),
+            viewFactory: .preview
         )
     }
 }

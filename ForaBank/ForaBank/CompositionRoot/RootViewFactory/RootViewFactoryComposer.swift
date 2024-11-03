@@ -24,17 +24,20 @@ final class RootViewFactoryComposer {
     private let httpClient: HTTPClient
     private let historyFeatureFlag: HistoryFilterFlag
     private let marketFeatureFlag: MarketplaceFlag
+    private let savingsAccountFlag: SavingsAccountFlag
 
     init(
         model: Model,
         httpClient: HTTPClient,
         historyFeatureFlag: HistoryFilterFlag,
-        marketFeatureFlag: MarketplaceFlag
+        marketFeatureFlag: MarketplaceFlag,
+        savingsAccountFlag: SavingsAccountFlag
     ) {
         self.model = model
         self.httpClient = httpClient
         self.historyFeatureFlag = historyFeatureFlag
         self.marketFeatureFlag = marketFeatureFlag
+        self.savingsAccountFlag = savingsAccountFlag
     }
 }
 
@@ -58,7 +61,8 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeAnywayFlowView: makeAnywayFlowView
+            makeAnywayFlowView: makeAnywayFlowView, 
+            makeCategoryView: { CategoryView(newImplementation: self.savingsAccountFlag.isActive, isSelected: $0, title: $1)}
         )
     }
 }
@@ -90,7 +94,8 @@ private extension RootViewFactoryComposer {
                 makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView, 
                 makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) }
-            ),
+            ), 
+            optionSelectorViewFactory: .init(makeCategoryView: { CategoryView(newImplementation: self.marketFeatureFlag.isActive, isSelected: $0, title: $1)}),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
@@ -124,12 +129,14 @@ private extension RootViewFactoryComposer {
     
     func makeUserAccountView(
         viewModel: UserAccountViewModel,
-        config: UserAccountConfig
+        config: UserAccountConfig,
+        viewFactory: OptionSelectorViewFactory
     ) -> UserAccountView {
         
         UserAccountView(
             viewModel: viewModel,
-            config: config
+            config: config,
+            viewFactory: viewFactory
         )
     }
     

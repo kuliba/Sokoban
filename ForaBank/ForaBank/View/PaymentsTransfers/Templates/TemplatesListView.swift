@@ -12,6 +12,7 @@ import UIPrimitives
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
     
@@ -69,10 +70,13 @@ private extension TemplatesListView {
                 
                 if let categorySelectorViewModel = viewModel.categorySelector {
                     
-                    OptionSelectorView(viewModel: categorySelectorViewModel)
-                        .frame(height: 32)
-                        .padding(.top, 16)
-                        .padding(.horizontal)
+                    OptionSelectorView(
+                        viewModel: categorySelectorViewModel,
+                        viewFactory: viewFactory
+                    )
+                    .frame(height: 32)
+                    .padding(.top, 16)
+                    .padding(.horizontal)
                 }
                 
                 switch viewModel.style {
@@ -201,7 +205,7 @@ private extension TemplatesListView {
             EmptyView()
             
         case let .payment(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+            PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
         }
     }
     
@@ -234,10 +238,10 @@ private extension TemplatesListView {
         switch sheet.type {
         case let .meToMe(viewModel):
             
-            PaymentsMeToMeView(viewModel: viewModel)
+            PaymentsMeToMeView(viewModel: viewModel, viewFactory: viewFactory)
                 .fullScreenCover(item: $viewModel.success) { successViewModel in
                     
-                    PaymentsSuccessView(viewModel: successViewModel)
+                    PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
                 }
                 .transaction { transaction in
                     
@@ -593,19 +597,19 @@ struct TemplatesListView_Previews: PreviewProvider {
                 .previewDisplayName("Rename View")
             
             NavigationView {
-                TemplatesListView(viewModel: .sampleComplete )
+                TemplatesListView(viewModel: .sampleComplete, viewFactory: .preview)
                     .environment(\.mainViewSize, CGSize(width: 414, height: 800))
                     
             }
             .previewDisplayName("TemplatesView List")
             
             NavigationView {
-                TemplatesListView(viewModel: .sampleTiles )
+                TemplatesListView(viewModel: .sampleTiles, viewFactory: .preview)
             }
             .previewDisplayName("TemplatesView Tiles")
             
             NavigationView {
-                TemplatesListView(viewModel: .sampleDeleting )
+                TemplatesListView(viewModel: .sampleDeleting, viewFactory: .preview)
             }
             
             TemplatesListView.EmptyTemplateListView(viewModel: .sample)

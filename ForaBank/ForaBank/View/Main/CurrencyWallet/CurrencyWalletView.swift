@@ -12,6 +12,7 @@ import SwiftUI
 struct CurrencyWalletView: View {
     
     @ObservedObject var viewModel: CurrencyWalletViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -33,7 +34,7 @@ struct CurrencyWalletView: View {
                                 CurrencySwapView(viewModel: swapViewModel)
                                 
                             case let selectorViewModel as CurrencySelectorView.ViewModel:
-                                CurrencySelectorView(viewModel: selectorViewModel)
+                                CurrencySelectorView(viewModel: selectorViewModel, viewFactory: viewFactory)
                                 
                             case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
                                 CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
@@ -123,6 +124,7 @@ struct CurrencyWalletView_Previews: PreviewProvider {
                 rateBuyItem: 1.00,
                 rateSellItem: 64.50),
             currencyOperation: .buy,
-            currencySymbol: "₽") {})
+            currencySymbol: "₽") {},
+            viewFactory: .preview)
     }
 }

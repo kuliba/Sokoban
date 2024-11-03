@@ -246,6 +246,7 @@ extension CurrencyWalletListViewModel {
 struct CurrencyWalletListView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -253,8 +254,11 @@ struct CurrencyWalletListView: View {
             
             if let optionSelector = viewModel.optionSelector {
                 
-                OptionSelectorView(viewModel: optionSelector)
-                    .padding(.horizontal, 20)
+                OptionSelectorView(
+                    viewModel: optionSelector,
+                    viewFactory: viewFactory
+                )
+                .padding(.horizontal, 20)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -296,7 +300,7 @@ extension CurrencyWalletListViewModel {
 
 struct CurrencyWalletListViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyWalletListView(viewModel: .sample)
+        CurrencyWalletListView(viewModel: .sample, viewFactory: .preview)
             .previewLayout(.sizeThatFits)
             .padding(.vertical)
     }

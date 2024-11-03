@@ -13,6 +13,7 @@ struct OperationDetailView: View {
     @ObservedObject var viewModel: OperationDetailViewModel
     let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
     let payment: () -> Void
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -87,7 +88,7 @@ struct OperationDetailView: View {
             case let .payments(viewModel):
                 NavigationView {
                     
-                    PaymentsView(viewModel: viewModel)
+                    PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
                 }
@@ -273,7 +274,8 @@ struct OperationDetailView_Previews: PreviewProvider {
             OperationDetailView(
                 viewModel: .sampleComplete,
                 makeRepeatButtonView: { _ in .init(action: { }) },
-                payment: {}
+                payment: {}, 
+                viewFactory: .preview
             )
         }
     }

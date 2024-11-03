@@ -70,7 +70,8 @@ extension ModelRootFactory: RootFactory {
             model: model,
             httpClient: httpClient,
             historyFeatureFlag: featureFlags.historyFilterFlag,
-            marketFeatureFlag: featureFlags.marketplaceFlag
+            marketFeatureFlag: featureFlags.marketplaceFlag,
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
         
         return composer.compose()

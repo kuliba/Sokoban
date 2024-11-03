@@ -10,6 +10,7 @@ import SwiftUI
 struct SbpPayView: View {
     
     @ObservedObject var viewModel: SbpPayViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
          
@@ -20,7 +21,9 @@ struct SbpPayView: View {
 
                 if let productsViewModel = viewModel.paymentProduct {
 
-                    ProductSelectorView(viewModel: productsViewModel)
+                    ProductSelectorView(
+                        viewModel: productsViewModel,
+                        viewFactory: viewFactory)
                 }
         
                 Divider()
@@ -137,6 +140,6 @@ struct SbpPayView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .sampleMe2MeCollapsed, conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil))
+        SbpPayView(viewModel: .init(.emptyMock, paymentProduct: .sampleMe2MeCollapsed, conditions: [.init(title: "Условия обслуживания при использовании СБП", link: .init(string: "")!), .init(title: "Соглашения/Договор на использование СБПэй", link: .init(string: "")!)], rootActions: nil), viewFactory: .preview)
     }
 }

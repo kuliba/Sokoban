@@ -11,6 +11,7 @@ import IQKeyboardManagerSwift
 struct PaymentsGroupView: View {
     
     let viewModel: PaymentsGroupViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -18,7 +19,7 @@ struct PaymentsGroupView: View {
             
             ForEach(viewModel.items) { itemViewModel in
                 
-                Self.separatedItemView(for: itemViewModel, items: viewModel.items)
+                Self.separatedItemView(for: itemViewModel, items: viewModel.items, viewFactory: viewFactory)
             }
         }
     }
@@ -29,10 +30,11 @@ extension PaymentsGroupView {
     @ViewBuilder
     static func separatedItemView(
         for viewModel: PaymentsParameterViewModel,
-        items: [PaymentsParameterViewModel]
+        items: [PaymentsParameterViewModel],
+        viewFactory: OptionSelectorViewFactory
     ) -> some View {
         
-        itemView(for: viewModel)
+        itemView(for: viewModel, viewFactory: viewFactory)
             .frame(minHeight: frameMinHeight(for: viewModel))
             .background(background(for: viewModel, items: items))
             .padding(.horizontal, horizontalPadding(for: viewModel))
@@ -43,7 +45,8 @@ extension PaymentsGroupView {
     
     @ViewBuilder
     static func itemView(
-        for viewModel: PaymentsParameterViewModel
+        for viewModel: PaymentsParameterViewModel,
+        viewFactory: OptionSelectorViewFactory
     ) -> some View {
         
         switch viewModel {
@@ -89,7 +92,7 @@ extension PaymentsGroupView {
             PaymentsNameView(viewModel: nameViewModel)
             
         case let productViewModel as PaymentsProductView.ViewModel:
-            PaymentsProductView(viewModel: productViewModel)
+            PaymentsProductView(viewModel: productViewModel, viewFactory: viewFactory)
             
         case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
             PaymentsProductTemplateView(viewModel: productTemplateViewModel)
@@ -287,7 +290,8 @@ extension PaymentsGroupView {
     
     @ViewBuilder
     static func groupView(
-        for groupViewModel: PaymentsGroupViewModel
+        for groupViewModel: PaymentsGroupViewModel,
+        viewFactory: OptionSelectorViewFactory
     ) -> some View {
         
         switch groupViewModel {
@@ -301,7 +305,7 @@ extension PaymentsGroupView {
             PaymentsSpoilerGroupView(viewModel: spoilerGroupViewModel)
             
         default:
-            PaymentsGroupView(viewModel: groupViewModel)
+            PaymentsGroupView(viewModel: groupViewModel, viewFactory: viewFactory)
         }
     }
 }
@@ -311,7 +315,7 @@ extension PaymentsGroupView {
 struct PaymentsGroupView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
-        PaymentsGroupView(viewModel: viewModel)
+        PaymentsGroupView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static var previews: some View {

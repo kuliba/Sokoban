@@ -76,10 +76,11 @@ extension PaymentsProductView {
 struct PaymentsProductView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
 
     var body: some View {
         
-        ProductSelectorView(viewModel: viewModel.selector)
+        ProductSelectorView(viewModel: viewModel.selector, viewFactory: viewFactory)
     }
 }
 
@@ -103,8 +104,8 @@ struct PaymentsCardView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsProductView(viewModel: .sample)
-            PaymentsProductView(viewModel: .sampleExpanded)
+            PaymentsProductView(viewModel: .sample, viewFactory: .preview)
+            PaymentsProductView(viewModel: .sampleExpanded, viewFactory: .preview)
         }
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct ContactsBanksSectionView: View {
     
     @ObservedObject var viewModel: ContactsBanksSectionViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
       
@@ -34,10 +35,13 @@ struct ContactsBanksSectionView: View {
             
             if viewModel.header.isCollapsed {
                 
-                OptionSelectorView(viewModel: viewModel.options)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 0)
-                    .padding(.bottom, 24)
+                OptionSelectorView(
+                    viewModel: viewModel.options,
+                    viewFactory: viewFactory
+                )
+                .padding(.horizontal, 20)
+                .padding(.top, 0)
+                .padding(.bottom, 24)
 
                 ScrollView(.vertical) {
                     
@@ -137,7 +141,7 @@ struct ContactsBanksSectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContactsBanksSectionView(viewModel: .sample)
+        ContactsBanksSectionView(viewModel: .sample, viewFactory: .preview)
         
         SearchPlaceholderView(viewModel: .init())
     }

@@ -124,6 +124,7 @@ enum OptionSelectorAction {
 struct OptionSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var spacing: CGFloat {
         
@@ -142,7 +143,10 @@ struct OptionSelectorView: View {
                 
                 ForEach(viewModel.options) { optionViewModel in
                     
-                    OptionButtonView(viewModel: optionViewModel, isSelected: viewModel.selected == optionViewModel.id)
+                    OptionButtonView(
+                        viewModel: optionViewModel,
+                        isSelected: viewModel.selected == optionViewModel.id,
+                        viewFactory: viewFactory)
                 }
             }
         }
@@ -157,7 +161,8 @@ extension OptionSelectorView {
         
         let viewModel: ViewModel.OptionViewModel
         let isSelected: Bool
-        
+        let viewFactory: OptionSelectorViewFactory
+
         var body: some View {
             
             Button(
@@ -181,22 +186,11 @@ extension OptionSelectorView {
                     .padding(.vertical, 6)
                     .background(Capsule().foregroundColor(capsuleColor))
                 
-            case .products, .productsSmall:
+            case .products:
+                viewFactory.makeCategoryView(isSelected, viewModel.title)
                 
-                let circleColor = isSelected ? Color.mainColorsRed : .mainColorsGrayLightest
-                let textColor = isSelected ? Color.textSecondary : .textPlaceholder
-                
-                HStack(spacing: 4) {
-                    
-                    Circle()
-                        .frame(width: 4, height: 4, alignment: .center)
-                        .foregroundColor(circleColor)
-                    
-                    Text(viewModel.title)
-                        .font(.textBodySM12160())
-                        .foregroundColor(textColor)
-                        .padding(.vertical, 6)
-                }
+            case .productsSmall:
+                CategoryView(newImplementation: false, isSelected: isSelected, title: viewModel.title)
             }
         }
     }
@@ -210,11 +204,11 @@ struct OptionSelectorView_Previews: PreviewProvider {
         
         Group {
             
-            OptionSelectorView(viewModel: .sample)
+            OptionSelectorView(viewModel: .sample, viewFactory: .preview)
                 .previewDisplayName("style: .template")
-            OptionSelectorView(viewModel: .mainSample)
+            OptionSelectorView(viewModel: .mainSample, viewFactory: .preview)
                 .previewDisplayName("style: .products")
-            OptionSelectorView(viewModel: .mainSampleSmall)
+            OptionSelectorView(viewModel: .mainSampleSmall, viewFactory: .preview)
                 .previewDisplayName("style: .productsSmall")
         }
     }

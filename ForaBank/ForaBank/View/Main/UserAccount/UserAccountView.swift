@@ -18,6 +18,7 @@ struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
     let config: UserAccountConfig
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -231,7 +232,7 @@ struct UserAccountView: View {
             )
             
         case let .successView(successViewModel):
-            PaymentsSuccessView(viewModel: successViewModel)
+            PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
         }
     }
     
@@ -385,7 +386,7 @@ struct UserAccountView: View {
                 .navigationBarBackButtonHidden(false)
             
         case let .sbpay(viewModel):
-            SbpPayView(viewModel: viewModel)
+            SbpPayView(viewModel: viewModel, viewFactory: viewFactory)
         }
     }
 }
@@ -493,7 +494,8 @@ struct UserAccountView_Previews: PreviewProvider {
         
         UserAccountView(
             viewModel: .sample,
-            config: .preview
+            config: .preview, 
+            viewFactory: .preview
         )
     }
 }

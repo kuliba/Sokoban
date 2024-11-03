@@ -67,6 +67,7 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
+                optionSelectorViewFactory: rootViewFactory.makeOptionSelectorViewFactory,
                 paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
@@ -141,13 +142,14 @@ struct RootView: View {
             NavigationView {
                 UserAccountView(
                     viewModel: viewModel,
-                    config: .iFora
+                    config: .iFora, 
+                    viewFactory: rootViewFactory.makeOptionSelectorViewFactory
                 )
             }
             
         case let .payments(paymentsViewModel):
             NavigationView {
-                PaymentsView(viewModel: paymentsViewModel)
+                PaymentsView(viewModel: paymentsViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             }
             
         case let .landing(viewModel, needIgnoringSafeArea):
@@ -368,7 +370,7 @@ private extension RootView {
         case let .paymentFlow(paymentFlow):
             switch paymentFlow {
             case let .mobile(mobile):
-                PaymentsView(viewModel: mobile.paymentsViewModel)
+                PaymentsView(viewModel: mobile.paymentsViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
                 
             case let .standard(standard):
                 switch standard {
@@ -380,7 +382,7 @@ private extension RootView {
                 }
                 
             case let .taxAndStateServices(wrapper):
-                PaymentsView(viewModel: wrapper.paymentsViewModel)
+                PaymentsView(viewModel: wrapper.paymentsViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
                 
             case let .transport(transport):
                 transportPaymentsView(transport)
@@ -396,7 +398,7 @@ private extension RootView {
         cover: CategoryPickerSectionNavigation.FullScreenCover
     ) -> some View {
         
-        QRView(viewModel: cover.qr.qrModel)
+        QRView(viewModel: cover.qr.qrModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
     }
     
     func paymentProviderPicker(
@@ -523,38 +525,42 @@ private extension RootView {
         _ transport: TransportPaymentsViewModel
     ) -> some View {
         
-        TransportPaymentsView(viewModel: transport) {
-            MosParkingView(
-                viewModel: .init(
-                    operation: viewModel.model.getMosParkingPickerData
-                ),
-                stateView: { state in
-                    
-                    MosParkingStateView(
-                        state: state,
-                        mapper: DefaultMosParkingPickerDataMapper(
-                            select: transport.selectMosParkingID(id:)
-                        ),
-                        errorView: {
-                            
-                            Text($0.localizedDescription).foregroundColor(.red)
-                        }
-                    )
-                }
-            )
-            // TODO: fix navigation bar
-            // .navigationBar(
-            //     with: .init(
-            //         title: "Московский паркинг",
-            //         rightItems: [
-            //             NavigationBarView.ViewModel.IconItemViewModel(
-            //                 icon: .init("ic40Transport"),
-            //                 style: .large
-            //             )
-            //         ]
-            //     )
-            // )
-        }
+        TransportPaymentsView(
+            viewModel: transport,
+            mosParkingView: {
+                MosParkingView(
+                    viewModel: .init(
+                        operation: viewModel.model.getMosParkingPickerData
+                    ),
+                    stateView: { state in
+                        
+                        MosParkingStateView(
+                            state: state,
+                            mapper: DefaultMosParkingPickerDataMapper(
+                                select: transport.selectMosParkingID(id:)
+                            ),
+                            errorView: {
+                                
+                                Text($0.localizedDescription).foregroundColor(.red)
+                            }
+                        )
+                    }
+                )
+                // TODO: fix navigation bar
+                // .navigationBar(
+                //     with: .init(
+                //         title: "Московский паркинг",
+                //         rightItems: [
+                //             NavigationBarView.ViewModel.IconItemViewModel(
+                //                 icon: .init("ic40Transport"),
+                //                 style: .large
+                //             )
+                //         ]
+                //     )
+                // )
+            },
+            viewFactory: .init(makeCategoryView: rootViewFactory.makeCategoryView)
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBar(
@@ -573,7 +579,7 @@ private extension RootView {
         
         switch qrDestination {
         case let .qrFailedViewModel(qrFailedViewModel):
-            QRFailedView(viewModel: qrFailedViewModel)
+            QRFailedView(viewModel: qrFailedViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             
         case let .internetTV(viewModel):
             InternetTVDetailsView(viewModel: viewModel)
@@ -581,15 +587,19 @@ private extension RootView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .operatorSearch(viewModel):
-            QRSearchOperatorView(viewModel: viewModel)
+            QRSearchOperatorView(viewModel: viewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
         case let .payments(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            PaymentsView(
+                viewModel: wrapper.paymentsViewModel,
+                viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             
         case let .paymentComplete(paymentComplete):
-            PaymentsSuccessView(viewModel: paymentComplete)
+            PaymentsSuccessView(
+                viewModel: paymentComplete,
+                viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             
         case let .providerPicker(providerPicker):
             paymentProviderPicker(providerPicker)
@@ -609,7 +619,8 @@ private extension RootView {
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: rootViewFactory.makeIconView,
-            makeAnywayFlowView: makeAnywayFlowView
+            makeAnywayFlowView: makeAnywayFlowView,
+            makeCategoryView: rootViewFactory.makeCategoryView
         )
         //    .navigationBarWithBack(
         //        title: PaymentsTransfersSectionType.payments.name,
@@ -631,7 +642,8 @@ private extension RootView {
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: makeAnywayFlowView,
-                makeIconView: rootViewFactory.makeIconView
+                makeIconView: rootViewFactory.makeIconView, 
+                makeCategoryView: rootViewFactory.makeCategoryView
             )
         )
 //        .navigationBarWithAsyncIcon(
@@ -679,7 +691,7 @@ private extension RootView {
             Text("TBD: destination view \(String(describing: backendFailure))")
             
         case let .detailPayment(wrapper):
-            PaymentsView(viewModel: wrapper.paymentsViewModel)
+            PaymentsView(viewModel: wrapper.paymentsViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             
         case let .payment(payment):
             Text("TBD: destination view \(String(describing: payment))")
@@ -712,7 +724,7 @@ private extension RootView {
         
         switch destination {
         case let .exchange(currencyWalletViewModel):
-            CurrencyWalletView(viewModel: currencyWalletViewModel)
+            CurrencyWalletView(viewModel: currencyWalletViewModel, viewFactory: rootViewFactory.makeOptionSelectorViewFactory)
             
         case let .latest(latest):
             Text("TBD: destination " + String(describing: latest))
@@ -770,31 +782,36 @@ private extension RootView {
         
         RxWrapperView(model: transfers.flow) {
             
-            PaymentsTransfersPersonalTransfersFlowView(state: $0,  event: $1) {
-                
-                RxWrapperView(model: transfers.content) { state, event in
+            PaymentsTransfersPersonalTransfersFlowView(
+                state: $0,
+                event: $1,
+                contentView: {
                     
-                    VStack {
+                    RxWrapperView(model: transfers.content) { state, event in
                         
-                        PTSectionTransfersButtonsView(
-                            title: PaymentsTransfersSectionType.transfers.name,
-                            buttons: state.elements.compactMap { element in
-                                
-                                switch element {
-                                case let .buttonType(buttonType):
-                                    return .init(type: buttonType) {
-                                        
-                                        event(.select(.buttonType(buttonType)))
-                                    }
+                        VStack {
+                            
+                            PTSectionTransfersButtonsView(
+                                title: PaymentsTransfersSectionType.transfers.name,
+                                buttons: state.elements.compactMap { element in
                                     
-                                default:
-                                    return nil
+                                    switch element {
+                                    case let .buttonType(buttonType):
+                                        return .init(type: buttonType) {
+                                            
+                                            event(.select(.buttonType(buttonType)))
+                                        }
+                                        
+                                    default:
+                                        return nil
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
-                }
-            }
+                },
+                viewFactory: rootViewFactory.makeOptionSelectorViewFactory
+            )
         }
     }
     
@@ -1095,9 +1112,10 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:config:),
+                        makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: $2) },
                         makeAnywayFlowView: { _ in fatalError() }
                     ),
+                    optionSelectorViewFactory: .preview,
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                         makeHistoryButton: { .init(event: $0 ) },
@@ -1109,9 +1127,10 @@ private extension RootViewFactory {
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
-            makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
+            makeUserAccountView: { _,_,_ in UserAccountView.init(viewModel: .sample, config: .preview, viewFactory: .preview) },
             makeMarketShowcaseView: { _,_,_   in .none },
-            makeAnywayFlowView: { _ in fatalError() }
+            makeAnywayFlowView: { _ in fatalError() }, 
+            makeCategoryView: { .init(newImplementation: true, isSelected: $0, title: $1) }
         )
     }
 }

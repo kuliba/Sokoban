@@ -12,12 +12,14 @@ import Combine
 class PaymentsHoustingViewController: UIHostingController<PaymentsView> {
     
     private let viewModel: PaymentsViewModel
+    private let viewFactory: OptionSelectorViewFactory
     private var bindings = Set<AnyCancellable>()
     
-    init(with viewModel: PaymentsViewModel) {
+    init(with viewModel: PaymentsViewModel, viewFactory: OptionSelectorViewFactory) {
         
         self.viewModel = viewModel
-        super.init(rootView: PaymentsView(viewModel: viewModel))
+        self.viewFactory = viewFactory
+        super.init(rootView: PaymentsView(viewModel: viewModel, viewFactory: viewFactory))
         
         bind()
     }

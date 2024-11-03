@@ -14,10 +14,11 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
     
     let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
     let makeIconView: (String?) -> IconDomain.IconView
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
-        TemplatesListView(viewModel: model.state.content)
+        TemplatesListView(viewModel: model.state.content, viewFactory: viewFactory)
             .alert(
                 item: model.state.alert,
                 content: alertContent
@@ -113,7 +114,7 @@ private extension TemplatesListFlowView {
         case let .payment(payment):
             switch payment {
             case let .legacy(paymentsViewModel):
-                PaymentsView(viewModel: paymentsViewModel)
+                PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
                 
             case let .v1(node):
                 let payload = node.model.state.content.state.transaction.context.outline.payload

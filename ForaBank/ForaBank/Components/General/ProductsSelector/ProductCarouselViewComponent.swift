@@ -723,17 +723,23 @@ struct ProductCarouselView: View {
     @ObservedObject private var viewModel: ViewModel
     
     private let buttonNewProduct: () -> ButtonNewProduct?
+    private let viewFactory: OptionSelectorViewFactory
     
     init(
         viewModel: ViewModel,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?
+        buttonNewProduct: @escaping () -> ButtonNewProduct?,
+        viewFactory: OptionSelectorViewFactory
     ) {
         self.viewModel = viewModel
         self.buttonNewProduct = buttonNewProduct
+        self.viewFactory = viewFactory
     }
     
-    init(viewModel: ViewModel) {
-        self.init(viewModel: viewModel, buttonNewProduct: { nil })
+    init(
+        viewModel: ViewModel,
+        viewFactory: OptionSelectorViewFactory
+    ) {
+        self.init(viewModel: viewModel, buttonNewProduct: { nil }, viewFactory: viewFactory)
     }
     
     private let newProductButtonHeight = ProductGroupView.ViewModel.Dimensions.regular.sizes.product.height
@@ -746,7 +752,10 @@ struct ProductCarouselView: View {
             
             viewModel.selector.map {
                 
-                OptionSelectorView(viewModel: $0)
+                OptionSelectorView(
+                    viewModel: $0,
+                    viewFactory: viewFactory
+                )
                     .frame(height: selectorFrameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")
                     .padding(
@@ -1050,7 +1059,7 @@ extension ProductCarouselView {
 struct ProdCarouselView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: ProductCarouselView.ViewModel) -> some View {
-        ProductCarouselView(viewModel: viewModel)
+        ProductCarouselView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static func previewsGroup() -> some View {

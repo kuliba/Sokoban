@@ -425,6 +425,7 @@ extension CurrencyWalletSelectorViewModel {
 struct CurrencyWalletSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var background: Color {
         
@@ -442,7 +443,7 @@ struct CurrencyWalletSelectorView: View {
             
             if let listViewModel = viewModel.listViewModel {
                 
-                CurrencyWalletListView(viewModel: listViewModel)
+                CurrencyWalletListView(viewModel: listViewModel, viewFactory: viewFactory)
                     .padding(.top, 8)
                 
             } else {
@@ -687,7 +688,7 @@ extension CurrencyWalletSelectorViewModel {
 struct CurrencyWalletSelectorViewComponent_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: CurrencyWalletSelectorView.ViewModel) -> some View {
-        CurrencyWalletSelectorView(viewModel: viewModel)
+        CurrencyWalletSelectorView(viewModel: viewModel, viewFactory: .preview)
     }
     
     static var previews: some View {

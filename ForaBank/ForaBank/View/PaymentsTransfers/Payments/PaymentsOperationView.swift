@@ -11,6 +11,7 @@ import Combine
 struct PaymentsOperationView: View {
     
     @ObservedObject var viewModel: PaymentsOperationViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -19,7 +20,7 @@ struct PaymentsOperationView: View {
             // top
             if let topItems = viewModel.top {
                 
-                ForEach(topItems, content: PaymentsGroupView.groupView(for:))
+                ForEach(topItems, content: { PaymentsGroupView.groupView(for: $0, viewFactory: viewFactory) })
                     .padding(.bottom, 16)
             }
             
@@ -30,7 +31,7 @@ struct PaymentsOperationView: View {
                     
                     VStack(spacing: 16) {
                         
-                        ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
+                        ForEach(viewModel.feed, content: { PaymentsGroupView.groupView(for: $0, viewFactory: viewFactory) })
                         
                         Color.clear
                             .frame(height: 0)
@@ -55,7 +56,7 @@ struct PaymentsOperationView: View {
             // bottom
             if let bottomItems = viewModel.bottom {
                 
-                ForEach(bottomItems, content: PaymentsGroupView.groupView(for:))
+                ForEach(bottomItems, content: { PaymentsGroupView.groupView(for: $0, viewFactory:  viewFactory) })
                     .padding(.bottom, 24)
             }
             
@@ -65,11 +66,11 @@ struct PaymentsOperationView: View {
                     
                     switch link {
                     case let .success(successViewModel):
-                        PaymentsSuccessView(viewModel: successViewModel)
+                        PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
                             .navigationBarBackButtonHidden()
                         
                     case let .confirm(confirmViewModel):
-                        PaymentsOperationView(viewModel: confirmViewModel)
+                        PaymentsOperationView(viewModel: confirmViewModel, viewFactory: viewFactory)
                     }
                 }
             }
@@ -81,7 +82,7 @@ struct PaymentsOperationView: View {
                     
                     switch sheet.type {
                     case let .contacts(contactsViewModel):
-                        ContactsView(viewModel: contactsViewModel)
+                        ContactsView(viewModel: contactsViewModel, viewFactory: viewFactory)
                     }
                 }
             
@@ -134,7 +135,7 @@ extension PaymentsOperationView {
             PaymentsSpoilerGroupView(viewModel: spoilerGroupViewModel)
             
         default:
-            PaymentsGroupView(viewModel: groupViewModel)
+            PaymentsGroupView(viewModel: groupViewModel, viewFactory: viewFactory)
         }
     }
 }
@@ -171,9 +172,9 @@ struct PaymentsOperationView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsOperationView(viewModel: .sampleContinue)
+            PaymentsOperationView(viewModel: .sampleContinue, viewFactory: .preview)
             
-            PaymentsOperationView(viewModel: .sampleAmount)
+            PaymentsOperationView(viewModel: .sampleAmount, viewFactory: .preview)
         }
     }
 }

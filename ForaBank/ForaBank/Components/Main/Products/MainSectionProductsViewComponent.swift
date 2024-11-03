@@ -160,6 +160,7 @@ private extension ButtonNewProduct.ViewModel {
 struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -173,7 +174,8 @@ struct MainSectionProductsView: View {
             
             ProductCarouselView(
                 viewModel: viewModel.productCarouselViewModel,
-                buttonNewProduct: buttonNewProduct
+                buttonNewProduct: buttonNewProduct, 
+                viewFactory: viewFactory
             )
         }
         .overlay13(alignment: .top) {
@@ -224,7 +226,7 @@ extension MainSectionProductsView {
 struct MainSectionProductsView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: MainSectionProductsView.ViewModel) -> some View {
-        MainSectionProductsView(viewModel: viewModel)
+        MainSectionProductsView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static var previews: some View {

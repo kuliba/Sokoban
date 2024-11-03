@@ -19,6 +19,7 @@ struct ProductProfileView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     let viewFactory: PaymentsTransfersViewFactory
+    let optionSelectorViewFactory: OptionSelectorViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
@@ -230,7 +231,8 @@ struct ProductProfileView: View {
             ControlPanelWrapperView(
                 viewModel: controlPanelViewModel,
                 config: .default, 
-                getUImage: getUImage)
+                getUImage: getUImage, 
+                viewFactory: optionSelectorViewFactory)
             .edgesIgnoringSafeArea(.bottom)
 
         case let .productInfo(viewModel):
@@ -256,6 +258,7 @@ struct ProductProfileView: View {
             MyProductsView(
                 viewModel: viewModel,
                 viewFactory: viewFactory, 
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -264,6 +267,7 @@ struct ProductProfileView: View {
             PaymentsTransfersView(
                 viewModel: node.model,
                 viewFactory: viewFactory, 
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -282,7 +286,8 @@ struct ProductProfileView: View {
                 makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView, 
                 payment: {
                     //TODO: Payment reducer
-                }
+                }, 
+                viewFactory: optionSelectorViewFactory
             )
             
         case let .optionsPannel(viewModel):
@@ -304,10 +309,10 @@ struct ProductProfileView: View {
                 .frame(height: 474)
             
         case let .meToMe(viewModel):
-            PaymentsMeToMeView(viewModel: viewModel)
+            PaymentsMeToMeView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .fullScreenCover(item: $viewModel.success) {
                     
-                    PaymentsSuccessView(viewModel: $0)
+                    PaymentsSuccessView(viewModel: $0, viewFactory: optionSelectorViewFactory)
                     
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
@@ -362,14 +367,14 @@ struct ProductProfileView: View {
             
         case let .successChangePin(viewModel):
             
-            PaymentsSuccessView(viewModel: viewModel)
+            PaymentsSuccessView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }
             
         case let .successZeroAccount(viewModel):
             
-            PaymentsSuccessView(viewModel: viewModel)
+            PaymentsSuccessView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }
@@ -503,6 +508,7 @@ struct ProfileView_Previews: PreviewProvider {
         ProductProfileView(
             viewModel: viewModel,
             viewFactory: .preview,
+            optionSelectorViewFactory: .preview, 
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: HistoryButtonView.init(event:),

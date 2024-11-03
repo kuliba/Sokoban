@@ -170,6 +170,7 @@ extension MainSectionCurrencyMetallView {
 struct MainSectionCurrencyMetallView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
 
     var body: some View {
         
@@ -179,9 +180,12 @@ struct MainSectionCurrencyMetallView: View {
                 
                 if let selectorViewModel = viewModel.selector {
                     
-                    OptionSelectorView(viewModel: selectorViewModel)
-                        .frame(height: 24)
-                        .padding(.leading, 20)
+                    OptionSelectorView(
+                        viewModel: selectorViewModel,
+                        viewFactory: viewFactory
+                    )
+                    .frame(height: 24)
+                    .padding(.leading, 20)
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -450,7 +454,7 @@ struct CurrencyMetallView_Previews: PreviewProvider {
         
         Group {
             
-            MainSectionCurrencyMetallView(viewModel: .sample)
+            MainSectionCurrencyMetallView(viewModel: .sample, viewFactory: .preview)
                 .previewLayout(.fixed(width: 375, height: 300))
 
             MainSectionCurrencyMetallView.PlaceholderItemView()

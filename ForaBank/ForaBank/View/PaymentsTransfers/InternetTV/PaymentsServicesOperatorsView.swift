@@ -10,6 +10,7 @@ import SwiftUI
 struct PaymentsServicesOperatorsView: View {
     
     @ObservedObject var viewModel: PaymentsServicesViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -66,7 +67,7 @@ struct PaymentsServicesOperatorsView: View {
                 .edgesIgnoringSafeArea(.all)
             
         case .payments(let viewModel):
-            PaymentsView(viewModel: viewModel)
+            PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
                 .navigationBarHidden(true)
         }
     }
@@ -129,7 +130,8 @@ struct PaymentsServicesOperatorsView_Previews: PreviewProvider {
                 allOperators: [],
                 addCompanyAction: {},
                 requisitesAction: {}
-            )
+            ), 
+            viewFactory: .preview
         )
     }
 }

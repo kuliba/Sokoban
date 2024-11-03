@@ -24,6 +24,7 @@ struct MainView<NavigationOperationView: View>: View {
     let navigationOperationView: () -> NavigationOperationView
     
     let viewFactory: MainViewFactory
+    let optionSelectorViewFactory: OptionSelectorViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
@@ -120,8 +121,11 @@ struct MainView<NavigationOperationView: View>: View {
             viewFactory.makeInfoViews.makeUpdateInfoView(updateInfoViewModel.content)
             
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-            MainSectionProductsView(viewModel: productsSectionViewModel)
-                .padding(.bottom, 19)
+            MainSectionProductsView(
+                viewModel: productsSectionViewModel,
+                viewFactory: optionSelectorViewFactory
+            )
+            .padding(.bottom, 19)
             
         case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
             MainSectionFastOperationView(viewModel: fastOperationViewModel)
@@ -142,7 +146,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .padding(.bottom, 32)
             
         case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
-            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel, viewFactory: optionSelectorViewFactory)
                 .padding(.bottom, 32)
             
         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
@@ -164,12 +168,13 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora)
+            viewFactory.makeUserAccountView(userAccountViewModel, .iFora, optionSelectorViewFactory)
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -193,16 +198,18 @@ struct MainView<NavigationOperationView: View>: View {
                 makeIconView: {
                     
                     viewFactory.makeIconView($0.map { .svg($0) })
-                }
+                }, 
+                viewFactory: optionSelectorViewFactory
             )
             
         case let .currencyWallet(viewModel):
-            CurrencyWalletView(viewModel: viewModel)
+            CurrencyWalletView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
             
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
                 viewFactory: paymentsTransfersViewFactory,
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -219,15 +226,15 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            QRFailedView(viewModel: failedViewModel)
+            QRFailedView(viewModel: failedViewModel, viewFactory: optionSelectorViewFactory)
             
         case let .searchOperators(viewModel):
-            QRSearchOperatorView(viewModel: viewModel)
+            QRSearchOperatorView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model)
+            PaymentsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
             
         case let .operatorView(internetDetailViewModel):
             InternetTVDetailsView(viewModel: internetDetailViewModel)
@@ -235,7 +242,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .paymentsServices(viewModel):
-            PaymentsServicesOperatorsView(viewModel: viewModel)
+            PaymentsServicesOperatorsView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -279,6 +286,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -290,7 +298,7 @@ struct MainView<NavigationOperationView: View>: View {
             PlacesView(viewModel: placesViewModel)
             
         case let .byPhone(node):
-            ContactsView(viewModel: node.model)
+            ContactsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
         }
     }
     
@@ -315,10 +323,10 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            QRView(viewModel: node.model.qrModel)
+            QRView(viewModel: node.model.qrModel, viewFactory: optionSelectorViewFactory)
             
         case let .success(viewModel):
-            PaymentsSuccessView(viewModel: viewModel)
+            PaymentsSuccessView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .edgesIgnoringSafeArea(.all)
         }
     }
@@ -400,7 +408,8 @@ private extension MainView {
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
-            makeAnywayFlowView: viewFactory.makeAnywayFlowView
+            makeAnywayFlowView: viewFactory.makeAnywayFlowView,
+            makeCategoryView: optionSelectorViewFactory.makeCategoryView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
@@ -422,7 +431,8 @@ private extension MainView {
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: viewFactory.makeAnywayFlowView,
-                makeIconView: viewFactory.makeIconView
+                makeIconView: viewFactory.makeIconView, 
+                makeCategoryView: optionSelectorViewFactory.makeCategoryView
             )
         )
         .navigationBarWithAsyncIcon(
@@ -549,7 +559,8 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            viewFactory: .preview,
+            viewFactory: .preview, 
+            optionSelectorViewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -579,7 +590,7 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:config:),
+            makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: $2) },
             makeAnywayFlowView: { _ in fatalError() }
         )
     }

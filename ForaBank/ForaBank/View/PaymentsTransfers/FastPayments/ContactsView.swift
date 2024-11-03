@@ -11,6 +11,7 @@ import SearchBarComponent
 struct ContactsView: View {
     
     @ObservedObject var viewModel: ContactsViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -55,7 +56,7 @@ struct ContactsView: View {
             ContactsBanksPrefferedSectionView(viewModel: viewModel)
             
         case let viewModel as ContactsBanksSectionViewModel:
-            ContactsBanksSectionView(viewModel: viewModel)
+            ContactsBanksSectionView(viewModel: viewModel, viewFactory: viewFactory)
             
         case let viewModel as ContactsCountriesSectionViewModel:
             ContactsCountriesSectionView(viewModel: viewModel)
@@ -74,9 +75,9 @@ struct ContactsView_Previews: PreviewProvider {
 
         Group {
             
-            ContactsView(viewModel: .sampleFastContacts)
+            ContactsView(viewModel: .sampleFastContacts, viewFactory: .preview)
             
-            ContactsView(viewModel: .sampleFastBanks)
+            ContactsView(viewModel: .sampleFastBanks, viewFactory: .preview)
         }
     }
 }

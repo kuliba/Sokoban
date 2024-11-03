@@ -13,6 +13,7 @@ where AnywayFlowView: View {
     let flowModel: FlowModel
     let iconView: (IconDomain.Icon?) -> IconDomain.IconView
     let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
+    let makeCategoryView: MakeCategoryView
     
     var body: some View {
         
@@ -52,17 +53,18 @@ private extension ComposedSegmentedPaymentProviderPickerFlowView {
         
         switch destination {
         case let .payByInstructions(node):
-            PaymentsView(viewModel: node.model)
+            PaymentsView(viewModel: node.model, viewFactory: .init(makeCategoryView: makeCategoryView))
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model)
+            PaymentsView(viewModel: node.model, viewFactory: .init(makeCategoryView: makeCategoryView))
             
         case let .servicePicker(node):
             AnywayServicePickerFlowView(
                 flowModel: node.model,
                 factory: .init(
                     makeAnywayFlowView: makeAnywayFlowView,
-                    makeIconView: iconView
+                    makeIconView: iconView, 
+                    makeCategoryView: makeCategoryView
                 )
             )
             .navigationBarWithAsyncIcon(

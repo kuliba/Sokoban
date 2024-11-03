@@ -12,6 +12,7 @@ import SwiftUI
 struct PaymentsMeToMeView: View {
     
     @ObservedObject var viewModel: PaymentsMeToMeViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -44,8 +45,11 @@ struct PaymentsMeToMeView: View {
                 
                 VStack {
                     
-                    ProductsSwapView(viewModel: viewModel.swapViewModel)
-                        .padding(.vertical, 20)
+                    ProductsSwapView(
+                        viewModel: viewModel.swapViewModel,
+                        viewFactory: viewFactory
+                    )
+                    .padding(.vertical, 20)
                     
                     PaymentsAmountView(viewModel: viewModel.paymentsAmount)
                 }
@@ -84,11 +88,17 @@ struct PaymentsMeToMeView: View {
 
 struct PaymentsMeToMeView_Previews: PreviewProvider {
 
+    private static func preview(
+        _ viewModel: PaymentsMeToMeViewModel
+    ) -> some View {
+        PaymentsMeToMeView(viewModel: viewModel, viewFactory: .preview)
+    }
+
     static var previews: some View {
 
         Group {
             
-            PaymentsMeToMeView(viewModel: .init(
+            preview(.init(
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
@@ -99,10 +109,9 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     title: "Сумма перевода",
                     textField: .init(150, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
-            )
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
             
-            PaymentsMeToMeView(viewModel: .init(
+            preview(.init(
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
@@ -113,10 +122,9 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     title: "Сумма перевода",
                     textField: .init(150, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
-            )
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
             
-            PaymentsMeToMeView(viewModel: .init(
+            preview(.init(
                 .emptyMock,
                 swapViewModel: .init(
                     model: .emptyMock,
@@ -127,8 +135,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
                     title: "Сумма перевода",
                     textField: .init(0, currencySymbol: "₽"),
                     transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими")
-            )
+                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
         }
         .previewLayout(.sizeThatFits)
         .padding(.top)

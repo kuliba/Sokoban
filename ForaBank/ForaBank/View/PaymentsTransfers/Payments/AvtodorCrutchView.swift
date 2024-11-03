@@ -94,14 +94,17 @@ extension Array where Element == Payments.ParameterSelectDropDownList.Option {
 struct AvtodorCrutchView: View {
     
     @ObservedObject private var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     private let action: (String) -> Void
     
     init(
         viewModel: ViewModel,
+        viewFactory: OptionSelectorViewFactory,
         action: @escaping (String) -> Void
     ) {
         self.viewModel = viewModel
+        self.viewFactory = viewFactory
         self.action = action
     }
     
@@ -109,7 +112,7 @@ struct AvtodorCrutchView: View {
         
         VStack {
             
-            PaymentsGroupView(viewModel: viewModel.paymentsGroupViewModel)
+            PaymentsGroupView(viewModel: viewModel.paymentsGroupViewModel, viewFactory: viewFactory)
                 .padding(.top)
             
             Spacer()
@@ -146,6 +149,6 @@ struct MultiOperatorView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AvtodorCrutchView(viewModel: .init(), action: { _ in })
+        AvtodorCrutchView(viewModel: .init(), viewFactory: .preview, action: { _ in })
     }
 }

@@ -360,6 +360,7 @@ enum ProductSelectorAction {
 struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -370,7 +371,7 @@ struct ProductSelectorView: View {
                 .padding(.trailing, 16)
             
             viewModel.productCarouselViewModel
-                .map(ProductCarouselView.init(viewModel:))
+                .map { ProductCarouselView.init(viewModel: $0, viewFactory: viewFactory) }
                 .animation(nil)
                 .accessibilityIdentifier("ProductSelectorCarousel")
         }
@@ -578,7 +579,7 @@ extension ProductSelectorView {
 struct ProductSelectorView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: ProductSelectorView.ViewModel) -> some View {
-        ProductSelectorView(viewModel: viewModel)
+        ProductSelectorView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static func previewsGroup() -> some View {

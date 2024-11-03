@@ -1009,7 +1009,7 @@ private extension MainSectionCurrencyMetallView.ViewModel {
 
 private extension TemplatesListViewModel {
     
-    func closeAndWait(timeout: TimeInterval = 0.05) {
+    func closeAndWait(timeout: TimeInterval = 0.1) {
         
         action.send(TemplatesListViewModelAction.CloseAction())
         

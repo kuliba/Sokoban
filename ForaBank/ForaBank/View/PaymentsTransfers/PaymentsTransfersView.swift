@@ -21,6 +21,7 @@ struct PaymentsTransfersView: View {
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let optionSelectorViewFactory: OptionSelectorViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
@@ -180,7 +181,7 @@ extension PaymentsTransfersView {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            UserAccountView(viewModel: userAccountViewModel, config: .iFora)
+            UserAccountView(viewModel: userAccountViewModel, config: .iFora, viewFactory: optionSelectorViewFactory)
             
         case let .exampleDetail(title):
             ExampleDetailMock(title: title)
@@ -197,7 +198,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model)
+            PaymentsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
                 .navigationBarHidden(true)
             
         case let .phone(phoneData):
@@ -243,14 +244,15 @@ extension PaymentsTransfersView {
                 makeIconView: {
                     
                     viewFactory.makeIconView($0.map { .svg($0) })
-                }
+                },
+                viewFactory: optionSelectorViewFactory
             )
 
         case let .currencyWallet(currencyWalletViewModel):
-            CurrencyWalletView(viewModel: currencyWalletViewModel)
+            CurrencyWalletView(viewModel: currencyWalletViewModel, viewFactory: optionSelectorViewFactory)
             
         case let .failedView(failedViewModel):
-            QRFailedView(viewModel: failedViewModel)
+            QRFailedView(viewModel: failedViewModel, viewFactory: optionSelectorViewFactory)
             
         case let .c2b(c2bViewModel):
             C2BDetailsView(viewModel: c2bViewModel, getUImage: getUImage)
@@ -259,7 +261,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .searchOperators(viewModel):
-            QRSearchOperatorView(viewModel: viewModel)
+            QRSearchOperatorView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -269,7 +271,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .paymentsServices(viewModel):
-            PaymentsServicesOperatorsView(viewModel: viewModel)
+            PaymentsServicesOperatorsView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -283,6 +285,7 @@ extension PaymentsTransfersView {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: viewFactory,
+                optionSelectorViewFactory: optionSelectorViewFactory,
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -343,36 +346,38 @@ extension PaymentsTransfersView {
     ) -> some View {
         
         TransportPaymentsView(
-            viewModel: transportPaymentsViewModel
-        ) {
-            MosParkingView(
-                viewModel: .init(
-                    operation: viewModel.getMosParkingPickerData
-                ),
-                stateView: { state in
-                    
-                    MosParkingStateView(
-                        state: state,
-                        mapper: DefaultMosParkingPickerDataMapper(select: transportPaymentsViewModel.selectMosParkingID(id:)),
-                        errorView: {
-                            Text($0.localizedDescription).foregroundColor(.red)
-                        }
-                    )
-                }
-            )
-            // TODO: fix navigation bar
-            // .navigationBar(
-            //     with: .init(
-            //         title: "Московский паркинг",
-            //         rightItems: [
-            //             NavigationBarView.ViewModel.IconItemViewModel(
-            //                 icon: .init("ic40Transport"),
-            //                 style: .large
-            //             )
-            //         ]
-            //     )
-            // )
-        }
+            viewModel: transportPaymentsViewModel,
+            mosParkingView: {
+                MosParkingView(
+                    viewModel: .init(
+                        operation: viewModel.getMosParkingPickerData
+                    ),
+                    stateView: { state in
+                        
+                        MosParkingStateView(
+                            state: state,
+                            mapper: DefaultMosParkingPickerDataMapper(select: transportPaymentsViewModel.selectMosParkingID(id:)),
+                            errorView: {
+                                Text($0.localizedDescription).foregroundColor(.red)
+                            }
+                        )
+                    }
+                )
+                // TODO: fix navigation bar
+                // .navigationBar(
+                //     with: .init(
+                //         title: "Московский паркинг",
+                //         rightItems: [
+                //             NavigationBarView.ViewModel.IconItemViewModel(
+                //                 icon: .init("ic40Transport"),
+                //                 style: .large
+                //             )
+                //         ]
+                //     )
+                // )
+            },
+            viewFactory: optionSelectorViewFactory
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBar(
@@ -396,22 +401,22 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .meToMe(viewModel):
-            PaymentsMeToMeView(viewModel: viewModel)
+            PaymentsMeToMeView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .edgesIgnoringSafeArea(.bottom)
                 .fixedSize(horizontal: false, vertical: true)
             
         case let .successMeToMe(successMeToMeViewModel):
-            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            PaymentsSuccessView(viewModel: successMeToMeViewModel, viewFactory: optionSelectorViewFactory)
             
         case .anotherCard(let anotherCardViewModel):
             AnotherCardView(viewModel: anotherCardViewModel)
                 .edgesIgnoringSafeArea(.bottom)
             
         case let .fastPayment(node):
-            ContactsView(viewModel: node.model)
+            ContactsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
             
         case let .country(node):
-            ContactsView(viewModel: node.model)
+            ContactsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
         }
     }
     
@@ -426,12 +431,12 @@ extension PaymentsTransfersView {
             
         case let .meToMe(viewModel):
             
-            PaymentsMeToMeView(viewModel: viewModel)
+            PaymentsMeToMeView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .fullScreenCover(item: $viewModel.fullCover) { fullCover in
                     
                     switch fullCover.type {
                     case let .successMeToMe(successMeToMeViewModel):
-                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                        PaymentsSuccessView(viewModel: successMeToMeViewModel, viewFactory: optionSelectorViewFactory)
                     }
                     
                 }.transaction { transaction in
@@ -448,13 +453,13 @@ extension PaymentsTransfersView {
         
         switch fullScreenCover.type {
         case let .qrScanner(node):
-            QRView(viewModel: node.model.qrModel)
+            QRView(viewModel: node.model.qrModel, viewFactory: optionSelectorViewFactory)
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)
             
         case let .success(viewModel):
-            PaymentsSuccessView(viewModel: viewModel)
+            PaymentsSuccessView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
                 .edgesIgnoringSafeArea(.all)
         }
     }
@@ -463,7 +468,7 @@ extension PaymentsTransfersView {
         _ paymentsViewModel: PaymentsViewModel
     ) -> some View {
         
-        PaymentsView(viewModel: paymentsViewModel)
+        PaymentsView(viewModel: paymentsViewModel, viewFactory: optionSelectorViewFactory)
             .navigationBarHidden(true)
     }
     
@@ -496,7 +501,8 @@ private extension PaymentsTransfersView {
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
-            makeAnywayFlowView: viewFactory.makeAnywayFlowView
+            makeAnywayFlowView: viewFactory.makeAnywayFlowView,
+            makeCategoryView: optionSelectorViewFactory.makeCategoryView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
@@ -518,7 +524,8 @@ private extension PaymentsTransfersView {
             flowModel: flowModel,
             factory: .init(
                 makeAnywayFlowView: viewFactory.makeAnywayFlowView,
-                makeIconView: viewFactory.makeIconView
+                makeIconView: viewFactory.makeIconView, 
+                makeCategoryView: optionSelectorViewFactory.makeCategoryView
             )
         )
         .navigationBarWithAsyncIcon(
@@ -1107,7 +1114,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         
         PaymentsTransfersView(
             viewModel: .sample,
-            viewFactory: .preview,
+            viewFactory: .preview, 
+            optionSelectorViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: { .init(event: $0 ) },

@@ -14,12 +14,14 @@ class TemplatesListViewHostingViewController: UIHostingController<TemplatesListV
     
     var delegate: TemplatesListViewHostingViewControllerDelegate?
     private let viewModel: TemplatesListViewModel
+    private let viewFactory: OptionSelectorViewFactory
     private var bindings = Set<AnyCancellable>()
     
-    init(with viewModel: TemplatesListViewModel) {
+    init(with viewModel: TemplatesListViewModel, viewFactory: OptionSelectorViewFactory) {
         
         self.viewModel = viewModel
-        super.init(rootView: TemplatesListView(viewModel: viewModel))
+        self.viewFactory = viewFactory
+        super.init(rootView: TemplatesListView(viewModel: viewModel, viewFactory: viewFactory))
         
         bind()
     }

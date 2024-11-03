@@ -14,6 +14,7 @@ where ContentView: View {
     let state: Domain.FlowState
     let event: (Domain.FlowEvent) -> Void
     let contentView: () -> ContentView
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -50,7 +51,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch bottomSheet {
         case let .meToMe(meToMe):
-            PaymentsMeToMeView(viewModel: meToMe.model)
+            PaymentsMeToMeView(viewModel: meToMe.model, viewFactory: viewFactory)
             //                .fullScreenCover(
             //                    cover: state.fullCover,
             //                    content: { fullCover in
@@ -72,7 +73,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch destination {
         case let .payments(node):
-            PaymentsView(viewModel: node.model.paymentsViewModel)
+            PaymentsView(viewModel: node.model.paymentsViewModel, viewFactory: viewFactory)
         }
     }
     
@@ -83,7 +84,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch sheet {
         case let .contacts(node):
-            ContactsView(viewModel: node.model)
+            ContactsView(viewModel: node.model, viewFactory: viewFactory)
         }
     }
 }

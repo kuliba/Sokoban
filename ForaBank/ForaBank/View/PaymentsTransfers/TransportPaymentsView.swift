@@ -12,13 +12,16 @@ struct TransportPaymentsView<MosParkingView: View>: View {
     @ObservedObject private var viewModel: TransportPaymentsViewModel
     
     private let mosParkingView: () -> MosParkingView
+    private let viewFactory: OptionSelectorViewFactory
     
     init(
         viewModel: TransportPaymentsViewModel,
-        mosParkingView: @escaping () -> MosParkingView
+        mosParkingView: @escaping () -> MosParkingView,
+        viewFactory: OptionSelectorViewFactory
     ) {
         self.viewModel = viewModel
         self.mosParkingView = mosParkingView
+        self.viewFactory = viewFactory
     }
     
     var body: some View {
@@ -50,7 +53,7 @@ struct TransportPaymentsView<MosParkingView: View>: View {
                 mosParkingView()
                 
             case let .payment(viewModel):
-                PaymentsView(viewModel: viewModel)
+                PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
                     .navigationBarHidden(true)
             }
         }
@@ -229,11 +232,11 @@ struct TransportPaymentsView_Previews: PreviewProvider {
         viewModel: TransportPaymentsViewModel
     ) -> some View {
         
-        TransportPaymentsView(viewModel: viewModel) {
-            
-            Text("MosParkingView")
-            
-        }
+        TransportPaymentsView(
+            viewModel: viewModel,
+            mosParkingView: { Text("MosParkingView")},
+            viewFactory: .preview
+        )
     }
 }
 

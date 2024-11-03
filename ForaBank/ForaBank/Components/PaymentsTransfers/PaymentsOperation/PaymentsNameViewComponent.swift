@@ -522,7 +522,7 @@ extension PaymentsNameView {
 struct PaymentsNameView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
-        PaymentsGroupView(viewModel: viewModel)
+        PaymentsGroupView(viewModel: viewModel, viewFactory: .preview)
     }
 
     static var previews: some View {

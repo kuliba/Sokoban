@@ -116,6 +116,7 @@ extension PaymentsProductSelectorView {
 struct PaymentsProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -123,8 +124,11 @@ struct PaymentsProductSelectorView: View {
             
             if let categoriesViewModel = viewModel.categories {
                 
-                OptionSelectorView(viewModel: categoriesViewModel)
-                    .frame(height: 24)
+                OptionSelectorView(
+                    viewModel: categoriesViewModel,
+                    viewFactory: viewFactory
+                )
+                .frame(height: 24)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -152,7 +156,7 @@ struct PaymentsProductSelectorView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsProductSelectorView(viewModel: .sample)
+        PaymentsProductSelectorView(viewModel: .sample, viewFactory: .preview)
             .previewLayout(.fixed(width: 375, height: 200))
     }
 }

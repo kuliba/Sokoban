@@ -12,6 +12,7 @@ where AnywayFlowView: View {
     
     let makeAnywayFlowView: MakeAnywayFlowView
     let makeIconView: IconDomain.MakeIconView
+    let makeCategoryView: MakeCategoryView
 }
 
 extension AnywayServicePickerFlowViewFactory {

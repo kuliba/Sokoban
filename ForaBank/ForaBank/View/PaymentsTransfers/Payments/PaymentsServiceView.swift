@@ -11,6 +11,7 @@ import Combine
 struct PaymentsServiceView: View {
     
     @ObservedObject var viewModel: PaymentsServiceViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -35,7 +36,7 @@ struct PaymentsServiceView: View {
                         
                         switch link {
                         case let .operation(operationViewModel):
-                            PaymentsOperationView(viewModel: operationViewModel)
+                            PaymentsOperationView(viewModel: operationViewModel, viewFactory: viewFactory)
                         }
                     }
                 }

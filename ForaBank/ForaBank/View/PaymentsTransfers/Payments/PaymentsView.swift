@@ -10,6 +10,7 @@ import SwiftUI
 struct PaymentsView: View {
     
     @ObservedObject var viewModel: PaymentsViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -22,16 +23,16 @@ struct PaymentsView: View {
                     .zIndex(0)
                 
             case let .service(serviceViewModel):
-                PaymentsServiceView(viewModel: serviceViewModel)
+                PaymentsServiceView(viewModel: serviceViewModel, viewFactory: viewFactory)
                     .zIndex(0)
                     .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
                         Image("Payments Icon Close") }))
                 
             case let .operation(operationViewModel):
-                PaymentsOperationView(viewModel: operationViewModel)
+                PaymentsOperationView(viewModel: operationViewModel, viewFactory: viewFactory)
                     .zIndex(0)
             case let .linkNotActive(viewModel):
-                PaymentsSuccessView(viewModel: viewModel)
+                PaymentsSuccessView(viewModel: viewModel, viewFactory: viewFactory)
             }
             
             if let spinnerViewModel = viewModel.spinner {
@@ -44,7 +45,7 @@ struct PaymentsView: View {
                 .zIndex(2)
                 .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
                     
-                    PaymentsSuccessView(viewModel: successViewModel)
+                    PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
                 })
             
             Color.clear
@@ -64,7 +65,7 @@ struct PaymentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsView(viewModel: .sample)
+        PaymentsView(viewModel: .sample, viewFactory: .preview)
     }
 }
 

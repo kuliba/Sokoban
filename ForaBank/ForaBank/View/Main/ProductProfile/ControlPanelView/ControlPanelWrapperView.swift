@@ -18,15 +18,18 @@ struct ControlPanelWrapperView: View {
     
     private let config: Config
     private let getUImage: (Md5hash) -> UIImage?
-
+    private let viewFactory: OptionSelectorViewFactory
+    
     init(
         viewModel: ViewModel,
         config: Config,
-        getUImage: @escaping (Md5hash) -> UIImage?
+        getUImage: @escaping (Md5hash) -> UIImage?,
+        viewFactory: OptionSelectorViewFactory
     ) {
         self.viewModel = viewModel
         self.config = config
         self.getUImage = getUImage
+        self.viewFactory = viewFactory
     }
     
     var body: some View {
@@ -60,10 +63,10 @@ struct ControlPanelWrapperView: View {
         
         switch destination {
         case let .contactTransfer(viewModel):
-            return AnyView(PaymentsView(viewModel: viewModel))
+            return AnyView(PaymentsView(viewModel: viewModel, viewFactory: viewFactory))
             
         case let .migTransfer(viewModel):
-            return AnyView(PaymentsView(viewModel: viewModel))
+            return AnyView(PaymentsView(viewModel: viewModel, viewFactory: viewFactory))
 
         case let .landing(viewModel):
             return AnyView(AuthProductsView(viewModel: viewModel))
@@ -91,7 +94,7 @@ struct ControlPanelWrapperView: View {
             )
             
         case let .successView(successViewModel):
-            return AnyView(PaymentsSuccessView(viewModel: successViewModel))
+            return AnyView(PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory))
         }
     }
 }

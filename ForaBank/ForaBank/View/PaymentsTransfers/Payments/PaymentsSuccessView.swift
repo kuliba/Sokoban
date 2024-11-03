@@ -10,6 +10,7 @@ import SwiftUI
 struct PaymentsSuccessView: View {
     
     @ObservedObject var viewModel: PaymentsSuccessViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var spacing: CGFloat = 24
     var bottomPadding: CGFloat = 56
@@ -75,7 +76,8 @@ struct PaymentsSuccessView: View {
             
             PaymentsGroupView.separatedItemView(
                 for: itemViewModel,
-                items: viewModel.items
+                items: viewModel.items,
+                viewFactory: viewFactory
             )
             .reportHeight()
             .padding(.top, isTheItem ? extraTopPadding(for: height) : 0)
@@ -106,7 +108,7 @@ struct PaymentsSuccessView: View {
         
         VStack(spacing: 0) {
             
-            ForEach(viewModel.bottom, content: PaymentsGroupView.groupView)
+            ForEach(viewModel.bottom, content: { PaymentsGroupView.groupView(for: $0, viewFactory: viewFactory) })
         }
     }
     
@@ -130,10 +132,10 @@ struct PaymentsSuccessView: View {
         
         switch cover.type {
         case let .abroad(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel)
+            PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
             
         case let .success(successViewModel):
-            PaymentsSuccessView(viewModel: successViewModel)
+            PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
         }
     }
     
@@ -183,42 +185,37 @@ private extension View {
 
 struct PaymentsSuccessView_Previews: PreviewProvider {
     
+    private static func preview(
+        viewModel: PaymentsSuccessViewModel,
+        previewDisplayName: String
+    ) -> some View {
+        PaymentsSuccessView(viewModel: viewModel, viewFactory: .preview)
+            .previewDisplayName(previewDisplayName)
+    }
+    
     static var previews: some View {
         
         Group {
             
             Group {
                 
-                PaymentsSuccessView(viewModel: .sampleSuccess)
-                    .previewDisplayName("sampleSuccess")
-                PaymentsSuccessView(viewModel: .sampleC2BSub)
-                    .previewDisplayName("sampleC2BSub")
-                PaymentsSuccessView(viewModel: .sampleC2B)
-                    .previewDisplayName("sampleC2B")
+                preview(viewModel: .sampleSuccess, previewDisplayName: "sampleSuccess")
+                preview(viewModel: .sampleC2BSub, previewDisplayName: "sampleC2BSub")
+                preview(viewModel: .sampleC2B, previewDisplayName: "sampleC2B")
             }
             
             Group {
                 
-                PaymentsSuccessView(viewModel: .sample1)
-                    .previewDisplayName("1: Успешный перевод")
-                PaymentsSuccessView(viewModel: .sample2)
-                    .previewDisplayName("2: принят в обработку")
-                PaymentsSuccessView(viewModel: .sample3)
-                    .previewDisplayName("3: Операция неуспешна!")
-                PaymentsSuccessView(viewModel: .sample4)
-                    .previewDisplayName("4: принят в обработку")
-                PaymentsSuccessView(viewModel: .sample5)
-                    .previewDisplayName("5: Операция в обработке!")
-                PaymentsSuccessView(viewModel: .sample6)
-                    .previewDisplayName("6: Перевод отменен!")
-                PaymentsSuccessView(viewModel: .sample7)
-                    .previewDisplayName("7: Перевод отменен!")
-                PaymentsSuccessView(viewModel: .sample8)
-                    .previewDisplayName("8: Из банка:")
-                PaymentsSuccessView(viewModel: .sample9)
-                    .previewDisplayName("9: Из банка:")
-                PaymentsSuccessView(viewModel: .sample10)
-                    .previewDisplayName("10: Привязка счета оформлена")
+                preview(viewModel: .sample1, previewDisplayName: "1: Успешный перевод")
+                preview(viewModel: .sample2, previewDisplayName: "2: принят в обработку")
+                preview(viewModel: .sample3, previewDisplayName: "3: Операция неуспешна!")
+                preview(viewModel: .sample4, previewDisplayName: "4: принят в обработку")
+                preview(viewModel: .sample5, previewDisplayName: "5: Операция в обработке!")
+                preview(viewModel: .sample6, previewDisplayName: "6: Перевод отменен!")
+                preview(viewModel: .sample7, previewDisplayName: "7: Перевод отменен!")
+                preview(viewModel: .sample8, previewDisplayName: "8: Из банка:")
+                preview(viewModel: .sample9, previewDisplayName: "9: Из банка:")
+                preview(viewModel: .sample10, previewDisplayName: "10: Привязка счета оформлена")
             }
         }
     }
@@ -230,12 +227,14 @@ struct PaymentsSuccessView_More_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsSuccessView(viewModel: .fraudCancelled(
-                goToMain: { print("Go to Main") }
-            ))
+            PaymentsSuccessView(
+                viewModel: .fraudCancelled(
+                    goToMain: { print("Go to Main") }
+                ),
+                viewFactory: .preview)
             .previewDisplayName("Fraud: Cancelled")
             
-            PaymentsSuccessView(viewModel: .fraudExpired)
+            PaymentsSuccessView(viewModel: .fraudExpired, viewFactory: .preview)
                 .previewDisplayName("Fraud: Expired")
         }
     }

@@ -10,6 +10,7 @@ import SwiftUI
 struct QRSearchOperatorView: View {
     
     @ObservedObject var viewModel: QRSearchOperatorViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var body: some View {
         
@@ -63,7 +64,7 @@ struct QRSearchOperatorView: View {
                         .navigationBarTitle("", displayMode: .inline)
                         .edgesIgnoringSafeArea(.all)
                 case .payments(let viewModel):
-                    PaymentsView(viewModel: viewModel)
+                    PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
                         .navigationBarHidden(true)
                 }
             }
@@ -91,7 +92,8 @@ struct QRSearchOperatorView_Previews: PreviewProvider {
                 model: .emptyMock,
                 addCompanyAction: {},
                 requisitesAction: {}
-            )
+            ), 
+            viewFactory: .preview
         )
     }
 }

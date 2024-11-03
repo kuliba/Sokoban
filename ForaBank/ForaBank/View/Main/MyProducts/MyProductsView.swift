@@ -19,6 +19,7 @@ struct MyProductsView: View {
     @ObservedObject var viewModel: MyProductsViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let optionSelectorViewFactory: OptionSelectorViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
 
     let getUImage: (Md5hash) -> UIImage?
@@ -120,6 +121,7 @@ struct MyProductsView: View {
                         ProductProfileView(
                             viewModel: productProfileViewModel,
                             viewFactory: viewFactory,
+                            optionSelectorViewFactory: optionSelectorViewFactory,
                             productProfileViewFactory: productProfileViewFactory,
                             getUImage: getUImage
                         )
@@ -185,7 +187,8 @@ struct MyProductsView_Previews: PreviewProvider {
         
         MyProductsView(
             viewModel: viewModel,
-            viewFactory: .preview,
+            viewFactory: .preview, 
+            optionSelectorViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: { .init(event: $0 ) },

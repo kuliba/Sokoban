@@ -248,6 +248,7 @@ struct CurrencySelectorView: View {
     
     @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
+    let viewFactory: OptionSelectorViewFactory
     
     var topTransition: AnyTransition {
         .asymmetric(insertion: .move(edge: .top), removal: .identity)
@@ -271,7 +272,7 @@ struct CurrencySelectorView: View {
                     if viewModel.currencyOperation == .buy {
                         
                         if let productCardSelector = viewModel.productCardSelector {
-                            CurrencyWalletSelectorView(viewModel: productCardSelector)
+                            CurrencyWalletSelectorView(viewModel: productCardSelector, viewFactory: viewFactory)
                                 .matchedGeometryEffect(id: "currencySelector", in: namespace)
                         }
                         
@@ -284,7 +285,7 @@ struct CurrencySelectorView: View {
                         case .productSelector:
                             
                             if let productAccountSelector = viewModel.productAccountSelector {
-                                CurrencyWalletSelectorView(viewModel: productAccountSelector)
+                                CurrencyWalletSelectorView(viewModel: productAccountSelector, viewFactory: viewFactory)
                                     .matchedGeometryEffect(id: "currencyProduct", in: namespace)
                             }
                         }
@@ -300,13 +301,13 @@ struct CurrencySelectorView: View {
                         case .productSelector:
                             
                             if let productAccountSelector = viewModel.productAccountSelector {
-                                CurrencyWalletSelectorView(viewModel: productAccountSelector)
+                                CurrencyWalletSelectorView(viewModel: productAccountSelector, viewFactory: viewFactory)
                                     .matchedGeometryEffect(id: "currencyProduct", in: namespace)
                             }
                         }
                         
                         if let productCardSelector = viewModel.productCardSelector {
-                            CurrencyWalletSelectorView(viewModel: productCardSelector)
+                            CurrencyWalletSelectorView(viewModel: productCardSelector, viewFactory: viewFactory)
                                 .matchedGeometryEffect(id: "currencySelector", in: namespace)
                         }
                     }
@@ -316,7 +317,7 @@ struct CurrencySelectorView: View {
                     if viewModel.currencyOperation == .buy {
                         
                         if let productCardSelector = viewModel.productCardSelector {
-                            CurrencyWalletSelectorView(viewModel: productCardSelector)
+                            CurrencyWalletSelectorView(viewModel: productCardSelector, viewFactory: viewFactory)
                                 .transition(bottomTransition)
                         }
                         
@@ -329,7 +330,7 @@ struct CurrencySelectorView: View {
                         case .productSelector:
                             
                             if let productAccountSelector = viewModel.productAccountSelector {
-                                CurrencyWalletSelectorView(viewModel: productAccountSelector)
+                                CurrencyWalletSelectorView(viewModel: productAccountSelector, viewFactory: viewFactory)
                                     .transition(topTransition)
                             }
                         }
@@ -345,13 +346,13 @@ struct CurrencySelectorView: View {
                         case .productSelector:
                             
                             if let productAccountSelector = viewModel.productAccountSelector {
-                                CurrencyWalletSelectorView(viewModel: productAccountSelector)
+                                CurrencyWalletSelectorView(viewModel: productAccountSelector, viewFactory: viewFactory)
                                     .transition(bottomTransition)
                             }
                         }
                         
                         if let productCardSelector = viewModel.productCardSelector {
-                            CurrencyWalletSelectorView(viewModel: productCardSelector)
+                            CurrencyWalletSelectorView(viewModel: productCardSelector, viewFactory: viewFactory)
                                 .transition(topTransition)
                         }
                     }
@@ -386,7 +387,7 @@ extension CurrencySelectorView.ViewModel {
 
 struct CurrencySelectorViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencySelectorView(viewModel: .sample)
+        CurrencySelectorView(viewModel: .sample, viewFactory: .preview)
             .previewLayout(.sizeThatFits)
             .frame(height: 200)
             .padding(.vertical)
