@@ -295,24 +295,23 @@ extension ProductProfileHistoryView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] images in
                     
-                    guard images.isEmpty == false, case .list(let historyListViewModel) = content else {
-                        return
-                    }
+                    guard !images.isEmpty,
+                          case .list(let historyListViewModel) = content
+                    else { return }
                     
-                    let operations = historyListViewModel.groups.flatMap{ $0.operations }
+                    let operations = historyListViewModel.groups
+                        .flatMap {
+                            $0.operations.filter { $0.image == nil }
+                        }
+                    
                     for operation in operations {
                         
-                        guard operation.image == nil else {
-                            continue
-                        }
-                        
 //                        withAnimation {
-                            
                             operation.image = images[operation.statement.imageId]?.image
 //                        }
                     }
-     
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
         
         func updateSegmentedBar(
@@ -848,7 +847,7 @@ struct ProductProfileHistoryView: View {
     
     var body: some View {
         
-        LazyVStack {
+        VStack {
             
             HeaderView(
                 viewModel: viewModel.header,
@@ -873,7 +872,11 @@ private extension ProductProfileHistoryView {
             
         case let .list(listViewModel):
             segmentedBarView()
+                .fixedSize(horizontal: false, vertical: true)
+                .border(width: 1, edges: .init(), color: .yellow)
+
             ListView(viewModel: listViewModel)
+                .border(width: 1, edges: .init(), color: .blue)
             
         case .loading:
             LoadingView()
@@ -887,7 +890,6 @@ private extension ProductProfileHistoryView {
             
             SegmentedBarView(viewModel: $0)
                 .padding(.vertical, 5)
-                .padding(.bottom, 64)
         }
     }
 }
@@ -968,22 +970,45 @@ extension ProductProfileHistoryView {
         
         @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel
         
+        @ViewBuilder
+        private
+        func updateView() -> some View {
+            
+            if let latestUpdate = viewModel.latestUpdate {
+                
+                switch latestUpdate {
+                case .updating:
+                    ProductProfileHistoryView.LoadingItemView()
+                    
+                case .fail(let failViewModel):
+                    ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
+                }
+            }
+        }
+        
+        @ViewBuilder
+        private
+        func eldestUpdateView() -> some View {
+            
+            if let eldestUpdate = viewModel.eldestUpdate {
+                
+                switch eldestUpdate {
+                case .more(let buttonViewModel):
+                    ButtonSimpleView(viewModel: buttonViewModel)
+                        .frame(height: 48)
+                    
+                case .updating:
+                    ProductProfileHistoryView.LoadingItemView()
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        
         var body: some View {
             
             VStack {
                 
-                //TODO: expences view
-                
-                if let latestUpdate = viewModel.latestUpdate {
-                    
-                    switch latestUpdate {
-                    case .updating:
-                        ProductProfileHistoryView.LoadingItemView()
-                        
-                    case .fail(let failViewModel):
-                        ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
-                    }
-                }
+                updateView()
                 
                 ForEach(viewModel.groups) { groupViewModel in
                     
@@ -991,20 +1016,10 @@ extension ProductProfileHistoryView {
                         .background(Color.mainColorsGrayLightest)
                         .cornerRadius(12)
                         .padding(.bottom, 14)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                if let eldestUpdate = viewModel.eldestUpdate {
-                    
-                    switch eldestUpdate {
-                    case .more(let buttonViewModel):
-                        ButtonSimpleView(viewModel: buttonViewModel)
-                            .frame(height: 48)
-                        
-                    case .updating:
-                        ProductProfileHistoryView.LoadingItemView()
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
+                eldestUpdateView()
             }
         }
     }
