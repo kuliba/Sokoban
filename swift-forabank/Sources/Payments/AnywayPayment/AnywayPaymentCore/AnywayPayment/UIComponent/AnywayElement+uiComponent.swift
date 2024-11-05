@@ -170,10 +170,15 @@ private extension AnywayElement.Parameter.UIAttributes {
         case (_, .output, _):
             return .hidden
             
-        case (.input, .input, .number):
+        case (.input, .input, .integer),
+            (.input, .input, .number),
+            (.input, .input, .numeric):
             return .numberInput
             
-        case (.input, .input, .string):
+        case (.input, .input, .string),
+            (.input, .input, .string2),
+            (.input, .input, .string2Rus),
+            (.input, .input, .stringEn):
             return .textInput
             
         case let (.select, .input, .pairs(pair, pairs)):

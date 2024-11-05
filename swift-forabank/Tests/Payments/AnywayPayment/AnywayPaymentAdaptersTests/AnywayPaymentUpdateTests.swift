@@ -170,7 +170,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
-                        dataType: .number,
+                        dataType: .numeric,
                         inputFieldType: .account,
                         isPrint: false,
                         title: "Лицевой счет",
