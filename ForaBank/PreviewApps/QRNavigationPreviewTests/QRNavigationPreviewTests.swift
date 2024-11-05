@@ -115,7 +115,7 @@ final class QRNavigationPreviewTests: XCTestCase {
         
         flow.event(.select(.scanQR))
         
-        XCTAssertNotNil(flow.state.navigation)
+        XCTAssertNoDiff(equatable(flow.state), .init(navigation: .qr))
     }
     
     func test_shouldResetNavigationOnDismiss() {
@@ -123,7 +123,7 @@ final class QRNavigationPreviewTests: XCTestCase {
         let flow = makeSUT().compose()
         
         flow.event(.select(.scanQR))
-        XCTAssertNotNil(flow.state.navigation)
+        XCTAssertNoDiff(equatable(flow.state), .init(navigation: .qr))
         
         flow.event(.dismiss)
         
@@ -133,6 +133,7 @@ final class QRNavigationPreviewTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ContentViewModelComposer
+    private typealias State = ContentViewDomain.State
     
     private func makeSUT(
         file: StaticString = #file,
@@ -147,5 +148,27 @@ final class QRNavigationPreviewTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func equatable(_ state: State) -> EquatableState {
+        
+        switch state.navigation {
+        case .none:
+            return .init(isLoading: state.isLoading, navigation: .none)
+            
+        case .qr:
+            return .init(isLoading: state.isLoading, navigation: .qr)
+        }
+    }
+    
+    private struct EquatableState: Equatable {
+        
+        var isLoading = false
+        let navigation: EquatableNavigation?
+        
+        enum EquatableNavigation: Equatable {
+            
+            case qr
+        }
     }
 }
