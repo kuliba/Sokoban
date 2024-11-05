@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 05.11.2024.
 //
 
-import Foundation
-
 public extension Optional where Wrapped == String {
     
     var isNilOrEmpty: Bool {
