@@ -29,7 +29,7 @@ extension AnywayElementModel {
         enum ParameterType {
          
             case hidden
-            case nonEditable
+            case nonEditable(Node<RxInputViewModel>)
             case numberInput(Node<RxInputViewModel>)
             case select(ObservingSelectorViewModel)
             case textInput(Node<RxInputViewModel>)
