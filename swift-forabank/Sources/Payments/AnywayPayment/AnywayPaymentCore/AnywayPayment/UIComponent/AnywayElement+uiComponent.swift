@@ -163,6 +163,8 @@ private extension AnywayElement.Parameter.UIAttributes {
     
     var parameterType: AnywayElement.UIComponent.Parameter.ParameterType {
         
+        guard !isReadOnly else { return .nonEditable }
+        
         switch (type, viewType, dataType) {
         case (_, .constant, _):
             return .nonEditable
