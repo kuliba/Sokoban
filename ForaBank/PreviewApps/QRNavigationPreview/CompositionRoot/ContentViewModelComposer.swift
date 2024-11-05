@@ -36,7 +36,10 @@ extension ContentViewModelComposer {
                 switch select {
                 case .scanQR:
                     let qr = qrComposer.compose()
-                    completion(.qr(.init(model: qr, cancellables: [])))
+                    let close = qr.content.isClosedPublisher
+                        .sink { if $0 { notify(.dismiss) }}
+                    
+                    completion(.qr(.init(model: qr, cancellable: close)))
                 }
             },
             scheduler: mainScheduler,

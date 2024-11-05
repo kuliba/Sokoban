@@ -24,9 +24,20 @@ final class QRNavigationPreviewTests: XCTestCase {
         let flow = makeSUT().compose()
         
         flow.event(.select(.scanQR))
-        XCTAssertNoDiff(equatable(flow.state), .init(navigation: .qr))
+        XCTAssertNotNil(flow.state.navigation)
         
         flow.event(.dismiss)
+        
+        XCTAssertNil(flow.state.navigation)
+    }
+    
+    func test_shouldResetNavigationOnQRClose() throws{
+        
+        let flow = makeSUT().compose()
+        flow.event(.select(.scanQR))
+        XCTAssertNotNil(flow.state.navigation)
+
+        try flow.qr.close()
         
         XCTAssertNil(flow.state.navigation)
     }
@@ -70,6 +81,22 @@ final class QRNavigationPreviewTests: XCTestCase {
         enum EquatableNavigation: Equatable {
             
             case qr
+        }
+    }
+}
+
+// MARK: - DSL
+
+private extension ContentViewDomain.Flow {
+    
+    var qr: QRModel {
+        
+        get throws {
+            
+            guard case let .qr(node) = state.navigation 
+            else { throw NSError(domain: "Expected QR, but got \(String(describing: state.navigation)).", code: -1) }
+            
+            return node.model.content
         }
     }
 }

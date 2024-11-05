@@ -715,6 +715,7 @@
 		2A3A64D12CDA9E11007C0587 /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A64D02CDA9E11007C0587 /* XCTAssertNoDiff.swift */; };
 		2A3A64D52CDA9F4A007C0587 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3A64D42CDA9F4A007C0587 /* CustomDump */; };
 		2A3A64D92CDA9FFE007C0587 /* ContentViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A64D62CDA9FBF007C0587 /* ContentViewModelComposer.swift */; };
+		2A3A64DB2CDAA2C3007C0587 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3A64DA2CDAA2C3007C0587 /* CombineSchedulers */; };
 		2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */; };
 		2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */; };
 		2A3BD5FD2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */; };
@@ -7121,6 +7122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A3A64DB2CDAA2C3007C0587 /* CombineSchedulers in Frameworks */,
 				2A3A64D52CDA9F4A007C0587 /* CustomDump in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18771,12 +18773,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				2A3A64DD2CDAA2CE007C0587 /* PBXTargetDependency */,
 				2A3A64D32CDA9E35007C0587 /* PBXTargetDependency */,
 				2A3A64C12CDA907D007C0587 /* PBXTargetDependency */,
 			);
 			name = QRNavigationPreviewTests;
 			packageProductDependencies = (
 				2A3A64D42CDA9F4A007C0587 /* CustomDump */,
+				2A3A64DA2CDAA2C3007C0587 /* CombineSchedulers */,
 			);
 			productName = QRNavigationPreviewTests;
 			productReference = 2A3A64BC2CDA907D007C0587 /* QRNavigationPreviewTests.xctest */;
@@ -23439,6 +23443,10 @@
 		2A3A64D32CDA9E35007C0587 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 2A3A64D22CDA9E35007C0587 /* CustomDump */;
+		};
+		2A3A64DD2CDAA2CE007C0587 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2A3A64DC2CDAA2CE007C0587 /* CombineSchedulers */;
 		};
 		2A46300B2AC4550500020B73 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -28956,6 +28964,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
 			productName = CustomDump;
+		};
+		2A3A64DA2CDAA2C3007C0587 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2A3A64DC2CDAA2CE007C0587 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2A3D6F032B61902700D19379 /* PaymentComponents */ = {
 			isa = XCSwiftPackageProductDependency;
