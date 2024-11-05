@@ -36,17 +36,15 @@ struct ProductProfileView: View {
             
             ScrollView {
                 
-                ZStack {
+                ZStack(alignment: .top) {
                     
                     filler()
-                    
+
                     content()
                         .padding(.top, 56 - 48)
                 }
                 .background(
                     GeometryReader { geo in
-                        
-                        let _ = print("### scroll geo \(-geo.frame(in: .named("scroll")).origin.y)")
                         
                         Color.clear
                             .preference(
@@ -688,7 +686,6 @@ private extension ProductProfileView {
             let geoY = geometry.frame(in: .global).minY
             
             let condition = geoY <= 0
-            let _ = print("### card geo \(condition)")
             let height = offsetHeight + (condition ? 0 : geoY)
             let offsetY = condition ? geoY / 9 : -geoY
             
