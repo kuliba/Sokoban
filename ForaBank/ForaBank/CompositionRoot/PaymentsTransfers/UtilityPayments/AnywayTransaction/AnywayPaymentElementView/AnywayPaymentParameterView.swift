@@ -9,6 +9,7 @@ import AnywayPaymentDomain
 import PaymentComponents
 import RxViewModel
 import SwiftUI
+import TextFieldUI
 
 struct AnywayPaymentParameterView: View {
     
@@ -21,43 +22,19 @@ struct AnywayPaymentParameterView: View {
         case .hidden:
             EmptyView()
             
-        case .nonEditable:
-#warning("replace with real components")
-            Text("TBD: nonEditable parameter view")
+        case let .nonEditable(node):
+            inputView(keyboard: .decimal, model: node.model)
+                .disabled(true)
             
         case let .numberInput(node):
-            TextInputWrapperView(
-                model: node.model,
-                config: .iFora(
-                    keyboard: .decimal, 
-                    title: parameter.origin.title
-                ),
-                iconView: {
-                    
-                    factory.makeIconView(parameter.origin.icon)
-                        .frame(width: 32, height: 32)
-                }
-            )
-            .paddedRoundedBackground()
+            inputView(keyboard: .decimal, model: node.model)
             
         case let .select(viewModel):
             factory.makeSelectorView(parameter, viewModel)
                 .paddedRoundedBackground()
             
         case let .textInput(node):
-            TextInputWrapperView(
-                model: node.model,
-                config: .iFora(
-                    keyboard: .default,
-                    title: parameter.origin.title
-                ),
-                iconView: {
-                    
-                    factory.makeIconView(parameter.origin.icon)
-                        .frame(width: 32, height: 32)
-                }
-            )
-            .paddedRoundedBackground()
+            inputView(keyboard: .decimal, model: node.model)
             
         case .unknown:
             EmptyView()
@@ -69,4 +46,27 @@ extension AnywayPaymentParameterView {
     
     typealias Parameter = AnywayElementModel.Parameter
     typealias Factory = AnywayPaymentParameterViewFactory
+}
+
+private extension AnywayPaymentParameterView {
+    
+    func inputView(
+        keyboard: TextFieldUI.KeyboardType,
+        model: RxInputViewModel
+    ) -> some View {
+        
+        TextInputWrapperView(
+            model: model,
+            config: .iFora(
+                keyboard: keyboard,
+                title: parameter.origin.title
+            ),
+            iconView: {
+                
+                factory.makeIconView(parameter.origin.icon)
+                    .frame(width: 32, height: 32)
+            }
+        )
+        .paddedRoundedBackground()
+    }
 }

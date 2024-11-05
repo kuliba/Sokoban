@@ -748,7 +748,12 @@ private extension PaymentsTransfersViewModel {
             
             switch outside {
             case .chat: self?.rootActions?.switchTab(.chat)
-            case .main: self?.rootActions?.switchTab(.main)
+            case .main:
+                if #available(iOS 16, *) {
+                    self?.rootActions?.switchTab(.main)
+                } else {
+                    self?.dismissAllViewAndSwitchToMainTab()
+                }
             }
             
             self?.rootActions?.spinner.hide()
@@ -816,10 +821,7 @@ private extension PaymentsTransfersViewModel {
                     event(.dismiss(.destination))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
-                    
-                    withAnimation {
-                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
-                    }
+                    dismissAllViewAndSwitchToMainTab()
                     
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
@@ -1278,6 +1280,7 @@ private extension PaymentsTransfersViewModel {
         
         templates.$state
             .map(\.external)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
@@ -1289,7 +1292,7 @@ private extension PaymentsTransfersViewModel {
 
         switch external.outside {
         case .none:
-            rootActions?.spinner.hide()
+            break
 
         case let .productID(productID):
             rootActions?.spinner.hide()
@@ -1446,6 +1449,12 @@ private extension PaymentsTransfersViewModel {
         self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
         self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
         self.rootActions?.switchTab(.main)
+    }
+    
+    private func dismissAllViewAndSwitchToMainTab() {
+        withAnimation {
+            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+        }
     }
     
     private func repeatSuccess() {

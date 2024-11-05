@@ -25,7 +25,7 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
             )
             .navigationDestination(
                 destination: model.state.destination,
-                dismissDestination: { model.event(.dismiss(.destination)) },
+                dismiss: { model.event(.dismiss(.destination)) },
                 content: destinationContent
             )
     }
