@@ -1115,7 +1115,6 @@ private extension RootViewFactory {
                         makeAnywayFlowView: { _ in fatalError() },
                         makeCategoryView: { _,_ in fatalError() }
                     ),
-                    optionSelectorViewFactory: .preview,
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                         makeHistoryButton: { .init(event: $0 ) },

@@ -96,7 +96,6 @@ private extension RootViewFactoryComposer {
                 makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) },
                 makeCategoryView: { CategoryView(newImplementation: self.marketFeatureFlag.isActive, isSelected: $0, title: $1)}
             ),
-            optionSelectorViewFactory: .init(makeCategoryView: { CategoryView(newImplementation: self.marketFeatureFlag.isActive, isSelected: $0, title: $1)}),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },

@@ -176,7 +176,6 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -211,7 +210,6 @@ struct MainView<NavigationOperationView: View>: View {
             MyProductsView(
                 viewModel: myProductsViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -288,7 +286,6 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
