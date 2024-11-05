@@ -34,9 +34,10 @@ final class QRNavigationPreviewTests: XCTestCase {
     func test_shouldResetNavigationOnQRClose() throws{
         
         let flow = makeSUT().compose()
+        
         flow.event(.select(.scanQR))
         XCTAssertNotNil(flow.state.navigation)
-
+        
         try flow.qr.close()
         
         XCTAssertNil(flow.state.navigation)
@@ -93,7 +94,7 @@ private extension ContentViewDomain.Flow {
         
         get throws {
             
-            guard case let .qr(node) = state.navigation 
+            guard case let .qr(node) = state.navigation
             else { throw NSError(domain: "Expected QR, but got \(String(describing: state.navigation)).", code: -1) }
             
             return node.model.content
