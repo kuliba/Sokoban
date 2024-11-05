@@ -1186,14 +1186,14 @@ private extension Target {
         name: .landingUIComponent,
         dependencies: [
             .combineSchedulers,
-            .tagged,
-            .shimmer,
-            .uiPrimitives,
-            .rxViewModel,
             .foraTools,
-            .textFieldComponent,
+            .rxViewModel,
             .sharedConfigs,
-            .svCardLimitAPI
+            .shimmer,
+            .svCardLimitAPI,
+            .tagged,
+            .textFieldComponent,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )

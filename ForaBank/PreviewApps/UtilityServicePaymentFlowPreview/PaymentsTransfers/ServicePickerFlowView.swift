@@ -117,11 +117,11 @@ private extension ServiceFailure {
         
         switch self {
         case .connectivityError:
-            let model = alertModelOf(title: "Error!", message: "alert message")
+            let model = alertModelOf(title: "Ошибка", message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.")
             return .init(with: model, event: event)
             
         case let .serverError(message):
-            let model = alertModelOf(title: "Error!", message: message)
+            let model = alertModelOf(title: "Ошибка", message: message)
             return .init(with: model, event: event)
         }
     }
