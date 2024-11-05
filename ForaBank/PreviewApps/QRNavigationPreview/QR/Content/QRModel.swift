@@ -9,7 +9,13 @@ import Combine
 
 final class QRModel {
     
+    private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
     private let subject = PassthroughSubject<QRResult, Never>()
+    
+    var isClosedPublisher: AnyPublisher<Bool, Never> {
+        
+        isClosedSubject.eraseToAnyPublisher()
+    }
     
     var publisher: AnyPublisher<QRResult, Never> {
         
@@ -23,5 +29,10 @@ final class QRModel {
     
     func receive() {
         
+    }
+    
+    func close() {
+        
+        isClosedSubject.send(true)
     }
 }

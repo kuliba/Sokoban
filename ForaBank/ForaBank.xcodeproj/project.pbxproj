@@ -1005,7 +1005,7 @@
 		2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */; };
 		2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */; };
 		2A632C6D2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */; };
-		2A632C6F2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6E2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift */; };
+		2A632C6F2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C6E2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift */; };
 		2A632C712CD1203100AF3B6B /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A632C702CD1203100AF3B6B /* QRModel.swift */; };
 		2A6371252BF25EF5007E494A /* IconDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6371242BF25EF5007E494A /* IconDomain.swift */; };
 		2A6371272BF260E3007E494A /* IconDomain+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6371262BF260E3007E494A /* IconDomain+preview.swift */; };
@@ -1017,7 +1017,8 @@
 		2A65AADF2CD127A8001AB123 /* QRContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AADE2CD127A8001AB123 /* QRContentView.swift */; };
 		2A65AAE22CD12889001AB123 /* Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE12CD12889001AB123 /* Payments.swift */; };
 		2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE32CD128AE001AB123 /* PaymentsView.swift */; };
-		2A65AAE82CD12B7D001AB123 /* ContentViewFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */; };
+		2A65AAE82CD12B7D001AB123 /* QRBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE72CD12B7D001AB123 /* QRBinderView.swift */; };
+		2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAEC2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift */; };
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
 		2A65FB3C2B4E62DF00A84F9E /* View+loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */; };
@@ -4577,7 +4578,7 @@
 		2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewDomain.swift; sourceTree = "<group>"; };
 		2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDomain.swift; sourceTree = "<group>"; };
 		2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QRBinderComposer+preview.swift"; sourceTree = "<group>"; };
-		2A632C6E2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Node+ContentViewDomain.Flow+preview.swift"; sourceTree = "<group>"; };
+		2A632C6E2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentViewDomain.Flow+preview.swift"; sourceTree = "<group>"; };
 		2A632C702CD1203100AF3B6B /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
 		2A6371242BF25EF5007E494A /* IconDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDomain.swift; sourceTree = "<group>"; };
 		2A6371262BF260E3007E494A /* IconDomain+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IconDomain+preview.swift"; sourceTree = "<group>"; };
@@ -4589,7 +4590,8 @@
 		2A65AADE2CD127A8001AB123 /* QRContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRContentView.swift; sourceTree = "<group>"; };
 		2A65AAE12CD12889001AB123 /* Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payments.swift; sourceTree = "<group>"; };
 		2A65AAE32CD128AE001AB123 /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
-		2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewFullScreenView.swift; sourceTree = "<group>"; };
+		2A65AAE72CD12B7D001AB123 /* QRBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRBinderView.swift; sourceTree = "<group>"; };
+		2A65AAEC2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+emitNilThenValueWithDelay.swift"; sourceTree = "<group>"; };
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
 		2A65D8AA2A333123003B3FEA /* TaxCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxCodes.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
@@ -8748,6 +8750,7 @@
 		2A1F5E802C26E9FF002B3F65 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
+				C1EC6F932BFFB0C8007E5AD9 /* ComponentsConfigurations.swift */,
 				2A1F5E812C26EA0D002B3F65 /* ButtonStateConfig+ext.swift */,
 				2A6679E42C58B0FD003ACA31 /* PaymentCompleteViewConfig+iFora.swift */,
 				2A6679E02C58AD0F003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift */,
@@ -9354,6 +9357,7 @@
 				2A632C662CD1179000AF3B6B /* ContentView */,
 				2A632C692CD118DF00AF3B6B /* QR */,
 				2A65AAE02CD1287B001AB123 /* Payments */,
+				2A65AAFC2CD26DF7001AB123 /* HELPERS-MOVE_TO_MODULE(S) */,
 				2A30B09B2CCE2BA4006697E1 /* Assets.xcassets */,
 				2A30B09D2CCE2BA4006697E1 /* Preview Content */,
 			);
@@ -10629,7 +10633,6 @@
 			children = (
 				2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */,
 				2A30B0992CCE2BA4006697E1 /* ContentView.swift */,
-				2A65AAE72CD12B7D001AB123 /* ContentViewFullScreenView.swift */,
 			);
 			path = ContentView;
 			sourceTree = "<group>";
@@ -10638,6 +10641,7 @@
 			isa = PBXGroup;
 			children = (
 				2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */,
+				2A65AAFB2CD26CA0001AB123 /* Binder */,
 				2A65AAEA2CD147F1001AB123 /* Content */,
 			);
 			path = QR;
@@ -10646,7 +10650,7 @@
 		2A632C722CD1206300AF3B6B /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
-				2A632C6E2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift */,
+				2A632C6E2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift */,
 				2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */,
 			);
 			path = CompositionRoot;
@@ -10685,6 +10689,22 @@
 				2A65AADE2CD127A8001AB123 /* QRContentView.swift */,
 			);
 			path = Content;
+			sourceTree = "<group>";
+		};
+		2A65AAFB2CD26CA0001AB123 /* Binder */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AAE72CD12B7D001AB123 /* QRBinderView.swift */,
+			);
+			path = Binder;
+			sourceTree = "<group>";
+		};
+		2A65AAFC2CD26DF7001AB123 /* HELPERS-MOVE_TO_MODULE(S) */ = {
+			isa = PBXGroup;
+			children = (
+				2A65AAEC2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift */,
+			);
+			path = "HELPERS-MOVE_TO_MODULE(S)";
 			sourceTree = "<group>";
 		};
 		2A65D8AE2A333144003B3FEA /* SupportingTypes */ = {
@@ -11034,9 +11054,18 @@
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
 				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeServiceCategoryListLoaders.swift */,
 				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
+				2A89A5172CCD84D30070131F /* RootViewModelFactorySettings.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
-				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
+				2A85775B2CC61951003BE84E /* RootViewModelFactory+decorate.swift */,
+				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
+				2AC2F0882CC441A6006FCFBC /* RootViewModelFactory+logging.swift */,
 				2A7CA21A2C92149600B900E9 /* RootViewModelFactory+Load.swift */,
+				2A72ACBF2CC6A73800B8BF5B /* RootViewModelFactory+composeServiceCategoryListLoaders.swift */,
+				839331A72C916FEC00D15379 /* RootViewModelFactory+makeBannersBinder.swift */,
+				2A72ACBD2CC6914700B8BF5B /* RootViewModelFactory+makeGetOperatorsListByParamPayloads.swift */,
+				2A6DC7B12C9828DA00A801A0 /* RootViewModelFactory+servicePaymentOperatorService.swift */,
+				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
+				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
 			);
 			path = RootViewModelFactory;
 			sourceTree = "<group>";
@@ -11613,6 +11642,7 @@
 				2AF2C97D2C9579EE00FF775E /* RemoteDomain.swift */,
 				2AACA45C2CA168DD007BD0C6 /* BatchService.swift */,
 				2AF2C97F2C957C9B00FF775E /* RemoteDomainOf.swift */,
+				2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */,
 				2AF2C9812C957CF100FF775E /* StringSerialRemoteDomain.swift */,
 				2A42B4092C8D65D500A9B658 /* LoggingRemoteNanoServiceComposer.swift */,
 				2AC2F08A2CC44B54006FCFBC /* LoggingRemoteNanoServiceComposer */,
@@ -13001,31 +13031,29 @@
 			children = (
 				83F775D22CA4744E00A05F69 /* MarketShowcase */,
 				838C09222C8B59C400E894AC /* LoadBannersList */,
+				2A1F5E802C26E9FF002B3F65 /* Configs */,
+				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A2836E52CC79FD100694241 /* HTTPClientFactory */,
-				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
-				2A42B40B2C8D66B700A9B658 /* RemoteService+httpClient.swift */,
-				8394B2ED2BBF09410078CB10 /* ProductProfile */,
-				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
+				2AFD59EA2B6F98FE00C86FBF /* Infra */,
+				2AE350E12C772D3300A766EE /* GenericLoaderOf+ext.swift */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
+				2A94AAF02C8ED0E4003B4FB1 /* Remote */,
+				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */,
-				2AAC45D52CB987630096DD71 /* Model+runOnceWhenAuthorised.swift */,
+				2A94AAF52C8F78E5003B4FB1 /* Services */,
+				83F775D22CA4744E00A05F69 /* MarketShowcase */,
+				838C09222C8B59C400E894AC /* LoadBannersList */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
 				2AEFDF732C8C95F500401496 /* Logger+decorate.swift */,
-				2AE350E12C772D3300A766EE /* GenericLoaderOf+ext.swift */,
 				2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */,
-				2A94AAF52C8F78E5003B4FB1 /* Services */,
-				2AF720322C74AAD300919CAF /* LoadLatestOperations */,
-				2A1F5E802C26E9FF002B3F65 /* Configs */,
-				2AFD59EA2B6F98FE00C86FBF /* Infra */,
-				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
 				2AD7EBDB2B0CB1F3009FDCAB /* Buttons */,
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
 				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
-				C1EC6F932BFFB0C8007E5AD9 /* ComponentsConfigurations.swift */,
+				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2A3624A42C5F7BD000174C50 /* Components */,
 				2A7183B82C5E283A008B222B /* QR */,
 				2AC2ADBC2B2243780049EE9B /* SberQR */,
@@ -17701,9 +17729,9 @@
 			children = (
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
 				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
+				2A3EB71B29B1098C002A1309 /* Config.swift */,
 				2A72ACC52CC6DA4000B8BF5B /* RootFactory */,
 				2AF1774D2AC476B600D100DD /* CompositionRoot */,
-				2A3EB71B29B1098C002A1309 /* Config.swift */,
 				77DC12592770988B00C917B0 /* Domain */,
 				77DC125B277098B800C917B0 /* Model */,
 				77DC12672770F5E200C917B0 /* Services */,
@@ -20306,8 +20334,9 @@
 				2A65AAE22CD12889001AB123 /* Payments.swift in Sources */,
 				2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */,
 				2A30B0982CCE2BA4006697E1 /* QRNavigationPreviewApp.swift in Sources */,
-				2A632C6F2CD1200A00AF3B6B /* Node+ContentViewDomain.Flow+preview.swift in Sources */,
-				2A65AAE82CD12B7D001AB123 /* ContentViewFullScreenView.swift in Sources */,
+				2A632C6F2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift in Sources */,
+				2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */,
+				2A65AAE82CD12B7D001AB123 /* QRBinderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -26262,6 +26291,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 25;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -26348,7 +26379,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -26360,7 +26391,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.4.1;
+				MARKETING_VERSION = 10.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -26678,7 +26709,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -26690,7 +26721,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.4.1;
+				MARKETING_VERSION = 10.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -26711,7 +26742,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -26723,7 +26754,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.4.1;
+				MARKETING_VERSION = 10.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -26809,6 +26840,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -26893,7 +26926,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -26905,7 +26938,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.4.1;
+				MARKETING_VERSION = 10.5;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -27870,6 +27903,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 25;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -27907,6 +27942,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

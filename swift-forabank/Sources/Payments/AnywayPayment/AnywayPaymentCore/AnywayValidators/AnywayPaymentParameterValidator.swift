@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import ForaTools
 import Foundation
 
 public final class AnywayPaymentParameterValidator {

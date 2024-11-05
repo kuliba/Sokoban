@@ -42,7 +42,8 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
                 makePayments: makePayments.call
-            )
+            ), 
+            witnesses: .init(isClosed: { $0.isClosed })
         )
         let sut = QRBinderComposer(
             microServices: .init(

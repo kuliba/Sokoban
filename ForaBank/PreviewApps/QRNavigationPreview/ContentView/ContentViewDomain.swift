@@ -11,12 +11,10 @@ typealias ContentViewDomain = PayHubUI.FlowDomain<ContentViewSelect, ContentView
 
 enum ContentViewSelect {
     
-    case qrNavigation(QRNavigation)
     case scanQR
 }
 
 enum ContentViewNavigation {
     
-    case qr(QRDomain.Binder)
-    case qrNavigation(QRNavigation)
+    case qr(Node<QRDomain.Binder>)
 }
