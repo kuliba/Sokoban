@@ -74,7 +74,8 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeAnywayFlowView: makeAnywayFlowView
+            makeAnywayFlowView: makeAnywayFlowView,
+            makeCategoryView: makeCategoryView
         )
     }
 }

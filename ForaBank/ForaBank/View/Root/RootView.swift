@@ -67,7 +67,6 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
-                optionSelectorViewFactory: rootViewFactory.makeOptionSelectorViewFactory,
                 paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory,
                 productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
@@ -1113,7 +1112,8 @@ private extension RootViewFactory {
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
                         makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: $2) },
-                        makeAnywayFlowView: { _ in fatalError() }
+                        makeAnywayFlowView: { _ in fatalError() },
+                        makeCategoryView: { _,_ in fatalError() }
                     ),
                     optionSelectorViewFactory: .preview,
                     productProfileViewFactory: .init(

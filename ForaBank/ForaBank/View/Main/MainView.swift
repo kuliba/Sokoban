@@ -24,7 +24,6 @@ struct MainView<NavigationOperationView: View>: View {
     let navigationOperationView: () -> NavigationOperationView
     
     let viewFactory: MainViewFactory
-    let optionSelectorViewFactory: OptionSelectorViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
@@ -123,7 +122,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             MainSectionProductsView(
                 viewModel: productsSectionViewModel,
-                viewFactory: optionSelectorViewFactory
+                viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView)
             )
             .padding(.bottom, 19)
             
@@ -146,8 +145,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .padding(.bottom, 32)
             
         case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
-            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel, viewFactory: optionSelectorViewFactory)
-                .padding(.bottom, 32)
+            MainSectionCurrencyMetallView(
+                viewModel: currencyMetallViewModel,
+                viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView)
+            )
+            .padding(.bottom, 32)
             
         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
             MainSectionOpenProductView(viewModel: openProductViewModel)
@@ -168,13 +170,13 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch link {
         case let .userAccount(userAccountViewModel):
-            viewFactory.makeUserAccountView(userAccountViewModel, .iFora, optionSelectorViewFactory)
+            viewFactory.makeUserAccountView(userAccountViewModel, .iFora, .init(makeCategoryView: viewFactory.makeCategoryView))
             
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: optionSelectorViewFactory,
+                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -199,17 +201,17 @@ struct MainView<NavigationOperationView: View>: View {
                     
                     viewFactory.makeIconView($0.map { .svg($0) })
                 }, 
-                viewFactory: optionSelectorViewFactory
+                viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView)
             )
             
         case let .currencyWallet(viewModel):
-            CurrencyWalletView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
+            CurrencyWalletView(viewModel: viewModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
             
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: optionSelectorViewFactory,
+                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -226,15 +228,15 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .failedView(failedViewModel):
-            QRFailedView(viewModel: failedViewModel, viewFactory: optionSelectorViewFactory)
+            QRFailedView(viewModel: failedViewModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
             
         case let .searchOperators(viewModel):
-            QRSearchOperatorView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
+            QRSearchOperatorView(viewModel: viewModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
         case let .payments(node):
-            PaymentsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
+            PaymentsView(viewModel: node.model, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
             
         case let .operatorView(internetDetailViewModel):
             InternetTVDetailsView(viewModel: internetDetailViewModel)
@@ -242,7 +244,7 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
             
         case let .paymentsServices(viewModel):
-            PaymentsServicesOperatorsView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
+            PaymentsServicesOperatorsView(viewModel: viewModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -286,7 +288,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory,
-                optionSelectorViewFactory: optionSelectorViewFactory,
+                optionSelectorViewFactory: .init(makeCategoryView: viewFactory.makeCategoryView),
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
@@ -298,7 +300,7 @@ struct MainView<NavigationOperationView: View>: View {
             PlacesView(viewModel: placesViewModel)
             
         case let .byPhone(node):
-            ContactsView(viewModel: node.model, viewFactory: optionSelectorViewFactory)
+            ContactsView(viewModel: node.model, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
         }
     }
     
@@ -323,10 +325,10 @@ struct MainView<NavigationOperationView: View>: View {
         
         switch fullScreenSheet.type {
         case let .qrScanner(node):
-            QRView(viewModel: node.model.qrModel, viewFactory: optionSelectorViewFactory)
+            QRView(viewModel: node.model.qrModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
             
         case let .success(viewModel):
-            PaymentsSuccessView(viewModel: viewModel, viewFactory: optionSelectorViewFactory)
+            PaymentsSuccessView(viewModel: viewModel, viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
                 .edgesIgnoringSafeArea(.all)
         }
     }
@@ -409,7 +411,7 @@ private extension MainView {
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
             makeAnywayFlowView: viewFactory.makeAnywayFlowView,
-            makeCategoryView: optionSelectorViewFactory.makeCategoryView
+            makeCategoryView: viewFactory.makeCategoryView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
@@ -432,7 +434,7 @@ private extension MainView {
             factory: .init(
                 makeAnywayFlowView: viewFactory.makeAnywayFlowView,
                 makeIconView: viewFactory.makeIconView, 
-                makeCategoryView: optionSelectorViewFactory.makeCategoryView
+                makeCategoryView: viewFactory.makeCategoryView
             )
         )
         .navigationBarWithAsyncIcon(
@@ -560,7 +562,6 @@ struct MainView_Previews: PreviewProvider {
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
             viewFactory: .preview, 
-            optionSelectorViewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -591,7 +592,8 @@ extension MainViewFactory {
             },
             makeInfoViews: .default,
             makeUserAccountView: { UserAccountView.init(viewModel: $0, config: $1, viewFactory: $2) },
-            makeAnywayFlowView: { _ in fatalError() }
+            makeAnywayFlowView: { _ in fatalError() },
+            makeCategoryView: { _,_ in fatalError() }
         )
     }
 }

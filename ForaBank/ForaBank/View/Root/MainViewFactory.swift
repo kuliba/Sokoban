@@ -17,6 +17,7 @@ struct MainViewFactory {
     let makeInfoViews: RootViewFactory.MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeAnywayFlowView: MakeAnywayFlowView
+    let makeCategoryView: MakeCategoryView
 }
 
 extension MainViewFactory {
