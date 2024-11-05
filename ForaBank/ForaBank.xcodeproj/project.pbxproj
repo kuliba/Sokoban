@@ -714,6 +714,7 @@
 		2A3A64CD2CDA9305007C0587 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A64CB2CDA9305007C0587 /* ValueSpy.swift */; };
 		2A3A64D12CDA9E11007C0587 /* XCTAssertNoDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A64D02CDA9E11007C0587 /* XCTAssertNoDiff.swift */; };
 		2A3A64D52CDA9F4A007C0587 /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3A64D42CDA9F4A007C0587 /* CustomDump */; };
+		2A3A64D92CDA9FFE007C0587 /* ContentViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A64D62CDA9FBF007C0587 /* ContentViewModelComposer.swift */; };
 		2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */; };
 		2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */; };
 		2A3BD5FD2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */; };
@@ -4286,6 +4287,7 @@
 		2A3A64CA2CDA9305007C0587 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A3A64CB2CDA9305007C0587 /* ValueSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2A3A64D02CDA9E11007C0587 /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
+		2A3A64D62CDA9FBF007C0587 /* ContentViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModelComposer.swift; sourceTree = "<group>"; };
 		2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensionsTests.swift; sourceTree = "<group>"; };
 		2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewModelTests.swift; sourceTree = "<group>"; };
 		2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createFastPaymentContractFindListRequest.swift"; sourceTree = "<group>"; };
@@ -10702,6 +10704,7 @@
 			isa = PBXGroup;
 			children = (
 				2A632C6E2CD1200A00AF3B6B /* ContentViewDomain.Flow+preview.swift */,
+				2A3A64D62CDA9FBF007C0587 /* ContentViewModelComposer.swift */,
 				2A632C6C2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift */,
 			);
 			path = CompositionRoot;
@@ -20407,6 +20410,7 @@
 				2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */,
 				2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */,
 				2A65AADF2CD127A8001AB123 /* QRContentView.swift in Sources */,
+				2A3A64D92CDA9FFE007C0587 /* ContentViewModelComposer.swift in Sources */,
 				2A632C6D2CD11B9B00AF3B6B /* QRBinderComposer+preview.swift in Sources */,
 				2A30B09A2CCE2BA4006697E1 /* ContentView.swift in Sources */,
 				2A632C712CD1203100AF3B6B /* QRModel.swift in Sources */,
