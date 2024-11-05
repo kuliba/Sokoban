@@ -124,7 +124,15 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                     case .confirm(let operation):
                         
-                        let confirmViewModel = PaymentsConfirmViewModel(operation: operation, model: model, closeAction: closeAction)
+                        let closeAction: () -> Void = operation.service == .abroad
+                            ? closeAction
+                            : { [weak self] in self?.link = nil }
+                        
+                        let confirmViewModel = PaymentsConfirmViewModel(
+                            operation: operation,
+                            model: model,
+                            closeAction: closeAction
+                        )
                         confirmViewModel.rootActions = rootActions
                         bind(confirmViewModel: confirmViewModel)
                         link = .confirm(confirmViewModel)
