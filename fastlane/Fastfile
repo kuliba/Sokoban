@@ -44,13 +44,13 @@ platform :ios do
 
   lane :test do
 
-    ENV["FASTLANE_XCODE_LIST_TIMEOUT"] = "120"
-    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
+    ENV["FASTLANE_XCODE_LIST_TIMEOUT"] = "1120"
+    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "1120"
 
     run_tests(
       project: ENV["XCODE_PROJECT"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
-      devices: ['iPhone 11 Pro Max (16.4)'],
+      devices: ['iPhone 11'],
       clean: true,
       suppress_xcode_output: false)
 

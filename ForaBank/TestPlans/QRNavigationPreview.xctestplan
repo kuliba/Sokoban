@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "9D99574B-31C3-45A6-8F6D-2656B56D50FC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "2A30B0942CCE2BA4006697E1",
+      "name" : "QRNavigationPreview"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubTests",
+        "name" : "PayHubTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PayHubUITests",
+        "name" : "PayHubUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

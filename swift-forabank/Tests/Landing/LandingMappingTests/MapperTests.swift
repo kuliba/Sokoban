@@ -206,6 +206,11 @@ final class MapperTests: XCTestCase {
                     imageLink: "link1",
                     link: "a",
                     detail: .init(groupId: "b", viewId: "c")
+                ),
+                .init(
+                    imageLink: "link3",
+                    link: "a",
+                    detail: .init(groupId: "HOUSING_AND_COMMUNAL_SERVICE", viewId: "")
                 )
             ])
         ])
@@ -822,6 +827,14 @@ private extension String {
               "details": {
                 "detailsGroupId": "b",
                 "detailViewId": "c"
+              }
+            },
+            {
+              "imageLink": "link3",
+              "link": "a",
+              "details": {
+                "detailsGroupId": "HOUSING_AND_COMMUNAL_SERVICE",
+                "detailViewId": null
               }
             }
           ]
