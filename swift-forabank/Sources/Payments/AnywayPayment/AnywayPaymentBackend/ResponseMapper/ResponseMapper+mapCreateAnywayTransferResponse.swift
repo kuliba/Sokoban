@@ -86,7 +86,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
         
         self.init(
             fieldName: additional.fieldName,
-            fieldValue: additional.fieldValue,
+            fieldValue: additional.fieldValue ?? "",
             fieldTitle: additional.fieldTitle ?? additional.fieldName,
             md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
@@ -303,7 +303,7 @@ private extension ResponseMapper._Data {
     struct _Additional: Decodable {
         
         let fieldName: String
-        let fieldValue: String
+        let fieldValue: String?
         let fieldTitle: String?
         let md5hash: String?
         let recycle: Bool?
