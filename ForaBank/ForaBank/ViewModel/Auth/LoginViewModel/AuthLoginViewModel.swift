@@ -89,19 +89,6 @@ class AuthLoginViewModel: ObservableObject {
 
 // MARK: Alert Handling
 
-enum AlertType: Identifiable {
-    
-    var id: UUID {
-        switch self {
-        case .clientInformAlerts(let alert): return alert.id
-        case .alertViewModel(let viewModelAlert): return viewModelAlert.id
-        }
-    }
-    
-    case clientInformAlerts(ClientInformAlerts.Alert)
-    case alertViewModel(Alert.ViewModel)
-}
-
 extension AuthLoginViewModel {
     
     func showNextAlert(action: ClientInformActionType) {
