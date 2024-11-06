@@ -97,6 +97,20 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNil(flow.qrNavigation)
     }
     
+    // MARK: - failure
+    
+    func test_shouldSetQRNavigationOnFailure() throws {
+        
+        let qrCode = makeQRCode()
+        let flow = makeSUT().compose()
+        flow.event(.select(.scanQR))
+        try XCTAssertNil(flow.qrFlow.state.navigation)
+
+        try flow.qr.emit(.failure(qrCode))
+        
+        try XCTAssertNotNil(flow.qrFlow.state.navigation)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ContentViewModelComposer
@@ -137,6 +151,13 @@ final class ContentViewModelComposerTests: XCTestCase {
             
             case qr
         }
+    }
+    
+    private func makeQRCode(
+        value: String = anyMessage()
+    ) -> QRCode {
+        
+        return .init(value: value)
     }
 }
 

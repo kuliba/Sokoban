@@ -90,6 +90,29 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // MARK: - failure
+    
+    func test_getNavigation_failure_shouldCallMakeQRFailureWithQRCode() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .failure(qrCode))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+    }
+    
+    func test_getNavigation_failure_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .failure(makeQRCode()),
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -97,10 +120,12 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     private struct Spies {
         
         let makePayments: MakePayments
+        let makeQRFailure: MakeQRFailure
     }
     
     private func makeSUT(
-        payments: Payments = .init(),
+        payments: Payments? = nil,
+        qrFailure: QRFailure? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -108,10 +133,12 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         spies: Spies
     ) {
         let spies = Spies(
-            makePayments: .init(stubs: [payments])
+            makePayments: .init(stubs: [payments ?? makePayments()]),
+            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()])
         )
         let sut = SUT(
             microServices: .init(
+                makeQRFailure: spies.makeQRFailure.call,
                 makePayments: spies.makePayments.call
             ),
             witnesses: .init(isClosed: { $0.isClosed })

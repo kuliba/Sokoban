@@ -81,24 +81,36 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
         return .init(
             microServices: .init(
-                makePayments: {
-                    
-                    switch $0 {
-                    case let .c2bSubscribe(url),
-                        let .c2b(url):
-                        Payments(url: url)
-                    }
-                }
+                makeQRFailure: makeQRFailure,
+                makePayments: makePayments
             ),
             witnesses: .init(
                 isClosed: { $0.isClosedPublisher }
             )
         )
+    }
+    
+    private func makeQRFailure(
+        qrCode: QRCode
+    ) -> QRFailure {
+        
+        return .init(qrCode: qrCode)
+    }
+    
+    private func makePayments(
+        payload: NavigationComposer.MicroServices.MakePaymentsPayload
+    ) -> Payments {
+        
+        switch payload {
+        case let .c2bSubscribe(url),
+            let .c2b(url):
+            return Payments(url: url)
+        }
     }
 }
