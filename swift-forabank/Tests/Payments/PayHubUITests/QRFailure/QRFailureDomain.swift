@@ -1,0 +1,39 @@
+//
+//  QRFailureDomain.swift
+//
+//
+//  Created by Igor Malyarov on 06.11.2024.
+//
+
+import PayHub
+import PayHubUI
+
+enum QRFailureDomain<QRFailure, Categories, DetailPayment> {
+    
+    // MARK: - Binder
+    
+    typealias Binder = PayHub.Binder<Content, Flow>
+    
+    // MARK: - Content
+    
+    typealias Content = QRFailure
+    
+    // MARK: - Flow
+    
+    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias Flow = FlowDomain.Flow
+    typealias FlowComposer = FlowDomain.Composer
+    
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
+
+    enum Select {
+        
+        case search, payWithDetails
+    }
+    
+    enum Navigation {
+        
+        case categories(Result<Categories, Error>)
+        case detailPayment(DetailPayment)
+    }
+}
