@@ -92,8 +92,8 @@ class QRBinderTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case let .payments(payments):
-            return .payments(.init(payments))
+        case let .payments(node):
+            return .payments(.init(node.model))
         }
     }
     
@@ -124,7 +124,20 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    final class Payments {}
+    final class Payments {
+        
+        private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
+        
+        var isClosed: AnyPublisher<Bool, Never> {
+            
+            isCloseSubject.eraseToAnyPublisher()
+        }
+        
+        func close() {
+            
+            isCloseSubject.value = true
+        }
+    }
     
     func makePayments() -> Payments {
         

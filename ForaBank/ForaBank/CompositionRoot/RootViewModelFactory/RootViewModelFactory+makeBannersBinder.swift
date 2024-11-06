@@ -5,10 +5,10 @@
 //  Created by Andryusina Nataly on 11.09.2024.
 //
 
-import Foundation
-import ForaTools
-import CombineSchedulers
 import Banners
+import CombineSchedulers
+import ForaTools
+import Foundation
 
 extension RootViewModelFactory {
     
