@@ -69,7 +69,7 @@ extension ProductsSwapView {
                         ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                         ProductData.Filter.DemandDepositRule(),
                         ProductData.Filter.CardActiveRule(),
-                        ProductData.Filter.CardIssuedToClientRule(),
+                        ProductData.Filter.CardActiveOrIssuedToClientRule(),
                         ProductData.Filter.CardCorporateIsIndividualBusinessmanMainRule(),
                         ProductData.Filter.CardAdditionalSelfRule(),
                         ProductData.Filter.AccountActiveRule(),

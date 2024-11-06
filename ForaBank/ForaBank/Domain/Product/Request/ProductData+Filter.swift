@@ -115,7 +115,7 @@ extension ProductData.Filter {
         }
     }
     
-    struct CardIssuedToClientRule: ProductDataFilterRule {
+    struct CardActiveOrIssuedToClientRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -123,7 +123,8 @@ extension ProductData.Filter {
                 return nil
             }
 
-            return productCard.status == .issuedToClient
+            return productCard.status == .active && productCard.statusPc == .active ||
+                   productCard.status == .issuedToClient
         }
     }
     
@@ -247,7 +248,7 @@ extension ProductData.Filter {
                 return nil
             }
             
-            return !cardType.isCorporateCard 
+            return !cardType.isCorporateCard
         }
     }
     
