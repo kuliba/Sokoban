@@ -1,5 +1,5 @@
 //
-//  QRNavigationPreviewTests.swift
+//  ContentViewModelComposerTests.swift
 //  QRNavigationPreviewTests
 //
 //  Created by Igor Malyarov on 05.11.2024.
@@ -8,7 +8,7 @@
 @testable import QRNavigationPreview
 import XCTest
 
-final class QRNavigationPreviewTests: XCTestCase {
+final class ContentViewModelComposerTests: XCTestCase {
     
     func test_shouldSetNavigationOnSelect() {
         
@@ -31,7 +31,7 @@ final class QRNavigationPreviewTests: XCTestCase {
         XCTAssertNil(flow.state.navigation)
     }
     
-    func test_shouldResetNavigationOnQRClose() throws{
+    func test_shouldResetNavigationOnQRClose() throws {
         
         let flow = makeSUT().compose()
         
