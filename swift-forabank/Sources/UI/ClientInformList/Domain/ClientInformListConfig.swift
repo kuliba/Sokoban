@@ -16,24 +16,29 @@ public struct ClientInformListConfig {
     let textConfig: TextConfig
     let sizes: Sizes
     let paddings: Paddings
+    let image: Image
 
     public struct Colors {
         
         let grayGrabber: Color
         let grayBackground: Color
+        let bgIconRedLight: Color
         
         public init(
             grayGrabber: Color,
-            grayBackground: Color
+            grayBackground: Color,
+            bgIconRedLight: Color
         ) {
             self.grayGrabber = grayGrabber
             self.grayBackground = grayBackground
+            self.bgIconRedLight = bgIconRedLight
         }
     }
     
     public struct Sizes {
         
         let iconSize: CGFloat
+        let iconBackgroundSize: CGFloat
         let rowIconSize: CGFloat
         let navBarHeight: CGFloat
         let navBarMaxWidth: CGFloat
@@ -44,6 +49,7 @@ public struct ClientInformListConfig {
 
         public init(
             iconSize: CGFloat,
+            iconBackgroundSize: CGFloat,
             rowIconSize: CGFloat,
             navBarHeight: CGFloat,
             navBarMaxWidth: CGFloat,
@@ -54,6 +60,7 @@ public struct ClientInformListConfig {
         ) {
             
             self.iconSize = iconSize
+            self.iconBackgroundSize = iconBackgroundSize
             self.rowIconSize = rowIconSize
             self.navBarHeight = navBarHeight
             self.navBarMaxWidth = navBarMaxWidth
@@ -100,8 +107,7 @@ public struct ClientInformListConfig {
         textConfig: TextConfig,
         sizes: Sizes,
         paddings: Paddings,
-        image: Image,
-        rowImage: Image
+        image: Image
     ) {
         self.colors = colors
         self.strings = strings
@@ -109,5 +115,6 @@ public struct ClientInformListConfig {
         self.textConfig = textConfig
         self.sizes = sizes
         self.paddings = paddings
+        self.image = image
     }
 }

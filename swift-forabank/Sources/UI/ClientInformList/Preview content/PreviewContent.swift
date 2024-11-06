@@ -12,7 +12,8 @@ extension ClientInformListConfig.Colors {
     static let preview: Self = .init(
 
         grayGrabber: Color(red: 0.83, green: 0.83, blue: 0.83),
-        grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97)
+        grayBackground: Color(red: 0.97, green: 0.97, blue: 0.97),
+        bgIconRedLight: Color(red: 1.00, green: 0.62, blue: 0.62)
     )
 }
 
@@ -53,7 +54,8 @@ extension ClientInformListConfig {
             textColor: .black
         ),
         sizes: .init(
-            iconSize: 64,
+            iconSize: 40,
+            iconBackgroundSize: 64,
             rowIconSize: 40,
             navBarHeight: 59,
             navBarMaxWidth: 48,
@@ -68,7 +70,6 @@ extension ClientInformListConfig {
             horizontal: 20,
             vertical: 12
         ),
-        image: .infoCircle,
-        rowImage: .clock
+        image: .infoCircle
     )
 }

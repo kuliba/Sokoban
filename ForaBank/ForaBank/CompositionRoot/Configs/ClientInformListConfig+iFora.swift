@@ -12,7 +12,8 @@ extension ClientInformListConfig {
     static let iFora: Self = .init(
         colors: .init(
             grayGrabber: .mainColorsGrayMedium,
-            grayBackground: .mainColorsGrayLightest
+            grayBackground: .mainColorsGrayLightest,
+            bgIconRedLight: .bgIconRedLight
         ),
         strings: .init(
             titlePlaceholder: "Информация"
@@ -26,7 +27,8 @@ extension ClientInformListConfig {
             textColor: .textSecondary
         ),
         sizes: .init(
-            iconSize: 64,
+            iconSize: 40,
+            iconBackgroundSize: 64,
             rowIconSize: 40,
             navBarHeight: 59,
             navBarMaxWidth: 48,
@@ -41,7 +43,6 @@ extension ClientInformListConfig {
             horizontal: 20,
             vertical: 12
         ),
-        image: .cardPlaceholder,
-        rowImage: .cardPlaceholder
+        image: .ic24Info
     )
 }
