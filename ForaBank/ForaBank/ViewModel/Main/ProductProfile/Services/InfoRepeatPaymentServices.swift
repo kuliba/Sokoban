@@ -30,10 +30,10 @@ extension InfoRepeatPaymentServices {
         .init(createInfoRepeatPaymentServices: { _, completion in
             
             completion(.success(.init(
-                type: "",
+                type: .betweenTheir,
                 parameterList: [],
-                productTemplate: nil)
-            ))
+                productTemplate: nil
+            )))
         })
     }
     

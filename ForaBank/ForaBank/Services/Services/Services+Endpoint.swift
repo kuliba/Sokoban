@@ -266,7 +266,7 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: .v4,
+        version: .v5,
         serviceName: .getCardStatementForPeriod
     )
     
