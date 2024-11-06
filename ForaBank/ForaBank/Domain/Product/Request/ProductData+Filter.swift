@@ -115,6 +115,18 @@ extension ProductData.Filter {
         }
     }
     
+    struct CardIssuedToClientRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let productCard = productData as? ProductCardData else {
+                return nil
+            }
+
+            return productCard.status == .issuedToClient
+        }
+    }
+    
     struct ProductRestrictedRule: ProductDataFilterRule {
         
         let restricted: Set<ProductData.ID>
@@ -168,16 +180,7 @@ extension ProductData.Filter {
                 return nil
             }
 
-            if productCard.loanBaseParam != nil {
-                
-                // credit card
-                return productCard.status == .active && productCard.statusPc == .active
-                
-            } else {
-               
-                // regular card
-                return productCard.status == .active && productCard.statusPc == .active
-            }
+            return productCard.status == .active && productCard.statusPc == .active
         }
     }
     
