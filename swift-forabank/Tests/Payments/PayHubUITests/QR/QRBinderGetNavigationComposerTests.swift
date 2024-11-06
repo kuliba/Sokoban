@@ -55,6 +55,41 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // MARK: - c2b
+    
+    func test_getNavigation_c2b_shouldCallMakePaymentsWithC2BURL() {
+        
+        let url = anyURL()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .c2bURL(url))
+        
+        XCTAssertNoDiff(spies.makePayments.payloads, [.c2b(url)])
+    }
+    
+    func test_getNavigation_c2b_shouldDeliverPayments() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .c2bURL(anyURL()),
+            toDeliver: .payments(.init(payments))
+        )
+    }
+    
+    func test_getNavigation_c2b_shouldNotifyWithDismissOnPaymentsClose() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .c2bURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.close() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer

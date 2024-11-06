@@ -90,7 +90,8 @@ private extension ContentViewModelComposer {
                 makePayments: {
                     
                     switch $0 {
-                    case let .c2bSubscribe(url):
+                    case let .c2bSubscribe(url),
+                        let .c2b(url):
                         Payments(url: url)
                     }
                 }

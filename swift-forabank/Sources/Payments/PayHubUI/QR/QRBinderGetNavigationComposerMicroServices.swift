@@ -25,5 +25,6 @@ public extension QRBinderGetNavigationComposerMicroServices {
     enum MakePaymentsPayload: Equatable {
         
         case c2bSubscribe(URL)
+        case c2b(URL)
     }
 }

@@ -40,6 +40,13 @@ public extension QRBinderGetNavigationComposer {
                 cancellables: bind(payments, with: notify)
             )))
             
+        case let .c2bURL(url):
+            let payments = microServices.makePayments(.c2b(url))
+            completion(.payments(.init(
+                model: payments,
+                cancellables: bind(payments, with: notify)
+            )))
+            
         default:
             fatalError()
         }
