@@ -9,10 +9,18 @@
 import SwiftUI
 import UIPrimitives
 
+struct TemplatesListViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+    let makePaymentsMeToMeView: MakePaymentsMeToMeView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+    let makePaymentsView: MakePaymentsView
+}
+
 struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: TemplatesListViewFactory
     
     private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
     
@@ -70,13 +78,10 @@ private extension TemplatesListView {
                 
                 if let categorySelectorViewModel = viewModel.categorySelector {
                     
-                    OptionSelectorView(
-                        viewModel: categorySelectorViewModel,
-                        viewFactory: viewFactory
-                    )
-                    .frame(height: 32)
-                    .padding(.top, 16)
-                    .padding(.horizontal)
+                    viewFactory.makeOptionSelectorView(categorySelectorViewModel)
+                        .frame(height: 32)
+                        .padding(.top, 16)
+                        .padding(.horizontal)
                 }
                 
                 switch viewModel.style {
@@ -205,7 +210,7 @@ private extension TemplatesListView {
             EmptyView()
             
         case let .payment(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsView(paymentsViewModel)
         }
     }
     
@@ -238,10 +243,10 @@ private extension TemplatesListView {
         switch sheet.type {
         case let .meToMe(viewModel):
             
-            PaymentsMeToMeView(viewModel: viewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsMeToMeView(viewModel)
                 .fullScreenCover(item: $viewModel.success) { successViewModel in
                     
-                    PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
+                    viewFactory.makePaymentsSuccessView(successViewModel)
                 }
                 .transaction { transaction in
                     
@@ -621,6 +626,14 @@ struct TemplatesListView_Previews: PreviewProvider {
     }
 }
 
-
+extension TemplatesListViewFactory {
+    
+    static let preview: Self = .init(
+        makeOptionSelectorView: {_ in fatalError() },
+        makePaymentsMeToMeView: {_ in fatalError() },
+        makePaymentsSuccessView: {_ in fatalError() },
+        makePaymentsView: {_ in fatalError() }
+    )
+}
 
 

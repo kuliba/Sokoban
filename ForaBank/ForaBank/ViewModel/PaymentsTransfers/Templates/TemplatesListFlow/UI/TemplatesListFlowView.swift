@@ -8,17 +8,25 @@
 import Combine
 import SwiftUI
 
+typealias MakeTemplatesListView = (TemplatesListViewModel) -> TemplatesListView
+
+struct TemplatesListFlowViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+    let makeTemplatesListView: MakeTemplatesListView
+}
+
 struct TemplatesListFlowView<AnywayFlowView: View>: View {
     
     @ObservedObject var model: Model
     
     let makeAnywayFlowView: (AnywayFlowModel) -> AnywayFlowView
     let makeIconView: (String?) -> IconDomain.IconView
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: TemplatesListFlowViewFactory
     
     var body: some View {
         
-        TemplatesListView(viewModel: model.state.content, viewFactory: viewFactory)
+        viewFactory.makeTemplatesListView(model.state.content)
             .alert(
                 item: model.state.alert,
                 content: alertContent
@@ -114,7 +122,7 @@ private extension TemplatesListFlowView {
         case let .payment(payment):
             switch payment {
             case let .legacy(paymentsViewModel):
-                PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
+                viewFactory.makePaymentsView(paymentsViewModel)
                 
             case let .v1(node):
                 let payload = node.model.state.content.state.transaction.context.outline.payload

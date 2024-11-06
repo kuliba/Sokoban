@@ -7,12 +7,19 @@
 
 import SwiftUI
 
+// MARK: - ViewFactory
+
+struct PaymentsMeToMeViewFactory {
+    
+    let makeProductsSwapView: MakeProductsSwapView
+}
+
 // MARK: - View
 
 struct PaymentsMeToMeView: View {
     
     @ObservedObject var viewModel: PaymentsMeToMeViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsMeToMeViewFactory
     
     var body: some View {
         
@@ -45,11 +52,8 @@ struct PaymentsMeToMeView: View {
                 
                 VStack {
                     
-                    ProductsSwapView(
-                        viewModel: viewModel.swapViewModel,
-                        viewFactory: viewFactory
-                    )
-                    .padding(.vertical, 20)
+                    viewFactory.makeProductsSwapView(viewModel.swapViewModel)
+                        .padding(.vertical, 20)
                     
                     PaymentsAmountView(viewModel: viewModel.paymentsAmount)
                 }
@@ -91,7 +95,7 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
     private static func preview(
         _ viewModel: PaymentsMeToMeViewModel
     ) -> some View {
-        PaymentsMeToMeView(viewModel: viewModel, viewFactory: .preview)
+        PaymentsMeToMeView(viewModel: viewModel, viewFactory: .init(makeProductsSwapView: {_ in fatalError()}))
     }
 
     static var previews: some View {

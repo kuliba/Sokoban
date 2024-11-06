@@ -268,8 +268,38 @@ private extension RootViewFactoryComposer {
             model: node.model,
             makeAnywayFlowView: makeAnywayFlowView,
             makeIconView: { self.makeIconView($0.map { .svg($0) }) },
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makeTemplatesListFlowViewFactory()
         )
+    }
+    
+    func makeTemplatesListFlowViewFactory() -> TemplatesListFlowViewFactory {
+        
+        .init(
+            makePaymentsView: makePaymentsView, 
+            makeTemplatesListView: makeTemplatesListView)
+    }
+    
+    func makeTemplatesListView(
+        viewModel: TemplatesListViewModel
+    ) -> TemplatesListView {
+        
+        .init(viewModel: viewModel, viewFactory: makeTemplatesListViewFactory())
+    }
+    
+    func makeTemplatesListViewFactory() -> TemplatesListViewFactory {
+        
+        .init(
+            makeOptionSelectorView: makeOptionSelectorView,
+            makePaymentsMeToMeView: makePaymentsMeToMeView,
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makePaymentsView: makePaymentsView)
+    }
+    
+    func makeOptionSelectorView(
+        viewModel: OptionSelectorView.ViewModel
+    ) -> OptionSelectorView {
+        
+        .init(viewModel: viewModel, viewFactory: makeOptionSelectorViewFactory())
     }
     
     func makeTransportPaymentsView(
@@ -354,6 +384,22 @@ private extension RootViewFactoryComposer {
         viewModel: PaymentsMeToMeViewModel
     ) -> PaymentsMeToMeView {
         
+        .init(
+            viewModel: viewModel,
+            viewFactory: makePaymentsMeToMeViewFactory()
+        )
+    }
+    
+    func makePaymentsMeToMeViewFactory() -> PaymentsMeToMeViewFactory {
+        
+        .init(
+            makeProductsSwapView: makeProductsSwapView
+        )
+    }
+    
+    func makeProductsSwapView(
+        viewModel: ProductsSwapView.ViewModel
+    ) -> ProductsSwapView {
         .init(
             viewModel: viewModel,
             viewFactory: makeOptionSelectorViewFactory()

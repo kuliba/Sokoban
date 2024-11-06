@@ -38,6 +38,7 @@ typealias MakeMainSectionCurrencyMetalView = (MainSectionCurrencyMetallView.View
 typealias MakeMainSectionProductsView = (MainSectionProductsView.ViewModel) -> MainSectionProductsView
 typealias MakePayment = () -> Void
 typealias MakeOperationDetailView = (OperationDetailViewModel, @escaping MakeRepeatButtonView, @escaping MakePayment) -> OperationDetailView
+typealias MakeOptionSelectorView = (OptionSelectorView.ViewModel) -> OptionSelectorView
 typealias MakePaymentsMeToMeView = (PaymentsMeToMeViewModel) -> PaymentsMeToMeView
 typealias MakePaymentsServicesOperatorsView = (PaymentsServicesViewModel) -> PaymentsServicesOperatorsView
 typealias MakePaymentsSuccessView = (PaymentsSuccessViewModel) -> PaymentsSuccessView
@@ -47,6 +48,7 @@ typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOper
 typealias MakeQRView = (QRViewModel) -> QRView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
+typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
