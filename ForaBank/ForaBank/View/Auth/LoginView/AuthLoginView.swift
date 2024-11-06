@@ -12,6 +12,8 @@ import UIPrimitives
 
 struct AuthLoginView: View {
     
+    @Environment(\.openURL) var openURL
+    
     @ObservedObject var viewModel: AuthLoginViewModel
     
     var body: some View {
@@ -21,19 +23,22 @@ struct AuthLoginView: View {
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
         }
-        .alert(item: viewModel.clientInformAlerts?.alert) { alert in
-            
-            return alert.swiftUIAlert {
-               
-                if let link = viewModel.clientInformAlerts?.alert?.link,
-                   let version = viewModel.clientInformAlerts?.alert?.version,
-                   let url = URL(string: "https://" + link) {
-                    print("Attempting to open URL: \(url.absoluteString)")
-
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        .alert(item: $viewModel.alertType) { alertType in
+            switch alertType {
+            case .clientInformAlerts(let alert):
+                return alert.swiftUIAlert {
+                    
+                    if let url = URL(string: viewModel.clientInformAlerts?.alert?.link ?? String.appStoreFora),
+                       let version = viewModel.clientInformAlerts?.alert?.version {
+                        
+                        print("Attempting to open URL: \(url)")
+                        openURL(url)
+                    }
+                    
+                    viewModel.showNextAlert(action: $0)
                 }
-            
-                viewModel.showNextAlert(action: $0)
+            case .alertViewModel(let alert):
+                return Alert.init(with: alert)
             }
         }
         .present(item: $viewModel.cardScanner, style: .fullScreen) {

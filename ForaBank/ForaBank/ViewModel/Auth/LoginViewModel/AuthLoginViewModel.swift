@@ -23,6 +23,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var buttons: [ButtonAuthView.ViewModel]
     @Published var clientInformAlerts: ClientInformAlerts?
+    @Published var alertType: AlertType?
 
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
@@ -88,10 +89,23 @@ class AuthLoginViewModel: ObservableObject {
 
 // MARK: Alert Handling
 
+enum AlertType: Identifiable {
+    
+    var id: UUID {
+        switch self {
+        case .clientInformAlerts(let alert): return alert.id
+        case .alertViewModel(let viewModelAlert): return viewModelAlert.id
+        }
+    }
+    
+    case clientInformAlerts(ClientInformAlerts.Alert)
+    case alertViewModel(Alert.ViewModel)
+}
+
 extension AuthLoginViewModel {
     
     func showNextAlert(action: ClientInformActionType) {
-                
+        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
         
         DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
@@ -190,6 +204,8 @@ private extension AuthLoginViewModel {
             .sink { [weak self] in
                 
                 self?.clientInformAlerts = $0
+                guard let alert = $0.alert else { return }
+                self?.alertType = .clientInformAlerts(alert)
             }
             .store(in: &bindings)
 #warning("todo handleVersionAppStore not finished")
@@ -273,6 +289,9 @@ private extension AuthLoginViewModel {
                     action: { [weak self] in self?.alert = nil }
                 )
             )
+            
+            guard let alert = alert else { return }
+            self.alertType = .alertViewModel(alert)
         }
     }
     
@@ -589,4 +608,9 @@ extension AuthLoginViewModel {
             case tarif(Int, type: Int)
         }
     }
+}
+
+extension String {
+    
+    static let appStoreFora = "https://apps.apple.com/ru/app/%D1%84%D0%BE%D1%80%D0%B0-%D0%B1%D0%B0%D0%BD%D0%BA/id1434684472"
 }
