@@ -718,6 +718,7 @@ private extension MainViewModel {
         
         templates.$state
             .map(\.external)
+            .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleTemplatesFlowState($0) }
     }
@@ -789,7 +790,7 @@ private extension MainViewModel {
 
         switch external.outside {
         case .none:
-            rootActions?.spinner.hide()
+            break
 
         case let .productID(productID):
             rootActions?.spinner.hide()

@@ -128,7 +128,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         try assert(string: .e1_sample_step1, makeResponse(
             parametersForNextStep: [
                 makeParameter(
-                    dataType: .number,
+                    dataType: .numeric,
                     id: "1",
                     inputFieldType: .account,
                     isRequired: true,
@@ -276,7 +276,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                 ),
                 makeParameter(
                     content: "4273.87",
-                    dataType: .number,
+                    dataType: .numeric,
                     id: "65",
                     rawLength: 2,
                     regExp: "^.{1,250}$",
@@ -286,7 +286,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                 ),
                 makeParameter(
                     content: "0.00",
-                    dataType: .number,
+                    dataType: .numeric,
                     id: "143",
                     inputFieldType: .penalty,
                     rawLength: 2,
@@ -409,6 +409,22 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             amount: 4273.87,
             needSum: true
         ))
+    }
+    
+    func test_map_shouldDeliverDifferentInputs() throws {
+        
+        let response = try map(String.inputs.json).get()
+        let dataTypes = response.parametersForNextStep.map(\.dataType)
+        
+        XCTAssertNoDiff(dataTypes, [
+            .integer,
+            .stringEn,
+            .string2,
+            .string2Rus,
+            .numeric,
+            ._backendReserved,
+            ._backendReserved,
+        ])
     }
 
     // MARK: - Helpers
@@ -1988,6 +2004,94 @@ private extension String {
             "MULTI_SUM"
         ]
     }
+}
+"""
+    
+    static let inputs = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "parameterListForNextStep": [
+      {
+        "id": "1",
+        "title": "%Integer",
+        "subTitle": "Для клавиатуры %Integer",
+        "viewType": "INPUT",
+        "dataType": "%Integer",
+        "type": "Input",
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "2",
+        "title": "%String(En)",
+        "subTitle": "Для клавиатуры %String(En)",
+        "viewType": "INPUT",
+        "dataType": "%String(En)",
+        "type": "Input",
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "3",
+        "title": " %String2",
+        "subTitle": "Для клавиатуры %String2",
+        "viewType": "INPUT",
+        "dataType": "%String2",
+        "type": "Input",
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "4",
+        "title": "%String2Rus",
+        "subTitle": "Для клавиатуры %String2Rus",
+        "viewType": "INPUT",
+        "dataType": "%String2Rus",
+        "type": "Input",
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "5",
+        "title": "%Numeric",
+        "subTitle": "Для клавиатуры %Numeric",
+        "viewType": "INPUT",
+        "dataType": "%Numeric",
+        "type": "Input",
+        "isRequired": true,
+        "readOnly": false,
+        "inputFieldType": "ACCOUNT",
+        "visible": true,
+        "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+      },
+      {
+        "id": "##ID##",
+        "viewType": "OUTPUT",
+        "content": "7e2fbb3f-680b-484e-97be-31a1cd03b74e",
+        "visible": false
+      },
+      {
+        "id": "##STEP##",
+        "viewType": "OUTPUT",
+        "content": "1",
+        "visible": false
+      }
+    ]
+  }
 }
 """
 }
