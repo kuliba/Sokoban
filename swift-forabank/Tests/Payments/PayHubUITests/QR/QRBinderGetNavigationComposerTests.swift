@@ -20,9 +20,9 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - c2bSubscribeURL
+    // MARK: - c2bSubscribe
     
-    func test_getNavigation_shouldCallMakePaymentsWithURLOnC2BSubscribe() {
+    func test_getNavigation_c2bSubscribe_shouldCallMakePaymentsWithC2BSubscribeURL() {
         
         let url = anyURL()
         let (sut, spies) = makeSUT()
@@ -32,14 +32,26 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         XCTAssertNoDiff(spies.makePayments.payloads, [.c2bSubscribe(url)])
     }
     
-    func test_getNavigation_shouldDeliverPaymentsOnC2BSubscribe() {
+    func test_getNavigation_c2bSubscribe_shouldDeliverPayments() {
         
         let payments = makePayments()
         
         expect(
             makeSUT(payments: payments).sut,
             with: .c2bSubscribeURL(anyURL()),
-            toDeliver: .payments(payments)
+            toDeliver: .payments(.init(payments))
+        )
+    }
+    
+    func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsClose() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .c2bSubscribeURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.close() }
         )
     }
     
@@ -63,9 +75,12 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let spies = Spies(
             makePayments: .init(stubs: [payments])
         )
-        let sut = SUT(microServices: .init(
-            makePayments: spies.makePayments.call
-        ))
+        let sut = SUT(
+            microServices: .init(
+                makePayments: spies.makePayments.call
+            ),
+            witnesses: .init(isClosed: { $0.isClosed })
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -75,7 +90,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     private func expect(
         _ sut: SUT,
         with qrResult: SUT.QRResult,
-        toDeliver expectedNavigation: Navigation,
+        toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -85,13 +100,40 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         sut.getNavigation(qrResult: qrResult, notify: { _ in }) {
             
-            XCTAssertNoDiff(self.equatable($0), self.equatable(expectedNavigation), "Expected \(expectedNavigation), but got \($0) instead.", file: file, line: line)
+            XCTAssertNoDiff(self.equatable($0), expectedNavigation, "Expected \(expectedNavigation), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
         }
         
         action()
         
         wait(for: [exp], timeout: timeout)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with qrResult: SUT.QRResult,
+        notifyWith expectedEvents: [SUT.FlowDomain.NotifyEvent],
+        for destinationAction: @escaping (Navigation) -> Void,
+        on action: () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedEvents = [SUT.FlowDomain.NotifyEvent]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getNavigation(
+            qrResult: qrResult,
+            notify: { receivedEvents.append($0) }
+        ) {
+            destinationAction($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertNoDiff(receivedEvents, expectedEvents, "Expected \(expectedEvents), but got \(receivedEvents) instead.", file: file, line: line)
     }
 }
 
@@ -103,5 +145,15 @@ private extension QRBinderGetNavigationComposer {
         qrResult: QRResult
     ) {
         self.getNavigation(qrResult: qrResult, notify: { _ in }, completion: { _ in })
+    }
+}
+
+extension QRNavigation {
+    
+    var payments: Payments? {
+        
+        guard case let .payments(node) = self else { return nil }
+        
+        return node.model
     }
 }

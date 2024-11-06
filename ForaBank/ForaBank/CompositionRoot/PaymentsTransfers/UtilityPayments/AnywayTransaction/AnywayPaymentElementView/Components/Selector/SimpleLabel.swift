@@ -12,13 +12,14 @@ struct SimpleLabel<IconView: View>: View {
     
     let text: String
     let makeIconView: () -> IconView
+    let iconColor: Color
     
     var body: some View {
 
         HStack(alignment: .top, spacing: 16) {
             
             makeIconView()
-                .foregroundColor(.textTertiary)
+                .foregroundColor(iconColor)
                 .frame(width: 24, height: 24)
             
             Text(text)

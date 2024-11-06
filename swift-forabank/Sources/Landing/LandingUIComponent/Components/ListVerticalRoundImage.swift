@@ -5,9 +5,10 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
-import Tagged
 import Combine
+import ForaTools
 import SwiftUI
+import Tagged
 
 extension UILanding.List {
     
@@ -237,14 +238,6 @@ extension UILanding.List.VerticalRoundImage.ListItem {
     }
 }
 
-extension Optional where Wrapped == String {
-
-    public var isNilOrEmpty: Bool {
-        if let text = self, !text.isEmpty { return false }
-        return true
-    }
-}
-
 private extension UILanding.List.VerticalRoundImage.ListItem.Action {
     
     var listVerticalRoundImageAction: LandingEvent.ListVerticalRoundImageAction? {
@@ -257,5 +250,3 @@ private extension UILanding.List.VerticalRoundImage.ListItem.Action {
         }
     }
 }
-
-
