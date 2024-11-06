@@ -55,6 +55,16 @@ public extension AnywayPaymentParameterValidator {
     typealias Parameter = AnywayElement.Parameter
 }
 
+private extension Optional where Wrapped == String {
+    
+    var isNilOrEmpty: Bool {
+        
+        guard let string = self else { return true }
+        
+        return string.isEmpty
+    }
+}
+
 private extension AnywayPaymentParameterValidator {
     
     func validateRequired(
