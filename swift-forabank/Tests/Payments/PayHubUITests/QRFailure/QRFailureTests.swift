@@ -23,6 +23,11 @@ class QRFailureTests: XCTestCase {
             subject.eraseToAnyPublisher()
         }
         
+        func emit(_ select: Select) {
+            
+            subject.send(select)
+        }
+        
         func receive() {
             
         }
@@ -57,5 +62,27 @@ class QRFailureTests: XCTestCase {
     ) -> DetailPayment {
         
         return .init(value: value)
+    }
+    
+    func equatable(
+        _ navigation: Domain.Navigation
+    ) -> EquatableNavigation {
+        
+        switch navigation {
+        case .categories(.failure):
+            return .categories(nil)
+            
+        case let .categories(.success(categories)):
+            return .categories(categories)
+            
+        case let .detailPayment(detailPayment):
+            return .detailPayment(detailPayment)
+        }
+    }
+    
+    enum EquatableNavigation: Equatable {
+        
+        case categories(Categories?)
+        case detailPayment(DetailPayment)
     }
 }

@@ -60,9 +60,18 @@ extension QRFailureBinderComposer {
         
         let factory = ContentFlowBindingFactory(delay: delay, scheduler: scheduler)
         let composer = Domain.FlowComposer(
-            getNavigation: { select, notify, completion in
+            getNavigation: { [weak self] select, notify, completion in
                 
-                fatalError()
+                guard let self else { return }
+                
+                switch select {
+                case .payWithDetails:
+                    let detailPayment = self.microServices.makeDetailPayment()
+                    completion(.detailPayment(detailPayment))
+                    
+                case .search:
+                    fatalError()
+                }
             },
             scheduler: scheduler,
             interactiveScheduler: interactiveScheduler
@@ -81,14 +90,49 @@ import XCTest
 
 final class QRFailureBinderComposerTests: QRFailureTests {
     
+    // MARK: - init
+    
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, spies, _,_) = makeSUT()
+        let (sut, spies, _) = makeSUT()
         
         XCTAssertEqual(spies.makeCategories.callCount, 0)
         XCTAssertEqual(spies.makeDetailPayment.callCount, 0)
         XCTAssertEqual(spies.makeQRFailure.callCount, 0)
         XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - payWithDetails
+    
+    func test_composed_payWithDetails_shouldCallMakeDetailPayment() {
+        
+        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose()
+        composed.content.emit(.payWithDetails)
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(spies.makeDetailPayment.payloads.count, 1)
+    }
+    
+    func test_composed_payWithDetails_shouldDeliverDetailPayment() {
+        
+        let detailPayment = makeDetailPayment()
+        let (sut, _, scheduler) = makeSUT(
+            delay: .seconds(500),
+            detailPayment: detailPayment
+        )
+        
+        let composed = sut.compose()
+        composed.content.emit(.payWithDetails)
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .detailPayment(detailPayment)
+        )
     }
     
     // MARK: - Helpers
@@ -115,8 +159,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     ) -> (
         sut: SUT,
         spies: Spies,
-        scheduler: TestSchedulerOf<DispatchQueue>,
-        interactiveScheduler: TestSchedulerOf<DispatchQueue>
+        scheduler: TestSchedulerOf<DispatchQueue>
     ) {
         let spies = Spies(
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
@@ -124,7 +167,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             makeDetailPayment: .init(stubs: [detailPayment ?? makeDetailPayment()])
         )
         let scheduler = DispatchQueue.test
-        let interactiveScheduler = DispatchQueue.test
         let sut = SUT(
             delay: delay,
             microServices: .init(
@@ -138,8 +180,8 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
-            scheduler: scheduler.eraseToAnyScheduler(), 
-            interactiveScheduler: interactiveScheduler.eraseToAnyScheduler()
+            scheduler: scheduler.eraseToAnyScheduler(),
+            interactiveScheduler: scheduler.eraseToAnyScheduler()
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -147,8 +189,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         trackForMemoryLeaks(spies.makeCategories, file: file, line: line)
         trackForMemoryLeaks(spies.makeDetailPayment, file: file, line: line)
         trackForMemoryLeaks(scheduler, file: file, line: line)
-        trackForMemoryLeaks(interactiveScheduler, file: file, line: line)
         
-        return (sut, spies, scheduler, interactiveScheduler)
+        return (sut, spies, scheduler)
     }
 }
