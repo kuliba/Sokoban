@@ -17,64 +17,149 @@ public enum GetInfoRepeatPaymentMapper {
     ) -> Result {
         
         do {
-            let decodableGetInfoRepeat = try JSONDecoder().decode(DecodableGetInfoRepeatPaymentCode.self, from: data)
+            let decodableGetInfoRepeat = try JSONDecoder().decode(Response.self, from: data)
             
-            return .success(.init(decodableGetInfoRepeatPaymentCode: decodableGetInfoRepeat))
+            if let data = decodableGetInfoRepeat.data {
+
+                return .success(.init(decodableGetInfoRepeatPaymentCode: data))
+            } else {
+                return .failure(.serverError(statusCode: httpURLResponse.statusCode, errorMessage: "Invalid json"))
+            }
+            
         } catch let error {
             return .failure(.serverError(statusCode: httpURLResponse.statusCode, errorMessage: error.localizedDescription))
         }
     }
-    
-    struct DecodableGetInfoRepeatPaymentCode: Decodable {
+
+    private struct Response: Decodable {
         
-        public let type: String
+        let statusCode: Int
+        let errorMessage: String?
+        let data: DecodableGetInfoRepeatPaymentCode?
+    }
+    
+    public struct DecodableGetInfoRepeatPaymentCode: Decodable {
+        
+        public let type: TransferType
         public let parameterList: [Transfer]
-        public let productTemplate: ProductTemplate
+        public let productTemplate: ProductTemplate?
     
         public init(
-            type: String,
+            type: TransferType,
             parameterList: [Transfer],
-            productTemplate: ProductTemplate
+            productTemplate: ProductTemplate?
         ) {
             self.type = type
             self.parameterList = parameterList
             self.productTemplate = productTemplate
         }
         
-        struct Transfer: Decodable {
+        public enum TransferType: String, Decodable {
             
-            let check: Bool
-            let amount: Double
-            let currencyAmount: String
-            let payer: Payer
+            case betweenTheir = "BETWEEN_THEIR"
+            case byPhone = "BY_PHONE"
+            case contactAddressless = "CONTACT_ADDRESSLESS"
+            case direct = "NEW_DIRECT"
+            case externalEntity = "EXTERNAL_ENTITY"
+            case externalIndivudual = "EXTERNAL_INDIVIDUAL"
+            case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
+            case insideBank = "INSIDE_BANK"
+            case internet = "INTERNET"
+            case mobile = "MOBILE"
+            case otherBank = "OTHER_BANK"
+            case sfp = "SFP"
+            case transport = "TRANSPORT"
+            case taxes = "TAX_AND_STATE_SERVICE"
+        }
+        
+        public struct Transfer: Decodable {
             
-            struct Payer: Decodable {
+            public let check: Bool
+            public let amount: Double?
+            public let currencyAmount: String?
+            public let payer: Payer?
+            public let comment: String?
+            public let puref: String?
+            public let payeeInternal: PayeeInternal?
+            public let payeeExternal: PayeeExternal?
+            public let additional: [Additional]?
+            public let mcc: String?
+
+            public struct PayeeInternal: Decodable, Equatable {
                 
-                let cardId: Int
-                let cardNumber: String
-                let accountId: Int
-                let accountNumber: String
-                let phoneNumber: String
-                let inn: String
+                let accountId: Int?
+                let accountNumber: String?
+                let cardId: Int?
+                let cardNumber: String?
+                let phoneNumber: String?
+                let productCustomName: String?
+            }
+            
+            public struct PayeeExternal: Decodable, Equatable {
+                
+                public let inn: String?
+                public let kpp: String?
+                public let accountId: Int?
+                public let accountNumber: String
+                public let bankBIC: String?
+                public let cardId: Int?
+                public let cardNumber: String?
+                public let compilerStatus: String?
+                public let date: String?
+                public let name: String
+                public let tax: Tax?
+                
+                public struct Tax: Decodable, Equatable {
+                    
+                    public let bcc: String?
+                    public let date: String?
+                    public let documentNumber: String?
+                    public let documentType: String?
+                    public let oktmo: String?
+                    public let period: String?
+                    public let reason: String?
+                    public let uin: String?
+                }
+                
+                private enum CodingKeys : String, CodingKey {
+                    case inn = "INN", kpp = "KPP", accountId, accountNumber, bankBIC, cardId, cardNumber, compilerStatus, date, name, tax
+                }
+            }
+            
+            public struct Additional: Decodable {
+            
+                public let fieldname: String
+                public let fieldid: Int
+                public let fieldvalue: String
+            }
+            
+            public struct Payer: Decodable {
+                
+                public let cardId: Int
+                public let cardNumber: String?
+                public let accountId: Int?
+                public let accountNumber: String?
+                public let phoneNumber: String?
+                public let INN: String?
             }
         }
         
-        struct ProductTemplate: Decodable {
+        public struct ProductTemplate: Decodable {
             
-            let id: Int
-            let numberMask: String
-            let customName: String
-            let currency: String
-            let type: ProductType
-            let smallDesign: String
-            let paymentSystemImage: String
+            public let id: Int?
+            public let numberMask: String?
+            public let customName: String?
+            public let currency: String?
+            public let type: ProductType?
+            public let smallDesign: String?
+            public let paymentSystemImage: String?
             
-            enum ProductType: Decodable {
+            public enum ProductType: String, Decodable {
                 
-                case account
-                case card
-                case loan
-                case deposit
+                case account = "ACCOUNT"
+                case card = "CARD"
+                case deposit = "DEPOSIT"
+                case loan = "LOAN"
             }
         }
     }
@@ -86,30 +171,58 @@ public enum GetInfoRepeatPaymentMapper {
     }
 }
 
+private extension GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.TransferType {
+    
+    var transferType: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.TransferType {
+        
+        switch self {
+        case .betweenTheir:
+            return .betweenTheir
+        case .byPhone:
+            return .byPhone
+        case .contactAddressless:
+            return .contactAddressless
+        case .direct:
+            return .direct
+        case .externalEntity:
+            return .externalEntity
+        case .externalIndivudual:
+            return .externalIndivudual
+        case .housingAndCommunalService:
+            return .housingAndCommunalService
+        case .insideBank:
+            return .insideBank
+        case .internet:
+            return .internet
+        case .mobile:
+            return .mobile
+        case .otherBank:
+            return .otherBank
+        case .sfp:
+            return .sfp
+        case .taxes:
+            return .taxes
+        case .transport:
+            return .transport
+        }
+    }
+}
+
 private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     init(decodableGetInfoRepeatPaymentCode: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode) {
      
-        self.type = decodableGetInfoRepeatPaymentCode.type
-        self.parameterList = decodableGetInfoRepeatPaymentCode.parameterList.map({
-            .init(check: $0.check, amount: $0.amount, currencyAmount: $0.currencyAmount, payer: .init(
-                cardId: $0.payer.cardId,
-                cardNumber: $0.payer.cardNumber,
-                accountId: $0.payer.accountId,
-                accountNumber: $0.payer.accountNumber,
-                phoneNumber: $0.payer.phoneNumber,
-                inn: $0.payer.inn
-            ))
-        })
+        self.type = decodableGetInfoRepeatPaymentCode.type.transferType
+        self.parameterList = decodableGetInfoRepeatPaymentCode.parameterList.map({ .init(transfer: $0) })
         
         self.productTemplate = .init(
-            id: decodableGetInfoRepeatPaymentCode.productTemplate.id,
-            numberMask: decodableGetInfoRepeatPaymentCode.productTemplate.numberMask,
-            customName: decodableGetInfoRepeatPaymentCode.productTemplate.customName,
-            currency: decodableGetInfoRepeatPaymentCode.productTemplate.currency,
-            type: .init(productType: decodableGetInfoRepeatPaymentCode.productTemplate.type),
-            smallDesign: decodableGetInfoRepeatPaymentCode.productTemplate.smallDesign,
-            paymentSystemImage: decodableGetInfoRepeatPaymentCode.productTemplate.paymentSystemImage
+            id: decodableGetInfoRepeatPaymentCode.productTemplate?.id,
+            numberMask: decodableGetInfoRepeatPaymentCode.productTemplate?.numberMask,
+            customName: decodableGetInfoRepeatPaymentCode.productTemplate?.customName,
+            currency: decodableGetInfoRepeatPaymentCode.productTemplate?.currency,
+            type: .init(productType: decodableGetInfoRepeatPaymentCode.productTemplate?.type ?? .card),
+            smallDesign: decodableGetInfoRepeatPaymentCode.productTemplate?.smallDesign,
+            paymentSystemImage: decodableGetInfoRepeatPaymentCode.productTemplate?.paymentSystemImage
         )
     }
 }

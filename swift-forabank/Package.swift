@@ -638,6 +638,7 @@ private extension Product {
             .cardGuardianUI,
             .productProfileComponents,
             .topUpCardUI,
+            .calendarUI
         ]
     )
     
@@ -1185,14 +1186,14 @@ private extension Target {
         name: .landingUIComponent,
         dependencies: [
             .combineSchedulers,
-            .tagged,
-            .shimmer,
-            .uiPrimitives,
-            .rxViewModel,
             .foraTools,
-            .textFieldComponent,
+            .rxViewModel,
             .sharedConfigs,
-            .svCardLimitAPI
+            .shimmer,
+            .svCardLimitAPI,
+            .tagged,
+            .textFieldComponent,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -2769,6 +2770,7 @@ private extension Target {
             .productDetailsUI,
             .cardGuardianUI,
             .topUpCardUI,
+            .calendarUI
         ],
         path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
