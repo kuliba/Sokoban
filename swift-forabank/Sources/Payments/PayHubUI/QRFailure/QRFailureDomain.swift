@@ -6,9 +6,11 @@
 //
 
 import PayHub
-import PayHubUI
 
-enum QRFailureDomain<QRFailure, Categories, DetailPayment> {
+/// A namespace.
+public enum QRFailureDomain<QRFailure, Categories, DetailPayment> {}
+
+public extension QRFailureDomain {
     
     // MARK: - Binder
     
@@ -25,7 +27,7 @@ enum QRFailureDomain<QRFailure, Categories, DetailPayment> {
     typealias FlowComposer = FlowDomain.Composer
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
-
+    
     enum Select {
         
         case search, payWithDetails

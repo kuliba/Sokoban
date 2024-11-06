@@ -6,6 +6,7 @@
 //
 
 import Combine
+import PayHubUI
 import XCTest
 
 class QRFailureTests: XCTestCase {
