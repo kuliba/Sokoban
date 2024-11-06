@@ -25,6 +25,7 @@ struct ClientInformAlerts {
         let type: ClientInformActionType
         let link: String?
         let version: String?
+        let authBlocking: Bool
         
         
         var alert: Alert {
@@ -35,7 +36,8 @@ struct ClientInformAlerts {
                 title: title,
                 text: text,
                 link: link,
-                version: version
+                version: version,
+                authBlocking: authBlocking
             )
         }
     }
@@ -45,6 +47,7 @@ struct ClientInformAlerts {
         let id = UUID()
         let title: String
         let text: String
+        let authBlocking: Bool
         
         var alert: Alert {
             .init(
@@ -54,7 +57,8 @@ struct ClientInformAlerts {
                 title: title,
                 text: text,
                 link: nil,
-                version: nil
+                version: nil, 
+                authBlocking: authBlocking
             )
         }
     }
@@ -68,6 +72,7 @@ struct ClientInformAlerts {
         let text: String
         let link: String?
         let version: String?
+        let authBlocking: Bool
     }
 }
 
@@ -85,15 +90,16 @@ extension ClientInformAlerts {
     }
     
     mutating func showAgain(requiredAlert: ClientInformAlerts.RequiredAlert) {
-        if alert?.isRequired == true {
-            required = .init(
-                title: requiredAlert.title,
-                text: requiredAlert.text,
-                type: requiredAlert.type, 
-                link: requiredAlert.link,
-                version: requiredAlert.version
-            )
-        }
+        guard let alert = alert,
+              alert.isRequired || alert.authBlocking else { return }
+        required = .init(
+            title: requiredAlert.title,
+            text: requiredAlert.text,
+            type: requiredAlert.type,
+            link: requiredAlert.link,
+            version: requiredAlert.version,
+            authBlocking: requiredAlert.authBlocking
+        )
     }
 }
 

@@ -484,20 +484,20 @@ extension RootViewModelFactory {
                     var list = ClientInformAlerts(notRequired: [], required: nil)
                     
                     list.notRequired = response.list.filter {
-                        
-                        $0.authBlocking == false &&
-                        ($0.update == nil || $0.update?.type == "not_required")
-                    }.map {
+                        if let update = $0.update {
+                            return $0.update?.type == "not_required" && $0.update?.platform == "iOS"
+                        } else { return true }
+                    }.compactMap {
                         
                         .init(
                             title: $0.title,
-                            text: $0.text
+                            text: $0.text,
+                            authBlocking: $0.authBlocking
                         )
                     }
                     
                     if let required = response.list.first(where: {
                         
-                        $0.authBlocking &&
                         $0.update != nil &&
                         $0.update?.platform == "iOS"
                     }) {
@@ -506,18 +506,22 @@ extension RootViewModelFactory {
                             list.required = .init(
                                 title: required.title,
                                 text: required.text,
-                                type: .required, 
+                                type: .required,
                                 link: required.update?.link,
-                                version: required.update?.version
+                                version: required.update?.version,
+                                authBlocking: required.authBlocking
                             )
                         }
+                        
                         if required.update?.type == "optional" {
                             list.required = .init(
                                 title: required.title,
                                 text: required.text,
                                 type: .optional,
                                 link: required.update?.link,
-                                version: required.update?.version
+                                version: required.update?.version,
+                                authBlocking: required.authBlocking
+                                
                             )
                         }
                     }
