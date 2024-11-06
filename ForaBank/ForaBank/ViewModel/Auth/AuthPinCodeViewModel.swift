@@ -114,9 +114,24 @@ class AuthPinCodeViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionState, clientInformAlerts, viewDidAppear in
                 
-                self?.clientInformAlerts = clientInformAlerts
-            }
-            .store(in: &bindings)
+                guard let self else { return }
+                
+                switch sessionState {
+                case .active:
+                    
+                    guard viewDidAppear else { return }
+                    withAnimation {
+                        self.spinner = nil
+                    }
+                    
+                    self.clientInformAlerts = clientInformAlerts
+                    
+                default:
+                    withAnimation {
+                        self.spinner = .init()
+                    }
+                }
+            }.store(in: &bindings)
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
