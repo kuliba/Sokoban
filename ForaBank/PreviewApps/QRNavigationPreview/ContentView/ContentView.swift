@@ -88,5 +88,5 @@ extension ContentViewDomain.Flow.FullScreen: Identifiable {
 
 #Preview {
     
-    ContentView(model: .preview())
+    ContentView(model: ContentViewModelComposer().compose())
 }
