@@ -13,13 +13,18 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
-            
-            Text("Payments View for **\(model.url.relativeString)**")
-                .foregroundColor(.secondary)
-            
-            Button("Close", action: model.close)
-        }
-        .navigationTitle("Payments")
+        Text("Payments View for **\(model.url.relativeString)**")
+            .foregroundColor(.secondary)
+            .padding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .navigationTitle("Payments")
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Button("Close", action: model.close)
+                }
+            }
     }
 }
