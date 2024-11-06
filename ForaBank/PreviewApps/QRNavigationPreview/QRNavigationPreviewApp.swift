@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct QRNavigationPreviewApp: App {
     
-    let flow: ContentViewDomain.Flow = .preview()
+    let flow = ContentViewModelComposer().compose()
     
     var body: some Scene {
         
