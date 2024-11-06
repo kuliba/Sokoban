@@ -15,7 +15,7 @@ struct PaymentsView: View {
         
         VStack(spacing: 32) {
             
-            Text("TBD: Payments View for \(model.url.relativeString)")
+            Text("Payments View for **\(model.url.relativeString)**")
                 .foregroundColor(.secondary)
             
             Button("Close", action: model.close)
