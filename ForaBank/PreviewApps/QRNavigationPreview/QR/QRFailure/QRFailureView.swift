@@ -14,6 +14,11 @@ struct QRFailureView: View {
     var body: some View {
         
         Text(String(describing: qrFailure))
+            .bold()
+            .foregroundColor(.red)
+            .padding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .navigationTitle("QR Failure")
     }
 }
 

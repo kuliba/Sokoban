@@ -17,15 +17,25 @@ struct QRContentView: View {
             
             Section("Select scan result") {
                 
-                Button("c2b Subscribe") {
+                Group {
                     
-                    model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
-                }
-                
-                Button("c2b") {
+                    Button("c2b Subscribe") {
+                        
+                        model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                    }
                     
-                    model.emit(.c2bURL(.init(string: "c2bURL")!))
+                    Button("c2b") {
+                        
+                        model.emit(.c2bURL(.init(string: "c2bURL")!))
+                    }
+                    
+                    Button("failure") {
+                        
+                        model.emit(.failure(.init(value: "QRCOde")))
+                    }
+                    .foregroundColor(.red)
                 }
+                .foregroundColor(.blue)
             }
         }
         .listStyle(.inset)
