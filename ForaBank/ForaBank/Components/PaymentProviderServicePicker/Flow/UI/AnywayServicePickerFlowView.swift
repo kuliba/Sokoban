@@ -150,7 +150,7 @@ private extension AnywayServicePickerFlowView {
         
         switch destination {
         case let .payByInstructions(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel, viewFactory: .init(makeCategoryView: factory.makeCategoryView))
+            factory.makePaymentsView(paymentsViewModel)
             
         case let .payment(anywayFlowModel):
             let provider = flowModel.state.content.state.payload.provider

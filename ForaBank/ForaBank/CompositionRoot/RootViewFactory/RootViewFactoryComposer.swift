@@ -17,6 +17,7 @@ import SwiftUI
 import UIPrimitives
 import MarketShowcase
 import LandingUIComponent
+import LoadableResourceComponent
 
 final class RootViewFactoryComposer {
     
@@ -68,9 +69,25 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
-            makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeAnywayFlowView: makeAnywayFlowView, 
-            makeCategoryView: { CategoryView(newImplementation: self.savingsAccountFlag.isActive, isSelected: $0, title: $1)}
+            makeMarketShowcaseView: makeMarketShowcaseView,
+            makeAnywayFlowView: makeAnywayFlowView,
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
+            makeContactsView: makeContactsView,
+            makeControlPanelWrapperView: makeControlPanelWrapperView,
+            makeCurrencyWalletView: makeCurrencyWalletView,
+            makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
+            makeMainSectionProductsView: makeMainSectionProductsView,
+            makeOperationDetailView: makeOperationDetailView,
+            makePaymentsMeToMeView: makePaymentsMeToMeView,
+            makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makePaymentsView: makePaymentsView,
+            makeQRFailedView: makeQRFailedView,
+            makeQRSearchOperatorView: makeQRSearchOperatorView,
+            makeQRView: makeQRView,
+            makeTemplatesListFlowView: makeTemplatesListFlowView,
+            makeTransportPaymentsView: makeTransportPaymentsView
         )
     }
 }
@@ -100,9 +117,25 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
-                makeUserAccountView: makeUserAccountView, 
+                makeUserAccountView: makeUserAccountView,
                 makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) },
-                makeCategoryView: { CategoryView(newImplementation: self.marketFeatureFlag.isActive, isSelected: $0, title: $1)}
+                makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+                makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
+                makeContactsView: makeContactsView, 
+                makeControlPanelWrapperView: makeControlPanelWrapperView,
+                makeCurrencyWalletView: makeCurrencyWalletView,
+                makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
+                makeMainSectionProductsView: makeMainSectionProductsView,
+                makeOperationDetailView: makeOperationDetailView,
+                makePaymentsMeToMeView: makePaymentsMeToMeView,
+                makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
+                makePaymentsSuccessView: makePaymentsSuccessView,
+                makePaymentsView: makePaymentsView,
+                makeQRFailedView: makeQRFailedView,
+                makeQRSearchOperatorView: makeQRSearchOperatorView,
+                makeQRView: makeQRView,
+                makeTemplatesListFlowView: makeTemplatesListFlowView,
+                makeTransportPaymentsView: makeTransportPaymentsView
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -143,16 +176,20 @@ private extension RootViewFactoryComposer {
         )
     }
     
+    func makeOptionSelectorViewFactory() -> OptionSelectorViewFactory {
+        
+        .init(makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
+    }
+    
     func makeUserAccountView(
         viewModel: UserAccountViewModel,
-        config: UserAccountConfig,
-        viewFactory: OptionSelectorViewFactory
+        config: UserAccountConfig
     ) -> UserAccountView {
         
         UserAccountView(
             viewModel: viewModel,
             config: config,
-            viewFactory: viewFactory
+            viewFactory: makeOptionSelectorViewFactory()
         )
     }
     
@@ -166,6 +203,254 @@ private extension RootViewFactoryComposer {
         )
         
         return composer.compose(event: event)
+    }
+    
+    func makeCategoryView(
+        savingsAccountFlag: Bool
+    ) -> MakeCategoryView  {
+        
+        return {
+            .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
+        }
+    }
+    
+    func makeMainSectionProductsView(
+        viewModel: MainSectionProductsView.ViewModel
+    ) -> MainSectionProductsView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: .init(makeProductCarouselView: makeProductCarouselView)
+        )
+    }
+    
+    func makeOperationDetailView(
+        viewModel: OperationDetailViewModel,
+        makeRepeatButtonView: @escaping MakeRepeatButtonView,
+        payment: @escaping () -> Void
+    ) -> OperationDetailView {
+        
+        .init(
+            viewModel: viewModel,
+            makeRepeatButtonView: makeRepeatButtonView,
+            payment: payment,
+            viewFactory: makeOptionSelectorViewFactory())
+    }
+    
+    
+    func makeProductCarouselView(
+        viewModel: ProductCarouselView.ViewModel,
+        buttonNewProduct: @escaping () -> ButtonNewProduct?
+    ) -> ProductCarouselView {
+        
+        .init(
+            viewModel: viewModel,
+            buttonNewProduct: buttonNewProduct,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeMainSectionCurrencyMetalView(
+        viewModel: MainSectionCurrencyMetallView.ViewModel
+    ) -> MainSectionCurrencyMetallView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeTemplatesListFlowView(
+        node: MainViewModel.TemplatesNode
+    ) -> TemplatesListFlowView<AnywayFlowView<PaymentCompleteView>> {
+        
+        .init(
+            model: node.model,
+            makeAnywayFlowView: makeAnywayFlowView,
+            makeIconView: { self.makeIconView($0.map { .svg($0) }) },
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeTransportPaymentsView(
+        viewModel: LoadableResourceViewModel<MosParkingPickerData>,
+        transportPaymentsViewModel: TransportPaymentsViewModel
+    ) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>> {
+        
+        .init(
+            viewModel: transportPaymentsViewModel,
+            mosParkingView: {
+                MosParkingView(
+                    viewModel: viewModel,
+                    stateView: { state in
+                        
+                        MosParkingStateView(
+                            state: state,
+                            mapper: DefaultMosParkingPickerDataMapper(select: transportPaymentsViewModel.selectMosParkingID(id:)),
+                            errorView: {
+                                Text($0.localizedDescription).foregroundColor(.red)
+                            }
+                        )
+                    }
+                )
+                // TODO: fix navigation bar
+                // .navigationBar(
+                //     with: .init(
+                //         title: "Московский паркинг",
+                //         rightItems: [
+                //             NavigationBarView.ViewModel.IconItemViewModel(
+                //                 icon: .init("ic40Transport"),
+                //                 style: .large
+                //             )
+                //         ]
+                //     )
+                // )
+            },
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeCurrencyWalletView(
+        viewModel: CurrencyWalletViewModel
+    ) -> CurrencyWalletView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: .init(makeCurrencySelectorView: makeCurrencySelectorView)
+        )
+    }   
+    
+    func makeCurrencySelectorView(
+        viewModel: CurrencySelectorView.ViewModel
+    ) -> CurrencySelectorView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeQRFailedView(
+        viewModel: QRFailedViewModel
+    ) -> QRFailedView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: .init(makeQRSearchOperatorView: makeQRSearchOperatorView)
+        )
+    }
+    
+    func makeQRSearchOperatorView(
+        viewModel: QRSearchOperatorViewModel
+    ) -> QRSearchOperatorView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makePaymentsMeToMeView(
+        viewModel: PaymentsMeToMeViewModel
+    ) -> PaymentsMeToMeView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makePaymentsView(
+        viewModel: PaymentsViewModel
+    ) -> PaymentsView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makePaymentsServicesOperatorsView(
+        viewModel: PaymentsServicesViewModel
+    ) -> PaymentsServicesOperatorsView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeContactsView(
+        viewModel: ContactsViewModel
+    ) -> ContactsView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeControlPanelWrapperView(
+        viewModel: ControlPanelViewModel
+    ) -> ControlPanelWrapperView {
+        
+        .init(
+            viewModel: viewModel,
+            config: .default,
+            getUImage: { self.model.images.value[$0]?.uiImage },
+            viewFactory: makeOptionSelectorViewFactory())
+    }
+    
+    func makeQRView(
+        viewModel: QRViewModel
+    ) -> QRView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: .init(makeQRFailedView: makeQRFailedView)
+        )
+    }
+    
+    func makePaymentsSuccessView(
+        viewModel: PaymentsSuccessViewModel
+    ) -> PaymentsSuccessView {
+        
+        .init(
+            viewModel: viewModel,
+            viewFactory: makeOptionSelectorViewFactory()
+        )
+    }
+    
+    func makeComposedSegmentedPaymentProviderPickerFlowView(
+        flowModel: SegmentedPaymentProviderPickerFlowModel
+    ) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>> {
+        
+        .init(
+            flowModel: flowModel,
+            iconView: model.imageCache().makeIconView(for:),
+            viewFactory: makeComposedSegmentedPaymentProviderPickerFlowViewFactory()
+        )
+    }
+    
+    func makeComposedSegmentedPaymentProviderPickerFlowViewFactory() -> ComposedSegmentedPaymentProviderPickerFlowViewFactory {
+        
+        .init(
+            makePaymentsView: makePaymentsView,
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView)
+    }
+    
+    func makeAnywayServicePickerFlowView(
+        flowModel: AnywayServicePickerFlowModel
+    ) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>> {
+        
+        .init(
+            flowModel: flowModel,
+            factory: .init(
+                makeAnywayFlowView: makeAnywayFlowView,
+                makeIconView: model.imageCache().makeIconView(for:),
+                makePaymentsView: makePaymentsView
+            )
+        )
     }
     
     @ViewBuilder

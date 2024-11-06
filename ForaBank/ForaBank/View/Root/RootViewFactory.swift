@@ -10,6 +10,7 @@ import AnywayPaymentDomain
 import SberQR
 import SwiftUI
 import MarketShowcase
+import LoadableResourceComponent
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -20,13 +21,32 @@ typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> Payment
 typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
-typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig, OptionSelectorViewFactory) -> UserAccountView
+typealias MakeUserAccountView = (UserAccountViewModel, UserAccountConfig) -> UserAccountView
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
 typealias MakeOrderCard = () -> Void
 typealias MakePaymentByType = (String) -> Void
 
 typealias MakeCategoryView = (Bool, String) -> CategoryView
+
+typealias MakeAnywayServicePickerFlowView = (AnywayServicePickerFlowModel) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>>
+typealias MakeComposedSegmentedPaymentProviderPickerFlowView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>
+typealias MakeContactsView = (ContactsViewModel) -> ContactsView
+typealias MakeControlPanelWrapperView = (ControlPanelViewModel) -> ControlPanelWrapperView
+typealias MakeCurrencyWalletView = (CurrencyWalletViewModel) -> CurrencyWalletView
+typealias MakeMainSectionCurrencyMetalView = (MainSectionCurrencyMetallView.ViewModel) -> MainSectionCurrencyMetallView
+typealias MakeMainSectionProductsView = (MainSectionProductsView.ViewModel) -> MainSectionProductsView
+typealias MakePayment = () -> Void
+typealias MakeOperationDetailView = (OperationDetailViewModel, @escaping MakeRepeatButtonView, @escaping MakePayment) -> OperationDetailView
+typealias MakePaymentsMeToMeView = (PaymentsMeToMeViewModel) -> PaymentsMeToMeView
+typealias MakePaymentsServicesOperatorsView = (PaymentsServicesViewModel) -> PaymentsServicesOperatorsView
+typealias MakePaymentsSuccessView = (PaymentsSuccessViewModel) -> PaymentsSuccessView
+typealias MakePaymentsView = (PaymentsViewModel) -> PaymentsView
+typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
+typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
+typealias MakeQRView = (QRViewModel) -> QRView
+typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
+typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
@@ -45,7 +65,23 @@ struct RootViewFactory {
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
     let makeAnywayFlowView: MakeAnywayFlowView
-    let makeCategoryView: MakeCategoryView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makeContactsView: MakeContactsView
+    let makeControlPanelWrapperView: MakeControlPanelWrapperView
+    let makeCurrencyWalletView: MakeCurrencyWalletView
+    let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
+    let makeMainSectionProductsView: MakeMainSectionProductsView
+    let makeOperationDetailView: MakeOperationDetailView
+    let makePaymentsMeToMeView: MakePaymentsMeToMeView
+    let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+    let makePaymentsView: MakePaymentsView
+    let makeQRFailedView: MakeQRFailedView
+    let makeQRSearchOperatorView: MakeQRSearchOperatorView
+    let makeQRView: MakeQRView
+    let makeTemplatesListFlowView: MakeTemplatesListFlowView
+    let makeTransportPaymentsView: MakeTransportPaymentsView
 }
 
 extension RootViewFactory {
@@ -75,16 +111,24 @@ extension RootViewFactory {
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
             makeAnywayFlowView: makeAnywayFlowView,
-            makeCategoryView: makeCategoryView
+            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
+            makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
+            makeContactsView: makeContactsView, 
+            makeControlPanelWrapperView: makeControlPanelWrapperView,
+            makeCurrencyWalletView: makeCurrencyWalletView,
+            makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
+            makeMainSectionProductsView: makeMainSectionProductsView,
+            makeOperationDetailView: makeOperationDetailView,
+            makePaymentsMeToMeView: makePaymentsMeToMeView,
+            makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makePaymentsView: makePaymentsView,
+            makeQRFailedView: makeQRFailedView,
+            makeQRSearchOperatorView: makeQRSearchOperatorView,
+            makeQRView: makeQRView,
+            makeTemplatesListFlowView: makeTemplatesListFlowView,
+            makeTransportPaymentsView: makeTransportPaymentsView
         )
-    }
-}
-
-extension RootViewFactory {
-    
-    var makeOptionSelectorViewFactory: OptionSelectorViewFactory {
-        
-        return .init(makeCategoryView: makeCategoryView)
     }
 }
 

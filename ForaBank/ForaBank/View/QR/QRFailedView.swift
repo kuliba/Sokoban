@@ -7,10 +7,15 @@
 
 import SwiftUI
 
+struct QRFailedViewFactory {
+    
+    let makeQRSearchOperatorView: (QRSearchOperatorViewModel) -> QRSearchOperatorView
+}
+
 struct QRFailedView: View {
     
     @ObservedObject var viewModel: QRFailedViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: QRFailedViewFactory
     
     var body: some View {
         
@@ -52,8 +57,8 @@ struct QRFailedView: View {
                 
                 switch link {
 
-                case .failedView(let view):
-                    QRSearchOperatorView(viewModel: view, viewFactory: viewFactory)
+                case let .failedView(viewModel):
+                    viewFactory.makeQRSearchOperatorView(viewModel)
                 }
             }
         }

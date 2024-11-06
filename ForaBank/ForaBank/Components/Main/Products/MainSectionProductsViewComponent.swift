@@ -157,10 +157,15 @@ private extension ButtonNewProduct.ViewModel {
 
 //MARK: - View
 
+struct MainSectionProductsViewFactory {
+    
+    let makeProductCarouselView: (ProductCarouselView.ViewModel, @escaping () -> ButtonNewProduct?) -> ProductCarouselView
+}
+
 struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: MainSectionProductsViewFactory
     
     var body: some View {
         
@@ -172,11 +177,7 @@ struct MainSectionProductsView: View {
             isCollapsed: $viewModel.isCollapsedContent
         ) {
             
-            ProductCarouselView(
-                viewModel: viewModel.productCarouselViewModel,
-                buttonNewProduct: buttonNewProduct, 
-                viewFactory: viewFactory
-            )
+            viewFactory.makeProductCarouselView(viewModel.productCarouselViewModel, buttonNewProduct)
         }
         .overlay13(alignment: .top) {
             MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20)
@@ -226,7 +227,7 @@ extension MainSectionProductsView {
 struct MainSectionProductsView_Previews: PreviewProvider {
     
     private static func preview(_ viewModel: MainSectionProductsView.ViewModel) -> some View {
-        MainSectionProductsView(viewModel: viewModel, viewFactory: .preview)
+        MainSectionProductsView(viewModel: viewModel, viewFactory: .init(makeProductCarouselView: {_,_ in fatalError() }))
     }
 
     static var previews: some View {

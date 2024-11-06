@@ -17,7 +17,23 @@ struct MainViewFactory {
     let makeInfoViews: RootViewFactory.MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeAnywayFlowView: MakeAnywayFlowView
-    let makeCategoryView: MakeCategoryView
+    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
+    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
+    let makeContactsView: MakeContactsView
+    let makeControlPanelWrapperView: MakeControlPanelWrapperView
+    let makeCurrencyWalletView: MakeCurrencyWalletView
+    let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
+    let makeMainSectionProductsView: MakeMainSectionProductsView
+    let makeOperationDetailView: MakeOperationDetailView
+    let makePaymentsMeToMeView: MakePaymentsMeToMeView
+    let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+    let makePaymentsView: MakePaymentsView
+    let makeQRFailedView: MakeQRFailedView
+    let makeQRSearchOperatorView: MakeQRSearchOperatorView
+    let makeQRView: MakeQRView
+    let makeTemplatesListFlowView: MakeTemplatesListFlowView
+    let makeTransportPaymentsView: MakeTransportPaymentsView
 }
 
 extension MainViewFactory {

@@ -8,13 +8,21 @@
 import RxViewModel
 import SwiftUI
 
+struct PaymentsTransfersPersonalTransfersFlowViewFactory {
+    
+    let makeContactsView: MakeContactsView
+    let makePaymentsMeToMeView: MakePaymentsMeToMeView
+    let makePaymentsView: MakePaymentsView
+}
+
+
 struct PaymentsTransfersPersonalTransfersFlowView<ContentView>: View
 where ContentView: View {
     
     let state: Domain.FlowState
     let event: (Domain.FlowEvent) -> Void
     let contentView: () -> ContentView
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsTransfersPersonalTransfersFlowViewFactory
     
     var body: some View {
         
@@ -51,7 +59,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch bottomSheet {
         case let .meToMe(meToMe):
-            PaymentsMeToMeView(viewModel: meToMe.model, viewFactory: viewFactory)
+            viewFactory.makePaymentsMeToMeView(meToMe.model)
             //                .fullScreenCover(
             //                    cover: state.fullCover,
             //                    content: { fullCover in
@@ -73,7 +81,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch destination {
         case let .payments(node):
-            PaymentsView(viewModel: node.model.paymentsViewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsView(node.model.paymentsViewModel)
         }
     }
     
@@ -84,7 +92,7 @@ private extension PaymentsTransfersPersonalTransfersFlowView {
         
         switch sheet {
         case let .contacts(node):
-            ContactsView(viewModel: node.model, viewFactory: viewFactory)
+            viewFactory.makeContactsView(node.model)
         }
     }
 }

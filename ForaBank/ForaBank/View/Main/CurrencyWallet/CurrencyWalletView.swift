@@ -9,10 +9,15 @@ import SwiftUI
 
 // MARK: - View
 
+struct CurrencyWalletViewFactory {
+    
+    let makeCurrencySelectorView: (CurrencySelectorView.ViewModel) -> CurrencySelectorView
+}
+
 struct CurrencyWalletView: View {
     
     @ObservedObject var viewModel: CurrencyWalletViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: CurrencyWalletViewFactory
     
     var body: some View {
         
@@ -34,7 +39,8 @@ struct CurrencyWalletView: View {
                                 CurrencySwapView(viewModel: swapViewModel)
                                 
                             case let selectorViewModel as CurrencySelectorView.ViewModel:
-                                CurrencySelectorView(viewModel: selectorViewModel, viewFactory: viewFactory)
+                                viewFactory.makeCurrencySelectorView(selectorViewModel)
+                               // CurrencySelectorView(viewModel: selectorViewModel, viewFactory: viewFactory)
                                 
                             case let confirmationViewModel as CurrencyExchangeConfirmationView.ViewModel:
                                 CurrencyExchangeConfirmationView(viewModel: confirmationViewModel)
@@ -113,18 +119,19 @@ struct CurrencyWalletView: View {
 
 struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyWalletView(viewModel: .init(
-            .emptyMock,
-            currency: .rub,
-            currencyItem: .init(
-                icon: nil,
+        CurrencyWalletView(
+            viewModel: .init(
+                .emptyMock,
                 currency: .rub,
-                rateBuy: "1,00",
-                rateSell: "64,50",
-                rateBuyItem: 1.00,
-                rateSellItem: 64.50),
-            currencyOperation: .buy,
-            currencySymbol: "₽") {},
-            viewFactory: .preview)
+                currencyItem: .init(
+                    icon: nil,
+                    currency: .rub,
+                    rateBuy: "1,00",
+                    rateSell: "64,50",
+                    rateBuyItem: 1.00,
+                    rateSellItem: 64.50),
+                currencyOperation: .buy,
+                currencySymbol: "₽") {},
+            viewFactory: .init(makeCurrencySelectorView: {_ in fatalError()}))
     }
 }
