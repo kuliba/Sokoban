@@ -7,6 +7,7 @@
 
 import ForaTools
 import SwiftUI
+import CalendarUI
 
 struct PaymentsTransfersFactory {
     
@@ -45,7 +46,7 @@ extension PaymentsTransfersFactory {
     
     typealias MakeUtilitiesViewModel = (MakeUtilitiesPayload, @escaping (UtilitiesVM) -> Void) -> Void
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     typealias DismissAction = () -> Void
     typealias TemplatesNode = Node<Templates>

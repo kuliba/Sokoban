@@ -65,9 +65,13 @@ struct OperationDetailView: View {
                 LoadingPlaceholder()
             }
             
-            makeRepeatButtonView(payment)
-                .frame(height: 56, alignment: .center)
-                .padding(20)
+            if viewModel.operationId != nil,
+               viewModel.repeatButtonAvailable {
+                
+                makeRepeatButtonView(payment)
+                    .frame(height: 56, alignment: .center)
+                    .padding(20)
+            }
         }
         .padding(.vertical, 40)
         .edgesIgnoringSafeArea(.bottom)

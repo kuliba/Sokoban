@@ -49,7 +49,7 @@ extension ServerCommands {
         struct GetAccountStatementForPeriod: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getAccountStatementForPeriod_V3"
+            let endpoint = "/rest/v4/getAccountStatementForPeriod"
             let method: ServerCommandMethod = .post
             var payload: BasePayload?
             
@@ -57,7 +57,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [ProductStatementData]?
+                let data: ProductStatementWithExtendedInfo?
             }
             
             internal init(token: String, payload: BasePayload) {

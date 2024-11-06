@@ -12,6 +12,7 @@ import PinCodeUI
 import RxViewModel
 import SberQR
 import SwiftUI
+import CalendarUI
 
 struct ProductProfileView: View {
     
@@ -81,23 +82,45 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton {
-                                    viewModel.event(.history($0))
-                                }
-                                
-                                if let selectedDate = viewModel.historyState?.date?.description {
-                                    
-                                    Text(selectedDate)
-                                }
-                                
-                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
-                                    
-                                    Text(filters)
-                                }
-                                
                                 ProductProfileHistoryView(
-                                    viewModel: historyViewModel
+                                    viewModel: historyViewModel,
+                                    makeHistoryButton: { isHistoryLoading in
+                                        
+                                        if isHistoryLoading {
+                                            
+                                            return productProfileViewFactory.makeHistoryButton(
+                                                {
+                                                    viewModel.event(.button($0))
+                                                },{
+                                                    viewModel.filterState.filter.selectedServices.isEmpty == false || viewModel.filterState.filter.selectedTransaction != nil || viewModel.filterState.filter.selectedPeriod == .week || viewModel.filterState.filter.selectDates != nil
+                                                },{
+                                                    return (viewModel.filterState.calendar.range?.lowerDate != nil && viewModel.filterState.filter.selectDates == nil) && viewModel.filterState.filter.selectedTransaction == nil &&
+                                                    viewModel.filterState.filter.selectedServices.isEmpty
+                                                }, {
+                                                    
+                                                    viewModel.filterState.filter.selectedServices = []
+                                                    viewModel.filterState.filter.selectedTransaction = nil
+                                                    viewModel.filterState.filter.selectedPeriod = .month
+                                                    viewModel.filterState.filter.selectDates = nil
+                                                    viewModel.filterState.calendar.range = nil
+                                                    
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                                        self.viewModel.history?.action.send(
+                                                            ProductProfileHistoryViewModelAction.Filter(
+                                                                filterState: viewModel.filterState,
+                                                                period: (
+                                                                    lowerDate: .distantPast,
+                                                                    upperDate: Date()
+                                                                ))
+                                                        )   
+                                                    }
+                                                })
+                                        } else {
+                                            return nil
+                                        }
+                                    }
                                 )
+                                .padding(.horizontal, 20)
                             }
                         }
                     }
@@ -129,7 +152,7 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
                
-            if viewModel.historyState?.showSheet == true {
+            if viewModel.historyState != nil {
                 
                 historySheet()
             }
@@ -171,52 +194,129 @@ struct ProductProfileView: View {
         
         Color.clear
             .sheet(
-                modal: viewModel.historyState,
-                dismissModal: { viewModel.historyState?.showSheet = false },
-                content: { _ in historySheetContent() }
+                modal: viewModel.historyState?.showSheet,
+                dismissModal: { viewModel.event(.history(.dismiss)) },
+                content: historySheetContent
             )
     }
     
-    private func historySheetContent() -> some View {
+    private func historySheetContent(
+        sheet: ProductProfileViewModel.HistoryState.Sheet
+    ) -> some View {
         
         VStack(spacing: 15) {
             
-            if let state = viewModel.historyState {
-                
-                switch state.buttonAction {
-                case .calendar:
-                    
-                    calendarView()
-                    
-                case .filter:
-                    
-                    Text("Filter")
-                    
-                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
-                        Text("setup debit filter")
+            switch sheet {
+            case .calendar:
+                CalendarWrapperView(
+                    state: .init(
+                        date: Date(),
+                        range: .init(
+                            startDate: Date.startDayOfCalendar(),
+                            endDate: Date()
+                        ),
+                        monthsData: .generate(startDate: viewModel.calendarDayStart()),
+                        periods: [.week, .month, .dates]
+                    ),
+                    event: { event in
+                        
+                        switch event {
+                        case .clear:
+                            break
+                        case .dismiss:
+                            viewModel.event(.history(.dismiss))
+                        }
+                    },
+                    config: .iFora,
+                    apply: { lowerDate, upperDate in
+                        if let lowerDate = lowerDate,
+                           let upperDate = upperDate {
+                            
+                            viewModel.filterState.calendar.range = .init(
+                                startDate: lowerDate,
+                                endDate: upperDate
+                            )
+                            viewModel.filterHistoryRequest(
+                                lowerDate,
+                                upperDate,
+                                nil,
+                                []
+                            )
+                        }
+                        viewModel.event(.history(.dismiss))
                     }
+                )
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarWithBack(
+                    title: "Выберите даты или период",
+                    dismiss: {
+                    viewModel.event(.history(.filter(.dismissCalendar)))
+                })
+                
+            case let .filter(filter):
                     
-                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
-                        Text("clear filters")
-                    })
+                NavigationView {
+                    
+                    FilterWrapperView(
+                        model: filter,
+                        config: .iFora
+                    ) {
+                        viewModel.event(.history(.filter(.period($0))))
+                    } buttonsView: { hasFilter in
+                        ButtonsContainer(
+                            applyAction: {
+                                
+                                viewModel.event(.updateFilter(filter.state))
+                            },
+                            clearOptionsAction: {
+                                filter.event(.clearOptions)
+                            },
+                            isAvailable: hasFilter,
+                            config: .init(
+                                clearButtonTitle: "Очистить",
+                                applyButtonTitle: "Применить",
+                                disableButtonBackground: .mainColorsGrayLightest
+                            )
+                        )
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(
+                        destination: viewModel.historyState?.calendarState,
+                        dismissDestination: { viewModel.event(.history(.filter(.dismissCalendar))) },
+                        content: { state in
+                            
+                            CalendarWrapperView(
+                                state: state.state,
+                                event: {
+                                    
+                                    switch $0 {
+                                    case .clear:
+                                        break
+                                    case .dismiss:
+                                        viewModel.event(.history(.filter(.dismissCalendar)))
+                                    }
+                                },
+                                config: .iFora,
+                                apply: { lowerDate, upperDate in
+                                    
+                                    if let lowerDate = lowerDate,
+                                       let upperDate = upperDate {
+                                    
+                                        filter.event(.selectedDates(lowerDate...upperDate, .dates))
+                                    }
+                                    
+                                    viewModel.event(.history(.filter(.dismissCalendar)))
+                                }
+                            )
+                            .navigationBarWithBack(
+                                title: "Выберите даты или период",
+                                dismiss: {
+                                viewModel.event(.history(.filter(.dismissCalendar)))
+                            })
+                        }
+                    )
                 }
             }
-        }
-    }
-    
-    private func calendarView() -> some View {
-        
-        VStack {
-            
-            Text("Calendar")
-            
-            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
-                Text("setup date")
-            })
-            
-            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
-                Text("clear date")
-            })
         }
     }
     
@@ -268,6 +368,9 @@ struct ProductProfileView: View {
                 productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
+        case let .payment(viewModel):
+            PaymentsView(viewModel: viewModel, 
+                         viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView))
         }
     }
     
@@ -278,14 +381,206 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(viewModel):
-            OperationDetailView(
-                viewModel: viewModel,
-                makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView, 
-                payment: {
-                    //TODO: Payment reducer
-                }, 
-                viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView)
-            )
+                OperationDetailView(
+                    viewModel: viewModel,
+                    makeRepeatButtonView: self.productProfileViewFactory.makeRepeatButtonView,
+                    payment: {
+                        if let operationId = viewModel.operationId {
+                            
+                            self.viewModel.productProfileServices.repeatPayment.createInfoRepeatPaymentServices(.init(paymentOperationDetailId: operationId)) { result in
+                                
+                                switch result {
+                                case let .success(infoPayment):
+                                    switch infoPayment.type {
+                                        
+                                    case .betweenTheir:
+                                        
+                                        let paymentViewModels = infoPayment.parameterList.compactMap { transfer -> PaymentsMeToMeViewModel? in
+                                            let allProducts = viewModel.model.products.value.flatMap({ $0.value })
+                                            
+                                            if let payeeInternalId = transfer.payeeInternal?.cardId ?? transfer.payeeInternal?.accountId,
+                                               let product = allProducts.first(where: { $0.id == payeeInternalId }),
+                                               let amount = transfer.amount,
+                                               let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
+                                                
+                                                return paymentViewModel
+                                            }
+                                            
+                                            if let payerId = transfer.payer?.cardId ?? transfer.payer?.accountId,
+                                               let product = allProducts.first(where: { $0.id == payerId }),
+                                               let amount = transfer.amount,
+                                               let paymentViewModel = PaymentsMeToMeViewModel(Model.shared, mode: .makePaymentTo(product, amount)) {
+                                                
+                                                return paymentViewModel
+                                            }
+                                            
+                                            return nil
+                                        }
+                                        
+                                        if let firstPaymentViewModel = paymentViewModels.first {
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
+                                                self.viewModel.bottomSheet = .init(type: .meToMe(firstPaymentViewModel))
+                                            }
+                                        }
+                                        
+                                    case .direct, .contactAddressless:
+                                        
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let additional = transfer.additional,
+                                           let phone = transfer.additional?.first(where: { $0.fieldname == "RECP"})?.fieldvalue,
+                                           let countryId = transfer.additional?.first(where: { $0.fieldname == "trnPickupPoint"})?.fieldvalue {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self.viewModel.link = .payment(.init(source: .direct(
+                                                    phone: phone,
+                                                    countryId: countryId,
+                                                    serviceData: .init(
+                                                        additionalList: additional.map({ PaymentServiceData.AdditionalListData(
+                                                            fieldTitle: $0.fieldname,
+                                                            fieldName: $0.fieldname,
+                                                            fieldValue: $0.fieldvalue,
+                                                            svgImage: ""
+                                                        )}),
+                                                        amount: transfer.amount ?? 0,
+                                                        date: Date(),
+                                                        paymentDate: "",
+                                                        puref: transfer.puref ?? "",
+                                                        type: .internet,
+                                                        lastPaymentName: nil
+                                                    )
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                    case .externalEntity, .externalIndivudual:
+                                       
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let bankBic = transfer.payeeExternal?.bankBIC,
+                                           let amount = transfer.amount?.description,
+                                           let accountNumber = transfer.payeeExternal?.accountNumber {
+                                            
+                                            let inn: String = transfer.payeeExternal?.inn ?? ""
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self.viewModel.link = .payment(.init(source: .repeatPaymentRequisites(
+                                                    accountNumber: accountNumber,
+                                                    bankId: bankBic,
+                                                    inn: inn,
+                                                    kpp: transfer.payeeExternal?.kpp,
+                                                    amount: amount,
+                                                    productId: transfer.payer?.cardId ?? transfer.payer?.accountId,
+                                                    comment: transfer.comment
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                        
+                                    case .insideBank:
+                                     
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let from = transfer.payer?.cardId,
+                                           let amount = transfer.amount,
+                                           let to = infoPayment.productTemplate?.id {
+                                         
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.viewModel.link = .payment(.init(source: .toAnotherCard(from: from, to: to, amount: String(amount)), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                    case .internet, .transport, .housingAndCommunalService:
+                                        
+                                        if let transfer = infoPayment.parameterList.first,
+                                           let puref = transfer.puref,
+                                           let amount = infoPayment.parameterList.first?.amount ?? infoPayment.parameterList.last?.amount {
+                                            
+                                            let additionalList: [PaymentServiceData.AdditionalListData]? = transfer.additional?.map {
+                                                .init(fieldTitle: $0.fieldname, fieldName: $0.fieldname, fieldValue: $0.fieldvalue, svgImage: nil)
+                                            }
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.viewModel.link = .payment(.init(source: .servicePayment(
+                                                    puref: puref,
+                                                    additionalList: additionalList,
+                                                    amount: amount, 
+                                                    productId: transfer.payer?.cardId
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                        
+                                    case .otherBank:
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
+                                            
+                                            self.viewModel.link = .payment(.init(Model.shared, service: .toAnotherCard, closeAction: {
+                                                self.viewModel.link = nil
+                                            }))
+                                        }
+                                        
+                                    case .byPhone:
+                                        
+                                        if let phone = infoPayment.parameterList.last?.payeeInternal?.phoneNumber,
+                                           let amount = infoPayment.parameterList.last?.amount?.description {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
+                                                self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: ForaBank.BankID.foraBankID.digits, amount: amount, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                    case .sfp:
+                                        
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let phone = transfer.additional?.first(where: { $0.fieldname == "RecipientID"})?.fieldvalue,
+                                           let bankId = transfer.additional?.first(where: { $0.fieldname == "BankRecipientID"})?.fieldvalue,
+                                           let amount = transfer.amount?.description {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                self.viewModel.link = .payment(.init(source: .sfp(phone: phone, bankId: bankId, amount: amount, productId: self.viewModel.product.activeProductId), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                    case .mobile:
+                                        
+                                        if let transfer = infoPayment.parameterList.last,
+                                           let phone = transfer.additional?.first(where: { $0.fieldname == "a3_NUMBER_1_2"})?.fieldvalue,
+                                           let amount = transfer.amount?.description {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                                
+                                                self.viewModel.link = .payment(.init(source: .mobile(
+                                                    phone: "7\(phone)",
+                                                    amount: amount,
+                                                    productId: transfer.payer?.cardId ?? transfer.payer?.accountId
+                                                ), model: Model.shared, closeAction: {
+                                                    self.viewModel.link = nil
+                                                }))
+                                            }
+                                        }
+                                    case .taxes:
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1300)) {
+                                            
+                                            self.viewModel.link = .payment(.init(source: .taxes(parameterData: nil), model: Model.shared, closeAction: {
+                                                self.viewModel.link = nil
+                                            }))
+                                        }
+                                    }
+                                    
+                                case let .failure(error):
+                                    print(error)
+                                }
+                            }
+                            
+                            self.viewModel.bottomSheet = nil
+                        }
+                    }, 
+                    viewFactory: .init(makeCategoryView: viewFactory.makeCategoryView)
+                )
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -507,7 +802,7 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:),
+                makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: { }) }
             ),
             getUImage: { _ in nil }
@@ -524,7 +819,7 @@ extension ProductProfileViewModel {
         product: .sample,
         buttons: .sample,
         detail: .sample,
-        history: .sampleHistory,
+        history: nil,
         fastPaymentsFactory: .legacy,
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
@@ -535,7 +830,9 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
+        filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
     
@@ -544,7 +841,7 @@ extension ProductProfileViewModel {
         product: .sample,
         buttons: .sample,
         detail: .sample,
-        history: .sampleHistory,
+        history: nil,
         fastPaymentsFactory: .legacy,
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
@@ -555,7 +852,9 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
+        filterHistoryRequest: { _,_,_,_ in },
         productProfileViewModelFactory: .preview,
+        filterState: .preview,
         rootView: ""
     )
 }
@@ -588,4 +887,22 @@ extension OperationDetailFactory {
     static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
             .sampleComplete
     })
+}
+
+extension Date {
+    
+    static func startDayOfCalendar() -> Date {
+        var today = Date.date(Date(), addDays: -30)!
+        var gregorian = Calendar(identifier: .gregorian)
+        gregorian.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = gregorian.dateComponents([.timeZone, .year, .month, .day, .hour, .minute,.second], from: today)
+
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+
+        today = gregorian.date(from: components)!
+        
+        return today
+    }
 }
