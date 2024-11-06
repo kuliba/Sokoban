@@ -20,7 +20,7 @@ struct QRFailureBinderComposerMicroServices<QRFailure, Categories, DetailPayment
 extension QRFailureBinderComposerMicroServices {
     
     typealias MakeQRFailure = () -> QRFailure
-    typealias MakeCategories = () -> Categories
+    typealias MakeCategories = () -> Categories?
     typealias MakeDetailPayment = () -> DetailPayment
 }
 
@@ -66,11 +66,15 @@ extension QRFailureBinderComposer {
                 
                 switch select {
                 case .payWithDetails:
-                    let detailPayment = self.microServices.makeDetailPayment()
+                    let detailPayment = microServices.makeDetailPayment()
                     completion(.detailPayment(detailPayment))
                     
                 case .search:
-                    fatalError()
+                    let categories = microServices.makeCategories()
+                    completion(.categories(.init {
+                        
+                        try categories.get(orThrow: MakeCategoriesFailure())
+                    }))
                 }
             },
             scheduler: scheduler,
@@ -83,6 +87,8 @@ extension QRFailureBinderComposer {
             bind: factory.bind(with: witnesses)
         )
     }
+    
+    struct MakeCategoriesFailure: Error {}
 }
 
 import PayHubUI
@@ -135,11 +141,63 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
     }
     
+    // MARK: - search
+    
+    func test_composed_search_shouldCallMakeCategories() {
+        
+        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose()
+        composed.content.emit(.search)
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(spies.makeCategories.payloads.count, 1)
+    }
+    
+    func test_composed_search_shouldDeliverFailureOnCategoriesFailure() {
+        
+        let (sut, _, scheduler) = makeSUT(
+            delay: .seconds(500),
+            categories: .none
+        )
+        
+        let composed = sut.compose()
+        composed.content.emit(.search)
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .categories(.failure(.init()))
+        )
+    }
+    
+    func test_composed_search_shouldDeliverCategories() {
+        
+        let categories = makeCategories()
+        let (sut, _, scheduler) = makeSUT(
+            delay: .seconds(500),
+            categories: categories
+        )
+        
+        let composed = sut.compose()
+        composed.content.emit(.search)
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .categories(.success(categories))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = QRFailureBinderComposer<QRFailure, Categories, DetailPayment>
     private typealias MakeQRFailure = CallSpy<Void, QRFailure>
-    private typealias MakeCategories = CallSpy<Void, Categories>
+    private typealias MakeCategories = CallSpy<Void, Categories?>
     private typealias MakeDetailPayment = CallSpy<Void, DetailPayment>
     
     private struct Spies {
@@ -163,7 +221,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     ) {
         let spies = Spies(
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
-            makeCategories: .init(stubs: [categories ?? makeCategories()]),
+            makeCategories: .init(stubs: [categories]),
             makeDetailPayment: .init(stubs: [detailPayment ?? makeDetailPayment()])
         )
         let scheduler = DispatchQueue.test

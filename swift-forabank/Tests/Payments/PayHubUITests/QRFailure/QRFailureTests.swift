@@ -70,10 +70,10 @@ class QRFailureTests: XCTestCase {
         
         switch navigation {
         case .categories(.failure):
-            return .categories(nil)
+            return .categories(.failure(.init()))
             
         case let .categories(.success(categories)):
-            return .categories(categories)
+            return .categories(.success(categories))
             
         case let .detailPayment(detailPayment):
             return .detailPayment(detailPayment)
@@ -82,7 +82,9 @@ class QRFailureTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case categories(Categories?)
+        case categories(Result<Categories, CategoriesFailure>)
         case detailPayment(DetailPayment)
     }
+    
+    struct CategoriesFailure: Error, Equatable {}
 }
