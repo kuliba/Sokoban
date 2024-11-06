@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AuthPinCodeView: View {
     
+    @Environment(\.openURL) var openURL
+
     @ObservedObject var viewModel: AuthPinCodeViewModel
     
     var body: some View {
@@ -50,19 +52,26 @@ struct AuthPinCodeView: View {
         }
         .background(Color.white)
         .navigationBarHidden(true)
-        .alert(item: viewModel.clientInformAlerts?.alert) { alert in
+        .alert(item: $viewModel.alertType) { alertType in
             
-            return alert.swiftUIAlert {
-               
-                if let link = viewModel.clientInformAlerts?.alert?.link,
-                   let version = viewModel.clientInformAlerts?.alert?.version,
-                   let url = URL(string: "https://" + link) {
-                    print("Attempting to open URL: \(url.absoluteString)")
-
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            switch alertType {
+                
+            case .clientInformAlerts(let alert):
+                
+                return alert.swiftUIAlert {
+                    
+                    if let url = URL(string: viewModel.clientInformAlerts?.alert?.link ?? String.appStoreFora),
+                       let version = viewModel.clientInformAlerts?.alert?.version {
+                        
+                        print("Attempting to open URL: \(url)")
+                        openURL(url)
+                    }
+                    
+                    viewModel.showNextAlert(action: $0)
                 }
-            
-                viewModel.showNextAlert(action: $0)
+                
+            case .alertViewModel(let alert):
+                return Alert.init(with: alert)
             }
         }
         .onAppear {

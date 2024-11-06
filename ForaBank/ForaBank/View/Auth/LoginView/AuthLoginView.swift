@@ -24,8 +24,11 @@ struct AuthLoginView: View {
             CardView(viewModel: viewModel.card)
         }
         .alert(item: $viewModel.alertType) { alertType in
+            
             switch alertType {
+                
             case .clientInformAlerts(let alert):
+                
                 return alert.swiftUIAlert {
                     
                     if let url = URL(string: viewModel.clientInformAlerts?.alert?.link ?? String.appStoreFora),
@@ -37,7 +40,9 @@ struct AuthLoginView: View {
                     
                     viewModel.showNextAlert(action: $0)
                 }
+                
             case .alertViewModel(let alert):
+                
                 return Alert.init(with: alert)
             }
         }
