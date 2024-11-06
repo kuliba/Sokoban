@@ -58,9 +58,7 @@ public struct ClientInformListView: View {
             config.colors.grayBackground
                 .frame(height: config.sizes.navBarHeight)
                 .ignoresSafeArea()
-            
-            grabberView()
-            
+                        
             navBarTitle(info.navBarTitle())
         }
     }
@@ -79,9 +77,7 @@ public struct ClientInformListView: View {
     private func contentStack() -> some View {
         
         VStack(spacing: config.sizes.spacing) {
-            
-            if !isShowNavBar { grabberView() }
-            
+                        
             switch info {
             case .single(let singleInfo):
                 singleInfoView(singleInfo)
@@ -90,19 +86,6 @@ public struct ClientInformListView: View {
                 multipleInfoView(multipleInfo)
             }
         }
-    }
-    
-    private func grabberView() -> some View {
-        
-        config.colors.grayGrabber
-            .frame(
-                width: config.sizes.grabberWidth,
-                height: config.sizes.grabberHeight,
-                alignment: .top
-            )
-            .cornerRadius(config.sizes.grabberCornerRadius)
-            .padding(.top, config.paddings.topGrabber)
-            .ignoresSafeArea()
     }
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
@@ -124,7 +107,7 @@ public struct ClientInformListView: View {
         VStack(spacing: config.sizes.spacing) {
             
             if !isShowNavBar {
-                iconView(multipleInfo.title.image)
+                iconView()
                 titleView(multipleInfo.title.title)
             }
             
@@ -144,12 +127,23 @@ public struct ClientInformListView: View {
         }
     }
     
-    private func iconView(_ image: Image) -> some View {
+    @ViewBuilder
+    private func iconView(_ image: Image? = nil) -> some View {
         
-        image
-            .resizable()
-            .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
-            .padding(.top, config.paddings.topImage)
+        if let image {
+            image
+                .resizable()
+                .frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                .padding(.top, config.paddings.topImage)
+        } else {
+            config.image
+                .resizable()
+                .frame(width: config.sizes.iconSize, height: config.sizes.iconSize)
+                .foregroundColor(.white)
+                .background(Circle().frame(width: config.sizes.iconBackgroundSize, height: config.sizes.iconBackgroundSize)
+                .foregroundColor(config.colors.bgIconRedLight))
+                .padding(.top, config.paddings.topImage)
+        }
     }
     
     private func titleView(_ text: String) -> some View {
