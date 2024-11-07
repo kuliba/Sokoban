@@ -48,8 +48,16 @@ extension RootViewFactoryComposer {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
-            makeIconView: imageCache.makeIconView(for:), 
+            makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
+                self.makeHistoryButtonView(
+                    self.historyFeatureFlag,
+                    isFiltered: isFiltered,
+                    isDateFiltered: isDateFiltered,
+                    clearAction: clearAction,
+                    event: event
+                )
+            },
+            makeIconView: imageCache.makeIconView(for:),
             makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
@@ -93,7 +101,15 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+                makeHistoryButton: {
+                    self.makeHistoryButtonView(
+                        self.historyFeatureFlag,
+                        isFiltered: $1,
+                        isDateFiltered: $2,
+                        clearAction: $3,
+                        event: $0
+                    )
+                },
                 makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
             ),
             getUImage: getUImage
@@ -243,24 +259,23 @@ private extension RootViewFactoryComposer {
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return RepeatButtonView(action: action)
-            
-        } else {
-           return nil
-        }
+        return RepeatButtonView(action: action)
     }
     
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag,
-        event: @escaping (HistoryEvent) -> Void
+        isFiltered: @escaping () -> Bool,
+        isDateFiltered: @escaping () -> Bool,
+        clearAction: @escaping () -> Void,
+        event: @escaping (ProductProfileFlowEvent.ButtonEvent) -> Void
     ) -> HistoryButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return HistoryButtonView(event: event)
-        } else {
-           return nil
-        }
+        return HistoryButtonView(
+            event: event,
+            isFiltered: isFiltered,
+            isDateFiltered: isDateFiltered,
+            clearOptions: clearAction
+        )
     }
     
     typealias Completed = AnywayCompleted

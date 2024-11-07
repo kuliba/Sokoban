@@ -328,6 +328,7 @@ extension Model {
         switch source {
         case let .mock(mock): return mock.service
         case .sfp: return .sfp
+        case .toAnotherCard: return .toAnotherCard
         case .requisites: return .requisites
         case .c2b: return .c2b
         case .c2bSubscribe: return .c2b
@@ -396,7 +397,7 @@ extension Model {
                 throw Payments.Error.unsupported
             }
             
-        case .servicePayment(let operatorCode, _, _):
+        case .servicePayment(let operatorCode, _, _, _):
             guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
                 throw Payments.Error.missingValueForParameter(operatorCode)
             }
@@ -454,6 +455,20 @@ extension Model {
             default:
                 throw Payments.Error.unsupported
             }
+        case let .mobile(phone: _, amount: _, productId: _):
+            return .mobileConnection
+        case .repeatPaymentRequisites(
+            accountNumber: _,
+            bankId: _,
+            inn: _,
+            kpp: _,
+            amount: _,
+            productId: _,
+            comment: _
+        ):
+            return .requisites
+        case let .taxes(parameterData: parameterData):
+            return .fns
         default:
             throw Payments.Error.unsupported
         }
@@ -835,10 +850,11 @@ extension Model {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
-        case let .sfp(phone: phone, bankId: bankId):
+        case let .sfp(phone: phone, bankId: bankId, amount: amount, productId: productId):
             return paymentsProcessSourceReducerSFP(
                 phone: phone,
                 bankId: bankId,
+                amount: amount,
                 parameterId: parameterId
             )
             
@@ -1255,6 +1271,7 @@ extension Model {
                 return paymentsProcessSourceReducerSFP(
                     phone: phoneNumber,
                     bankId: bankId,
+                    amount: paymentData.amount,
                     parameterId: parameterId
                 )
                 
