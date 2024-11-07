@@ -7,20 +7,20 @@
 
 import Combine
 
-public struct QRFailureIsClosedWitnesses<Categories, DetailPayment> {
+public struct QRFailureIsClosedWitnesses<CategoryPicker, DetailPayment> {
     
-    public let categories: CategoriesWitness
+    public let categoryPicker: CategoryPickerWitness
     public let detailPayment: DetailPaymentWitness
     
     public init(
-        categories: @escaping CategoriesWitness,
+        categoryPicker: @escaping CategoryPickerWitness,
         detailPayment: @escaping DetailPaymentWitness
     ) {
-        self.categories = categories
+        self.categoryPicker = categoryPicker
         self.detailPayment = detailPayment
     }
     
     public typealias IsClosed<T> = (T) -> AnyPublisher<Bool, Never>
-    public typealias CategoriesWitness = IsClosed<Categories>
+    public typealias CategoryPickerWitness = IsClosed<CategoryPicker>
     public typealias DetailPaymentWitness = IsClosed<DetailPayment>
 }

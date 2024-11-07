@@ -24,7 +24,7 @@ final class ContentViewModelComposer {
         self.qrFailureBinderComposer = .init(
             delay: .milliseconds(100),
             microServices: .init(
-                makeCategories: Categories.init(qrCode:),
+                makeCategoryPicker: CategoryPicker.init(qrCode:),
                 makeDetailPayment: Payments.init(qrCode:),
                 makeQRFailure: QRFailure.init(qrCode:)
             ),
@@ -35,18 +35,18 @@ final class ContentViewModelComposer {
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
             isClosedWitnesses: .init(
-                categories: { $0.isClosedPublisher },
+                categoryPicker: { $0.isClosedPublisher },
                 detailPayment: { $0.isClosedPublisher }
             ),
             scanQRWitnesses: .init(
-                categories: { $0.scanQRPublisher },
+                categoryPicker: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }
             ),
             schedulers: schedulers
         )
     }
     
-    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, Categories, Payments>
+    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, Payments>
 }
 
 extension ContentViewModelComposer {

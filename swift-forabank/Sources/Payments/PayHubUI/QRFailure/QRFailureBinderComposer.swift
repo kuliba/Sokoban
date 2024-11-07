@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
-public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment> {
+public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment> {
     
     private let delay: Delay
     private let microServices: MicroServices
@@ -37,14 +37,14 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
-    public typealias MicroServices = QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment>
+    public typealias MicroServices = QRFailureBinderComposerMicroServices<QRCode, QRFailure, CategoryPicker, DetailPayment>
     
-    public typealias IsClosedWitnesses = QRFailureIsClosedWitnesses<Categories, DetailPayment>
+    public typealias IsClosedWitnesses = QRFailureIsClosedWitnesses<CategoryPicker, DetailPayment>
     
-    public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<Categories, DetailPayment>
+    public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<CategoryPicker, DetailPayment>
     
     public typealias ContentFlowWitnesses = PayHubUI.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
-    public typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
+    public typealias Domain = QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment>
 }
 
 public extension QRFailureBinderComposer {
@@ -86,10 +86,10 @@ private extension QRFailureBinderComposer {
             )))
             
         case let .search(qrCode):
-            let categories = microServices.makeCategories(qrCode)
-            completion(.categories(.init(
-                model: categories,
-                cancellables: bind(categories, using: notify)
+            let categoryPicker = microServices.makeCategoryPicker(qrCode)
+            completion(.categoryPicker(.init(
+                model: categoryPicker,
+                cancellables: bind(categoryPicker, using: notify)
             )))
             
         case .scanQR:
@@ -103,14 +103,14 @@ private extension QRFailureBinderComposer {
 private extension QRFailureBinderComposer {
     
     func bind(
-        _ categories: Categories,
+        _ categoryPicker: CategoryPicker,
         using notify: @escaping Domain.Notify
     ) -> Set<AnyCancellable> {
         
-        let close = isClosedWitnesses.categories(categories)
+        let close = isClosedWitnesses.categoryPicker(categoryPicker)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = scanQRWitnesses.categories(categories)
+        let scanQR = scanQRWitnesses.categoryPicker(categoryPicker)
             .sink { notify(.select(.scanQR)) }
         
         return [close, scanQR]
