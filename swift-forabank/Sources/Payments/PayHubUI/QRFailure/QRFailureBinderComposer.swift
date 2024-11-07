@@ -51,32 +51,13 @@ public extension QRFailureBinderComposer {
     
     func compose(qrCode: QRCode) -> Domain.Binder {
         
-        let factory = ContentFlowBindingFactory(delay: delay, scheduler: schedulers.main)
+        let factory = ContentFlowBindingFactory(
+            delay: delay,
+            scheduler: schedulers.main
+        )
         
         let composer = Domain.FlowComposer(
-            getNavigation: { [weak self] select, notify, completion in
-                
-                guard let self else { return }
-                
-                switch select {
-                case let .payWithDetails(qrCode):
-                    let payment = microServices.makeDetailPayment(qrCode)
-                    completion(.detailPayment(.init(
-                        model: payment,
-                        cancellables: bind(payment, using: notify)
-                    )))
-                    
-                case let .search(qrCode):
-                    let categories = microServices.makeCategories(qrCode)
-                    completion(.categories(.init(
-                        model: categories,
-                        cancellables: bind(categories, using: notify)
-                    )))
-                    
-                case .scanQR:
-                    completion(.scanQR)
-                }
-            },
+            getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
         )
@@ -88,6 +69,36 @@ public extension QRFailureBinderComposer {
         )
     }
 }
+
+private extension QRFailureBinderComposer {
+    
+    func getNavigation(
+        select: Domain.Select,
+        notify: @escaping Domain.Notify,
+        completion: @escaping (Domain.Navigation) -> Void
+    ) {
+        switch select {
+        case let .payWithDetails(qrCode):
+            let payment = microServices.makeDetailPayment(qrCode)
+            completion(.detailPayment(.init(
+                model: payment,
+                cancellables: bind(payment, using: notify)
+            )))
+            
+        case let .search(qrCode):
+            let categories = microServices.makeCategories(qrCode)
+            completion(.categories(.init(
+                model: categories,
+                cancellables: bind(categories, using: notify)
+            )))
+            
+        case .scanQR:
+            completion(.scanQR)
+        }
+    }
+}
+
+// MARK: - bindings
 
 private extension QRFailureBinderComposer {
     
