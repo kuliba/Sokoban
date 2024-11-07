@@ -1,5 +1,5 @@
 //
-//  CategoriesView.swift
+//  CategoryPickerView.swift
 //  QRNavigationPreview
 //
 //  Created by Igor Malyarov on 07.11.2024.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct CategoriesView: View {
+struct CategoryPickerView: View {
     
-    let model: Categories
+    let model: CategoryPicker
     
     var body: some View {
         
@@ -55,7 +55,7 @@ struct CategoriesView: View {
     
     NavigationView {
         
-        CategoriesView(model: .init(
+        CategoryPickerView(model: .init(
             qrCode: .init(value: .init(UUID().uuidString.prefix(6)))
         ))
     }

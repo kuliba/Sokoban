@@ -145,10 +145,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(
-            mainScheduler: .immediate,
-            interactiveScheduler: .immediate
-        )
+        let sut = SUT(schedulers: .immediate)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -183,6 +180,16 @@ final class ContentViewModelComposerTests: XCTestCase {
         
         return .init(value: value)
     }
+}
+
+extension Schedulers {
+    
+    static let immediate: Self = .init(
+        main: .immediate,
+        interactive: .immediate,
+        userInitiated: .immediate,
+        background: .immediate
+    )
 }
 
 // MARK: - DSL

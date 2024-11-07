@@ -8,4 +8,4 @@
 import PayHub
 import PayHubUI
 
-typealias QRFailureDomain = PayHubUI.QRFailureDomain<QRCode, QRFailure, Categories, Payments>
+typealias QRFailureDomain = PayHubUI.QRFailureDomain<QRCode, QRFailure, CategoryPicker, Payments>

@@ -17,7 +17,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let (sut, spies, _) = makeSUT()
         
-        XCTAssertEqual(spies.makeCategories.callCount, 0)
+        XCTAssertEqual(spies.makeCategoryPicker.callCount, 0)
         XCTAssertEqual(spies.makeDetailPayment.callCount, 0)
         XCTAssertEqual(spies.makeQRFailure.callCount, 0)
         XCTAssertNotNil(sut)
@@ -89,7 +89,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
     }
     
-    func test_composed_payWithDetails_shouldDismissOnCategoriesClose() throws {
+    func test_composed_payWithDetails_shouldDismissOnDetailPaymentClose() throws {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
@@ -108,7 +108,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - search
     
-    func test_composed_search_shouldCallMakeCategoriesWithQRCode() {
+    func test_composed_search_shouldCallMakeCategoryPickerWithQRCode() {
         
         let qrCode = makeQRCode()
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
@@ -117,15 +117,15 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         composed.content.emit(.search(qrCode))
         scheduler.advance(by: .seconds(500))
         
-        XCTAssertNoDiff(spies.makeCategories.payloads, [qrCode])
+        XCTAssertNoDiff(spies.makeCategoryPicker.payloads, [qrCode])
     }
     
-    func test_composed_search_shouldDeliverCategories() {
+    func test_composed_search_shouldDeliverCategoryPicker() {
         
-        let categories = makeCategories()
+        let categoryPicker = makeCategoryPicker()
         let (sut, _, scheduler) = makeSUT(
             delay: .seconds(500),
-            categories: categories
+            categoryPicker: categoryPicker
         )
         
         let composed = sut.compose(qrCode: makeQRCode())
@@ -136,11 +136,11 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
-            .categories(.init(categories))
+            .categories(.init(categoryPicker))
         )
     }
     
-    func test_composed_search_shouldDeliverScanQROnCategoriesScanQR() throws {
+    func test_composed_search_shouldDeliverScanQROnCategoryPickerScanQR() throws {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
@@ -150,7 +150,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
-        try composed.flow.categories.scanQR()
+        try composed.flow.categoryPicker.scanQR()
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(
@@ -159,7 +159,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
     }
     
-    func test_composed_search_shouldDismissOnCategoriesClose() throws {
+    func test_composed_search_shouldDismissOnCategoryPickerClose() throws {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
@@ -170,7 +170,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         scheduler.advance(by: .milliseconds(100))
         XCTAssertNotNil(composed.flow.state.navigation)
         
-        try composed.flow.categories.close()
+        try composed.flow.categoryPicker.close()
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNil(composed.flow.state.navigation)
@@ -178,22 +178,22 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment>
+    private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment>
     private typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
-    private typealias MakeCategories = CallSpy<QRCode, Categories>
+    private typealias MakeCategoryPicker = CallSpy<QRCode, CategoryPicker>
     private typealias MakeDetailPayment = CallSpy<QRCode, DetailPayment>
     
     private struct Spies {
         
         let makeQRFailure: MakeQRFailure
-        let makeCategories: MakeCategories
+        let makeCategoryPicker: MakeCategoryPicker
         let makeDetailPayment: MakeDetailPayment
     }
     
     private func makeSUT(
         delay: DispatchQueue.SchedulerTimeType.Stride = .milliseconds(200),
         qrFailure: QRFailure? = nil,
-        categories: Categories? = nil,
+        categoryPicker: CategoryPicker? = nil,
         detailPayment: DetailPayment? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -204,42 +204,54 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     ) {
         let spies = Spies(
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
-            makeCategories: .init(stubs: [categories ?? makeCategories()]),
+            makeCategoryPicker: .init(stubs: [categoryPicker ?? makeCategoryPicker()]),
             makeDetailPayment: .init(stubs: [detailPayment ?? makeDetailPayment()])
         )
         let scheduler = DispatchQueue.test
         let sut = SUT(
             delay: delay,
             microServices: .init(
-                makeCategories: spies.makeCategories.call,
+                makeCategoryPicker: spies.makeCategoryPicker.call,
                 makeDetailPayment: spies.makeDetailPayment.call,
                 makeQRFailure: spies.makeQRFailure.call
             ),
-            isClosedWitnesses: .init(
-                categories: { $0.isClosedPublisher },
-                detailPayment: { $0.isClosedPublisher }
-            ),
-            scanQRWitnesses: .init(
-                categories: { $0.scanQRPublisher },
-                detailPayment: { $0.scanQRPublisher }
-            ),
-            witnesses: .init(
+            contentFlowWitnesses: .init(
                 contentEmitting: { $0.selectPublisher },
                 contentReceiving: { $0.receive },
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
-            scheduler: scheduler.eraseToAnyScheduler(),
-            interactiveScheduler: scheduler.eraseToAnyScheduler()
+            isClosedWitnesses: .init(
+                categoryPicker: { $0.isClosedPublisher },
+                detailPayment: { $0.isClosedPublisher }
+            ),
+            scanQRWitnesses: .init(
+                categoryPicker: { $0.scanQRPublisher },
+                detailPayment: { $0.scanQRPublisher }
+            ),
+            schedulers: .init(scheduler)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spies.makeQRFailure, file: file, line: line)
-        trackForMemoryLeaks(spies.makeCategories, file: file, line: line)
+        trackForMemoryLeaks(spies.makeCategoryPicker, file: file, line: line)
         trackForMemoryLeaks(spies.makeDetailPayment, file: file, line: line)
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, spies, scheduler)
+    }
+}
+
+private extension Schedulers {
+    
+    init(_ testScheduler: TestSchedulerOf<DispatchQueue>) {
+        
+        self.init(
+            main: testScheduler.eraseToAnyScheduler(),
+            interactive: testScheduler.eraseToAnyScheduler(),
+            userInitiated: testScheduler.eraseToAnyScheduler(),
+            background: testScheduler.eraseToAnyScheduler()
+        )
     }
 }
 
@@ -258,12 +270,12 @@ extension QRFailureTests.Domain.Flow {
         }
     }
     
-    var categories: QRFailureTests.Categories {
+    var categoryPicker: QRFailureTests.CategoryPicker {
         
         get throws {
             
-            guard case let .categories(node) = state.navigation
-            else { throw NSError(domain: "Expected Categories", code: -1) }
+            guard case let .categoryPicker(node) = state.navigation
+            else { throw NSError(domain: "Expected CategoryPicker", code: -1) }
             
             return node.model
         }
