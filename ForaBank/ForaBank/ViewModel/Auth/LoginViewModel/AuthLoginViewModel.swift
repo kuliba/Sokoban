@@ -67,7 +67,7 @@ class AuthLoginViewModel: ObservableObject {
         self.eventHandlers = eventHandlers
         self.factory = factory
         self.onRegister = onRegister
-        
+
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
         bind(on: scheduler)
@@ -91,6 +91,17 @@ class AuthLoginViewModel: ObservableObject {
 
 extension AuthLoginViewModel {
     
+    func handleLink() -> URL? {
+        
+        guard let link = clientInformAlerts?.alert?.link,
+              let updateVersion = clientInformAlerts?.alert?.version,
+              Bundle.main.appVersionLong < updateVersion else {
+            return URL(string: String.appStoreFora)
+        }
+        
+        return URL(string: link)
+    }
+    
     func showNextAlert(action: ClientInformActionType) {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
@@ -111,20 +122,6 @@ extension AuthLoginViewModel {
             }
             
             self?.eventHandlers.hideSpinner()
-        }
-    }
-    
-    private func handleAppVersionResponse(_ response: ModelAction.AppVersion.Response) {
-        
-        switch response.result {
-        case .success(let appInfo):
-            
-            let appVersion = appInfo.version
-            print("App Version: \(appVersion)")
-            
-        case .failure(let error):
-            
-            print("Failed to fetch app version: \(error.localizedDescription)")
         }
     }
 }
@@ -199,14 +196,6 @@ private extension AuthLoginViewModel {
                 
                 guard let alert = $0.alert else { return }
                 self?.alertType = .clientInformAlerts(alert)
-            }
-            .store(in: &bindings)
-#warning("todo handleVersionAppStore not finished")
-        eventPublishers.handleVersionAppStore
-            .receive(on: scheduler)
-            .sink { [weak self] response in
-                
-                self?.handleAppVersionResponse(response)
             }
             .store(in: &bindings)
 
@@ -582,7 +571,6 @@ extension AuthLoginViewModel {
     struct EventPublishers {
         
         let clientInformAlerts: AnyPublisher<ClientInformAlerts, Never>
-        let handleVersionAppStore: AnyPublisher<ModelAction.AppVersion.Response, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
         let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>

@@ -41,10 +41,6 @@ private extension Model {
                 .compactMap { $0 }
                 .eraseToAnyPublisher(),
             
-            handleVersionAppStore: action
-                .compactMap { $0 as? ModelAction.AppVersion.Response }
-                .eraseToAnyPublisher(),
-            
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),

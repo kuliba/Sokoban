@@ -31,12 +31,7 @@ struct AuthLoginView: View {
                 
                 return alert.swiftUIAlert {
                     
-                    if let url = URL(string: viewModel.clientInformAlerts?.alert?.link ?? String.appStoreFora),
-                       let version = viewModel.clientInformAlerts?.alert?.version {
-                        
-                        print("Attempting to open URL: \(url)")
-                        openURL(url)
-                    }
+                    if let url = viewModel.handleLink() { openURL(url) }
                     
                     viewModel.showNextAlert(action: $0)
                 }

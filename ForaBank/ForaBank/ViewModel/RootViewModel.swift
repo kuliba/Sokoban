@@ -460,18 +460,14 @@ class RootViewModel: ObservableObject, Resetable {
 }
 
 private extension Model {
-#warning("todo handleVersionAppStore not finished")
+
     var eventPublishers: AuthLoginViewModel.EventPublishers {
         
         .init(
             clientInformAlerts: clientNotAuthorizedAlerts
                 .compactMap { $0 }
                 .eraseToAnyPublisher(),
-            
-            handleVersionAppStore: action
-                .compactMap { $0 as? ModelAction.AppVersion.Response }
-                .eraseToAnyPublisher(),
-            
+
             checkClientResponse: action
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),
