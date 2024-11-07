@@ -12,6 +12,8 @@ import PayHubUI
 
 final class ContentViewModelComposer {
     
+    private let qrFailureBinderComposer: QRFailureBinderComposer
+    
     private let mainScheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
@@ -21,7 +23,30 @@ final class ContentViewModelComposer {
     ) {
         self.mainScheduler = mainScheduler
         self.interactiveScheduler = interactiveScheduler
+        
+        self.qrFailureBinderComposer = .init(
+            delay: .milliseconds(100),
+            microServices: .init(
+                makeCategories: Categories.init(qrCode:),
+                makeDetailPayment: Payments.init(qrCode:),
+                makeQRFailure: QRFailure.init(qrCode:)
+            ),
+            scanQRWitnesses: .init(
+                categories: { $0.scanQRPublisher },
+                detailPayment: { $0.scanQRPublisher }
+            ),
+            witnesses: .init(
+                contentEmitting: { $0.selectPublisher },
+                contentReceiving: { $0.receive },
+                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                flowReceiving: { flow in { flow.event(.select($0)) }}
+            ),
+            scheduler: mainScheduler,
+            interactiveScheduler: interactiveScheduler
+        )
     }
+    
+    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, Categories, Payments>
 }
 
 extension ContentViewModelComposer {
@@ -81,26 +106,19 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
         return .init(
             microServices: .init(
-                makeQRFailure: makeQRFailure,
+                makeQRFailure: qrFailureBinderComposer.compose(qrCode:),
                 makePayments: makePayments
             ),
             witnesses: .init(
                 isClosed: { $0.isClosedPublisher }
             )
         )
-    }
-    
-    private func makeQRFailure(
-        qrCode: QRCode
-    ) -> QRFailure {
-        
-        return .init(qrCode: qrCode)
     }
     
     private func makePayments(
