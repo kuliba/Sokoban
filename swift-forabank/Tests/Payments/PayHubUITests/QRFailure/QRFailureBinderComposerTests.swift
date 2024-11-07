@@ -215,6 +215,12 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 makeDetailPayment: spies.makeDetailPayment.call,
                 makeQRFailure: spies.makeQRFailure.call
             ),
+            contentFlowWitnesses: .init(
+                contentEmitting: { $0.selectPublisher },
+                contentReceiving: { $0.receive },
+                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                flowReceiving: { flow in { flow.event(.select($0)) }}
+            ),
             isClosedWitnesses: .init(
                 categories: { $0.isClosedPublisher },
                 detailPayment: { $0.isClosedPublisher }
@@ -222,12 +228,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             scanQRWitnesses: .init(
                 categories: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }
-            ),
-            witnesses: .init(
-                contentEmitting: { $0.selectPublisher },
-                contentReceiving: { $0.receive },
-                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
             scheduler: scheduler.eraseToAnyScheduler(),
             interactiveScheduler: scheduler.eraseToAnyScheduler()

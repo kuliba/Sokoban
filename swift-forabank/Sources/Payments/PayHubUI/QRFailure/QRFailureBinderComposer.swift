@@ -14,26 +14,26 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     
     private let delay: Delay
     private let microServices: MicroServices
+    private let contentFlowWitnesses: ContentFlowWitnesses
     private let isClosedWitnesses: IsClosedWitnesses
     private let scanQRWitnesses: QRFailureScanQRWitnesses
-    private let witnesses: Witnesses
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         delay: Delay,
         microServices: MicroServices,
+        contentFlowWitnesses: ContentFlowWitnesses,
         isClosedWitnesses: IsClosedWitnesses,
         scanQRWitnesses: QRFailureScanQRWitnesses,
-        witnesses: Witnesses,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.delay = delay
         self.microServices = microServices
+        self.contentFlowWitnesses = contentFlowWitnesses
         self.isClosedWitnesses = isClosedWitnesses
         self.scanQRWitnesses = scanQRWitnesses
-        self.witnesses = witnesses
         self.scheduler = scheduler
         self.interactiveScheduler = interactiveScheduler
     }
@@ -46,7 +46,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     
     public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<Categories, DetailPayment>
     
-    public typealias Witnesses = ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
+    public typealias ContentFlowWitnesses = PayHubUI.ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
     public typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
 }
 
@@ -87,7 +87,7 @@ public extension QRFailureBinderComposer {
         return .init(
             content: microServices.makeQRFailure(qrCode),
             flow: composer.compose(),
-            bind: factory.bind(with: witnesses)
+            bind: factory.bind(with: contentFlowWitnesses)
         )
     }
 }

@@ -31,6 +31,12 @@ final class ContentViewModelComposer {
                 makeDetailPayment: Payments.init(qrCode:),
                 makeQRFailure: QRFailure.init(qrCode:)
             ),
+            contentFlowWitnesses: .init(
+                contentEmitting: { $0.selectPublisher },
+                contentReceiving: { $0.receive },
+                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                flowReceiving: { flow in { flow.event(.select($0)) }}
+            ),
             isClosedWitnesses: .init(
                 categories: { $0.isClosedPublisher },
                 detailPayment: { $0.isClosedPublisher }
@@ -38,12 +44,6 @@ final class ContentViewModelComposer {
             scanQRWitnesses: .init(
                 categories: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }
-            ),
-            witnesses: .init(
-                contentEmitting: { $0.selectPublisher },
-                contentReceiving: { $0.receive },
-                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
             scheduler: mainScheduler,
             interactiveScheduler: interactiveScheduler
