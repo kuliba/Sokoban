@@ -29,6 +29,7 @@ extension Model {
                     operatorCode: operatorCode,
                     additionalList: dataByOperation.additionalList,
                     amount: amount,
+                    productId: nil,
                     isSingle: isSingle,
                     source: operation.source)
                 
@@ -45,18 +46,18 @@ extension Model {
                     operatorCode: puref,
                     additionalList: nil,
                     amount: list.last?.amountDouble ?? 0,
+                    productId: nil,
                     isSingle: isSingle,
                     source: operation.source)
                 
-            case .servicePayment(let operatorCode,
-                                 let additionalList,
-                                 let amount):
+            case let .servicePayment(operatorCode, additionalList, amount, productID):
                 
                 let isSingle = try await isSingleService(operatorCode)
                 return try await paymentsProcessLocalStepServicesStep0(
                     operatorCode: operatorCode,
                     additionalList: additionalList,
                     amount: amount,
+                    productId: productID,
                     isSingle: isSingle,
                     source: operation.source)
                 
@@ -74,7 +75,8 @@ extension Model {
         operatorCode: String,
         additionalList: [PaymentServiceData.AdditionalListData]?,
         amount: Double,
-        isSingle : Bool,
+        productId: ProductData.ID?,
+        isSingle: Bool,
         source: Payments.Operation.Source?
     ) async throws -> Payments.Operation.Step {
         
@@ -85,8 +87,15 @@ extension Model {
         let productParameterId = Payments.Parameter.Identifier.product.rawValue
         let filter = ProductData.Filter.generalFrom
         
-        guard let product = firstProduct(with: filter) else {
-            throw Payments.Error.unableCreateRepresentable(productParameterId)
+        let product: ProductData
+        if let productId = productId, let foundProduct = self.product(productId: productId) {
+            product = foundProduct
+            
+        } else {
+            guard let firstProduct = firstProduct(with: filter) else {
+                throw Payments.Error.unableCreateRepresentable(productParameterId)
+            }
+            product = firstProduct
         }
         
         var parameters: [PaymentsParameterRepresentable] = []
@@ -107,7 +116,8 @@ extension Model {
         visible.append(headerParameter.id)
         
         let productId = productWithSource(source: source, productId: String(product.id))
-        let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+        let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true) // счет списания
+        
         parameters.append(productParameter)
         required.append(productParameter.id)
         let parametersList = operatorValue.parameterList.sorted { ($0.order ?? 0) < ($1.order ?? 0) }
@@ -440,7 +450,7 @@ extension Model {
             }
             operatorCode = puref
             
-        case .servicePayment(let code, _, _):
+        case let .servicePayment(code, _, _, _):
             
             operatorCode = code
             

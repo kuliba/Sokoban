@@ -24,10 +24,10 @@ extension Model {
                 source: operation.source,
                 header: .init(title: "Оплата мобильной связи")
             )
-                
+           
             let phoneParameterId = Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
             let phoneParameter = Payments.ParameterInputPhone(
-                .init(id: phoneParameterId, value: nil),
+                .init(id: phoneParameterId, value: operation.source?.mobilePhoneValue()),
                 title: "Номер телефона",
                 countryCode: .russian
             )
@@ -42,10 +42,10 @@ extension Model {
             }
             
             let productId = productWithSource(source: operation.source, productId: String(product.id))
-            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+            let productParameter = Payments.ParameterProduct(value: operation.source?.mobileProductIdValue() ?? productId, filter: filter, isEditable: true)
             
             let amountParameter = Payments.ParameterAmount(
-                value: nil,
+                value:  operation.source?.mobileAmountValue(),
                 title: "Сумма перевода",
                 currencySymbol: currencySymbol,
                 transferButtonTitle: "Продолжить",
@@ -217,5 +217,35 @@ extension Model {
         }
             
         return templateHeader
+    }
+}
+
+private extension Payments.Operation.Source {
+
+    func mobilePhoneValue() -> String? {
+        switch self {
+        case let .mobile(phone: phone, amount: _, productId: _):
+            return phone
+        default:
+            return nil
+        }
+    }
+    
+    func mobileAmountValue() -> String? {
+        switch self {
+        case let .mobile(phone: _, amount: amount, productId: _):
+            return amount
+        default:
+            return nil
+        }
+    }
+    
+    func mobileProductIdValue() -> String? {
+        switch self {
+        case let .mobile(phone: _, amount: _, productId: productId):
+            return productId?.description
+        default:
+            return nil
+        }
     }
 }
