@@ -14,43 +14,39 @@ final class ContentViewModelComposer {
     
     private let qrFailureBinderComposer: QRFailureBinderComposer
     
-    private let mainScheduler: AnySchedulerOf<DispatchQueue>
-    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
+    private let schedulers: Schedulers
     
     init(
-        mainScheduler: AnySchedulerOf<DispatchQueue> = .main,
-        interactiveScheduler: AnySchedulerOf<DispatchQueue> = .global(qos: .userInteractive)
+        schedulers: Schedulers = .init()
     ) {
-        self.mainScheduler = mainScheduler
-        self.interactiveScheduler = interactiveScheduler
+        self.schedulers = schedulers
         
         self.qrFailureBinderComposer = .init(
             delay: .milliseconds(100),
             microServices: .init(
-                makeCategories: Categories.init(qrCode:),
+                makeCategoryPicker: CategoryPicker.init(qrCode:),
                 makeDetailPayment: Payments.init(qrCode:),
                 makeQRFailure: QRFailure.init(qrCode:)
             ),
-            isClosedWitnesses: .init(
-                categories: { $0.isClosedPublisher },
-                detailPayment: { $0.isClosedPublisher }
-            ),
-            scanQRWitnesses: .init(
-                categories: { $0.scanQRPublisher },
-                detailPayment: { $0.scanQRPublisher }
-            ),
-            witnesses: .init(
+            contentFlowWitnesses: .init(
                 contentEmitting: { $0.selectPublisher },
                 contentReceiving: { $0.receive },
                 flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
                 flowReceiving: { flow in { flow.event(.select($0)) }}
             ),
-            scheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            isClosedWitnesses: .init(
+                categoryPicker: { $0.isClosedPublisher },
+                detailPayment: { $0.isClosedPublisher }
+            ),
+            scanQRWitnesses: .init(
+                categoryPicker: { $0.scanQRPublisher },
+                detailPayment: { $0.scanQRPublisher }
+            ),
+            schedulers: schedulers
         )
     }
     
-    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, Categories, Payments>
+    typealias QRFailureBinderComposer = PayHubUI.QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, Payments>
 }
 
 extension ContentViewModelComposer {
@@ -71,8 +67,8 @@ extension ContentViewModelComposer {
                     completion(.qr(.init(model: qr, cancellable: close)))
                 }
             },
-            scheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            scheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
         
         return composer.compose()
@@ -85,7 +81,7 @@ private extension ContentViewModelComposer {
     
     func makeQRBinderComposer() -> QRBinderComposer {
         
-        let factory = ContentFlowBindingFactory(scheduler: mainScheduler)
+        let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
         let witnesses = makeWitnesses()
         let composer = makeNavigationComposer()
         
@@ -95,8 +91,8 @@ private extension ContentViewModelComposer {
                 getNavigation: composer.getNavigation,
                 makeQR: QRModel.init
             ),
-            mainScheduler: mainScheduler,
-            interactiveScheduler: interactiveScheduler
+            mainScheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
     }
     

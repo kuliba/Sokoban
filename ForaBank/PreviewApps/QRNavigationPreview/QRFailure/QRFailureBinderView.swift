@@ -26,8 +26,8 @@ struct QRFailureBinderView: View {
                         content: {
                             
                             switch $0 {
-                            case let .categories(categories):
-                                CategoriesView(model: categories)
+                            case let .categoryPicker(categoryPicker):
+                                CategoryPickerView(model: categoryPicker)
                                 
                             case let .detailPayment(detailPayment):
                                 PaymentsView(model: detailPayment)
@@ -47,8 +47,8 @@ private extension QRFailureDomain.FlowDomain.State {
         case .none, .scanQR:
             return nil
             
-        case let .categories(node):
-            return .categories(node.model)
+        case let .categoryPicker(node):
+            return .categoryPicker(node.model)
             
         case let .detailPayment(node):
             return .detailPayment(node.model)
@@ -60,7 +60,7 @@ private extension QRFailureDomain.Flow {
     
     enum Destination {
         
-        case categories(Categories)
+        case categoryPicker(CategoryPicker)
         case detailPayment(Payments)
     }
 }
@@ -70,7 +70,7 @@ extension QRFailureDomain.Flow.Destination: Identifiable {
     public var id: ID {
         
         switch self {
-        case let .categories(categories):
+        case let .categoryPicker(categories):
             return .categories(.init(categories))
             
         case let .detailPayment(payments):
