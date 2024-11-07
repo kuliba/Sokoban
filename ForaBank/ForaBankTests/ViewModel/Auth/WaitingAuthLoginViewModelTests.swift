@@ -93,16 +93,33 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
         
-        let message = "message"
-        let (sut, clientInformMessage, _, _, _, _, _, _) = makeSUT()
+        let title = "TITLE"
+        let text = "TEXT"
+        let type = ClientInformActionType.required
+        let link = "https://www.forabank.ru"
+        let version = "1.5"
+        let authBlocking = false
+        
+        let (sut, clientInformAlertsResponse, _, _, _, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.alertPublisher)
         
-        clientInformMessage.send(message)
+        clientInformAlertsResponse.send(
+            ClientInformAlerts.init(
+                required: .init(
+                    title: title,
+                    text: text,
+                    type: type,
+                    link: link,
+                    version: version,
+                    authBlocking: authBlocking
+                )
+            )
+        )
         XCTAssertNoDiff(spy.values, [nil])
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, .alert(message: message)])
+        XCTAssertNoDiff(spy.values, [nil, .alert(title: title, message: text)])
     }
     
     // MARK: - Events: Auth.CheckClient.Response
@@ -519,7 +536,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
-        clientInformMessage: ClientInformMessage,
+        clientInformAlertsResponse: ClientInformAlertsResponse,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -527,13 +544,13 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformMessage = ClientInformMessage()
+        let clientInformAlerts = ClientInformAlertsResponse()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
         
         let eventPublishers = AuthLoginViewModel.EventPublishers(
-            clientInformMessage: clientInformMessage.eraseToAnyPublisher(),
+            clientInformAlerts: clientInformAlerts.eraseToAnyPublisher(),
             checkClientResponse: checkClientResponse.eraseToAnyPublisher(),
             catalogProducts: catalogProducts.eraseToAnyPublisher(),
             sessionStateFcmToken: sessionStateFcmToken.eraseToAnyPublisher()
@@ -564,7 +581,7 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         trackForMemoryLeaks(factory, file: file, line: line)
         trackForMemoryLeaks(rootActionsSpy, file: file, line: line)
         
-        return (sut, clientInformMessage, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
+        return (sut, clientInformAlerts, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
     }
     
     private func tapTransferButton(

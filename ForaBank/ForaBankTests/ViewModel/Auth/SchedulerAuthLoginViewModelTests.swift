@@ -93,15 +93,32 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     func test_clientInform_shouldShowClientInformAlertWithMessage() {
         
-        let message = "message"
-        let (sut, scheduler, clientInformMessage, _, _, _, _, _, _) = makeSUT()
+        let title = "TITLE"
+        let text = "TEXT"
+        let type = ClientInformActionType.required
+        let link = "https://www.forabank.ru"
+        let version = "1.5"
+        let authBlocking = false
+        
+        let (sut, scheduler, clientInformAlertsResponse, _, _, _, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.alertPublisher)
         
-        clientInformMessage.send(message)
+        clientInformAlertsResponse.send(
+            ClientInformAlerts.init(
+                required: .init(
+                    title: title,
+                    text: text,
+                    type: type,
+                    link: link,
+                    version: version,
+                    authBlocking: authBlocking
+                )
+            )
+        )
         XCTAssertNoDiff(spy.values, [nil])
         scheduler.advance()
         
-        XCTAssertNoDiff(spy.values, [nil, .alert(message: message)])
+        XCTAssertNoDiff(spy.values, [nil, .alert(title: title, message: text)])
     }
     
     // MARK: - Events: Auth.CheckClient.Response
@@ -521,7 +538,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
     ) -> (
         sut: AuthLoginViewModel,
         scheduler: TestSchedulerOfDispatchQueue,
-        clientInformMessage: ClientInformMessage,
+        ClientInformAlertsResponse: ClientInformAlertsResponse,
         checkClientResponse: CheckClientResponse,
         catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
@@ -529,13 +546,13 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         factory: AuthLoginViewModelFactorySpy,
         rootActionsSpy: RootActionsSpy
     ) {
-        let clientInformMessage = ClientInformMessage()
+        let clientInformAlerts = ClientInformAlertsResponse()
         let checkClientResponse = CheckClientResponse()
         let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
         
         let eventPublishers = AuthLoginViewModel.EventPublishers(
-            clientInformMessage: clientInformMessage.eraseToAnyPublisher(),
+            clientInformAlerts: clientInformAlerts.eraseToAnyPublisher(),
             checkClientResponse: checkClientResponse.eraseToAnyPublisher(),
             catalogProducts: catalogProducts.eraseToAnyPublisher(),
             sessionStateFcmToken: sessionStateFcmToken.eraseToAnyPublisher()
@@ -571,7 +588,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         trackForMemoryLeaks(factory, file: file, line: line)
         trackForMemoryLeaks(rootActionsSpy, file: file, line: line)
         
-        return (sut, scheduler, clientInformMessage, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
+        return (sut, scheduler, clientInformAlerts, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
     }
     
     private func tapTransferButton(

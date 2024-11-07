@@ -13,7 +13,7 @@ import XCTest
 
 class AuthLoginViewModelTests: XCTestCase {
     
-    typealias ClientInformMessage = PassthroughSubject<String, Never>
+    typealias ClientInformAlertsResponse = PassthroughSubject<ClientInformAlerts, Never>
     typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
     typealias CatalogProducts = PassthroughSubject<([CatalogProductData]), Never>
     typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
@@ -555,13 +555,13 @@ extension Alert.ViewModel {
         }
         
         static func alert(
-            title: String = "Ошибка",
+            title: String? = nil,
             message: String,
             primary: ButtonViewModel = .default,
             secondary: ButtonViewModel? = nil
         ) -> Self {
             
-            .init(title: title, message: message, primary: primary, secondary: secondary)
+            .init(title: title ?? "Ошибка", message: message, primary: primary, secondary: secondary)
         }
     }
 }
