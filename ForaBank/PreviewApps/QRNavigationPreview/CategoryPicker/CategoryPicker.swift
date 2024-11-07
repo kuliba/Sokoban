@@ -1,5 +1,5 @@
 //
-//  Categories.swift
+//  CategoryPicker.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 07.11.2024.
@@ -7,7 +7,7 @@
 
 import Combine
 
-final class Categories {
+final class CategoryPicker {
     
     let qrCode: QRCode
     
