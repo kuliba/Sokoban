@@ -38,12 +38,18 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
+        let makeQRFailure = MakeQRFailure()
         let makePayments = MakePayments()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
+                makeQRFailure: makeQRFailure.call,
                 makePayments: makePayments.call
             ), 
-            witnesses: .init(isClosed: { $0.isClosed })
+            witnesses: .init(
+                isClosed: { $0.isClosed },
+                scanQR: { $0.scanQRPublisher },
+                qrFailureScanQR: { $0.scanQRPublisher }
+            )
         )
         let sut = QRBinderComposer(
             microServices: .init(

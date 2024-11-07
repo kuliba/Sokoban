@@ -10,7 +10,6 @@ import XCTest
 
 final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
     
-    
     func test_paymentsProcessSourceReducerSFP_parameterNotBankNotPhone_shouldReturnNil() {
         
         let sut = makeSUT()
@@ -18,6 +17,7 @@ final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
         let result = sut.paymentsProcessSourceReducerSFP(
             phone: "9630000000",
             bankId: "1111",
+            amount: nil,
             parameterId: Payments.Parameter.Identifier.sfpMessage.rawValue
         )
         
@@ -30,7 +30,8 @@ final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
         
         let result = sut.paymentsProcessSourceReducerSFP(
             phone: "9630000000",
-            bankId: "1111",
+            bankId: "1111", 
+            amount: nil,
             parameterId: .phoneParameterId
         )
         
@@ -43,7 +44,8 @@ final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
         
         let result = sut.paymentsProcessSourceReducerSFP(
             phone: "963000000",
-            bankId: "1111",
+            bankId: "1111", 
+            amount: nil,
             parameterId: .phoneParameterId
         )
         
@@ -57,6 +59,7 @@ final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
         let result = sut.paymentsProcessSourceReducerSFP(
             phone: "96300000000",
             bankId: "1111",
+            amount: nil,
             parameterId: .phoneParameterId
         )
         
@@ -70,6 +73,7 @@ final class Model_PaymentsProcessSourceReducerSFPTests: XCTestCase {
         let result = sut.paymentsProcessSourceReducerSFP(
             phone: "9630000000",
             bankId: "1111",
+            amount: nil,
             parameterId: .bankId
         )
         

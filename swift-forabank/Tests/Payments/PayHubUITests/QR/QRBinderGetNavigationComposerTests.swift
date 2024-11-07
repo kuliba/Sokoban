@@ -45,16 +45,100 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsClose() {
         
-        let payments = makePayments()
-        
         expect(
-            makeSUT(payments: payments).sut,
+            makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
             for: { $0.payments?.close() }
         )
     }
     
+    func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bSubscribeURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.scanQR() }
+        )
+    }
+    
+    // MARK: - c2b
+    
+    func test_getNavigation_c2b_shouldCallMakePaymentsWithC2BURL() {
+        
+        let url = anyURL()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .c2bURL(url))
+        
+        XCTAssertNoDiff(spies.makePayments.payloads, [.c2b(url)])
+    }
+    
+    func test_getNavigation_c2b_shouldDeliverPayments() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .c2bURL(anyURL()),
+            toDeliver: .payments(.init(payments))
+        )
+    }
+    
+    func test_getNavigation_c2b_shouldNotifyWithDismissOnPaymentsClose() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.close() }
+        )
+    }
+    
+    func test_getNavigation_c2b_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.scanQR() }
+        )
+    }
+
+    // MARK: - failure
+    
+    func test_getNavigation_failure_shouldCallMakeQRFailureWithQRCode() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .failure(qrCode))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+    }
+    
+    func test_getNavigation_failure_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .failure(makeQRCode()),
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
+    func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .failure(makeQRCode()),
+            notifyWith: [.dismiss],
+            for: { $0.qrFailure?.scanQR() }
+        )
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -62,10 +146,12 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     private struct Spies {
         
         let makePayments: MakePayments
+        let makeQRFailure: MakeQRFailure
     }
     
     private func makeSUT(
-        payments: Payments = .init(),
+        payments: Payments? = nil,
+        qrFailure: QRFailure? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -73,13 +159,19 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         spies: Spies
     ) {
         let spies = Spies(
-            makePayments: .init(stubs: [payments])
+            makePayments: .init(stubs: [payments ?? makePayments()]),
+            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()])
         )
         let sut = SUT(
             microServices: .init(
+                makeQRFailure: spies.makeQRFailure.call,
                 makePayments: spies.makePayments.call
             ),
-            witnesses: .init(isClosed: { $0.isClosed })
+            witnesses: .init(
+                isClosed: { $0.isClosed },
+                scanQR: { $0.scanQRPublisher },
+                qrFailureScanQR: { $0.scanQRPublisher }
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -153,6 +245,13 @@ extension QRNavigation {
     var payments: Payments? {
         
         guard case let .payments(node) = self else { return nil }
+        
+        return node.model
+    }
+    
+    var qrFailure: QRFailure? {
+        
+        guard case let .qrFailure(node) = self else { return nil }
         
         return node.model
     }
