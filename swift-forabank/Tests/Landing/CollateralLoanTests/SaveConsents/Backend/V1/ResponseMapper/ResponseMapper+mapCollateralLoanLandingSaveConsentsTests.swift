@@ -166,21 +166,24 @@ private extension String {
     
     static let validJson = """
 {
-   "statusCode": 200,
-   "errorMessage": null,
-   "data": {
-        "applicationId": 123456,
-        "name": "name",
-        "amount": 8552,
-        "termDays": 421,
-        "collateralType": "collateralType",
-        "interestRate": 11443,
-        "collateralInfo": "collateralInfo",
-        "documents": ["document"],
-        "cityName": "cityName",
-        "status": "status",
-        "responseMessage": "responseMessage"
-   }
+"statusCode": 200,
+"errorMessage": null,
+"data": {
+    "applicationId": 9,
+    "name": "Кредит под залог транспорта",
+    "amount": 99998,
+    "termMonth": 365,
+    "collateralType": "CAR",
+    "interestRate": 18,
+    "collateralInfo": "Лада",
+    "documents": [
+"/persons/381/collateral_loan_applications/9/consent_processing_personal_data.pdf",
+"/persons/381/collateral_loan_applications/9/consent_request_credit_history.pdf"
+    ],
+    "cityName": "Москва",
+    "status": "submitted_for_review",
+    "responseMessage": "Специалист банка свяжется с Вами в ближайшее время."
+    }
 }
 """
 }
@@ -188,16 +191,19 @@ private extension String {
 private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
     static let stub: Self = .init(
-        applicationId: 123456,
-        name: "name",
-        amount: 8552,
-        termDays: 421,
-        collateralType: "collateralType",
-        interestRate: 11443,
-        collateralInfo: "collateralInfo",
-        documents: ["document"],
-        cityName: "cityName",
-        status: "status",
-        responseMessage: "responseMessage"
+        applicationId: 9,
+        name: "Кредит под залог транспорта",
+        amount: 99998,
+        termMonth: 365,
+        collateralType: "CAR",
+        interestRate: 18,
+        collateralInfo: "Лада",
+        documents: [
+            "/persons/381/collateral_loan_applications/9/consent_processing_personal_data.pdf",
+            "/persons/381/collateral_loan_applications/9/consent_request_credit_history.pdf"
+        ],
+        cityName: "Москва",
+        status: "submitted_for_review",
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
     )
 }

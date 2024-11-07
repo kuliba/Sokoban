@@ -14,7 +14,7 @@ extension ResponseMapper {
         public let applicationId: UInt
         public let name: String
         public let amount: UInt
-        public let termDays: UInt
+        public let termMonth: UInt
         public let collateralType: String
         public let interestRate: UInt
         public let collateralInfo: String?
@@ -27,7 +27,7 @@ extension ResponseMapper {
             applicationId: UInt,
             name: String,
             amount: UInt,
-            termDays: UInt,
+            termMonth: UInt,
             collateralType: String,
             interestRate: UInt,
             collateralInfo: String?,
@@ -39,7 +39,7 @@ extension ResponseMapper {
             self.applicationId = applicationId
             self.name = name
             self.amount = amount
-            self.termDays = termDays
+            self.termMonth = termMonth
             self.collateralType = collateralType
             self.interestRate = interestRate
             self.collateralInfo = collateralInfo

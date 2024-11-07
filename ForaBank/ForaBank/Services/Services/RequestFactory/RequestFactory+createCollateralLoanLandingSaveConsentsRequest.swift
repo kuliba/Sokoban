@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createCollateralLoanLandingSaveConsentsRequest.swift
+//  RequestFactory+createSaveConsentsRequest.swift
 //  ForaBank
 //
 //  Created by Valentin Ozerov on 28.10.2024.
@@ -11,12 +11,12 @@ import CollateralLoanLandingSaveConsentsBackend
 
 extension RequestFactory {
     
-    static func createCollateralLoanLandingSaveConsentsRequest(
+    static func createSaveConsentsRequest(
         with payload: RemoteServices.RequestFactory.CreateCollateralLoanLandingSaveConsentsPayload
     ) throws -> URLRequest {
         
         let endpoint = Services.Endpoint.saveConsents
-        let url = try endpoint.url(
+        let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL
         )
         

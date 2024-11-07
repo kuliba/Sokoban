@@ -40,7 +40,7 @@ private extension ResponseMapper._Data {
             let applicationId = self.applicationId,
             let name = self.name,
             let amount = self.amount,
-            let termDays = self.termDays,
+            let termMonth = self.termMonth,
             let collateralType = self.collateralType,
             let interestRate = self.interestRate,
             let documents = self.documents,
@@ -55,7 +55,7 @@ private extension ResponseMapper._Data {
             applicationId: applicationId,
             name: name,
             amount: amount,
-            termDays: termDays,
+            termMonth: termMonth,
             collateralType: collateralType,
             interestRate: interestRate,
             collateralInfo: collateralInfo,
@@ -74,7 +74,7 @@ private extension ResponseMapper {
         let applicationId: UInt?
         let name: String?
         let amount: UInt?
-        let termDays: UInt?
+        let termMonth: UInt?
         let collateralType: String?
         let interestRate: UInt?
         let collateralInfo: String?

@@ -35,9 +35,14 @@ final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: 
     func test_createRequest_shouldSetNotNilHTTPBody() throws {
         
         var request = RequestFactory.createEmptyRequest(.post, with: anyURL())
-        request.httpBody = try Payload.stub.httpBody
+        
+        let payload = Body.stub
+        request.httpBody = try payload.httpBody
 
-        XCTAssertNotNil(request.httpBody)
+        let decodedBody = try request.decodedBody(as: Body.self)
+        
+        XCTAssertNoDiff(decodedBody.applicationId, payload.applicationId)
+        XCTAssertNoDiff(decodedBody.verificationCode, payload.verificationCode)
     }
 }
 
@@ -48,18 +53,31 @@ extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
 
 // MARK: - Helpers
 
-private extension RequestFactory.CreateCollateralLoanLandingSaveConsentsPayload {
+private struct Body: Decodable {
     
-    static let stub = Self(applicationId: .random(in: (0...Int.max)), verificationCode: anyMessage())
+    let applicationId: Int
+    let verificationCode: String
+    
+    static let stub = Self(
+        applicationId: .random(in: (0...Int.max)),
+        verificationCode: anyMessage()
+    )
+}
+
+extension Body {
     
     var httpBody: Data {
-        
+
         get throws {
             
-            try JSONSerialization.data(withJSONObject: [
+            let parameters: [String: Any] = [
                 "applicationId": applicationId,
                 "verificationCode": verificationCode
-            ] as [String: Any])
+            ]
+                        
+            return try JSONSerialization.data(
+                withJSONObject: parameters as [String: Any]
+            )
         }
     }
 }

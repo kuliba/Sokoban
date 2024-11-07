@@ -7,6 +7,7 @@
 
 import AnywayPaymentBackend
 import CodableLanding
+import CollateralLoanLandingShowCaseBackend
 import Combine
 import Fetcher
 import ForaTools
@@ -350,6 +351,11 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makePaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder
+        )
+        
+        let collateralLoanLandingShowCase = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetCollateralLoanLandingShowCaseRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCollateralLoanShowCaseResponse
         )
         
         // threading
