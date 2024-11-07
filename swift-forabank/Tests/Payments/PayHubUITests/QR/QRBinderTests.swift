@@ -12,14 +12,17 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Navigation = QRNavigation<Payments>
+    typealias Navigation = QRNavigation<Payments, QRFailure>
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
+
+    typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
     
-    typealias MakePaymentsPayload = QRBinderGetNavigationComposerMicroServices<Payments>.MakePaymentsPayload
+    typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     struct Operator: Equatable {
@@ -85,6 +88,7 @@ class QRBinderTests: XCTestCase {
     enum EquatableNavigation: Equatable {
         
         case payments(ObjectIdentifier)
+        case qrFailure(ObjectIdentifier)
     }
     
     func equatable(
@@ -94,6 +98,9 @@ class QRBinderTests: XCTestCase {
         switch navigation {
         case let .payments(node):
             return .payments(.init(node.model))
+            
+        case let .qrFailure(node):
+            return .qrFailure(.init(node.model))
         }
     }
     
@@ -137,9 +144,41 @@ class QRBinderTests: XCTestCase {
             
             isCloseSubject.value = true
         }
+        
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
     }
     
     func makePayments() -> Payments {
+        
+        return .init()
+    }
+    
+    final class QRFailure {
+        
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
+    }
+    
+    func makeQRFailure() -> QRFailure {
         
         return .init()
     }

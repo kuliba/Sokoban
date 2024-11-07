@@ -687,7 +687,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         bankId: BankData.ID = anyMessage()
     ) -> Payments.Operation.Source {
         
-        return .sfp(phone: phone, bankId: bankId)
+        return .sfp(phone: phone, bankId: bankId, amount: nil, productId: nil)
     }
     
     private func makeQRModel(

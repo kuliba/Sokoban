@@ -1080,7 +1080,9 @@ private extension RootViewFactory {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeHistoryButtonView: { _ in .init { event in }},
+            makeHistoryButtonView: { _,_,_,_   in
+                HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
+            },
             makeIconView: IconDomain.preview,
             makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
@@ -1100,7 +1102,7 @@ private extension RootViewFactory {
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                        makeHistoryButton: { .init(event: $0 ) },
+                        makeHistoryButton: { .init(event: $0, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: $3) },
                         makeRepeatButtonView: { _ in .init(action: {})}
                     ),
                     getUImage: { _ in nil }

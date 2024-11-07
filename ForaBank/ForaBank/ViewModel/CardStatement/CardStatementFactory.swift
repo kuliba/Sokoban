@@ -19,18 +19,25 @@ extension Services {
         period: Period,
         name: CardStatementForPeriodPayload.Name? = nil,
         statementFormat: CardStatementForPeriodPayload.StatementFormat? = nil,
-        cardNumber: CardStatementForPeriodPayload.CardNumber? = nil
+        cardNumber: CardStatementForPeriodPayload.CardNumber? = nil,
+        operationType: String? = nil,
+        operationGroup: [String]? = nil,
+        includeAdditionalCards: Bool? = nil
     ) async throws-> [ProductStatementData] {
         
-        let payload = CardStatementForPeriodPayload.init(
+        let payload = CardStatementForPeriodPayload(
             id: .init(productId),
             name: name,
             period: .init(start: period.start, end: period.end),
             statementFormat: statementFormat,
-            cardNumber: cardNumber)
+            cardNumber: cardNumber,
+            operationType: operationType,
+            operationGroup: operationGroup,
+            includeAdditionalCards: includeAdditionalCards
+        )
         let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
         
-        return data.map { .init(data: $0) }
+        return data.operationList.map({ .init(data: $0) })
     }
     
     private func getCardStatementForPeriod(

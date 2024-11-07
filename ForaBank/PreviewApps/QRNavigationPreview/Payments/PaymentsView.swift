@@ -13,13 +13,53 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
+        model.source.text
+            .foregroundColor(.secondary)
+            .padding(.top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .navigationTitle("Payments")
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Button(action: model.close) {
+                        
+                        Image(systemName: "chevron.left")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    
+                    Button(action: model.scanQR) {
+                        
+                        Image(systemName: "qrcode.viewfinder")
+                    }
+                }
+            }
+    }
+}
+
+private extension Payments.Source {
+    
+    var text: Text {
+        
+        switch self {
+        case let .qrCode(qrCode):
+            Text("Payments View for QR Code **\(qrCode.value)**")
             
-            Text("TBD: Payments View for \(model.url.relativeString)")
-                .foregroundColor(.secondary)
-            
-            Button("Close", action: model.close)
+        case let .url(url):
+            Text("Payments View for url: **\(url.relativeString)**")
         }
-        .navigationTitle("Payments")
+    }
+}
+
+#Preview {
+    
+    NavigationView {
+        
+        PaymentsView(model: .init(
+            qrCode: .init(value: .init(UUID().uuidString.prefix(6)))
+        ))
     }
 }
