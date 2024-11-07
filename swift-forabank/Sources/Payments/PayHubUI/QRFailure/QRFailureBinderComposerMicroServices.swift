@@ -7,24 +7,24 @@
 
 public struct QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment> {
     
-    public let makeQRFailure: MakeQRFailure
     public let makeCategories: MakeCategories
     public let makeDetailPayment: MakeDetailPayment
+    public let makeQRFailure: MakeQRFailure
     
     public init(
-        makeQRFailure: @escaping MakeQRFailure,
         makeCategories: @escaping MakeCategories,
-        makeDetailPayment: @escaping MakeDetailPayment
-) {
-        self.makeQRFailure = makeQRFailure
+        makeDetailPayment: @escaping MakeDetailPayment,
+        makeQRFailure: @escaping MakeQRFailure
+    ) {
         self.makeCategories = makeCategories
         self.makeDetailPayment = makeDetailPayment
+        self.makeQRFailure = makeQRFailure
     }
 }
 
 public extension QRFailureBinderComposerMicroServices {
     
-    typealias MakeQRFailure = (QRCode) -> QRFailure
     typealias MakeCategories = (QRCode) -> Categories
     typealias MakeDetailPayment = (QRCode) -> DetailPayment
+    typealias MakeQRFailure = (QRCode) -> QRFailure
 }

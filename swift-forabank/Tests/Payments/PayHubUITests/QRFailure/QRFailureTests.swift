@@ -14,7 +14,7 @@ class QRFailureTests: XCTestCase {
     typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
     typealias Categories = ScanQR
     typealias DetailPayment = ScanQR
-
+    
     typealias Select = Domain.Select
     
     struct QRCode: Equatable {
@@ -100,6 +100,4 @@ class QRFailureTests: XCTestCase {
         case detailPayment(ObjectIdentifier)
         case scanQR
     }
-    
-    struct CategoriesFailure: Error, Equatable {}
 }

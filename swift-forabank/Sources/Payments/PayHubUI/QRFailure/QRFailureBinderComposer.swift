@@ -56,9 +56,6 @@ public extension QRFailureBinderComposer {
                 guard let self else { return }
                 
                 switch select {
-                case .scanQR:
-                    completion(.scanQR)
-                    
                 case let .payWithDetails(qrCode):
                     let payment = microServices.makeDetailPayment(qrCode)
                     let cancellable = scanQRWitnesses.detailPayment(payment)
@@ -72,6 +69,9 @@ public extension QRFailureBinderComposer {
                     .sink { notify(.select(.scanQR)) }
                     
                     completion(.categories(.init(model: categories, cancellable: cancellable)))
+                    
+                case .scanQR:
+                    completion(.scanQR)
                 }
             },
             scheduler: scheduler,

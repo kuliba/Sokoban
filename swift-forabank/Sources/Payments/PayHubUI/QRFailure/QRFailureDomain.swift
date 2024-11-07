@@ -30,9 +30,9 @@ public extension QRFailureDomain {
     
     enum Select {
         
-        case scanQR
         case payWithDetails(QRCode)
         case search(QRCode)
+        case scanQR
     }
     
     enum Navigation {

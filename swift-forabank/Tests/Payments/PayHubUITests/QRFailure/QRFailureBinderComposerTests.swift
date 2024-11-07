@@ -181,10 +181,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let sut = SUT(
             delay: delay,
             microServices: .init(
-                makeQRFailure: spies.makeQRFailure.call,
                 makeCategories: spies.makeCategories.call,
-                makeDetailPayment: spies.makeDetailPayment.call
-            ), 
+                makeDetailPayment: spies.makeDetailPayment.call,
+                makeQRFailure: spies.makeQRFailure.call
+            ),
             scanQRWitnesses: .init(
                 categories: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }
