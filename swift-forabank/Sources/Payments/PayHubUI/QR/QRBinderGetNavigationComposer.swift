@@ -99,25 +99,27 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.mixedPickerIsClosed(mixedPicker)
+        let close = witnesses.mixedPicker.isClosed(mixedPicker)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.mixedPickerScanQR(mixedPicker)
+        let scanQR = witnesses.mixedPicker.scanQR(mixedPicker)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]
     }
-    
     
     func bind(
         _ qrFailure: QRFailure,
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let scanQR = witnesses.qrFailureScanQR(qrFailure)
+        let close = witnesses.qrFailure.isClosed(qrFailure)
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = witnesses.qrFailure.scanQR(qrFailure)
             .sink { notify(.dismiss) }
         
-        return [scanQR]
+        return [close, scanQR]
     }
     
     func bind(
@@ -125,10 +127,10 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.isClosed(payments)
+        let close = witnesses.payments.isClosed(payments)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.scanQR(payments)
+        let scanQR = witnesses.payments.scanQR(payments)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]

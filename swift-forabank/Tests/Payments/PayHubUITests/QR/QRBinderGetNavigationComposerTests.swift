@@ -129,6 +129,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_c2b_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .failure(makeQRCode()),
+            notifyWith: [.dismiss],
+            for: { $0.qrFailure?.close() }
+        )
+    }
+    
     func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureScanQR() {
         
         expect(
@@ -215,11 +225,18 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 makeMixedPicker: spies.makeMixedPicker.call
             ),
             witnesses: .init(
-                isClosed: { $0.isClosed },
-                mixedPickerIsClosed: { $0.isClosed },
-                mixedPickerScanQR: { $0.scanQRPublisher },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.scanQRPublisher }
+                mixedPicker: .init(
+                    isClosed: { $0.isClosed },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                payments: .init(
+                    isClosed: { $0.isClosed },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                qrFailure: .init(
+                    isClosed: { $0.isClosed },
+                    scanQR: { $0.scanQRPublisher }
+                )
             )
         )
         

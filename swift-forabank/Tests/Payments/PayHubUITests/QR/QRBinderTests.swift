@@ -155,59 +155,28 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    final class Payments {
-        
-        private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
-        
-        var isClosed: AnyPublisher<Bool, Never> {
-            
-            isCloseSubject.eraseToAnyPublisher()
-        }
-        
-        func close() {
-            
-            isCloseSubject.value = true
-        }
-        
-        private let scanQRSubject = PassthroughSubject<Void, Never>()
-        
-        var scanQRPublisher: AnyPublisher<Void, Never> {
-            
-            scanQRSubject.eraseToAnyPublisher()
-        }
-        
-        func scanQR() {
-            
-            scanQRSubject.send(())
-        }
-    }
+    typealias Payments = ClosingScanQR
     
     func makePayments() -> Payments {
         
         return .init()
     }
     
-    final class QRFailure {
-        
-        private let scanQRSubject = PassthroughSubject<Void, Never>()
-        
-        var scanQRPublisher: AnyPublisher<Void, Never> {
-            
-            scanQRSubject.eraseToAnyPublisher()
-        }
-        
-        func scanQR() {
-            
-            scanQRSubject.send(())
-        }
-    }
+    typealias QRFailure = ClosingScanQR
     
     func makeQRFailure() -> QRFailure {
         
         return .init()
     }
     
-    final class MixedPicker {
+    typealias MixedPicker = ClosingScanQR
+    
+    func makeMixedPicker() -> MixedPicker {
+        
+        return .init()
+    }
+    
+    final class ClosingScanQR {
         
         private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
         
@@ -232,10 +201,5 @@ class QRBinderTests: XCTestCase {
             
             scanQRSubject.send(())
         }
-    }
-    
-    func makeMixedPicker() -> MixedPicker {
-        
-        return .init()
     }
 }

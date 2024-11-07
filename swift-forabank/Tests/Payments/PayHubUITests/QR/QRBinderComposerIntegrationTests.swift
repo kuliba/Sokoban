@@ -48,11 +48,18 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                 makeMixedPicker: makeMixedPicker.call
             ),
             witnesses: .init(
-                isClosed: { $0.isClosed },
-                mixedPickerIsClosed: { $0.isClosed },
-                mixedPickerScanQR: { $0.scanQRPublisher },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.scanQRPublisher }
+                mixedPicker: .init(
+                    isClosed: { $0.isClosed },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                payments: .init(
+                    isClosed: { $0.isClosed },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                qrFailure: .init(
+                    isClosed: { _ in fatalError() },
+                    scanQR: { $0.scanQRPublisher }
+                )
             )
         )
         let sut = QRBinderComposer(

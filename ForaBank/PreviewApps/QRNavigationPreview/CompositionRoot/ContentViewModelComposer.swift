@@ -117,11 +117,18 @@ private extension ContentViewModelComposer {
                 makeMixedPicker: { _ in .init() }
             ),
             witnesses: .init(
-                isClosed: { $0.isClosedPublisher },
-                mixedPickerIsClosed: { $0.isClosedPublisher },
-                mixedPickerScanQR: { $0.scanQRPublisher },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
+                mixedPicker: .init(
+                    isClosed: { $0.isClosedPublisher },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                payments: .init(
+                    isClosed: { $0.isClosedPublisher },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                qrFailure: .init(
+                    isClosed: { _ in Empty().eraseToAnyPublisher() },
+                    scanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
+                )
             )
         )
     }
