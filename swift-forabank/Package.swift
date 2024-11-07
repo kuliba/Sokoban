@@ -1225,7 +1225,7 @@ private extension Target {
             .remoteServices,
             .sharedConfigs
         ],
-        path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingSaveConsentsName)/Backend"
+        path: "Sources/Landing/\(String.collateralLoan)/\(String.SaveConsents)/Backend"
     )
     
     static let collateralLoanLandingSaveConsentsBackendTests = testTarget(
@@ -1234,7 +1234,7 @@ private extension Target {
             .collateralLoanLandingSaveConsentsBackend,
             .customDump
         ],
-        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingSaveConsentsName)/Backend"
+        path: "Tests/Landing/\(String.collateralLoanTests)/\(String.SaveConsents)/Backend"
     )
 
     static let collateralLoanLandingShowCaseBackend = target(
@@ -3443,8 +3443,8 @@ private extension String {
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
 
+    static let SaveConsents = "SaveConsents"
     static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
-    static let collateralLoanLandingSaveConsentsName = "SaveConsents"
     static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
 
     static let collateralLoanLandingShowCaseBackend = "CollateralLoanLandingShowCaseBackend"
