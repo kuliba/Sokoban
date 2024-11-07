@@ -49,6 +49,8 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             ),
             witnesses: .init(
                 isClosed: { $0.isClosed },
+                mixedPickerIsClosed: { $0.isClosed },
+                mixedPickerScanQR: { $0.scanQRPublisher },
                 scanQR: { $0.scanQRPublisher },
                 qrFailureScanQR: { $0.scanQRPublisher }
             )

@@ -1491,6 +1491,7 @@
 		2ABB63162C648BBD00541DE7 /* TextInputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63152C648BBD00541DE7 /* TextInputWrapperView.swift */; };
 		2ABB63182C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */; };
 		2ABBD6BF2CDD1BEC0078E977 /* MixedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6BD2CDD1BD60078E977 /* MixedPicker.swift */; };
+		2ABBD6C52CDD35650078E977 /* MixedPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
 		2ABBFD1D2BE4BF7500BA8B58 /* UtilitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */; };
 		2ABBFD1F2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */; };
@@ -5080,6 +5081,7 @@
 		2ABB63152C648BBD00541DE7 /* TextInputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputWrapperView.swift; sourceTree = "<group>"; };
 		2ABB63172C64914300541DE7 /* AnywayElementModelMapper+makeInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeInputViewModel.swift"; sourceTree = "<group>"; };
 		2ABBD6BD2CDD1BD60078E977 /* MixedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedPicker.swift; sourceTree = "<group>"; };
+		2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedPickerView.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2ABBFD1C2BE4BF7500BA8B58 /* UtilitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesViewModel.swift; sourceTree = "<group>"; };
 		2ABBFD1E2BE4C03900BA8B58 /* PaymentsTransfersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFactory.swift; sourceTree = "<group>"; };
@@ -12268,6 +12270,7 @@
 			isa = PBXGroup;
 			children = (
 				2ABBD6BD2CDD1BD60078E977 /* MixedPicker.swift */,
+				2ABBD6C22CDD35420078E977 /* MixedPickerView.swift */,
 			);
 			path = MixedPicker;
 			sourceTree = "<group>";
@@ -20495,6 +20498,7 @@
 				2ABBD6BF2CDD1BEC0078E977 /* MixedPicker.swift in Sources */,
 				2A30B0982CCE2BA4006697E1 /* QRNavigationPreviewApp.swift in Sources */,
 				2AA3C37F2CDB7D6700B4C220 /* QRBinderView.swift in Sources */,
+				2ABBD6C52CDD35650078E977 /* MixedPickerView.swift in Sources */,
 				2A65AAED2CD1F88C001AB123 /* Publisher+emitNilThenValueWithDelay.swift in Sources */,
 				2AA3C37E2CDB7D5C00B4C220 /* QRFailureView.swift in Sources */,
 			);

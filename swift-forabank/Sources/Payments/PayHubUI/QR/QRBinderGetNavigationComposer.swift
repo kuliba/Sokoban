@@ -22,7 +22,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider
     }
     
     public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
-    public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments, QRFailure>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -37,21 +37,21 @@ public extension QRBinderGetNavigationComposer {
             let payments = microServices.makePayments(.c2bSubscribe(url))
             completion(.payments(.init(
                 model: payments,
-                cancellables: bind(payments, with: notify)
+                cancellables: bind(payments, using: notify)
             )))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
             completion(.payments(.init(
                 model: payments,
-                cancellables: bind(payments, with: notify)
+                cancellables: bind(payments, using: notify)
             )))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(qrCode)
             completion(.qrFailure(.init(
                 model: qrFailure,
-                cancellables: bind(qrFailure, with: notify)
+                cancellables: bind(qrFailure, using: notify)
             )))
             
         case let .mapped(mapped):
@@ -80,8 +80,8 @@ private extension QRBinderGetNavigationComposer {
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
             completion(.mixedPicker(.init(
-                model: mixedPicker, 
-                cancellables: []
+                model: mixedPicker,
+                cancellables: bind(mixedPicker, using: notify)
             )))
             
         default:
@@ -95,8 +95,23 @@ private extension QRBinderGetNavigationComposer {
 private extension QRBinderGetNavigationComposer {
     
     func bind(
+        _ mixedPicker: MixedPicker,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let close = witnesses.mixedPickerIsClosed(mixedPicker)
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = witnesses.mixedPickerScanQR(mixedPicker)
+            .sink { notify(.dismiss) }
+        
+        return [close, scanQR]
+    }
+    
+    
+    func bind(
         _ qrFailure: QRFailure,
-        with notify: @escaping Notify
+        using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
         let scanQR = witnesses.qrFailureScanQR(qrFailure)
@@ -107,7 +122,7 @@ private extension QRBinderGetNavigationComposer {
     
     func bind(
         _ payments: Payments,
-        with notify: @escaping Notify
+        using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
         let close = witnesses.isClosed(payments)

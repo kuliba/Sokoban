@@ -209,7 +209,29 @@ class QRBinderTests: XCTestCase {
     
     final class MixedPicker {
         
+        private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
         
+        var isClosed: AnyPublisher<Bool, Never> {
+            
+            isCloseSubject.eraseToAnyPublisher()
+        }
+        
+        func close() {
+            
+            isCloseSubject.value = true
+        }
+        
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
     }
     
     func makeMixedPicker() -> MixedPicker {

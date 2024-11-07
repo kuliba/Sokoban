@@ -105,7 +105,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             for: { $0.payments?.scanQR() }
         )
     }
-
+    
     // MARK: - failure
     
     func test_getNavigation_failure_shouldCallMakeQRFailureWithQRCode() {
@@ -138,7 +138,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             for: { $0.qrFailure?.scanQR() }
         )
     }
-
+    
     // MARK: - mixedPicker
     
     func test_getNavigation_mixedPicker_shouldCallMakeMixedPickerWithPayload() {
@@ -162,26 +162,26 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-//    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
-//        
-//        expect(
-//            makeSUT(payments: makeMixedPicker()).sut,
-//            with: .mixedPickerURL(anyURL()),
-//            notifyWith: [.dismiss],
-//            for: { $0.payments?.close() }
-//        )
-//    }
-//    
-//    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerScanQR() {
-//        
-//        expect(
-//            makeSUT(payments: makeMixedPicker()).sut,
-//            with: .mixedPickerURL(anyURL()),
-//            notifyWith: [.dismiss],
-//            for: { $0.mixedPicker?.scanQR() }
-//        )
-//    }
-
+    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.dismiss],
+            for: { $0.mixedPicker?.close() }
+        )
+    }
+    
+    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerScanQR() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.dismiss],
+            for: { $0.mixedPicker?.scanQR() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -216,6 +216,8 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             ),
             witnesses: .init(
                 isClosed: { $0.isClosed },
+                mixedPickerIsClosed: { $0.isClosed },
+                mixedPickerScanQR: { $0.scanQRPublisher },
                 scanQR: { $0.scanQRPublisher },
                 qrFailureScanQR: { $0.scanQRPublisher }
             )
@@ -288,6 +290,13 @@ private extension QRBinderGetNavigationComposer {
 }
 
 extension QRNavigation {
+    
+    var mixedPicker: MixedPicker? {
+        
+        guard case let .mixedPicker(node) = self else { return nil }
+        
+        return node.model
+    }
     
     var payments: Payments? {
         

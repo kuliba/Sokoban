@@ -118,6 +118,8 @@ private extension ContentViewModelComposer {
             ),
             witnesses: .init(
                 isClosed: { $0.isClosedPublisher },
+                mixedPickerIsClosed: { $0.isClosedPublisher },
+                mixedPickerScanQR: { $0.scanQRPublisher },
                 scanQR: { $0.scanQRPublisher },
                 qrFailureScanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
             )
