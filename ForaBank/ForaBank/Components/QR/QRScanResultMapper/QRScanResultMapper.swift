@@ -80,7 +80,11 @@ private extension QRScanResultMapper {
                 )))
                 
             case let .multiple(multipleOperators):
-                completion(.multiple(multipleOperators, qrCode, qrMapping))
+                completion(.multiple(.init(
+                    operators: multipleOperators, 
+                    qrCode: qrCode, 
+                    qrMapping: qrMapping
+                )))
                 
             case .none:
                 completion(.none(qrCode))

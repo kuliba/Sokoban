@@ -150,8 +150,37 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         XCTAssertNoDiff(spies.makeMixedPicker.payloads, [mixed])
     }
-        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.2), [mixed.2])
-    }
+    
+//    func test_getNavigation_mixedPicker_shouldDeliverMixedPicker() {
+//        
+//        let payments = makeMixedPicker()
+//        
+//        expect(
+//            makeSUT(payments: payments).sut,
+//            with: .mixedPickerURL(anyURL()),
+//            toDeliver: .payments(.init(payments))
+//        )
+//    }
+//    
+//    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
+//        
+//        expect(
+//            makeSUT(payments: makeMixedPicker()).sut,
+//            with: .mixedPickerURL(anyURL()),
+//            notifyWith: [.dismiss],
+//            for: { $0.payments?.close() }
+//        )
+//    }
+//    
+//    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerScanQR() {
+//        
+//        expect(
+//            makeSUT(payments: makeMixedPicker()).sut,
+//            with: .mixedPickerURL(anyURL()),
+//            notifyWith: [.dismiss],
+//            for: { $0.mixedPicker?.scanQR() }
+//        )
+//    }
 
     // MARK: - Helpers
     

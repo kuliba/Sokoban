@@ -137,11 +137,11 @@ private extension QRNavigationComposer {
                 )))
             }
             
-        case let .multiple(multiple, qrCode, qrMapping):
+        case let .multiple(multiple):
             let payload = MicroServices.MakeOperatorSearchPayload(
-                multiple: multiple,
-                qrCode: qrCode,
-                qrMapping: qrMapping,
+                multiple: multiple.operators,
+                qrCode: multiple.qrCode,
+                qrMapping: multiple.qrMapping,
                 chat: { notify(.outside(.chat)) },
                 detailPayment: { notify(.detailPayment(nil)) },
                 dismiss: { notify(.dismiss) }

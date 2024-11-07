@@ -1694,8 +1694,8 @@ extension PaymentsTransfersViewModel {
         case let .mixed(mixed):
             makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
 
-        case let .multiple(multipleOperators, qrCode, qrMapping):
-            searchOperators(multipleOperators, with: qrCode)
+        case let .multiple(multiple):
+            searchOperators(multiple.operators, with: multiple.qrCode)
             
         case let .none(qrCode):
             payByInstructions(with: qrCode)

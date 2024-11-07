@@ -367,7 +367,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_multiple_shouldCallMakeOperatorSearchWithPayload() {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        )))
         let (sut, microServices) = makeSUT()
         
         sut.getNavigation(with: result)
@@ -958,7 +962,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
     private func makeMappedMultiple() -> QRModelResult {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        return .mapped(.multiple(multiple, qrCode, qrMapping))
+        return .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode, 
+            qrMapping: qrMapping
+        )))
     }
     
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
