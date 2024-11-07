@@ -151,17 +151,17 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         XCTAssertNoDiff(spies.makeMixedPicker.payloads, [mixed])
     }
     
-//    func test_getNavigation_mixedPicker_shouldDeliverMixedPicker() {
-//        
-//        let payments = makeMixedPicker()
-//        
-//        expect(
-//            makeSUT(payments: payments).sut,
-//            with: .mixedPickerURL(anyURL()),
-//            toDeliver: .payments(.init(payments))
-//        )
-//    }
-//    
+    func test_getNavigation_mixedPicker_shouldDeliverMixedPicker() {
+        
+        let mixedPicker = makeMixedPicker()
+        
+        expect(
+            makeSUT(mixedPicker: mixedPicker).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            toDeliver: .mixedPicker(.init(mixedPicker))
+        )
+    }
+    
 //    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
 //        
 //        expect(

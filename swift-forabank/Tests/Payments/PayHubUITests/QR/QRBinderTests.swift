@@ -16,7 +16,7 @@ class QRBinderTests: XCTestCase {
     typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Navigation = QRNavigation<Payments, QRFailure>
+    typealias Navigation = QRNavigation<MixedPicker, Payments, QRFailure>
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
@@ -89,7 +89,7 @@ class QRBinderTests: XCTestCase {
     func makeMakeMixedPickerPayload() -> MakeMixedPickerPayload {
         
         let (mixed, qrCode, qrMapping) = (makeMixed(), makeQRCode(), makeQRMapping())
-
+        
         return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
     }
     
@@ -107,6 +107,7 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
+        case mixedPicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
     }
@@ -116,6 +117,9 @@ class QRBinderTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
+        case let .mixedPicker(node):
+            return .mixedPicker(.init(node.model))
+            
         case let .payments(node):
             return .payments(.init(node.model))
             
@@ -203,15 +207,13 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    struct MixedPicker: Equatable {
+    final class MixedPicker {
         
-        let value: String
+        
     }
     
-    func makeMixedPicker(
-        _ value: String = anyMessage()
-    ) -> MixedPicker {
+    func makeMixedPicker() -> MixedPicker {
         
-        return .init(value: value)
+        return .init()
     }
 }

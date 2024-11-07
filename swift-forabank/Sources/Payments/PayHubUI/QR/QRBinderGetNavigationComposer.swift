@@ -66,7 +66,7 @@ public extension QRBinderGetNavigationComposer {
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Navigation = QRNavigation<Payments, QRFailure>
+    typealias Navigation = QRNavigation<MixedPicker, Payments, QRFailure>
 }
 
 private extension QRBinderGetNavigationComposer {
@@ -78,7 +78,11 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch mapped {
         case let .mixed(mixed):
-            let _ /*mixedPicker*/ = microServices.makeMixedPicker(mixed)
+            let mixedPicker = microServices.makeMixedPicker(mixed)
+            completion(.mixedPicker(.init(
+                model: mixedPicker, 
+                cancellables: []
+            )))
             
         default:
             fatalError()
