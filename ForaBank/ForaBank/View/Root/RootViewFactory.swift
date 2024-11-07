@@ -27,7 +27,7 @@ typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeO
 typealias MakeOrderCard = () -> Void
 typealias MakePaymentByType = (String) -> Void
 
-typealias MakeCategoryView = (Bool, String) -> CategoryView
+typealias MakeProductsCategoryView = (Bool, String) -> ProductsCategoryView
 
 typealias MakeAnywayServicePickerFlowView = (AnywayServicePickerFlowModel) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>>
 typealias MakeComposedSegmentedPaymentProviderPickerFlowView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>

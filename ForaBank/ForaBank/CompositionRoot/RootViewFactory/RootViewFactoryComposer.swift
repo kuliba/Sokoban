@@ -188,7 +188,7 @@ private extension RootViewFactoryComposer {
     }
     
     func makeOptionButtonViewFactory() -> OptionSelectorView.OptionButtonViewFactory {
-        .init(makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
+        .init(makeProductsCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
     }
     
     func makeUserAccountView(
@@ -231,7 +231,7 @@ private extension RootViewFactoryComposer {
     
     func makeCategoryView(
         savingsAccountFlag: Bool
-    ) -> MakeCategoryView  {
+    ) -> MakeProductsCategoryView  {
         return {
             .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
         }
