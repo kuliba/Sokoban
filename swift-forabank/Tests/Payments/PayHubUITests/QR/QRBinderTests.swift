@@ -144,6 +144,18 @@ class QRBinderTests: XCTestCase {
             
             isCloseSubject.value = true
         }
+        
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
     }
     
     func makePayments() -> Payments {

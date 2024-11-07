@@ -116,7 +116,8 @@ private extension ContentViewModelComposer {
                 makePayments: makePayments
             ),
             witnesses: .init(
-                isClosed: { $0.isClosedPublisher }
+                isClosed: { $0.isClosedPublisher },
+                scanQR: { $0.scanQRPublisher }
             )
         )
     }

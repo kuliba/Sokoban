@@ -45,7 +45,10 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                 makeQRFailure: makeQRFailure.call,
                 makePayments: makePayments.call
             ), 
-            witnesses: .init(isClosed: { $0.isClosed })
+            witnesses: .init(
+                isClosed: { $0.isClosed },
+                scanQR: { $0.scanQRPublisher }
+            )
         )
         let sut = QRBinderComposer(
             microServices: .init(

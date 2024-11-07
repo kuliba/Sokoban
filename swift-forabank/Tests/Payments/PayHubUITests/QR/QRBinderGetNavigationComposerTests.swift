@@ -45,13 +45,21 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsClose() {
         
-        let payments = makePayments()
-        
         expect(
-            makeSUT(payments: payments).sut,
+            makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
             for: { $0.payments?.close() }
+        )
+    }
+    
+    func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bSubscribeURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.scanQR() }
         )
     }
     
@@ -80,16 +88,24 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     func test_getNavigation_c2b_shouldNotifyWithDismissOnPaymentsClose() {
         
-        let payments = makePayments()
-        
         expect(
-            makeSUT(payments: payments).sut,
+            makeSUT(payments: makePayments()).sut,
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
             for: { $0.payments?.close() }
         )
     }
     
+    func test_getNavigation_c2b_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bURL(anyURL()),
+            notifyWith: [.dismiss],
+            for: { $0.payments?.scanQR() }
+        )
+    }
+
     // MARK: - failure
     
     func test_getNavigation_failure_shouldCallMakeQRFailureWithQRCode() {
@@ -141,7 +157,10 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 makeQRFailure: spies.makeQRFailure.call,
                 makePayments: spies.makePayments.call
             ),
-            witnesses: .init(isClosed: { $0.isClosed })
+            witnesses: .init(
+                isClosed: { $0.isClosed },
+                scanQR: { $0.scanQRPublisher }
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

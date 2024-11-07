@@ -73,6 +73,9 @@ private extension QRBinderGetNavigationComposer {
         let close = witnesses.isClosed(payments)
             .sink { if $0 { notify(.dismiss) }}
         
-        return [close]
+        let scanQR = witnesses.scanQR(payments)
+        .sink { notify(.dismiss) }
+        
+        return [close, scanQR]
     }
 }
