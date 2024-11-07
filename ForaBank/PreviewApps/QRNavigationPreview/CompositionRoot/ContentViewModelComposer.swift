@@ -31,6 +31,10 @@ final class ContentViewModelComposer {
                 makeDetailPayment: Payments.init(qrCode:),
                 makeQRFailure: QRFailure.init(qrCode:)
             ),
+            isClosedWitnesses: .init(
+                categories: { $0.isClosedPublisher },
+                detailPayment: { $0.isClosedPublisher }
+            ),
             scanQRWitnesses: .init(
                 categories: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }

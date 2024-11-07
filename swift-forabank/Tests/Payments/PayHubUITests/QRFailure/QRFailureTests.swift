@@ -12,8 +12,8 @@ import XCTest
 class QRFailureTests: XCTestCase {
     
     typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
-    typealias Categories = ScanQR
-    typealias DetailPayment = ScanQR
+    typealias Categories = ClosingScanQR
+    typealias DetailPayment = ClosingScanQR
     
     typealias Select = Domain.Select
     
@@ -53,7 +53,23 @@ class QRFailureTests: XCTestCase {
         return .init()
     }
     
-    final class ScanQR {
+    final class ClosingScanQR {
+        
+        // MARK: - close
+        
+        private let closeSubject = PassthroughSubject<Bool, Never>()
+        
+        var isClosedPublisher: AnyPublisher<Bool, Never> {
+            
+            closeSubject.eraseToAnyPublisher()
+        }
+        
+        func close() {
+            
+            closeSubject.send(true)
+        }
+        
+        // MARK: - scanQR
         
         private let subject = PassthroughSubject<Void, Never>()
         
@@ -68,12 +84,12 @@ class QRFailureTests: XCTestCase {
         }
     }
     
-    func makeDetailPayment() -> ScanQR {
+    func makeDetailPayment() -> ClosingScanQR {
         
         return .init()
     }
     
-    func makeCategories() -> ScanQR {
+    func makeCategories() -> ClosingScanQR {
         
         return .init()
     }

@@ -14,6 +14,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     
     private let delay: Delay
     private let microServices: MicroServices
+    private let isClosedWitnesses: IsClosedWitnesses
     private let scanQRWitnesses: QRFailureScanQRWitnesses
     private let witnesses: Witnesses
     private let scheduler: AnySchedulerOf<DispatchQueue>
@@ -22,6 +23,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public init(
         delay: Delay,
         microServices: MicroServices,
+        isClosedWitnesses: IsClosedWitnesses,
         scanQRWitnesses: QRFailureScanQRWitnesses,
         witnesses: Witnesses,
         scheduler: AnySchedulerOf<DispatchQueue>,
@@ -29,6 +31,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     ) {
         self.delay = delay
         self.microServices = microServices
+        self.isClosedWitnesses = isClosedWitnesses
         self.scanQRWitnesses = scanQRWitnesses
         self.witnesses = witnesses
         self.scheduler = scheduler
@@ -38,6 +41,8 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
     public typealias MicroServices = QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment>
+    
+    public typealias IsClosedWitnesses = QRFailureIsClosedWitnesses<Categories, DetailPayment>
     
     public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<Categories, DetailPayment>
     
@@ -94,10 +99,13 @@ private extension QRFailureBinderComposer {
         using notify: @escaping Domain.Notify
     ) -> Set<AnyCancellable> {
         
+        let close = isClosedWitnesses.categories(categories)
+            .sink { if $0 { notify(.dismiss) }}
+        
         let scanQR = scanQRWitnesses.categories(categories)
             .sink { notify(.select(.scanQR)) }
         
-        return [scanQR]
+        return [close, scanQR]
     }
     
     func bind(
@@ -105,9 +113,12 @@ private extension QRFailureBinderComposer {
         using notify: @escaping Domain.Notify
     ) -> Set<AnyCancellable> {
         
+        let close = isClosedWitnesses.detailPayment(detailPayment)
+            .sink { if $0 { notify(.dismiss) }}
+        
         let scanQR = scanQRWitnesses.detailPayment(detailPayment)
             .sink { notify(.select(.scanQR)) }
         
-        return [scanQR]
+        return [close, scanQR]
     }
 }

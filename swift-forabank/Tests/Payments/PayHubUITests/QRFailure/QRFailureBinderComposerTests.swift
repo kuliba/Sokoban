@@ -89,6 +89,23 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
     }
     
+    func test_composed_payWithDetails_shouldDismissOnCategoriesClose() throws {
+        
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.payWithDetails(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        XCTAssertNotNil(composed.flow.state.navigation)
+        
+        try composed.flow.detailPayment.close()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNil(composed.flow.state.navigation)
+    }
+    
     // MARK: - search
     
     func test_composed_search_shouldCallMakeCategoriesWithQRCode() {
@@ -125,11 +142,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     func test_composed_search_shouldDeliverScanQROnCategoriesScanQR() throws {
         
-        let categories = makeCategories()
-        let (sut, _, scheduler) = makeSUT(
-            delay: .seconds(500),
-            categories: categories
-        )
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
         let composed = sut.compose(qrCode: makeQRCode())
         composed.content.emit(.search(makeQRCode()))
@@ -144,6 +157,23 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             composed.flow.state.navigation.map(equatable),
             .scanQR
         )
+    }
+    
+    func test_composed_search_shouldDismissOnCategoriesClose() throws {
+        
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.search(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        XCTAssertNotNil(composed.flow.state.navigation)
+        
+        try composed.flow.categories.close()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNil(composed.flow.state.navigation)
     }
     
     // MARK: - Helpers
@@ -184,6 +214,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 makeCategories: spies.makeCategories.call,
                 makeDetailPayment: spies.makeDetailPayment.call,
                 makeQRFailure: spies.makeQRFailure.call
+            ),
+            isClosedWitnesses: .init(
+                categories: { $0.isClosedPublisher },
+                detailPayment: { $0.isClosedPublisher }
             ),
             scanQRWitnesses: .init(
                 categories: { $0.scanQRPublisher },
