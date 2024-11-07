@@ -67,8 +67,8 @@ extension QRDomain.FlowDomain.State {
         case let .payments(node):
             return .payments(node.model)
             
-        case let .qrFailure(qrFailure):
-            return .qrFailure(qrFailure)
+        case let .qrFailure(node):
+            return .qrFailure(node.model)
         }
     }
     

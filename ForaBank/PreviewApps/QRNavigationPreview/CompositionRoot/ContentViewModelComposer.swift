@@ -117,7 +117,8 @@ private extension ContentViewModelComposer {
             ),
             witnesses: .init(
                 isClosed: { $0.isClosedPublisher },
-                scanQR: { $0.scanQRPublisher }
+                scanQR: { $0.scanQRPublisher },
+                qrFailureScanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
             )
         )
     }
@@ -131,5 +132,15 @@ private extension ContentViewModelComposer {
             let .c2b(url):
             return Payments(url: url)
         }
+    }
+}
+
+extension QRFailureDomain.Navigation {
+    
+    var scanQR: Void? {
+        
+        guard case .scanQR = self else { return nil }
+        
+        return ()
     }
 }

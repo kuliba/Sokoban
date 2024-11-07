@@ -47,7 +47,8 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             ), 
             witnesses: .init(
                 isClosed: { $0.isClosed },
-                scanQR: { $0.scanQRPublisher }
+                scanQR: { $0.scanQRPublisher },
+                qrFailureScanQR: { $0.scanQRPublisher }
             )
         )
         let sut = QRBinderComposer(

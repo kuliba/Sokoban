@@ -129,6 +129,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .failure(makeQRCode()),
+            notifyWith: [.dismiss],
+            for: { $0.qrFailure?.scanQR() }
+        )
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -159,7 +169,8 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             ),
             witnesses: .init(
                 isClosed: { $0.isClosed },
-                scanQR: { $0.scanQRPublisher }
+                scanQR: { $0.scanQRPublisher },
+                qrFailureScanQR: { $0.scanQRPublisher }
             )
         )
         
@@ -234,6 +245,13 @@ extension QRNavigation {
     var payments: Payments? {
         
         guard case let .payments(node) = self else { return nil }
+        
+        return node.model
+    }
+    
+    var qrFailure: QRFailure? {
+        
+        guard case let .qrFailure(node) = self else { return nil }
         
         return node.model
     }
