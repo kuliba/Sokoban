@@ -1,6 +1,6 @@
 //
-//  Services+ModifyC2B.swift
-//  ForaBank
+//  Services+ModifyC2Ble.swift
+//  
 //
 //  Created by Дмитрий Савушкин on 07.11.2024.
 //

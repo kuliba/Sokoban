@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
@@ -22,6 +23,19 @@ extension RequestFactory {
         request.httpBody = modifyC2BSubscription.json
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
+    }
+}
+
+struct ModifyC2BSubscription {
+    
+    let productId: Int
+    let productType: ProductType
+    let subscriptionToken: String
+    
+    enum ProductType {
+        
+        case card
+        case account
     }
 }
 
