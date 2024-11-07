@@ -14,7 +14,7 @@ final class ContentViewModelComposerTests: XCTestCase {
     
     // MARK: - scanQR
     
-    func test_shouldSetNavigationOnSelect() {
+    func test_scanQR_shouldSetNavigationOnSelect() {
         
         let flow = makeSUT().compose()
         
@@ -23,7 +23,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNoDiff(equatable(flow.state), .init(navigation: .qr))
     }
     
-    func test_shouldResetNavigationOnDismiss() {
+    func test_scanQR_shouldResetNavigationOnDismiss() {
         
         let flow = makeSUT().compose()
         
@@ -35,7 +35,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNil(flow.state.navigation)
     }
     
-    func test_shouldResetNavigationOnQRClose() throws {
+    func test_scanQR_shouldResetNavigationOnQRClose() throws {
         
         let flow = makeSUT().compose()
         

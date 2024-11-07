@@ -70,9 +70,7 @@ private extension QRBinderGetNavigationComposer {
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let share = witnesses.isClosed(payments).share()
-        
-        let close = share
+        let close = witnesses.isClosed(payments)
             .sink { if $0 { notify(.dismiss) }}
         
         return [close]
