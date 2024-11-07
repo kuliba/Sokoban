@@ -70,7 +70,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
     }
     
-    func test_composed_payWithDetails_shouldDeliverOutsideScanQROnScanQR() throws {
+    func test_composed_payWithDetails_shouldDeliverScanQROnDetailPaymentScanQR() throws {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
@@ -181,8 +181,8 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 makeCategories: spies.makeCategories.call,
                 makeDetailPayment: spies.makeDetailPayment.call
             ), 
-            scanQRWitness: .init(
-                scanQR: { $0.scanQRPublisher }
+            scanQRWitnesses: .init(
+                detailPayment:  { $0.scanQRPublisher }
             ),
             witnesses: .init(
                 contentEmitting: { $0.selectPublisher },

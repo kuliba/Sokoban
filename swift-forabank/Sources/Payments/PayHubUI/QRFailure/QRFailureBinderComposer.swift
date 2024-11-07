@@ -10,22 +10,11 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
-public struct ScanQRWitness<T> {
-    
-    public let scanQR: (T) -> AnyPublisher<Void, Never>
-    
-    public init(
-        scanQR: @escaping (T) -> AnyPublisher<Void, Never>
-    ) {
-        self.scanQR = scanQR
-    }
-}
-
 public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment> {
     
     private let delay: Delay
     private let microServices: MicroServices
-    private let scanQRWitness: ScanQRWitness<DetailPayment>
+    private let scanQRWitnesses: QRFailureScanQRWitnesses<DetailPayment>
     private let witnesses: Witnesses
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -33,14 +22,14 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public init(
         delay: Delay,
         microServices: MicroServices,
-        scanQRWitness: ScanQRWitness<DetailPayment>,
+        scanQRWitnesses: QRFailureScanQRWitnesses<DetailPayment>,
         witnesses: Witnesses,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.delay = delay
         self.microServices = microServices
-        self.scanQRWitness = scanQRWitness
+        self.scanQRWitnesses = scanQRWitnesses
         self.witnesses = witnesses
         self.scheduler = scheduler
         self.interactiveScheduler = interactiveScheduler
@@ -70,7 +59,7 @@ public extension QRFailureBinderComposer {
                     
                 case let .payWithDetails(qrCode):
                     let payment = microServices.makeDetailPayment(qrCode)
-                    let cancellable = scanQRWitness.scanQR(payment)
+                    let cancellable = scanQRWitnesses.detailPayment(payment)
                         .sink { notify(.select(.scanQR)) }
                     
                     completion(.detailPayment(.init(model: payment, cancellable: cancellable)))
