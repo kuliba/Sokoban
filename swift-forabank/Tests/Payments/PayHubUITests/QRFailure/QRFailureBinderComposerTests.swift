@@ -229,8 +229,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 categories: { $0.scanQRPublisher },
                 detailPayment: { $0.scanQRPublisher }
             ),
-            scheduler: scheduler.eraseToAnyScheduler(),
-            interactiveScheduler: scheduler.eraseToAnyScheduler()
+            schedulers: .init(scheduler)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -240,6 +239,19 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, spies, scheduler)
+    }
+}
+
+private extension Schedulers {
+    
+    init(_ testScheduler: TestSchedulerOf<DispatchQueue>) {
+        
+        self.init(
+            main: testScheduler.eraseToAnyScheduler(),
+            interactive: testScheduler.eraseToAnyScheduler(),
+            userInitiated: testScheduler.eraseToAnyScheduler(),
+            background: testScheduler.eraseToAnyScheduler()
+        )
     }
 }
 

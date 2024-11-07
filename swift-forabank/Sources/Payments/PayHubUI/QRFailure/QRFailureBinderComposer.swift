@@ -17,8 +17,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     private let contentFlowWitnesses: ContentFlowWitnesses
     private let isClosedWitnesses: IsClosedWitnesses
     private let scanQRWitnesses: QRFailureScanQRWitnesses
-    private let scheduler: AnySchedulerOf<DispatchQueue>
-    private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
+    private let schedulers: Schedulers
     
     public init(
         delay: Delay,
@@ -26,16 +25,14 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
         contentFlowWitnesses: ContentFlowWitnesses,
         isClosedWitnesses: IsClosedWitnesses,
         scanQRWitnesses: QRFailureScanQRWitnesses,
-        scheduler: AnySchedulerOf<DispatchQueue>,
-        interactiveScheduler: AnySchedulerOf<DispatchQueue>
+        schedulers: Schedulers
     ) {
         self.delay = delay
         self.microServices = microServices
         self.contentFlowWitnesses = contentFlowWitnesses
         self.isClosedWitnesses = isClosedWitnesses
         self.scanQRWitnesses = scanQRWitnesses
-        self.scheduler = scheduler
-        self.interactiveScheduler = interactiveScheduler
+        self.schedulers = schedulers
     }
     
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
@@ -54,7 +51,7 @@ public extension QRFailureBinderComposer {
     
     func compose(qrCode: QRCode) -> Domain.Binder {
         
-        let factory = ContentFlowBindingFactory(delay: delay, scheduler: scheduler)
+        let factory = ContentFlowBindingFactory(delay: delay, scheduler: schedulers.main)
         
         let composer = Domain.FlowComposer(
             getNavigation: { [weak self] select, notify, completion in
@@ -80,8 +77,8 @@ public extension QRFailureBinderComposer {
                     completion(.scanQR)
                 }
             },
-            scheduler: scheduler,
-            interactiveScheduler: interactiveScheduler
+            scheduler: schedulers.main,
+            interactiveScheduler: schedulers.interactive
         )
         
         return .init(
