@@ -9,17 +9,22 @@ import UIKit
 import SwiftUI
 import Combine
 
+struct PaymentsHostingViewControllerViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+}
+
 class PaymentsHoustingViewController: UIHostingController<PaymentsView> {
     
     private let viewModel: PaymentsViewModel
-    private let viewFactory: OptionSelectorViewFactory
+    private let viewFactory: PaymentsHostingViewControllerViewFactory
     private var bindings = Set<AnyCancellable>()
     
-    init(with viewModel: PaymentsViewModel, viewFactory: OptionSelectorViewFactory) {
+    init(with viewModel: PaymentsViewModel, viewFactory: PaymentsHostingViewControllerViewFactory) {
         
         self.viewModel = viewModel
         self.viewFactory = viewFactory
-        super.init(rootView: PaymentsView(viewModel: viewModel, viewFactory: viewFactory))
+        super.init(rootView: viewFactory.makePaymentsView(viewModel))
         
         bind()
     }

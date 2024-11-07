@@ -7,10 +7,20 @@
 
 import SwiftUI
 
+struct PaymentsServicesOperatorsViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+}
+
+extension PaymentsServicesOperatorsViewFactory {
+    
+    static let preview: Self = .init(makePaymentsView: {_ in fatalError()})
+}
+
 struct PaymentsServicesOperatorsView: View {
     
     @ObservedObject var viewModel: PaymentsServicesViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsServicesOperatorsViewFactory
     
     var body: some View {
         
@@ -67,7 +77,7 @@ struct PaymentsServicesOperatorsView: View {
                 .edgesIgnoringSafeArea(.all)
             
         case .payments(let viewModel):
-            PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsView(viewModel)
                 .navigationBarHidden(true)
         }
     }

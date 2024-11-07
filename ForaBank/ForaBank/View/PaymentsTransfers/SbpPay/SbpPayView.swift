@@ -7,10 +7,20 @@
 
 import SwiftUI
 
+struct SbpPayViewFactory {
+    
+    let makeProductSelectorView: MakeProductSelectorView
+}
+
+extension SbpPayViewFactory {
+    
+    static let preview: Self = .init(makeProductSelectorView: {_ in fatalError()})
+}
+
 struct SbpPayView: View {
     
     @ObservedObject var viewModel: SbpPayViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: SbpPayViewFactory
     
     var body: some View {
          
@@ -21,9 +31,7 @@ struct SbpPayView: View {
 
                 if let productsViewModel = viewModel.paymentProduct {
 
-                    ProductSelectorView(
-                        viewModel: productsViewModel,
-                        viewFactory: viewFactory)
+                    viewFactory.makeProductSelectorView(productsViewModel)
                 }
         
                 Divider()

@@ -8,12 +8,22 @@
 import SwiftUI
 import UIPrimitives
 
+struct OperationDetailViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+}
+
+extension OperationDetailViewFactory {
+    
+    static let preview: Self = .init(makePaymentsView: {_ in fatalError()})
+}
+
 struct OperationDetailView: View {
     
     @ObservedObject var viewModel: OperationDetailViewModel
     let makeRepeatButtonView: (@escaping () -> Void) -> RepeatButtonView?
     let payment: () -> Void
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: OperationDetailViewFactory
     
     var body: some View {
         
@@ -92,7 +102,7 @@ struct OperationDetailView: View {
             case let .payments(viewModel):
                 NavigationView {
                     
-                    PaymentsView(viewModel: viewModel, viewFactory: viewFactory)
+                    viewFactory.makePaymentsView(viewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
                 }

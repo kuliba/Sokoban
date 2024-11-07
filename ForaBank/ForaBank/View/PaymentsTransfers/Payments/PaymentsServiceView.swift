@@ -8,10 +8,15 @@
 import SwiftUI
 import Combine
 
+struct PaymentsServiceViewFactory {
+    
+    let makePaymentsOperationView: MakePaymentsOperationView
+}
+
 struct PaymentsServiceView: View {
     
     @ObservedObject var viewModel: PaymentsServiceViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsServiceViewFactory
     
     var body: some View {
         
@@ -36,7 +41,7 @@ struct PaymentsServiceView: View {
                         
                         switch link {
                         case let .operation(operationViewModel):
-                            PaymentsOperationView(viewModel: operationViewModel, viewFactory: viewFactory)
+                            viewFactory.makePaymentsOperationView(operationViewModel)
                         }
                     }
                 }

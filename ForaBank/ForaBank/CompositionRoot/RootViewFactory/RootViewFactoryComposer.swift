@@ -189,8 +189,27 @@ private extension RootViewFactoryComposer {
         UserAccountView(
             viewModel: viewModel,
             config: config,
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makeUserAccountViewFactory()
         )
+    }
+    
+    func makeUserAccountViewFactory() -> UserAccountViewFactory {
+        
+        .init(
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makeSbpPayView: makeSbpPayView)
+    }
+    
+    func makeSbpPayView(
+        viewModel: SbpPayViewModel
+    ) -> SbpPayView {
+        
+        .init(viewModel: viewModel, viewFactory: makeSbpPayViewFactory())
+    }
+    
+    func makeSbpPayViewFactory() -> SbpPayViewFactory {
+        
+        .init(makeProductSelectorView: makeProductSelectorView)
     }
     
     func makeAnywayPaymentFactory(
@@ -234,9 +253,13 @@ private extension RootViewFactoryComposer {
             viewModel: viewModel,
             makeRepeatButtonView: makeRepeatButtonView,
             payment: payment,
-            viewFactory: makeOptionSelectorViewFactory())
+            viewFactory: makeOperationDetailViewFactory())
     }
     
+    func makeOperationDetailViewFactory() -> OperationDetailViewFactory {
+        
+        .init(makePaymentsView: makePaymentsView)
+    }
     
     func makeProductCarouselView(
         viewModel: ProductCarouselView.ViewModel,
@@ -336,8 +359,13 @@ private extension RootViewFactoryComposer {
                 //     )
                 // )
             },
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makeTransportPaymentsViewFactory()
         )
+    }
+    
+    func makeTransportPaymentsViewFactory() -> TransportPaymentsViewFactory {
+        
+        .init(makePaymentsView: makePaymentsView)
     }
     
     func makeCurrencyWalletView(
@@ -376,8 +404,13 @@ private extension RootViewFactoryComposer {
         
         .init(
             viewModel: viewModel,
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makeQRSearchOperatorViewFactory()
         )
+    }
+    
+    func makeQRSearchOperatorViewFactory() -> QRSearchOperatorViewFactory {
+        
+        .init(makePaymentsView: makePaymentsView)
     }
     
     func makePaymentsMeToMeView(
@@ -412,8 +445,50 @@ private extension RootViewFactoryComposer {
         
         .init(
             viewModel: viewModel,
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makePaymentsViewFactory()
         )
+    }
+    
+    func makePaymentsViewFactory() -> PaymentsViewFactory {
+        
+        .init(
+            makePaymentsOperationView: makePaymentsOperationView,
+            makePaymentsServiceView: makePaymentsServiceView,
+            makePaymentsSuccessView: makePaymentsSuccessView)
+    }
+
+    func makePaymentsServiceView(
+        viewModel: PaymentsServiceViewModel
+    ) -> PaymentsServiceView {
+        
+        .init(viewModel: viewModel, viewFactory: makePaymentsServiceViewFactory())
+    }
+    
+    func makePaymentsServiceViewFactory() -> PaymentsServiceViewFactory {
+        
+        .init(makePaymentsOperationView: makePaymentsOperationView)
+    }
+    
+    func makePaymentsOperationView(
+        viewModel: PaymentsOperationViewModel
+    ) -> PaymentsOperationView {
+        .init(
+            viewModel: viewModel,
+            viewFactory: makePaymentsOperationViewFactory())
+    }
+    
+    func makePaymentsOperationViewFactory() -> PaymentsOperationViewFactory {
+        
+        .init(
+            makeContactsView: makeContactsView,
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makeProductSelectorView: makeProductSelectorView)
+    }
+    
+    func makeProductSelectorView(
+        viewModel: ProductSelectorView.ViewModel
+    ) -> ProductSelectorView {
+        .init(viewModel: viewModel, viewFactory: makeOptionSelectorViewFactory())
     }
     
     func makePaymentsServicesOperatorsView(
@@ -422,8 +497,13 @@ private extension RootViewFactoryComposer {
         
         .init(
             viewModel: viewModel,
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makePaymentsServicesOperatorsViewFactory()
         )
+    }
+    
+    func makePaymentsServicesOperatorsViewFactory() -> PaymentsServicesOperatorsViewFactory {
+        
+        .init(makePaymentsView: makePaymentsView)
     }
     
     func makeContactsView(
@@ -444,7 +524,14 @@ private extension RootViewFactoryComposer {
             viewModel: viewModel,
             config: .default,
             getUImage: { self.model.images.value[$0]?.uiImage },
-            viewFactory: makeOptionSelectorViewFactory())
+            viewFactory: makeControlPanelWrapperViewFactory())
+    }
+    
+    func makeControlPanelWrapperViewFactory() -> ControlPanelWrapperViewFactory {
+        
+        .init(
+            makePaymentsView: makePaymentsView,
+            makePaymentsSuccessView: makePaymentsSuccessView)
     }
     
     func makeQRView(
@@ -463,8 +550,16 @@ private extension RootViewFactoryComposer {
         
         .init(
             viewModel: viewModel,
-            viewFactory: makeOptionSelectorViewFactory()
+            viewFactory: makePaymentsSuccessViewFactory()
         )
+    }
+    
+    func makePaymentsSuccessViewFactory() -> PaymentsSuccessViewFactory {
+        
+        .init(
+            makePaymentsSuccessView: makePaymentsSuccessView,
+            makePaymentsView: makePaymentsView,
+            makeProductSelectorView: makeProductSelectorView)
     }
     
     func makeComposedSegmentedPaymentProviderPickerFlowView(

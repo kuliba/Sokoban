@@ -94,13 +94,13 @@ extension Array where Element == Payments.ParameterSelectDropDownList.Option {
 struct AvtodorCrutchView: View {
     
     @ObservedObject private var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsProductViewFactory
     
     private let action: (String) -> Void
     
     init(
         viewModel: ViewModel,
-        viewFactory: OptionSelectorViewFactory,
+        viewFactory: PaymentsProductViewFactory,
         action: @escaping (String) -> Void
     ) {
         self.viewModel = viewModel

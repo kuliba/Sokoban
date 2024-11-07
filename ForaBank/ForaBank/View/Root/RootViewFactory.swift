@@ -49,6 +49,11 @@ typealias MakeQRView = (QRViewModel) -> QRView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
 typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
+typealias MakeProductSelectorView = (ProductSelectorView.ViewModel) -> ProductSelectorView
+typealias MakePaymentGroupView = (PaymentsGroupViewModel) -> PaymentGroupView
+typealias MakePaymentsOperationView = (PaymentsOperationViewModel) -> PaymentsOperationView
+typealias MakePaymentsServiceView = (PaymentsServiceViewModel) -> PaymentsServiceView
+typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 

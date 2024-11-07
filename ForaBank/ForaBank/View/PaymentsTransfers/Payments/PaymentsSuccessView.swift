@@ -7,10 +7,25 @@
 
 import SwiftUI
 
+struct PaymentsSuccessViewFactory {
+    
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+    let makePaymentsView: MakePaymentsView
+    let makeProductSelectorView: MakeProductSelectorView
+}
+
+extension PaymentsSuccessViewFactory {
+    
+    static let preview: Self = .init(
+        makePaymentsSuccessView: {_ in fatalError()},
+        makePaymentsView: {_ in fatalError()},
+        makeProductSelectorView: {_ in fatalError()})
+}
+
 struct PaymentsSuccessView: View {
     
     @ObservedObject var viewModel: PaymentsSuccessViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: PaymentsSuccessViewFactory
     
     var spacing: CGFloat = 24
     var bottomPadding: CGFloat = 56
@@ -74,10 +89,10 @@ struct PaymentsSuccessView: View {
             
             let isTheItem = itemViewModel is PaymentsSuccessOptionButtonsView.ViewModel
             
-            PaymentsGroupView.separatedItemView(
+            SeparatedItemView(
                 for: itemViewModel,
                 items: viewModel.items,
-                viewFactory: viewFactory
+                viewFactory: .init(makeProductSelectorView: viewFactory.makeProductSelectorView)
             )
             .reportHeight()
             .padding(.top, isTheItem ? extraTopPadding(for: height) : 0)
@@ -108,7 +123,7 @@ struct PaymentsSuccessView: View {
         
         VStack(spacing: 0) {
             
-            ForEach(viewModel.bottom, content: { PaymentsGroupView.groupView(for: $0, viewFactory: viewFactory) })
+            ForEach(viewModel.bottom, content: { PaymentGroupView(viewModel: $0, viewFactory: .init(makeProductSelectorView: viewFactory.makeProductSelectorView)) })
         }
     }
     
@@ -132,10 +147,10 @@ struct PaymentsSuccessView: View {
         
         switch cover.type {
         case let .abroad(paymentsViewModel):
-            PaymentsView(viewModel: paymentsViewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsView(paymentsViewModel)
             
         case let .success(successViewModel):
-            PaymentsSuccessView(viewModel: successViewModel, viewFactory: viewFactory)
+            viewFactory.makePaymentsSuccessView(successViewModel)
         }
     }
     
