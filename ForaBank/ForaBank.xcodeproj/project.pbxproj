@@ -1379,6 +1379,9 @@
 		2AA3C37A2CDB79E200B4C220 /* QRFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3C3782CDB79CC00B4C220 /* QRFailure.swift */; };
 		2AA3C37E2CDB7D5C00B4C220 /* QRFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3C37B2CDB7D1500B4C220 /* QRFailureView.swift */; };
 		2AA3C37F2CDB7D6700B4C220 /* QRBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65AAE72CD12B7D001AB123 /* QRBinderView.swift */; };
+		2AA3C3832CDBBD7000B4C220 /* QRFailureDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3C3802CDBBD2900B4C220 /* QRFailureDomain.swift */; };
+		2AA3C3862CDBBDC000B4C220 /* QRFailureBinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3C3842CDBBDA700B4C220 /* QRFailureBinderView.swift */; };
+		2AA3C38D2CDC825500B4C220 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3C38B2CDC823E00B4C220 /* Categories.swift */; };
 		2AA429052AC1D54E00919C4A /* PaymentsProductViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */; };
 		2AA42C4C2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */; };
 		2AA4C9F02A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */; };
@@ -1548,6 +1551,7 @@
 		2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */; };
 		2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
+		2ACE8C9C2CDCAF27006EC9F4 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8C9B2CDCAF27006EC9F4 /* CategoriesView.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACEA7BA2CA82EDA00404DFF /* SelectedCategoryNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
@@ -4964,6 +4968,9 @@
 		2AA3C3752CDB73C300B4C220 /* anyMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = anyMessage.swift; sourceTree = "<group>"; };
 		2AA3C3782CDB79CC00B4C220 /* QRFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailure.swift; sourceTree = "<group>"; };
 		2AA3C37B2CDB7D1500B4C220 /* QRFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailureView.swift; sourceTree = "<group>"; };
+		2AA3C3802CDBBD2900B4C220 /* QRFailureDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailureDomain.swift; sourceTree = "<group>"; };
+		2AA3C3842CDBBDA700B4C220 /* QRFailureBinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailureBinderView.swift; sourceTree = "<group>"; };
+		2AA3C38B2CDC823E00B4C220 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
 		2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsProductViewModelTests.swift; sourceTree = "<group>"; };
 		2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsSuccessViewModel.swift"; sourceTree = "<group>"; };
 		2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewModelExpandedViewModelTests.swift; sourceTree = "<group>"; };
@@ -5127,6 +5134,7 @@
 		2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSubscriptionsViewModel.swift"; sourceTree = "<group>"; };
 		2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2ACE0AB72B540697007AA2ED /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		2ACE8C9B2CDCAF27006EC9F4 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACEA7B92CA82EDA00404DFF /* SelectedCategoryNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryNavigation.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
@@ -9395,7 +9403,9 @@
 				2A30B0972CCE2BA4006697E1 /* QRNavigationPreviewApp.swift */,
 				2A632C722CD1206300AF3B6B /* CompositionRoot */,
 				2A632C662CD1179000AF3B6B /* ContentView */,
+				2AA3C38A2CDC823000B4C220 /* Categories */,
 				2A632C692CD118DF00AF3B6B /* QR */,
+				2AA3C3772CDB79C000B4C220 /* QRFailure */,
 				2A65AAE02CD1287B001AB123 /* Payments */,
 				2A65AAFC2CD26DF7001AB123 /* HELPERS-MOVE_TO_MODULE(S) */,
 				2A30B09B2CCE2BA4006697E1 /* Assets.xcassets */,
@@ -10705,7 +10715,6 @@
 				2A632C6A2CD118ED00AF3B6B /* QRDomain.swift */,
 				2A65AAFB2CD26CA0001AB123 /* Binder */,
 				2A65AAEA2CD147F1001AB123 /* Content */,
-				2AA3C3772CDB79C000B4C220 /* QRFailure */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -11976,10 +11985,21 @@
 		2AA3C3772CDB79C000B4C220 /* QRFailure */ = {
 			isa = PBXGroup;
 			children = (
+				2AA3C3802CDBBD2900B4C220 /* QRFailureDomain.swift */,
+				2AA3C3842CDBBDA700B4C220 /* QRFailureBinderView.swift */,
 				2AA3C3782CDB79CC00B4C220 /* QRFailure.swift */,
 				2AA3C37B2CDB7D1500B4C220 /* QRFailureView.swift */,
 			);
 			path = QRFailure;
+			sourceTree = "<group>";
+		};
+		2AA3C38A2CDC823000B4C220 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				2AA3C38B2CDC823E00B4C220 /* Categories.swift */,
+				2ACE8C9B2CDCAF27006EC9F4 /* CategoriesView.swift */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		2AA429032AC1D51300919C4A /* PaymentsProductViewComponent */ = {
@@ -20445,13 +20465,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AA3C3862CDBBDC000B4C220 /* QRFailureBinderView.swift in Sources */,
+				2AA3C38D2CDC825500B4C220 /* Categories.swift in Sources */,
 				2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */,
 				2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */,
 				2A65AADF2CD127A8001AB123 /* QRContentView.swift in Sources */,
 				2A3A64D92CDA9FFE007C0587 /* ContentViewModelComposer.swift in Sources */,
+				2ACE8C9C2CDCAF27006EC9F4 /* CategoriesView.swift in Sources */,
 				2A30B09A2CCE2BA4006697E1 /* ContentView.swift in Sources */,
 				2AA3C37A2CDB79E200B4C220 /* QRFailure.swift in Sources */,
 				2A632C712CD1203100AF3B6B /* QRModel.swift in Sources */,
+				2AA3C3832CDBBD7000B4C220 /* QRFailureDomain.swift in Sources */,
 				2A65AAE22CD12889001AB123 /* Payments.swift in Sources */,
 				2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */,
 				2A30B0982CCE2BA4006697E1 /* QRNavigationPreviewApp.swift in Sources */,

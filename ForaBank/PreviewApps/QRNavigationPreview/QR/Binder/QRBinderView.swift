@@ -27,7 +27,7 @@ struct QRBinderView: View {
                             PaymentsView(model: payments)
                             
                         case let .qrFailure(qrFailure):
-                            QRFailureView(qrFailure: qrFailure)
+                            QRFailureBinderView(binder: qrFailure)
                         }
                     }
                 )
@@ -67,15 +67,15 @@ extension QRDomain.FlowDomain.State {
         case let .payments(node):
             return .payments(node.model)
             
-        case let .qrFailure(qrFailure):
-            return .qrFailure(qrFailure)
+        case let .qrFailure(node):
+            return .qrFailure(node.model)
         }
     }
     
     enum Destination {
         
         case payments(Payments)
-        case qrFailure(QRFailure)
+        case qrFailure(QRFailureDomain.Binder)
     }
 }
 

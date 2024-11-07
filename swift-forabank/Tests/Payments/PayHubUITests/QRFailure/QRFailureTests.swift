@@ -12,6 +12,9 @@ import XCTest
 class QRFailureTests: XCTestCase {
     
     typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
+    typealias Categories = ClosingScanQR
+    typealias DetailPayment = ClosingScanQR
+    
     typealias Select = Domain.Select
     
     struct QRCode: Equatable {
@@ -28,7 +31,6 @@ class QRFailureTests: XCTestCase {
     
     struct QRFailure {
         
-        let value: String
         private let subject = PassthroughSubject<Select, Never>()
         
         var selectPublisher: AnyPublisher<Select, Never> {
@@ -46,35 +48,50 @@ class QRFailureTests: XCTestCase {
         }
     }
     
-    func makeQRFailure(
-        _ value: String = anyMessage()
-    ) -> QRFailure {
+    func makeQRFailure() -> QRFailure {
         
-        return .init(value: value)
+        return .init()
     }
     
-    struct Categories: Equatable {
+    final class ClosingScanQR {
         
-        let value: String
+        // MARK: - close
+        
+        private let closeSubject = PassthroughSubject<Bool, Never>()
+        
+        var isClosedPublisher: AnyPublisher<Bool, Never> {
+            
+            closeSubject.eraseToAnyPublisher()
+        }
+        
+        func close() {
+            
+            closeSubject.send(true)
+        }
+        
+        // MARK: - scanQR
+        
+        private let subject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            subject.send(())
+        }
     }
     
-    func makeCategories(
-        _ value: String = anyMessage()
-    ) -> Categories {
+    func makeDetailPayment() -> ClosingScanQR {
         
-        return .init(value: value)
+        return .init()
     }
     
-    struct DetailPayment: Equatable {
+    func makeCategories() -> ClosingScanQR {
         
-        let value: String
-    }
-    
-    func makeDetailPayment(
-        _ value: String = anyMessage()
-    ) -> DetailPayment {
-        
-        return .init(value: value)
+        return .init()
     }
     
     func equatable(
@@ -82,22 +99,21 @@ class QRFailureTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .categories(.failure):
-            return .categories(.failure(.init()))
+        case let .categories(node):
+            return .categories(.init(node.model))
             
-        case let .categories(.success(categories)):
-            return .categories(.success(categories))
+        case let .detailPayment(node):
+            return .detailPayment(.init(node.model))
             
-        case let .detailPayment(detailPayment):
-            return .detailPayment(detailPayment)
+        case .scanQR:
+            return .scanQR
         }
     }
     
     enum EquatableNavigation: Equatable {
         
-        case categories(Result<Categories, CategoriesFailure>)
-        case detailPayment(DetailPayment)
+        case categories(ObjectIdentifier)
+        case detailPayment(ObjectIdentifier)
+        case scanQR
     }
-    
-    struct CategoriesFailure: Error, Equatable {}
 }
