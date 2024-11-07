@@ -25,6 +25,9 @@ struct QRBinderView: View {
                         switch $0 {
                         case let .payments(payments):
                             PaymentsView(model: payments)
+                            
+                        case let .qrFailure(qrFailure):
+                            QRFailureView(qrFailure: qrFailure)
                         }
                     }
                 )
@@ -63,12 +66,16 @@ extension QRDomain.FlowDomain.State {
             
         case let .payments(node):
             return .payments(node.model)
+            
+        case let .qrFailure(qrFailure):
+            return .qrFailure(qrFailure)
         }
     }
     
     enum Destination {
         
         case payments(Payments)
+        case qrFailure(QRFailure)
     }
 }
 
@@ -79,11 +86,15 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         switch self {
         case let .payments(payments):
             return .payments(.init(payments))
+            
+        case let .qrFailure(qrFailure):
+            return .qrFailure(.init(qrFailure))
         }
     }
     
     enum ID: Hashable {
         
         case payments(ObjectIdentifier)
+        case qrFailure(ObjectIdentifier)
     }
 }
