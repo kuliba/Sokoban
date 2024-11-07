@@ -1,23 +1,23 @@
 //
-//  PaymentsView.swift
+//  CategoryPickerView.swift
 //  QRNavigationPreview
 //
-//  Created by Igor Malyarov on 29.10.2024.
+//  Created by Igor Malyarov on 07.11.2024.
 //
 
 import SwiftUI
 
-struct PaymentsView: View {
+struct CategoryPickerView: View {
     
-    let model: Payments
+    let model: CategoryPicker
     
     var body: some View {
         
-        model.source.text
+        content
             .foregroundColor(.secondary)
             .padding(.top)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .navigationTitle("Payments")
+            .navigationTitle("Payment Categories")
             .navigationBarBackButtonHidden()
             .toolbar {
                 
@@ -38,18 +38,15 @@ struct PaymentsView: View {
                 }
             }
     }
-}
-
-private extension Payments.Source {
     
-    var text: Text {
+    @ViewBuilder
+    var content: some View {
         
-        switch self {
-        case let .qrCode(qrCode):
-            Text("Payments View for QR Code **\(qrCode.value)**")
-            
-        case let .url(url):
-            Text("Payments View for url: **\(url.relativeString)**")
+        if model.qrCode.value.isEmpty {
+            Text("Load Categories failure")
+                .foregroundColor(.red)
+        } else {
+            Text("TBD: list of categories")
         }
     }
 }
@@ -58,7 +55,7 @@ private extension Payments.Source {
     
     NavigationView {
         
-        PaymentsView(model: .init(
+        CategoryPickerView(model: .init(
             qrCode: .init(value: .init(UUID().uuidString.prefix(6)))
         ))
     }

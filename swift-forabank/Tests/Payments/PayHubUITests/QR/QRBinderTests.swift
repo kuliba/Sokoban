@@ -99,8 +99,8 @@ class QRBinderTests: XCTestCase {
         case let .payments(node):
             return .payments(.init(node.model))
             
-        case let .qrFailure(qrFailure):
-            return .qrFailure(.init(qrFailure))
+        case let .qrFailure(node):
+            return .qrFailure(.init(node.model))
         }
     }
     
@@ -144,6 +144,18 @@ class QRBinderTests: XCTestCase {
             
             isCloseSubject.value = true
         }
+        
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
     }
     
     func makePayments() -> Payments {
@@ -153,6 +165,17 @@ class QRBinderTests: XCTestCase {
     
     final class QRFailure {
         
+        private let scanQRSubject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            scanQRSubject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            scanQRSubject.send(())
+        }
     }
     
     func makeQRFailure() -> QRFailure {

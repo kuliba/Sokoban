@@ -8,5 +8,5 @@
 public enum QRNavigation<Payments, QRFailure> {
     
     case payments(Node<Payments>)
-    case qrFailure(QRFailure)
+    case qrFailure(Node<QRFailure>)
 }

@@ -10,7 +10,7 @@ import PayHubUI
 
 typealias QRDomain = PayHubUI.QRDomain<QRNavigation, QRModel, QRResult>
 
-typealias QRNavigation = PayHubUI.QRNavigation<Payments, QRFailure>
+typealias QRNavigation = PayHubUI.QRNavigation<Payments, QRFailureDomain.Binder>
 
 typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
 
