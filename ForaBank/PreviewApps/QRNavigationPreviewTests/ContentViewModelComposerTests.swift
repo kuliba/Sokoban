@@ -14,7 +14,7 @@ final class ContentViewModelComposerTests: XCTestCase {
     
     // MARK: - scanQR
     
-    func test_shouldSetNavigationOnSelect() {
+    func test_scanQR_shouldSetNavigationOnSelect() {
         
         let flow = makeSUT().compose()
         
@@ -23,7 +23,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNoDiff(equatable(flow.state), .init(navigation: .qr))
     }
     
-    func test_shouldResetNavigationOnDismiss() {
+    func test_scanQR_shouldResetNavigationOnDismiss() {
         
         let flow = makeSUT().compose()
         
@@ -35,7 +35,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNil(flow.state.navigation)
     }
     
-    func test_shouldResetNavigationOnQRClose() throws {
+    func test_scanQR_shouldResetNavigationOnQRClose() throws {
         
         let flow = makeSUT().compose()
         
@@ -72,6 +72,18 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNil(flow.qrNavigation)
     }
     
+    func test_shouldResetQRNavigationOnC2BSubscribeScanQR() throws {
+        
+        let flow = makeSUT().compose()
+        flow.event(.select(.scanQR))
+        try flow.qr.emit(.c2bSubscribeURL(anyURL()))
+        XCTAssertNotNil(flow.qrNavigation)
+        
+        try flow.payments.scanQR()
+        
+        XCTAssertNil(flow.qrNavigation)
+    }
+    
     // MARK: - c2bURL
     
     func test_shouldSetQRNavigationOnC2B() throws {
@@ -97,6 +109,18 @@ final class ContentViewModelComposerTests: XCTestCase {
         XCTAssertNil(flow.qrNavigation)
     }
     
+    func test_shouldResetQRNavigationOnC2BScanQR() throws {
+        
+        let flow = makeSUT().compose()
+        flow.event(.select(.scanQR))
+        try flow.qr.emit(.c2bURL(anyURL()))
+        XCTAssertNotNil(flow.qrNavigation)
+        
+        try flow.payments.scanQR()
+        
+        XCTAssertNil(flow.qrNavigation)
+    }
+    
     // MARK: - failure
     
     func test_shouldSetQRNavigationOnFailure() throws {
@@ -105,7 +129,7 @@ final class ContentViewModelComposerTests: XCTestCase {
         let flow = makeSUT().compose()
         flow.event(.select(.scanQR))
         try XCTAssertNil(flow.qrFlow.state.navigation)
-
+        
         try flow.qr.emit(.failure(qrCode))
         
         try XCTAssertNotNil(flow.qrFlow.state.navigation)

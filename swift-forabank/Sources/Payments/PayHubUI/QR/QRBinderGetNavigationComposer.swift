@@ -22,7 +22,7 @@ public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, Q
     }
     
     public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure>
-    public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments, QRFailure>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -49,7 +49,10 @@ public extension QRBinderGetNavigationComposer {
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(qrCode)
-            completion(.qrFailure(qrFailure))
+            completion(.qrFailure(.init(
+                model: qrFailure,
+                cancellables: bind(qrFailure, with: notify)
+            )))
             
         default:
             fatalError()
@@ -66,15 +69,27 @@ public extension QRBinderGetNavigationComposer {
 private extension QRBinderGetNavigationComposer {
     
     func bind(
+        _ qrFailure: QRFailure,
+        with notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let scanQR = witnesses.qrFailureScanQR(qrFailure)
+            .sink { notify(.dismiss) }
+        
+        return [scanQR]
+    }
+    
+    func bind(
         _ payments: Payments,
         with notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let share = witnesses.isClosed(payments).share()
-        
-        let close = share
+        let close = witnesses.isClosed(payments)
             .sink { if $0 { notify(.dismiss) }}
         
-        return [close]
+        let scanQR = witnesses.scanQR(payments)
+            .sink { notify(.dismiss) }
+        
+        return [close, scanQR]
     }
 }
