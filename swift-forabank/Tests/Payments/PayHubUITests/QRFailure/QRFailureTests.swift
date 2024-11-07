@@ -12,6 +12,9 @@ import XCTest
 class QRFailureTests: XCTestCase {
     
     typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
+    typealias Categories = ScanQR
+    typealias DetailPayment = ScanQR
+
     typealias Select = Domain.Select
     
     struct QRCode: Equatable {
@@ -50,19 +53,7 @@ class QRFailureTests: XCTestCase {
         return .init()
     }
     
-    struct Categories: Equatable {
-        
-        let value: String
-    }
-    
-    func makeCategories(
-        _ value: String = anyMessage()
-    ) -> Categories {
-        
-        return .init(value: value)
-    }
-    
-    final class DetailPayment{
+    final class ScanQR {
         
         private let subject = PassthroughSubject<Void, Never>()
         
@@ -77,7 +68,12 @@ class QRFailureTests: XCTestCase {
         }
     }
     
-    func makeDetailPayment() -> DetailPayment {
+    func makeDetailPayment() -> ScanQR {
+        
+        return .init()
+    }
+    
+    func makeCategories() -> ScanQR {
         
         return .init()
     }
@@ -87,11 +83,8 @@ class QRFailureTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case .categories(.failure):
-            return .categories(.failure(.init()))
-            
-        case let .categories(.success(categories)):
-            return .categories(.success(categories))
+        case let .categories(node):
+            return .categories(.init(node.model))
             
         case let .detailPayment(node):
             return .detailPayment(.init(node.model))
@@ -103,7 +96,7 @@ class QRFailureTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
-        case categories(Result<Categories, CategoriesFailure>)
+        case categories(ObjectIdentifier)
         case detailPayment(ObjectIdentifier)
         case scanQR
     }

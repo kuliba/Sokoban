@@ -103,25 +103,6 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         XCTAssertNoDiff(spies.makeCategories.payloads, [qrCode])
     }
     
-    func test_composed_search_shouldDeliverFailureOnCategoriesFailure() {
-        
-        let (sut, _, scheduler) = makeSUT(
-            delay: .seconds(500),
-            categories: .none
-        )
-        
-        let composed = sut.compose(qrCode: makeQRCode())
-        composed.content.emit(.search(makeQRCode()))
-        scheduler.advance(by: .seconds(500))
-        scheduler.advance(to: .init(.now()))
-        scheduler.advance(by: .milliseconds(100))
-        
-        XCTAssertNoDiff(
-            composed.flow.state.navigation.map(equatable),
-            .categories(.failure(.init()))
-        )
-    }
-    
     func test_composed_search_shouldDeliverCategories() {
         
         let categories = makeCategories()
@@ -138,7 +119,30 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
-            .categories(.success(categories))
+            .categories(.init(categories))
+        )
+    }
+    
+    func test_composed_search_shouldDeliverScanQROnCategoriesScanQR() throws {
+        
+        let categories = makeCategories()
+        let (sut, _, scheduler) = makeSUT(
+            delay: .seconds(500),
+            categories: categories
+        )
+        
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.search(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        try composed.flow.categories.scanQR()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .scanQR
         )
     }
     
@@ -146,7 +150,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment>
     private typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
-    private typealias MakeCategories = CallSpy<QRCode, Categories?>
+    private typealias MakeCategories = CallSpy<QRCode, Categories>
     private typealias MakeDetailPayment = CallSpy<QRCode, DetailPayment>
     
     private struct Spies {
@@ -170,7 +174,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     ) {
         let spies = Spies(
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
-            makeCategories: .init(stubs: [categories]),
+            makeCategories: .init(stubs: [categories ?? makeCategories()]),
             makeDetailPayment: .init(stubs: [detailPayment ?? makeDetailPayment()])
         )
         let scheduler = DispatchQueue.test
@@ -182,7 +186,8 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 makeDetailPayment: spies.makeDetailPayment.call
             ), 
             scanQRWitnesses: .init(
-                detailPayment:  { $0.scanQRPublisher }
+                categories: { $0.scanQRPublisher },
+                detailPayment: { $0.scanQRPublisher }
             ),
             witnesses: .init(
                 contentEmitting: { $0.selectPublisher },
@@ -219,25 +224,14 @@ extension QRFailureTests.Domain.Flow {
         }
     }
     
-    var categoriesSuccess: QRFailureTests.Categories {
+    var categories: QRFailureTests.Categories {
         
         get throws {
             
-            guard case let .categories(.success(categories)) = state.navigation
+            guard case let .categories(node) = state.navigation
             else { throw NSError(domain: "Expected Categories", code: -1) }
             
-            return categories
-        }
-    }
-    
-    var categoriesFailure: Error {
-        
-        get throws {
-            
-            guard case let .categories(.failure(failure)) = state.navigation
-            else { throw NSError(domain: "Expected Categories Failure", code: -1) }
-            
-            return failure
+            return node.model
         }
     }
 }

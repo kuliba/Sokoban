@@ -14,7 +14,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     
     private let delay: Delay
     private let microServices: MicroServices
-    private let scanQRWitnesses: QRFailureScanQRWitnesses<DetailPayment>
+    private let scanQRWitnesses: QRFailureScanQRWitnesses
     private let witnesses: Witnesses
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -22,7 +22,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public init(
         delay: Delay,
         microServices: MicroServices,
-        scanQRWitnesses: QRFailureScanQRWitnesses<DetailPayment>,
+        scanQRWitnesses: QRFailureScanQRWitnesses,
         witnesses: Witnesses,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -38,6 +38,8 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
     public typealias MicroServices = QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment>
+    
+    public typealias QRFailureScanQRWitnesses = PayHubUI.QRFailureScanQRWitnesses<Categories, DetailPayment>
     
     public typealias Witnesses = ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
     public typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
@@ -66,10 +68,10 @@ public extension QRFailureBinderComposer {
                     
                 case let .search(qrCode):
                     let categories = microServices.makeCategories(qrCode)
-                    completion(.categories(.init {
-                        
-                        try categories.get(orThrow: MakeCategoriesFailure())
-                    }))
+                    let cancellable = scanQRWitnesses.categories(categories)
+                    .sink { notify(.select(.scanQR)) }
+                    
+                    completion(.categories(.init(model: categories, cancellable: cancellable)))
                 }
             },
             scheduler: scheduler,

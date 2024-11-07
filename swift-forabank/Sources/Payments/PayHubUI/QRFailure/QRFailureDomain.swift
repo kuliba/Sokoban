@@ -37,7 +37,7 @@ public extension QRFailureDomain {
     
     enum Navigation {
         
-        case categories(Result<Categories, Error>)
+        case categories(Node<Categories>)
         case detailPayment(Node<DetailPayment>)
         case scanQR
     }
