@@ -102,7 +102,7 @@ final class ResponseMapper_mapCollateralLoanLandingSaveConsentsResponseTests: XC
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
-        ResponseMapper.mapCollateralLoanLandingSaveConsents(data, httpURLResponse)
+        ResponseMapper.mapCollateralLoanLandingSaveConsentsResponse(data, httpURLResponse)
     }
 }
 

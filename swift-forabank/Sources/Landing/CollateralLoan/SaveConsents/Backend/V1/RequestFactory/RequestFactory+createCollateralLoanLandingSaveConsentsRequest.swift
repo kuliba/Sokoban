@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension RequestFactory {
 
-    struct CreateSaveConsentsCollateralLoanApplicationPayload: Equatable {
+    struct CreateCollateralLoanLandingSaveConsentsPayload: Equatable {
         
         public let applicationId: Int
         public let verificationCode: String
@@ -23,7 +23,7 @@ public extension RequestFactory {
 
     static func createCollateralLoanLandingSaveConsentsRequest(
         url: URL,
-        payload: CreateSaveConsentsCollateralLoanApplicationPayload
+        payload: CreateCollateralLoanLandingSaveConsentsPayload
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -32,7 +32,7 @@ public extension RequestFactory {
     }
 }
 
-public extension RequestFactory.CreateSaveConsentsCollateralLoanApplicationPayload {
+public extension RequestFactory.CreateCollateralLoanLandingSaveConsentsPayload {
     
     var httpBody: Data {
 

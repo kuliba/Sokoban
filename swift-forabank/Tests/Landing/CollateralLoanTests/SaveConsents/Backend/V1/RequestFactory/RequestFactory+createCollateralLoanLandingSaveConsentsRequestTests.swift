@@ -43,12 +43,12 @@ final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: 
 
 extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
     
-    typealias Payload = RequestFactory.CreateSaveConsentsCollateralLoanApplicationPayload
+    typealias Payload = RequestFactory.CreateCollateralLoanLandingSaveConsentsPayload
 }
 
 // MARK: - Helpers
 
-private extension RequestFactory.CreateSaveConsentsCollateralLoanApplicationPayload {
+private extension RequestFactory.CreateCollateralLoanLandingSaveConsentsPayload {
     
     static let stub = Self(applicationId: .random(in: (0...Int.max)), verificationCode: anyMessage())
     

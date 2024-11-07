@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapCollateralLoanLandingSaveConsents.swift
+//  ResponseMapper+mapCollateralLoanLandingSaveConsentsResponse.swift
 //
 //
 //  Created by Valentin Ozerov on 24.10.2024.
@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension ResponseMapper {
     
-    static func mapCollateralLoanLandingSaveConsents(
+    static func mapCollateralLoanLandingSaveConsentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<CollateralLoanLandingSaveConsentsResponse> {
