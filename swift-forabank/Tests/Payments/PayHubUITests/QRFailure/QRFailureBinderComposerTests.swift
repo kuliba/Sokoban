@@ -23,29 +23,43 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         XCTAssertNotNil(sut)
     }
     
+    // MARK: - compose
+    
+    func test_compose_shouldCallMakeQRFailureWithQRCode() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies, _) = makeSUT()
+        
+        let composed = sut.compose(qrCode: qrCode)
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+    }
+    
     // MARK: - payWithDetails
     
-    func test_composed_payWithDetails_shouldCallMakeDetailPayment() {
+    func test_composed_payWithDetails_shouldCallMakeDetailPaymentWithQRCode() {
         
+        let qrCode = makeQRCode()
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose()
-        composed.content.emit(.payWithDetails)
+        let composed = sut.compose(qrCode: qrCode)
+        composed.content.emit(.init(qrCode: qrCode, selection: .payWithDetails))
         scheduler.advance(by: .seconds(500))
         
-        XCTAssertNoDiff(spies.makeDetailPayment.payloads.count, 1)
+        XCTAssertNoDiff(spies.makeDetailPayment.payloads, [qrCode])
     }
     
     func test_composed_payWithDetails_shouldDeliverDetailPayment() {
         
+        let qrCode = makeQRCode()
         let detailPayment = makeDetailPayment()
         let (sut, _, scheduler) = makeSUT(
             delay: .seconds(500),
             detailPayment: detailPayment
         )
         
-        let composed = sut.compose()
-        composed.content.emit(.payWithDetails)
+        let composed = sut.compose(qrCode: qrCode)
+        composed.content.emit(.init(qrCode: qrCode, selection: .payWithDetails))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -58,15 +72,16 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - search
     
-    func test_composed_search_shouldCallMakeCategories() {
+    func test_composed_search_shouldCallMakeCategoriesWithQRCode() {
         
+        let qrCode = makeQRCode()
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose()
-        composed.content.emit(.search)
+        let composed = sut.compose(qrCode: qrCode)
+        composed.content.emit(.init(qrCode: qrCode, selection: .search))
         scheduler.advance(by: .seconds(500))
         
-        XCTAssertNoDiff(spies.makeCategories.payloads.count, 1)
+        XCTAssertNoDiff(spies.makeCategories.payloads, [qrCode])
     }
     
     func test_composed_search_shouldDeliverFailureOnCategoriesFailure() {
@@ -76,8 +91,8 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             categories: .none
         )
         
-        let composed = sut.compose()
-        composed.content.emit(.search)
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.init(qrCode: makeQRCode(), selection: .search))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -96,8 +111,8 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             categories: categories
         )
         
-        let composed = sut.compose()
-        composed.content.emit(.search)
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.init(qrCode: makeQRCode(), selection: .search))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -110,10 +125,10 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRFailureBinderComposer<QRFailure, Categories, DetailPayment>
-    private typealias MakeQRFailure = CallSpy<Void, QRFailure>
-    private typealias MakeCategories = CallSpy<Void, Categories?>
-    private typealias MakeDetailPayment = CallSpy<Void, DetailPayment>
+    private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment>
+    private typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
+    private typealias MakeCategories = CallSpy<QRCode, Categories?>
+    private typealias MakeDetailPayment = CallSpy<QRCode, DetailPayment>
     
     private struct Spies {
         

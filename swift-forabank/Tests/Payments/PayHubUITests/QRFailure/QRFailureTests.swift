@@ -11,8 +11,20 @@ import XCTest
 
 class QRFailureTests: XCTestCase {
     
-    typealias Domain = QRFailureDomain<QRFailure, Categories, DetailPayment>
+    typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
     typealias Select = Domain.Select
+    
+    struct QRCode: Equatable {
+        
+        let value: String
+    }
+    
+    func makeQRCode(
+        _ value: String = anyMessage()
+    ) -> QRCode {
+        
+        return .init(value: value)
+    }
     
     struct QRFailure {
         

@@ -8,7 +8,7 @@
 import PayHub
 
 /// A namespace.
-public enum QRFailureDomain<QRFailure, Categories, DetailPayment> {}
+public enum QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment> {}
 
 public extension QRFailureDomain {
     
@@ -28,9 +28,24 @@ public extension QRFailureDomain {
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    enum Select {
+    struct Select {
         
-        case search, payWithDetails
+        public let qrCode: QRCode
+        public let selection: Selection
+        
+        public init(
+            qrCode: QRCode, 
+            selection: Selection
+        ) {
+            self.qrCode = qrCode
+            self.selection = selection
+        }
+        
+        public enum Selection {
+            
+            case search
+            case payWithDetails
+        }
     }
     
     enum Navigation {

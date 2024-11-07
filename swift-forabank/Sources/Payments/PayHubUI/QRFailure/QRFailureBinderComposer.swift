@@ -10,7 +10,7 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
-public final class QRFailureBinderComposer<QRFailure, Categories, DetailPayment> {
+public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment> {
     
     private let delay: Delay
     private let microServices: MicroServices
@@ -34,15 +34,15 @@ public final class QRFailureBinderComposer<QRFailure, Categories, DetailPayment>
     
     public typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
-    public typealias MicroServices = QRFailureBinderComposerMicroServices<QRFailure, Categories, DetailPayment>
+    public typealias MicroServices = QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment>
     
     public typealias Witnesses = ContentFlowWitnesses<QRFailure, Domain.Flow, Domain.Select, Domain.Navigation>
-    public typealias Domain = QRFailureDomain<QRFailure, Categories, DetailPayment>
+    public typealias Domain = QRFailureDomain<QRCode, QRFailure, Categories, DetailPayment>
 }
 
 public extension QRFailureBinderComposer {
     
-    func compose() -> Domain.Binder {
+    func compose(qrCode: QRCode) -> Domain.Binder {
         
         let factory = ContentFlowBindingFactory(delay: delay, scheduler: scheduler)
         let composer = Domain.FlowComposer(
@@ -50,13 +50,13 @@ public extension QRFailureBinderComposer {
                 
                 guard let self else { return }
                 
-                switch select {
+                switch select.selection {
                 case .payWithDetails:
-                    let detailPayment = microServices.makeDetailPayment()
+                    let detailPayment = microServices.makeDetailPayment(select.qrCode)
                     completion(.detailPayment(detailPayment))
                     
                 case .search:
-                    let categories = microServices.makeCategories()
+                    let categories = microServices.makeCategories(select.qrCode)
                     completion(.categories(.init {
                         
                         try categories.get(orThrow: MakeCategoriesFailure())
@@ -68,7 +68,7 @@ public extension QRFailureBinderComposer {
         )
         
         return .init(
-            content: microServices.makeQRFailure(),
+            content: microServices.makeQRFailure(qrCode),
             flow: composer.compose(),
             bind: factory.bind(with: witnesses)
         )

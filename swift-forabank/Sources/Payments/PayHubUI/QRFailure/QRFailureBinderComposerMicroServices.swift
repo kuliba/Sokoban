@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 06.11.2024.
 //
 
-public struct QRFailureBinderComposerMicroServices<QRFailure, Categories, DetailPayment> {
+public struct QRFailureBinderComposerMicroServices<QRCode, QRFailure, Categories, DetailPayment> {
     
     public let makeQRFailure: MakeQRFailure
     public let makeCategories: MakeCategories
@@ -24,7 +24,7 @@ public struct QRFailureBinderComposerMicroServices<QRFailure, Categories, Detail
 
 public extension QRFailureBinderComposerMicroServices {
     
-    typealias MakeQRFailure = () -> QRFailure
-    typealias MakeCategories = () -> Categories?
-    typealias MakeDetailPayment = () -> DetailPayment
+    typealias MakeQRFailure = (QRCode) -> QRFailure
+    typealias MakeCategories = (QRCode) -> Categories?
+    typealias MakeDetailPayment = (QRCode) -> DetailPayment
 }
