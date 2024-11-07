@@ -8,10 +8,20 @@
 import SwiftUI
 import SearchBarComponent
 
+struct ContactsViewFactory {
+    
+    let makeContactsBanksSectionView: MakeContactsBanksSectionView
+}
+
+extension ContactsViewFactory {
+    
+    static let preview: Self = .init(makeContactsBanksSectionView: {_ in fatalError()})
+}
+
 struct ContactsView: View {
     
     @ObservedObject var viewModel: ContactsViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: ContactsViewFactory
     
     var body: some View {
         
@@ -56,7 +66,7 @@ struct ContactsView: View {
             ContactsBanksPrefferedSectionView(viewModel: viewModel)
             
         case let viewModel as ContactsBanksSectionViewModel:
-            ContactsBanksSectionView(viewModel: viewModel, viewFactory: viewFactory)
+            viewFactory.makeContactsBanksSectionView(viewModel)
             
         case let viewModel as ContactsCountriesSectionViewModel:
             ContactsCountriesSectionView(viewModel: viewModel)

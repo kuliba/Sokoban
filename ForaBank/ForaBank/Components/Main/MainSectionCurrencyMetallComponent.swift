@@ -165,12 +165,22 @@ extension MainSectionCurrencyMetallView {
     }
 }
 
+struct MainSectionCurrencyMetalViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension MainSectionCurrencyMetalViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 //MARK: - View
 
 struct MainSectionCurrencyMetallView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: MainSectionCurrencyMetalViewFactory
 
     var body: some View {
         
@@ -180,12 +190,9 @@ struct MainSectionCurrencyMetallView: View {
                 
                 if let selectorViewModel = viewModel.selector {
                     
-                    OptionSelectorView(
-                        viewModel: selectorViewModel,
-                        viewFactory: viewFactory
-                    )
-                    .frame(height: 24)
-                    .padding(.leading, 20)
+                    viewFactory.makeOptionSelectorView(selectorViewModel)
+                        .frame(height: 24)
+                        .padding(.leading, 20)
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {

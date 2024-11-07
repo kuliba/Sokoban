@@ -716,6 +716,18 @@ extension ProductCarouselView.ViewModel {
     }
 }
 
+// MARK: - ViewFactory
+
+struct ProductCarouselViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension ProductCarouselViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 //MARK: - View
 
 struct ProductCarouselView: View {
@@ -723,12 +735,12 @@ struct ProductCarouselView: View {
     @ObservedObject private var viewModel: ViewModel
     
     private let buttonNewProduct: () -> ButtonNewProduct?
-    private let viewFactory: OptionSelectorViewFactory
+    private let viewFactory: ProductCarouselViewFactory
     
     init(
         viewModel: ViewModel,
         buttonNewProduct: @escaping () -> ButtonNewProduct?,
-        viewFactory: OptionSelectorViewFactory
+        viewFactory: ProductCarouselViewFactory
     ) {
         self.viewModel = viewModel
         self.buttonNewProduct = buttonNewProduct
@@ -737,7 +749,7 @@ struct ProductCarouselView: View {
     
     init(
         viewModel: ViewModel,
-        viewFactory: OptionSelectorViewFactory
+        viewFactory: ProductCarouselViewFactory
     ) {
         self.init(viewModel: viewModel, buttonNewProduct: { nil }, viewFactory: viewFactory)
     }
@@ -752,10 +764,7 @@ struct ProductCarouselView: View {
             
             viewModel.selector.map {
                 
-                OptionSelectorView(
-                    viewModel: $0,
-                    viewFactory: viewFactory
-                )
+                viewFactory.makeOptionSelectorView($0)
                     .frame(height: selectorFrameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")
                     .padding(

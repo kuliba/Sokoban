@@ -241,12 +241,24 @@ extension CurrencyWalletListViewModel {
     }
 }
 
+// MARK: - ViewFactory
+
+struct CurrencyWalletListViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension CurrencyWalletListViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 // MARK: - View
 
 struct CurrencyWalletListView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: CurrencyWalletListViewFactory
     
     var body: some View {
         
@@ -254,11 +266,8 @@ struct CurrencyWalletListView: View {
             
             if let optionSelector = viewModel.optionSelector {
                 
-                OptionSelectorView(
-                    viewModel: optionSelector,
-                    viewFactory: viewFactory
-                )
-                .padding(.horizontal, 20)
+                viewFactory.makeOptionSelectorView(optionSelector)
+                    .padding(.horizontal, 20)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {

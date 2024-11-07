@@ -439,19 +439,31 @@ extension ProductsSwapView.ViewModel {
     }
 }
 
+// MARK: - ViewFactory
+
+struct ProductsSwapViewFactory {
+    
+    let makeProductSelectorView: MakeProductSelectorView
+}
+
+extension ProductsSwapViewFactory {
+    
+    static let preview: Self = .init(makeProductSelectorView: {_ in fatalError()})
+}
+
 // MARK: - View
 
 struct ProductsSwapView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: ProductsSwapViewFactory
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: 8) {
             
             ForEach(viewModel.items) { item in
-                ProductSelectorView(viewModel: item, viewFactory: viewFactory)
+                viewFactory.makeProductSelectorView(item)
                     .padding(.top, 4)
                 
                 if let from = viewModel.from, item.id == from.id {

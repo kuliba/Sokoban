@@ -354,13 +354,24 @@ enum ProductSelectorAction {
         }
     }
 }
+// MARK: - ViewFactory
+
+struct ProductSelectorViewFactory {
+    
+    let makeProductCarouselView: MakeProductCarouselView
+}
+
+extension ProductSelectorViewFactory {
+    
+    static let preview: Self = .init(makeProductCarouselView: {_,_  in fatalError()})
+}
 
 // MARK: - View
 
 struct ProductSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: ProductSelectorViewFactory
     
     var body: some View {
         
@@ -371,7 +382,7 @@ struct ProductSelectorView: View {
                 .padding(.trailing, 16)
             
             viewModel.productCarouselViewModel
-                .map { ProductCarouselView.init(viewModel: $0, viewFactory: viewFactory) }
+                .map { viewFactory.makeProductCarouselView($0, { nil }) }
                 .animation(nil)
                 .accessibilityIdentifier("ProductSelectorCarousel")
         }

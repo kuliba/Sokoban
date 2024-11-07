@@ -119,6 +119,18 @@ enum OptionSelectorAction {
     }
 }
 
+// MARK: - ViewFactory
+
+struct OptionSelectorViewFactory {
+    
+    let makeOptionButtonView: MakeOptionButtonView
+}
+
+extension OptionSelectorViewFactory {
+    
+    static let preview: Self = .init(makeOptionButtonView: {_,_  in fatalError()})
+}
+
 //MARK: - View
 
 struct OptionSelectorView: View {
@@ -143,10 +155,7 @@ struct OptionSelectorView: View {
                 
                 ForEach(viewModel.options) { optionViewModel in
                     
-                    OptionButtonView(
-                        viewModel: optionViewModel,
-                        isSelected: viewModel.selected == optionViewModel.id,
-                        viewFactory: viewFactory)
+                    viewFactory.makeOptionButtonView(optionViewModel, viewModel.selected == optionViewModel.id)
                 }
             }
         }
@@ -157,11 +166,16 @@ struct OptionSelectorView: View {
 
 extension OptionSelectorView {
     
+    struct OptionButtonViewFactory {
+        
+        let makeCategoryView: MakeCategoryView
+    }
+    
     struct OptionButtonView: View {
         
         let viewModel: ViewModel.OptionViewModel
         let isSelected: Bool
-        let viewFactory: OptionSelectorViewFactory
+        let viewFactory: OptionButtonViewFactory
 
         var body: some View {
             

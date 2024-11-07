@@ -54,6 +54,11 @@ typealias MakePaymentGroupView = (PaymentsGroupViewModel) -> PaymentGroupView
 typealias MakePaymentsOperationView = (PaymentsOperationViewModel) -> PaymentsOperationView
 typealias MakePaymentsServiceView = (PaymentsServiceViewModel) -> PaymentsServiceView
 typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
+typealias MakeContactsBanksSectionView = (ContactsBanksSectionViewModel) -> ContactsBanksSectionView
+typealias MakeCurrencyWalletSelectorView = (CurrencyWalletSelectorView.ViewModel) -> CurrencyWalletSelectorView
+typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping () -> ButtonNewProduct?) -> ProductCarouselView
+typealias MakeCurrencyWalletListView = (CurrencyWalletListViewModel) -> CurrencyWalletListView
+typealias MakeOptionButtonView = (OptionSelectorView.ViewModel.OptionViewModel, Bool) -> OptionSelectorView.OptionButtonView
 
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 

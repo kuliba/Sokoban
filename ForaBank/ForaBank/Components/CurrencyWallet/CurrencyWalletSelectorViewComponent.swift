@@ -420,12 +420,24 @@ extension CurrencyWalletSelectorViewModel {
     }
 }
 
+// MARK: - ViewFactory
+
+struct CurrencyWalletSelectorViewFactory {
+    
+    let makeCurrencyWalletListView: MakeCurrencyWalletListView
+}
+
+extension CurrencyWalletSelectorViewFactory {
+    
+    static let preview: Self = .init(makeCurrencyWalletListView: {_ in fatalError()})
+}
+
 // MARK: - View
 
 struct CurrencyWalletSelectorView: View {
     
     @ObservedObject var viewModel: ViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: CurrencyWalletSelectorViewFactory
     
     var background: Color {
         
@@ -443,7 +455,7 @@ struct CurrencyWalletSelectorView: View {
             
             if let listViewModel = viewModel.listViewModel {
                 
-                CurrencyWalletListView(viewModel: listViewModel, viewFactory: viewFactory)
+                viewFactory.makeCurrencyWalletListView(listViewModel)
                     .padding(.top, 8)
                 
             } else {

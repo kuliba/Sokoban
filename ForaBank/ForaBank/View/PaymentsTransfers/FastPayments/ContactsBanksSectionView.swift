@@ -7,10 +7,20 @@
 
 import SwiftUI
 
+struct ContactsBanksSectionViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension ContactsBanksSectionViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 struct ContactsBanksSectionView: View {
     
     @ObservedObject var viewModel: ContactsBanksSectionViewModel
-    let viewFactory: OptionSelectorViewFactory
+    let viewFactory: ContactsBanksSectionViewFactory
     
     var body: some View {
       
@@ -35,13 +45,10 @@ struct ContactsBanksSectionView: View {
             
             if viewModel.header.isCollapsed {
                 
-                OptionSelectorView(
-                    viewModel: viewModel.options,
-                    viewFactory: viewFactory
-                )
-                .padding(.horizontal, 20)
-                .padding(.top, 0)
-                .padding(.bottom, 24)
+                viewFactory.makeOptionSelectorView(viewModel.options)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 0)
+                    .padding(.bottom, 24)
 
                 ScrollView(.vertical) {
                     
