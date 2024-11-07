@@ -10,10 +10,22 @@ import CombineSchedulers
 import Foundation
 import PayHub
 
+public struct ScanQRWitness<T> {
+    
+    public let scanQR: (T) -> AnyPublisher<Void, Never>
+    
+    public init(
+        scanQR: @escaping (T) -> AnyPublisher<Void, Never>
+    ) {
+        self.scanQR = scanQR
+    }
+}
+
 public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, DetailPayment> {
     
     private let delay: Delay
     private let microServices: MicroServices
+    private let scanQRWitness: ScanQRWitness<DetailPayment>
     private let witnesses: Witnesses
     private let scheduler: AnySchedulerOf<DispatchQueue>
     private let interactiveScheduler: AnySchedulerOf<DispatchQueue>
@@ -21,12 +33,14 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, Categories, Detail
     public init(
         delay: Delay,
         microServices: MicroServices,
+        scanQRWitness: ScanQRWitness<DetailPayment>,
         witnesses: Witnesses,
         scheduler: AnySchedulerOf<DispatchQueue>,
         interactiveScheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.delay = delay
         self.microServices = microServices
+        self.scanQRWitness = scanQRWitness
         self.witnesses = witnesses
         self.scheduler = scheduler
         self.interactiveScheduler = interactiveScheduler
@@ -50,13 +64,19 @@ public extension QRFailureBinderComposer {
                 
                 guard let self else { return }
                 
-                switch select.selection {
-                case .payWithDetails:
-                    let detailPayment = microServices.makeDetailPayment(select.qrCode)
-                    completion(.detailPayment(detailPayment))
+                switch select {
+                case .scanQR:
+                    completion(.scanQR)
                     
-                case .search:
-                    let categories = microServices.makeCategories(select.qrCode)
+                case let .payWithDetails(qrCode):
+                    let payment = microServices.makeDetailPayment(qrCode)
+                    let cancellable = scanQRWitness.scanQR(payment)
+                        .sink { notify(.select(.scanQR)) }
+                    
+                    completion(.detailPayment(.init(model: payment, cancellable: cancellable)))
+                    
+                case let .search(qrCode):
+                    let categories = microServices.makeCategories(qrCode)
                     completion(.categories(.init {
                         
                         try categories.get(orThrow: MakeCategoriesFailure())
@@ -76,4 +96,3 @@ public extension QRFailureBinderComposer {
     
     struct MakeCategoriesFailure: Error {}
 }
-

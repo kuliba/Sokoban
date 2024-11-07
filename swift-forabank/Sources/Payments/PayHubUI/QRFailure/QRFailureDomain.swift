@@ -28,29 +28,17 @@ public extension QRFailureDomain {
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
-    struct Select {
+    enum Select {
         
-        public let qrCode: QRCode
-        public let selection: Selection
-        
-        public init(
-            qrCode: QRCode, 
-            selection: Selection
-        ) {
-            self.qrCode = qrCode
-            self.selection = selection
-        }
-        
-        public enum Selection {
-            
-            case search
-            case payWithDetails
-        }
+        case scanQR
+        case payWithDetails(QRCode)
+        case search(QRCode)
     }
     
     enum Navigation {
         
         case categories(Result<Categories, Error>)
-        case detailPayment(DetailPayment)
+        case detailPayment(Node<DetailPayment>)
+        case scanQR
     }
 }

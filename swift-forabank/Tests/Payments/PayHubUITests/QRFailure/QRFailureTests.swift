@@ -28,7 +28,6 @@ class QRFailureTests: XCTestCase {
     
     struct QRFailure {
         
-        let value: String
         private let subject = PassthroughSubject<Select, Never>()
         
         var selectPublisher: AnyPublisher<Select, Never> {
@@ -46,11 +45,9 @@ class QRFailureTests: XCTestCase {
         }
     }
     
-    func makeQRFailure(
-        _ value: String = anyMessage()
-    ) -> QRFailure {
+    func makeQRFailure() -> QRFailure {
         
-        return .init(value: value)
+        return .init()
     }
     
     struct Categories: Equatable {
@@ -65,16 +62,24 @@ class QRFailureTests: XCTestCase {
         return .init(value: value)
     }
     
-    struct DetailPayment: Equatable {
+    final class DetailPayment{
         
-        let value: String
+        private let subject = PassthroughSubject<Void, Never>()
+        
+        var scanQRPublisher: AnyPublisher<Void, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func scanQR() {
+            
+            subject.send(())
+        }
     }
     
-    func makeDetailPayment(
-        _ value: String = anyMessage()
-    ) -> DetailPayment {
+    func makeDetailPayment() -> DetailPayment {
         
-        return .init(value: value)
+        return .init()
     }
     
     func equatable(
@@ -88,15 +93,19 @@ class QRFailureTests: XCTestCase {
         case let .categories(.success(categories)):
             return .categories(.success(categories))
             
-        case let .detailPayment(detailPayment):
-            return .detailPayment(detailPayment)
+        case let .detailPayment(node):
+            return .detailPayment(.init(node.model))
+            
+        case .scanQR:
+            return .scanQR
         }
     }
     
     enum EquatableNavigation: Equatable {
         
         case categories(Result<Categories, CategoriesFailure>)
-        case detailPayment(DetailPayment)
+        case detailPayment(ObjectIdentifier)
+        case scanQR
     }
     
     struct CategoriesFailure: Error, Equatable {}

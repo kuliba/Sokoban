@@ -30,7 +30,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let qrCode = makeQRCode()
         let (sut, spies, _) = makeSUT()
         
-        let composed = sut.compose(qrCode: qrCode)
+        _ = sut.compose(qrCode: qrCode)
         
         XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
     }
@@ -43,7 +43,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
         let composed = sut.compose(qrCode: qrCode)
-        composed.content.emit(.init(qrCode: qrCode, selection: .payWithDetails))
+        composed.content.emit(.payWithDetails(qrCode))
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(spies.makeDetailPayment.payloads, [qrCode])
@@ -59,14 +59,33 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
         
         let composed = sut.compose(qrCode: qrCode)
-        composed.content.emit(.init(qrCode: qrCode, selection: .payWithDetails))
+        composed.content.emit(.payWithDetails(qrCode))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
         
         XCTAssertNoDiff(
             composed.flow.state.navigation.map(equatable),
-            .detailPayment(detailPayment)
+            .detailPayment(.init(detailPayment))
+        )
+    }
+    
+    func test_composed_payWithDetails_shouldDeliverOutsideScanQROnScanQR() throws {
+        
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(qrCode: makeQRCode())
+        composed.content.emit(.payWithDetails(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        try composed.flow.detailPayment.scanQR()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .scanQR
         )
     }
     
@@ -78,7 +97,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
         let composed = sut.compose(qrCode: qrCode)
-        composed.content.emit(.init(qrCode: qrCode, selection: .search))
+        composed.content.emit(.search(qrCode))
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(spies.makeCategories.payloads, [qrCode])
@@ -92,7 +111,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
         
         let composed = sut.compose(qrCode: makeQRCode())
-        composed.content.emit(.init(qrCode: makeQRCode(), selection: .search))
+        composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -112,7 +131,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         )
         
         let composed = sut.compose(qrCode: makeQRCode())
-        composed.content.emit(.init(qrCode: makeQRCode(), selection: .search))
+        composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -161,6 +180,9 @@ final class QRFailureBinderComposerTests: QRFailureTests {
                 makeQRFailure: spies.makeQRFailure.call,
                 makeCategories: spies.makeCategories.call,
                 makeDetailPayment: spies.makeDetailPayment.call
+            ), 
+            scanQRWitness: .init(
+                scanQR: { $0.scanQRPublisher }
             ),
             witnesses: .init(
                 contentEmitting: { $0.selectPublisher },
@@ -179,5 +201,43 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, spies, scheduler)
+    }
+}
+
+// MARK: - DSL
+
+extension QRFailureTests.Domain.Flow {
+    
+    var detailPayment: QRFailureTests.DetailPayment {
+        
+        get throws {
+            
+            guard case let .detailPayment(node) = state.navigation
+            else { throw NSError(domain: "Expected Detail Payment", code: -1) }
+            
+            return node.model
+        }
+    }
+    
+    var categoriesSuccess: QRFailureTests.Categories {
+        
+        get throws {
+            
+            guard case let .categories(.success(categories)) = state.navigation
+            else { throw NSError(domain: "Expected Categories", code: -1) }
+            
+            return categories
+        }
+    }
+    
+    var categoriesFailure: Error {
+        
+        get throws {
+            
+            guard case let .categories(.failure(failure)) = state.navigation
+            else { throw NSError(domain: "Expected Categories Failure", code: -1) }
+            
+            return failure
+        }
     }
 }
