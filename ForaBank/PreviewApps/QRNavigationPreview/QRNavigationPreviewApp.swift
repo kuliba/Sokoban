@@ -7,6 +7,7 @@
 
 import PayHubUI
 import SwiftUI
+import UIPrimitives
 
 @main
 struct QRNavigationPreviewApp: App {
@@ -18,6 +19,7 @@ struct QRNavigationPreviewApp: App {
         WindowGroup {
             
             ContentView(model: flow)
+                .onFirstAppear { flow.event(.select(.scanQR)) }
         }
     }
 }

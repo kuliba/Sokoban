@@ -52,36 +52,6 @@ extension ContentViewModelComposer {
 
 private extension ContentViewModelComposer {
     
-    func makeWitnesses() -> QRDomain.Witnesses {
-        
-        return .init(
-            contentEmitting: { $0.publisher },
-            contentReceiving: { content in { content.receive() }},
-            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
-        )
-    }
-    
-    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source>
-    
-    func makeNavigationComposer() -> NavigationComposer {
-        
-        return .init(
-            microServices: .init(
-                makePayments: {
-                    
-                    switch $0 {
-                    case let .c2bSubscribe(url):
-                        Payments(url: url)
-                    }
-                }
-            ),
-            witnesses: .init(
-                isClosed: { $0.isClosedPublisher }
-            )
-        )
-    }
-    
     typealias QRBinderComposer = PayHubUI.QRBinderComposer<QRNavigation, QRModel, QRResult>
     
     func makeQRBinderComposer() -> QRBinderComposer {
@@ -99,5 +69,48 @@ private extension ContentViewModelComposer {
             mainScheduler: mainScheduler,
             interactiveScheduler: interactiveScheduler
         )
+    }
+    
+    private func makeWitnesses() -> QRDomain.Witnesses {
+        
+        return .init(
+            contentEmitting: { $0.publisher },
+            contentReceiving: { content in { content.receive() }},
+            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+            flowReceiving: { flow in { flow.event(.select($0)) }}
+        )
+    }
+    
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    
+    private func makeNavigationComposer() -> NavigationComposer {
+        
+        return .init(
+            microServices: .init(
+                makeQRFailure: makeQRFailure,
+                makePayments: makePayments
+            ),
+            witnesses: .init(
+                isClosed: { $0.isClosedPublisher }
+            )
+        )
+    }
+    
+    private func makeQRFailure(
+        qrCode: QRCode
+    ) -> QRFailure {
+        
+        return .init(qrCode: qrCode)
+    }
+    
+    private func makePayments(
+        payload: NavigationComposer.MicroServices.MakePaymentsPayload
+    ) -> Payments {
+        
+        switch payload {
+        case let .c2bSubscribe(url),
+            let .c2b(url):
+            return Payments(url: url)
+        }
     }
 }

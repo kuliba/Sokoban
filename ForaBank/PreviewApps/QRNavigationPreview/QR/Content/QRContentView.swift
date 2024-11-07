@@ -13,17 +13,37 @@ struct QRContentView: View {
     
     var body: some View {
         
-        VStack {
+        List {
             
-            Text("Select scan result")
-                .foregroundColor(.secondary)
-                .padding(.vertical)
-            
-            Button("c2b Subscribe") {
+            Section("Select scan result") {
                 
-                model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                Group {
+                    
+                    Button("c2b Subscribe") {
+                        
+                        model.emit(.c2bSubscribeURL(.init(string: "c2bSubscribeURL")!))
+                    }
+                    
+                    Button("c2b") {
+                        
+                        model.emit(.c2bURL(.init(string: "c2bURL")!))
+                    }
+                    
+                    Button("failure") {
+                        
+                        model.emit(.failure(.init(value: "QRCOde")))
+                    }
+                    .foregroundColor(.red)
+                }
+                .foregroundColor(.blue)
             }
         }
+        .listStyle(.inset)
         .navigationTitle("QR Scanner")
     }
+}
+
+#Preview {
+    
+    QRContentView(model: .init())
 }

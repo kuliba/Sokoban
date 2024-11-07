@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, Source> {
+public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, Q
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments>
 }
 
@@ -40,6 +40,17 @@ public extension QRBinderGetNavigationComposer {
                 cancellables: bind(payments, with: notify)
             )))
             
+        case let .c2bURL(url):
+            let payments = microServices.makePayments(.c2b(url))
+            completion(.payments(.init(
+                model: payments,
+                cancellables: bind(payments, with: notify)
+            )))
+            
+        case let .failure(qrCode):
+            let qrFailure = microServices.makeQRFailure(qrCode)
+            completion(.qrFailure(qrFailure))
+            
         default:
             fatalError()
         }
@@ -49,7 +60,7 @@ public extension QRBinderGetNavigationComposer {
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Navigation = QRNavigation<Payments>
+    typealias Navigation = QRNavigation<Payments, QRFailure>
 }
 
 private extension QRBinderGetNavigationComposer {
