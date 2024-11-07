@@ -139,6 +139,20 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
 
+    // MARK: - mixedPicker
+    
+    func test_getNavigation_mixedPicker_shouldCallMakeMixedPickerWithPayload() {
+        
+        let mixed = makeMakeMixedPickerPayload()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.mixed(mixed.0, mixed.1, mixed.2)))
+        
+        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.0), [mixed.0])
+        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.1), [mixed.1])
+        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.2), [mixed.2])
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -147,11 +161,13 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         let makePayments: MakePayments
         let makeQRFailure: MakeQRFailure
+        let makeMixedPicker: MakeMixedPicker
     }
     
     private func makeSUT(
         payments: Payments? = nil,
         qrFailure: QRFailure? = nil,
+        mixedPicker: MixedPicker? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -160,12 +176,14 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     ) {
         let spies = Spies(
             makePayments: .init(stubs: [payments ?? makePayments()]),
-            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()])
+            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
+            makeMixedPicker: .init(stubs: [mixedPicker ?? makeMixedPicker()])
         )
         let sut = SUT(
             microServices: .init(
                 makeQRFailure: spies.makeQRFailure.call,
-                makePayments: spies.makePayments.call
+                makePayments: spies.makePayments.call,
+                makeMixedPicker: spies.makeMixedPicker.call
             ),
             witnesses: .init(
                 isClosed: { $0.isClosed },

@@ -6,24 +6,28 @@
 //
 
 import Combine
+import ForaTools
 import PayHub
 import PayHubUI
 import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
     typealias Navigation = QRNavigation<Payments, QRFailure>
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
-
-    typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
+    
+    typealias MakeMixedPickerPayload = (MultiElementArray<OperatorProvider<Operator, Provider>>, QRCode, QRMapping)
+    typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
     
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
+    
+    typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
     
     struct Operator: Equatable {
         
@@ -71,6 +75,22 @@ class QRBinderTests: XCTestCase {
     ) -> QRMapping {
         
         return .init(value: value)
+    }
+    
+    func makeMixed(
+        first: OperatorProvider<Operator, Provider>? = nil,
+        second: OperatorProvider<Operator, Provider>? = nil,
+        tail: OperatorProvider<Operator, Provider>...
+    ) -> MultiElementArray<OperatorProvider<Operator, Provider>> {
+        
+        return .init(first ?? .operator(makeOperator()), second ?? .provider(makeProvider()), tail)
+    }
+    
+    func makeMakeMixedPickerPayload() -> MakeMixedPickerPayload {
+        
+        let (mixed, qrCode, qrMapping) = (makeMixed(), makeQRCode(), makeQRMapping())
+
+        return (mixed, qrCode, qrMapping)
     }
     
     struct Source: Equatable {
@@ -181,5 +201,17 @@ class QRBinderTests: XCTestCase {
     func makeQRFailure() -> QRFailure {
         
         return .init()
+    }
+    
+    struct MixedPicker: Equatable {
+        
+        let value: String
+    }
+    
+    func makeMixedPicker(
+        _ value: String = anyMessage()
+    ) -> MixedPicker {
+        
+        return .init(value: value)
     }
 }

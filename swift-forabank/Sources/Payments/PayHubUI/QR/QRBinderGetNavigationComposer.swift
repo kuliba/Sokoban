@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
+public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, Q
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments, QRFailure>
 }
 
@@ -54,6 +54,9 @@ public extension QRBinderGetNavigationComposer {
                 cancellables: bind(qrFailure, with: notify)
             )))
             
+        case let .mapped(mapped):
+            getNavigation(mapped, notify, completion)
+            
         default:
             fatalError()
         }
@@ -65,6 +68,25 @@ public extension QRBinderGetNavigationComposer {
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Navigation = QRNavigation<Payments, QRFailure>
 }
+
+private extension QRBinderGetNavigationComposer {
+    
+    func getNavigation(
+        _ mapped: QRResult.Mapped,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (Navigation) -> Void
+    ) {
+        switch mapped {
+        case let .mixed(mixed, qrCode, QRMapping):
+            let _ /*mixedPicker*/ = microServices.makeMixedPicker((mixed, qrCode, QRMapping))
+            
+        default:
+            fatalError()
+        }
+    }
+}
+
+// MARK: - bindings
 
 private extension QRBinderGetNavigationComposer {
     
