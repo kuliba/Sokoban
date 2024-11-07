@@ -50,6 +50,7 @@ public extension QRFailureBinderComposer {
     func compose(qrCode: QRCode) -> Domain.Binder {
         
         let factory = ContentFlowBindingFactory(delay: delay, scheduler: scheduler)
+        
         let composer = Domain.FlowComposer(
             getNavigation: { [weak self] select, notify, completion in
                 
@@ -58,17 +59,17 @@ public extension QRFailureBinderComposer {
                 switch select {
                 case let .payWithDetails(qrCode):
                     let payment = microServices.makeDetailPayment(qrCode)
-                    let cancellable = scanQRWitnesses.detailPayment(payment)
-                        .sink { notify(.select(.scanQR)) }
-                    
-                    completion(.detailPayment(.init(model: payment, cancellable: cancellable)))
+                    completion(.detailPayment(.init(
+                        model: payment,
+                        cancellables: bind(payment, using: notify)
+                    )))
                     
                 case let .search(qrCode):
                     let categories = microServices.makeCategories(qrCode)
-                    let cancellable = scanQRWitnesses.categories(categories)
-                    .sink { notify(.select(.scanQR)) }
-                    
-                    completion(.categories(.init(model: categories, cancellable: cancellable)))
+                    completion(.categories(.init(
+                        model: categories,
+                        cancellables: bind(categories, using: notify)
+                    )))
                     
                 case .scanQR:
                     completion(.scanQR)
@@ -84,6 +85,29 @@ public extension QRFailureBinderComposer {
             bind: factory.bind(with: witnesses)
         )
     }
+}
+
+private extension QRFailureBinderComposer {
     
-    struct MakeCategoriesFailure: Error {}
+    func bind(
+        _ categories: Categories,
+        using notify: @escaping Domain.Notify
+    ) -> Set<AnyCancellable> {
+        
+        let scanQR = scanQRWitnesses.categories(categories)
+            .sink { notify(.select(.scanQR)) }
+        
+        return [scanQR]
+    }
+    
+    func bind(
+        _ detailPayment: DetailPayment,
+        using notify: @escaping Domain.Notify
+    ) -> Set<AnyCancellable> {
+        
+        let scanQR = scanQRWitnesses.detailPayment(detailPayment)
+            .sink { notify(.select(.scanQR)) }
+        
+        return [scanQR]
+    }
 }
