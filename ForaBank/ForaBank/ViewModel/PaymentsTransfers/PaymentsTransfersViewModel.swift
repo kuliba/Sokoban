@@ -1691,8 +1691,8 @@ extension PaymentsTransfersViewModel {
         case .missingINN:
             handleUnknownQR()
 
-        case let .mixed(mixed, qrCode, qrMapping):
-            makePaymentProviderPicker(mixed, qrCode, qrMapping)
+        case let .mixed(mixed):
+            makePaymentProviderPicker(mixed.operators, mixed.qrCode, mixed.qrMapping)
 
         case let .multiple(multipleOperators, qrCode, qrMapping):
             searchOperators(multipleOperators, with: qrCode)

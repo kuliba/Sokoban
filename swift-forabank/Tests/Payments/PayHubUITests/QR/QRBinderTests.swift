@@ -21,7 +21,7 @@ class QRBinderTests: XCTestCase {
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
     typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
     
-    typealias MakeMixedPickerPayload = (MultiElementArray<OperatorProvider<Operator, Provider>>, QRCode, QRMapping)
+    typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
     
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
@@ -90,7 +90,7 @@ class QRBinderTests: XCTestCase {
         
         let (mixed, qrCode, qrMapping) = (makeMixed(), makeQRCode(), makeQRMapping())
 
-        return (mixed, qrCode, qrMapping)
+        return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
     }
     
     struct Source: Equatable {

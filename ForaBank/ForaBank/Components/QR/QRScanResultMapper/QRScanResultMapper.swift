@@ -73,7 +73,11 @@ private extension QRScanResultMapper {
                 completion(.missingINN)
                 
             case let .mixed(mixed):
-                completion(.mixed(mixed, qrCode, qrMapping))
+                completion(.mixed(.init(
+                    operators: mixed, 
+                    qrCode: qrCode, 
+                    qrMapping: qrMapping
+                )))
                 
             case let .multiple(multipleOperators):
                 completion(.multiple(multipleOperators, qrCode, qrMapping))

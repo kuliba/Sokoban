@@ -21,14 +21,13 @@ public enum QRModelResult<Operator, Provider, QRCode, QRMapping, Source> {
     public enum Mapped {
         
         case missingINN
-        case mixed(MixedOperators, QRCode, QRMapping)
+        case mixed(MixedQRResult<Operator, Provider, QRCode, QRMapping>)
         case multiple(MultipleOperators, QRCode, QRMapping)
         case none(QRCode)
         case provider(ProviderPayload<Provider, QRCode, QRMapping>)
         case single(Operator, QRCode, QRMapping)
         case source(Source) // Payments.Operation.Source
         
-        public typealias MixedOperators = MultiElementArray<OperatorProvider<Operator, Provider>>
         public typealias MultipleOperators = MultiElementArray<Operator>
     }
 }

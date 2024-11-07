@@ -77,8 +77,8 @@ private extension QRBinderGetNavigationComposer {
         _ completion: @escaping (Navigation) -> Void
     ) {
         switch mapped {
-        case let .mixed(mixed, qrCode, QRMapping):
-            let _ /*mixedPicker*/ = microServices.makeMixedPicker((mixed, qrCode, QRMapping))
+        case let .mixed(mixed):
+            let _ /*mixedPicker*/ = microServices.makeMixedPicker(mixed)
             
         default:
             fatalError()

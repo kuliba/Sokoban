@@ -146,10 +146,10 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let mixed = makeMakeMixedPickerPayload()
         let (sut, spies) = makeSUT()
         
-        sut.getNavigation(qrResult: .mapped(.mixed(mixed.0, mixed.1, mixed.2)))
+        sut.getNavigation(qrResult: .mapped(.mixed(mixed)))
         
-        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.0), [mixed.0])
-        XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.1), [mixed.1])
+        XCTAssertNoDiff(spies.makeMixedPicker.payloads, [mixed])
+    }
         XCTAssertNoDiff(spies.makeMixedPicker.payloads.map(\.2), [mixed.2])
     }
 

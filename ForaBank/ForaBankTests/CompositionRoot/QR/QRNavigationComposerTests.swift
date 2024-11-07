@@ -260,7 +260,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_mixed_shouldCallMakeProviderPickerWithPayload() {
         
         let (mixed, qrCode, qrMapping) = makeMixed()
-        let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.mixed(.init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)))
         let (sut, microServices) = makeSUT()
         
         sut.getNavigation(with: result)
@@ -940,7 +940,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     private func makeMappedMixed() -> QRModelResult {
         
-        return .mapped(.mixed(makeMixedOperators(), makeQR(), makeQRMapping()))
+        return .mapped(.mixed(.init(operators: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())))
     }
     
     private func makeProviderPicker() -> QRNavigation.ProviderPicker {

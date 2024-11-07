@@ -28,7 +28,7 @@ public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, 
 
 public extension QRBinderGetNavigationComposerMicroServices {
     
-    typealias MakeMixedPickerPayload = (MultiElementArray<OperatorProvider<Operator, Provider>>, QRCode, QRMapping)
+    typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = (MakeMixedPickerPayload) -> MixedPicker
     
     typealias MakePayments = (MakePaymentsPayload) -> Payments

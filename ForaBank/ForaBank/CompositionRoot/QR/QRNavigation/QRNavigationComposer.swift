@@ -121,11 +121,11 @@ private extension QRNavigationComposer {
         case .missingINN:
             makeQRFailure(with: notify) { completion(.failure($0)) }
             
-        case let .mixed(mixed, qrCode, qrMapping):
+        case let .mixed(mixed):
             let payload = MicroServices.MakeProviderPickerPayload(
-                mixed: mixed,
-                qrCode: qrCode,
-                qrMapping: qrMapping
+                mixed: mixed.operators,
+                qrCode: mixed.qrCode,
+                qrMapping: mixed.qrMapping
             )
             microServices.makeProviderPicker(payload) { [weak self] in
                 
