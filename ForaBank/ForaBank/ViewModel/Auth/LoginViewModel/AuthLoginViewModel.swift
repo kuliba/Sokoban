@@ -95,6 +95,9 @@ extension AuthLoginViewModel {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
         
+        eventHandlers.showSpinner()
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Call show spinner rootAction")
+        
         DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
             
             switch action {
@@ -106,6 +109,8 @@ extension AuthLoginViewModel {
                 guard let alert = self?.clientInformAlerts?.required else { return }
                 self?.clientInformAlerts?.showAgain(requiredAlert: alert)
             }
+            
+            self?.eventHandlers.hideSpinner()
         }
     }
     
@@ -191,6 +196,7 @@ private extension AuthLoginViewModel {
             .sink { [weak self] in
                 
                 self?.clientInformAlerts = $0
+                
                 guard let alert = $0.alert else { return }
                 self?.alertType = .clientInformAlerts(alert)
             }
