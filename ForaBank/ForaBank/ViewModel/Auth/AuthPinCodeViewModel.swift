@@ -698,14 +698,25 @@ extension AuthPinCodeViewModel {
         
         DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
             
+            guard let self = self else { return }
+            
             switch action {
             case .notRequired:
-                self?.clientInformAlerts?.dropFirst()
+                
+                if let alert = self.clientInformAlerts?.alert,
+                   alert.authBlocking {
+                    
+                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                } else {
+                    self.clientInformAlerts?.dropFirst()
+                }
                 
             case .required, .optional:
                 
-                guard let alert = self?.clientInformAlerts?.required else { return }
-                self?.clientInformAlerts?.showAgain(requiredAlert: alert)
+                if let alert = self.clientInformAlerts?.alert {
+                    
+                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                }
             }
         }
     }

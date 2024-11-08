@@ -41,16 +41,17 @@ extension ClientInformAlerts {
         }
     }
     
-    mutating func showAgain(requiredAlert: ClientInformAlerts.RequiredAlert) {
-        guard let alert = alert,
-              alert.isRequired || alert.authBlocking else { return }
+    mutating func showAgain(blockingAlert: ClientInformAlerts.Alert) {
+        
+        guard let alert = alert else { return }
+        
         required = .init(
-            title: requiredAlert.title,
-            text: requiredAlert.text,
-            type: requiredAlert.type,
-            link: requiredAlert.link,
-            version: requiredAlert.version,
-            authBlocking: requiredAlert.authBlocking
+            title: blockingAlert.title,
+            text: blockingAlert.text,
+            type: blockingAlert.type,
+            link: blockingAlert.link,
+            version: blockingAlert.version,
+            authBlocking: blockingAlert.authBlocking
         )
     }
 }
@@ -80,9 +81,7 @@ extension ClientInformAlerts.Alert {
                 return Alert(
                     title: Text(title),
                     message: Text(text),
-                    dismissButton: .default(Text("Ok"), action: {
-                        action(.notRequired)
-                    })
+                    dismissButton: .default(Text("Ok"), action: { action(.notRequired) })
                 )
             }
         }

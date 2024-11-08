@@ -93,13 +93,11 @@ extension AuthLoginViewModel {
     
     func handleLink() -> URL? {
         
-        guard let link = clientInformAlerts?.alert?.link,
-              let updateVersion = clientInformAlerts?.alert?.version,
-              Bundle.main.appVersionLong < updateVersion else {
-            return URL(string: String.appStoreFora)
-        }
+        guard let updateVersion = clientInformAlerts?.alert?.version,
+              Bundle.main.appVersionLong < updateVersion else { return nil }
         
-        return URL(string: link)
+        let link = clientInformAlerts?.alert?.link
+        return URL(string: link ?? String.appStoreFora)
     }
     
     func showNextAlert(action: ClientInformActionType) {
@@ -111,17 +109,28 @@ extension AuthLoginViewModel {
         
         DispatchQueue.main.delay(for: .microseconds(300)) { [weak self] in
             
+            guard let self = self else { return }
+            
             switch action {
             case .notRequired:
-                self?.clientInformAlerts?.dropFirst()
-
+                
+                if let alert = self.clientInformAlerts?.alert,
+                   alert.authBlocking {
+                    
+                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                } else {
+                    self.clientInformAlerts?.dropFirst()
+                }
+                
             case .required, .optional:
                 
-                guard let alert = self?.clientInformAlerts?.required else { return }
-                self?.clientInformAlerts?.showAgain(requiredAlert: alert)
+                if let alert = self.clientInformAlerts?.alert {
+                    
+                    self.clientInformAlerts?.showAgain(blockingAlert: alert)
+                }
             }
             
-            self?.eventHandlers.hideSpinner()
+            self.eventHandlers.hideSpinner()
         }
     }
 }
