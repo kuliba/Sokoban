@@ -58,7 +58,6 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch outside {
         case .chat:
-            fatalError()
             completion(.outside(.chat))
         }
     }
@@ -133,13 +132,16 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
+        let addCompany = witnesses.addCompany.mixedPicker(mixedPicker)
+            .sink { notify(.select(.outside(.chat))) }
+        
         let close = witnesses.isClosed.mixedPicker(mixedPicker)
             .sink { if $0 { notify(.dismiss) }}
         
         let scanQR = witnesses.scanQR.mixedPicker(mixedPicker)
             .sink { notify(.dismiss) }
         
-        return [close, scanQR]
+        return [addCompany, close, scanQR]
     }
     
     func bind(

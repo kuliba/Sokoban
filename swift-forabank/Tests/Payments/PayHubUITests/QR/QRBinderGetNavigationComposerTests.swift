@@ -215,6 +215,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_mixedPicker_shouldNotifyWithChatOnMixedPickerAddCompany() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.select(.outside(.chat))],
+            for: { self.mixedPicker($0)?.addCompany() }
+        )
+    }
+    
     func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
         
         expect(
@@ -268,7 +278,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 makeMixedPicker: spies.makeMixedPicker.call
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { _ in fatalError() }),
+                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },
                     payments: { $0.isClosed },

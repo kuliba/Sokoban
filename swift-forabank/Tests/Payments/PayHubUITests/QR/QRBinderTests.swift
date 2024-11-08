@@ -214,6 +214,8 @@ class QRBinderTests: XCTestCase {
     
     final class ClosingScanQR {
         
+        // MARK: - close
+        
         private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
         
         var isClosed: AnyPublisher<Bool, Never> {
@@ -225,6 +227,8 @@ class QRBinderTests: XCTestCase {
             
             isCloseSubject.value = true
         }
+
+        // MARK: - scanQR
         
         private let scanQRSubject = PassthroughSubject<Void, Never>()
         
@@ -236,6 +240,20 @@ class QRBinderTests: XCTestCase {
         func scanQR() {
             
             scanQRSubject.send(())
+        }
+
+        // MARK: - addCompany
+        
+        private let addCompanySubject = PassthroughSubject<Void, Never>()
+        
+        var addCompanyPublisher: AnyPublisher<Void, Never> {
+            
+            addCompanySubject.eraseToAnyPublisher()
+        }
+        
+        func addCompany() {
+            
+            addCompanySubject.send(())
         }
     }
 }

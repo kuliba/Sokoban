@@ -118,7 +118,7 @@ private extension ContentViewModelComposer {
                 makeMixedPicker: { _ in .init() }
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { _ in fatalError() }),
+                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },
                     payments: { $0.isClosedPublisher },
@@ -138,8 +138,7 @@ private extension ContentViewModelComposer {
     ) -> Payments {
         
         switch payload {
-        case let .c2bSubscribe(url),
-            let .c2b(url):
+        case let .c2bSubscribe(url), let .c2b(url):
             return Payments(url: url)
         }
     }
