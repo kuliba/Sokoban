@@ -43,24 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeAnywayFlowView: MakeAnywayFlowView
-    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
-    let makeContactsView: MakeContactsView
-    let makeControlPanelWrapperView: MakeControlPanelWrapperView
-    let makeCurrencyWalletView: MakeCurrencyWalletView
-    let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
-    let makeMainSectionProductsView: MakeMainSectionProductsView
-    let makeOperationDetailView: MakeOperationDetailView
-    let makePaymentsMeToMeView: MakePaymentsMeToMeView
-    let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
-    let makePaymentsSuccessView: MakePaymentsSuccessView
-    let makePaymentsView: MakePaymentsView
-    let makeQRFailedView: MakeQRFailedView
-    let makeQRSearchOperatorView: MakeQRSearchOperatorView
-    let makeQRView: MakeQRView
-    let makeTemplatesListFlowView: MakeTemplatesListFlowView
-    let makeTransportPaymentsView: MakeTransportPaymentsView
+    let makeViewComponents: ViewComponents
 }
 
 extension RootViewFactory {
@@ -89,24 +72,7 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeAnywayFlowView: makeAnywayFlowView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
-            makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
-            makeContactsView: makeContactsView, 
-            makeControlPanelWrapperView: makeControlPanelWrapperView,
-            makeCurrencyWalletView: makeCurrencyWalletView,
-            makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
-            makeMainSectionProductsView: makeMainSectionProductsView,
-            makeOperationDetailView: makeOperationDetailView,
-            makePaymentsMeToMeView: makePaymentsMeToMeView,
-            makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-            makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView,
-            makeQRFailedView: makeQRFailedView,
-            makeQRSearchOperatorView: makeQRSearchOperatorView,
-            makeQRView: makeQRView,
-            makeTemplatesListFlowView: makeTemplatesListFlowView,
-            makeTransportPaymentsView: makeTransportPaymentsView
+            makeViewComponents: makeViewComponents
         )
     }
 }

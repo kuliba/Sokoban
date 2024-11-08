@@ -70,6 +70,12 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
+            makeViewComponents: makeViewComponents()
+        )
+    }
+    
+    func makeViewComponents() -> ViewComponents {
+        .init(
             makeAnywayFlowView: makeAnywayFlowView,
             makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
             makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
@@ -90,7 +96,7 @@ extension RootViewFactoryComposer {
             makeTransportPaymentsView: makeTransportPaymentsView
         )
     }
-}
+ }
 
 extension RootViewFactoryComposer {
     
@@ -118,24 +124,7 @@ private extension RootViewFactoryComposer {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
-                makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) },
-                makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
-                makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
-                makeContactsView: makeContactsView, 
-                makeControlPanelWrapperView: makeControlPanelWrapperView,
-                makeCurrencyWalletView: makeCurrencyWalletView,
-                makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
-                makeMainSectionProductsView: makeMainSectionProductsView,
-                makeOperationDetailView: makeOperationDetailView,
-                makePaymentsMeToMeView: makePaymentsMeToMeView,
-                makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-                makePaymentsSuccessView: makePaymentsSuccessView,
-                makePaymentsView: makePaymentsView,
-                makeQRFailedView: makeQRFailedView,
-                makeQRSearchOperatorView: makeQRSearchOperatorView,
-                makeQRView: makeQRView,
-                makeTemplatesListFlowView: makeTemplatesListFlowView,
-                makeTransportPaymentsView: makeTransportPaymentsView
+                makeViewComponents: makeViewComponents()
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
