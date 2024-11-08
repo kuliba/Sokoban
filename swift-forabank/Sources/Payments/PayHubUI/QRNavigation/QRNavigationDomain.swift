@@ -25,7 +25,8 @@ public extension QRNavigationDomain {
             case chat
         }
 
-        public typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+        public typealias QRResult = PayHub.QRResult<QRCode, QRMappedResult>
+        public typealias QRMappedResult = PayHub.QRMappedResult<Operator, Provider, QRCode, QRMapping, Source>
     }
     
     enum Navigation {
