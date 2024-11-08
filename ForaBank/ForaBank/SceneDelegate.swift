@@ -28,7 +28,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         bind(rootViewModel: rootViewModel)
         
-        let composer = RootViewBinderComposer()
+        let getNavigation = factory.makeGetRootNavigation(featureFlags)
+        let composer = RootViewBinderComposer(getNavigation: getNavigation)
+        
         return composer.compose(with: rootViewModel)
     }()
     

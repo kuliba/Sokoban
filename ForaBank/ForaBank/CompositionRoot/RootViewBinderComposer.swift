@@ -12,10 +12,14 @@ import PayHubUI
 
 final class RootViewBinderComposer {
     
+    private let getNavigation: RootViewDomain.GetNavigation
     private let schedulers: Schedulers
     
-    init(schedulers: Schedulers = .init()) {
-        
+    init(
+        getNavigation: @escaping RootViewDomain.GetNavigation,
+        schedulers: Schedulers = .init()
+    ) {
+        self.getNavigation = getNavigation
         self.schedulers = schedulers
     }
 }
@@ -41,17 +45,6 @@ extension RootViewBinderComposer {
 }
 
 private extension RootViewBinderComposer {
-    
-    func getNavigation(
-        select: RootViewDomain.Select,
-        notify: @escaping RootViewDomain.Notify,
-        completion: @escaping (RootViewDomain.Navigation) -> Void
-    ) {
-        switch select {
-        case .scanQR:
-            completion(.scanQR)
-        }
-    }
     
     func bind(
         with witnesses: RootViewDomain.Witnesses

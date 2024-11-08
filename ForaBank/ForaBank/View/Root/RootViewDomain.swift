@@ -13,6 +13,7 @@ enum RootViewDomain {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
+    typealias GetNavigation = (RootViewDomain.Select, @escaping RootViewDomain.Notify, @escaping (RootViewDomain.Navigation) -> Void) -> Void
     typealias Witnesses = ContentFlowWitnesses<Content, Flow, Select, Navigation>
     
     // MARK: - Content
