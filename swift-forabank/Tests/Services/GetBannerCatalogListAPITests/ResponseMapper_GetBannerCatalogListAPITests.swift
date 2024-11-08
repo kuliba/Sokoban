@@ -124,7 +124,6 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
         ]))
     }
     
-    // TODO: update test when new type is added
     func test_map_actionService_shouldDeliverValidData() throws {
         
         let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.serviceLanding.utf8))).get()
@@ -134,7 +133,7 @@ final class ResponseMapper_GetBannerCatalogListAPITests: XCTestCase {
                 productName: "ЖКХ",
                 conditions: ["Оплати"],
                 links: .init(image: "imageLink", order: "", condition: ""),
-                action: nil)
+                action: .init(type: .payment("HOUSING_AND_COMMUNAL_SERVICE")))
         ]))
     }
 

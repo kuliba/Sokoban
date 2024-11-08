@@ -19,16 +19,13 @@ struct PageTitleView: View {
         
         VStack {
             
-            Text(model.text)
-                .font(config.title.font)
-                .foregroundColor(config.title.color)
+            model.text.text(withConfig: config.title)
                 .accessibilityIdentifier("LandingPageTitleText")
             
-            if let subtitle = model.subTitle {
+            model.subTitle.map {
                 
-                Text(subtitle)
-                    .font(config.subtitle.font)
-                    .foregroundColor(config.subtitle.color)
+                $0.text(withConfig: config.subtitle)
+                    .accessibilityIdentifier("LandingPageSubtitleText")
             }
         }
         .padding(.horizontal)

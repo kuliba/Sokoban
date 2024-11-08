@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import ForaTools
 import PayHub
+import RemoteServices
 import SwiftUI
 import MarketShowcase
 import LandingUIComponent
@@ -34,6 +35,8 @@ class RootViewModel: ObservableObject, Resetable {
     private let productNavigationStateManager: ProductProfileFlowManager
     let landingServices: LandingServices
     private let mainScheduler: AnySchedulerOfDispatchQueue
+    
+    let stickerViewFactory: StickerViewFactory
 
     let model: Model
     private let infoDictionary: [String : Any]?
@@ -43,6 +46,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     init(
         fastPaymentsFactory: FastPaymentsFactory,
+        stickerViewFactory: StickerViewFactory,
         navigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
@@ -54,6 +58,7 @@ class RootViewModel: ObservableObject, Resetable {
         mainScheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.fastPaymentsFactory = fastPaymentsFactory
+        self.stickerViewFactory = stickerViewFactory
         self.navigationStateManager = navigationStateManager
         self.productNavigationStateManager = productNavigationStateManager
         self.selected = .main
@@ -87,7 +92,9 @@ class RootViewModel: ObservableObject, Resetable {
     
     func setLink(to newValue: Link) {
         
-        link = newValue
+        mainScheduler.schedule { [weak self] in
+            self?.link = newValue
+        }
     }
     
     private func bindAuth() {
@@ -401,7 +408,18 @@ class RootViewModel: ObservableObject, Resetable {
             self?.action.send(RootViewModelAction.DismissAll())
         }
         
-        return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
+        let openUtilityPayment: (String) -> Void = { [weak self] in
+            
+            self?.openUtilityPayment(category: $0, switchTab: switchTab)
+        }
+        
+        return .init(
+            dismissCover: dismissCover,
+            spinner: .init(show: spinnerShow, hide: spinnerHide),
+            switchTab: switchTab,
+            dismissAll: dismissAll,
+            openUtilityPayment: openUtilityPayment
+        )
     }()
     
     func createAlertAppVersion(
@@ -528,6 +546,7 @@ extension RootViewModel {
         let spinner: Spinner
         let switchTab: (RootViewModel.TabType) -> Void
         let dismissAll: () -> Void
+        let openUtilityPayment: (String) -> Void
         
         struct Spinner {
             

@@ -109,6 +109,7 @@ private extension AnywayPaymentContext {
         and outline: AnywayPaymentOutline
     ) -> Self {
         
+        let outline = outline.updating(with: update)
         let payment = payment.update(with: update, and: outline)
         
         return .init(

@@ -88,7 +88,7 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing.header, [
             .pageTitle(.init(
                 text: "a",
-                subtitle: nil,
+                subtitle: "За 790 ₽",
                 transparency: true))
         ])
     }
@@ -206,6 +206,11 @@ final class MapperTests: XCTestCase {
                     imageLink: "link1",
                     link: "a",
                     detail: .init(groupId: "b", viewId: "c")
+                ),
+                .init(
+                    imageLink: "link3",
+                    link: "a",
+                    detail: .init(groupId: "HOUSING_AND_COMMUNAL_SERVICE", viewId: "")
                 )
             ])
         ])
@@ -272,6 +277,13 @@ final class MapperTests: XCTestCase {
                     .init(title: "c", description: "d")
                 ])
         ])
+    }
+    
+    func test_map_listDropDownTextsWithEmptyList_notDeliversListDropDownTexts() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.listDropDownTextsWithEmptyList.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listDropDownTexts, [])
     }
     
     func test_map_deliversSpacingInMain() throws {
@@ -707,6 +719,7 @@ private extension String {
             "type":"PAGE_TITLE",
             "data":{
                "title":"a",
+               "subtitle": "За 790 ₽",
                "transparency":true
             }
          }
@@ -814,6 +827,14 @@ private extension String {
               "details": {
                 "detailsGroupId": "b",
                 "detailViewId": "c"
+              }
+            },
+            {
+              "imageLink": "link3",
+              "link": "a",
+              "details": {
+                "detailsGroupId": "HOUSING_AND_COMMUNAL_SERVICE",
+                "detailViewId": null
               }
             }
           ]
@@ -3502,6 +3523,27 @@ private extension String {
     ],
     "serial": ""
     }
+    }
+
+"""
+    
+    static let listDropDownTextsWithEmptyList = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [],
+        "main": [
+          {
+            "type": "LIST_DROP_DOWN_TEXTS",
+            "data": {
+              "title": "title",
+              "list": []
+            }
+          }
+        ],
+        "serial": ""
+      }
     }
 
 """
