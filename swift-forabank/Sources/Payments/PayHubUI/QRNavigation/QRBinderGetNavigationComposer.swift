@@ -141,16 +141,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let addCompany = witnesses.addCompany.mixedPicker(mixedPicker)
-            .sink { notify(.select(.outside(.chat))) }
-        
-        let close = witnesses.isClosed.mixedPicker(mixedPicker)
-            .sink { if $0 { notify(.dismiss) }}
-        
-        let scanQR = witnesses.scanQR.mixedPicker(mixedPicker)
-            .sink { notify(.dismiss) }
-        
-        return [addCompany, close, scanQR]
+        return bind(mixedPicker, to: notify, addCompany: \.mixedPicker, isClosed: \.mixedPicker, scanQR: \.mixedPicker)
     }
     
     func bind(
@@ -158,16 +149,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let addCompany = witnesses.addCompany.multiplePicker(multiplePicker)
-            .sink { notify(.select(.outside(.chat))) }
-        
-        let close = witnesses.isClosed.multiplePicker(multiplePicker)
-            .sink { if $0 { notify(.dismiss) }}
-        
-        let scanQR = witnesses.scanQR.multiplePicker(multiplePicker)
-            .sink { notify(.dismiss) }
-        
-        return [addCompany, close, scanQR]
+        return bind(multiplePicker, to: notify, addCompany: \.multiplePicker, isClosed: \.multiplePicker, scanQR: \.multiplePicker)
     }
     
     func bind(
@@ -175,13 +157,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.isClosed.qrFailure(qrFailure)
-            .sink { if $0 { notify(.dismiss) }}
-        
-        let scanQR = witnesses.scanQR.qrFailure(qrFailure)
-            .sink { notify(.dismiss) }
-        
-        return [close, scanQR]
+        return bind(qrFailure, to: notify, isClosed: \.qrFailure, scanQR: \.qrFailure)
     }
     
     func bind(
@@ -189,12 +165,43 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.isClosed.payments(payments)
-            .sink { if $0 { notify(.dismiss) }}
+        return bind(payments, to: notify, isClosed: \.payments, scanQR: \.payments)
+    }
+    
+    private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
+    private typealias WitnessKeyPath<T, Witness, Value> = KeyPath<Witness, WitnessFunction<T, Value>>
+
+    private func bind<T>(
+        _ object: T,
+        to notify: @escaping Notify,
+        addCompany addCompanyKeyPath: WitnessKeyPath<T, Witnesses.AddCompanyWitnesses, Void>? = nil,
+        isClosed isClosedKeyPath: WitnessKeyPath<T, Witnesses.IsClosedWitnesses, Bool>? = nil,
+        scanQR scanQRKeyPath: WitnessKeyPath<T, Witnesses.ScanQRWitnesses, Void>? = nil
+    ) -> Set<AnyCancellable> {
         
-        let scanQR = witnesses.scanQR.payments(payments)
-            .sink { notify(.dismiss) }
+        var cancellables = Set<AnyCancellable>()
         
-        return [close, scanQR]
+        if let addCompanyKeyPath {
+            
+            let witness = witnesses.addCompany[keyPath: addCompanyKeyPath]
+            let chat = witness(object).sink { notify(.select(.outside(.chat))) }
+            cancellables.insert(chat)
+        }
+        
+        if let isClosedKeyPath {
+            
+            let witness = witnesses.isClosed[keyPath: isClosedKeyPath]
+            let close = witness(object).sink { if $0 { notify(.dismiss) }}
+            cancellables.insert(close)
+        }
+        
+        if let scanQRKeyPath {
+            
+            let witness = witnesses.scanQR[keyPath: scanQRKeyPath]
+            let scanQR = witness(object).sink { notify(.dismiss) }
+            cancellables.insert(scanQR)
+        }
+        
+        return cancellables
     }
 }
