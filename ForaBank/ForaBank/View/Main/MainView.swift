@@ -189,7 +189,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .templates(node):
             TemplatesListFlowView(
                 model: node.model,
-                makeAnywayFlowView: makeAnywayFlowView,
+                makeAnywayFlowView: viewFactory.makeAnywayFlowView,
                 makeIconView: {
                     
                     viewFactory.makeIconView($0.map { .svg($0) })
@@ -400,7 +400,7 @@ private extension MainView {
         ComposedSegmentedPaymentProviderPickerFlowView(
             flowModel: flowModel,
             iconView: viewFactory.makeIconView,
-            makeAnywayFlowView: makeAnywayFlowView
+            makeAnywayFlowView: viewFactory.makeAnywayFlowView
         )
         .navigationBarWithBack(
             title: PaymentsTransfersSectionType.payments.name,
@@ -421,7 +421,7 @@ private extension MainView {
         AnywayServicePickerFlowView(
             flowModel: flowModel,
             factory: .init(
-                makeAnywayFlowView: makeAnywayFlowView,
+                makeAnywayFlowView: viewFactory.makeAnywayFlowView,
                 makeIconView: viewFactory.makeIconView
             )
         )
@@ -431,44 +431,6 @@ private extension MainView {
             dismiss: viewModel.dismissProviderServicePicker,
             icon: viewFactory.iconView(provider.origin.icon),
             style: .normal
-        )
-    }
-}
-
-// MARK: - payment flow
-
-private extension MainView {
-    
-    @ViewBuilder
-    func makeAnywayFlowView(
-        flowModel: AnywayFlowModel
-    ) -> some View {
-        
-        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
-            
-            flowModel.state.content.event(.payment($0))
-        }
-        
-        AnywayFlowView(
-            flowModel: flowModel,
-            factory: .init(
-                makeElementView: anywayPaymentFactory.makeElementView,
-                makeFooterView: anywayPaymentFactory.makeFooterView
-            ),
-            makePaymentCompleteView: {
-                
-                viewFactory.makePaymentCompleteView(
-                    .init(
-                        formattedAmount: $0.formattedAmount,
-                        merchantIcon: $0.merchantIcon,
-                        result: $0.result.mapError {
-                            
-                            return .init(hasExpired: $0.hasExpired)
-                        }
-                    ),
-                    { flowModel.event(.goTo(.main)) }
-                )
-            }
         )
     }
 }
@@ -591,7 +553,7 @@ struct MainView_Previews: PreviewProvider {
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: HistoryButtonView.init(event:),
+                makeHistoryButton: { .init(event: $0, isFiltered: $1, isDateFiltered: $2, clearOptions: $3) },
                 makeRepeatButtonView: { _ in .init(action: {}) }
             ),
             getUImage: { _ in nil }
@@ -617,7 +579,8 @@ extension MainViewFactory {
                 )
             },
             makeInfoViews: .default,
-            makeUserAccountView: UserAccountView.init(viewModel:config:)
+            makeUserAccountView: UserAccountView.init(viewModel:config:),
+            makeAnywayFlowView: { _ in fatalError() }
         )
     }
 }

@@ -38,20 +38,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .c2bSubscribeURL(url))
+        sut.getNavigation(with: .c2bSubscribeURL(url))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.source(.c2bSubscribe(url))])
     }
     
     func test_c2bSubscribe_shouldDeliverPayments() {
         
+        let payments = makePaymentsModel()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .c2bSubscribeURL(anyURL()),
-            toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
+            toDeliver: .payments(.init(payments)),
+            on: { microServices.makePayments.complete(with: payments) }
         )
     }
     
@@ -102,20 +103,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .c2bURL(url))
+        sut.getNavigation(with: .c2bURL(url))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.source(.c2b(url))])
     }
     
     func test_c2b_shouldDeliverPayments() {
         
+        let payments = makePaymentsModel()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .c2bURL(anyURL()),
-            toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
+            toDeliver: .payments(.init(payments)),
+            on: { microServices.makePayments.complete(with: payments) }
         )
     }
     
@@ -166,20 +168,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let qrCode = makeQR()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .failure(qrCode))
+        sut.getNavigation(with: .failure(qrCode))
         
         XCTAssertNoDiff(microServices.makeQRFailureWithQR.payloads.map(\.qrCode), [qrCode])
     }
     
     func test_failure_shouldDeliverFailure() {
         
+        let failure = makeQRFailed()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .failure(makeQR()),
-            toDeliver: .failure,
-            on: { microServices.makeQRFailureWithQR.complete(with: makeQRFailed()) }
+            toDeliver: .failure(.init(failure)),
+            on: { microServices.makeQRFailureWithQR.complete(with: failure) }
         )
     }
     
@@ -188,10 +191,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .failure(makeQR()), notify: { events.append($0) })
+        sut.getNavigation(with: .failure(makeQR()), notify: { events.append($0) })
         microServices.makeQRFailureWithQR.payloads.first.map(\.chat)?()
         
-        XCTAssertNoDiff(events, [.outside(.chat)])
+        XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
     }
     
     func test_failure_shouldDeliverDetailPaymentEventOnFailureDetailPaymentAction() {
@@ -200,10 +203,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .failure(makeQR()), notify: { events.append($0) })
+        sut.getNavigation(with: .failure(makeQR()), notify: { events.append($0) })
         microServices.makeQRFailureWithQR.payloads.first.map(\.detailPayment)?(qrCode)
         
-        XCTAssertNoDiff(events, [.detailPayment(qrCode)])
+        XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(qrCode)])
     }
     
     // MARK: - qrResult: mapped: missingINN
@@ -212,20 +215,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.missingINN))
+        sut.getNavigation(with: .mapped(.missingINN))
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
     
     func test_missingINN_shouldDeliverFailureOnMissingINN() {
         
+        let failure = makeQRFailed()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .mapped(.missingINN),
-            toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
+            toDeliver: .failure(.init(failure)),
+            on: { microServices.makeQRFailure.complete(with: failure) }
         )
     }
     
@@ -234,10 +238,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
-        XCTAssertNoDiff(events, [.outside(.chat)])
+        XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
     }
     
     func test_missingINN_shouldDeliverDetailPaymentEventOnFailureDetailPaymentAction() {
@@ -245,10 +249,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .mapped(.missingINN), notify: { events.append($0) })
+        sut.getNavigation(with: .mapped(.missingINN), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
-        XCTAssertNoDiff(events, [.detailPayment(nil)])
+        XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
     }
     
     // MARK: - qrResult: mapped: mixed
@@ -256,10 +260,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_mixed_shouldCallMakeProviderPickerWithPayload() {
         
         let (mixed, qrCode, qrMapping) = makeMixed()
-        let result: QRModelResult = .mapped(.mixed(mixed, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.mixed(.init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)))
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: result)
+        sut.getNavigation(with: result)
         
         XCTAssertNoDiff(microServices.makeProviderPicker.payloads, [
             .init(mixed: mixed, qrCode: qrCode, qrMapping: qrMapping)
@@ -268,13 +272,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     func test_mapped_mixed_shouldDeliverProviderPicker() {
         
+        let picker = makeProviderPicker()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: makeMappedMixed(),
-            toDeliver: .providerPicker,
-            on: { microServices.makeProviderPicker.complete(with: makeProviderPicker()) }
+            toDeliver: .providerPicker(.init(picker)),
+            on: { microServices.makeProviderPicker.complete(with: picker) }
         )
     }
     
@@ -362,10 +367,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_multiple_shouldCallMakeOperatorSearchWithPayload() {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        let result: QRModelResult = .mapped(.multiple(multiple, qrCode, qrMapping))
+        let result: QRModelResult = .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode,
+            qrMapping: qrMapping
+        )))
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: result)
+        sut.getNavigation(with: result)
         
         let payloads = microServices.makeOperatorSearch.payloads
         XCTAssertNoDiff(payloads.map(\.multiple), [multiple])
@@ -377,13 +386,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     func test_mapped_multiple_shouldDeliverOperatorSearch() {
         
+        let search = makeOperatorSearch()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: makeMappedMultiple(),
-            toDeliver: .operatorSearch,
-            on: { microServices.makeOperatorSearch.complete(with: makeOperatorSearch()) }
+            toDeliver: .operatorSearch(.init(search)),
+            on: { microServices.makeOperatorSearch.complete(with: search) }
         )
     }
     
@@ -396,20 +406,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let qrCode = makeQR()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.none(qrCode)))
+        sut.getNavigation(with: .mapped(.none(qrCode)))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.qrCode(qrCode)])
     }
     
     func test_mapped_none_shouldDeliverPayments() {
         
+        let payments = makePaymentsModel()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .mapped(.none(makeQR())),
-            toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
+            toDeliver: .payments(.init(payments)),
+            on: { microServices.makePayments.complete(with: payments) }
         )
     }
     
@@ -460,7 +471,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let payload = makePaymentProviderServicePickerPayload()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.provider(payload)))
+        sut.getNavigation(with: .mapped(.provider(payload)))
         
         XCTAssertNoDiff(microServices.makeServicePicker.payloads, [payload])
     }
@@ -468,13 +479,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     func test_mapped_provider_shouldDeliverServicePicker() {
         
         let payload = makePaymentProviderServicePickerPayload()
+        let picker = makeServicePicker()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .mapped(.provider(payload)),
-            toDeliver: .servicePicker,
-            on: { microServices.makeServicePicker.complete(with: makeServicePicker()) }
+            toDeliver: .servicePicker(.init(picker)),
+            on: { microServices.makeServicePicker.complete(with: picker) }
         )
     }
     
@@ -568,7 +580,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (qrCode, qrMapping) = (makeQR(), makeQRMapping())
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.single(
+        sut.getNavigation(with: .mapped(.single(
             makeSegmentedOperatorData(), qrCode, qrMapping
         )))
         
@@ -594,20 +606,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .mapped(.source(.avtodor)))
+        sut.getNavigation(with: .mapped(.source(.avtodor)))
         
         XCTAssertNoDiff(microServices.makePayments.payloads, [.operationSource(.avtodor)])
     }
     
     func test_mapped_source_shouldDeliverPayments() {
         
+        let payments = makePaymentsModel()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .mapped(.source(.avtodor)),
-            toDeliver: .payments,
-            on: { microServices.makePayments.complete(with: makePaymentsModel()) }
+            toDeliver: .payments(.init(payments)),
+            on: { microServices.makePayments.complete(with: payments) }
         )
     }
     
@@ -658,7 +671,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let url = anyURL()
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .sberQR(url))
+        sut.getNavigation(with: .sberQR(url))
         
         XCTAssertEqual(microServices.makeSberQR.payloads.map(\.url), [url])
     }
@@ -669,13 +682,13 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var receivedEvents = [SUT.NotifyEvent]()
         
-        sut.compose(
+        sut.getNavigation(
             with: .sberQR(anyURL()),
             notify: { receivedEvents.append($0) }
         )
         microServices.makeSberQR.payloads.map(\.1).first?(sberState)
         
-        XCTAssertNoDiff(receivedEvents, [.sberPay(sberState)])
+        XCTAssertNoDiff(receivedEvents.map(\.equatable), [.sberPay(sberState)])
     }
     
     func test_sberQR_shouldDeliverSberQRFailureOnMakeSberQRFailure() {
@@ -693,13 +706,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     func test_sberQR_shouldDeliverSberQROnMakeSberQRSuccess() {
         
+        let sberQR = makeSberQR()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .sberQR(anyURL()),
-            toDeliver: .sberQR(.success),
-            on: { microServices.makeSberQR.complete(with: self.makeSberQR()) }
+            toDeliver: .sberQR(.success(.init(sberQR))),
+            on: { microServices.makeSberQR.complete(with: sberQR) }
         )
     }
     
@@ -711,20 +725,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .url(anyURL()))
+        sut.getNavigation(with: .url(anyURL()))
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
     
     func test_url_shouldDeliverFailure() {
         
+        let failure = makeQRFailed()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .url(anyURL()),
-            toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
+            toDeliver: .failure(.init(failure)),
+            on: { microServices.makeQRFailure.complete(with: failure) }
         )
     }
     
@@ -733,10 +748,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .url(anyURL()), notify: { events.append($0) })
+        sut.getNavigation(with: .url(anyURL()), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
-        XCTAssertNoDiff(events, [.outside(.chat)])
+        XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
     }
     
     func test_url_shouldNotifyWithWithDetailPaymentAction() {
@@ -744,10 +759,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .url(anyURL()), notify: { events.append($0) })
+        sut.getNavigation(with: .url(anyURL()), notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
-        XCTAssertNoDiff(events, [.detailPayment(nil)])
+        XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
     }
     
     // MARK: - qrResult: unknown
@@ -756,20 +771,21 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         let (sut, microServices) = makeSUT()
         
-        sut.compose(with: .unknown)
+        sut.getNavigation(with: .unknown)
         
         XCTAssertEqual(microServices.makeQRFailure.payloads.count, 1)
     }
     
     func test_unknown_shouldDeliverFailure() {
         
+        let failure = makeQRFailed()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .unknown,
-            toDeliver: .failure,
-            on: { microServices.makeQRFailure.complete(with: makeQRFailed()) }
+            toDeliver: .failure(.init(failure)),
+            on: { microServices.makeQRFailure.complete(with: failure) }
         )
     }
     
@@ -778,10 +794,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .unknown, notify: { events.append($0) })
+        sut.getNavigation(with: .unknown, notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.chat)?()
         
-        XCTAssertNoDiff(events, [.outside(.chat)])
+        XCTAssertNoDiff(events.map(\.equatable), [.outside(.chat)])
     }
     
     func test_unknown_shouldNotifyWithWithDetailPaymentAction() {
@@ -789,10 +805,10 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (sut, microServices) = makeSUT()
         var events = [SUT.NotifyEvent]()
         
-        sut.compose(with: .unknown, notify: { events.append($0) })
+        sut.getNavigation(with: .unknown, notify: { events.append($0) })
         microServices.makeQRFailure.payloads.first.map(\.detailPayment)?()
         
-        XCTAssertNoDiff(events, [.detailPayment(nil)])
+        XCTAssertNoDiff(events.map(\.equatable), [.detailPayment(nil)])
     }
     
     // MARK: - sberPay
@@ -802,7 +818,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let (url, state) = (anyURL(), makeSberQRConfirmPaymentState())
         let (sut, microServices) = makeSUT()
         
-        sut.compose(url: url, state: state)
+        sut.getNavigation(url: url, state: state)
         
         XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.0), [url])
         XCTAssertNoDiff(microServices.makeSberPaymentComplete.payloads.map(\.1), [state])
@@ -823,13 +839,14 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     func test_sberPay_shouldDeliverPaymentCompleteSuccessOnMakeSberPaymentCompleteSuccess() {
         
+        let complete = makePaymentsComplete()
         let (sut, microServices) = makeSUT()
         
         expect(
             sut,
             with: .sberPay(anyURL(), makeSberQRConfirmPaymentState()),
-            toDeliver: .paymentComplete(.success),
-            on: { microServices.makeSberPaymentComplete.complete(with: self.makePaymentsComplete()) }
+            toDeliver: .paymentComplete(.success(.init(complete))),
+            on: { microServices.makeSberPaymentComplete.complete(with: complete) }
         )
     }
     
@@ -927,7 +944,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     
     private func makeMappedMixed() -> QRModelResult {
         
-        return .mapped(.mixed(makeMixedOperators(), makeQR(), makeQRMapping()))
+        return .mapped(.mixed(.init(operators: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())))
     }
     
     private func makeProviderPicker() -> QRNavigation.ProviderPicker {
@@ -945,7 +962,11 @@ final class QRNavigationComposerTests: QRNavigationTests {
     private func makeMappedMultiple() -> QRModelResult {
         
         let (multiple, qrCode, qrMapping) = makeMultiple()
-        return .mapped(.multiple(multiple, qrCode, qrMapping))
+        return .mapped(.multiple(.init(
+            operators: multiple, 
+            qrCode: qrCode, 
+            qrMapping: qrMapping
+        )))
     }
     
     private func makeOperatorSearch() -> QRNavigation.OperatorSearch {
@@ -1003,7 +1024,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     private func expect(
         _ sut: SUT? = nil,
         with qrResult: QRModelResult,
-        toDeliver expectedResult: EquatableQRNavigation,
+        toDeliver expectedResult: QRNavigation.EquatableQRNavigation,
         notify: @escaping SUT.Notify = { _ in },
         on action: () -> Void = {},
         file: StaticString = #file,
@@ -1015,7 +1036,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
     private func expect(
         _ sut: SUT? = nil,
         with payload: SUT.Payload,
-        toDeliver expectedResult: EquatableQRNavigation,
+        toDeliver expectedResult: QRNavigation.EquatableQRNavigation,
         notify: @escaping SUT.Notify = { _ in },
         on action: () -> Void = {},
         file: StaticString = #file,
@@ -1024,7 +1045,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let sut = sut ?? makeSUT().sut
         let exp = expectation(description: "wait for completion")
         
-        sut.compose(payload: payload, notify: notify) {
+        sut.getNavigation(payload: payload, notify: notify) {
             
             XCTAssertNoDiff($0.equatable, expectedResult, "Expected \(expectedResult), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
@@ -1047,7 +1068,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         var receivedEvent: SUT.NotifyEvent?
         let exp = expectation(description: "wait for completion")
         
-        sut.compose(
+        sut.getNavigation(
             with: qrResult,
             notify: { receivedEvent = $0 }
         ) {
@@ -1059,7 +1080,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         
         wait(for: [exp], timeout: 1)
         
-        XCTAssertNoDiff(receivedEvent, expectedEvent, "Expected \(expectedEvent), but got \(String(describing: receivedEvent)) instead.", file: file, line: line)
+        XCTAssertNoDiff(receivedEvent?.equatable, expectedEvent.equatable, "Expected \(expectedEvent), but got \(String(describing: receivedEvent)) instead.", file: file, line: line)
     }
 }
 
@@ -1082,9 +1103,9 @@ private extension ClosePaymentsViewModelWrapper {
     }
 }
 
-// MARK: - DSL
+// MARK: - DSL & Equatable
 
-private extension QRNavigation {
+extension QRNavigation {
     
     // MARK: - payments
     
@@ -1121,66 +1142,103 @@ private extension QRNavigation {
         
         return servicePicker.model
     }
+}
+
+extension QRNavigationComposer.NotifyEvent {
     
-    // MARK: - equatable
+    var equatable: EquatableNotifyEvent {
+        
+        switch self {
+        case let .contactAbroad(contactAbroad):
+            return .contactAbroad(contactAbroad)
+            
+        case let .detailPayment(detailPayment):
+            return .detailPayment(detailPayment)
+            
+        case .dismiss:
+            return .dismiss
+            
+        case let .isLoading(isLoading):
+            return .isLoading(isLoading)
+            
+        case let .outside(outside):
+            return .outside(outside)
+            
+        case let .qrNavigation(qrNavigation):
+            return .qrNavigation(qrNavigation.equatable)
+            
+        case let .sberPay(sberPay):
+            return .sberPay(sberPay)
+            
+        case .scanQR:
+            return .scanQR
+        }
+    }
+    
+    enum EquatableNotifyEvent: Equatable {
+        
+        case contactAbroad(Payments.Operation.Source)
+        case detailPayment(QRCode?)
+        case dismiss
+        case isLoading(Bool)
+        case outside(QRNavigationComposer.NotifyEvent.Outside)
+        case qrNavigation(QRNavigation.EquatableQRNavigation)
+        case sberPay(SberQRConfirmPaymentState)
+        case scanQR
+    }
+}
+
+extension QRNavigation {
     
     var equatable: EquatableQRNavigation {
-        
+    
         switch self {
-        case .failure:            return .failure
-        case .internetTV:         return .internetTV
-        case .operatorSearch:     return .operatorSearch
-        case .payments:           return .payments
+        case let .failure(failure):
+            return .failure(.init(failure))
             
-        case let .paymentComplete(paymentsSuccess):
-            return .paymentComplete(paymentsSuccess.result)
+        case .internetTV:
+            return .internetTV
             
-        case .providerPicker:     return .providerPicker
+        case let .operatorSearch(operatorSearch):
+            return .operatorSearch(.init(operatorSearch))
             
-        case let .sberQR(sberQR):
-            return .sberQR(sberQR.result)
+        case let .payments(node):
+            return .payments(.init(node.model))
             
-        case .servicePicker:      return .servicePicker
+        case let .paymentComplete(.failure(message)):
+            return .paymentComplete(.failure(message))
+            
+        case let .paymentComplete(.success(paymentComplete)):
+            return .paymentComplete(.success(.init(paymentComplete)))
+            
+        case let .providerPicker(node):
+            return .providerPicker(.init(node.model))
+            
+        case let .sberQR(.failure(message)):
+            return .sberQR(.failure(message))
+            
+        case let .sberQR(.success(sberQR)):
+            return .sberQR(.success(.init(sberQR)))
+            
+        case let .servicePicker(node):
+            return .servicePicker(.init(node.model))
         }
     }
-}
-
-private enum EquatableQRNavigation: Equatable {
     
-    case failure
-    case internetTV
-    case operatorSearch
-    case payments
-    case providerPicker
-    case paymentComplete(Result)
-    case sberQR(Result)
-    case servicePicker
-    
-    enum Result: Equatable {
+    enum EquatableQRNavigation: Equatable {
         
-        case failure(QRNavigation.ErrorMessage)
-        case success
-    }
-}
-
-private extension QRNavigation.SberQRResult {
-    
-    var result: EquatableQRNavigation.Result {
+        case failure(ObjectIdentifier)
+        case internetTV
+        case operatorSearch(ObjectIdentifier)
+        case payments(ObjectIdentifier)
+        case paymentComplete(PaymentCompleteResult)
+        case providerPicker(ObjectIdentifier)
+        case sberQR(SberQRResult)
+        case servicePicker(ObjectIdentifier)
         
-        switch self {
-        case let .failure(error): return .failure(error)
-        case .success:            return .success
-        }
-    }
-}
-
-private extension QRNavigation.PaymentCompleteResult {
-    
-    var result: EquatableQRNavigation.Result {
-        
-        switch self {
-        case let .failure(error): return .failure(error)
-        case .success:            return .success
-        }
+        typealias OperatorSearch = QRSearchOperatorViewModel
+        typealias PaymentCompleteResult = Result<ObjectIdentifier, ErrorMessage>
+        typealias ProviderPicker = SegmentedPaymentProviderPickerFlowModel
+        typealias SberQRResult = Result<ObjectIdentifier, QRNavigation.ErrorMessage>
     }
 }

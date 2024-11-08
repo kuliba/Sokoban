@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import LandingUIComponent
 import SberQR
 import XCTest
 
@@ -121,7 +122,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -539,6 +540,39 @@ final class MainViewModelTests: XCTestCase {
 
         assert(sections: sut.sections, count: 6, type: .products)
     }
+    
+    // MARK: - handleLandingAction
+    
+    func test_handleLandingAction_shouldSetDestinationToLanding() {
+        
+        let (sut, _) = makeSUT()
+        let type = anyMessage()
+        
+        XCTAssertNil(sut.route.destination)
+        XCTAssertNil(sut.route.modal)
+        
+        sut.handleLandingAction(type)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNoDiff(sut.route.case, .landing)
+        XCTAssertNil(sut.route.modal)
+    }
+
+    func test_landingAction_tapGoToBack_shouldSetDestinationToNil() {
+        
+        let (sut, _) = makeSUT()
+        let type = anyMessage()
+        
+        let destinationSpy = ValueSpy(sut.$route.map(\.case))
+
+        sut.handleLandingAction(type)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        sut.landingWrapperViewModel?.action(.goToBack)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNoDiff(destinationSpy.values, [nil, .landing, nil])
+    }
 
     // MARK: - Helpers
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
@@ -564,7 +598,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -598,7 +632,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: .preview(),
@@ -636,7 +670,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: .preview(),
@@ -692,7 +726,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_  in nil },
+            makeProductProfileViewModel: { _,_,_,_   in nil },
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -842,6 +876,17 @@ private extension MainViewModel {
         }
     }
     
+    var landingWrapperViewModel: LandingWrapperViewModel? {
+        
+        switch route.destination {
+        case let .landing(landingViewModel, _):
+            return landingViewModel
+            
+        default:
+            return nil
+        }
+    }
+    
     var currencyWalletSection: MainSectionCurrencyMetallView.ViewModel? {
         
         sections.compactMap {
@@ -861,6 +906,7 @@ private extension MainViewModel.Route {
         case .templates:      return .templates
         case .paymentSticker: return .paymentSticker
         case .openCard:       return .openCard
+        case .landing:        return .landing
         case .currencyWallet: return .currencyWallet
         case .payments:       return .payments
         default:              return .other
@@ -870,6 +916,7 @@ private extension MainViewModel.Route {
     enum Case: Equatable {
         
         case currencyWallet
+        case landing
         case openCard
         case payments
         case paymentSticker

@@ -48,8 +48,16 @@ extension RootViewFactoryComposer {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
-            makeIconView: imageCache.makeIconView(for:), 
+            makeHistoryButtonView: { event, isFiltered, isDateFiltered, clearAction in
+                self.makeHistoryButtonView(
+                    self.historyFeatureFlag,
+                    isFiltered: isFiltered,
+                    isDateFiltered: isDateFiltered,
+                    clearAction: clearAction,
+                    event: event
+                )
+            },
+            makeIconView: imageCache.makeIconView(for:),
             makeGeneralIconView: generalImageCache.makeIconView(for:),
             makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
@@ -58,7 +66,7 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView, 
-            makeNavigationOperationView: makeNavigationOperationView
+            makeAnywayFlowView: makeAnywayFlowView
         )
     }
 }
@@ -88,11 +96,20 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
-                makeUserAccountView: makeUserAccountView
+                makeUserAccountView: makeUserAccountView, 
+                makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) }
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+                makeHistoryButton: {
+                    self.makeHistoryButtonView(
+                        self.historyFeatureFlag,
+                        isFiltered: $1,
+                        isDateFiltered: $2,
+                        clearAction: $3,
+                        event: $0
+                    )
+                },
                 makeRepeatButtonView: { action in self.makeReturnButtonView(self.historyFeatureFlag, action: action) }
             ),
             getUImage: getUImage
@@ -143,6 +160,39 @@ private extension RootViewFactoryComposer {
         
         return composer.compose(event: event)
     }
+    
+    @ViewBuilder
+    func makeAnywayFlowView(
+        flowModel: AnywayFlowModel
+    ) -> AnywayFlowView<PaymentCompleteView> {
+        
+        let anywayPaymentFactory = makeAnywayPaymentFactory {
+            
+            flowModel.state.content.event(.payment($0))
+        }
+        
+        AnywayFlowView(
+            flowModel: flowModel,
+            factory: .init(
+                makeElementView: anywayPaymentFactory.makeElementView,
+                makeFooterView: anywayPaymentFactory.makeFooterView
+            ),
+            makePaymentCompleteView: {
+                
+                self.makePaymentCompleteView(
+                result: .init(
+                    formattedAmount: $0.formattedAmount,
+                    merchantIcon: $0.merchantIcon,
+                    result: $0.result.mapError {
+                        
+                        return .init(hasExpired: $0.hasExpired)
+                    }
+                ),
+                goToMain: { flowModel.event(.goTo(.main)) })
+            }
+        )
+    }
+    
     
     private func currencyOfProduct(
         product: ProductSelect.Product
@@ -209,24 +259,23 @@ private extension RootViewFactoryComposer {
         action: @escaping () -> Void
     ) -> RepeatButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return RepeatButtonView(action: action)
-            
-        } else {
-           return nil
-        }
+        return RepeatButtonView(action: action)
     }
     
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag,
-        event: @escaping (HistoryEvent) -> Void
+        isFiltered: @escaping () -> Bool,
+        isDateFiltered: @escaping () -> Bool,
+        clearAction: @escaping () -> Void,
+        event: @escaping (ProductProfileFlowEvent.ButtonEvent) -> Void
     ) -> HistoryButtonView? {
         
-        if historyFeatureFlag.rawValue {
-            return HistoryButtonView(event: event)
-        } else {
-           return nil
-        }
+        return HistoryButtonView(
+            event: event,
+            isFiltered: isFiltered,
+            isDateFiltered: isDateFiltered,
+            clearOptions: clearAction
+        )
     }
     
     typealias Completed = AnywayCompleted
@@ -305,7 +354,8 @@ private extension RootViewFactoryComposer {
         _ contentEvent: @escaping (MarketShowcaseDomain.ContentEvent) -> Void,
         _ flowEvent: @escaping (MarketShowcaseDomain.FlowEvent) -> Void,
         _ landing: MarketShowcaseDomain.Landing,
-        _ orderCard: @escaping () -> Void
+        _ orderCard: @escaping () -> Void,
+        _ payment: @escaping (String) -> Void
     ) -> LandingWrapperView {
         
         if landing.errorMessage != nil {
@@ -342,7 +392,8 @@ private extension RootViewFactoryComposer {
             }
             }, 
             outsideAction: { flowEvent(.select(.landing($0))) },
-            orderCard: orderCard
+            orderCard: orderCard, 
+            payment: payment
         )
         
        return LandingWrapperView(viewModel: landingViewModel)
@@ -350,7 +401,8 @@ private extension RootViewFactoryComposer {
     
     func makeMarketShowcaseView(
         viewModel: MarketShowcaseDomain.Binder,
-        orderCard: @escaping () -> Void
+        orderCard: @escaping () -> Void,
+        payment: @escaping (String) -> Void
     ) -> MarketShowcaseWrapperView? {
         marketFeatureFlag.isActive ?
         
@@ -369,32 +421,15 @@ private extension RootViewFactoryComposer {
                                         config: .iFora,
                                         factory: .init(
                                             makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
-                                            makeLandingView: { self.makeLandingView(contentEvent, flowEvent, $0, orderCard) }
+                                            makeLandingView: {
+                                                self.makeLandingView(contentEvent, flowEvent, $0, orderCard, payment)
+                                            }
                                         )
                                     )
                                 })
                         }
                 })
         : nil
-    }
-    
-    func makeNavigationOperationView(
-        dismissAll: @escaping() -> Void
-    ) -> some View {
-        
-        NavigationView {
-            
-            RootViewModelFactory(
-                model: model, 
-                httpClient: model.authenticatedHTTPClient(), 
-                logger: LoggerAgent()
-            ).makeNavigationOperationView(dismissAll: dismissAll)()
-                .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: Button(action: dismissAll) { Image("ic24ChevronLeft") })
-                .foregroundColor(.textSecondary)
-        }
     }
 }
 

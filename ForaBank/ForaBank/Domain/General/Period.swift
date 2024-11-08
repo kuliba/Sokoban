@@ -12,7 +12,7 @@ struct Period: Codable, Equatable {
     let start: Date
     let end: Date
     
-    init(start: Date, end: Date) {
+    init(start: Date, end: Date) { //MARK: init with Calendar
         
         self.start = start
         self.end = end
@@ -25,6 +25,12 @@ struct Period: Codable, Equatable {
     }
 }
 
+extension Period {
+    
+    var range: ClosedRange<Date> {
+        start...end //MARK: end - start of next day time
+    }
+}
 extension Period {
     
     func including(_ other: Period) -> Period {
@@ -50,12 +56,14 @@ extension Period {
         
         case latest
         case eldest
+        case custom(start: Date, end: Date)
         
         var debugDescription: String {
             
             switch self {
             case .latest: return "direction: latest"
             case .eldest: return "direction: eldest"
+            case .custom: return "direction: custom"
             }
         }
     }
