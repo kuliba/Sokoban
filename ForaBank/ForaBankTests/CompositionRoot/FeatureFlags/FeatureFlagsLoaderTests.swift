@@ -206,6 +206,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+//    // MARK: - CollateralLoanLandingFlag
+//    
+//    func test_load_shouldDeliverActiveCollateralLoanLandingFlagForActiveRetrieveResult() {
+//        
+//        let sut = makeSUT { $0 == .collateralLoanLandingFlag ? "1" : nil }
+//        
+//        let flags = sut.load()
+//        
+//        XCTAssertNoDiff(flags, makeFeatureFlags(
+//            collateralLoanLandingFlag: .init(.active)
+//        ))
+//    }
+//    
+//    func test_load_shouldDeliverInactiveCollateralLoanLandingFlagForInactiveRetrieveResult() {
+//        
+//        let sut = makeSUT { _ in "0" }
+//        
+//        let flags = sut.load()
+//        
+//        XCTAssertNoDiff(flags, makeFeatureFlags(
+//            collateralLoanLandingFlag: .init(.inactive)
+//        ))
+//    }
+
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -229,8 +253,19 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
         marketplaceFlag: MarketplaceFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
-        utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
+        utilitiesPaymentsFlag: StubbedFeatureFlag? = nil,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
     ) -> FeatureFlags {
+
+//        .init(
+//            changeSVCardLimitsFlag: .init(.inactive),
+//            getProductListByTypeV6Flag: .init(.inactive),
+//            marketplaceFlag: .init(.inactive),
+//            historyFilterFlag: .init(false),
+//            paymentsTransfersFlag: .init(.inactive),
+//            utilitiesPaymentsFlag: .init(.inactive),
+//            collateralLoanLandingFlag: .init(.inactive)
+//        )
         
         return .init(
             changeSVCardLimitsFlag: changeSVCardLimitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
@@ -238,7 +273,8 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             marketplaceFlag: marketplaceFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag.map { .init($0.rawValue) } ?? .init(.inactive),
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive),
+            collateralLoanLandingFlag: collateralLoanLandingFlag.map { .init($0).rawValue } ?? .init(.inactive)
         )
     }
 }
