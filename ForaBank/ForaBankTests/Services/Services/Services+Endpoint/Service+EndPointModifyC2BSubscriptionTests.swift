@@ -10,7 +10,7 @@ import XCTest
 
 final class Service_EndPointModifyC2BSubscriptionTests: XCTestCase {
     
-    func test_urlWithBase_shouldThrowOnEmptyBase() throws {
+    func test_urlWithBaseAcc_shouldThrowOnEmptyBase() throws {
         
         let endpoint: Services.Endpoint = .modifyC2BSubAccData
         let emptyBase = ""
@@ -20,9 +20,29 @@ final class Service_EndPointModifyC2BSubscriptionTests: XCTestCase {
         )
     }
     
-    func test_urlWithBase_shouldThrowOnIllegalBase() throws {
+    func test_urlWithBaseCard_shouldThrowOnEmptyBase() throws {
+        
+        let endpoint: Services.Endpoint = .modifyC2BSubCardData
+        let emptyBase = ""
+        
+        XCTAssertThrowsError(
+            try endpoint.url(withBase: emptyBase)
+        )
+    }
+    
+    func test_urlWithBaseAcc_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .modifyC2BSubAccData
+        let illegalBase = "🤯"
+        
+        XCTAssertThrowsError(
+            try endpoint.url(withBase: illegalBase)
+        )
+    }
+    
+    func test_urlWithBaseCard_shouldThrowOnIllegalBase() throws {
+        
+        let endpoint: Services.Endpoint = .modifyC2BSubCardData
         let illegalBase = "🤯"
         
         XCTAssertThrowsError(
@@ -41,10 +61,22 @@ final class Service_EndPointModifyC2BSubscriptionTests: XCTestCase {
             "//any.url/rest/binding/v1/modifyC2BSubAcc"
         )
     }
-
-    func test_urlWithBase_shouldThrowOnIllegalBaseURL() throws {
+    
+    func test_urlWithBaseCard_shouldReturnURL_bindPublicKeyWithEventId() throws {
         
-        let endpoint: Services.Endpoint = .bindPublicKeyWithEventID
+        let endpoint: Services.Endpoint = .modifyC2BSubCardData
+        
+        let url = try endpoint.url(withBase: "any.url")
+        
+        XCTAssertNoDiff(
+            url.absoluteString,
+            "//any.url/rest/binding/v1/modifyC2BSubCard"
+        )
+    }
+
+    func test_urlWithBaseAcc_shouldThrowOnIllegalBaseURL() throws {
+        
+        let endpoint: Services.Endpoint = .modifyC2BSubAccData
         let illegalBaseURL = URL(staticString: "/")
         
         XCTAssertThrowsError(
@@ -52,7 +84,17 @@ final class Service_EndPointModifyC2BSubscriptionTests: XCTestCase {
         )
     }
     
-    func test_urlWithBaseURL_shouldReturnURL_bindPublicKeyWithEventID() throws {
+    func test_urlWithBaseCard_shouldThrowOnIllegalBaseURL() throws {
+        
+        let endpoint: Services.Endpoint = .modifyC2BSubCardData
+        let illegalBaseURL = URL(staticString: "/")
+        
+        XCTAssertThrowsError(
+            try endpoint.url(withBaseURL: illegalBaseURL)
+        )
+    }
+    
+    func test_urlWithBaseURLAcc_shouldReturnURL_bindPublicKeyWithEventID() throws {
         
         let endpoint: Services.Endpoint = .modifyC2BSubAccData
         
@@ -61,6 +103,18 @@ final class Service_EndPointModifyC2BSubscriptionTests: XCTestCase {
         XCTAssertNoDiff(
             url.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/rest/binding/v1/modifyC2BSubAcc"
+        )
+    }
+    
+    func test_urlWithBaseURLCard_shouldReturnURL_bindPublicKeyWithEventID() throws {
+        
+        let endpoint: Services.Endpoint = .modifyC2BSubCardData
+        
+        let url = try endpoint.url(withBaseURL: baseURL())
+        
+        XCTAssertNoDiff(
+            url.absoluteString,
+            "https://pl.forabank.ru/dbo/api/v3/rest/binding/v1/modifyC2BSubCard"
         )
     }
     
