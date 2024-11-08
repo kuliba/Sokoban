@@ -206,29 +206,29 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-//    // MARK: - CollateralLoanLandingFlag
-//    
-//    func test_load_shouldDeliverActiveCollateralLoanLandingFlagForActiveRetrieveResult() {
-//        
-//        let sut = makeSUT { $0 == .collateralLoanLandingFlag ? "1" : nil }
-//        
-//        let flags = sut.load()
-//        
-//        XCTAssertNoDiff(flags, makeFeatureFlags(
-//            collateralLoanLandingFlag: .init(.active)
-//        ))
-//    }
-//    
-//    func test_load_shouldDeliverInactiveCollateralLoanLandingFlagForInactiveRetrieveResult() {
-//        
-//        let sut = makeSUT { _ in "0" }
-//        
-//        let flags = sut.load()
-//        
-//        XCTAssertNoDiff(flags, makeFeatureFlags(
-//            collateralLoanLandingFlag: .init(.inactive)
-//        ))
-//    }
+    // MARK: - CollateralLoanLandingFlag
+    
+    func test_load_shouldDeliverActiveCollateralLoanLandingFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .collateralLoanLandingFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            collateralLoanLandingFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveCollateralLoanLandingFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            collateralLoanLandingFlag: .init(.inactive)
+        ))
+    }
 
     // MARK: - Helpers
     
