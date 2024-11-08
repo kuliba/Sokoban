@@ -70,6 +70,12 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
+            components: makeViewComponents()
+        )
+    }
+    
+    func makeViewComponents() -> ViewComponents {
+        .init(
             makeAnywayFlowView: makeAnywayFlowView,
             makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
             makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
@@ -90,7 +96,7 @@ extension RootViewFactoryComposer {
             makeTransportPaymentsView: makeTransportPaymentsView
         )
     }
-}
+ }
 
 extension RootViewFactoryComposer {
     
@@ -118,24 +124,7 @@ private extension RootViewFactoryComposer {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
-                makeAnywayFlowView: { self.makeAnywayFlowView(flowModel: $0) },
-                makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
-                makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
-                makeContactsView: makeContactsView, 
-                makeControlPanelWrapperView: makeControlPanelWrapperView,
-                makeCurrencyWalletView: makeCurrencyWalletView,
-                makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
-                makeMainSectionProductsView: makeMainSectionProductsView,
-                makeOperationDetailView: makeOperationDetailView,
-                makePaymentsMeToMeView: makePaymentsMeToMeView,
-                makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-                makePaymentsSuccessView: makePaymentsSuccessView,
-                makePaymentsView: makePaymentsView,
-                makeQRFailedView: makeQRFailedView,
-                makeQRSearchOperatorView: makeQRSearchOperatorView,
-                makeQRView: makeQRView,
-                makeTemplatesListFlowView: makeTemplatesListFlowView,
-                makeTransportPaymentsView: makeTransportPaymentsView
+                components: makeViewComponents()
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -188,7 +177,7 @@ private extension RootViewFactoryComposer {
     }
     
     func makeOptionButtonViewFactory() -> OptionSelectorView.OptionButtonViewFactory {
-        .init(makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
+        .init(makeProductsCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
     }
     
     func makeUserAccountView(
@@ -231,7 +220,7 @@ private extension RootViewFactoryComposer {
     
     func makeCategoryView(
         savingsAccountFlag: Bool
-    ) -> MakeCategoryView  {
+    ) -> MakeProductsCategoryView  {
         return {
             .init(newImplementation: savingsAccountFlag, isSelected: $0, title: $1)
         }
@@ -264,11 +253,11 @@ private extension RootViewFactoryComposer {
     
     func makeProductCarouselView(
         viewModel: ProductCarouselView.ViewModel,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?
+        newProductButton: @escaping () -> NewProductButton?
     ) -> ProductCarouselView {
         .init(
             viewModel: viewModel,
-            buttonNewProduct: buttonNewProduct,
+            newProductButton: newProductButton,
             viewFactory: makeProductCarouselViewFactory()
         )
     }

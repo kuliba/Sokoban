@@ -27,39 +27,6 @@ typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeO
 typealias MakeOrderCard = () -> Void
 typealias MakePaymentByType = (String) -> Void
 
-typealias MakeCategoryView = (Bool, String) -> CategoryView
-
-typealias MakeAnywayServicePickerFlowView = (AnywayServicePickerFlowModel) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>>
-typealias MakeComposedSegmentedPaymentProviderPickerFlowView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>
-typealias MakeContactsBanksSectionView = (ContactsBanksSectionViewModel) -> ContactsBanksSectionView
-typealias MakeContactsView = (ContactsViewModel) -> ContactsView
-typealias MakeControlPanelWrapperView = (ControlPanelViewModel) -> ControlPanelWrapperView
-typealias MakeCurrencyWalletListView = (CurrencyWalletListViewModel) -> CurrencyWalletListView
-typealias MakeCurrencyWalletSelectorView = (CurrencyWalletSelectorView.ViewModel) -> CurrencyWalletSelectorView
-typealias MakeCurrencyWalletView = (CurrencyWalletViewModel) -> CurrencyWalletView
-typealias MakeMainSectionCurrencyMetalView = (MainSectionCurrencyMetallView.ViewModel) -> MainSectionCurrencyMetallView
-typealias MakeMainSectionProductsView = (MainSectionProductsView.ViewModel) -> MainSectionProductsView
-typealias MakeOperationDetailView = (OperationDetailViewModel, @escaping MakeRepeatButtonView, @escaping MakePayment) -> OperationDetailView
-typealias MakeOptionButtonView = (OptionSelectorView.ViewModel.OptionViewModel, Bool) -> OptionSelectorView.OptionButtonView
-typealias MakeOptionSelectorView = (OptionSelectorView.ViewModel) -> OptionSelectorView
-typealias MakePayment = () -> Void
-typealias MakePaymentGroupView = (PaymentsGroupViewModel) -> PaymentGroupView
-typealias MakePaymentsMeToMeView = (PaymentsMeToMeViewModel) -> PaymentsMeToMeView
-typealias MakePaymentsOperationView = (PaymentsOperationViewModel) -> PaymentsOperationView
-typealias MakePaymentsServicesOperatorsView = (PaymentsServicesViewModel) -> PaymentsServicesOperatorsView
-typealias MakePaymentsServiceView = (PaymentsServiceViewModel) -> PaymentsServiceView
-typealias MakePaymentsSuccessView = (PaymentsSuccessViewModel) -> PaymentsSuccessView
-typealias MakePaymentsView = (PaymentsViewModel) -> PaymentsView
-typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping () -> ButtonNewProduct?) -> ProductCarouselView
-typealias MakeProductSelectorView = (ProductSelectorView.ViewModel) -> ProductSelectorView
-typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
-typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
-typealias MakeQRSearchOperatorView = (QRSearchOperatorViewModel) -> QRSearchOperatorView
-typealias MakeQRView = (QRViewModel) -> QRView
-typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
-typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
-typealias MakeTransportPaymentsView = (LoadableResourceViewModel<MosParkingPickerData>, TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
-
 typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
@@ -76,24 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeAnywayFlowView: MakeAnywayFlowView
-    let makeAnywayServicePickerFlowView: MakeAnywayServicePickerFlowView
-    let makeComposedSegmentedPaymentProviderPickerFlowView: MakeComposedSegmentedPaymentProviderPickerFlowView
-    let makeContactsView: MakeContactsView
-    let makeControlPanelWrapperView: MakeControlPanelWrapperView
-    let makeCurrencyWalletView: MakeCurrencyWalletView
-    let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
-    let makeMainSectionProductsView: MakeMainSectionProductsView
-    let makeOperationDetailView: MakeOperationDetailView
-    let makePaymentsMeToMeView: MakePaymentsMeToMeView
-    let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
-    let makePaymentsSuccessView: MakePaymentsSuccessView
-    let makePaymentsView: MakePaymentsView
-    let makeQRFailedView: MakeQRFailedView
-    let makeQRSearchOperatorView: MakeQRSearchOperatorView
-    let makeQRView: MakeQRView
-    let makeTemplatesListFlowView: MakeTemplatesListFlowView
-    let makeTransportPaymentsView: MakeTransportPaymentsView
+    let components: ViewComponents
 }
 
 extension RootViewFactory {
@@ -122,24 +72,7 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeAnywayFlowView: makeAnywayFlowView,
-            makeAnywayServicePickerFlowView: makeAnywayServicePickerFlowView,
-            makeComposedSegmentedPaymentProviderPickerFlowView: makeComposedSegmentedPaymentProviderPickerFlowView,
-            makeContactsView: makeContactsView, 
-            makeControlPanelWrapperView: makeControlPanelWrapperView,
-            makeCurrencyWalletView: makeCurrencyWalletView,
-            makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
-            makeMainSectionProductsView: makeMainSectionProductsView,
-            makeOperationDetailView: makeOperationDetailView,
-            makePaymentsMeToMeView: makePaymentsMeToMeView,
-            makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-            makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView,
-            makeQRFailedView: makeQRFailedView,
-            makeQRSearchOperatorView: makeQRSearchOperatorView,
-            makeQRView: makeQRView,
-            makeTemplatesListFlowView: makeTemplatesListFlowView,
-            makeTransportPaymentsView: makeTransportPaymentsView
+            components: components
         )
     }
 }

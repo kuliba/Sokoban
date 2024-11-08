@@ -48,7 +48,8 @@ extension ModelRootFactory: RootFactory {
             getProductListByTypeV6Flag: .init(.active),
             marketplaceFlag: featureFlags.marketplaceFlag,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag,
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            savingsAccountFlag: featureFlags.savingsAccountFlag
         )
         
         let binder = MarketShowcaseToRootViewModelBinder(

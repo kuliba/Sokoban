@@ -1,5 +1,5 @@
 //
-//  CategoryView.swift
+//  ProductsCategoryView.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 02.11.2024.
@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-struct CategoryView: View {
+struct ProductsCategoryView: View {
     
     let newImplementation: Bool
     let isSelected: Bool
     let title: String
     
-    @ViewBuilder
     var body: some View {
         
         if newImplementation {
@@ -59,9 +58,9 @@ struct CategoryView: View {
 
 #Preview {
     Group {
-        CategoryView(newImplementation: true, isSelected: true, title: "title")
-        CategoryView(newImplementation: false, isSelected: true, title: "title")
-        CategoryView(newImplementation: true, isSelected: false, title: "title")
-        CategoryView(newImplementation: false, isSelected: false, title: "title")
+        ProductsCategoryView(newImplementation: true, isSelected: true, title: "title")
+        ProductsCategoryView(newImplementation: false, isSelected: true, title: "title")
+        ProductsCategoryView(newImplementation: true, isSelected: false, title: "title")
+        ProductsCategoryView(newImplementation: false, isSelected: false, title: "title")
     }
 }

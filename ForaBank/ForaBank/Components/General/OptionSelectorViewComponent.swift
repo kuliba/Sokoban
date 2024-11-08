@@ -168,7 +168,7 @@ extension OptionSelectorView {
     
     struct OptionButtonViewFactory {
         
-        let makeCategoryView: MakeCategoryView
+        let makeProductsCategoryView: MakeProductsCategoryView
     }
     
     struct OptionButtonView: View {
@@ -201,10 +201,10 @@ extension OptionSelectorView {
                     .background(Capsule().foregroundColor(capsuleColor))
                 
             case .products:
-                viewFactory.makeCategoryView(isSelected, viewModel.title)
+                viewFactory.makeProductsCategoryView(isSelected, viewModel.title)
                 
             case .productsSmall:
-                CategoryView(newImplementation: false, isSelected: isSelected, title: viewModel.title)
+                ProductsCategoryView(newImplementation: false, isSelected: isSelected, title: viewModel.title)
             }
         }
     }

@@ -273,104 +273,10 @@ struct CurrencySelectorView: View {
     var body: some View {
         
         ZStack {
-            
             RoundedRectangle(cornerRadius: 12)
                 .foregroundColor(.mainColorsGrayLightest)
             
-            VStack(spacing: 20) {
-                
-                if #available(iOS 14.0, *) {
-                    
-                    if viewModel.currencyOperation == .buy {
-                        
-                        if let productCardSelector = viewModel.productCardSelector {
-                            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
-                                .matchedGeometryEffect(id: "currencySelector", in: namespace)
-                        }
-                        
-                        switch viewModel.state {
-                        case .openAccount:
-                            
-                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
-                                .matchedGeometryEffect(id: "currencyAccount", in: namespace)
-                            
-                        case .productSelector:
-                            
-                            if let productAccountSelector = viewModel.productAccountSelector {
-                                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
-                                    .matchedGeometryEffect(id: "currencyProduct", in: namespace)
-                            }
-                        }
-                        
-                    } else {
-                        
-                        switch viewModel.state {
-                        case .openAccount:
-                            
-                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
-                                .matchedGeometryEffect(id: "currencyAccount", in: namespace)
-                            
-                        case .productSelector:
-                            
-                            if let productAccountSelector = viewModel.productAccountSelector {
-                                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
-                                    .matchedGeometryEffect(id: "currencyProduct", in: namespace)
-                            }
-                        }
-                        
-                        if let productCardSelector = viewModel.productCardSelector {
-                            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
-                                .matchedGeometryEffect(id: "currencySelector", in: namespace)
-                        }
-                    }
-                    
-                } else {
-                    
-                    if viewModel.currencyOperation == .buy {
-                        
-                        if let productCardSelector = viewModel.productCardSelector {
-                            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
-                                .transition(bottomTransition)
-                        }
-                        
-                        switch viewModel.state {
-                        case .openAccount:
-                            
-                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
-                                .transition(topTransition)
-                            
-                        case .productSelector:
-                            
-                            if let productAccountSelector = viewModel.productAccountSelector {
-                                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
-                                    .transition(topTransition)
-                            }
-                        }
-                        
-                    } else {
-                        
-                        switch viewModel.state {
-                        case .openAccount:
-                            
-                            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
-                                .transition(bottomTransition)
-                            
-                        case .productSelector:
-                            
-                            if let productAccountSelector = viewModel.productAccountSelector {
-                                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
-                                    .transition(bottomTransition)
-                            }
-                        }
-                        
-                        if let productCardSelector = viewModel.productCardSelector {
-                            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
-                                .transition(topTransition)
-                        }
-                    }
-                }
-                
-            }.padding(.vertical, 20)
+            selectorView()
         }
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
             switch bottomSheet.type {
@@ -380,6 +286,60 @@ struct CurrencySelectorView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 20)
+    }
+    
+    @ViewBuilder
+    private func selectorView() -> some View {
+        
+        VStack(spacing: 20) {
+            switch viewModel.currencyOperation {
+            case .buy: 
+                buyView()
+                
+            case .sell:
+                sellView()
+            }
+        }.padding(.vertical, 20)
+    }
+    
+    @ViewBuilder
+    private func buyView() -> some View {
+        if let productCardSelector = viewModel.productCardSelector {
+            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
+                .transition(bottomTransition)
+        }
+        
+        switch viewModel.state {
+        case .openAccount:
+            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                .transition(topTransition)
+            
+        case .productSelector:
+            if let productAccountSelector = viewModel.productAccountSelector {
+                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
+                    .transition(topTransition)
+            }
+        }
+    }
+    
+    @ViewBuilder 
+    private func sellView() -> some View {
+        switch viewModel.state {
+        case .openAccount:
+            CurrencyWalletAccountView(viewModel: viewModel.openAccount)
+                .transition(bottomTransition)
+            
+        case .productSelector:
+            if let productAccountSelector = viewModel.productAccountSelector {
+                viewFactory.makeCurrencyWalletSelectorView(productAccountSelector)
+                    .transition(bottomTransition)
+            }
+        }
+        
+        if let productCardSelector = viewModel.productCardSelector {
+            viewFactory.makeCurrencyWalletSelectorView(productCardSelector)
+                .transition(topTransition)
+        }
     }
 }
 

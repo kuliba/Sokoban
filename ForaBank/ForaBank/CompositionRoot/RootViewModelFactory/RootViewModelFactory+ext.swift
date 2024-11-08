@@ -49,7 +49,8 @@ extension RootViewModelFactory {
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag,
         marketplaceFlag: MarketplaceFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        savingsAccountFlag: SavingsAccountFlag
     ) -> RootViewModel {
         
         func performOrWaitForActive(

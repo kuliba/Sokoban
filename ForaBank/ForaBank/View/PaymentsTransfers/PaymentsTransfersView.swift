@@ -198,7 +198,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .payments(node):
-            viewFactory.makePaymentsView(node.model)
+            viewFactory.components.makePaymentsView(node.model)
                 .navigationBarHidden(true)
             
         case let .phone(phoneData):
@@ -238,13 +238,13 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .templates(node):
-            viewFactory.makeTemplatesListFlowView(node)
+            viewFactory.components.makeTemplatesListFlowView(node)
 
         case let .currencyWallet(currencyWalletViewModel):
-            viewFactory.makeCurrencyWalletView( currencyWalletViewModel)
+            viewFactory.components.makeCurrencyWalletView( currencyWalletViewModel)
             
         case let .failedView(failedViewModel):
-            viewFactory.makeQRFailedView(failedViewModel)
+            viewFactory.components.makeQRFailedView(failedViewModel)
             
         case let .c2b(c2bViewModel):
             C2BDetailsView(viewModel: c2bViewModel, getUImage: getUImage)
@@ -253,7 +253,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .searchOperators(viewModel):
-            viewFactory.makeQRSearchOperatorView(viewModel)
+            viewFactory.components.makeQRSearchOperatorView(viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -263,7 +263,7 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .paymentsServices(viewModel):
-            viewFactory.makePaymentsServicesOperatorsView(viewModel)
+            viewFactory.components.makePaymentsServicesOperatorsView(viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
@@ -341,7 +341,7 @@ extension PaymentsTransfersView {
             operation: viewModel.getMosParkingPickerData
         )
         
-        viewFactory.makeTransportPaymentsView(mosParkingPickerData, transportPaymentsViewModel)
+        viewFactory.components.makeTransportPaymentsView(mosParkingPickerData, transportPaymentsViewModel)
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBar(
@@ -365,22 +365,22 @@ extension PaymentsTransfersView {
                 .edgesIgnoringSafeArea(.all)
             
         case let .meToMe(viewModel):
-            viewFactory.makePaymentsMeToMeView(viewModel)
+            viewFactory.components.makePaymentsMeToMeView(viewModel)
                 .edgesIgnoringSafeArea(.bottom)
                 .fixedSize(horizontal: false, vertical: true)
             
         case let .successMeToMe(successMeToMeViewModel):
-            viewFactory.makePaymentsSuccessView(successMeToMeViewModel)
+            viewFactory.components.makePaymentsSuccessView(successMeToMeViewModel)
             
         case .anotherCard(let anotherCardViewModel):
             AnotherCardView(viewModel: anotherCardViewModel)
                 .edgesIgnoringSafeArea(.bottom)
             
         case let .fastPayment(node):
-            viewFactory.makeContactsView(node.model)
+            viewFactory.components.makeContactsView(node.model)
             
         case let .country(node):
-            viewFactory.makeContactsView(node.model)
+            viewFactory.components.makeContactsView(node.model)
         }
     }
     
@@ -395,12 +395,12 @@ extension PaymentsTransfersView {
             
         case let .meToMe(viewModel):
             
-            viewFactory.makePaymentsMeToMeView(viewModel)
+            viewFactory.components.makePaymentsMeToMeView(viewModel)
                 .fullScreenCover(item: $viewModel.fullCover) { fullCover in
                     
                     switch fullCover.type {
                     case let .successMeToMe(successMeToMeViewModel):
-                        viewFactory.makePaymentsSuccessView(successMeToMeViewModel)
+                        viewFactory.components.makePaymentsSuccessView(successMeToMeViewModel)
                     }
                     
                 }.transaction { transaction in
@@ -417,13 +417,13 @@ extension PaymentsTransfersView {
         
         switch fullScreenCover.type {
         case let .qrScanner(node):
-            viewFactory.makeQRView(node.model.qrModel)
+            viewFactory.components.makeQRView(node.model.qrModel)
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)
             
         case let .success(viewModel):
-            viewFactory.makePaymentsSuccessView(viewModel)
+            viewFactory.components.makePaymentsSuccessView(viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
     }
@@ -432,7 +432,7 @@ extension PaymentsTransfersView {
         _ paymentsViewModel: PaymentsViewModel
     ) -> some View {
         
-        viewFactory.makePaymentsView(paymentsViewModel)
+        viewFactory.components.makePaymentsView(paymentsViewModel)
             .navigationBarHidden(true)
     }
     
@@ -462,7 +462,7 @@ private extension PaymentsTransfersView {
         _ flowModel: SegmentedPaymentProviderPickerFlowModel
     ) -> some View {
         
-        viewFactory.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
+        viewFactory.components.makeComposedSegmentedPaymentProviderPickerFlowView(flowModel)
             .navigationBarWithBack(
                 title: PaymentsTransfersSectionType.payments.name,
                 dismiss: viewModel.dismissPaymentProviderPicker,
@@ -479,7 +479,7 @@ private extension PaymentsTransfersView {
         
         let provider = flowModel.state.content.state.payload.provider
         
-        viewFactory.makeAnywayServicePickerFlowView(flowModel)
+        viewFactory.components.makeAnywayServicePickerFlowView(flowModel)
             .navigationBarWithAsyncIcon(
                 title: provider.origin.title,
                 subtitle: provider.origin.inn,

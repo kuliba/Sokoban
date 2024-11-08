@@ -734,16 +734,16 @@ struct ProductCarouselView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
-    private let buttonNewProduct: () -> ButtonNewProduct?
+    private let newProductButton: () -> NewProductButton?
     private let viewFactory: ProductCarouselViewFactory
     
     init(
         viewModel: ViewModel,
-        buttonNewProduct: @escaping () -> ButtonNewProduct?,
+        newProductButton: @escaping () -> NewProductButton?,
         viewFactory: ProductCarouselViewFactory
     ) {
         self.viewModel = viewModel
-        self.buttonNewProduct = buttonNewProduct
+        self.newProductButton = newProductButton
         self.viewFactory = viewFactory
     }
     
@@ -751,7 +751,7 @@ struct ProductCarouselView: View {
         viewModel: ViewModel,
         viewFactory: ProductCarouselViewFactory
     ) {
-        self.init(viewModel: viewModel, buttonNewProduct: { nil }, viewFactory: viewFactory)
+        self.init(viewModel: viewModel, newProductButton: { nil }, viewFactory: viewFactory)
     }
     
     private let newProductButtonHeight = ProductGroupView.ViewModel.Dimensions.regular.sizes.product.height
@@ -809,7 +809,7 @@ struct ProductCarouselView: View {
                             }
                         }
                         
-                        buttonNewProduct().map {
+                        newProductButton().map {
                             $0.frame(height: newProductButtonHeight)
                         }
                     }
@@ -1189,7 +1189,7 @@ extension ProductCarouselView.ViewModel {
     )
 }
 
-extension ButtonNewProduct.ViewModel {
+extension NewProductButton.ViewModel {
     
-    static let sampleWantCard = ButtonNewProduct.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+    static let sampleWantCard = NewProductButton.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
 }
