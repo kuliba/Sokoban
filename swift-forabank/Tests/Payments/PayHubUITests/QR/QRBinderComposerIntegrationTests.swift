@@ -57,7 +57,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                     scanQR: { $0.scanQRPublisher }
                 ),
                 qrFailure: .init(
-                    isClosed: { _ in fatalError() },
+                    isClosed: { $0.isClosed },
                     scanQR: { $0.scanQRPublisher }
                 )
             )
