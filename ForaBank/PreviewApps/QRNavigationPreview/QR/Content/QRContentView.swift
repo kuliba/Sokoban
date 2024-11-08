@@ -34,6 +34,24 @@ struct QRContentView: View {
                         model.emit(.failure(.init(value: "QRCOde")))
                     }
                     .foregroundColor(.red)
+                    
+                    Button("missing INN") {
+                        
+                        model.emit(.mapped(.missingINN(.init(value: "QRCOde"))))
+                    }
+                    .foregroundColor(.red)
+                    
+                    Button("Mixed Operators") {
+                        
+                        model.emit(.mapped(.mixed(.init(
+                            operators: .init(
+                                .operator(.init()),
+                                .provider(.init())
+                            ),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
                 }
                 .foregroundColor(.blue)
             }

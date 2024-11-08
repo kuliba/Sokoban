@@ -62,6 +62,19 @@ extension ModelRootFactory: RootFactory {
         return rootViewModel
     }
     
+    func makeGetRootNavigation(
+        _ featureFlags: FeatureFlags
+    ) -> RootViewDomain.GetNavigation {
+        
+        return { select, notify, completion in
+        
+            switch select {
+            case .scanQR:
+                completion(.scanQR)
+            }
+        }
+    }
+    
     func makeRootViewFactory(
         _ featureFlags: FeatureFlags
     ) -> RootViewFactory {

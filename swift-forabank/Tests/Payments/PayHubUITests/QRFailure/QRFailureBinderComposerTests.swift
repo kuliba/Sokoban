@@ -25,14 +25,24 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - compose
     
-    func test_compose_shouldCallMakeQRFailureWithQRCode() {
+    func test_compose_shouldCallMakeQRFailureWithQRCodeDetails() {
         
         let qrCode = makeQRCode()
         let (sut, spies, _) = makeSUT()
         
-        _ = sut.compose(qrCode: qrCode)
+        _ = sut.compose(with: .qrCode(qrCode))
         
-        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.qrCode(qrCode)])
+    }
+    
+    func test_compose_shouldCallMakeQRFailureWithMissingINNQRCode() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies, _) = makeSUT()
+        
+        _ = sut.compose(with: .missingINN(qrCode))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.missingINN(qrCode)])
     }
     
     // MARK: - payWithDetails
@@ -42,11 +52,23 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let qrCode = makeQRCode()
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: qrCode)
+        let composed = sut.compose(with: .qrCode(qrCode))
         composed.content.emit(.payWithDetails(qrCode))
         scheduler.advance(by: .seconds(500))
         
         XCTAssertNoDiff(spies.makeDetailPayment.payloads, [qrCode])
+    }
+    
+    func test_composed_payWithDetails_shouldCallMakeDetailPaymentWithoutQRCodeOnMissingINN() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(with: .missingINN(qrCode))
+        composed.content.emit(.payWithDetails(nil))
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(spies.makeDetailPayment.payloads, [nil])
     }
     
     func test_composed_payWithDetails_shouldDeliverDetailPayment() {
@@ -58,8 +80,29 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             detailPayment: detailPayment
         )
         
-        let composed = sut.compose(qrCode: qrCode)
+        let composed = sut.compose(with: .qrCode(qrCode))
         composed.content.emit(.payWithDetails(qrCode))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .detailPayment(.init(detailPayment))
+        )
+    }
+    
+    func test_composed_payWithDetails_shouldDeliverDetailPaymentOnMissingINN() {
+        
+        let qrCode = makeQRCode()
+        let detailPayment = makeDetailPayment()
+        let (sut, _, scheduler) = makeSUT(
+            delay: .seconds(500),
+            detailPayment: detailPayment
+        )
+        
+        let composed = sut.compose(with: .missingINN(qrCode))
+        composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -74,8 +117,27 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: makeQRCode())
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
         composed.content.emit(.payWithDetails(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        
+        try composed.flow.detailPayment.scanQR()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNoDiff(
+            composed.flow.state.navigation.map(equatable),
+            .scanQR
+        )
+    }
+    
+    func test_composed_payWithDetails_shouldDeliverScanQROnDetailPaymentScanQRMissingINN() throws {
+        
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(with: .missingINN(makeQRCode()))
+        composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -93,8 +155,25 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: makeQRCode())
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
         composed.content.emit(.payWithDetails(makeQRCode()))
+        scheduler.advance(by: .seconds(500))
+        scheduler.advance(to: .init(.now()))
+        scheduler.advance(by: .milliseconds(100))
+        XCTAssertNotNil(composed.flow.state.navigation)
+        
+        try composed.flow.detailPayment.close()
+        scheduler.advance(by: .seconds(500))
+        
+        XCTAssertNil(composed.flow.state.navigation)
+    }
+    
+    func test_composed_payWithDetails_shouldDismissOnDetailPaymentCloseOnMissingINN() throws {
+        
+        let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
+        
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
+        composed.content.emit(.payWithDetails(nil))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
         scheduler.advance(by: .milliseconds(100))
@@ -113,7 +192,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         let qrCode = makeQRCode()
         let (sut, spies, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: qrCode)
+        let composed = sut.compose(with: .qrCode(qrCode))
         composed.content.emit(.search(qrCode))
         scheduler.advance(by: .seconds(500))
         
@@ -128,7 +207,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
             categoryPicker: categoryPicker
         )
         
-        let composed = sut.compose(qrCode: makeQRCode())
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
@@ -144,7 +223,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: makeQRCode())
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
@@ -163,7 +242,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
         
         let (sut, _, scheduler) = makeSUT(delay: .seconds(500))
         
-        let composed = sut.compose(qrCode: makeQRCode())
+        let composed = sut.compose(with: .qrCode(makeQRCode()))
         composed.content.emit(.search(makeQRCode()))
         scheduler.advance(by: .seconds(500))
         scheduler.advance(to: .init(.now()))
@@ -179,9 +258,9 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     // MARK: - Helpers
     
     private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment>
-    private typealias MakeQRFailure = CallSpy<QRCode, QRFailure>
+    private typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
     private typealias MakeCategoryPicker = CallSpy<QRCode, CategoryPicker>
-    private typealias MakeDetailPayment = CallSpy<QRCode, DetailPayment>
+    private typealias MakeDetailPayment = CallSpy<QRCode?, DetailPayment>
     
     private struct Spies {
         

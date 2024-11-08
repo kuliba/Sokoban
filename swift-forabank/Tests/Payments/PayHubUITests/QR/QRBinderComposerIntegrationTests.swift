@@ -21,7 +21,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderComposer<Navigation, QR, QRResult>
+    private typealias SUT = QRBinderComposer<Navigation, QR, Select>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -40,15 +40,25 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         )
         let makeQRFailure = MakeQRFailure()
         let makePayments = MakePayments()
+        let makeMixedPicker = MakeMixedPicker()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
                 makeQRFailure: makeQRFailure.call,
-                makePayments: makePayments.call
-            ), 
+                makePayments: makePayments.call,
+                makeMixedPicker: makeMixedPicker.call
+            ),
             witnesses: .init(
-                isClosed: { $0.isClosed },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.scanQRPublisher }
+                addCompany: .init(mixedPicker: { _ in fatalError() }),
+                isClosed: .init(
+                    mixedPicker: { $0.isClosed },
+                    payments: { $0.isClosed },
+                    qrFailure: { $0.isClosed }
+                ),
+                scanQR: .init(
+                    mixedPicker: { $0.scanQRPublisher },
+                    payments: { $0.scanQRPublisher },
+                    qrFailure: { $0.scanQRPublisher }
+                )
             )
         )
         let sut = QRBinderComposer(
