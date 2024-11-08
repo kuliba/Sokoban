@@ -1,5 +1,5 @@
 //
-//  QRBinderGetMappedNavigationComposerTests.swift
+//  _QRBinderGetMappedNavigationComposerTests.swift
 //
 //
 //  Created by Igor Malyarov on 29.10.2024.
@@ -8,7 +8,7 @@
 import PayHubUI
 import XCTest
 
-final class QRBinderGetMappedNavigationComposerTests: QRBinderTests {
+final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
     
     // MARK: - init
     
@@ -243,7 +243,7 @@ final class QRBinderGetMappedNavigationComposerTests: QRBinderTests {
 
 // MARK: - DSL
 
-private extension QRBinderGetMappedNavigationComposer {
+private extension _QRBinderGetMappedNavigationComposer {
     
     func getNavigation(
         mapped: Mapped

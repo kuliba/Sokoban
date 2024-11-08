@@ -1,5 +1,5 @@
 //
-//  QRBinderGetMappedNavigationComposer.swift
+//  _QRBinderGetMappedNavigationComposer.swift
 //
 //
 //  Created by Igor Malyarov on 29.10.2024.
@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
+public final class _QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,11 +21,11 @@ public final class QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Pr
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetMappedNavigationComposerMicroServices<MixedPicker, Operator, Provider, QRCode, QRMapping, QRFailure>
-    public typealias Witnesses = QRBinderGetMappedNavigationWitnesses<MixedPicker, QRFailure>
+    public typealias MicroServices = _QRBinderGetMappedNavigationComposerMicroServices<MixedPicker, Operator, Provider, QRCode, QRMapping, QRFailure>
+    public typealias Witnesses = _QRBinderGetMappedNavigationWitnesses<MixedPicker, QRFailure>
 }
 
-public extension QRBinderGetMappedNavigationComposer {
+public extension _QRBinderGetMappedNavigationComposer {
     
     func getNavigation(
         mapped: Mapped,
@@ -62,7 +62,7 @@ public extension QRBinderGetMappedNavigationComposer {
 
 // MARK: - bindings
 
-private extension QRBinderGetMappedNavigationComposer {
+private extension _QRBinderGetMappedNavigationComposer {
     
     func bind(
         _ mixedPicker: MixedPicker,

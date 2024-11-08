@@ -1,5 +1,5 @@
 //
-//  QRBinderGetMappedNavigationComposerMicroServices.swift
+//  _QRBinderGetMappedNavigationComposerMicroServices.swift
 //
 //
 //  Created by Igor Malyarov on 29.10.2024.
@@ -9,7 +9,7 @@ import ForaTools
 import Foundation
 import PayHub
 
-public struct QRBinderGetMappedNavigationComposerMicroServices<MixedPicker, Operator, Provider, QRCode, QRMapping, QRFailure> {
+public struct _QRBinderGetMappedNavigationComposerMicroServices<MixedPicker, Operator, Provider, QRCode, QRMapping, QRFailure> {
     
     public let makeQRFailure: MakeQRFailure
     public let makeMixedPicker: MakeMixedPicker
@@ -23,7 +23,7 @@ public struct QRBinderGetMappedNavigationComposerMicroServices<MixedPicker, Oper
     }
 }
 
-public extension QRBinderGetMappedNavigationComposerMicroServices {
+public extension _QRBinderGetMappedNavigationComposerMicroServices {
     
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = (MakeMixedPickerPayload) -> MixedPicker

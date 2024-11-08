@@ -1,5 +1,5 @@
 //
-//  QRBinderGetMappedNavigationWitnesses.swift
+//  _QRBinderGetMappedNavigationWitnesses.swift
 //
 //
 //  Created by Igor Malyarov on 30.10.2024.
@@ -7,7 +7,7 @@
 
 import Combine
 
-public struct QRBinderGetMappedNavigationWitnesses<MixedPicker, QRFailure> {
+public struct _QRBinderGetMappedNavigationWitnesses<MixedPicker, QRFailure> {
     
     public let addCompany: AddCompanyWitnesses
     public let isClosed: IsClosedWitnesses

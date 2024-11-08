@@ -39,7 +39,7 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
-    typealias MappedNavigationComposer = QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
     
     typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
