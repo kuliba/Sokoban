@@ -28,30 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         bind(rootViewModel: rootViewModel)
         
-        let flowComposer = RootViewDomain.FlowDomain.Composer(
-            getNavigation: { select, notify, completion in
-                
-                switch select {
-                case .scanQR:
-                    completion(.scanQR)
-                }
-            },
-            scheduler: .main,
-            interactiveScheduler: .global(qos: .userInteractive)
-        )
-        
-        let factory = ContentFlowBindingFactory(scheduler: .main)
-        
-        return .init(
-            content: rootViewModel,
-            flow: flowComposer.compose(),
-            bind: factory.bind(with: .init(
-                contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-                contentReceiving: { _ in {}},
-                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
-            ))
-        )
+        let composer = RootViewBinderComposer()
+        return composer.compose(with: rootViewModel)
     }()
     
     private lazy var rootViewFactory = factory.makeRootViewFactory(featureFlags)
