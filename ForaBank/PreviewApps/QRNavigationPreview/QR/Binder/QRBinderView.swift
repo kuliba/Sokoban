@@ -23,6 +23,9 @@ struct QRBinderView: View {
                     content: {
                         
                         switch $0 {
+                        case let .mixedPicker(mixedPicker):
+                            MixedPickerView(model: mixedPicker)
+                            
                         case let .payments(payments):
                             PaymentsView(model: payments)
                             
@@ -64,6 +67,9 @@ extension QRDomain.FlowDomain.State {
         case .none:
             return nil
             
+        case let .mixedPicker(node):
+            return .mixedPicker(node.model)
+            
         case let .payments(node):
             return .payments(node.model)
             
@@ -74,6 +80,7 @@ extension QRDomain.FlowDomain.State {
     
     enum Destination {
         
+        case mixedPicker(MixedPicker)
         case payments(Payments)
         case qrFailure(QRFailureDomain.Binder)
     }
@@ -84,6 +91,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .mixedPicker(mixedPicker):
+            return .mixedPicker(.init(mixedPicker))
+            
         case let .payments(payments):
             return .payments(.init(payments))
             
@@ -94,6 +104,7 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case mixedPicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
     }

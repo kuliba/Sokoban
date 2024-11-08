@@ -5,25 +5,31 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import ForaTools
 import Foundation
+import PayHub
 
-public struct QRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure> {
+public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure> {
     
     public let makeQRFailure: MakeQRFailure
     public let makePayments: MakePayments
+    public let makeMixedPicker: MakeMixedPicker
     
     public init(
         makeQRFailure: @escaping MakeQRFailure,
-        makePayments: @escaping MakePayments
+        makePayments: @escaping MakePayments,
+        makeMixedPicker: @escaping MakeMixedPicker
     ) {
         self.makeQRFailure = makeQRFailure
         self.makePayments = makePayments
+        self.makeMixedPicker = makeMixedPicker
     }
 }
 
 public extension QRBinderGetNavigationComposerMicroServices {
     
-    typealias MakeQRFailure = (QRCode) -> QRFailure
+    typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMixedPicker = (MakeMixedPickerPayload) -> MixedPicker
     
     typealias MakePayments = (MakePaymentsPayload) -> Payments
     
@@ -32,4 +38,6 @@ public extension QRBinderGetNavigationComposerMicroServices {
         case c2bSubscribe(URL)
         case c2b(URL)
     }
+    
+    typealias MakeQRFailure = (QRCode) -> QRFailure
 }

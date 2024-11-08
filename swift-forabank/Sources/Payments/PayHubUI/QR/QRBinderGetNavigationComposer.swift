@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
+public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,8 +21,8 @@ public final class QRBinderGetNavigationComposer<Operator, Provider, Payments, Q
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure>
-    public typealias Witnesses = QRBinderGetNavigationWitnesses<Payments, QRFailure>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -37,22 +37,25 @@ public extension QRBinderGetNavigationComposer {
             let payments = microServices.makePayments(.c2bSubscribe(url))
             completion(.payments(.init(
                 model: payments,
-                cancellables: bind(payments, with: notify)
+                cancellables: bind(payments, using: notify)
             )))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
             completion(.payments(.init(
                 model: payments,
-                cancellables: bind(payments, with: notify)
+                cancellables: bind(payments, using: notify)
             )))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(qrCode)
             completion(.qrFailure(.init(
                 model: qrFailure,
-                cancellables: bind(qrFailure, with: notify)
+                cancellables: bind(qrFailure, using: notify)
             )))
+            
+        case let .mapped(mapped):
+            getNavigation(mapped, notify, completion)
             
         default:
             fatalError()
@@ -63,31 +66,71 @@ public extension QRBinderGetNavigationComposer {
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Navigation = QRNavigation<Payments, QRFailure>
+    typealias Navigation = QRNavigation<MixedPicker, Payments, QRFailure>
 }
 
 private extension QRBinderGetNavigationComposer {
     
+    func getNavigation(
+        _ mapped: QRResult.Mapped,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (Navigation) -> Void
+    ) {
+        switch mapped {
+        case let .mixed(mixed):
+            let mixedPicker = microServices.makeMixedPicker(mixed)
+            completion(.mixedPicker(.init(
+                model: mixedPicker,
+                cancellables: bind(mixedPicker, using: notify)
+            )))
+            
+        default:
+            fatalError()
+        }
+    }
+}
+
+// MARK: - bindings
+
+private extension QRBinderGetNavigationComposer {
+    
     func bind(
-        _ qrFailure: QRFailure,
-        with notify: @escaping Notify
+        _ mixedPicker: MixedPicker,
+        using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let scanQR = witnesses.qrFailureScanQR(qrFailure)
+        let close = witnesses.mixedPicker.isClosed(mixedPicker)
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = witnesses.mixedPicker.scanQR(mixedPicker)
             .sink { notify(.dismiss) }
         
-        return [scanQR]
+        return [close, scanQR]
+    }
+    
+    func bind(
+        _ qrFailure: QRFailure,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let close = witnesses.qrFailure.isClosed(qrFailure)
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = witnesses.qrFailure.scanQR(qrFailure)
+            .sink { notify(.dismiss) }
+        
+        return [close, scanQR]
     }
     
     func bind(
         _ payments: Payments,
-        with notify: @escaping Notify
+        using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.isClosed(payments)
+        let close = witnesses.payments.isClosed(payments)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.scanQR(payments)
+        let scanQR = witnesses.payments.scanQR(payments)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]
