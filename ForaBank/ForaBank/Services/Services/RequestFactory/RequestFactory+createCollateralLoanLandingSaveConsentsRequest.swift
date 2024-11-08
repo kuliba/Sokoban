@@ -20,7 +20,7 @@ extension RequestFactory {
             withBase: Config.serverAgentEnvironment.baseURL
         )
         
-        return try RemoteServices.RequestFactory.createCollateralLoanLandingSaveConsentsRequest(
+        return try RemoteServices.RequestFactory.createSaveConsentsRequest(
             url: url,
             payload: payload
         )
