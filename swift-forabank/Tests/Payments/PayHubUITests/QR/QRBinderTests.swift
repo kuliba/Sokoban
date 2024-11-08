@@ -13,11 +13,37 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
+    typealias _NavigationComposer = _QRBinderGetNavigationComposer<_QRResult, _QRNavigation>
+    
+    struct _QRResult: Equatable {
+        
+        let value: String
+    }
+    
+    func make_QRResult(
+        _ value: String = anyMessage()
+    ) -> _QRResult {
+        
+        return .init(value: value)
+    }
+    
+    struct _QRNavigation: Equatable {
+        
+        let value: String
+    }
+    
+    func make_QRNavigation(
+        _ value: String = anyMessage()
+    ) -> _QRNavigation {
+        
+        return .init(value: value)
+    }
+    
     typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
     typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
-
+    
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
     typealias QRResult = Select.QRResult
@@ -106,6 +132,25 @@ class QRBinderTests: XCTestCase {
     ) -> Source {
         
         return .init(value: value)
+    }
+    
+    func equatable(
+        _ select: Select
+    ) -> EquatableSelect {
+        
+        switch select {
+        case .outside(.chat):
+            return .chat
+            
+        case let .qrResult(qrResult):
+            return .qrResult(qrResult)
+        }
+    }
+    
+    enum EquatableSelect: Equatable {
+        
+        case chat
+        case qrResult(QRResult)
     }
     
     func equatable(
@@ -227,7 +272,7 @@ class QRBinderTests: XCTestCase {
             
             isCloseSubject.value = true
         }
-
+        
         // MARK: - scanQR
         
         private let scanQRSubject = PassthroughSubject<Void, Never>()
@@ -241,7 +286,7 @@ class QRBinderTests: XCTestCase {
             
             scanQRSubject.send(())
         }
-
+        
         // MARK: - addCompany
         
         private let addCompanySubject = PassthroughSubject<Void, Never>()

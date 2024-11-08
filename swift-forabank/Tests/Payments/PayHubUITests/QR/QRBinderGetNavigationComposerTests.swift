@@ -16,7 +16,9 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         let (sut, spies) = makeSUT()
         
+        XCTAssertEqual(spies.makeMixedPicker.callCount, 0)
         XCTAssertEqual(spies.makePayments.callCount, 0)
+        XCTAssertEqual(spies.makeQRFailure.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
@@ -293,6 +295,9 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spies.makeMixedPicker, file: file, line: line)
+        trackForMemoryLeaks(spies.makePayments, file: file, line: line)
+        trackForMemoryLeaks(spies.makeQRFailure, file: file, line: line)
         
         return (sut, spies)
     }
