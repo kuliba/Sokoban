@@ -63,11 +63,7 @@ struct RootView: View {
             
             MainView(
                 viewModel: mainViewModel,
-                navigationOperationView: RootViewModelFactory(
-                    model: viewModel.model,
-                    httpClient: viewModel.model.authenticatedHTTPClient(),
-                    logger: LoggerAgent()
-                ).makeNavigationOperationView(
+                navigationOperationView: viewModel.stickerViewFactory.makeNavigationOperationView(
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
@@ -113,7 +109,7 @@ struct RootView: View {
         _ marketShowcaseBinder: MarketShowcaseDomain.Binder
     ) -> some View {
         
-        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard).map {
+        rootViewFactory.makeMarketShowcaseView(marketShowcaseBinder, viewModel.openCard, viewModel.openPayment).map {
             $0
             .taggedTabItem(.market, selected: viewModel.selected)
         }
@@ -168,9 +164,17 @@ struct RootView: View {
             
         case .paymentSticker:
             
-            AnyView(
-                rootViewFactory.makeNavigationOperationView(viewModel.resetLink)
-            )
+            NavigationView {
+                
+                viewModel.stickerViewFactory.makeNavigationOperationView(
+                    dismissAll: viewModel.rootActions.dismissAll
+                )()
+                    .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: Button(action: viewModel.resetLink) { Image("ic24ChevronLeft") })
+                    .foregroundColor(.textSecondary)
+            }
         }
     }
 }
@@ -296,7 +300,8 @@ private extension RootView {
                         factory: .init(
                             makeCategoryPickerView: makeCategoryPickerSectionView,
                             makeOperationPickerView: makeOperationPickerView,
-                            makeToolbarView: makePaymentsTransfersToolbarView
+                            makeToolbarView: makePaymentsTransfersToolbarView,
+                            makeTransfersView: makePaymentsTransfersTransfersView
                         ),
                         config: .iFora
                     )
@@ -759,6 +764,40 @@ private extension RootView {
         )
     }
     
+    private func makePaymentsTransfersTransfersView(
+        transfers: PaymentsTransfersPersonalTransfersDomain.Binder
+    ) -> some View {
+        
+        RxWrapperView(model: transfers.flow) {
+            
+            PaymentsTransfersPersonalTransfersFlowView(state: $0,  event: $1) {
+                
+                RxWrapperView(model: transfers.content) { state, event in
+                    
+                    VStack {
+                        
+                        PTSectionTransfersButtonsView(
+                            title: PaymentsTransfersSectionType.transfers.name,
+                            buttons: state.elements.compactMap { element in
+                                
+                                switch element {
+                                case let .buttonType(buttonType):
+                                    return .init(type: buttonType) {
+                                        
+                                        event(.select(.buttonType(buttonType)))
+                                    }
+                                    
+                                default:
+                                    return nil
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
     private func itemLabel(
         item: CategoryPickerSectionDomain.ContentDomain.State.Item
     ) -> some View {
@@ -1007,7 +1046,8 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy,
+                fastPaymentsFactory: .legacy, 
+                stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
@@ -1040,7 +1080,9 @@ private extension RootViewFactory {
         return .init(
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makeHistoryButtonView: { _ in .init { event in }},
+            makeHistoryButtonView: { _,_,_,_   in
+                HistoryButtonView(event: { event in }, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: {})
+            },
             makeIconView: IconDomain.preview,
             makeGeneralIconView: IconDomain.preview,
             makePaymentCompleteView: { _,_ in fatalError() },
@@ -1055,11 +1097,12 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() },
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeInfoViews: .default,
-                        makeUserAccountView: UserAccountView.init(viewModel:config:)
+                        makeUserAccountView: UserAccountView.init(viewModel:config:),
+                        makeAnywayFlowView: { _ in fatalError() }
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                        makeHistoryButton: { .init(event: $0 ) },
+                        makeHistoryButton: { .init(event: $0, isFiltered: { return true }, isDateFiltered: { true }, clearOptions: $3) },
                         makeRepeatButtonView: { _ in .init(action: {})}
                     ),
                     getUImage: { _ in nil }
@@ -1069,8 +1112,8 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: .default,
             makeUserAccountView: { _,_ in UserAccountView.init(viewModel: .sample, config: .preview) },
-            makeMarketShowcaseView: { _,_  in .none },
-            makeNavigationOperationView: { _ in EmptyView() }
+            makeMarketShowcaseView: { _,_,_   in .none },
+            makeAnywayFlowView: { _ in fatalError() }
         )
     }
 }

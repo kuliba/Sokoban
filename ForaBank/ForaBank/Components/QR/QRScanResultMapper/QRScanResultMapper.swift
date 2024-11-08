@@ -70,13 +70,21 @@ private extension QRScanResultMapper {
             
             switch loadResult {
             case .missingINN:
-                completion(.missingINN)
+                completion(.missingINN(qrCode))
                 
             case let .mixed(mixed):
-                completion(.mixed(mixed, qrCode, qrMapping))
+                completion(.mixed(.init(
+                    operators: mixed, 
+                    qrCode: qrCode, 
+                    qrMapping: qrMapping
+                )))
                 
             case let .multiple(multipleOperators):
-                completion(.multiple(multipleOperators, qrCode, qrMapping))
+                completion(.multiple(.init(
+                    operators: multipleOperators, 
+                    qrCode: qrCode, 
+                    qrMapping: qrMapping
+                )))
                 
             case .none:
                 completion(.none(qrCode))
@@ -125,7 +133,8 @@ extension OperatorGroupData.OperatorData {
         return .servicePayment(
             puref: puref,
             additionalList: additionalList,
-            amount: amount/100
+            amount: amount/100, 
+            productId: nil
         )
     }
     
