@@ -53,20 +53,8 @@ extension ContentViewModelComposer {
     
     func compose() -> ContentViewDomain.Flow {
         
-        let qrComposer = makeQRBinderComposer()
-        
         let composer = ContentViewDomain.Composer(
-            getNavigation: { select, notify, completion in
-                
-                switch select {
-                case .scanQR:
-                    let qr = qrComposer.compose()
-                    let close = qr.content.isClosedPublisher
-                        .sink { if $0 { notify(.dismiss) }}
-                    
-                    completion(.qr(.init(model: qr, cancellable: close)))
-                }
-            },
+            getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
         )
@@ -76,6 +64,56 @@ extension ContentViewModelComposer {
 }
 
 private extension ContentViewModelComposer {
+    
+    func getNavigation(
+        select: ContentViewSelect,
+        using notify: @escaping (ContentViewDomain.NotifyEvent) -> Void,
+        completion: @escaping (ContentViewNavigation) -> Void
+    ) {
+        let qrComposer = makeQRBinderComposer()
+        
+        switch select {
+        case .scanQR:
+            let qr = qrComposer.compose()
+            
+            completion(.qr(.init(
+                model: qr,
+                cancellables: bind(qr: qr, using: notify)
+            )))
+        }
+    }
+    
+    func bind(
+        qr: QRDomain.Binder,
+        using notify: @escaping (ContentViewDomain.NotifyEvent) -> Void
+    ) -> Set<AnyCancellable> {
+        
+        let addCompany = qr.flow.$state
+            .compactMap(\.navigation)
+            .compactMap {
+                
+                switch $0 {
+                case let .outside(outside):
+                    return outside
+                    
+                default:
+                    return nil
+                }
+            }
+            .sink {
+                
+                switch $0 {
+                case .chat:
+                    print("Need to switch to chat tab")
+                    notify(.dismiss)
+                }
+            }
+        
+        let close = qr.content.isClosedPublisher
+            .sink { if $0 { notify(.dismiss) }}
+        
+        return [addCompany, close]
+    }
     
     typealias Domain = QRNavigationDomain
     typealias QRBinderComposer = PayHubUI.QRBinderComposer<Domain.Navigation, QRModel, Domain.Select>
