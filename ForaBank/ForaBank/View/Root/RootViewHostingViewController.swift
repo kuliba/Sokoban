@@ -5,13 +5,14 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
 import PaymentSticker
+import SwiftUI
 
-class RootViewHostingViewController: UIHostingController<RootView> {
+class RootViewHostingViewController: UIHostingController<RootViewBinderView> {
     
+    private let binder: RootViewDomain.Binder
     private let viewModel: RootViewModel
     private var cover: Cover?
     private var informer: Informer?
@@ -20,17 +21,17 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     private var bindings = Set<AnyCancellable>()
 
     init(
-        with viewModel: RootViewModel,
+        with binder: RootViewDomain.Binder,
         rootViewFactory: RootViewFactory
     ) {
-        
-        self.viewModel = viewModel
+        self.binder = binder
+        self.viewModel = binder.content
         self.cover = nil
         self.informer = nil
         self.isCoverDismissing = false
         super.init(
-            rootView: RootView(
-                viewModel: viewModel,
+            rootView: RootViewBinderView(
+                binder: binder,
                 rootViewFactory: rootViewFactory
             )
         )
