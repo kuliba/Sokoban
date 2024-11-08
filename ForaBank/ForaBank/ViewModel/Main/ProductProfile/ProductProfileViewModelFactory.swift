@@ -91,6 +91,20 @@ struct ProductProfileViewModelFactory {
 
 extension ProductProfileViewModelFactory {
     
+    func makeNavigationOperationView(
+        dismissAll: @escaping() -> Void
+    ) -> () -> some View {
+        
+        return StickerViewFactory(
+            model: model,
+            httpClient: model.authenticatedHTTPClient(),
+            logger: LoggerAgent()
+        ).makeNavigationOperationView(dismissAll: dismissAll)
+    }
+}
+
+extension ProductProfileViewModelFactory {
+    
     typealias Event = AlertEvent
     typealias Events = (Event) -> Void
 

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "21DA346E-BCBB-4D9A-8D6A-B3A511619D07",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "СlientInformListTests",
+        "name" : "СlientInformListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

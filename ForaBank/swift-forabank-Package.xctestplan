@@ -519,13 +519,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "PlainClientInformBottomSheetTests",
-        "name" : "PlainClientInformBottomSheetTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "EphemeralStoresTests",
         "name" : "EphemeralStoresTests"
       }
@@ -540,15 +533,50 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CollateralLoanLandingTests",
-        "name" : "CollateralLoanLandingTests"
+        "identifier" : "SerialComponentsTests",
+        "name" : "SerialComponentsTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "SerialComponentsTests",
-        "name" : "SerialComponentsTests"
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingShowCaseBackendTests",
+        "name" : "CollateralLoanLandingShowCaseBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingShowCaseUITests",
+        "name" : "CollateralLoanLandingShowCaseUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "СlientInformListTests",
+        "name" : "СlientInformListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CollateralLoanLandingDraftBackendTests",
+        "name" : "CollateralLoanLandingDraftBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeV7ServiceTests",
+        "name" : "GetProductListByTypeV7ServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetBannersMyProductListServiceTests",
+        "name" : "GetBannersMyProductListServiceTests"
       }
     }
   ],

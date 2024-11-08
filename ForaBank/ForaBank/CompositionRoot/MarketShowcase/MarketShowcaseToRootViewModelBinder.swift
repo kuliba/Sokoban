@@ -36,7 +36,7 @@ final class MarketShowcaseToRootViewModelBinder {
             .receive(on: scheduler)
             .sink { [weak rootViewModel] in
                 
-                rootViewModel?.handleOutside($0, self.scheduler)
+                rootViewModel?.handleOutside($0)
             }
             .store(in: &bindings)
         
@@ -54,6 +54,17 @@ final class MarketShowcaseToRootViewModelBinder {
 }
 
 extension RootViewModel {
+    
+    func openPayment(_ type: String) {
+        
+        if model.onlyCorporateCards {
+            alert = .disableForCorporateCard { [weak self] in
+                self?.action.send(RootViewModelAction.CloseAlert())
+            }
+        } else {
+            rootActions.openUtilityPayment(type)
+        }
+    }
     
     func openCard() {
         
@@ -100,23 +111,17 @@ extension RootViewModel {
     }
     
     func handleOutside(
-        _ outside: MarketShowcaseDomain.FlowState.Status.Outside,
-        _ scheduler: AnySchedulerOf<DispatchQueue>
+        _ outside: MarketShowcaseDomain.FlowState.Status.Outside
     ) {
-        scheduler.delay(for: .milliseconds(300)) { [weak self] in
+        switch outside {
+        case .main:
+            rootActions.switchTab(.main)
             
-            guard let self else { return }
+        case let .openURL(linkURL):
+            linkURL.openLink()
             
-            switch outside {
-            case .main:
-                self.rootActions.switchTab(.main)
-                
-            case let .openURL(linkURL):
-                linkURL.openLink()
-                
-            case let .landing(type):
-                self.landing(by: type)
-            }
+        case let .landing(type):
+            landing(by: type)
         }
     }
 }
@@ -137,7 +142,8 @@ private extension RootViewModel {
                     config: type == "abroadSticker" ? .stickerDefault : .default,
                     landingActions: { self.landingActions($0) },
                     outsideAction: {_ in },
-                    orderCard: openCard
+                    orderCard: openCard, 
+                    payment: openPayment
                 )
                 
                 setLink(to: .landing(viewModel, type == "abroadSticker"))
@@ -156,6 +162,9 @@ private extension RootViewModel {
         case let .sticker(action):
             stickerActions(action)
             
+        case .goToBack:
+            resetLink()
+            
         default:break
         }
     }
@@ -163,9 +172,9 @@ private extension RootViewModel {
     func cardActions(_ action: LandingEvent.Card) {
         switch action {
         case .goToMain: 
-            resetLink()
+            goToMain()
             
-        case let .openUrl(linkURL): 
+        case let .openUrl(linkURL):
             linkURL.openLink()
             
         default: break
@@ -175,11 +184,16 @@ private extension RootViewModel {
     func stickerActions(_ action: LandingEvent.Sticker) {
         switch action {
         case .goToMain: 
-            resetLink()
-            
+            goToMain()
+
         case .order: 
             orderSticker()
         }
+    }
+    
+    func goToMain() {
+        resetLink()
+        rootActions.switchTab(.main)
     }
 }
 

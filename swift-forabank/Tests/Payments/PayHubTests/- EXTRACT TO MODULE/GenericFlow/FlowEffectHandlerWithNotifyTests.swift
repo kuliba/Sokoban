@@ -34,19 +34,17 @@ final class FlowEffectHandlerWithNotifyTests: FlowTests {
     
     func test_getNavigation_shouldDeliverEventViaNotify() throws {
         
-        let (select, navigation) = (makeSelect(), makeNavigation())
+        let select = makeSelect()
         let (sut, getNavigation) = makeSUT()
         var events = [SUT.Event]()
         sut.handleEffect(.select(makeSelect())) { events.append($0)}
         let notify = try XCTUnwrap(getNavigation.payloads.map(\.1).first)
         
         notify(.dismiss)
-        notify(.receive(navigation))
         notify(.select(select))
         
         XCTAssertEqual(events, [
             .dismiss,
-            .receive(navigation),
             .select(select)
         ])
     }

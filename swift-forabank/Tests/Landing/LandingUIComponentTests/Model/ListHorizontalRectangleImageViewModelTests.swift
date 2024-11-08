@@ -100,6 +100,9 @@ final class ListHorizontalRectangleImageViewModelTests: XCTestCase {
                     
                 case .listVerticalRoundImageAction:
                     received.append(.listVerticalRoundImageAction)
+                    
+                case .goToBack:
+                    received.append(.goToBack)
                 }
             }, 
             canOpenDetail: canOpenDetail
@@ -111,6 +114,7 @@ final class ListHorizontalRectangleImageViewModelTests: XCTestCase {
     enum ActionType {
         
         case goMain
+        case goToBack
         case openLink
         case orderCard
         case selectDetail
@@ -118,5 +122,4 @@ final class ListHorizontalRectangleImageViewModelTests: XCTestCase {
         case bannerAction
         case listVerticalRoundImageAction
     }
-
 }

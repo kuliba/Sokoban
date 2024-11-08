@@ -30,7 +30,7 @@ extension ModelStatementTests {
         // then
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.period, Period(start: Date.date(year: 2022, month: 3, day: 11, calendar: calendar)!, end: currentDate))
-        XCTAssertEqual(result?.direction, .latest)
+        XCTAssertEqual(DirectionTest(direction: result?.direction), .latest)
         XCTAssertEqual(result?.limitDate, currentDate)
     }
     
@@ -51,7 +51,7 @@ extension ModelStatementTests {
         // then
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.period, Period(start: Date.date(year: 2022, month: 2, day: 10, calendar: calendar)!, end: Date.date(year: 2022, month: 3, day: 12, calendar: calendar)!))
-        XCTAssertEqual(result?.direction, .latest)
+        XCTAssertEqual(DirectionTest(direction: result?.direction), .latest)
         XCTAssertEqual(result?.limitDate, currentDate)
     }
     
@@ -72,7 +72,7 @@ extension ModelStatementTests {
         // then
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.period, Period(start: Date.date(year: 2022, month: 4, day: 2, calendar: calendar)!, end: Date.date(year: 2022, month: 4, day: 10, calendar: calendar)!))
-        XCTAssertEqual(result?.direction, .latest)
+        XCTAssertEqual(DirectionTest(direction: result?.direction), .latest)
         XCTAssertEqual(result?.limitDate, currentDate)
     }
     
@@ -94,7 +94,7 @@ extension ModelStatementTests {
         // then
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.period, Period(start: Date.date(year: 2022, month: 1, day: 30, calendar: calendar)!, end: Date.date(year: 2022, month: 3, day: 1, calendar: calendar)!))
-        XCTAssertEqual(result?.direction, .eldest)
+        XCTAssertEqual(DirectionTest(direction: result?.direction), .eldest)
         XCTAssertEqual(result?.limitDate, bankOpenDate)
     }
     
@@ -120,4 +120,27 @@ extension ModelStatementTests {
 extension ModelStatementTests {
     
     static let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+}
+
+
+ 
+private enum DirectionTest: Equatable {
+    
+    case latest
+    case eldest
+    case custom
+    
+    init(direction: Period.Direction?) {
+        
+        switch direction {
+        case .custom:
+            self = .custom
+        case .eldest:
+            self = .eldest
+        case .latest:
+            self = .latest
+        case .none:
+            self = .custom
+        }
+    }
 }

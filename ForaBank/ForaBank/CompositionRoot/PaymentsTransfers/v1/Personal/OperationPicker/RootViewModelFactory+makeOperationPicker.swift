@@ -11,10 +11,9 @@ import PayHubUI
 extension RootViewModelFactory {
     
     func makeOperationPicker(
-        operationPickerPlaceholderCount: Int,
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> OperationPickerBinder {
-        
+
         let operationPickerContentComposer = LoadablePickerModelComposer<UUID, OperationPickerElement>(
             load: { completion in
                 
@@ -25,6 +24,7 @@ extension RootViewModelFactory {
             },
             scheduler: mainScheduler
         )
+        let operationPickerPlaceholderCount = settings.operationPickerPlaceholderCount
         let operationPickerContent = operationPickerContentComposer.compose(
             prefix: [
                 .element(.init(.templates)),
