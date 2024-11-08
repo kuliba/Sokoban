@@ -43,7 +43,7 @@ struct RootViewFactory {
     let makeInfoViews: MakeInfoViews
     let makeUserAccountView: MakeUserAccountView
     let makeMarketShowcaseView: MakeMarketShowcaseView
-    let makeViewComponents: ViewComponents
+    let components: ViewComponents
 }
 
 extension RootViewFactory {
@@ -72,7 +72,7 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeInfoViews: makeInfoViews,
             makeUserAccountView: makeUserAccountView, 
-            makeViewComponents: makeViewComponents
+            components: components
         )
     }
 }

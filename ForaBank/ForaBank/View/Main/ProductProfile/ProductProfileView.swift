@@ -327,7 +327,7 @@ struct ProductProfileView: View {
         
         switch link {
         case let .controlPanel(controlPanelViewModel):
-            viewFactory.makeViewComponents.makeControlPanelWrapperView(controlPanelViewModel)
+            viewFactory.components.makeControlPanelWrapperView(controlPanelViewModel)
                 .edgesIgnoringSafeArea(.bottom)
 
         case let .productInfo(viewModel):
@@ -365,7 +365,7 @@ struct ProductProfileView: View {
                 getUImage: getUImage
             )
         case let .payment(viewModel):
-            viewFactory.makeViewComponents.makePaymentsView(viewModel)
+            viewFactory.components.makePaymentsView(viewModel)
         }
     }
     
@@ -376,7 +376,7 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(viewModel):
-            viewFactory.makeViewComponents.makeOperationDetailView(viewModel, productProfileViewFactory.makeRepeatButtonView, { payment(viewModel: viewModel) })
+            viewFactory.components.makeOperationDetailView(viewModel, productProfileViewFactory.makeRepeatButtonView, { payment(viewModel: viewModel) })
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -397,10 +397,10 @@ struct ProductProfileView: View {
                 .frame(height: 474)
             
         case let .meToMe(viewModel):
-            viewFactory.makeViewComponents.makePaymentsMeToMeView(viewModel)
+            viewFactory.components.makePaymentsMeToMeView(viewModel)
                 .fullScreenCover(item: $viewModel.success) {
                     
-                    viewFactory.makeViewComponents.makePaymentsSuccessView($0)
+                    viewFactory.components.makePaymentsSuccessView($0)
                     
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
@@ -654,14 +654,14 @@ struct ProductProfileView: View {
             
         case let .successChangePin(viewModel):
             
-            viewFactory.makeViewComponents.makePaymentsSuccessView(viewModel)
+            viewFactory.components.makePaymentsSuccessView(viewModel)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }
             
         case let .successZeroAccount(viewModel):
             
-            viewFactory.makeViewComponents.makePaymentsSuccessView(viewModel)
+            viewFactory.components.makePaymentsSuccessView(viewModel)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }

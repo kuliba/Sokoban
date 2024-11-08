@@ -70,7 +70,7 @@ extension RootViewFactoryComposer {
             makeInfoViews: .default,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
-            makeViewComponents: makeViewComponents()
+            components: makeViewComponents()
         )
     }
     
@@ -124,7 +124,7 @@ private extension RootViewFactoryComposer {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeInfoViews: .default,
                 makeUserAccountView: makeUserAccountView,
-                makeViewComponents: makeViewComponents()
+                components: makeViewComponents()
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
