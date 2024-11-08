@@ -36,8 +36,6 @@ final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: 
         )
         let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: payload)
 
-        request.
-        
         let decodedBody = try request.decodedBody(as: RequestFactory.SaveConsentsPayload.self)
         
         XCTAssertNoDiff(decodedBody.applicationId, payload.applicationId)
@@ -51,35 +49,6 @@ extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
 }
 
 // MARK: - Helpers
-
-private struct Body: Decodable {
-    
-    let applicationId: Int
-    let verificationCode: String
-    
-    static let stub = Self(
-        applicationId: .random(in: (0...Int.max)),
-        verificationCode: anyMessage()
-    )
-}
-
-extension Body {
-    
-    var httpBody: Data {
-
-        get throws {
-            
-            let parameters: [String: Any] = [
-                "applicationId": applicationId,
-                "verificationCode": verificationCode
-            ]
-                        
-            return try JSONSerialization.data(
-                withJSONObject: parameters as [String: Any]
-            )
-        }
-    }
-}
 
 extension RequestFactory.SaveConsentsPayload {
     
@@ -98,7 +67,6 @@ extension RequestFactory.SaveConsentsPayload {
 extension RequestFactory.SaveConsentsPayload: Decodable {
 
     enum CodingKeys: CodingKey {
-        
         case applicationId
         case verificationCode
     }
@@ -107,8 +75,12 @@ extension RequestFactory.SaveConsentsPayload: Decodable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.applicationId = try container.decode(Int.self, forKey: .applicationId)
-        self.link = try container.decodeWrapper(String.self, forKey: Item.CodingKeys.link, defaultValue: "")
-        self.detail = try container.decodeIfPresent(Item.Detail.self, forKey: Item.CodingKeys.detail) ?? nil
+        let applicationId = try container.decode(Int.self, forKey: .applicationId)
+        let verificationCode = try container.decode(String.self, forKey: .verificationCode)
+        
+        self = Self(
+            applicationId: applicationId,
+            verificationCode: verificationCode
+        )
     }
 }
