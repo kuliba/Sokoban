@@ -12,21 +12,30 @@ import UIPrimitives
 
 typealias ControlPanelViewModel = RxViewModel<ControlPanelState, ControlPanelEvent, ControlPanelEffect>
 
+struct ControlPanelWrapperViewFactory {
+    
+    let makePaymentsView: MakePaymentsView
+    let makePaymentsSuccessView: MakePaymentsSuccessView
+}
+
 struct ControlPanelWrapperView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
     private let config: Config
     private let getUImage: (Md5hash) -> UIImage?
-
+    private let viewFactory: ControlPanelWrapperViewFactory
+    
     init(
         viewModel: ViewModel,
         config: Config,
-        getUImage: @escaping (Md5hash) -> UIImage?
+        getUImage: @escaping (Md5hash) -> UIImage?,
+        viewFactory: ControlPanelWrapperViewFactory
     ) {
         self.viewModel = viewModel
         self.config = config
         self.getUImage = getUImage
+        self.viewFactory = viewFactory
     }
     
     var body: some View {
@@ -60,10 +69,10 @@ struct ControlPanelWrapperView: View {
         
         switch destination {
         case let .contactTransfer(viewModel):
-            return AnyView(PaymentsView(viewModel: viewModel))
+            return AnyView(viewFactory.makePaymentsView(viewModel))
             
         case let .migTransfer(viewModel):
-            return AnyView(PaymentsView(viewModel: viewModel))
+            return AnyView(viewFactory.makePaymentsView(viewModel))
 
         case let .landing(viewModel):
             return AnyView(AuthProductsView(viewModel: viewModel))
@@ -91,7 +100,7 @@ struct ControlPanelWrapperView: View {
             )
             
         case let .successView(successViewModel):
-            return AnyView(PaymentsSuccessView(viewModel: successViewModel))
+            return AnyView(viewFactory.makePaymentsSuccessView(successViewModel))
         }
     }
 }
