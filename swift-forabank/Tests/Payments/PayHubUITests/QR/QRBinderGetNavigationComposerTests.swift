@@ -49,7 +49,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { $0.payments?.close() }
+            for: { self.payments($0)?.close() }
         )
     }
     
@@ -59,7 +59,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { $0.payments?.scanQR() }
+            for: { self.payments($0)?.scanQR() }
         )
     }
     
@@ -92,7 +92,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { $0.payments?.close() }
+            for: { self.payments($0)?.close() }
         )
     }
     
@@ -102,10 +102,10 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { $0.payments?.scanQR() }
+            for: { self.payments($0)?.scanQR() }
         )
     }
-
+    
     // MARK: - failure
     
     func test_getNavigation_failure_shouldCallMakeQRFailureWithQRCode() {
@@ -115,7 +115,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         sut.getNavigation(qrResult: .failure(qrCode))
         
-        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.qrCode(qrCode)])
     }
     
     func test_getNavigation_failure_shouldDeliverQRFailure() {
@@ -129,16 +129,122 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .failure(makeQRCode()),
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.close() }
+        )
+    }
+    
     func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureScanQR() {
         
         expect(
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .failure(makeQRCode()),
             notifyWith: [.dismiss],
-            for: { $0.qrFailure?.scanQR() }
+            for: { self.qrFailure($0)?.scanQR() }
         )
     }
-
+    
+    // MARK: - missingINN
+    
+    func test_getNavigation_missingINN_shouldCallMakeQRFailure() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.missingINN(qrCode)))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.missingINN(qrCode)])
+    }
+    
+    func test_getNavigation_missingINN_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
+    func test_getNavigation_missingINN_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.close() }
+        )
+    }
+    
+    func test_getNavigation_missingINN_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.scanQR() }
+        )
+    }
+    
+    // MARK: - mixedPicker
+    
+    func test_getNavigation_mixedPicker_shouldCallMakeMixedPickerWithPayload() {
+        
+        let mixed = makeMakeMixedPickerPayload()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.mixed(mixed)))
+        
+        XCTAssertNoDiff(spies.makeMixedPicker.payloads, [mixed])
+    }
+    
+    func test_getNavigation_mixedPicker_shouldDeliverMixedPicker() {
+        
+        let mixedPicker = makeMixedPicker()
+        
+        expect(
+            makeSUT(mixedPicker: mixedPicker).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            toDeliver: .mixedPicker(.init(mixedPicker))
+        )
+    }
+    
+    func test_getNavigation_mixedPicker_shouldNotifyWithChatOnMixedPickerAddCompany() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.select(.outside(.chat))],
+            for: { self.mixedPicker($0)?.addCompany() }
+        )
+    }
+    
+    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerClose() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.dismiss],
+            for: { self.mixedPicker($0)?.close() }
+        )
+    }
+    
+    func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerScanQR() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [.dismiss],
+            for: { self.mixedPicker($0)?.scanQR() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -147,11 +253,13 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         let makePayments: MakePayments
         let makeQRFailure: MakeQRFailure
+        let makeMixedPicker: MakeMixedPicker
     }
     
     private func makeSUT(
         payments: Payments? = nil,
         qrFailure: QRFailure? = nil,
+        mixedPicker: MixedPicker? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -160,17 +268,27 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     ) {
         let spies = Spies(
             makePayments: .init(stubs: [payments ?? makePayments()]),
-            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()])
+            makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
+            makeMixedPicker: .init(stubs: [mixedPicker ?? makeMixedPicker()])
         )
         let sut = SUT(
             microServices: .init(
                 makeQRFailure: spies.makeQRFailure.call,
-                makePayments: spies.makePayments.call
+                makePayments: spies.makePayments.call,
+                makeMixedPicker: spies.makeMixedPicker.call
             ),
             witnesses: .init(
-                isClosed: { $0.isClosed },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.scanQRPublisher }
+                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
+                isClosed: .init(
+                    mixedPicker: { $0.isClosed },
+                    payments: { $0.isClosed },
+                    qrFailure: { $0.isClosed }
+                ),
+                scanQR: .init(
+                    mixedPicker: { $0.scanQRPublisher },
+                    payments: { $0.scanQRPublisher },
+                    qrFailure: { $0.scanQRPublisher }
+                )
             )
         )
         
@@ -181,7 +299,19 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     private func expect(
         _ sut: SUT,
-        with qrResult: SUT.QRResult,
+        with qrResult: SUT.Select.QRResult,
+        toDeliver expectedNavigation: EquatableNavigation,
+        on action: () -> Void = {},
+        timeout: TimeInterval = 1.0,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        expect(sut, with: .qrResult(qrResult), toDeliver: expectedNavigation, on: action, timeout: timeout, file: file, line: line)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with select: SUT.Select,
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         timeout: TimeInterval = 1.0,
@@ -190,7 +320,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.getNavigation(qrResult: qrResult, notify: { _ in }) {
+        sut.getNavigation(select: select, notify: { _ in }) {
             
             XCTAssertNoDiff(self.equatable($0), expectedNavigation, "Expected \(expectedNavigation), but got \($0) instead.", file: file, line: line)
             exp.fulfill()
@@ -203,7 +333,19 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     private func expect(
         _ sut: SUT,
-        with qrResult: SUT.QRResult,
+        with qrResult: SUT.Select.QRResult,
+        notifyWith expectedEvents: [SUT.FlowDomain.NotifyEvent],
+        for destinationAction: @escaping (Navigation) -> Void,
+        on action: () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        expect(sut, with: .qrResult(qrResult), notifyWith: expectedEvents, for: destinationAction, on: action, file: file, line: line)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        with select: SUT.Select,
         notifyWith expectedEvents: [SUT.FlowDomain.NotifyEvent],
         for destinationAction: @escaping (Navigation) -> Void,
         on action: () -> Void = {},
@@ -214,7 +356,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let exp = expectation(description: "wait for completion")
         
         sut.getNavigation(
-            qrResult: qrResult,
+            select: select,
             notify: { receivedEvents.append($0) }
         ) {
             destinationAction($0)
@@ -225,7 +367,32 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         wait(for: [exp], timeout: 1)
         
-        XCTAssertNoDiff(receivedEvents, expectedEvents, "Expected \(expectedEvents), but got \(receivedEvents) instead.", file: file, line: line)
+        XCTAssertNoDiff(receivedEvents.map(equatable), expectedEvents.map(equatable), "Expected \(expectedEvents), but got \(receivedEvents) instead.", file: file, line: line)
+    }
+    
+    // MARK: - DSL
+    
+    func mixedPicker(_ navigation: Navigation) -> MixedPicker? {
+        
+        qrNavigation(navigation)?.mixedPicker
+    }
+    
+    func payments(_ navigation: Navigation) -> Payments? {
+        
+        qrNavigation(navigation)?.payments
+    }
+    
+    func qrFailure(_ navigation: Navigation) -> QRFailure? {
+        
+        qrNavigation(navigation)?.qrFailure
+    }
+    
+    func qrNavigation(_ navigation: Navigation) -> Navigation.QRNavigation? {
+        
+        guard case let .qrNavigation(qrNavigation) = navigation
+        else { return nil }
+        
+        return qrNavigation
     }
 }
 
@@ -234,13 +401,20 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
 private extension QRBinderGetNavigationComposer {
     
     func getNavigation(
-        qrResult: QRResult
+        qrResult: Select.QRResult
     ) {
-        self.getNavigation(qrResult: qrResult, notify: { _ in }, completion: { _ in })
+        self.getNavigation(select: .qrResult(qrResult), notify: { _ in }, completion: { _ in })
     }
 }
 
 extension QRNavigation {
+    
+    var mixedPicker: MixedPicker? {
+        
+        guard case let .mixedPicker(node) = self else { return nil }
+        
+        return node.model
+    }
     
     var payments: Payments? {
         

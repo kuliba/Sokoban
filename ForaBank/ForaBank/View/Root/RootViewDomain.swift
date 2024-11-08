@@ -1,44 +1,39 @@
 //
-//  QRFailureDomain.swift
+//  RootViewDomain.swift
+//  ForaBank
 //
-//
-//  Created by Igor Malyarov on 06.11.2024.
+//  Created by Igor Malyarov on 07.11.2024.
 //
 
 import PayHub
+import PayHubUI
 
-/// A namespace.
-public enum QRFailureDomain<QRCode, QRFailure, CategoryPicker, DetailPayment> {}
-
-public extension QRFailureDomain {
+enum RootViewDomain {
     
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
+    typealias GetNavigation = (RootViewDomain.Select, @escaping RootViewDomain.Notify, @escaping (RootViewDomain.Navigation) -> Void) -> Void
+    typealias Witnesses = ContentFlowWitnesses<Content, Flow, Select, Navigation>
     
     // MARK: - Content
     
-    typealias Content = QRFailure
+    typealias Content = RootViewModel
     
     // MARK: - Flow
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
-    typealias FlowComposer = FlowDomain.Composer
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
     
     enum Select {
         
-        case payWithDetails(QRCode?)
-        case search(QRCode)
         case scanQR
     }
     
     enum Navigation {
         
-        case categoryPicker(Node<CategoryPicker>)
-        case detailPayment(Node<DetailPayment>)
         case scanQR
     }
 }

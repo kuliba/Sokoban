@@ -25,6 +25,6 @@ public struct QRFailureBinderComposerMicroServices<QRCode, QRFailure, CategoryPi
 public extension QRFailureBinderComposerMicroServices {
     
     typealias MakeCategoryPicker = (QRCode) -> CategoryPicker
-    typealias MakeDetailPayment = (QRCode) -> DetailPayment
-    typealias MakeQRFailure = (QRCode) -> QRFailure
+    typealias MakeDetailPayment = (QRCode?) -> DetailPayment
+    typealias MakeQRFailure = (QRCodeDetails<QRCode>) -> QRFailure
 }

@@ -49,7 +49,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
 
 public extension QRFailureBinderComposer {
     
-    func compose(qrCode: QRCode) -> Domain.Binder {
+    func compose(with qrCodeDetails: QRCodeDetails<QRCode>) -> Domain.Binder {
         
         let factory = ContentFlowBindingFactory(
             delay: delay,
@@ -63,7 +63,7 @@ public extension QRFailureBinderComposer {
         )
         
         return .init(
-            content: microServices.makeQRFailure(qrCode),
+            content: microServices.makeQRFailure(qrCodeDetails),
             flow: composer.compose(),
             bind: factory.bind(with: contentFlowWitnesses)
         )

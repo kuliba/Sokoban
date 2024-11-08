@@ -200,14 +200,14 @@ private extension ContentViewDomain.Flow {
         
         get throws {
             
-            guard case let .payments(node) = try qrFlow.state.navigation
+            guard case let .qrNavigation(.payments(node)) = try qrFlow.state.navigation
             else { throw NSError(domain: "Expected Payments", code: -1)}
             
             return node.model
         }
     }
     
-    var qrNavigation: QRNavigationPreview.QRNavigation? {
+    var qrNavigation: QRNavigationPreview.QRNavigationDomain.Navigation? {
         
         try? qrFlow.state.navigation
     }
