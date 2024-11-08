@@ -21,7 +21,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = QRBinderComposer<Navigation, QR, QRResult>
+    private typealias SUT = QRBinderComposer<Navigation, QR, Select>
     
     private func makeSUT(
         file: StaticString = #file,

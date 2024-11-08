@@ -28,31 +28,89 @@ public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider
 public extension QRBinderGetNavigationComposer {
     
     func getNavigation(
-        qrResult: QRResult,
+        select: Select,
         notify: @escaping Notify,
         completion: @escaping (Navigation) -> Void
+    ) {
+        switch select {
+        case let .outside(outside):
+            getNavigation(outside, notify, completion)
+            
+        case let .qrResult(qrResult):
+            getNavigation(qrResult, notify, completion)
+        }
+    }
+    
+    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
+        
+    enum Select {
+        
+        case outside(Outside)
+        case qrResult(QRResult)
+        
+        public enum Outside {
+            
+            case chat
+        }
+
+        public typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
+    }
+    
+    enum Navigation {
+        
+        case outside(Outside)
+        case qrNavigation(QRNavigation)
+        
+        public enum Outside {
+            
+            case chat
+        }
+        
+        public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, Payments, QRFailure>
+    }
+}
+
+private extension QRBinderGetNavigationComposer {
+    
+    func getNavigation(
+        _ outside: Select.Outside,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (Navigation) -> Void
+    ) {
+        switch outside {
+        case .chat:
+            fatalError()
+            completion(.outside(.chat))
+        }
+    }
+    
+    func getNavigation(
+        _ qrResult: Select.QRResult,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (Navigation) -> Void
     ) {
         switch qrResult {
         case let .c2bSubscribeURL(url):
             let payments = microServices.makePayments(.c2bSubscribe(url))
-            completion(.payments(.init(
+            completion(.qrNavigation(.payments(.init(
                 model: payments,
                 cancellables: bind(payments, using: notify)
-            )))
+            ))))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
-            completion(.payments(.init(
+            completion(.qrNavigation(.payments(.init(
                 model: payments,
                 cancellables: bind(payments, using: notify)
-            )))
+            ))))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
-            completion(.qrFailure(.init(
+            completion(.qrNavigation(.qrFailure(.init(
                 model: qrFailure,
                 cancellables: bind(qrFailure, using: notify)
-            )))
+            ))))
             
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
@@ -62,34 +120,25 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias FlowDomain = PayHubUI.FlowDomain<QRResult, Navigation>
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
-    
-    typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Navigation = QRNavigation<MixedPicker, Payments, QRFailure>
-}
-
-private extension QRBinderGetNavigationComposer {
-    
     func getNavigation(
-        _ mapped: QRResult.Mapped,
+        _ mapped: Select.QRResult.Mapped,
         _ notify: @escaping Notify,
         _ completion: @escaping (Navigation) -> Void
     ) {
         switch mapped {
         case let .missingINN(qrCode):
             let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
-            completion(.qrFailure(.init(
+            completion(.qrNavigation(.qrFailure(.init(
                 model: qrFailure,
                 cancellables: bind(qrFailure, using: notify)
-            )))
+            ))))
             
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
-            completion(.mixedPicker(.init(
+            completion(.qrNavigation(.mixedPicker(.init(
                 model: mixedPicker,
                 cancellables: bind(mixedPicker, using: notify)
-            )))
+            ))))
             
         default:
             fatalError()

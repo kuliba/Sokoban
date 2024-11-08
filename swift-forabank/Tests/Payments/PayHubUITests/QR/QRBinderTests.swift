@@ -16,10 +16,12 @@ class QRBinderTests: XCTestCase {
     typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Navigation = QRNavigation<MixedPicker, Payments, QRFailure>
+    typealias Navigation = NavigationComposer.Navigation
+    typealias Select = NavigationComposer.Select
     
-    typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    typealias Witnesses = QRDomain<Navigation, QR, QRResult>.Witnesses
+    typealias QRResult = NavigationComposer.Select.QRResult
+    
+    typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
     
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
@@ -105,8 +107,35 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
+    func equatable(
+        _ event: NavigationComposer.FlowDomain.NotifyEvent
+    ) -> EquatableNotifyEvent {
+        
+        switch event {
+        case .dismiss:
+            return .dismiss
+            
+        case let .select(select):
+            switch select {
+            case .outside(.chat):
+                return .chat
+                
+            case let .qrResult(qrResult):
+                return .qrResult(qrResult)
+            }
+        }
+    }
+    
+    enum EquatableNotifyEvent: Equatable {
+        
+        case chat
+        case dismiss
+        case qrResult(QRResult)
+    }
+    
     enum EquatableNavigation: Equatable {
         
+        case chat
         case mixedPicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
@@ -117,29 +146,35 @@ class QRBinderTests: XCTestCase {
     ) -> EquatableNavigation {
         
         switch navigation {
-        case let .mixedPicker(node):
-            return .mixedPicker(.init(node.model))
+        case .outside(.chat):
+            return .chat
             
-        case let .payments(node):
-            return .payments(.init(node.model))
-            
-        case let .qrFailure(node):
-            return .qrFailure(.init(node.model))
+        case let .qrNavigation(qrNavigation):
+            switch qrNavigation {
+            case let .mixedPicker(node):
+                return .mixedPicker(.init(node.model))
+                
+            case let .payments(node):
+                return .payments(.init(node.model))
+                
+            case let .qrFailure(node):
+                return .qrFailure(.init(node.model))
+            }
         }
     }
     
     final class QR {
         
-        private let subject = PassthroughSubject<QRResult, Never>()
+        private let subject = PassthroughSubject<Select, Never>()
         
         private(set) var callCount = 0
         
-        var publisher: AnyPublisher<QRResult, Never> {
+        var publisher: AnyPublisher<Select, Never> {
             
             subject.eraseToAnyPublisher()
         }
         
-        func emit(_ value: QRResult) {
+        func emit(_ value: Select) {
             
             self.subject.send(value)
         }
