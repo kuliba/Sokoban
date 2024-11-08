@@ -13,33 +13,30 @@ final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: 
     
     func test_createRequest_shouldSetHTTPMethodToPOST() throws {
         
-        let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: .stub())
+        let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: anyPayload())
         
         XCTAssertNoDiff(request.httpMethod, "POST")
     }
     
     func test_createRequest_shouldSetCachePolicy() throws {
         
-        let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: .stub())
+        let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: anyPayload())
 
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
     func test_createRequest_shouldSetWithHTTPBody() throws {
         
-        let applicationId = Int.random(in: (0...Int.max))
-        let verificationCode = anyMessage()
-
-        let payload = RequestFactory.SaveConsentsPayload.stub(
-            applicationId: applicationId,
-            verificationCode: verificationCode
-        )
-        let request = try RequestFactory.createSaveConsentsRequest(url: anyURL(), payload: payload)
-
-        let decodedBody = try request.decodedBody(as: RequestFactory.SaveConsentsPayload.self)
+        let payload = anyPayload()
+        let request = try createRequest(payload: payload)
         
-        XCTAssertNoDiff(decodedBody.applicationId, payload.applicationId)
-        XCTAssertNoDiff(decodedBody.verificationCode, payload.verificationCode)
+        try assertBody(of: request, hasJSON: """
+        {
+            "verificationCode": "\(payload.verificationCode)",
+            "applicationId": \(payload.applicationId)
+        }
+        """
+        )
     }
 }
 
@@ -50,37 +47,24 @@ extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
 
 // MARK: - Helpers
 
-extension RequestFactory.SaveConsentsPayload {
+private func createRequest(
+    url: URL = anyURL(),
+    payload: RequestFactory.SaveConsentsPayload = anyPayload()
+) throws -> URLRequest {
     
-    static func stub(
-        applicationId: Int = .random(in: (0...Int.max)),
-        verificationCode: String = anyMessage()
-    ) -> Self {
-        
-        Self(
-            applicationId: applicationId,
-            verificationCode: verificationCode
-        )
-    }
+    try RequestFactory.createSaveConsentsRequest(
+        url: url,
+        payload: payload
+    )
 }
 
-extension RequestFactory.SaveConsentsPayload: Decodable {
-
-    enum CodingKeys: CodingKey {
-        case applicationId
-        case verificationCode
-    }
+private func anyPayload(
+    applicationId: Int = .random(in: (0...Int.max)),
+    verificationCode: String = anyMessage()
+) -> RequestFactory.SaveConsentsPayload {
     
-    public init(from decoder: any Decoder) throws {
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        let applicationId = try container.decode(Int.self, forKey: .applicationId)
-        let verificationCode = try container.decode(String.self, forKey: .verificationCode)
-        
-        self = Self(
-            applicationId: applicationId,
-            verificationCode: verificationCode
-        )
-    }
+    .init(
+        applicationId: applicationId,
+        verificationCode: verificationCode
+    )
 }
