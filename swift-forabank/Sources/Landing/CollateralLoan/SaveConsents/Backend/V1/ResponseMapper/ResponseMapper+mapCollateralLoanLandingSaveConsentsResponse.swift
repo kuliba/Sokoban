@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension ResponseMapper {
     
-    static func mapCollateralLoanLandingSaveConsentsResponse(
+    static func mapSaveConsentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<CollateralLoanLandingSaveConsentsResponse> {
