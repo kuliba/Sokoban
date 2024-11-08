@@ -133,10 +133,10 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.mixedPicker.isClosed(mixedPicker)
+        let close = witnesses.isClosed.mixedPicker(mixedPicker)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.mixedPicker.scanQR(mixedPicker)
+        let scanQR = witnesses.scanQR.mixedPicker(mixedPicker)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]
@@ -147,10 +147,10 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.qrFailure.isClosed(qrFailure)
+        let close = witnesses.isClosed.qrFailure(qrFailure)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.qrFailure.scanQR(qrFailure)
+        let scanQR = witnesses.scanQR.qrFailure(qrFailure)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]
@@ -161,10 +161,10 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        let close = witnesses.payments.isClosed(payments)
+        let close = witnesses.isClosed.payments(payments)
             .sink { if $0 { notify(.dismiss) }}
         
-        let scanQR = witnesses.payments.scanQR(payments)
+        let scanQR = witnesses.scanQR.payments(payments)
             .sink { notify(.dismiss) }
         
         return [close, scanQR]

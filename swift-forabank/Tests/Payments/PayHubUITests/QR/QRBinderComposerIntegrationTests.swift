@@ -48,17 +48,16 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                 makeMixedPicker: makeMixedPicker.call
             ),
             witnesses: .init(
-                mixedPicker: .init(
-                    isClosed: { $0.isClosed },
-                    scanQR: { $0.scanQRPublisher }
+                addCompany: .init(mixedPicker: { _ in fatalError() }),
+                isClosed: .init(
+                    mixedPicker: { $0.isClosed },
+                    payments: { $0.isClosed },
+                    qrFailure: { $0.isClosed }
                 ),
-                payments: .init(
-                    isClosed: { $0.isClosed },
-                    scanQR: { $0.scanQRPublisher }
-                ),
-                qrFailure: .init(
-                    isClosed: { $0.isClosed },
-                    scanQR: { $0.scanQRPublisher }
+                scanQR: .init(
+                    mixedPicker: { $0.scanQRPublisher },
+                    payments: { $0.scanQRPublisher },
+                    qrFailure: { $0.scanQRPublisher }
                 )
             )
         )
