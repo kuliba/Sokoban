@@ -64,17 +64,20 @@ extension QRDomain.FlowDomain.State {
     var destination: Destination? {
         
         switch navigation {
-        case .none:
+        case .none, .outside:
             return nil
             
-        case let .mixedPicker(node):
-            return .mixedPicker(node.model)
-            
-        case let .payments(node):
-            return .payments(node.model)
-            
-        case let .qrFailure(node):
-            return .qrFailure(node.model)
+        case let .qrNavigation(qrNavigation):
+            switch qrNavigation {
+            case let .mixedPicker(node):
+                return .mixedPicker(node.model)
+                
+            case let .payments(node):
+                return .payments(node.model)
+                
+            case let .qrFailure(node):
+                return .qrFailure(node.model)
+            }
         }
     }
     

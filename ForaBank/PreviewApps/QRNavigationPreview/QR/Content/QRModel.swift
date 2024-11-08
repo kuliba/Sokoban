@@ -10,21 +10,21 @@ import Combine
 final class QRModel {
     
     private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
-    private let subject = PassthroughSubject<QRResult, Never>()
+    private let subject = PassthroughSubject<QRNavigationDomain.Select, Never>()
     
     var isClosedPublisher: AnyPublisher<Bool, Never> {
         
         isClosedSubject.eraseToAnyPublisher()
     }
     
-    var publisher: AnyPublisher<QRResult, Never> {
+    var publisher: AnyPublisher<QRNavigationDomain.Select, Never> {
         
         subject.eraseToAnyPublisher()
     }
     
-    func emit(_ value: QRResult) {
+    func emit(_ value: QRNavigationDomain.Select.QRResult) {
         
-        self.subject.send(value)
+        self.subject.send(.qrResult(value))
     }
     
     func receive() {

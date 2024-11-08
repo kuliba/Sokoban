@@ -23,14 +23,35 @@ struct QRFailureView: View {
             
             Group {
                 
-                Button("Search provider") {
+                switch qrFailure.details {
+                case let .missingINN(qrCode):
+                    Group {
+                        
+                        Button("TBD: Add Company") {
+                            
+                           // qrFailure.select(.search)
+                        }
+                        
+                        Button("Pay with details with QR Code") {
+                            
+                            qrFailure.select(.payWithDetails(nil))
+                        }
+                    }
                     
-                    qrFailure.select(.search(qrFailure.qrCode))
-                }
-                
-                Button("Pay with details") {
+                case let .qrCode(qrCode):
                     
-                    qrFailure.select(.payWithDetails(qrFailure.qrCode))
+                    Group {
+                        
+                        Button("Search provider") {
+                            
+                            qrFailure.select(.search(qrCode))
+                        }
+                        
+                        Button("Pay with details with QR Code") {
+                            
+                            qrFailure.select(.payWithDetails(qrCode))
+                        }
+                    }
                 }
             }
             .foregroundColor(.blue)
@@ -45,7 +66,7 @@ struct QRFailureView: View {
     NavigationView {
         
         QRFailureView(
-            qrFailure: .init(qrCode: .init(value: UUID().uuidString))
+            qrFailure: .init(with: .qrCode(.init(value: UUID().uuidString)))
         )
     }
 }
