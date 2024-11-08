@@ -97,8 +97,10 @@ private extension QRBinderGetNavigationComposer {
         }
     }
     
+    typealias Mapped = QRMappedResult<Operator, Provider, QRCode, QRMapping, Source>
+    
     func getNavigation(
-        _ mapped: Select.QRResult.Mapped,
+        _ mapped: Mapped,
         _ notify: @escaping Notify,
         _ completion: @escaping (Navigation) -> Void
     ) {
