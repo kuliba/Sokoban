@@ -36,10 +36,11 @@ public extension QRBinderGetNavigationComposerMicroServices {
     
     typealias MakePayments = (MakePaymentsPayload) -> Payments
     
-    enum MakePaymentsPayload: Equatable {
+    enum MakePaymentsPayload {
         
         case c2bSubscribe(URL)
         case c2b(URL)
+        case details(QRCode) // MainViewModelAction.Show.Requisites
     }
     
     typealias MakeQRFailure = (QRCodeDetails<QRCode>) -> QRFailure
@@ -47,3 +48,5 @@ public extension QRBinderGetNavigationComposerMicroServices {
     typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMultiplePicker = (MakeMultiplePickerPayload) -> MultiplePicker
 }
+
+extension QRBinderGetNavigationComposerMicroServices.MakePaymentsPayload: Equatable where QRCode: Equatable {}

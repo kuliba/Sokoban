@@ -52,6 +52,7 @@ final class Payments {
     
     enum Source {
         
+        case details(QRCode)
         case nothing
         case qrCode(QRCode)
         case url(URL)

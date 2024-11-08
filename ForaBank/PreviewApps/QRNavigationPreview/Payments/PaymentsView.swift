@@ -45,6 +45,9 @@ private extension Payments.Source {
     var text: Text {
         
         switch self {
+        case let .details(qrCode):
+            Text("Detail Payments View for QR Code **\(qrCode.value)**")
+
         case .nothing:
             Text("Payments View with no source.")
             

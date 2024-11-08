@@ -183,7 +183,10 @@ private extension ContentViewModelComposer {
         
         switch payload {
         case let .c2bSubscribe(url), let .c2b(url):
-            return Payments(url: url)
+            return .init(url: url)
+            
+        case let .details(qrCode):
+            return .init(source: .details(qrCode))
         }
     }
 }

@@ -300,6 +300,49 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // MARK: - none
+    
+    func test_getNavigation_none_shouldCallMakePaymentsWithQRCode() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.none(qrCode)))
+        
+        XCTAssertNoDiff(spies.makePayments.payloads, [.details(qrCode)])
+    }
+    
+    func test_getNavigation_none_shouldDeliverPayments() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .mapped(.none(makeQRCode())),
+            toDeliver: .payments(.init(payments))
+        )
+    }
+    
+    func test_getNavigation_none_shouldNotifyWithDismissOnPaymentsClose() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.none(makeQRCode())),
+            notifyWith: [.dismiss],
+            for: { self.payments($0)?.close() }
+        )
+    }
+    
+    func test_getNavigation_none_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.none(makeQRCode())),
+            notifyWith: [.dismiss],
+            for: { self.payments($0)?.scanQR() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer

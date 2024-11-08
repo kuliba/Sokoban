@@ -61,6 +61,12 @@ struct QRContentView: View {
                             qrMapping: .init()
                         ))))
                     }
+                    
+                    Button("none") {
+                        
+                        model.emit(.mapped(.none(.init(value: .init(UUID().uuidString.prefix(4))))))
+                    }
+                    .foregroundColor(.red)
                 }
                 .foregroundColor(.blue)
             }

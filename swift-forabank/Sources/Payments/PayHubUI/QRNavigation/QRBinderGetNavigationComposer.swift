@@ -126,6 +126,13 @@ private extension QRBinderGetNavigationComposer {
                 cancellables: bind(multiplePicker, using: notify)
             ))))
             
+        case let .none(qrCode):
+            let payments = microServices.makePayments(.details(qrCode))
+            completion(.qrNavigation(.payments(.init(
+                model: payments,
+                cancellables: bind(payments, using: notify)
+            ))))
+            
         default:
             fatalError()
         }
