@@ -56,13 +56,13 @@ class QRBinderTests: XCTestCase {
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
     
+    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
+    
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
-    
-    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
-    typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
     
     struct Operator: Equatable {
         
@@ -268,35 +268,35 @@ class QRBinderTests: XCTestCase {
         return .init()
     }
     
-    typealias Payments = ClosingScanQR
+    typealias Payments = Mock
     
     func makePayments() -> Payments {
         
         return .init()
     }
     
-    typealias QRFailure = ClosingScanQR
+    typealias QRFailure = Mock
     
     func makeQRFailure() -> QRFailure {
         
         return .init()
     }
     
-    typealias MixedPicker = ClosingScanQR
+    typealias MixedPicker = Mock
     
     func makeMixedPicker() -> MixedPicker {
         
         return .init()
     }
     
-    typealias MultiplePicker = ClosingScanQR
+    typealias MultiplePicker = Mock
     
     func makeMultiplePicker() -> MultiplePicker {
         
         return .init()
     }
     
-    final class ClosingScanQR {
+    final class Mock {
         
         // MARK: - close
         

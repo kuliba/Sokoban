@@ -157,14 +157,19 @@ private extension ContentViewModelComposer {
                 makeMultiplePicker: { _ in .init() }
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
+                addCompany: .init(
+                    mixedPicker: { $0.addCompanyPublisher },
+                    multiplePicker: { $0.addCompanyPublisher }
+                ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },
+                    multiplePicker: { $0.isClosedPublisher },
                     payments: { $0.isClosedPublisher },
                     qrFailure: { _ in Empty().eraseToAnyPublisher() }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.scanQRPublisher },
+                    multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
                     qrFailure: { _ in Empty().eraseToAnyPublisher() }
                 )

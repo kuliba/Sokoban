@@ -270,6 +270,36 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_multiplePicker_shouldNotifyWithChatOnMultiplePickerAddCompany() {
+        
+        expect(
+            makeSUT(multiplePicker: makeMultiplePicker()).sut,
+            with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
+            notifyWith: [.select(.outside(.chat))],
+            for: { self.multiplePicker($0)?.addCompany() }
+        )
+    }
+    
+    func test_getNavigation_multiplePicker_shouldNotifyWithDismissOnMultiplePickerClose() {
+        
+        expect(
+            makeSUT(multiplePicker: makeMultiplePicker()).sut,
+            with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
+            notifyWith: [.dismiss],
+            for: { self.multiplePicker($0)?.close() }
+        )
+    }
+    
+    func test_getNavigation_multiplePicker_shouldNotifyWithDismissOnMultiplePickerScanQR() {
+        
+        expect(
+            makeSUT(multiplePicker: makeMultiplePicker()).sut,
+            with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
+            notifyWith: [.dismiss],
+            for: { self.multiplePicker($0)?.scanQR() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -307,14 +337,19 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 makeMultiplePicker: spies.makeMultiplePicker.call
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
+                addCompany: .init(
+                    mixedPicker: { $0.addCompanyPublisher },
+                    multiplePicker: { $0.addCompanyPublisher }
+                ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },
+                    multiplePicker: { $0.isClosed },
                     payments: { $0.isClosed },
                     qrFailure: { $0.isClosed }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.scanQRPublisher },
+                    multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
                     qrFailure: { $0.scanQRPublisher }
                 )
@@ -409,6 +444,11 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         qrNavigation(navigation)?.mixedPicker
     }
     
+    func multiplePicker(_ navigation: Navigation) -> MultiplePicker? {
+        
+        qrNavigation(navigation)?.multiplePicker
+    }
+    
     func payments(_ navigation: Navigation) -> Payments? {
         
         qrNavigation(navigation)?.payments
@@ -444,6 +484,13 @@ extension QRNavigation {
     var mixedPicker: MixedPicker? {
         
         guard case let .mixedPicker(node) = self else { return nil }
+        
+        return node.model
+    }
+    
+    var multiplePicker: MultiplePicker? {
+        
+        guard case let .multiplePicker(node) = self else { return nil }
         
         return node.model
     }

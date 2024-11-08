@@ -22,7 +22,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
     }
     
     public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
-    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -122,8 +122,8 @@ private extension QRBinderGetNavigationComposer {
         case let .multiple(multiple):
             let multiplePicker = microServices.makeMultiplePicker(multiple)
             completion(.qrNavigation(.multiplePicker(.init(
-                model: multiplePicker, 
-                cancellables: []
+                model: multiplePicker,
+                cancellables: bind(multiplePicker, using: notify)
             ))))
             
         default:
@@ -148,6 +148,23 @@ private extension QRBinderGetNavigationComposer {
             .sink { if $0 { notify(.dismiss) }}
         
         let scanQR = witnesses.scanQR.mixedPicker(mixedPicker)
+            .sink { notify(.dismiss) }
+        
+        return [addCompany, close, scanQR]
+    }
+    
+    func bind(
+        _ multiplePicker: MultiplePicker,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        let addCompany = witnesses.addCompany.multiplePicker(multiplePicker)
+            .sink { notify(.select(.outside(.chat))) }
+        
+        let close = witnesses.isClosed.multiplePicker(multiplePicker)
+            .sink { if $0 { notify(.dismiss) }}
+        
+        let scanQR = witnesses.scanQR.multiplePicker(multiplePicker)
             .sink { notify(.dismiss) }
         
         return [addCompany, close, scanQR]

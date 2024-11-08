@@ -13,7 +13,27 @@ struct MultiplePickerView: View {
     
     var body: some View {
         
-        Text("TBD: MultiplePickerView")
+        Button("Add Company", action: model.addCompany)
+            .navigationTitle("MixedPicker")
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Button(action: model.close) {
+                        
+                        Image(systemName: "chevron.left")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    
+                    Button(action: model.scanQR) {
+                        
+                        Image(systemName: "qrcode.viewfinder")
+                    }
+                }
+            }
     }
 }
 
