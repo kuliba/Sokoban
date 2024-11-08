@@ -256,16 +256,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil,
         collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil
     ) -> FeatureFlags {
-
-//        .init(
-//            changeSVCardLimitsFlag: .init(.inactive),
-//            getProductListByTypeV6Flag: .init(.inactive),
-//            marketplaceFlag: .init(.inactive),
-//            historyFilterFlag: .init(false),
-//            paymentsTransfersFlag: .init(.inactive),
-//            utilitiesPaymentsFlag: .init(.inactive),
-//            collateralLoanLandingFlag: .init(.inactive)
-//        )
         
         return .init(
             changeSVCardLimitsFlag: changeSVCardLimitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
@@ -274,7 +264,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             paymentsTransfersFlag: paymentsTransfersFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive),
-            collateralLoanLandingFlag: collateralLoanLandingFlag.map { .init($0).rawValue } ?? .init(.inactive)
+            collateralLoanLandingFlag: collateralLoanLandingFlag.map { .init($0.rawValue) } ?? .init(.inactive)
         )
     }
 }
