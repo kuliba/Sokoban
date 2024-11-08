@@ -8,9 +8,9 @@
 import PayHub
 
 /// A namespace.
-public enum QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {}
+public enum _QRNavigationDomain<QRResult, QRNavigation> {}
 
-public extension QRNavigationDomain {
+public extension _QRNavigationDomain {
     
     typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
@@ -24,9 +24,6 @@ public extension QRNavigationDomain {
             
             case chat
         }
-
-        public typealias QRResult = PayHub.QRResult<QRCode, QRMappedResult>
-        public typealias QRMappedResult = PayHub.QRMappedResult<Operator, Provider, QRCode, QRMapping, Source>
     }
     
     enum Navigation {
@@ -38,7 +35,8 @@ public extension QRNavigationDomain {
             
             case chat
         }
-        
-        public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, MultiplePicker, Payments, QRFailure>
     }
 }
+
+extension _QRNavigationDomain.Select: Equatable where QRResult: Equatable, QRNavigation: Equatable {}
+extension _QRNavigationDomain.Navigation: Equatable where QRResult: Equatable, QRNavigation: Equatable {}

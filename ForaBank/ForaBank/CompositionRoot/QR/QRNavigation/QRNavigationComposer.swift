@@ -113,7 +113,7 @@ private extension QRNavigationComposer {
     }
     
     func handle(
-        mapped: QRModelResult.Mapped,
+        mapped: QRMappedResult,
         with notify: @escaping Notify,
         and completion: @escaping QRNavigationCompletion
     ) {
