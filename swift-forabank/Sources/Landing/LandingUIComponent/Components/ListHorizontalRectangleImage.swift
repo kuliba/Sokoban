@@ -149,6 +149,9 @@ private extension DetailDestination {
             return .depositTransfer
         case "LANDING":
             return .landing
+        case "HOUSING_AND_COMMUNAL_SERVICE":
+            return .payment(groupID.rawValue)
+
         default:
             return nil
         }

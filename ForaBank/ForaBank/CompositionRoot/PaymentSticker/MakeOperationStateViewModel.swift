@@ -10,7 +10,7 @@ import PaymentSticker
 import GenericRemoteService
 import SwiftUI
 
-extension RootViewModelFactory {
+extension StickerViewFactory {
             
     typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     

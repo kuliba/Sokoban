@@ -23,9 +23,14 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         assert(isRequired: false, validationError: nil)
     }
     
-    func test_isValid_shouldDeliverErrorOnEmptyValueOfRequiredParameter() {
+    func test_isValid_shouldDeliverErrorOnNilValueOfRequiredParameter() {
         
         assert(value: nil, isRequired: true, validationError: .emptyRequired)
+    }
+    
+    func test_isValid_shouldDeliverErrorOnEmptyValueOfRequiredParameter() {
+        
+        assert(value: "", isRequired: true, validationError: .emptyRequired)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOfRequiredParameter() {

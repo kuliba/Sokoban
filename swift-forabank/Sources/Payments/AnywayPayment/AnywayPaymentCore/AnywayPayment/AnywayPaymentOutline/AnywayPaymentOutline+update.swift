@@ -23,6 +23,26 @@ extension AnywayPaymentOutline {
             payload: payload
         )
     }
+
+    public func updating(with update: AnywayPaymentUpdate) -> Self {
+        
+        let updateFields: Fields = Dictionary(
+            uniqueKeysWithValues: update.fields.map { ($0.name, $0.value) }
+        )
+        let fieldsToUpdate = updateFields.filter {
+            self.fields.keys.contains($0.key)
+        }
+        
+        var fields = fields
+        fields.merge(fieldsToUpdate) { (_, new) in new }
+        
+        return .init(
+            amount: amount,
+            product: product,
+            fields: fields,
+            payload: payload
+        )
+    }
 }
 
 private extension AnywayPayment {

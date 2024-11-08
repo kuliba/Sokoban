@@ -10,7 +10,6 @@ import CodableLanding
 import CollateralLoanLandingShowCaseBackend
 import Combine
 import Fetcher
-import Fetcher
 import ForaTools
 import Foundation
 import GenericRemoteService
@@ -25,6 +24,16 @@ import PaymentSticker
 import RemoteServices
 import SberQR
 import SerialComponents
+import SwiftUI
+import PayHub
+import PayHubUI
+import Fetcher
+import LandingUIComponent
+import LandingMapping
+import CodableLanding
+import MarketShowcase
+import CalendarUI
+import GenericRemoteService
 import SharedAPIInfra
 import SwiftUI
 
@@ -96,6 +105,12 @@ extension RootViewModelFactory {
                 }))
             }
         }()
+        
+        let stickerViewFactory: StickerViewFactory = .init(
+            model: model,
+            httpClient: httpClient,
+            logger: logger
+        )
         
         let userAccountNavigationStateManager = makeNavigationStateManager(
             modelEffectHandler: .init(model: model),
@@ -189,9 +204,53 @@ extension RootViewModelFactory {
                 self.model.action.send(action)
             })
         
+        let historyEffectHandlerMicroServices = HistoryEffectHandlerMicroServices(
+            makeFilterModel: { payload, completion in
+                
+                let reducer = FilterModelReducer()
+                let composer = FilterEffectHandlerMicroServicesComposer(model: self.model)
+                let filterEffectHandler = FilterModelEffectHandler(
+                    microServices: composer.compose()
+                )
+                let firstDay = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+                let services = self.model.historyCategories(range: payload.state.selectDates ?? firstDay...Date(), productId: payload.productId)
+                let viewModel = FilterViewModel(
+                    initialState: .init(
+                        productId: payload.productId,
+                        calendar: .init(
+                            date: Date(),
+                            range: .init(range: payload.state.selectDates ?? firstDay...Date()),
+                            monthsData: .generate(startDate: self.model.calendarDayStart(payload.productId)),
+                            periods: FilterHistoryState.Period.allCases
+                        ),
+                        filter: .init(
+                            title: "Фильтры",
+                            selectDates: payload.state.selectDates ?? firstDay...Date(),
+                            selectedPeriod: .dates,
+                            selectedTransaction: payload.state.selectedTransaction,
+                            selectedServices: payload.state.selectedServices,
+                            periods: FilterHistoryState.Period.allCases,
+                            transactionType: FilterHistoryState.TransactionType.allCases,
+                            services: services
+                        ),
+                        status: services.isEmpty ? .empty : .normal
+                    ),
+                    reduce: reducer.reduce,
+                    handleEffect: filterEffectHandler.handleEffect
+                )
+                completion(viewModel)
+            }
+        )
+        
+        let historyEffectHandler = HistoryEffectHandler(
+            microServices: historyEffectHandlerMicroServices
+        )
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleEffect: ProductNavigationStateEffectHandler(
+                handleHistoryEffect: historyEffectHandler.handleEffect
+            ).handleEffect,
             handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
@@ -220,7 +279,7 @@ extension RootViewModelFactory {
         }
         
         let servicePaymentBinderComposer = ServicePaymentBinderComposer(
-            fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
+            fraudDelay: settings.fraudDelay,
             flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
@@ -329,16 +388,21 @@ extension RootViewModelFactory {
         let loadCategories = backgroundScheduler.scheduled(serviceCategoryListLoad)
         let reloadCategories = decoratedServiceCategoryListReload// backgroundScheduler.scheduled(decoratedServiceCategoryListReload)
         
+        let qrScannerComposer = QRScannerComposer(
+            model: model,
+            qrResolverFeatureFlag: qrResolverFeatureFlag,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag,
+            scheduler: mainScheduler
+        )
+        
         let paymentsTransfersPersonal = makePaymentsTransfersPersonal(
-            categoryPickerPlaceholderCount: 6,
-            operationPickerPlaceholderCount: 4,
             nanoServices: .init(
                 loadCategories: loadCategories,
                 reloadCategories: reloadCategories,
                 loadAllLatest: makeLoadLatestOperations(.all),
                 loadLatestForCategory: { getLatestPayments([$0.name], $1) }
             ),
-            pageSize: 50
+            makeQRModel: qrScannerComposer.compose
         )
         
         if paymentsTransfersFlag.isActive {
@@ -411,7 +475,8 @@ extension RootViewModelFactory {
             paymentsTransfersFlag: paymentsTransfersFlag,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeTemplates,
-            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsFactory: fastPaymentsFactory, 
+            stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
@@ -429,113 +494,6 @@ extension RootViewModelFactory {
             marketShowcaseBinder: marketShowcaseBinder
         )
     }
-    
-    func makeNavigationOperationView(
-        dismissAll: @escaping() -> Void
-    ) -> () -> some View {
-        
-        return makeNavigationOperationView
-        
-        func operationView(
-            setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
-        ) -> some View {
-            
-            let makeOperationStateViewModel = makeOperationStateViewModel()
-            
-            return OperationView(
-                model: makeOperationStateViewModel(setSelection),
-                operationResultView: { result in
-                    
-                    OperationResultView(
-                        model: result,
-                        buttonsView: self.makeStickerDetailDocumentButtons(),
-                        mainButtonAction: dismissAll,
-                        configuration: .default
-                    )
-                },
-                configuration: .default
-            )
-        }
-        
-        func dictionaryAtmList(location: Location) -> [AtmData] {
-            
-            model.dictionaryAtmList()?
-                .filter({ $0.cityId.description == location.id })
-                .filter({ $0.serviceIdList.contains(where: { $0 == 140 } )}) ?? []
-        }
-        
-        func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
-            
-            model.dictionaryAtmMetroStations() ?? []
-        }
-        
-        func listView(
-            location: Location,
-            completion: @escaping (Office?) -> Void
-        ) -> some View {
-            
-            PlacesListInternalView(
-                items: dictionaryAtmList(location: location).map { item in
-                    PlacesListViewModel.ItemViewModel(
-                        id: item.id,
-                        name: item.name,
-                        address: item.address,
-                        metro: dictionaryAtmMetroStations().filter({
-                            item.metroStationList.contains($0.id)
-                        }).map({
-                            PlacesListViewModel.ItemViewModel.MetroStationViewModel(
-                                id: $0.id,
-                                name: $0.name,
-                                color: $0.color.color
-                            )
-                        }),
-                        schedule: item.schedule,
-                        distance: nil
-                    )
-                },
-                selectItem: { item in
-                    
-                    completion(Office(id: item.id, name: item.name))
-                }
-            )
-        }
-        
-        //NavigationOperationView
-        func makeNavigationOperationView() -> some View {
-            
-            NavigationOperationView(
-                location: .init(id: ""),
-                viewModel: .init(),
-                operationView: operationView,
-                listView: listView
-            )
-        }
-    }
-    
-    func makeStickerDetailDocumentButtons(
-    ) -> (
-        PaymentSticker.OperationResult.PaymentID
-    ) -> some View {
-        
-        let makeDetailButton = makeOperationDetailButton()
-        
-        let makeDocumentButton = makeDocumentButton(
-            printFormType: .sticker
-        )
-        
-        return make
-        
-        func make(
-            paymentID: PaymentSticker.OperationResult.PaymentID
-        ) -> some View {
-            
-            HStack {
-                
-                makeDetailButton(.init("\(paymentID.id)"))
-                makeDocumentButton(.init(paymentID.id))
-            }
-        }
-    }
 }
 
 typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
@@ -548,7 +506,7 @@ extension ProductProfileViewModel {
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
         with model: Model,
@@ -571,7 +529,7 @@ extension ProductProfileViewModel {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> MakeProductProfileViewModel {
         
-        return { product, rootView, dismissAction in
+        return { product, rootView, filterState, dismissAction in
             
             let makeProductProfileViewModel = ProductProfileViewModel.make(
                 with: model,
@@ -670,6 +628,16 @@ extension ProductProfileViewModel {
                 product: product,
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
+                filterHistoryRequest: { lowerDate, upperDate, operationType, category in
+
+                    model.action.send(ModelAction.Statement.List.Request(
+                        productId: product.id,
+                        direction: .custom(start: lowerDate, end: upperDate),
+                        operationType: .init(rawValue: operationType ?? .avtodorGroupTitle),
+                        category: category
+                    ))
+                },
+                filterState: filterState,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -701,7 +669,7 @@ private extension RootViewModelFactory {
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
     
-    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
@@ -710,6 +678,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
+        stickerViewFactory: StickerViewFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
@@ -803,7 +772,8 @@ private extension RootViewModelFactory {
             marketShowcaseBinder: marketShowcaseBinder)
         
         return .init(
-            fastPaymentsFactory: fastPaymentsFactory,
+            fastPaymentsFactory: fastPaymentsFactory, 
+            stickerViewFactory: stickerViewFactory,
             navigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,

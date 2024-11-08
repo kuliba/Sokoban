@@ -7,6 +7,7 @@
 
 import Foundation
 import ForaCrypto
+import ForaTools
 import KeyChainStore
 
 typealias KeyTagKeyChainStore<Key> = KeyChainStore<KeyTag, Key>
@@ -98,16 +99,6 @@ where Key == SymmetricKey {
             data: { $0.rawValue},
             key: { try .init(rawValue: $0).get(orThrow: RawRepresentationError()) }
         )
-    }
-}
-
-extension Optional {
-    
-    func get(orThrow error: Error) throws -> Wrapped {
-        
-        guard let wrapped = self else { throw error }
-        
-        return wrapped
     }
 }
 

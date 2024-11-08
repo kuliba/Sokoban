@@ -51,7 +51,18 @@ public extension FlowEffectHandler {
         _ select: Select,
         _ dispatch: @escaping Dispatch
     ) {
-        microServices.getNavigation(select, dispatch) { [weak self] navigation in
+        let notify = { (event: MicroServices.NotifyEvent) in
+            
+            switch event {
+            case .dismiss:
+                dispatch(.dismiss)
+                
+            case let .select(select):
+                dispatch(.select(select))
+            }
+        }
+        
+        microServices.getNavigation(select, notify) { [weak self] navigation in
             
             self?.scheduler.delay(for: .milliseconds(100)) {
                 
