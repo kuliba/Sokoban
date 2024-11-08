@@ -20,7 +20,7 @@ public enum QRModelResult<Operator, Provider, QRCode, QRMapping, Source> {
     
     public enum Mapped {
         
-        case missingINN
+        case missingINN(QRCode)
         case mixed(Mixed)
         case multiple(Multiple)
         case none(QRCode)

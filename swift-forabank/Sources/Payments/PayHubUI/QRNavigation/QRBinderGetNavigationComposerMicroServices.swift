@@ -39,5 +39,13 @@ public extension QRBinderGetNavigationComposerMicroServices {
         case c2b(URL)
     }
     
-    typealias MakeQRFailure = (QRCode) -> QRFailure
+    typealias MakeQRFailure = (QRCodeDetails<QRCode>) -> QRFailure
 }
+
+public enum QRCodeDetails<QRCode> {
+    
+    case qrCode(QRCode)
+    case missingINN(QRCode)
+}
+
+extension QRCodeDetails: Equatable where QRCode: Equatable {}

@@ -35,6 +35,12 @@ struct QRContentView: View {
                     }
                     .foregroundColor(.red)
                     
+                    Button("missing INN") {
+                        
+                        model.emit(.mapped(.missingINN(.init(value: "QRCOde"))))
+                    }
+                    .foregroundColor(.red)
+                    
                     Button("Mixed Operators") {
                         
                         model.emit(.mapped(.mixed(.init(
