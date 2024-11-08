@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
+public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, Operator, Provider
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, Payments, QRFailure>
 }
 
@@ -41,7 +41,7 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias FlowDomain = Domain.FlowDomain
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
@@ -117,6 +117,13 @@ private extension QRBinderGetNavigationComposer {
             completion(.qrNavigation(.mixedPicker(.init(
                 model: mixedPicker,
                 cancellables: bind(mixedPicker, using: notify)
+            ))))
+            
+        case let .multiple(multiple):
+            let multiplePicker = microServices.makeMultiplePicker(multiple)
+            completion(.qrNavigation(.multiplePicker(.init(
+                model: multiplePicker, 
+                cancellables: []
             ))))
             
         default:

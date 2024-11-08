@@ -39,13 +39,13 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
-    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -60,6 +60,9 @@ class QRBinderTests: XCTestCase {
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
+    
+    typealias MakeMultiplePickerPayload = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias MakeMultiplePicker = CallSpy<MakeMultiplePickerPayload, MultiplePicker>
     
     struct Operator: Equatable {
         
@@ -125,6 +128,28 @@ class QRBinderTests: XCTestCase {
         return .init(operators: mixed, qrCode: qrCode, qrMapping: qrMapping)
     }
     
+    func makeMultiple(
+        first: Operator? = nil,
+        second: Operator? = nil,
+        tail: Operator...
+    ) -> MultiElementArray<Operator> {
+        
+        return .init(first ?? makeOperator(), second ?? makeOperator(), tail)
+    }
+    
+    func makeMakeMultiplePickerPayload(
+        operators: MultipleQRResult<Operator, Provider, QRCode, QRMapping>.MultipleOperators? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> MakeMultiplePickerPayload {
+        
+        return .init(
+            operators: operators ?? makeMultiple(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
+    }
+    
     struct Source: Equatable {
         
         let value: String
@@ -186,6 +211,7 @@ class QRBinderTests: XCTestCase {
         
         case chat
         case mixedPicker(ObjectIdentifier)
+        case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
     }
@@ -202,6 +228,9 @@ class QRBinderTests: XCTestCase {
             switch qrNavigation {
             case let .mixedPicker(node):
                 return .mixedPicker(.init(node.model))
+                
+            case let .multiplePicker(node):
+                return .multiplePicker(.init(node.model))
                 
             case let .payments(node):
                 return .payments(.init(node.model))
@@ -256,6 +285,13 @@ class QRBinderTests: XCTestCase {
     typealias MixedPicker = ClosingScanQR
     
     func makeMixedPicker() -> MixedPicker {
+        
+        return .init()
+    }
+    
+    typealias MultiplePicker = ClosingScanQR
+    
+    func makeMultiplePicker() -> MultiplePicker {
         
         return .init()
     }

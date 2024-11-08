@@ -247,6 +247,29 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // MARK: - multiplePicker
+    
+    func test_getNavigation_multiplePicker_shouldCallMakeMultiplePickerWithPayload() {
+        
+        let multiple = makeMakeMultiplePickerPayload()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.multiple(multiple)))
+        
+        XCTAssertNoDiff(spies.makeMultiplePicker.payloads, [multiple])
+    }
+    
+    func test_getNavigation_multiplePicker_shouldDeliverMultiplePicker() {
+        
+        let multiplePicker = makeMultiplePicker()
+        
+        expect(
+            makeSUT(multiplePicker: multiplePicker).sut,
+            with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
+            toDeliver: .multiplePicker(.init(multiplePicker))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -256,12 +279,14 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let makePayments: MakePayments
         let makeQRFailure: MakeQRFailure
         let makeMixedPicker: MakeMixedPicker
+        let makeMultiplePicker: MakeMultiplePicker
     }
     
     private func makeSUT(
         payments: Payments? = nil,
         qrFailure: QRFailure? = nil,
         mixedPicker: MixedPicker? = nil,
+        multiplePicker: MultiplePicker? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -271,13 +296,15 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let spies = Spies(
             makePayments: .init(stubs: [payments ?? makePayments()]),
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
-            makeMixedPicker: .init(stubs: [mixedPicker ?? makeMixedPicker()])
+            makeMixedPicker: .init(stubs: [mixedPicker ?? makeMixedPicker()]),
+            makeMultiplePicker: .init(stubs: [multiplePicker ?? makeMixedPicker()])
         )
         let sut = SUT(
             microServices: .init(
                 makeQRFailure: spies.makeQRFailure.call,
                 makePayments: spies.makePayments.call,
-                makeMixedPicker: spies.makeMixedPicker.call
+                makeMixedPicker: spies.makeMixedPicker.call,
+                makeMultiplePicker: spies.makeMultiplePicker.call
             ),
             witnesses: .init(
                 addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
