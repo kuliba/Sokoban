@@ -69,6 +69,7 @@ extension Services {
             case changeClientConsentMe2MePull
             case changePIN
             case changeSVCardLimit
+            case saveConsents
             case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
@@ -465,5 +466,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .getInfoForRepeatPayment
+    )
+    
+    static let saveConsents: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .saveConsents
     )
 }

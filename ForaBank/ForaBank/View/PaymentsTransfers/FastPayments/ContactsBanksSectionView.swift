@@ -7,9 +7,20 @@
 
 import SwiftUI
 
+struct ContactsBanksSectionViewFactory {
+    
+    let makeOptionSelectorView: MakeOptionSelectorView
+}
+
+extension ContactsBanksSectionViewFactory {
+    
+    static let preview: Self = .init(makeOptionSelectorView: {_ in fatalError()})
+}
+
 struct ContactsBanksSectionView: View {
     
     @ObservedObject var viewModel: ContactsBanksSectionViewModel
+    let viewFactory: ContactsBanksSectionViewFactory
     
     var body: some View {
       
@@ -34,7 +45,7 @@ struct ContactsBanksSectionView: View {
             
             if viewModel.header.isCollapsed {
                 
-                OptionSelectorView(viewModel: viewModel.options)
+                viewFactory.makeOptionSelectorView(viewModel.options)
                     .padding(.horizontal, 20)
                     .padding(.top, 0)
                     .padding(.bottom, 24)
@@ -137,7 +148,7 @@ struct ContactsBanksSectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ContactsBanksSectionView(viewModel: .sample)
+        ContactsBanksSectionView(viewModel: .sample, viewFactory: .preview)
         
         SearchPlaceholderView(viewModel: .init())
     }
