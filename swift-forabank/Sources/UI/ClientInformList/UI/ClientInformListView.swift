@@ -90,7 +90,7 @@ public struct ClientInformListView: View {
 
     private func singleInfoView(_ singleInfo: Info.Single) -> some View {
         
-        VStack(spacing: config.sizes.spacing) {
+        VStack(alignment: .center, spacing: config.sizes.spacing) {
             
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
