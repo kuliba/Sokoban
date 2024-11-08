@@ -38,7 +38,7 @@ final class QRScanResultMapperTests: XCTestCase {
         let mixed = makeMixed()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
         
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.mixed(mixed, qr, qrMapping))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.mixed(.init(operators: mixed, qrCode: qr, qrMapping: qrMapping)))) {
             
             spy.complete(with: .mixed(mixed))
         }
@@ -50,7 +50,7 @@ final class QRScanResultMapperTests: XCTestCase {
         let multiple = makeMultiple()
         let (sut, spy) = makeSUT(qrMapping: qrMapping)
 
-        expect(sut, with: .qrCode(qr), delivers: .mapped(.multiple(multiple, qr, qrMapping))) {
+        expect(sut, with: .qrCode(qr), delivers: .mapped(.multiple(.init(operators: multiple, qrCode: qr, qrMapping: qrMapping)))) {
             
             spy.complete(with: .multiple(multiple))
         }
@@ -269,7 +269,7 @@ final class QRScanResultMapperTests: XCTestCase {
     
     private func makeMixed(
         segment: String = anyMessage()
-    ) -> QRModelResult.Mapped.MixedOperators {
+    ) -> MixedQRResult.MixedOperators {
         
         return .init(
             .operator(makeOperator(
@@ -305,7 +305,7 @@ final class QRScanResultMapperTests: XCTestCase {
     
     private func makeMultiple(
         segment: String = anyMessage()
-    ) -> QRModelResult.Mapped.MultipleOperators {
+    ) -> MultipleQRResult.MultipleOperators {
         
         return .init(makeOperator(segment: segment), makeOperator(segment: segment))
     }

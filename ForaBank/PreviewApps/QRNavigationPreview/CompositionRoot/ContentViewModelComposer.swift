@@ -106,19 +106,29 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
         return .init(
             microServices: .init(
                 makeQRFailure: qrFailureBinderComposer.compose(qrCode:),
-                makePayments: makePayments
+                makePayments: makePayments,
+                makeMixedPicker: { _ in .init() }
             ),
             witnesses: .init(
-                isClosed: { $0.isClosedPublisher },
-                scanQR: { $0.scanQRPublisher },
-                qrFailureScanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
+                mixedPicker: .init(
+                    isClosed: { $0.isClosedPublisher },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                payments: .init(
+                    isClosed: { $0.isClosedPublisher },
+                    scanQR: { $0.scanQRPublisher }
+                ),
+                qrFailure: .init(
+                    isClosed: { _ in Empty().eraseToAnyPublisher() },
+                    scanQR: { $0.flow.$state.compactMap(\.navigation?.scanQR).eraseToAnyPublisher() }
+                )
             )
         )
     }

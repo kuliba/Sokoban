@@ -45,6 +45,7 @@ private extension ContentView {
                 
                 QRBinderView(binder: binder)
             }
+            .navigationViewStyle(.stack)
         }
     }
 }
