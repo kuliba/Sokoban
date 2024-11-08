@@ -70,7 +70,7 @@ private extension QRScanResultMapper {
             
             switch loadResult {
             case .missingINN:
-                completion(.missingINN)
+                completion(.missingINN(qrCode))
                 
             case let .mixed(mixed):
                 completion(.mixed(.init(

@@ -48,7 +48,7 @@ public extension QRBinderGetNavigationComposer {
             )))
             
         case let .failure(qrCode):
-            let qrFailure = microServices.makeQRFailure(qrCode)
+            let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
             completion(.qrFailure(.init(
                 model: qrFailure,
                 cancellables: bind(qrFailure, using: notify)
@@ -77,6 +77,13 @@ private extension QRBinderGetNavigationComposer {
         _ completion: @escaping (Navigation) -> Void
     ) {
         switch mapped {
+        case let .missingINN(qrCode):
+            let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
+            completion(.qrFailure(.init(
+                model: qrFailure,
+                cancellables: bind(qrFailure, using: notify)
+            )))
+            
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
             completion(.mixedPicker(.init(

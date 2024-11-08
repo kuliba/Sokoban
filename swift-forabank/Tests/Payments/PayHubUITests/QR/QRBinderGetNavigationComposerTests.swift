@@ -115,7 +115,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         sut.getNavigation(qrResult: .failure(qrCode))
         
-        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.qrCode(qrCode)])
     }
     
     func test_getNavigation_failure_shouldDeliverQRFailure() {
@@ -129,7 +129,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    func test_getNavigation_c2b_shouldNotifyWithDismissOnQRFailureClose() {
+    func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureClose() {
         
         expect(
             makeSUT(qrFailure: makeQRFailure()).sut,
@@ -144,6 +144,49 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         expect(
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .failure(makeQRCode()),
+            notifyWith: [.dismiss],
+            for: { $0.qrFailure?.scanQR() }
+        )
+    }
+    
+    // MARK: - missingINN
+    
+    func test_getNavigation_missingINN_shouldCallMakeQRFailure() {
+        
+        let qrCode = makeQRCode()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.missingINN(qrCode)))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.missingINN(qrCode)])
+    }
+    
+    func test_getNavigation_missingINN_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
+    func test_getNavigation_missingINN_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            notifyWith: [.dismiss],
+            for: { $0.qrFailure?.close() }
+        )
+    }
+    
+    func test_getNavigation_missingINN_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .mapped(.missingINN(makeQRCode())),
             notifyWith: [.dismiss],
             for: { $0.qrFailure?.scanQR() }
         )

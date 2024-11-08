@@ -26,7 +26,7 @@ final class ContentViewModelComposer {
             microServices: .init(
                 makeCategoryPicker: CategoryPicker.init(qrCode:),
                 makeDetailPayment: Payments.init(qrCode:),
-                makeQRFailure: QRFailure.init(qrCode:)
+                makeQRFailure: QRFailure.init(with:)
             ),
             contentFlowWitnesses: .init(
                 contentEmitting: { $0.selectPublisher },
@@ -112,7 +112,7 @@ private extension ContentViewModelComposer {
         
         return .init(
             microServices: .init(
-                makeQRFailure: qrFailureBinderComposer.compose(qrCode:),
+                makeQRFailure: qrFailureBinderComposer.compose,
                 makePayments: makePayments,
                 makeMixedPicker: { _ in .init() }
             ),
