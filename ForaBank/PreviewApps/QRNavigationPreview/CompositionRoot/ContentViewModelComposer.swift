@@ -77,7 +77,8 @@ extension ContentViewModelComposer {
 
 private extension ContentViewModelComposer {
     
-    typealias QRBinderComposer = PayHubUI.QRBinderComposer<QRNavigation, QRModel, QRResult>
+    typealias Domain = QRNavigationDomain
+    typealias QRBinderComposer = PayHubUI.QRBinderComposer<Domain.Navigation, QRModel, Domain.Select>
     
     func makeQRBinderComposer() -> QRBinderComposer {
         

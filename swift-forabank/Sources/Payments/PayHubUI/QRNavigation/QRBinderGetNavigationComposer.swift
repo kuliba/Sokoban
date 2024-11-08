@@ -41,34 +41,12 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias FlowDomain = PayHubUI.FlowDomain<Select, Navigation>
-    typealias Notify = (FlowDomain.NotifyEvent) -> Void
-        
-    enum Select {
-        
-        case outside(Outside)
-        case qrResult(QRResult)
-        
-        public enum Outside {
-            
-            case chat
-        }
-
-        public typealias QRResult = QRModelResult<Operator, Provider, QRCode, QRMapping, Source>
-    }
+    typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias FlowDomain = Domain.FlowDomain
     
-    enum Navigation {
-        
-        case outside(Outside)
-        case qrNavigation(QRNavigation)
-        
-        public enum Outside {
-            
-            case chat
-        }
-        
-        public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, Payments, QRFailure>
-    }
+    typealias Notify = (FlowDomain.NotifyEvent) -> Void
+    typealias Select = Domain.Select
+    typealias Navigation = Domain.Navigation
 }
 
 private extension QRBinderGetNavigationComposer {

@@ -16,10 +16,11 @@ class QRBinderTests: XCTestCase {
     typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Navigation = NavigationComposer.Navigation
-    typealias Select = NavigationComposer.Select
-    
-    typealias QRResult = NavigationComposer.Select.QRResult
+    typealias Domain = QRNavigationDomain<MixedPicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+
+    typealias Navigation = Domain.Navigation
+    typealias Select = Domain.Select
+    typealias QRResult = Select.QRResult
     
     typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
     
