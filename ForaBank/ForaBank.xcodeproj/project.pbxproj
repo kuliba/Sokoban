@@ -2372,7 +2372,7 @@
 		774A8B682865FDAF00B81140 /* PaymentsNameViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B5B2865FDAF00B81140 /* PaymentsNameViewComponent.swift */; };
 		774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B692865FE5B00B81140 /* ProductProfileDetailViewComponent.swift */; };
 		774A8B6C2865FE9500B81140 /* ButtonIconTextViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B6B2865FE9500B81140 /* ButtonIconTextViewComponent.swift */; };
-		774A8B6E2865FEA100B81140 /* ButtonNewProductComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B6D2865FEA100B81140 /* ButtonNewProductComponent.swift */; };
+		774A8B6E2865FEA100B81140 /* NewProductButtonComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B6D2865FEA100B81140 /* NewProductButtonComponent.swift */; };
 		774A8B702865FEB200B81140 /* OptionSelectorViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B6F2865FEB200B81140 /* OptionSelectorViewComponent.swift */; };
 		774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B712865FEC000B81140 /* ContextMenuViewComponent.swift */; };
 		774A8B742865FECB00B81140 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B732865FECB00B81140 /* CircleProgressViewComponent.swift */; };
@@ -5938,7 +5938,7 @@
 		774A8B5B2865FDAF00B81140 /* PaymentsNameViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsNameViewComponent.swift; sourceTree = "<group>"; };
 		774A8B692865FE5B00B81140 /* ProductProfileDetailViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailViewComponent.swift; sourceTree = "<group>"; };
 		774A8B6B2865FE9500B81140 /* ButtonIconTextViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonIconTextViewComponent.swift; sourceTree = "<group>"; };
-		774A8B6D2865FEA100B81140 /* ButtonNewProductComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonNewProductComponent.swift; sourceTree = "<group>"; };
+		774A8B6D2865FEA100B81140 /* NewProductButtonComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewProductButtonComponent.swift; sourceTree = "<group>"; };
 		774A8B6F2865FEB200B81140 /* OptionSelectorViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewComponent.swift; sourceTree = "<group>"; };
 		774A8B712865FEC000B81140 /* ContextMenuViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextMenuViewComponent.swift; sourceTree = "<group>"; };
 		774A8B732865FECB00B81140 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
@@ -14352,7 +14352,7 @@
 				0CA79AE129131AB300B6C281 /* OpenNewProductsViewModelComponent.swift */,
 				77BF27B028467AE6009624BB /* ButtonIconTextRectViewComponent.swift */,
 				774A8B6B2865FE9500B81140 /* ButtonIconTextViewComponent.swift */,
-				774A8B6D2865FEA100B81140 /* ButtonNewProductComponent.swift */,
+				774A8B6D2865FEA100B81140 /* NewProductButtonComponent.swift */,
 				774A8B712865FEC000B81140 /* ContextMenuViewComponent.swift */,
 				774A8B732865FECB00B81140 /* CircleProgressViewComponent.swift */,
 				774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */,
@@ -14392,11 +14392,9 @@
 		770DCE9427BBFA49004099C1 /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */,
 				2ABBD6C62CDD61BD0078E977 /* RootViewDomain.swift */,
 				2ABBD6C82CDD61E20078E977 /* RootViewBinderView.swift */,
 				770DCE9227BBF93B004099C1 /* RootView.swift */,
-				833286CF2C91BF4700B6FA3F /* RootView+banners.swift */,
 				2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */,
 				2A6371242BF25EF5007E494A /* IconDomain.swift */,
 				2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */,
@@ -22013,7 +22011,7 @@
 				83D962B12B63C3570092C61C /* GetProductDynamicParamsListFactory.swift in Sources */,
 				2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */,
 				2AA619532C16BD8000043997 /* __AnywayTransactionViewModelComposer.swift in Sources */,
-				774A8B6E2865FEA100B81140 /* ButtonNewProductComponent.swift in Sources */,
+				774A8B6E2865FEA100B81140 /* NewProductButtonComponent.swift in Sources */,
 				2A46DCAA2B3EF212001C896C /* FastPaymentsSettingsFlag.swift in Sources */,
 				77CCEA6A28F58DB600C62215 /* OpenDepositDetailViewModel.swift in Sources */,
 				774A8B2A2865FC6F00B81140 /* MyProductsSectionItemViewModel.swift in Sources */,

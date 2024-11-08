@@ -21,7 +21,7 @@ extension MainSectionProductsView {
         
         @Published private(set) var isChevronVisible: Bool
         @Published var isCollapsedContent: Bool
-        @Published private(set) var buttonNewProductViewModel: ButtonNewProduct.ViewModel?
+        @Published private(set) var newProductButtonViewModel: NewProductButton.ViewModel?
         
         private let settings: MainProductsGroupSettings
         let productCarouselViewModel: ProductCarouselView.ViewModel
@@ -131,7 +131,7 @@ extension MainSectionProductsView {
                     return .some(.cardWanted(url: self.model.productsOpenAccountURL))
                 }
                 .receive(on: DispatchQueue.main)
-                .assign(to: &$buttonNewProductViewModel)
+                .assign(to: &$newProductButtonViewModel)
         }
 
         struct MoreButtonViewModel {
@@ -142,9 +142,9 @@ extension MainSectionProductsView {
     }
 }
 
-private extension ButtonNewProduct.ViewModel {
+private extension NewProductButton.ViewModel {
     
-    static func cardWanted(url: URL) -> ButtonNewProduct.ViewModel {
+    static func cardWanted(url: URL) -> NewProductButton.ViewModel {
         
         .init(
             icon: .ic24NewCardColor,
@@ -159,7 +159,7 @@ private extension ButtonNewProduct.ViewModel {
 
 struct MainSectionProductsViewFactory {
     
-    let makeProductCarouselView: (ProductCarouselView.ViewModel, @escaping () -> ButtonNewProduct?) -> ProductCarouselView
+    let makeProductCarouselView: (ProductCarouselView.ViewModel, @escaping () -> NewProductButton?) -> ProductCarouselView
 }
 
 struct MainSectionProductsView: View {
@@ -177,7 +177,7 @@ struct MainSectionProductsView: View {
             isCollapsed: $viewModel.isCollapsedContent
         ) {
             
-            viewFactory.makeProductCarouselView(viewModel.productCarouselViewModel, buttonNewProduct)
+            viewFactory.makeProductCarouselView(viewModel.productCarouselViewModel, newProductButton)
         }
         .overlay13(alignment: .top) {
             MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20)
@@ -189,9 +189,9 @@ struct MainSectionProductsView: View {
 
 extension MainSectionProductsView {
     
-    func buttonNewProduct() -> ButtonNewProduct? {
+    func newProductButton() -> NewProductButton? {
         
-        viewModel.buttonNewProductViewModel.map(ButtonNewProduct.init(viewModel:))
+        viewModel.newProductButtonViewModel.map(NewProductButton.init(viewModel:))
     }
     
     struct MoreButtonView: View {

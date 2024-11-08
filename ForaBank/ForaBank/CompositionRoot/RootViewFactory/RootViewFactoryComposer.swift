@@ -264,7 +264,7 @@ private extension RootViewFactoryComposer {
     
     func makeProductCarouselView(
         viewModel: ProductCarouselView.ViewModel,
-        newProductButton: @escaping () -> ButtonNewProduct?
+        newProductButton: @escaping () -> NewProductButton?
     ) -> ProductCarouselView {
         .init(
             viewModel: viewModel,

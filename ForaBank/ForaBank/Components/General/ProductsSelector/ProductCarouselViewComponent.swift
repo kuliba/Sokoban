@@ -734,12 +734,12 @@ struct ProductCarouselView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
-    private let newProductButton: () -> ButtonNewProduct?
+    private let newProductButton: () -> NewProductButton?
     private let viewFactory: ProductCarouselViewFactory
     
     init(
         viewModel: ViewModel,
-        newProductButton: @escaping () -> ButtonNewProduct?,
+        newProductButton: @escaping () -> NewProductButton?,
         viewFactory: ProductCarouselViewFactory
     ) {
         self.viewModel = viewModel
@@ -1189,7 +1189,7 @@ extension ProductCarouselView.ViewModel {
     )
 }
 
-extension ButtonNewProduct.ViewModel {
+extension NewProductButton.ViewModel {
     
-    static let sampleWantCard = ButtonNewProduct.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+    static let sampleWantCard = NewProductButton.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
 }

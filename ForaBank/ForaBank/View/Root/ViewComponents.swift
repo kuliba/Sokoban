@@ -36,7 +36,7 @@ enum ViewComponents {}
     typealias MakePaymentsServiceView = (PaymentsServiceViewModel) -> PaymentsServiceView
     typealias MakePaymentsSuccessView = (PaymentsSuccessViewModel) -> PaymentsSuccessView
     typealias MakePaymentsView = (PaymentsViewModel) -> PaymentsView
-    typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping () -> ButtonNewProduct?) -> ProductCarouselView
+    typealias MakeProductCarouselView = (ProductCarouselView.ViewModel, @escaping () -> NewProductButton?) -> ProductCarouselView
     typealias MakeProductSelectorView = (ProductSelectorView.ViewModel) -> ProductSelectorView
     typealias MakeProductsSwapView = (ProductsSwapView.ViewModel) -> ProductsSwapView
     typealias MakeQRFailedView = (QRFailedViewModel) -> QRFailedView
