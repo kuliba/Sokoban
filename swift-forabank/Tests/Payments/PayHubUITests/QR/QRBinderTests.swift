@@ -397,46 +397,30 @@ class QRBinderTests: XCTestCase {
     
     final class ServicePicker {
         
-        // MARK: - addCompany
-        
-        private let addCompanySubject = PassthroughSubject<Void, Never>()
-        
-        var addCompanyPublisher: AnyPublisher<Void, Never> {
+        func publisher(
+            for keyPath: KeyPath<Event, Void?>
+        ) -> AnyPublisher<Void, Never> {
             
-            addCompanySubject.eraseToAnyPublisher()
+            return eventSubject
+                .compactMap { $0[keyPath: keyPath] }
+                .eraseToAnyPublisher()
         }
         
-        func addCompany() {
+        func addCompany() { eventSubject.send(.goToChat) }
+        func goToMain() { eventSubject.send(.goToMain) }
+        func goToPayments() { eventSubject.send(.goToPayments) }
+        
+        // MARK: - Event
+        
+        private let eventSubject = PassthroughSubject<Event, Never>()
+        
+        enum Event {
             
-            addCompanySubject.send(())
-        }
-        
-        // MARK: - gotToMain
-        
-        private let goToMainSubject = PassthroughSubject<Void, Never>()
-        
-        var goToMainPublisher: AnyPublisher<Void, Never> {
+            case goToChat, goToMain, goToPayments
             
-            goToMainSubject.eraseToAnyPublisher()
-        }
-        
-        func goToMain() {
-            
-            goToMainSubject.send(())
-        }
-        
-        // MARK: - gotToPayments
-        
-        private let goToPaymentsSubject = PassthroughSubject<Void, Never>()
-        
-        var goToPaymentsPublisher: AnyPublisher<Void, Never> {
-            
-            goToPaymentsSubject.eraseToAnyPublisher()
-        }
-        
-        func goToPayments() {
-            
-            goToPaymentsSubject.send(())
+            var goToChat: Void? { self == .goToChat ? () : nil }
+            var goToMain: Void? { self == .goToMain ? () : nil }
+            var goToPayments: Void? { self == .goToPayments ? () : nil }
         }
         
         // MARK: - isLoading

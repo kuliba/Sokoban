@@ -451,13 +451,13 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 addCompany: .init(
                     mixedPicker: { $0.addCompanyPublisher },
                     multiplePicker: { $0.addCompanyPublisher },
-                    servicePicker: { $0.addCompanyPublisher }
+                    servicePicker: { $0.publisher(for: \.goToChat) }
                 ),
                 goToMain: .init(
-                    servicePicker: { $0.goToMainPublisher }
+                    servicePicker: { $0.publisher(for: \.goToMain) }
                 ),
                 goToPayments: .init(
-                    servicePicker: { $0.goToPaymentsPublisher }
+                    servicePicker: { $0.publisher(for: \.goToPayments) }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },
