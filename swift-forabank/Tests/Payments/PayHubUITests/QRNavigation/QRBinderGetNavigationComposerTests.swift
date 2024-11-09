@@ -56,6 +56,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_c2bSubscribe_shouldNotNotifyOnPaymentsCloseFalse() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bSubscribeURL(anyURL()),
+            notifyWith: [],
+            for: { self.payments($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_c2bSubscribe_shouldNotifyWithDismissOnPaymentsScanQR() {
         
         expect(
@@ -96,6 +106,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
             for: { self.payments($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_c2b_shouldNotNotifyOnPaymentsCloseFalse() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .c2bURL(anyURL()),
+            notifyWith: [],
+            for: { self.payments($0)?.emit(.isClosed(false)) }
         )
     }
     
@@ -142,6 +162,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_failure_shouldNotNotifyOnQRFailureCloseFalse() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .failure(makeQRCode()),
+            notifyWith: [],
+            for: { self.qrFailure($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_failure_shouldNotifyWithDismissOnQRFailureScanQR() {
         
         expect(
@@ -182,6 +212,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             with: .mapped(.missingINN(makeQRCode())),
             notifyWith: [.dismiss],
             for: { self.qrFailure($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_missingINN_shouldNotNotifyOnQRFailureCloseFalse() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .mapped(.missingINN(makeQRCode())),
+            notifyWith: [],
+            for: { self.qrFailure($0)?.emit(.isClosed(false)) }
         )
     }
     
@@ -238,6 +278,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_mixedPicker_shouldNotNotifyOnMixedPickerCloseFalse() {
+        
+        expect(
+            makeSUT(mixedPicker: makeMixedPicker()).sut,
+            with: .mapped(.mixed(makeMakeMixedPickerPayload())),
+            notifyWith: [],
+            for: { self.mixedPicker($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_mixedPicker_shouldNotifyWithDismissOnMixedPickerScanQR() {
         
         expect(
@@ -291,6 +341,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_multiplePicker_shouldNotNotifyOnMultiplePickerCloseFalse() {
+        
+        expect(
+            makeSUT(multiplePicker: makeMultiplePicker()).sut,
+            with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
+            notifyWith: [],
+            for: { self.multiplePicker($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_multiplePicker_shouldNotifyWithDismissOnMultiplePickerScanQR() {
         
         expect(
@@ -331,6 +391,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             with: .mapped(.none(makeQRCode())),
             notifyWith: [.dismiss],
             for: { self.payments($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_none_shouldNotNotifyOnPaymentsCloseFalse() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.none(makeQRCode())),
+            notifyWith: [],
+            for: { self.payments($0)?.emit(.isClosed(false)) }
         )
     }
     
@@ -474,6 +544,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_source_shouldNotNotifyOnPaymentsCloseFalse() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.source(makeSource())),
+            notifyWith: [],
+            for: { self.payments($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_source_shouldNotifyWithDismissOnPaymentsScanQR() {
         
         expect(
@@ -518,6 +598,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_url_shouldNotNotifyOnQRFailureCloseFalse() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .url(anyURL()),
+            notifyWith: [],
+            for: { self.qrFailure($0)?.emit(.isClosed(false)) }
+        )
+    }
+    
     func test_getNavigation_url_shouldNotifyWithDismissOnQRFailureScanQR() {
         
         expect(
@@ -557,6 +647,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             with: .unknown,
             notifyWith: [.dismiss],
             for: { self.qrFailure($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_unknown_shouldNotNotifyOnQRFailureCloseFalse() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .unknown,
+            notifyWith: [],
+            for: { self.qrFailure($0)?.emit(.isClosed(false)) }
         )
     }
     
