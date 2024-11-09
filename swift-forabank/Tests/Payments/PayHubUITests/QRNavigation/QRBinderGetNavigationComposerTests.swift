@@ -138,7 +138,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         sut.getNavigation(qrResult: .failure(qrCode))
         
-        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.qrCode(qrCode)])
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [qrCode])
     }
     
     func test_getNavigation_failure_shouldDeliverQRFailure() {
@@ -186,12 +186,11 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     
     func test_getNavigation_missingINN_shouldCallMakeQRFailure() {
         
-        let qrCode = makeQRCode()
         let (sut, spies) = makeSUT()
         
-        sut.getNavigation(qrResult: .mapped(.missingINN(qrCode)))
+        sut.getNavigation(qrResult: .mapped(.missingINN(makeQRCode())))
         
-        XCTAssertNoDiff(spies.makeQRFailure.payloads, [.missingINN(qrCode)])
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [nil])
     }
     
     func test_getNavigation_missingINN_shouldDeliverQRFailure() {

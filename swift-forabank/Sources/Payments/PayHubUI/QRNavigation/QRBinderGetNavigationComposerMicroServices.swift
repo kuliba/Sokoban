@@ -56,7 +56,7 @@ public extension QRBinderGetNavigationComposerMicroServices {
         case source(Source)
     }
     
-    typealias MakeQRFailure = (QRCodeDetails<QRCode>?) -> QRFailure
+    typealias MakeQRFailure = (QRCode?) -> QRFailure
     
     typealias ProviderPayload = PayHub.ProviderPayload<Provider, QRCode, QRMapping>
     typealias MakeServicePicker = (ProviderPayload) -> ServicePicker

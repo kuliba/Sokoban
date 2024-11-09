@@ -79,7 +79,7 @@ private extension QRBinderGetNavigationComposer {
             completion(.payments(bind(payments, to: notify)))
             
         case let .failure(qrCode):
-            let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
+            let qrFailure = microServices.makeQRFailure(qrCode)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mapped(mapped):
@@ -107,7 +107,7 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch mapped {
         case let .missingINN(qrCode):
-            let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
+            let qrFailure = microServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mixed(mixed):

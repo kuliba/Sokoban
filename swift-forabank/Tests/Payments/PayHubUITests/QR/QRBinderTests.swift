@@ -36,7 +36,7 @@ class QRBinderTests: XCTestCase {
     typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
-    typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>?, QRFailure>
+    typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
     
     typealias MakeServicePicker = CallSpy<ProviderPayload, ServicePicker>
     

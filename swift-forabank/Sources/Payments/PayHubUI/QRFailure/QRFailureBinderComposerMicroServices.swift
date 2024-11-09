@@ -26,5 +26,5 @@ public extension QRFailureBinderComposerMicroServices {
     
     typealias MakeCategoryPicker = (QRCode) -> CategoryPicker
     typealias MakeDetailPayment = (QRCode?) -> DetailPayment
-    typealias MakeQRFailure = (QRCodeDetails<QRCode>?) -> QRFailure
+    typealias MakeQRFailure = (QRCode?) -> QRFailure
 }
