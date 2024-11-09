@@ -93,7 +93,8 @@ private extension QRBinderGetNavigationComposer {
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case .unknown:
-            fatalError()
+            let qrFailure = microServices.makeQRFailure(nil)
+            completion(.qrFailure(bind(qrFailure, to: notify)))
         }
     }
     

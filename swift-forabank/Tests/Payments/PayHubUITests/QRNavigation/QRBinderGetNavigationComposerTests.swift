@@ -528,8 +528,48 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
 
-    // FIXME: MARK: - unknown
+    // MARK: - unknown
     
+    func test_getNavigation_unknown_shouldCallMakeQRFailureWithNilPayload() {
+        
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .unknown)
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [nil])
+    }
+    
+    func test_getNavigation_unknown_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .unknown,
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
+    func test_getNavigation_unknown_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .unknown,
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_unknown_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .unknown,
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.emit(.scanQR) }
+        )
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer

@@ -95,6 +95,11 @@ struct QRContentView: View {
                         
                         model.emit(.url(.init(string: "any-url")!))
                     }
+                    
+                    Button("unknown") {
+                        
+                        model.emit(.unknown)
+                    }
                 }
                 .foregroundColor(.blue)
             }
