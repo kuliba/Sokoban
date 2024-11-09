@@ -23,6 +23,9 @@ struct QRBinderView: View {
                     content: {
                         
                         switch $0 {
+                        case let .confirmSberQR(confirmSberQR):
+                            ConfirmSberQRView(model: confirmSberQR)
+                            
                         case let .failure(.sberQR(url)):
                             Text("SberQR Failure with \"\(url.absoluteString)\"")
                             
@@ -81,6 +84,9 @@ extension QRDomain.FlowDomain.State {
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .confirmSberQR(node):
+                return .confirmSberQR(node.model)
+                
             case let .failure(.sberQR(url)):
                 return .failure(.sberQR(url))
                 
@@ -107,6 +113,7 @@ extension QRDomain.FlowDomain.State {
     
     enum Destination {
         
+        case confirmSberQR(ConfirmSberQR)
         case failure(Failure)
         case mixedPicker(MixedPicker)
         case multiplePicker(MultiplePicker)
@@ -127,6 +134,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .confirmSberQR(confirmSberQR):
+            return .confirmSberQR(.init(confirmSberQR))
+            
         case let .failure(.sberQR(url)):
             return .failure(.sberQR(url))
             
@@ -152,6 +162,7 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case confirmSberQR(ObjectIdentifier)
         case failure(Failure)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)

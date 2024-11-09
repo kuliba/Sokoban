@@ -6,9 +6,10 @@
 //
 
 import Combine
+import Foundation
 import PayHub
 
-public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
+public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +22,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
@@ -41,7 +42,7 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
     typealias FlowDomain = Domain.FlowDomain
     
@@ -86,10 +87,7 @@ private extension QRBinderGetNavigationComposer {
             getNavigation(mapped, notify, completion)
             
         case let .sberQR(url):
-            microServices.makeConfirmSberQR(url) { _ in
-                
-                completion(.failure(.sberQR(url)))
-            }
+            handleSberQR(url, notify, completion)
             
         case .url:
             let qrFailure = microServices.makeQRFailure(nil)
@@ -101,6 +99,26 @@ private extension QRBinderGetNavigationComposer {
         }
     }
     
+    func handleSberQR(
+        _ url: URL,
+        _ notify: @escaping Notify,
+        _ completion: @escaping (Navigation.QRNavigation) -> Void
+    ) {
+        microServices.makeConfirmSberQR(url) {
+            
+            switch $0 {
+            case .none:
+                completion(.failure(.sberQR(url)))
+                
+            case let .some(confirmSberQR):
+                completion(.confirmSberQR(.init(
+                    model: confirmSberQR,
+                    cancellables: []
+                )))
+            }
+        }
+    }
+    
     typealias Mapped = QRMappedResult<Operator, Provider, QRCode, QRMapping, Source>
     
     func getNavigation(
@@ -109,7 +127,7 @@ private extension QRBinderGetNavigationComposer {
         _ completion: @escaping (Navigation.QRNavigation) -> Void
     ) {
         switch mapped {
-        case let .missingINN:
+        case .missingINN:
             let qrFailure = microServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             

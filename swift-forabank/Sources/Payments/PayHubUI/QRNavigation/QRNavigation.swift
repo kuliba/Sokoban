@@ -7,8 +7,9 @@
 
 import Foundation
 
-public enum QRNavigation<MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker> {
+public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker> {
     
+    case confirmSberQR(Node<ConfirmSberQR>)
     case failure(Failure)
     case mixedPicker(Node<MixedPicker>)
     case multiplePicker(Node<MultiplePicker>)

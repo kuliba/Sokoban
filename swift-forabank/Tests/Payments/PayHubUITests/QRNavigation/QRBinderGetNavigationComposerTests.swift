@@ -590,6 +590,21 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_sberQR_shouldDeliverConfirmSberQROnMakeConfirmSberQRSuccess() {
+        
+        let confirmSberQR = makeConfirmSberQR()
+        let (sut, spies) = makeSUT()
+        
+        expect(
+            sut,
+            with: .sberQR(anyURL()),
+            toDeliver: .confirmSberQR(.init(confirmSberQR)),
+            on: {
+                spies.makeConfirmSberQR.complete(with: confirmSberQR)
+            }
+        )
+    }
+    
     // MARK: - url
     
     func test_getNavigation_url_shouldCallMakeQRFailureWithNilPayload() {

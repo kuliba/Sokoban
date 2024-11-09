@@ -35,6 +35,12 @@ struct QRContentView: View {
                     }
                     .foregroundColor(.red)
                     
+                    Button("SberQR failure") {
+                        
+                        model.emit(.sberQR(.init(string: "failure")!))
+                    }
+                    .foregroundColor(.red)
+                    
                     Button("SberQR") {
                         
                         model.emit(.sberQR(.init(string: "sberQR")!))

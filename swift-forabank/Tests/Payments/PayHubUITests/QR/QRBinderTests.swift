@@ -13,10 +13,10 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -24,7 +24,7 @@ class QRBinderTests: XCTestCase {
     
     typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
     
-    typealias MakeConfirmSberQR = Spy<URL, Void?>
+    typealias MakeConfirmSberQR = Spy<URL, ConfirmSberQR?>
     
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
@@ -224,6 +224,7 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
+        case confirmSberQR(ObjectIdentifier)
         case failure(Failure)
         case outside(Outside)
         case mixedPicker(ObjectIdentifier)
@@ -260,6 +261,9 @@ class QRBinderTests: XCTestCase {
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .confirmSberQR(node):
+                return .confirmSberQR(.init(node.model))
+                
             case let .failure(.sberQR(url)):
                 return .failure(.sberQR(url))
                 
@@ -404,6 +408,13 @@ class QRBinderTests: XCTestCase {
                 return ()
             }
         }
+    }
+    
+    final class ConfirmSberQR {}
+    
+    func makeConfirmSberQR() -> ConfirmSberQR {
+        
+        return .init()
     }
     
     final class ServicePicker {
