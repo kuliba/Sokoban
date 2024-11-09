@@ -145,16 +145,17 @@ private extension ContentViewModelComposer {
         )
     }
     
-    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
+    private typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source, ServicePicker>
     
     private func makeNavigationComposer() -> NavigationComposer {
         
         return .init(
             microServices: .init(
-                makeQRFailure: qrFailureBinderComposer.compose,
-                makePayments: makePayments,
                 makeMixedPicker: { _ in .init() },
-                makeMultiplePicker: { _ in .init() }
+                makeMultiplePicker: { _ in .init() },
+                makePayments: makePayments,
+                makeQRFailure: qrFailureBinderComposer.compose,
+                makeServicePicker: { _ in .init() }
             ),
             witnesses: .init(
                 addCompany: .init(

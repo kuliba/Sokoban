@@ -39,13 +39,13 @@ class QRBinderTests: XCTestCase {
         return .init(value: value)
     }
     
-    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
     typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -63,6 +63,8 @@ class QRBinderTests: XCTestCase {
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
+    
+    typealias MakeServicePicker = CallSpy<ProviderPayload, ServicePicker>
     
     struct Operator: Equatable {
         
@@ -86,6 +88,21 @@ class QRBinderTests: XCTestCase {
     ) -> Provider {
         
         return .init(value: value)
+    }
+    
+    typealias ProviderPayload = PayHub.ProviderPayload<Provider, QRCode, QRMapping>
+    
+    func makeProviderPayload(
+        provider: Provider? = nil,
+        qrCode: QRCode? = nil,
+        qrMapping: QRMapping? = nil
+    ) -> ProviderPayload {
+        
+        return .init(
+            provider: provider ?? makeProvider(),
+            qrCode: qrCode ?? makeQRCode(),
+            qrMapping: qrMapping ?? makeQRMapping()
+        )
     }
     
     struct QRCode: Equatable {
@@ -214,6 +231,7 @@ class QRBinderTests: XCTestCase {
         case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
     
     func equatable(
@@ -237,6 +255,9 @@ class QRBinderTests: XCTestCase {
                 
             case let .qrFailure(node):
                 return .qrFailure(.init(node.model))
+                
+            case let .servicePicker(node):
+                return .servicePicker(.init(node.model))
             }
         }
     }
@@ -339,5 +360,12 @@ class QRBinderTests: XCTestCase {
             
             addCompanySubject.send(())
         }
+    }
+    
+    final class ServicePicker {}
+    
+    func makeServicePicker() -> ServicePicker {
+        
+        return .init()
     }
 }

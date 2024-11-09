@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source> {
+public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure>
 }
 
@@ -41,7 +41,7 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
     typealias FlowDomain = Domain.FlowDomain
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
@@ -133,6 +133,13 @@ private extension QRBinderGetNavigationComposer {
                 cancellables: bind(payments, using: notify)
             ))))
             
+        case let .provider(payload):
+            let servicePicker = microServices.makeServicePicker(payload)
+            completion(.qrNavigation(.servicePicker(.init(
+                model: servicePicker, 
+                cancellables: []
+            ))))
+            
         default:
             fatalError()
         }
@@ -177,7 +184,7 @@ private extension QRBinderGetNavigationComposer {
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
     private typealias WitnessKeyPath<T, Witness, Value> = KeyPath<Witness, WitnessFunction<T, Value>>
-
+    
     private func bind<T>(
         _ object: T,
         to notify: @escaping Notify,

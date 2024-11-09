@@ -8,7 +8,7 @@
 import PayHub
 import PayHubUI
 
-typealias QRNavigationDomain = PayHubUI.QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source>
+typealias QRNavigationDomain = PayHubUI.QRNavigationDomain<MixedPicker, MultiplePicker, Operator, Provider, Payments, QRCode, QRMapping, QRFailureDomain.Binder, Source, ServicePicker>
 
 typealias QRDomain = PayHubUI.QRDomain<QRNavigationDomain.Navigation, QRModel, QRNavigationDomain.Select>
 

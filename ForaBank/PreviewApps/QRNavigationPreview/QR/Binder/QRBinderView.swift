@@ -34,6 +34,9 @@ struct QRBinderView: View {
                             
                         case let .qrFailure(qrFailure):
                             QRFailureBinderView(binder: qrFailure)
+                            
+                        case let .servicePicker(servicePicker):
+                            ServicePickerView(model: servicePicker)
                         }
                     }
                 )
@@ -83,6 +86,9 @@ extension QRDomain.FlowDomain.State {
                 
             case let .qrFailure(node):
                 return .qrFailure(node.model)
+                
+            case let .servicePicker(node):
+                return .servicePicker(node.model)
             }
         }
     }
@@ -93,6 +99,7 @@ extension QRDomain.FlowDomain.State {
         case multiplePicker(MultiplePicker)
         case payments(Payments)
         case qrFailure(QRFailureDomain.Binder)
+        case servicePicker(ServicePicker)
     }
 }
 
@@ -112,6 +119,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
             
         case let .qrFailure(qrFailure):
             return .qrFailure(.init(qrFailure))
+            
+        case let .servicePicker(servicePicker):
+            return .servicePicker(.init(servicePicker))
         }
     }
     
@@ -121,5 +131,6 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
         case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
+        case servicePicker(ObjectIdentifier)
     }
 }

@@ -38,16 +38,18 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
-        let makeQRFailure = MakeQRFailure()
-        let makePayments = MakePayments()
         let makeMixedPicker = MakeMixedPicker()
         let makeMultiplePicker = MakeMultiplePicker()
+        let makePayments = MakePayments()
+        let makeQRFailure = MakeQRFailure()
+        let makeServicePicker = MakeServicePicker()
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
-                makeQRFailure: makeQRFailure.call,
-                makePayments: makePayments.call,
                 makeMixedPicker: makeMixedPicker.call,
-                makeMultiplePicker: makeMultiplePicker.call
+                makeMultiplePicker: makeMultiplePicker.call,
+                makePayments: makePayments.call,
+                makeQRFailure: makeQRFailure.call,
+                makeServicePicker: makeServicePicker.call
             ),
             witnesses: .init(
                 addCompany: .init(
