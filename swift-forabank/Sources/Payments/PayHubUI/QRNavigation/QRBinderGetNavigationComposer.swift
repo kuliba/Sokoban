@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker, Source>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
@@ -121,8 +121,9 @@ private extension QRBinderGetNavigationComposer {
             let operatorModel = microServices.makeOperatorModel(payload)
             completion(.operatorModel(operatorModel))
             
-        default:
-            fatalError()
+        case let .source(source):
+            let payments = microServices.makePayments(.source(source))
+            completion(.payments(bind(payments, to: notify)))
         }
     }
 }

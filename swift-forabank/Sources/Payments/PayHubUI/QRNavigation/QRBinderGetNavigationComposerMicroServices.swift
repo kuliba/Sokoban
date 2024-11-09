@@ -9,7 +9,7 @@ import ForaTools
 import Foundation
 import PayHub
 
-public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker> {
+public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker, Source> {
     
     public let makeMixedPicker: MakeMixedPicker
     public let makeMultiplePicker: MakeMultiplePicker
@@ -53,6 +53,7 @@ public extension QRBinderGetNavigationComposerMicroServices {
         case c2bSubscribe(URL)
         case c2b(URL)
         case details(QRCode) // MainViewModelAction.Show.Requisites
+        case source(Source)
     }
     
     typealias MakeQRFailure = (QRCodeDetails<QRCode>) -> QRFailure
@@ -61,4 +62,4 @@ public extension QRBinderGetNavigationComposerMicroServices {
     typealias MakeServicePicker = (ProviderPayload) -> ServicePicker
 }
 
-extension QRBinderGetNavigationComposerMicroServices.MakePaymentsPayload: Equatable where QRCode: Equatable {}
+extension QRBinderGetNavigationComposerMicroServices.MakePaymentsPayload: Equatable where QRCode: Equatable, Source: Equatable {}

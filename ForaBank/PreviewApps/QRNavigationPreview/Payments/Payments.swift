@@ -56,5 +56,6 @@ final class Payments {
         case nothing
         case qrCode(QRCode)
         case url(URL)
+        case source(QRNavigationPreview.Source)
     }
 }

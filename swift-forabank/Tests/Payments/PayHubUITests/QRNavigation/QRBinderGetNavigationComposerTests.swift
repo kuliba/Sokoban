@@ -430,7 +430,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         XCTAssertNoDiff(spies.makeOperatorModel.payloads, [payload])
     }
     
-    func test_getNavigation_single_shouldDeliverPayments() {
+    func test_getNavigation_single_shouldOperatorModel() {
         
         let operatorModel = makeOperatorModel()
         
@@ -438,6 +438,49 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(operatorModel: operatorModel).sut,
             with: .mapped(.single(makeSinglePayload())),
             toDeliver: .operatorModel(.init(operatorModel))
+        )
+    }
+    
+    // MARK: - source
+    
+    func test_getNavigation_source_shouldCallMakePaymentsWithPayload() {
+        
+        let source = makeSource()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.source(source)))
+        
+        XCTAssertNoDiff(spies.makePayments.payloads, [.source(source)])
+    }
+    
+    func test_getNavigation_source_shouldDeliverPayments() {
+        
+        let payments = makePayments()
+        
+        expect(
+            makeSUT(payments: payments).sut,
+            with: .mapped(.source(makeSource())),
+            toDeliver: .payments(.init(payments))
+        )
+    }
+    
+    func test_getNavigation_source_shouldNotifyWithDismissOnPaymentsClose() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.source(makeSource())),
+            notifyWith: [.dismiss],
+            for: { self.payments($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_source_shouldNotifyWithDismissOnPaymentsScanQR() {
+        
+        expect(
+            makeSUT(payments: makePayments()).sut,
+            with: .mapped(.source(makeSource())),
+            notifyWith: [.dismiss],
+            for: { self.payments($0)?.emit(.scanQR) }
         )
     }
     
@@ -479,7 +522,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let sut = SUT(
             microServices: .init(
                 makeMixedPicker: spies.makeMixedPicker.call,
-                makeMultiplePicker: spies.makeMultiplePicker.call, 
+                makeMultiplePicker: spies.makeMultiplePicker.call,
                 makeOperatorModel: spies.makeOperatorModel.call,
                 makePayments: spies.makePayments.call,
                 makeQRFailure: spies.makeQRFailure.call,

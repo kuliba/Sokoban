@@ -206,6 +206,9 @@ private extension ContentViewModelComposer {
             
         case let .details(qrCode):
             return .init(source: .details(qrCode))
+            
+        case let .source(source):
+            return .init(source: .nothing)
         }
     }
 }
