@@ -120,10 +120,7 @@ private extension QRBinderGetNavigationComposer {
             
         case let .provider(payload):
             let servicePicker = microServices.makeServicePicker(payload)
-            completion(.qrNavigation(.servicePicker(.init(
-                model: servicePicker,
-                cancellables: bind(servicePicker, using: notify)
-            ))))
+            completion(.qrNavigation(.servicePicker(bind(servicePicker, using: notify))))
             
         default:
             fatalError()
@@ -159,7 +156,7 @@ private extension QRBinderGetNavigationComposer {
         return .init(
             model: multiplePicker,
             cancellables: bind(
-                multiplePicker, 
+                multiplePicker,
                 to: notify,
                 addCompany: \.multiplePicker,
                 isClosed: \.multiplePicker,
@@ -203,9 +200,19 @@ private extension QRBinderGetNavigationComposer {
     func bind(
         _ servicePicker: ServicePicker,
         using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
+    ) -> Node<ServicePicker> {
         
-        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker, goToPayments: \.servicePicker, scanQR: \.servicePicker)
+        return .init(
+            model: servicePicker,
+            cancellables: bind(
+                servicePicker, 
+                to: notify,
+                addCompany: \.servicePicker,
+                goToMain: \.servicePicker,
+                goToPayments: \.servicePicker,
+                scanQR: \.servicePicker
+            )
+        )
     }
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
