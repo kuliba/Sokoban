@@ -397,6 +397,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_provider_shouldNotifyWithPaymentsOnServicePickerGoToPayments() {
+        
+        expect(
+            makeSUT(servicePicker: makeServicePicker()).sut,
+            with: .mapped(.provider(makeProviderPayload())),
+            notifyWith: [.select(.outside(.payments))],
+            for: { self.servicePicker($0)?.goToPayments() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -445,6 +455,9 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                 ),
                 goToMain: .init(
                     servicePicker: { $0.goToMainPublisher }
+                ),
+                goToPayments: .init(
+                    servicePicker: { $0.goToPaymentsPublisher }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },

@@ -190,6 +190,9 @@ class QRBinderTests: XCTestCase {
         case .outside(.main):
             return .outside(.main)
             
+        case .outside(.payments):
+            return .outside(.payments)
+            
         case let .qrResult(qrResult):
             return .qrResult(qrResult)
         }
@@ -202,7 +205,7 @@ class QRBinderTests: XCTestCase {
 
         enum Outside: Equatable {
          
-            case chat, main
+            case chat, main, payments
         }
     }
     
@@ -222,6 +225,9 @@ class QRBinderTests: XCTestCase {
             case .outside(.main):
                 return .outside(.main)
                 
+            case .outside(.payments):
+                return .outside(.payments)
+                
             case let .qrResult(qrResult):
                 return .qrResult(qrResult)
             }
@@ -236,7 +242,7 @@ class QRBinderTests: XCTestCase {
 
         enum Outside: Equatable {
          
-            case chat, main
+            case chat, main, payments
         }
     }
     
@@ -251,7 +257,7 @@ class QRBinderTests: XCTestCase {
         
         enum Outside: Equatable {
             
-            case chat, main
+            case chat, main, payments
         }
     }
     
@@ -265,6 +271,9 @@ class QRBinderTests: XCTestCase {
             
         case .outside(.main):
             return .outside(.main)
+            
+        case .outside(.payments):
+            return .outside(.payments)
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
@@ -414,6 +423,20 @@ class QRBinderTests: XCTestCase {
         func goToMain() {
             
             goToMainSubject.send(())
+        }
+        
+        // MARK: - gotToPayments
+        
+        private let goToPaymentsSubject = PassthroughSubject<Void, Never>()
+        
+        var goToPaymentsPublisher: AnyPublisher<Void, Never> {
+            
+            goToPaymentsSubject.eraseToAnyPublisher()
+        }
+        
+        func goToPayments() {
+            
+            goToPaymentsSubject.send(())
         }
         
         // MARK: - isLoading

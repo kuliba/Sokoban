@@ -17,6 +17,7 @@ struct ServicePickerView: View {
             
             Button("Add Company", action: model.addCompany)
             Button("Go to Main", action: model.goToMain)
+            Button("Go to Payments", action: model.goToPayments)
         }
         .navigationTitle("ServicePicker")
     }

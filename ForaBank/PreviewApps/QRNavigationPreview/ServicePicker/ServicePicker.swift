@@ -36,4 +36,18 @@ final class ServicePicker {
         
         goToMainSubject.send(())
     }
+    
+    // MARK: - goToPayments
+    
+    private let goToPaymentsSubject = PassthroughSubject<Void, Never>()
+    
+    var goToPaymentsPublisher: AnyPublisher<Void, Never> {
+        
+        goToPaymentsSubject.eraseToAnyPublisher()
+    }
+    
+    func goToPayments() {
+        
+        goToPaymentsSubject.send(())
+    }
 }

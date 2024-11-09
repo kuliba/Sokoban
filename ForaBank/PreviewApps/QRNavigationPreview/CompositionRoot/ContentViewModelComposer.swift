@@ -110,6 +110,10 @@ private extension ContentViewModelComposer {
                 case .main:
                     print("Need to switch to main tab")
                     notify(.dismiss)
+                    
+                case .payments:
+                    print("Need to switch to payments tab")
+                    notify(.dismiss)
                 }
             }
         
@@ -169,6 +173,9 @@ private extension ContentViewModelComposer {
                 ),
                 goToMain: .init(
                     servicePicker: { $0.goToMainPublisher }
+                ),
+                goToPayments: .init(
+                    servicePicker: { $0.goToPaymentsPublisher }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },

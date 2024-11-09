@@ -60,6 +60,9 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                 goToMain: .init(
                     servicePicker: { $0.goToMainPublisher }
                 ),
+                goToPayments: .init(
+                    servicePicker: { $0.goToPaymentsPublisher }
+                ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },
                     multiplePicker: { $0.isClosed },

@@ -62,6 +62,9 @@ private extension QRBinderGetNavigationComposer {
         
         case .main:
             completion(.outside(.main))
+        
+        case .payments:
+            completion(.outside(.payments))
         }
     }
     
@@ -190,7 +193,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker)
+        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker, goToPayments: \.servicePicker)
     }
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
@@ -201,6 +204,7 @@ private extension QRBinderGetNavigationComposer {
         to notify: @escaping Notify,
         addCompany addCompanyKeyPath: WitnessKeyPath<T, Witnesses.AddCompanyWitnesses, Void>? = nil,
         goToMain goToMainKeyPath: WitnessKeyPath<T, Witnesses.GoToMainWitnesses, Void>? = nil,
+        goToPayments goToPaymentsKeyPath: WitnessKeyPath<T, Witnesses.GoToPaymentsWitnesses, Void>? = nil,
         isClosed isClosedKeyPath: WitnessKeyPath<T, Witnesses.IsClosedWitnesses, Bool>? = nil,
         scanQR scanQRKeyPath: WitnessKeyPath<T, Witnesses.ScanQRWitnesses, Void>? = nil
     ) -> Set<AnyCancellable> {
@@ -219,6 +223,13 @@ private extension QRBinderGetNavigationComposer {
             let witness = witnesses.goToMain[keyPath: goToMainKeyPath]
             let main = witness(object).sink { notify(.select(.outside(.main))) }
             cancellables.insert(main)
+        }
+        
+        if let goToPaymentsKeyPath {
+            
+            let witness = witnesses.goToPayments[keyPath: goToPaymentsKeyPath]
+            let payments = witness(object).sink { notify(.select(.outside(.payments))) }
+            cancellables.insert(payments)
         }
         
         if let isClosedKeyPath {
