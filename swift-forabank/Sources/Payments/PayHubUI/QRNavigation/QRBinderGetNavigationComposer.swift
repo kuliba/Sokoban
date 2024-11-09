@@ -34,10 +34,10 @@ public extension QRBinderGetNavigationComposer {
     ) {
         switch select {
         case let .outside(outside):
-            getNavigation(outside, notify, completion)
+            getNavigation(outside, notify) { completion(.outside($0)) }
             
         case let .qrResult(qrResult):
-            getNavigation(qrResult, notify, completion)
+            getNavigation(qrResult, notify) { completion(.qrNavigation($0)) }
         }
     }
     
@@ -54,37 +54,32 @@ private extension QRBinderGetNavigationComposer {
     func getNavigation(
         _ outside: Select.Outside,
         _ notify: @escaping Notify,
-        _ completion: @escaping (Navigation) -> Void
+        _ completion: @escaping (Navigation.Outside) -> Void
     ) {
         switch outside {
-        case .chat:
-            completion(.outside(.chat))
-            
-        case .main:
-            completion(.outside(.main))
-            
-        case .payments:
-            completion(.outside(.payments))
+        case .chat:     completion(.chat)
+        case .main:     completion(.main)
+        case .payments: completion(.payments)
         }
     }
     
     func getNavigation(
         _ qrResult: Select.QRResult,
         _ notify: @escaping Notify,
-        _ completion: @escaping (Navigation) -> Void
+        _ completion: @escaping (Navigation.QRNavigation) -> Void
     ) {
         switch qrResult {
         case let .c2bSubscribeURL(url):
             let payments = microServices.makePayments(.c2bSubscribe(url))
-            completion(.qrNavigation(.payments(bind(payments, to: notify))))
+            completion(.payments(bind(payments, to: notify)))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
-            completion(.qrNavigation(.payments(bind(payments, to: notify))))
+            completion(.payments(bind(payments, to: notify)))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
-            completion(.qrNavigation(.qrFailure(bind(qrFailure, to: notify))))
+            completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
@@ -99,28 +94,28 @@ private extension QRBinderGetNavigationComposer {
     func getNavigation(
         _ mapped: Mapped,
         _ notify: @escaping Notify,
-        _ completion: @escaping (Navigation) -> Void
+        _ completion: @escaping (Navigation.QRNavigation) -> Void
     ) {
         switch mapped {
         case let .missingINN(qrCode):
             let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
-            completion(.qrNavigation(.qrFailure(bind(qrFailure, to: notify))))
+            completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
-            completion(.qrNavigation(.mixedPicker(bind(mixedPicker, to: notify))))
+            completion(.mixedPicker(bind(mixedPicker, to: notify)))
             
         case let .multiple(multiple):
             let multiplePicker = microServices.makeMultiplePicker(multiple)
-            completion(.qrNavigation(.multiplePicker(bind(multiplePicker, to: notify))))
+            completion(.multiplePicker(bind(multiplePicker, to: notify)))
             
         case let .none(qrCode):
             let payments = microServices.makePayments(.details(qrCode))
-            completion(.qrNavigation(.payments(bind(payments, to: notify))))
+            completion(.payments(bind(payments, to: notify)))
             
         case let .provider(payload):
             let servicePicker = microServices.makeServicePicker(payload)
-            completion(.qrNavigation(.servicePicker(bind(servicePicker, to: notify))))
+            completion(.servicePicker(bind(servicePicker, to: notify)))
             
         default:
             fatalError()
