@@ -76,17 +76,11 @@ private extension QRBinderGetNavigationComposer {
         switch qrResult {
         case let .c2bSubscribeURL(url):
             let payments = microServices.makePayments(.c2bSubscribe(url))
-            completion(.qrNavigation(.payments(.init(
-                model: payments,
-                cancellables: bind(payments, using: notify)
-            ))))
+            completion(.qrNavigation(.payments(bind(payments, using: notify))))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
-            completion(.qrNavigation(.payments(.init(
-                model: payments,
-                cancellables: bind(payments, using: notify)
-            ))))
+            completion(.qrNavigation(.payments(bind(payments, using: notify))))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
@@ -134,10 +128,7 @@ private extension QRBinderGetNavigationComposer {
             
         case let .none(qrCode):
             let payments = microServices.makePayments(.details(qrCode))
-            completion(.qrNavigation(.payments(.init(
-                model: payments,
-                cancellables: bind(payments, using: notify)
-            ))))
+            completion(.qrNavigation(.payments(bind(payments, using: notify))))
             
         case let .provider(payload):
             let servicePicker = microServices.makeServicePicker(payload)
@@ -175,9 +166,17 @@ private extension QRBinderGetNavigationComposer {
     func bind(
         _ payments: Payments,
         using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
+    ) -> Node<Payments> {
         
-        return bind(payments, to: notify, isClosed: \.payments, scanQR: \.payments)
+        return .init(
+            model: payments,
+            cancellables: bind(
+                payments,
+                to: notify,
+                isClosed: \.payments,
+                scanQR: \.payments
+            )
+        )
     }
     
     func bind(
