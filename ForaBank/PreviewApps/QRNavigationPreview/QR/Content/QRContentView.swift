@@ -76,6 +76,15 @@ struct QRContentView: View {
                             qrMapping: .init()
                         ))))
                     }
+                    
+                    Button("single operator") {
+                        
+                        model.emit(.mapped(.single(.init(
+                            operator: .init(),
+                            qrCode: .init(value: UUID().uuidString),
+                            qrMapping: .init()
+                        ))))
+                    }
                 }
                 .foregroundColor(.blue)
             }

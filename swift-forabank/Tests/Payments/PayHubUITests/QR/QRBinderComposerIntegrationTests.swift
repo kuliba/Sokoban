@@ -41,6 +41,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         )
         let makeMixedPicker = MakeMixedPicker()
         let makeMultiplePicker = MakeMultiplePicker()
+        let makeOperatorModel = MakeOperatorModel()
         let makePayments = MakePayments()
         let makeQRFailure = MakeQRFailure()
         let makeServicePicker = MakeServicePicker()
@@ -48,6 +49,7 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             microServices: .init(
                 makeMixedPicker: makeMixedPicker.call,
                 makeMultiplePicker: makeMultiplePicker.call,
+                makeOperatorModel: makeOperatorModel.call,
                 makePayments: makePayments.call,
                 makeQRFailure: makeQRFailure.call,
                 makeServicePicker: makeServicePicker.call

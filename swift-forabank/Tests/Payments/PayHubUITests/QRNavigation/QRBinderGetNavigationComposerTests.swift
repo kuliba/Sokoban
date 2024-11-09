@@ -418,6 +418,29 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // MARK: - single
+    
+    func test_getNavigation_single_shouldCallMakeOperatorModel() {
+        
+        let payload = makeSinglePayload()
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .mapped(.single(payload)))
+        
+        XCTAssertNoDiff(spies.makeOperatorModel.payloads, [payload])
+    }
+    
+    func test_getNavigation_single_shouldDeliverPayments() {
+        
+        let operatorModel = makeOperatorModel()
+        
+        expect(
+            makeSUT(operatorModel: operatorModel).sut,
+            with: .mapped(.single(makeSinglePayload())),
+            toDeliver: .operatorModel(.init(operatorModel))
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -426,6 +449,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         
         let makeMixedPicker: MakeMixedPicker
         let makeMultiplePicker: MakeMultiplePicker
+        let makeOperatorModel: MakeOperatorModel
         let makePayments: MakePayments
         let makeQRFailure: MakeQRFailure
         let makeServicePicker: MakeServicePicker
@@ -434,6 +458,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     private func makeSUT(
         mixedPicker: MixedPicker? = nil,
         multiplePicker: MultiplePicker? = nil,
+        operatorModel: OperatorModel? = nil,
         payments: Payments? = nil,
         qrFailure: QRFailure? = nil,
         servicePicker: ServicePicker? = nil,
@@ -446,6 +471,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let spies = Spies(
             makeMixedPicker: .init(stubs: [mixedPicker ?? makeMixedPicker()]),
             makeMultiplePicker: .init(stubs: [multiplePicker ?? makeMixedPicker()]),
+            makeOperatorModel: .init(stubs: [operatorModel ?? makeOperatorModel()]),
             makePayments: .init(stubs: [payments ?? makePayments()]),
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
             makeServicePicker: .init(stubs: [servicePicker ?? makeServicePicker()])
@@ -453,7 +479,8 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let sut = SUT(
             microServices: .init(
                 makeMixedPicker: spies.makeMixedPicker.call,
-                makeMultiplePicker: spies.makeMultiplePicker.call,
+                makeMultiplePicker: spies.makeMultiplePicker.call, 
+                makeOperatorModel: spies.makeOperatorModel.call,
                 makePayments: spies.makePayments.call,
                 makeQRFailure: spies.makeQRFailure.call,
                 makeServicePicker: spies.makeServicePicker.call
