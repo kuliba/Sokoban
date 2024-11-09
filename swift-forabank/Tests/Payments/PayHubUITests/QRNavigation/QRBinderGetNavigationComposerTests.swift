@@ -366,6 +366,17 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    // FIXME: - need fix to observe child `isLoading` state
+    //    func test_getNavigation_provider_shouldNotifyWithIsLoadingOnServicePickerIsLoading_true() {
+    //
+    //        expect(
+    //            makeSUT(servicePicker: makeServicePicker()).sut,
+    //            with: .mapped(.provider(makeProviderPayload())),
+    //            notifyWith: [.select(.outside(.isLoading(true)))],
+    //            for: { self.servicePicker($0)?.isLoading(true) }
+    //        )
+    //    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -529,6 +540,11 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         qrNavigation(navigation)?.qrFailure
     }
     
+    func servicePicker(_ navigation: Navigation) -> ServicePicker? {
+        
+        qrNavigation(navigation)?.servicePicker
+    }
+    
     func qrNavigation(_ navigation: Navigation) -> Navigation.QRNavigation? {
         
         guard case let .qrNavigation(qrNavigation) = navigation
@@ -575,6 +591,13 @@ extension QRNavigation {
     var qrFailure: QRFailure? {
         
         guard case let .qrFailure(node) = self else { return nil }
+        
+        return node.model
+    }
+    
+    var servicePicker: ServicePicker? {
+        
+        guard case let .servicePicker(node) = self else { return nil }
         
         return node.model
     }

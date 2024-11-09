@@ -136,7 +136,7 @@ private extension QRBinderGetNavigationComposer {
         case let .provider(payload):
             let servicePicker = microServices.makeServicePicker(payload)
             completion(.qrNavigation(.servicePicker(.init(
-                model: servicePicker, 
+                model: servicePicker,
                 cancellables: []
             ))))
             

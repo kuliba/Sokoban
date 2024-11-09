@@ -321,16 +321,16 @@ class QRBinderTests: XCTestCase {
         
         // MARK: - close
         
-        private let isCloseSubject = CurrentValueSubject<Bool, Never>(false)
+        private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
         
         var isClosed: AnyPublisher<Bool, Never> {
             
-            isCloseSubject.eraseToAnyPublisher()
+            isClosedSubject.eraseToAnyPublisher()
         }
         
-        func close() {
+        func close(_ input: Bool = true) {
             
-            isCloseSubject.value = true
+            isClosedSubject.send(input)
         }
         
         // MARK: - scanQR
@@ -362,7 +362,22 @@ class QRBinderTests: XCTestCase {
         }
     }
     
-    final class ServicePicker {}
+    final class ServicePicker {
+        
+        // MARK: - isLoading
+        
+        private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+        
+        var isClosed: AnyPublisher<Bool, Never> {
+            
+            isLoadingSubject.eraseToAnyPublisher()
+        }
+        
+        func isLoading(_ input: Bool) {
+            
+            isLoadingSubject.send(input)
+        }
+    }
     
     func makeServicePicker() -> ServicePicker {
         
