@@ -59,10 +59,10 @@ private extension QRBinderGetNavigationComposer {
         switch outside {
         case .chat:
             completion(.outside(.chat))
-        
+            
         case .main:
             completion(.outside(.main))
-        
+            
         case .payments:
             completion(.outside(.payments))
         }
@@ -76,15 +76,15 @@ private extension QRBinderGetNavigationComposer {
         switch qrResult {
         case let .c2bSubscribeURL(url):
             let payments = microServices.makePayments(.c2bSubscribe(url))
-            completion(.qrNavigation(.payments(bind(payments, using: notify))))
+            completion(.qrNavigation(.payments(bind(payments, to: notify))))
             
         case let .c2bURL(url):
             let payments = microServices.makePayments(.c2b(url))
-            completion(.qrNavigation(.payments(bind(payments, using: notify))))
+            completion(.qrNavigation(.payments(bind(payments, to: notify))))
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
-            completion(.qrNavigation(.qrFailure(bind(qrFailure, using: notify))))
+            completion(.qrNavigation(.qrFailure(bind(qrFailure, to: notify))))
             
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
@@ -104,23 +104,23 @@ private extension QRBinderGetNavigationComposer {
         switch mapped {
         case let .missingINN(qrCode):
             let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
-            completion(.qrNavigation(.qrFailure(bind(qrFailure, using: notify))))
+            completion(.qrNavigation(.qrFailure(bind(qrFailure, to: notify))))
             
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
-            completion(.qrNavigation(.mixedPicker(bind(mixedPicker, using: notify))))
+            completion(.qrNavigation(.mixedPicker(bind(mixedPicker, to: notify))))
             
         case let .multiple(multiple):
             let multiplePicker = microServices.makeMultiplePicker(multiple)
-            completion(.qrNavigation(.multiplePicker(bind(multiplePicker, using: notify))))
+            completion(.qrNavigation(.multiplePicker(bind(multiplePicker, to: notify))))
             
         case let .none(qrCode):
             let payments = microServices.makePayments(.details(qrCode))
-            completion(.qrNavigation(.payments(bind(payments, using: notify))))
+            completion(.qrNavigation(.payments(bind(payments, to: notify))))
             
         case let .provider(payload):
             let servicePicker = microServices.makeServicePicker(payload)
-            completion(.qrNavigation(.servicePicker(bind(servicePicker, using: notify))))
+            completion(.qrNavigation(.servicePicker(bind(servicePicker, to: notify))))
             
         default:
             fatalError()
@@ -134,131 +134,156 @@ private extension QRBinderGetNavigationComposer {
     
     func bind(
         _ mixedPicker: MixedPicker,
-        using notify: @escaping Notify
+        to notify: @escaping Notify
     ) -> Node<MixedPicker> {
         
-        return .init(
-            model: mixedPicker,
-            cancellables: bind(
-                mixedPicker,
-                to: notify,
-                addCompany: \.mixedPicker,
-                isClosed: \.mixedPicker, scanQR: \.mixedPicker
-            )
-        )
+        return bind(mixedPicker, to: notify, with: .forMixedPicker())
     }
     
     func bind(
         _ multiplePicker: MultiplePicker,
-        using notify: @escaping Notify
+        to notify: @escaping Notify
     ) -> Node<MultiplePicker> {
         
-        return .init(
-            model: multiplePicker,
-            cancellables: bind(
-                multiplePicker,
-                to: notify,
-                addCompany: \.multiplePicker,
-                isClosed: \.multiplePicker,
-                scanQR: \.multiplePicker
-            )
-        )
+        return bind(multiplePicker, to: notify, with: .forMultiplePicker())
     }
     
     func bind(
         _ payments: Payments,
-        using notify: @escaping Notify
+        to notify: @escaping Notify
     ) -> Node<Payments> {
         
-        return .init(
-            model: payments,
-            cancellables: bind(
-                payments,
-                to: notify,
-                isClosed: \.payments,
-                scanQR: \.payments
-            )
-        )
+        return bind(payments, to: notify, with: .forPayments())
     }
     
     func bind(
         _ qrFailure: QRFailure,
-        using notify: @escaping Notify
+        to notify: @escaping Notify
     ) -> Node<QRFailure> {
         
-        return .init(
-            model: qrFailure,
-            cancellables: bind(
-                qrFailure,
-                to: notify,
-                isClosed: \.qrFailure,
-                scanQR: \.qrFailure
-            )
-        )
+        return bind(qrFailure, to: notify, with: .forQRFailure())
     }
     
     func bind(
         _ servicePicker: ServicePicker,
-        using notify: @escaping Notify
+        to notify: @escaping Notify
     ) -> Node<ServicePicker> {
         
+        return bind(servicePicker, to: notify, with: .forServicePicker())
+    }
+}
+
+// MARK: - Helpers
+
+private extension QRBinderGetNavigationComposer {
+    
+    func bind<Model>(
+        _ model: Model,
+        to notify: @escaping Notify,
+        with parameters: BindParameters<Model>
+    ) -> Node<Model> {
+        
         return .init(
-            model: servicePicker,
-            cancellables: bind(
-                servicePicker, 
-                to: notify,
+            model: model,
+            cancellables: bind(model, to: notify, with: parameters)
+        )
+    }
+    
+    struct BindParameters<T> {
+        
+        var addCompany: VoidWitnessKeyPath<T, Witnesses.AddCompanyWitnesses>? = nil
+        var goToMain: VoidWitnessKeyPath<T, Witnesses.GoToMainWitnesses>? = nil
+        var goToPayments: VoidWitnessKeyPath<T, Witnesses.GoToPaymentsWitnesses>? = nil
+        var isClosed: BoolWitnessKeyPath<T, Witnesses.IsClosedWitnesses>? = nil
+        var scanQR: VoidWitnessKeyPath<T, Witnesses.ScanQRWitnesses>? = nil
+        
+        typealias VoidWitnessKeyPath<V, Witness> = WitnessKeyPath<V, Witness, Void>
+        typealias BoolWitnessKeyPath<V, Witness> = WitnessKeyPath<V, Witness, Bool>
+        typealias WitnessKeyPath<V, Witness, Value> = KeyPath<Witness, WitnessFunction<V, Value>>
+        typealias WitnessFunction<V, Value> = (V) -> AnyPublisher<Value, Never>
+        
+        static func forMixedPicker() -> BindParameters<MixedPicker> {
+            
+            return .init(
+                addCompany: \.mixedPicker,
+                isClosed: \.mixedPicker,
+                scanQR: \.mixedPicker
+            )
+        }
+        
+        static func forMultiplePicker() -> BindParameters<MultiplePicker> {
+            
+            return .init(
+                addCompany: \.multiplePicker,
+                isClosed: \.multiplePicker,
+                scanQR: \.multiplePicker
+            )
+        }
+        
+        static func forPayments() -> BindParameters<Payments> {
+            
+            return .init(
+                isClosed: \.payments,
+                scanQR: \.payments
+            )
+        }
+        
+        static func forQRFailure() -> BindParameters<QRFailure> {
+            
+            return .init(
+                isClosed: \.qrFailure,
+                scanQR: \.qrFailure
+            )
+        }
+        
+        static func forServicePicker() -> BindParameters<ServicePicker> {
+            
+            return .init(
                 addCompany: \.servicePicker,
                 goToMain: \.servicePicker,
                 goToPayments: \.servicePicker,
                 scanQR: \.servicePicker
             )
-        )
+        }
     }
     
-    private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
-    private typealias WitnessKeyPath<T, Witness, Value> = KeyPath<Witness, WitnessFunction<T, Value>>
-    
-    private func bind<T>(
+    func bind<T>(
         _ object: T,
         to notify: @escaping Notify,
-        addCompany addCompanyKeyPath: WitnessKeyPath<T, Witnesses.AddCompanyWitnesses, Void>? = nil,
-        goToMain goToMainKeyPath: WitnessKeyPath<T, Witnesses.GoToMainWitnesses, Void>? = nil,
-        goToPayments goToPaymentsKeyPath: WitnessKeyPath<T, Witnesses.GoToPaymentsWitnesses, Void>? = nil,
-        isClosed isClosedKeyPath: WitnessKeyPath<T, Witnesses.IsClosedWitnesses, Bool>? = nil,
-        scanQR scanQRKeyPath: WitnessKeyPath<T, Witnesses.ScanQRWitnesses, Void>? = nil
+        with parameters: BindParameters<T>
     ) -> Set<AnyCancellable> {
         
         var cancellables = Set<AnyCancellable>()
         
-        if let addCompanyKeyPath {
+        if let addCompanyKeyPath = parameters.addCompany {
             
             let witness = witnesses.addCompany[keyPath: addCompanyKeyPath]
             let chat = witness(object).sink { notify(.select(.outside(.chat))) }
             cancellables.insert(chat)
         }
         
-        if let goToMainKeyPath {
+        if let goToMainKeyPath = parameters.goToMain {
             
             let witness = witnesses.goToMain[keyPath: goToMainKeyPath]
             let main = witness(object).sink { notify(.select(.outside(.main))) }
             cancellables.insert(main)
         }
         
-        if let goToPaymentsKeyPath {
+        if let goToPaymentsKeyPath = parameters.goToPayments {
             
             let witness = witnesses.goToPayments[keyPath: goToPaymentsKeyPath]
             let payments = witness(object).sink { notify(.select(.outside(.payments))) }
             cancellables.insert(payments)
         }
         
-        if let isClosedKeyPath {
+        if let isClosedKeyPath = parameters.isClosed {
             
             let witness = witnesses.isClosed[keyPath: isClosedKeyPath]
             let close = witness(object).sink { if $0 { notify(.dismiss) }}
             cancellables.insert(close)
         }
         
-        if let scanQRKeyPath {
+        if let scanQRKeyPath = parameters.scanQR {
             
             let witness = witnesses.scanQR[keyPath: scanQRKeyPath]
             let scanQR = witness(object).sink { notify(.dismiss) }
