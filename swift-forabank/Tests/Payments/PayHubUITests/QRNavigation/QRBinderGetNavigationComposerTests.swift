@@ -747,13 +747,15 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeServicePicker: .init(stubs: [servicePicker ?? makeServicePicker()])
         )
         let sut = SUT(
-            microServices: .init(
+            firstMicroServices: .init(
+                makePayments: spies.makePayments.call,
+                makeQRFailure: spies.makeQRFailure.call
+            ),
+            secondMicroServices: .init(
                 makeConfirmSberQR: spies.makeConfirmSberQR.process,
                 makeMixedPicker: spies.makeMixedPicker.call,
                 makeMultiplePicker: spies.makeMultiplePicker.call,
                 makeOperatorModel: spies.makeOperatorModel.call,
-                makePayments: spies.makePayments.call,
-                makeQRFailure: spies.makeQRFailure.call,
                 makeServicePicker: spies.makeServicePicker.call
             ),
             witnesses: .init(

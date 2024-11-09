@@ -14,6 +14,31 @@ enum QRResult<Operator, Provider, QRCode, QRMapping, Source> {
     case second(Second<Operator, Provider, QRCode, QRMapping>)
 }
 
+enum First<QRCode, Source> {
+    
+    case c2bSubscribe(URL)
+    case c2b(URL)
+    case failure(QRCode)
+    case missingINN(QRCode)
+    case none(QRCode)
+    case source(Source)
+    case url(URL)
+    case unknown
+}
+
+enum Second<Operator, Provider, QRCode, QRMapping> {
+    
+    case mixed(Mixed)
+    case multiple(Multiple)
+    case provider(ProviderPayload<Provider, QRCode, QRMapping>)
+    case sberQR(URL)
+    case single(Single)
+    
+    typealias Mixed = MixedQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias Multiple = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
+    typealias Single = SinglePayload<Operator, QRCode, QRMapping>
+}
+
 extension QRResult {
     
     init(_ qrModelResult: QRModelResult<Operator, Provider, QRCode, QRMapping, Source>) {
@@ -114,29 +139,4 @@ extension QRResult {
             }
         }
     }
-}
-
-enum First<QRCode, Source> {
-    
-    case c2bSubscribe(URL)
-    case c2b(URL)
-    case failure(QRCode)
-    case missingINN(QRCode)
-    case none(QRCode)
-    case source(Source)
-    case url(URL)
-    case unknown
-}
-
-enum Second<Operator, Provider, QRCode, QRMapping> {
-    
-    case mixed(Mixed)
-    case multiple(Multiple)
-    case provider(ProviderPayload<Provider, QRCode, QRMapping>)
-    case sberQR(URL)
-    case single(Single)
-    
-    typealias Mixed = MixedQRResult<Operator, Provider, QRCode, QRMapping>
-    typealias Multiple = MultipleQRResult<Operator, Provider, QRCode, QRMapping>
-    typealias Single = SinglePayload<Operator, QRCode, QRMapping>
 }

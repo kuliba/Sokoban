@@ -11,18 +11,22 @@ import PayHub
 
 public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     
-    private let microServices: MicroServices
+    private let firstMicroServices: FirstMicroServices
+    private let secondMicroServices: SecondMicroServices
     private let witnesses: Witnesses
     
     public init(
-        microServices: MicroServices,
+        firstMicroServices: FirstMicroServices,
+        secondMicroServices: SecondMicroServices,
         witnesses: Witnesses
     ) {
-        self.microServices = microServices
+        self.firstMicroServices = firstMicroServices
+        self.secondMicroServices = secondMicroServices
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    public typealias FirstMicroServices = FirstQRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure, Source>
+    public typealias SecondMicroServices = SecondQRBinderGetNavigationComposerMicroServices<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, QRCode, QRMapping, ServicePicker>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
@@ -86,35 +90,35 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch first {
         case let .c2bSubscribe(url):
-            let payments = microServices.makePayments(.c2bSubscribe(url))
+            let payments = firstMicroServices.makePayments(.c2bSubscribe(url))
             completion(.payments(bind(payments, to: notify)))
             
         case let .c2b(url):
-            let payments = microServices.makePayments(.c2b(url))
+            let payments = firstMicroServices.makePayments(.c2b(url))
             completion(.payments(bind(payments, to: notify)))
             
         case let .failure(qrCode):
-            let qrFailure = microServices.makeQRFailure(qrCode)
+            let qrFailure = firstMicroServices.makeQRFailure(qrCode)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case .missingINN:
-            let qrFailure = microServices.makeQRFailure(nil)
+            let qrFailure = firstMicroServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case let .none(qrCode):
-            let payments = microServices.makePayments(.details(qrCode))
+            let payments = firstMicroServices.makePayments(.details(qrCode))
             completion(.payments(bind(payments, to: notify)))
             
         case let .source(source):
-            let payments = microServices.makePayments(.source(source))
+            let payments = firstMicroServices.makePayments(.source(source))
             completion(.payments(bind(payments, to: notify)))
             
         case .url:
-            let qrFailure = microServices.makeQRFailure(nil)
+            let qrFailure = firstMicroServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             
         case .unknown:
-            let qrFailure = microServices.makeQRFailure(nil)
+            let qrFailure = firstMicroServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
         }
     }
@@ -126,22 +130,22 @@ private extension QRBinderGetNavigationComposer {
     ) {
         switch second {
         case let .mixed(mixed):
-            let mixedPicker = microServices.makeMixedPicker(mixed)
+            let mixedPicker = secondMicroServices.makeMixedPicker(mixed)
             completion(.mixedPicker(bind(mixedPicker, to: notify)))
             
         case let .multiple(multiple):
-            let multiplePicker = microServices.makeMultiplePicker(multiple)
+            let multiplePicker = secondMicroServices.makeMultiplePicker(multiple)
             completion(.multiplePicker(bind(multiplePicker, to: notify)))
             
         case let .provider(payload):
-            let servicePicker = microServices.makeServicePicker(payload)
+            let servicePicker = secondMicroServices.makeServicePicker(payload)
             completion(.servicePicker(bind(servicePicker, to: notify)))
             
         case let .sberQR(url):
             handleSberQR(url, notify, completion)
             
         case let .single(payload):
-            let operatorModel = microServices.makeOperatorModel(payload)
+            let operatorModel = secondMicroServices.makeOperatorModel(payload)
             completion(.operatorModel(operatorModel))
         }
     }
@@ -151,7 +155,7 @@ private extension QRBinderGetNavigationComposer {
         _ notify: @escaping Notify,
         _ completion: @escaping (Navigation.QRNavigation) -> Void
     ) {
-        microServices.makeConfirmSberQR(url) {
+        secondMicroServices.makeConfirmSberQR(url) {
             
             switch $0 {
             case .none:

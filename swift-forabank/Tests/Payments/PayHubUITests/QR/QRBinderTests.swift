@@ -14,7 +14,7 @@ import XCTest
 class QRBinderTests: XCTestCase {
     
     typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
-    typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
+    typealias FirstMicroServices = NavigationComposer.FirstMicroServices
     
     typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
@@ -35,7 +35,7 @@ class QRBinderTests: XCTestCase {
     typealias SinglePayload = PayHub.SinglePayload<Operator, QRCode, QRMapping>
     typealias MakeOperatorModel = CallSpy<SinglePayload, OperatorModel>
     
-    typealias MakePaymentsPayload = NavigationComposerMicroServices.MakePaymentsPayload
+    typealias MakePaymentsPayload = FirstMicroServices.MakePaymentsPayload
     typealias MakePayments = CallSpy<MakePaymentsPayload, Payments>
     
     typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
