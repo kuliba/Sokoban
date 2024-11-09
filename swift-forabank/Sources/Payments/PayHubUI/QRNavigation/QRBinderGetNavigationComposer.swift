@@ -193,7 +193,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker, goToPayments: \.servicePicker)
+        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker, goToPayments: \.servicePicker, scanQR: \.servicePicker)
     }
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>

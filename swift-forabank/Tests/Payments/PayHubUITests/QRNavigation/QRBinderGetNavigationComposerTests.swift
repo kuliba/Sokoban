@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import PayHubUI
 import XCTest
 
@@ -366,6 +367,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
+    func test_getNavigation_provider_shouldNotifyWithDismissOnServicePickerScanQR() {
+        
+        expect(
+            makeSUT(servicePicker: makeServicePicker()).sut,
+            with: .mapped(.provider(makeProviderPayload())),
+            notifyWith: [.dismiss],
+            for: { self.servicePicker($0)?.emit(.scanQR) }
+        )
+    }
+    
     // FIXME: - need fix to observe child `isLoading` state
     //    func test_getNavigation_provider_shouldNotifyWithIsLoadingOnServicePickerIsLoading_true() {
     //
@@ -463,13 +474,15 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                     mixedPicker: { $0.publisher(for: \.isClosed) },
                     multiplePicker: { $0.publisher(for: \.isClosed) },
                     payments: { $0.publisher(for: \.isClosed) },
-                    qrFailure: { $0.publisher(for: \.isClosed) }
+                    qrFailure: { $0.publisher(for: \.isClosed) },
+                    servicePicker: { _ in fatalError() }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.publisher(for: \.scanQR) },
                     multiplePicker: { $0.publisher(for: \.scanQR) },
                     payments: { $0.publisher(for: \.scanQR) },
-                    qrFailure: { $0.publisher(for: \.scanQR) }
+                    qrFailure: { $0.publisher(for: \.scanQR) },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

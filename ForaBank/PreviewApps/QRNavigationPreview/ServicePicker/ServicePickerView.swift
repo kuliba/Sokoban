@@ -20,7 +20,16 @@ struct ServicePickerView: View {
             Button("Go to Payments", action: model.goToPayments)
         }
         .navigationTitle("ServicePicker")
-    }
+        .toolbar {
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                
+                Button(action: model.scanQR) {
+                    
+                    Image(systemName: "qrcode.viewfinder")
+                }
+            }
+        }    }
 }
 
 #Preview {

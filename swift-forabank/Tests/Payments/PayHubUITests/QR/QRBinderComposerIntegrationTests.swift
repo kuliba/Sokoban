@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.10.2024.
 //
 
+import Combine
 import CombineSchedulers
 import PayHub
 import PayHubUI
@@ -67,13 +68,15 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                     mixedPicker: { $0.publisher(for: \.isClosed) },
                     multiplePicker: { $0.publisher(for: \.isClosed) },
                     payments: { $0.publisher(for: \.isClosed) },
-                    qrFailure: { $0.publisher(for: \.isClosed) }
+                    qrFailure: { $0.publisher(for: \.isClosed) },
+                    servicePicker: { _ in Empty().eraseToAnyPublisher() }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.publisher(for: \.scanQR) },
                     multiplePicker: { $0.publisher(for: \.scanQR) },
                     payments: { $0.publisher(for: \.scanQR) },
-                    qrFailure: { $0.publisher(for: \.scanQR) }
+                    qrFailure: { $0.publisher(for: \.scanQR) },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

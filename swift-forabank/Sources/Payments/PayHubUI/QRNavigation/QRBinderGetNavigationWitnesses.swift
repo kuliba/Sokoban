@@ -83,17 +83,20 @@ public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Paymen
         public let multiplePicker: MakePublisher<MultiplePicker>
         public let payments: MakePublisher<Payments>
         public let qrFailure: MakePublisher<QRFailure>
+        public let servicePicker: MakePublisher<ServicePicker>
         
         public init(
             mixedPicker: @escaping MakePublisher<MixedPicker>,
             multiplePicker: @escaping MakePublisher<MultiplePicker>,
             payments: @escaping MakePublisher<Payments>,
-            qrFailure: @escaping MakePublisher<QRFailure>
+            qrFailure: @escaping MakePublisher<QRFailure>,
+            servicePicker: @escaping MakePublisher<ServicePicker>
         ) {
             self.mixedPicker = mixedPicker
             self.multiplePicker = multiplePicker
             self.payments = payments
             self.qrFailure = qrFailure
+            self.servicePicker = servicePicker
         }
         
         public typealias MakePublisher<V> = (V) -> AnyPublisher<Value, Never>

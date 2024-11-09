@@ -21,6 +21,7 @@ final class ServicePicker {
     func addCompany() { eventSubject.send(.goToChat) }
     func goToMain() { eventSubject.send(.goToMain) }
     func goToPayments() { eventSubject.send(.goToPayments) }
+    func scanQR() { eventSubject.send(.scanQR) }
     
     // MARK: - Event
     
@@ -29,9 +30,11 @@ final class ServicePicker {
     enum Event {
         
         case goToChat, goToMain, goToPayments
+        case scanQR
         
         var goToChat: Void? { self == .goToChat ? () : nil }
         var goToMain: Void? { self == .goToMain ? () : nil }
         var goToPayments: Void? { self == .goToPayments ? () : nil }
+        var scanQR: Void? { self == .scanQR ? () : nil }
     }
 }

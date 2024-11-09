@@ -181,13 +181,15 @@ private extension ContentViewModelComposer {
                     mixedPicker: { $0.isClosedPublisher },
                     multiplePicker: { $0.isClosedPublisher },
                     payments: { $0.isClosedPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                    qrFailure: { _ in Empty().eraseToAnyPublisher() },
+                    servicePicker: { _ in fatalError() }
                 ),
                 scanQR: .init(
                     mixedPicker: { $0.scanQRPublisher },
                     multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() }
+                    qrFailure: { _ in Empty().eraseToAnyPublisher() },
+                    servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

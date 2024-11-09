@@ -420,10 +420,12 @@ class QRBinderTests: XCTestCase {
         enum Event {
             
             case goToChat, goToMain, goToPayments
+            case scanQR
             
             var goToChat: Void? { self == .goToChat ? () : nil }
             var goToMain: Void? { self == .goToMain ? () : nil }
             var goToPayments: Void? { self == .goToPayments ? () : nil }
+            var scanQR: Void? { self == .scanQR ? () : nil }
         }
         
         // MARK: - isLoading
