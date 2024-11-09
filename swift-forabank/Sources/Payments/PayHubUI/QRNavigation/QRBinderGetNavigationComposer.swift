@@ -8,7 +8,7 @@
 import Combine
 import PayHub
 
-public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker> {
+public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     
     private let microServices: MicroServices
     private let witnesses: Witnesses
@@ -21,7 +21,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
         self.witnesses = witnesses
     }
     
-    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker, Source>
+    public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
@@ -41,7 +41,8 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+
     typealias FlowDomain = Domain.FlowDomain
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void

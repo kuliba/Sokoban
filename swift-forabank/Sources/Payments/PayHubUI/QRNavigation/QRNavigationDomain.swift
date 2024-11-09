@@ -8,7 +8,8 @@
 import PayHub
 
 /// A namespace.
-public enum QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker> {}
+public enum QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+ {}
 
 public extension QRNavigationDomain {
     

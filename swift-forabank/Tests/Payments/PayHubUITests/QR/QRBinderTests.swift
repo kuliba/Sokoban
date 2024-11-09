@@ -13,39 +13,10 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias _NavigationComposer = _QRBinderGetNavigationComposer<_QRResult, _QRNavigation>
-    
-    struct _QRResult: Equatable {
-        
-        let value: String
-    }
-    
-    func make_QRResult(
-        _ value: String = anyMessage()
-    ) -> _QRResult {
-        
-        return .init(value: value)
-    }
-    
-    struct _QRNavigation: Equatable {
-        
-        let value: String
-    }
-    
-    func make_QRNavigation(
-        _ value: String = anyMessage()
-    ) -> _QRNavigation {
-        
-        return .init(value: value)
-    }
-    
-    typealias MappedNavigationComposer = _QRBinderGetMappedNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
-    typealias MappedNavigationComposerMicroServices = MappedNavigationComposer.MicroServices
-    
-    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     typealias NavigationComposerMicroServices = NavigationComposer.MicroServices
     
-    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, Payments, QRCode, QRMapping, QRFailure, Source, ServicePicker>
+    typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -459,7 +430,7 @@ class QRBinderTests: XCTestCase {
         
         private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
         
-        var isClosed: AnyPublisher<Bool, Never> {
+        var isLoading: AnyPublisher<Bool, Never> {
             
             isLoadingSubject.eraseToAnyPublisher()
         }

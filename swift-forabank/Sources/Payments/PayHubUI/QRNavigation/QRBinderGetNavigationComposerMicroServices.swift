@@ -9,7 +9,7 @@ import ForaTools
 import Foundation
 import PayHub
 
-public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker, Source> {
+public struct QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
     
     public let makeMixedPicker: MakeMixedPicker
     public let makeMultiplePicker: MakeMultiplePicker
