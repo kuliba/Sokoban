@@ -1277,6 +1277,8 @@
 		2A8B7E132CDF25BC00D4D202 /* ServicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E102CDF257A00D4D202 /* ServicePickerView.swift */; };
 		2A8B7E172CDF8DA200D4D202 /* OperatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E152CDF8D6C00D4D202 /* OperatorModel.swift */; };
 		2A8B7E192CDF8E8300D4D202 /* OperatorModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */; };
+		2A8B7E1C2CDFC22B00D4D202 /* ConfirmSberQR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E1B2CDFC22B00D4D202 /* ConfirmSberQR.swift */; };
+		2A8B7E1E2CDFC23D00D4D202 /* ConfirmSberQRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B7E1D2CDFC23D00D4D202 /* ConfirmSberQRView.swift */; };
 		2A8CC23F2B299CC200191B8E /* RootViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */; };
 		2A8CC2432B29B4C100191B8E /* RootViewFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2422B29B4C100191B8E /* RootViewFactoryComposer.swift */; };
 		2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2442B29D44D00191B8E /* ImageCache.swift */; };
@@ -4884,6 +4886,8 @@
 		2A8B7E102CDF257A00D4D202 /* ServicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerView.swift; sourceTree = "<group>"; };
 		2A8B7E152CDF8D6C00D4D202 /* OperatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorModel.swift; sourceTree = "<group>"; };
 		2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorModelView.swift; sourceTree = "<group>"; };
+		2A8B7E1B2CDFC22B00D4D202 /* ConfirmSberQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmSberQR.swift; sourceTree = "<group>"; };
+		2A8B7E1D2CDFC23D00D4D202 /* ConfirmSberQRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmSberQRView.swift; sourceTree = "<group>"; };
 		2A8C30FB2C6B26B3009EB5F7 /* ServiceCategories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategories.xctestplan; sourceTree = "<group>"; };
 		2A8C30FC2C6B2CA1009EB5F7 /* ServiceCategoriesBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ServiceCategoriesBackend.xctestplan; sourceTree = "<group>"; };
 		2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
@@ -10738,6 +10742,7 @@
 		2A632C662CD1179000AF3B6B /* ContentView */ = {
 			isa = PBXGroup;
 			children = (
+				2A8B7E1A2CDFC22000D4D202 /* ConfirmSberQR */,
 				2A632C672CD1179B00AF3B6B /* ContentViewDomain.swift */,
 				2A30B0992CCE2BA4006697E1 /* ContentView.swift */,
 			);
@@ -11650,6 +11655,15 @@
 				2A8B7E182CDF8E8300D4D202 /* OperatorModelView.swift */,
 			);
 			path = OperatorModel;
+			sourceTree = "<group>";
+		};
+		2A8B7E1A2CDFC22000D4D202 /* ConfirmSberQR */ = {
+			isa = PBXGroup;
+			children = (
+				2A8B7E1B2CDFC22B00D4D202 /* ConfirmSberQR.swift */,
+				2A8B7E1D2CDFC23D00D4D202 /* ConfirmSberQRView.swift */,
+			);
+			path = ConfirmSberQR;
 			sourceTree = "<group>";
 		};
 		2A8DF0E12CC8CF5400FB76D4 /* Transfers */ = {
@@ -20542,6 +20556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AA3C3862CDBBDC000B4C220 /* QRFailureBinderView.swift in Sources */,
+				2A8B7E1E2CDFC23D00D4D202 /* ConfirmSberQRView.swift in Sources */,
 				2AA3C38D2CDC825500B4C220 /* CategoryPicker.swift in Sources */,
 				2A65AAE42CD128AE001AB123 /* PaymentsView.swift in Sources */,
 				2A632C682CD1179B00AF3B6B /* ContentViewDomain.swift in Sources */,
@@ -20552,6 +20567,7 @@
 				2A30B09A2CCE2BA4006697E1 /* ContentView.swift in Sources */,
 				2AA3C37A2CDB79E200B4C220 /* QRFailure.swift in Sources */,
 				2A632C712CD1203100AF3B6B /* QRModel.swift in Sources */,
+				2A8B7E1C2CDFC22B00D4D202 /* ConfirmSberQR.swift in Sources */,
 				2AA3C3832CDBBD7000B4C220 /* QRFailureDomain.swift in Sources */,
 				2A65AAE22CD12889001AB123 /* Payments.swift in Sources */,
 				2A632C6B2CD118ED00AF3B6B /* QRDomain.swift in Sources */,

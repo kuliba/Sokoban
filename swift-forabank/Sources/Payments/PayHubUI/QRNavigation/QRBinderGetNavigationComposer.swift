@@ -42,7 +42,7 @@ public extension QRBinderGetNavigationComposer {
     }
     
     typealias Domain = QRNavigationDomain<MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
-
+    
     typealias FlowDomain = Domain.FlowDomain
     
     typealias Notify = (FlowDomain.NotifyEvent) -> Void
@@ -86,7 +86,10 @@ private extension QRBinderGetNavigationComposer {
             getNavigation(mapped, notify, completion)
             
         case let .sberQR(url):
-            fatalError()
+            microServices.makeConfirmSberQR(url) { _ in
+                
+                completion(.failure(.sberQR(url)))
+            }
             
         case .url:
             let qrFailure = microServices.makeQRFailure(nil)
@@ -106,7 +109,7 @@ private extension QRBinderGetNavigationComposer {
         _ completion: @escaping (Navigation.QRNavigation) -> Void
     ) {
         switch mapped {
-        case let .missingINN(qrCode):
+        case let .missingINN:
             let qrFailure = microServices.makeQRFailure(nil)
             completion(.qrFailure(bind(qrFailure, to: notify)))
             

@@ -159,6 +159,7 @@ private extension ContentViewModelComposer {
         
         return .init(
             microServices: .init(
+                makeConfirmSberQR: { _, completion in completion(nil) },
                 makeMixedPicker: { _ in .init() },
                 makeMultiplePicker: { _ in .init() },
                 makeOperatorModel: { _ in .init() },

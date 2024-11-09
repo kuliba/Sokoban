@@ -24,6 +24,8 @@ class QRBinderTests: XCTestCase {
     
     typealias Witnesses = QRDomain<Navigation, QR, Select>.Witnesses
     
+    typealias MakeConfirmSberQR = Spy<URL, Void?>
+    
     typealias MakeMixedPickerPayload = MixedQRResult<Operator, Provider, QRCode, QRMapping>
     typealias MakeMixedPicker = CallSpy<MakeMixedPickerPayload, MixedPicker>
     
@@ -222,6 +224,7 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNavigation: Equatable {
         
+        case failure(Failure)
         case outside(Outside)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
@@ -229,6 +232,11 @@ class QRBinderTests: XCTestCase {
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
+        
+        enum Failure: Equatable {
+            
+            case sberQR(URL)
+        }
         
         enum Outside: Equatable {
             
@@ -252,6 +260,9 @@ class QRBinderTests: XCTestCase {
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .failure(.sberQR(url)):
+                return .failure(.sberQR(url))
+                
             case let .mixedPicker(node):
                 return .mixedPicker(.init(node.model))
                 
@@ -363,7 +374,7 @@ class QRBinderTests: XCTestCase {
             
             eventSubject.send(event)
         }
-                
+        
         private let eventSubject = PassthroughSubject<Event, Never>()
         
         enum Event {

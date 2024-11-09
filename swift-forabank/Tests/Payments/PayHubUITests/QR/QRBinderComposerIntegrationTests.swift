@@ -39,14 +39,18 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
             flowReceiving: { flow in { flow.event(.select($0)) }}
         )
+        
+        let makeConfirmSberQR = MakeConfirmSberQR()
         let makeMixedPicker = MakeMixedPicker()
         let makeMultiplePicker = MakeMultiplePicker()
         let makeOperatorModel = MakeOperatorModel()
         let makePayments = MakePayments()
         let makeQRFailure = MakeQRFailure()
         let makeServicePicker = MakeServicePicker()
+        
         let getNavigationComposer = NavigationComposer(
             microServices: .init(
+                makeConfirmSberQR: makeConfirmSberQR.process,
                 makeMixedPicker: makeMixedPicker.call,
                 makeMultiplePicker: makeMultiplePicker.call,
                 makeOperatorModel: makeOperatorModel.call,

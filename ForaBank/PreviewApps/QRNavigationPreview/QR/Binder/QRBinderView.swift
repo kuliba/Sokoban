@@ -23,6 +23,9 @@ struct QRBinderView: View {
                     content: {
                         
                         switch $0 {
+                        case let .failure(.sberQR(url)):
+                            Text("SberQR Failure with \"\(url.absoluteString)\"")
+                            
                         case let .mixedPicker(mixedPicker):
                             MixedPickerView(model: mixedPicker)
                             
@@ -78,6 +81,9 @@ extension QRDomain.FlowDomain.State {
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
+            case let .failure(.sberQR(url)):
+                return .failure(.sberQR(url))
+                
             case let .mixedPicker(node):
                 return .mixedPicker(node.model)
                 
@@ -101,12 +107,18 @@ extension QRDomain.FlowDomain.State {
     
     enum Destination {
         
+        case failure(Failure)
         case mixedPicker(MixedPicker)
         case multiplePicker(MultiplePicker)
         case operatorModel(OperatorModel)
         case payments(Payments)
         case qrFailure(QRFailureDomain.Binder)
         case servicePicker(ServicePicker)
+        
+        enum Failure: Equatable {
+            
+            case sberQR(URL)
+        }
     }
 }
 
@@ -115,6 +127,9 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     var id: ID {
         
         switch self {
+        case let .failure(.sberQR(url)):
+            return .failure(.sberQR(url))
+            
         case let .mixedPicker(mixedPicker):
             return .mixedPicker(.init(mixedPicker))
             
@@ -137,11 +152,17 @@ extension QRDomain.FlowDomain.State.Destination: Identifiable {
     
     enum ID: Hashable {
         
+        case failure(Failure)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
         case operatorModel(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
+        
+        enum Failure: Hashable {
+            
+            case sberQR(URL)
+        }
     }
 }
