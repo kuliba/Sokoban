@@ -13,8 +13,12 @@ struct ServicePickerView: View {
     
     var body: some View {
         
-        Button("Add Company", action: model.addCompany)
-            .navigationTitle("ServicePicker")
+        VStack(spacing: 24) {
+            
+            Button("Add Company", action: model.addCompany)
+            Button("Go to Main", action: model.goToMain)
+        }
+        .navigationTitle("ServicePicker")
     }
 }
 

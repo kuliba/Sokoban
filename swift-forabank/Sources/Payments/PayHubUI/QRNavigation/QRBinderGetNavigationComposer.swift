@@ -59,6 +59,9 @@ private extension QRBinderGetNavigationComposer {
         switch outside {
         case .chat:
             completion(.outside(.chat))
+        
+        case .main:
+            completion(.outside(.main))
         }
     }
     
@@ -187,7 +190,7 @@ private extension QRBinderGetNavigationComposer {
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        return bind(servicePicker, to: notify, addCompany: \.servicePicker)
+        return bind(servicePicker, to: notify, addCompany: \.servicePicker, goToMain: \.servicePicker)
     }
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
@@ -197,6 +200,7 @@ private extension QRBinderGetNavigationComposer {
         _ object: T,
         to notify: @escaping Notify,
         addCompany addCompanyKeyPath: WitnessKeyPath<T, Witnesses.AddCompanyWitnesses, Void>? = nil,
+        goToMain goToMainKeyPath: WitnessKeyPath<T, Witnesses.GoToMainWitnesses, Void>? = nil,
         isClosed isClosedKeyPath: WitnessKeyPath<T, Witnesses.IsClosedWitnesses, Bool>? = nil,
         scanQR scanQRKeyPath: WitnessKeyPath<T, Witnesses.ScanQRWitnesses, Void>? = nil
     ) -> Set<AnyCancellable> {
@@ -208,6 +212,13 @@ private extension QRBinderGetNavigationComposer {
             let witness = witnesses.addCompany[keyPath: addCompanyKeyPath]
             let chat = witness(object).sink { notify(.select(.outside(.chat))) }
             cancellables.insert(chat)
+        }
+        
+        if let goToMainKeyPath {
+            
+            let witness = witnesses.goToMain[keyPath: goToMainKeyPath]
+            let main = witness(object).sink { notify(.select(.outside(.main))) }
+            cancellables.insert(main)
         }
         
         if let isClosedKeyPath {

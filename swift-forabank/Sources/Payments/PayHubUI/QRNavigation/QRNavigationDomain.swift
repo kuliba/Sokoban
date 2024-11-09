@@ -22,7 +22,7 @@ public extension QRNavigationDomain {
         
         public enum Outside {
             
-            case chat
+            case chat, main
         }
 
         public typealias QRResult = PayHub.QRResult<QRCode, QRMappedResult>
@@ -36,7 +36,7 @@ public extension QRNavigationDomain {
         
         public enum Outside {
             
-            case chat
+            case chat, main
         }
         
         public typealias QRNavigation = PayHubUI.QRNavigation<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>

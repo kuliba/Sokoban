@@ -185,7 +185,10 @@ class QRBinderTests: XCTestCase {
         
         switch select {
         case .outside(.chat):
-            return .chat
+            return .outside(.chat)
+            
+        case .outside(.main):
+            return .outside(.main)
             
         case let .qrResult(qrResult):
             return .qrResult(qrResult)
@@ -194,8 +197,13 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableSelect: Equatable {
         
-        case chat
+        case outside(Outside)
         case qrResult(QRResult)
+
+        enum Outside: Equatable {
+         
+            case chat, main
+        }
     }
     
     func equatable(
@@ -209,7 +217,10 @@ class QRBinderTests: XCTestCase {
         case let .select(select):
             switch select {
             case .outside(.chat):
-                return .chat
+                return .outside(.chat)
+                
+            case .outside(.main):
+                return .outside(.main)
                 
             case let .qrResult(qrResult):
                 return .qrResult(qrResult)
@@ -219,19 +230,29 @@ class QRBinderTests: XCTestCase {
     
     enum EquatableNotifyEvent: Equatable {
         
-        case chat
         case dismiss
+        case outside(Outside)
         case qrResult(QRResult)
+
+        enum Outside: Equatable {
+         
+            case chat, main
+        }
     }
     
     enum EquatableNavigation: Equatable {
         
-        case chat
+        case outside(Outside)
         case mixedPicker(ObjectIdentifier)
         case multiplePicker(ObjectIdentifier)
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
+        
+        enum Outside: Equatable {
+            
+            case chat, main
+        }
     }
     
     func equatable(
@@ -240,7 +261,10 @@ class QRBinderTests: XCTestCase {
         
         switch navigation {
         case .outside(.chat):
-            return .chat
+            return .outside(.chat)
+            
+        case .outside(.main):
+            return .outside(.main)
             
         case let .qrNavigation(qrNavigation):
             switch qrNavigation {
@@ -376,6 +400,20 @@ class QRBinderTests: XCTestCase {
         func addCompany() {
             
             addCompanySubject.send(())
+        }
+        
+        // MARK: - gotToMain
+        
+        private let goToMainSubject = PassthroughSubject<Void, Never>()
+        
+        var goToMainPublisher: AnyPublisher<Void, Never> {
+            
+            goToMainSubject.eraseToAnyPublisher()
+        }
+        
+        func goToMain() {
+            
+            goToMainSubject.send(())
         }
         
         // MARK: - isLoading

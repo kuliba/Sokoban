@@ -106,6 +106,10 @@ private extension ContentViewModelComposer {
                 case .chat:
                     print("Need to switch to chat tab")
                     notify(.dismiss)
+                    
+                case .main:
+                    print("Need to switch to main tab")
+                    notify(.dismiss)
                 }
             }
         
@@ -162,6 +166,9 @@ private extension ContentViewModelComposer {
                     mixedPicker: { $0.addCompanyPublisher },
                     multiplePicker: { $0.addCompanyPublisher },
                     servicePicker: { $0.addCompanyPublisher }
+                ),
+                goToMain: .init(
+                    servicePicker: { $0.goToMainPublisher }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },

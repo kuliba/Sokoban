@@ -10,15 +10,18 @@ import Combine
 public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker> {
     
     public let addCompany: AddCompanyWitnesses
+    public let goToMain: GoToMainWitnesses
     public let isClosed: IsClosedWitnesses
     public let scanQR: ScanQRWitnesses
     
     public init(
         addCompany: AddCompanyWitnesses,
+        goToMain: GoToMainWitnesses,
         isClosed: IsClosedWitnesses,
         scanQR: ScanQRWitnesses
     ) {
         self.addCompany = addCompany
+        self.goToMain = goToMain
         self.isClosed = isClosed
         self.scanQR = scanQR
     }
@@ -40,6 +43,19 @@ public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Paymen
         }
         
         public typealias MakeAddCompanyPublisher<V> = (V) -> AnyPublisher<Void, Never>
+    }
+    
+    public struct GoToMainWitnesses {
+        
+        public let servicePicker: MakeGoToMainPublisher<ServicePicker>
+        
+        public init(
+            servicePicker: @escaping MakeGoToMainPublisher<ServicePicker>
+        ) {
+            self.servicePicker = servicePicker
+        }
+
+        public typealias MakeGoToMainPublisher<V> = (V) -> AnyPublisher<Void, Never>
     }
     
     public typealias IsClosedWitnesses = Witness<Bool>

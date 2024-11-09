@@ -22,4 +22,18 @@ final class ServicePicker {
         
         addCompanySubject.send(())
     }
+    
+    // MARK: - goToMain
+    
+    private let goToMainSubject = PassthroughSubject<Void, Never>()
+    
+    var goToMainPublisher: AnyPublisher<Void, Never> {
+        
+        goToMainSubject.eraseToAnyPublisher()
+    }
+    
+    func goToMain() {
+        
+        goToMainSubject.send(())
+    }
 }
