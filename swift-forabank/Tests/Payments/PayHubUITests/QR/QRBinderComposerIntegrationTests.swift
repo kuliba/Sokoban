@@ -53,8 +53,8 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
             ),
             witnesses: .init(
                 addCompany: .init(
-                    mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher },
+                    mixedPicker: { $0.publisher(for: \.addCompany) },
+                    multiplePicker: { $0.publisher(for: \.addCompany) },
                     servicePicker: { $0.publisher(for: \.goToChat) }
                 ),
                 goToMain: .init(
@@ -64,16 +64,16 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
                     servicePicker: { $0.publisher(for: \.goToPayments) }
                 ),
                 isClosed: .init(
-                    mixedPicker: { $0.isClosed },
-                    multiplePicker: { $0.isClosed },
-                    payments: { $0.isClosed },
-                    qrFailure: { $0.isClosed }
+                    mixedPicker: { $0.publisher(for: \.isClosed) },
+                    multiplePicker: { $0.publisher(for: \.isClosed) },
+                    payments: { $0.publisher(for: \.isClosed) },
+                    qrFailure: { $0.publisher(for: \.isClosed) }
                 ),
                 scanQR: .init(
-                    mixedPicker: { $0.scanQRPublisher },
-                    multiplePicker: { $0.scanQRPublisher },
-                    payments: { $0.scanQRPublisher },
-                    qrFailure: { $0.scanQRPublisher }
+                    mixedPicker: { $0.publisher(for: \.scanQR) },
+                    multiplePicker: { $0.publisher(for: \.scanQR) },
+                    payments: { $0.publisher(for: \.scanQR) },
+                    qrFailure: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

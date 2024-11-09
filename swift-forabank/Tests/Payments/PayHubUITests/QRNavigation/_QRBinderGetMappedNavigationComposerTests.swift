@@ -50,7 +50,7 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .missingINN(makeQRCode()),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.close() }
+            for: { self.qrFailure($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -60,7 +60,7 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .missingINN(makeQRCode()),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.scanQR() }
+            for: { self.qrFailure($0)?.emit(.scanQR) }
         )
     }
     
@@ -93,7 +93,7 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mixed(makeMakeMixedPickerPayload()),
             notifyWith: [.select(.outside(.chat))],
-            for: { self.mixedPicker($0)?.addCompany() }
+            for: { self.mixedPicker($0)?.emit(.addCompany) }
         )
     }
     
@@ -103,7 +103,7 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mixed(makeMakeMixedPickerPayload()),
             notifyWith: [.dismiss],
-            for: { self.mixedPicker($0)?.close() }
+            for: { self.mixedPicker($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -113,7 +113,7 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mixed(makeMakeMixedPickerPayload()),
             notifyWith: [.dismiss],
-            for: { self.mixedPicker($0)?.scanQR() }
+            for: { self.mixedPicker($0)?.emit(.scanQR) }
         )
     }
     
@@ -147,14 +147,14 @@ final class _QRBinderGetMappedNavigationComposerTests: QRBinderTests {
                 makeMixedPicker: spies.makeMixedPicker.call
             ),
             witnesses: .init(
-                addCompany: .init(mixedPicker: { $0.addCompanyPublisher }),
+                addCompany: .init(mixedPicker: { $0.publisher(for: \.addCompany) }),
                 isClosed: .init(
-                    mixedPicker: { $0.isClosed },
-                    qrFailure: { $0.isClosed }
+                    mixedPicker: { $0.publisher(for: \.isClosed) },
+                    qrFailure: { $0.publisher(for: \.isClosed) }
                 ),
                 scanQR: .init(
-                    mixedPicker: { $0.scanQRPublisher },
-                    qrFailure: { $0.scanQRPublisher }
+                    mixedPicker: { $0.publisher(for: \.scanQR) },
+                    qrFailure: { $0.publisher(for: \.scanQR) }
                 )
             )
         )

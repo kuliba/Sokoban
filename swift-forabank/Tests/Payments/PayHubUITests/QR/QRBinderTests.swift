@@ -202,9 +202,9 @@ class QRBinderTests: XCTestCase {
         
         case outside(Outside)
         case qrResult(QRResult)
-
+        
         enum Outside: Equatable {
-         
+            
             case chat, main, payments
         }
     }
@@ -239,9 +239,9 @@ class QRBinderTests: XCTestCase {
         case dismiss
         case outside(Outside)
         case qrResult(QRResult)
-
+        
         enum Outside: Equatable {
-         
+            
             case chat, main, payments
         }
     }
@@ -352,46 +352,48 @@ class QRBinderTests: XCTestCase {
     
     final class Mock {
         
-        // MARK: - close
-        
-        private let isClosedSubject = CurrentValueSubject<Bool, Never>(false)
-        
-        var isClosed: AnyPublisher<Bool, Never> {
+        func publisher<T>(
+            for keyPath: KeyPath<Event, T?>
+        ) -> AnyPublisher<T, Never> {
             
-            isClosedSubject.eraseToAnyPublisher()
+            return eventSubject
+                .compactMap { $0[keyPath: keyPath] }
+                .eraseToAnyPublisher()
         }
         
-        func close(_ input: Bool = true) {
+        func emit(_ event: Event) {
             
-            isClosedSubject.send(input)
+            eventSubject.send(event)
         }
+                
+        private let eventSubject = PassthroughSubject<Event, Never>()
         
-        // MARK: - scanQR
-        
-        private let scanQRSubject = PassthroughSubject<Void, Never>()
-        
-        var scanQRPublisher: AnyPublisher<Void, Never> {
+        enum Event {
             
-            scanQRSubject.eraseToAnyPublisher()
-        }
-        
-        func scanQR() {
+            case addCompany
+            case isClosed(Bool)
+            case scanQR
             
-            scanQRSubject.send(())
-        }
-        
-        // MARK: - addCompany
-        
-        private let addCompanySubject = PassthroughSubject<Void, Never>()
-        
-        var addCompanyPublisher: AnyPublisher<Void, Never> {
+            var addCompany: Void? {
+                
+                guard case .addCompany = self else { return nil }
+                
+                return ()
+            }
             
-            addCompanySubject.eraseToAnyPublisher()
-        }
-        
-        func addCompany() {
+            var isClosed: Bool? {
+                
+                guard case let .isClosed(value) = self else { return nil }
+                
+                return value
+            }
             
-            addCompanySubject.send(())
+            var scanQR: Void? {
+                
+                guard case .scanQR = self else { return nil }
+                
+                return ()
+            }
         }
     }
     
@@ -406,9 +408,10 @@ class QRBinderTests: XCTestCase {
                 .eraseToAnyPublisher()
         }
         
-        func addCompany() { eventSubject.send(.goToChat) }
-        func goToMain() { eventSubject.send(.goToMain) }
-        func goToPayments() { eventSubject.send(.goToPayments) }
+        func emit(_ event: Event) {
+            
+            eventSubject.send(event)
+        }
         
         // MARK: - Event
         

@@ -51,7 +51,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.close() }
+            for: { self.payments($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -61,7 +61,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bSubscribeURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.scanQR() }
+            for: { self.payments($0)?.emit(.scanQR) }
         )
     }
     
@@ -94,7 +94,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.close() }
+            for: { self.payments($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -104,7 +104,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .c2bURL(anyURL()),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.scanQR() }
+            for: { self.payments($0)?.emit(.scanQR) }
         )
     }
     
@@ -137,7 +137,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .failure(makeQRCode()),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.close() }
+            for: { self.qrFailure($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -147,7 +147,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .failure(makeQRCode()),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.scanQR() }
+            for: { self.qrFailure($0)?.emit(.scanQR) }
         )
     }
     
@@ -180,7 +180,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .mapped(.missingINN(makeQRCode())),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.close() }
+            for: { self.qrFailure($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -190,7 +190,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(qrFailure: makeQRFailure()).sut,
             with: .mapped(.missingINN(makeQRCode())),
             notifyWith: [.dismiss],
-            for: { self.qrFailure($0)?.scanQR() }
+            for: { self.qrFailure($0)?.emit(.scanQR) }
         )
     }
     
@@ -223,7 +223,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mapped(.mixed(makeMakeMixedPickerPayload())),
             notifyWith: [.select(.outside(.chat))],
-            for: { self.mixedPicker($0)?.addCompany() }
+            for: { self.mixedPicker($0)?.emit(.addCompany) }
         )
     }
     
@@ -233,7 +233,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mapped(.mixed(makeMakeMixedPickerPayload())),
             notifyWith: [.dismiss],
-            for: { self.mixedPicker($0)?.close() }
+            for: { self.mixedPicker($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -243,7 +243,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(mixedPicker: makeMixedPicker()).sut,
             with: .mapped(.mixed(makeMakeMixedPickerPayload())),
             notifyWith: [.dismiss],
-            for: { self.mixedPicker($0)?.scanQR() }
+            for: { self.mixedPicker($0)?.emit(.scanQR) }
         )
     }
     
@@ -276,7 +276,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(multiplePicker: makeMultiplePicker()).sut,
             with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
             notifyWith: [.select(.outside(.chat))],
-            for: { self.multiplePicker($0)?.addCompany() }
+            for: { self.multiplePicker($0)?.emit(.addCompany) }
         )
     }
     
@@ -286,7 +286,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(multiplePicker: makeMultiplePicker()).sut,
             with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
             notifyWith: [.dismiss],
-            for: { self.multiplePicker($0)?.close() }
+            for: { self.multiplePicker($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -296,7 +296,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(multiplePicker: makeMultiplePicker()).sut,
             with: .mapped(.multiple(makeMakeMultiplePickerPayload())),
             notifyWith: [.dismiss],
-            for: { self.multiplePicker($0)?.scanQR() }
+            for: { self.multiplePicker($0)?.emit(.scanQR) }
         )
     }
     
@@ -329,7 +329,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .mapped(.none(makeQRCode())),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.close() }
+            for: { self.payments($0)?.emit(.isClosed(true)) }
         )
     }
     
@@ -339,7 +339,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(payments: makePayments()).sut,
             with: .mapped(.none(makeQRCode())),
             notifyWith: [.dismiss],
-            for: { self.payments($0)?.scanQR() }
+            for: { self.payments($0)?.emit(.scanQR) }
         )
     }
     
@@ -383,7 +383,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(servicePicker: makeServicePicker()).sut,
             with: .mapped(.provider(makeProviderPayload())),
             notifyWith: [.select(.outside(.chat))],
-            for: { self.servicePicker($0)?.addCompany() }
+            for: { self.servicePicker($0)?.emit(.goToChat) }
         )
     }
     
@@ -393,7 +393,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(servicePicker: makeServicePicker()).sut,
             with: .mapped(.provider(makeProviderPayload())),
             notifyWith: [.select(.outside(.main))],
-            for: { self.servicePicker($0)?.goToMain() }
+            for: { self.servicePicker($0)?.emit(.goToMain) }
         )
     }
     
@@ -403,7 +403,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeSUT(servicePicker: makeServicePicker()).sut,
             with: .mapped(.provider(makeProviderPayload())),
             notifyWith: [.select(.outside(.payments))],
-            for: { self.servicePicker($0)?.goToPayments() }
+            for: { self.servicePicker($0)?.emit(.goToPayments) }
         )
     }
     
@@ -449,8 +449,8 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             ),
             witnesses: .init(
                 addCompany: .init(
-                    mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher },
+                    mixedPicker: { $0.publisher(for: \.addCompany) },
+                    multiplePicker: { $0.publisher(for: \.addCompany) },
                     servicePicker: { $0.publisher(for: \.goToChat) }
                 ),
                 goToMain: .init(
@@ -460,16 +460,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
                     servicePicker: { $0.publisher(for: \.goToPayments) }
                 ),
                 isClosed: .init(
-                    mixedPicker: { $0.isClosed },
-                    multiplePicker: { $0.isClosed },
-                    payments: { $0.isClosed },
-                    qrFailure: { $0.isClosed }
+                    mixedPicker: { $0.publisher(for: \.isClosed) },
+                    multiplePicker: { $0.publisher(for: \.isClosed) },
+                    payments: { $0.publisher(for: \.isClosed) },
+                    qrFailure: { $0.publisher(for: \.isClosed) }
                 ),
                 scanQR: .init(
-                    mixedPicker: { $0.scanQRPublisher },
-                    multiplePicker: { $0.scanQRPublisher },
-                    payments: { $0.scanQRPublisher },
-                    qrFailure: { $0.scanQRPublisher }
+                    mixedPicker: { $0.publisher(for: \.scanQR) },
+                    multiplePicker: { $0.publisher(for: \.scanQR) },
+                    payments: { $0.publisher(for: \.scanQR) },
+                    qrFailure: { $0.publisher(for: \.scanQR) }
                 )
             )
         )
