@@ -84,10 +84,7 @@ private extension QRBinderGetNavigationComposer {
             
         case let .failure(qrCode):
             let qrFailure = microServices.makeQRFailure(.qrCode(qrCode))
-            completion(.qrNavigation(.qrFailure(.init(
-                model: qrFailure,
-                cancellables: bind(qrFailure, using: notify)
-            ))))
+            completion(.qrNavigation(.qrFailure(bind(qrFailure, using: notify))))
             
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
@@ -107,10 +104,7 @@ private extension QRBinderGetNavigationComposer {
         switch mapped {
         case let .missingINN(qrCode):
             let qrFailure = microServices.makeQRFailure(.missingINN(qrCode))
-            completion(.qrNavigation(.qrFailure(.init(
-                model: qrFailure,
-                cancellables: bind(qrFailure, using: notify)
-            ))))
+            completion(.qrNavigation(.qrFailure(bind(qrFailure, using: notify))))
             
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
@@ -182,9 +176,17 @@ private extension QRBinderGetNavigationComposer {
     func bind(
         _ qrFailure: QRFailure,
         using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
+    ) -> Node<QRFailure> {
         
-        return bind(qrFailure, to: notify, isClosed: \.qrFailure, scanQR: \.qrFailure)
+        return .init(
+            model: qrFailure,
+            cancellables: bind(
+                qrFailure,
+                to: notify,
+                isClosed: \.qrFailure,
+                scanQR: \.qrFailure
+            )
+        )
     }
     
     func bind(
