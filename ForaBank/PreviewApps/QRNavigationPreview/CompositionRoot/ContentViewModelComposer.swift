@@ -189,7 +189,7 @@ private extension ContentViewModelComposer {
                     mixedPicker: { $0.scanQRPublisher },
                     multiplePicker: { $0.scanQRPublisher },
                     payments: { $0.scanQRPublisher },
-                    qrFailure: { _ in Empty().eraseToAnyPublisher() },
+                    qrFailure: { $0.scanQRPublisher },
                     servicePicker: { $0.publisher(for: \.scanQR) }
                 )
             )
@@ -210,6 +210,16 @@ private extension ContentViewModelComposer {
         case let .source(source):
             return .init(source: .source(source))
         }
+    }
+}
+
+extension QRFailureDomain.Binder {
+    
+    var scanQRPublisher: AnyPublisher<Void, Never> {
+        
+        flow.$state
+            .compactMap(\.navigation?.scanQR)
+            .eraseToAnyPublisher()
     }
 }
 
