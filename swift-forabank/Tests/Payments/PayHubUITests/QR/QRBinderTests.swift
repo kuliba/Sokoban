@@ -364,6 +364,20 @@ class QRBinderTests: XCTestCase {
     
     final class ServicePicker {
         
+        // MARK: - addCompany
+        
+        private let addCompanySubject = PassthroughSubject<Void, Never>()
+        
+        var addCompanyPublisher: AnyPublisher<Void, Never> {
+            
+            addCompanySubject.eraseToAnyPublisher()
+        }
+        
+        func addCompany() {
+            
+            addCompanySubject.send(())
+        }
+        
         // MARK: - isLoading
         
         private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)

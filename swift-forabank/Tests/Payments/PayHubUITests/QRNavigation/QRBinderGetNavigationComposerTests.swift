@@ -377,6 +377,16 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
     //        )
     //    }
     
+    func test_getNavigation_provider_shouldNotifyWithChatOnServicePickerAddCompany() {
+        
+        expect(
+            makeSUT(servicePicker: makeServicePicker()).sut,
+            with: .mapped(.provider(makeProviderPayload())),
+            notifyWith: [.select(.outside(.chat))],
+            for: { self.servicePicker($0)?.addCompany() }
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = NavigationComposer
@@ -420,7 +430,8 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             witnesses: .init(
                 addCompany: .init(
                     mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher }
+                    multiplePicker: { $0.addCompanyPublisher },
+                    servicePicker: { $0.addCompanyPublisher }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosed },

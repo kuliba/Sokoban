@@ -160,7 +160,8 @@ private extension ContentViewModelComposer {
             witnesses: .init(
                 addCompany: .init(
                     mixedPicker: { $0.addCompanyPublisher },
-                    multiplePicker: { $0.addCompanyPublisher }
+                    multiplePicker: { $0.addCompanyPublisher },
+                    servicePicker: { $0.addCompanyPublisher }
                 ),
                 isClosed: .init(
                     mixedPicker: { $0.isClosedPublisher },

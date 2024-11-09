@@ -13,7 +13,7 @@ struct ServicePickerView: View {
     
     var body: some View {
         
-        Text("TBD: ServicePicker")
+        Button("Add Company", action: model.addCompany)
             .navigationTitle("ServicePicker")
     }
 }

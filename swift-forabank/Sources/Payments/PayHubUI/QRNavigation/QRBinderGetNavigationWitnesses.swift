@@ -7,7 +7,7 @@
 
 import Combine
 
-public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure> {
+public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker> {
     
     public let addCompany: AddCompanyWitnesses
     public let isClosed: IsClosedWitnesses
@@ -27,13 +27,16 @@ public struct QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Paymen
         
         public let mixedPicker: MakeAddCompanyPublisher<MixedPicker>
         public let multiplePicker: MakeAddCompanyPublisher<MultiplePicker>
+        public let servicePicker: MakeAddCompanyPublisher<ServicePicker>
         
         public init(
             mixedPicker: @escaping MakeAddCompanyPublisher<MixedPicker>,
-            multiplePicker: @escaping MakeAddCompanyPublisher<MultiplePicker>
+            multiplePicker: @escaping MakeAddCompanyPublisher<MultiplePicker>,
+            servicePicker: @escaping MakeAddCompanyPublisher<ServicePicker>
         ) {
             self.mixedPicker = mixedPicker
             self.multiplePicker = multiplePicker
+            self.servicePicker = servicePicker
         }
         
         public typealias MakeAddCompanyPublisher<V> = (V) -> AnyPublisher<Void, Never>

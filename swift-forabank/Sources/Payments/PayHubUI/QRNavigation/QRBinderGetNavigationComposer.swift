@@ -22,7 +22,7 @@ public final class QRBinderGetNavigationComposer<MixedPicker, MultiplePicker, Op
     }
     
     public typealias MicroServices = QRBinderGetNavigationComposerMicroServices<MixedPicker, MultiplePicker, Operator, Payments, Provider, QRCode, QRMapping, QRFailure, ServicePicker>
-    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure>
+    public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
 
 public extension QRBinderGetNavigationComposer {
@@ -137,7 +137,7 @@ private extension QRBinderGetNavigationComposer {
             let servicePicker = microServices.makeServicePicker(payload)
             completion(.qrNavigation(.servicePicker(.init(
                 model: servicePicker,
-                cancellables: []
+                cancellables: bind(servicePicker, using: notify)
             ))))
             
         default:
@@ -167,6 +167,14 @@ private extension QRBinderGetNavigationComposer {
     }
     
     func bind(
+        _ payments: Payments,
+        using notify: @escaping Notify
+    ) -> Set<AnyCancellable> {
+        
+        return bind(payments, to: notify, isClosed: \.payments, scanQR: \.payments)
+    }
+    
+    func bind(
         _ qrFailure: QRFailure,
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
@@ -175,11 +183,11 @@ private extension QRBinderGetNavigationComposer {
     }
     
     func bind(
-        _ payments: Payments,
+        _ servicePicker: ServicePicker,
         using notify: @escaping Notify
     ) -> Set<AnyCancellable> {
         
-        return bind(payments, to: notify, isClosed: \.payments, scanQR: \.payments)
+        return bind(servicePicker, to: notify, addCompany: \.servicePicker)
     }
     
     private typealias WitnessFunction<T, Value> = (T) -> AnyPublisher<Value, Never>
