@@ -49,7 +49,7 @@ public final class QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, De
 
 public extension QRFailureBinderComposer {
     
-    func compose(with qrCodeDetails: QRCodeDetails<QRCode>) -> Domain.Binder {
+    func compose(with qrCodeDetails: QRCodeDetails<QRCode>?) -> Domain.Binder {
         
         let factory = ContentFlowBindingFactory(
             delay: delay,

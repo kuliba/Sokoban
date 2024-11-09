@@ -24,15 +24,29 @@ struct QRFailureView: View {
             Group {
                 
                 switch qrFailure.details {
+                case .none:
+                    Group {
+                        
+                        Button("TBD: Add Company") {
+                            
+                            // qrFailure.select(.search)
+                        }
+                        
+                        Button("Pay with raw details - url can't be handled") {
+                            
+                            qrFailure.select(.payWithDetails(nil))
+                        }
+                    }
+                    
                 case let .missingINN(qrCode):
                     Group {
                         
                         Button("TBD: Add Company") {
                             
-                           // qrFailure.select(.search)
+                            // qrFailure.select(.search)
                         }
                         
-                        Button("Pay with details with QR Code") {
+                        Button("Pay with details without QR Code - INN is missing") {
                             
                             qrFailure.select(.payWithDetails(nil))
                         }

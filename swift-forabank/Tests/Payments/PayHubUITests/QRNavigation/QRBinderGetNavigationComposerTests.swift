@@ -152,7 +152,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - missingINN
+    // MARK: - mapped: missingINN
     
     func test_getNavigation_missingINN_shouldCallMakeQRFailure() {
         
@@ -195,7 +195,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - mixedPicker
+    // MARK: - mapped: mixedPicker
     
     func test_getNavigation_mixedPicker_shouldCallMakeMixedPickerWithPayload() {
         
@@ -248,7 +248,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - multiplePicker
+    // MARK: - mapped: multiplePicker
     
     func test_getNavigation_multiplePicker_shouldCallMakeMultiplePickerWithPayload() {
         
@@ -301,7 +301,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - none
+    // MARK: - mapped: none
     
     func test_getNavigation_none_shouldCallMakePaymentsWithQRCode() {
         
@@ -344,7 +344,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - provider
+    // MARK: - mapped: provider
     
     func test_getNavigation_provider_shouldCallMakeServicePickerWithQRCode() {
         
@@ -418,7 +418,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - single
+    // MARK: - mapped: single
     
     func test_getNavigation_single_shouldCallMakeOperatorModel() {
         
@@ -441,7 +441,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         )
     }
     
-    // MARK: - source
+    // MARK: - mapped: source
     
     func test_getNavigation_source_shouldCallMakePaymentsWithPayload() {
         
@@ -483,6 +483,52 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             for: { self.payments($0)?.emit(.scanQR) }
         )
     }
+    
+    // FIXME: MARK: - sberQR
+    
+    // MARK: - url
+    
+    func test_getNavigation_url_shouldCallMakeQRFailureWithNilPayload() {
+        
+        let (sut, spies) = makeSUT()
+        
+        sut.getNavigation(qrResult: .url(anyURL()))
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [nil])
+    }
+    
+    func test_getNavigation_url_shouldDeliverQRFailure() {
+        
+        let qrFailure = makeQRFailure()
+        
+        expect(
+            makeSUT(qrFailure: qrFailure).sut,
+            with: .url(anyURL()),
+            toDeliver: .qrFailure(.init(qrFailure))
+        )
+    }
+    
+    func test_getNavigation_url_shouldNotifyWithDismissOnQRFailureClose() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .url(anyURL()),
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.emit(.isClosed(true)) }
+        )
+    }
+    
+    func test_getNavigation_url_shouldNotifyWithDismissOnQRFailureScanQR() {
+        
+        expect(
+            makeSUT(qrFailure: makeQRFailure()).sut,
+            with: .url(anyURL()),
+            notifyWith: [.dismiss],
+            for: { self.qrFailure($0)?.emit(.scanQR) }
+        )
+    }
+
+    // FIXME: MARK: - unknown
     
     // MARK: - Helpers
     

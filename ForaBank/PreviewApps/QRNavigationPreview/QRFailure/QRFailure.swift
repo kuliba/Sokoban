@@ -10,10 +10,10 @@ import PayHubUI
 
 final class QRFailure {
     
-    let details: QRCodeDetails<QRCode>
+    let details: QRCodeDetails<QRCode>?
     private let selectSubject = PassthroughSubject<Select, Never>()
     
-    init(with details: QRCodeDetails<QRCode>) {
+    init(with details: QRCodeDetails<QRCode>?) {
      
         self.details = details
     }

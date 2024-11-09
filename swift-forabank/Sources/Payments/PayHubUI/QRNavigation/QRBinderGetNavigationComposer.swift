@@ -85,7 +85,14 @@ private extension QRBinderGetNavigationComposer {
         case let .mapped(mapped):
             getNavigation(mapped, notify, completion)
             
-        default:
+        case let .sberQR(url):
+            fatalError()
+            
+        case .url:
+            let qrFailure = microServices.makeQRFailure(nil)
+            completion(.qrFailure(bind(qrFailure, to: notify)))
+            
+        case .unknown:
             fatalError()
         }
     }

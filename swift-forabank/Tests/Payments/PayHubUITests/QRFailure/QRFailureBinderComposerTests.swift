@@ -25,6 +25,15 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     
     // MARK: - compose
     
+    func test_compose_shouldCallMakeQRFailureWithNilOnNil() {
+        
+        let (sut, spies, _) = makeSUT()
+        
+        _ = sut.compose(with: nil)
+        
+        XCTAssertNoDiff(spies.makeQRFailure.payloads, [nil])
+    }
+    
     func test_compose_shouldCallMakeQRFailureWithQRCodeDetails() {
         
         let qrCode = makeQRCode()
@@ -258,7 +267,7 @@ final class QRFailureBinderComposerTests: QRFailureTests {
     // MARK: - Helpers
     
     private typealias SUT = QRFailureBinderComposer<QRCode, QRFailure, CategoryPicker, DetailPayment>
-    private typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>, QRFailure>
+    private typealias MakeQRFailure = CallSpy<QRCodeDetails<QRCode>?, QRFailure>
     private typealias MakeCategoryPicker = CallSpy<QRCode, CategoryPicker>
     private typealias MakeDetailPayment = CallSpy<QRCode?, DetailPayment>
     
