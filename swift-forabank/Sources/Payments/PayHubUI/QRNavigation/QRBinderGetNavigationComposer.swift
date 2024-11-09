@@ -108,10 +108,7 @@ private extension QRBinderGetNavigationComposer {
             
         case let .mixed(mixed):
             let mixedPicker = microServices.makeMixedPicker(mixed)
-            completion(.qrNavigation(.mixedPicker(.init(
-                model: mixedPicker,
-                cancellables: bind(mixedPicker, using: notify)
-            ))))
+            completion(.qrNavigation(.mixedPicker(bind(mixedPicker, using: notify))))
             
         case let .multiple(multiple):
             let multiplePicker = microServices.makeMultiplePicker(multiple)
@@ -144,9 +141,17 @@ private extension QRBinderGetNavigationComposer {
     func bind(
         _ mixedPicker: MixedPicker,
         using notify: @escaping Notify
-    ) -> Set<AnyCancellable> {
+    ) -> Node<MixedPicker> {
         
-        return bind(mixedPicker, to: notify, addCompany: \.mixedPicker, isClosed: \.mixedPicker, scanQR: \.mixedPicker)
+        return .init(
+            model: mixedPicker,
+            cancellables: bind(
+                mixedPicker,
+                to: notify, 
+                addCompany: \.mixedPicker,
+                isClosed: \.mixedPicker, scanQR: \.mixedPicker
+            )
+        )
     }
     
     func bind(
