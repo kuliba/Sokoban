@@ -36,30 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             },
             getNavigation: getNavigation,
             schedulers: .init(),
-            witnesses: .init(
-                contentFlow: .init(
-                    contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-                    contentReceiving: { _ in {}},
-                    flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                    flowReceiving: { flow in { flow.event(.select($0)) }}
-                ),
-                dismiss: .init(
-                    dismissAll: {
-                        
-                        $0.action
-                            .compactMap { $0 as? RootViewModelAction.DismissAll }
-                            .eraseToAnyPublisher()
-                    },
-                    reset: { content in
-                        
-                        return {
-                            
-                            content.resetLink()
-                            content.reset()
-                        }
-                    }
-                )
-            )
+            witnesses: .default
         )
         
         return composer.compose(with: rootViewModel)
