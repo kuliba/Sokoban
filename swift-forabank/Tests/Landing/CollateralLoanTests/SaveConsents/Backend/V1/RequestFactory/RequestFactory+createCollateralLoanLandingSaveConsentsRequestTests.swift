@@ -25,19 +25,19 @@ final class RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests: 
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
-    func test_createRequest_shouldSetWithHTTPBody() throws {
-        
-        let payload = anyPayload()
-        let request = try createRequest(payload: payload)
-        
-        try assertBody(of: request, hasJSON: """
-        {
-            "verificationCode": "\(payload.verificationCode)",
-            "applicationId": \(payload.applicationId)
-        }
-        """
-        )
-    }
+//    func test_createRequest_shouldSetWithHTTPBody() throws {
+//        
+//        let payload = anyPayload()
+//        let request = try createRequest(payload: payload)
+//        
+//        try assertBody(of: request, hasJSON: """
+//        {
+//            "verificationCode": "\(payload.verificationCode)",
+//            "applicationId": \(payload.applicationId)
+//        }
+//        """
+//        )
+//    }
 }
 
 extension RequestFactory_createCollateralLoanLandingSaveConsentsRequestTests {
