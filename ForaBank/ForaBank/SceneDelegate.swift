@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var binder: RootViewDomain.Binder = {
+    private lazy var binder: RootViewDomain<RootViewModel>.Binder = {
         
         var bindings = Set<AnyCancellable>()
         let rootViewModel = factory.makeRootViewModel(
@@ -37,10 +37,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             getNavigation: getNavigation,
             schedulers: .init(),
             witnesses: .init(
-                contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-                contentReceiving: { _ in {}},
-                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-                flowReceiving: { flow in { flow.event(.select($0)) }}
+                contentFlow: .init(
+                    contentEmitting: { _ in Empty().eraseToAnyPublisher() },
+                    contentReceiving: { _ in {}},
+                    flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                    flowReceiving: { flow in { flow.event(.select($0)) }}
+                ),
+                dismiss: .init(
+                    dismissAll: {
+                        
+                        $0.action
+                            .compactMap { $0 as? RootViewModelAction.DismissAll }
+                            .eraseToAnyPublisher()
+                    },
+                    reset: { content in
+                        
+                        return {
+                            
+                            content.resetLink()
+                            content.reset()
+                        }
+                    }
+                )
             )
         )
         
@@ -86,7 +104,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-//MARK: - helpers
+// MARK: - helpers
 
 private extension SceneDelegate {
     
@@ -101,7 +119,7 @@ private extension SceneDelegate {
     }
 }
 
-//MARK: - Bindings
+// MARK: - appearance
 
 extension SceneDelegate {
     
@@ -121,7 +139,7 @@ extension SceneDelegate {
     
 }
 
-//MARK: - Scene Lyfecycle
+// MARK: - Scene Lifecycle
 
 extension SceneDelegate {
     
@@ -146,7 +164,7 @@ extension SceneDelegate {
     }
 }
 
-//MARK: - DeepLinks
+// MARK: - DeepLinks
 
 extension SceneDelegate {
     

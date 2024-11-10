@@ -8,22 +8,23 @@
 import Combine
 import CombineSchedulers
 import Foundation
+import PayHub
 import PayHubUI
 
-final class RootViewBinderComposer {
+final class RootViewBinderComposer<RootViewModel> {
     
     private let bindings: Set<AnyCancellable>
     private let dismiss: () -> Void
-    private let getNavigation: RootViewDomain.GetNavigation
+    private let getNavigation: RootDomain.GetNavigation
     private let schedulers: Schedulers
-    private let witnesses: RootViewDomain.Witnesses
+    private let witnesses: RootDomain.Witnesses
     
     init(
         bindings: Set<AnyCancellable>,
         dismiss: @escaping () -> Void,
-        getNavigation: @escaping RootViewDomain.GetNavigation,
+        getNavigation: @escaping RootDomain.GetNavigation,
         schedulers: Schedulers = .init(),
-        witnesses: RootViewDomain.Witnesses
+        witnesses: RootDomain.Witnesses
     ) {
         self.bindings = bindings
         self.dismiss = dismiss
@@ -31,15 +32,17 @@ final class RootViewBinderComposer {
         self.schedulers = schedulers
         self.witnesses = witnesses
     }
+    
+    typealias RootDomain = RootViewDomain<RootViewModel>
 }
 
 extension RootViewBinderComposer {
     
     func compose(
         with rootViewModel: RootViewModel
-    ) -> RootViewDomain.Binder {
+    ) -> RootDomain.Binder {
         
-        let flowComposer = RootViewDomain.FlowDomain.Composer(
+        let flowComposer = RootDomain.FlowDomain.Composer(
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
@@ -56,12 +59,12 @@ extension RootViewBinderComposer {
 private extension RootViewBinderComposer {
     
     func bind(
-        content: RootViewDomain.Content,
-        flow: RootViewDomain.Flow
+        content: RootDomain.Content,
+        flow: RootDomain.Flow
     ) -> Set<AnyCancellable> {
         
         let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
-        let bind = factory.bind(with: witnesses)
+        let bind = factory.bind(with: witnesses.contentFlow)
         
         var bindings = bindings.union(bind(content, flow))
         bindings.insert(bindDismiss(content: content))
@@ -69,16 +72,16 @@ private extension RootViewBinderComposer {
         return bindings
     }
     
-    func bindDismiss(content: RootViewDomain.Content) -> AnyCancellable {
+    func bindDismiss(content: RootDomain.Content) -> AnyCancellable {
         
-        content.action
-            .compactMap { $0 as? RootViewModelAction.DismissAll }
+        let dismiss = witnesses.dismiss.reset(content)
+        
+        return witnesses.dismiss.dismissAll(content)
             .receive(on: schedulers.main)
             .sink { [unowned self] _ in
                 
                 self.dismiss()
-                content.resetLink()
-                content.reset()
+                dismiss()
             }
     }
 }
