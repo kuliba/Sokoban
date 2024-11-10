@@ -21,6 +21,19 @@ final class SceneDelegateTests: XCTestCase {
         XCTAssertEqual(window.makeKeyAndVisibleCallCount, 1, "Expected to make window key and visible")
     }
     
+    func test_configureWindow_shouldConfigureRootViewController() {
+        
+        let sut = SceneDelegate()
+        sut.window = UIWindowSpy()
+        
+        sut.configureWindow()
+        
+        let root = sut.window?.rootViewController
+        let rootController = root as? RootViewHostingViewController
+        
+        XCTAssertNotNil(rootController, "Expected RootViewHostingViewController as root, got \(String(describing: root)) instead.")
+    }
+    
     // MARK: - Helpers
     
     private class UIWindowSpy: UIWindow {
