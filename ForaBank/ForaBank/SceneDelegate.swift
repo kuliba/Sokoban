@@ -14,22 +14,29 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    private var bindings = Set<AnyCancellable>()
     
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
     private lazy var binder: RootViewDomain.Binder = {
         
+        var bindings = Set<AnyCancellable>()
         let rootViewModel = factory.makeRootViewModel(
             featureFlags,
             bindings: &bindings
         )
         
-        bind(rootViewModel: rootViewModel)
-        
         let getNavigation = factory.makeGetRootNavigation(featureFlags)
-        let composer = RootViewBinderComposer(getNavigation: getNavigation)
+        let composer = RootViewBinderComposer(
+            bindings: bindings,
+            dismiss: { [weak self] in
+                
+                let root = self?.window?.rootViewController
+                root?.dismiss(animated: false, completion: nil)
+            },
+            getNavigation: getNavigation,
+            schedulers: .init()
+        )
         
         return composer.compose(with: rootViewModel)
     }()
@@ -91,20 +98,6 @@ private extension SceneDelegate {
 //MARK: - Bindings
 
 extension SceneDelegate {
-    
-    func bind(rootViewModel: RootViewModel) {
-        
-        rootViewModel.action
-            .compactMap { $0 as? RootViewModelAction.DismissAll }
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in
-                
-                window?.rootViewController?.dismiss(animated: false, completion: nil)
-                rootViewModel.resetLink()
-                rootViewModel.reset()
-            }
-            .store(in: &bindings)
-    }
     
     func legacyNavigationBarBackground() {
         // Настройка NavigationBar
