@@ -16,17 +16,20 @@ final class RootViewBinderComposer {
     private let dismiss: () -> Void
     private let getNavigation: RootViewDomain.GetNavigation
     private let schedulers: Schedulers
+    private let witnesses: RootViewDomain.Witnesses
     
     init(
         bindings: Set<AnyCancellable>,
         dismiss: @escaping () -> Void,
         getNavigation: @escaping RootViewDomain.GetNavigation,
-        schedulers: Schedulers = .init()
+        schedulers: Schedulers = .init(),
+        witnesses: RootViewDomain.Witnesses
     ) {
         self.bindings = bindings
         self.dismiss = dismiss
         self.getNavigation = getNavigation
         self.schedulers = schedulers
+        self.witnesses = witnesses
     }
 }
 
@@ -58,22 +61,12 @@ private extension RootViewBinderComposer {
     ) -> Set<AnyCancellable> {
         
         let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
-        let bind = factory.bind(with: witnesses())
+        let bind = factory.bind(with: witnesses)
         
         var bindings = bindings.union(bind(content, flow))
         bindings.insert(bindDismiss(content: content))
         
         return bindings
-    }
-    
-    func witnesses() -> RootViewDomain.Witnesses {
-        
-        return .init(
-            contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-            contentReceiving: { _ in {}},
-            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
-        )
     }
     
     func bindDismiss(content: RootViewDomain.Content) -> AnyCancellable {

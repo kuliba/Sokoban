@@ -35,7 +35,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 root?.dismiss(animated: false, completion: nil)
             },
             getNavigation: getNavigation,
-            schedulers: .init()
+            schedulers: .init(),
+            witnesses: .init(
+                contentEmitting: { _ in Empty().eraseToAnyPublisher() },
+                contentReceiving: { _ in {}},
+                flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
+                flowReceiving: { flow in { flow.event(.select($0)) }}
+            )
         )
         
         return composer.compose(with: rootViewModel)
