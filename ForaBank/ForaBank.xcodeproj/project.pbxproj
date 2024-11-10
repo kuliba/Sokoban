@@ -358,6 +358,7 @@
 		2A0801B62B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */; };
 		2A08888A2CE08606009005EB /* RootViewBinderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0888892CE08606009005EB /* RootViewBinderComposerTests.swift */; };
 		2A08888C2CE087B6009005EB /* Schedulers+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08888B2CE087B6009005EB /* Schedulers+ext.swift */; };
+		2A08888E2CE09B0A009005EB /* SceneDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */; };
 		2A094DE22BFEFB0900481B99 /* Selector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A094DDE2BFEF68100481B99 /* Selector.swift */; };
 		2A094DE32BFEFB0900481B99 /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A094DE02BFEFA4D00481B99 /* SelectorView.swift */; };
 		2A094DE62BFEFB6F00481B99 /* SelectorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A094DE42BFEFB5300481B99 /* SelectorEvent.swift */; };
@@ -3956,6 +3957,7 @@
 		2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessViewModelWithTransferNumberTests.swift; sourceTree = "<group>"; };
 		2A0888892CE08606009005EB /* RootViewBinderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewBinderComposerTests.swift; sourceTree = "<group>"; };
 		2A08888B2CE087B6009005EB /* Schedulers+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Schedulers+ext.swift"; sourceTree = "<group>"; };
+		2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegateTests.swift; sourceTree = "<group>"; };
 		2A094DDE2BFEF68100481B99 /* Selector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selector.swift; sourceTree = "<group>"; };
 		2A094DE02BFEFA4D00481B99 /* SelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorView.swift; sourceTree = "<group>"; };
 		2A094DE42BFEFB5300481B99 /* SelectorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorEvent.swift; sourceTree = "<group>"; };
@@ -17976,6 +17978,7 @@
 		EDB14396265FDA430028EF5A /* ForaBankTests */ = {
 			isa = PBXGroup;
 			children = (
+				2A08888D2CE09B0A009005EB /* SceneDelegateTests.swift */,
 				2A7688D42AF3A72000045293 /* CompositionRoot */,
 				2A3599A62ADA7F3C00820369 /* Infra */,
 				2AD437682B00BD090027286A /* TestHelpers */,
@@ -23181,6 +23184,7 @@
 				83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */,
 				2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */,
 				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,
+				2A08888E2CE09B0A009005EB /* SceneDelegateTests.swift in Sources */,
 				2AF718DB2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift in Sources */,
 				2A85775E2CC61A02003BE84E /* RootViewModelFactory+decorateTests.swift in Sources */,
 				2AEDAD5429A6355600017F73 /* ServerCommandsDictionaryControllerGetMobileListResponseHelpersTests.swift in Sources */,
