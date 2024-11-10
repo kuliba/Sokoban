@@ -38,12 +38,12 @@ public enum ClientInformListDataState {
     public struct Label<Title>: Identifiable {
         
         public let id: UUID
-        public let image: Image
+        public let image: Image?
         public let title: Title
         
         public init(
             id: UUID = .init(),
-            image: Image,
+            image: Image?,
             title: Title
         ) {
             self.id = id

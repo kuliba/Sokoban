@@ -761,12 +761,17 @@ private extension ClientInformListDataState {
         
         switch self {
         case let .single(single):
+            
             return .single(.init(
+                
                 label: .init(image: single.label.image, title: single.label.title),
                 text: single.text
             ))
+            
         case let .multiple(multiple):
+            
             return .multiple(.init(
+                
                 title: .init(image: multiple.title.image, title: multiple.title.title),
                 items: multiple.items.map {
                     

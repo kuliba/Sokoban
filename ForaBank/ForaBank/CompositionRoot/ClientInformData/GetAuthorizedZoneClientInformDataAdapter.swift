@@ -16,7 +16,7 @@ extension GetAuthorizedZoneClientInformData {
         
         self.init(
             title: data.title,
-            image: .init(svg: data.svgImage) ?? .ic24Info,
+            image: .init(svg: data.svgImage),
             text: data.text.underlinedText,
             url: data.text.extractedURL
             )

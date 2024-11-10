@@ -495,17 +495,11 @@ extension RootViewModelFactory {
                     completion(nil)
                     
                 case let .success(response):
-
-                        let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
-                        
-                        if let oneElementArray = list.first,
-                           let firstImage = extractImage(from: oneElementArray) {
-                            completion(.init(list, infoLabel: .init(image: firstImage, title: "Информация")))
-                        } else {
-                            
-                            completion(.init(list, infoLabel: .init(image: .ic24Info, title: "Информация")))
-                        }
-                    }
+                    
+                    let list = response.list.compactMap { GetAuthorizedZoneClientInformData($0) }
+                    
+                    completion(.init(list, infoLabel: .init(image: list.first?.image, title: list.first?.title ?? "Информация")))
+                }
                 
                 _ = _createGetAuthorizedZoneClientInformData
             }

@@ -11,7 +11,7 @@ import SwiftUI
 struct GetAuthorizedZoneClientInformData: Equatable {
     
     let title: String
-    let image: Image
+    let image: Image?
     let text: AttributedString
     let url: URL?
 }
