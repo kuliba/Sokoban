@@ -95,18 +95,13 @@ extension SceneDelegate {
     func bind(rootViewModel: RootViewModel) {
         
         rootViewModel.action
+            .compactMap { $0 as? RootViewModelAction.DismissAll }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] _ in
                 
-                switch action {
-                case _ as RootViewModelAction.DismissAll:
-                    window?.rootViewController?.dismiss(animated: false, completion: nil)
-                    rootViewModel.resetLink()
-                    rootViewModel.reset()
-                    
-                default:
-                    break
-                }
+                window?.rootViewController?.dismiss(animated: false, completion: nil)
+                rootViewModel.resetLink()
+                rootViewModel.reset()
             }
             .store(in: &bindings)
     }
