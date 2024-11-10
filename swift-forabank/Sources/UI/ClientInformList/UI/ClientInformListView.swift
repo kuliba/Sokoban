@@ -107,6 +107,7 @@ public struct ClientInformListView: View {
                 .foregroundColor(config.titleConfig.textColor)
                 .padding(.horizontal, config.paddings.horizontal)
         }
+        .frame(maxWidth: .infinity)
     }
 
     private func multipleInfoView(_ multipleInfo: Info.Multiple) -> some View {
