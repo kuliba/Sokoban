@@ -11,7 +11,31 @@ import XCTest
 
 final class RootViewBinderComposerTests: XCTestCase {
     
-    func test_compose_shouldPreserveBindings() {
+    func test_shouldCallDismissOnDismissAll() {
+        
+        var dismissCallCount = 0
+        let (sut, dismissAllSubject) = makeSUT(dismiss: { dismissCallCount += 1 })
+        let binder = compose(with: sut)
+        
+        dismissAllSubject.send(.init())
+        
+        XCTAssertEqual(dismissCallCount, 1)
+        XCTAssertNotNil(binder)
+    }
+    
+    func test_shouldCallResetOnDismissAll() {
+        
+        var resetCallCount = 0
+        let (sut, dismissAllSubject) = makeSUT(reset: { resetCallCount += 1})
+        let binder = compose(with: sut)
+        
+        dismissAllSubject.send(.init())
+        
+        XCTAssertEqual(resetCallCount, 1)
+        XCTAssertNotNil(binder)
+    }
+    
+    func test_shouldPreserveBindings() {
         
         var uuids = [UUID]()
         let (uuid1, uuid2) = (UUID(), UUID())
@@ -38,7 +62,6 @@ final class RootViewBinderComposerTests: XCTestCase {
     private func makeSUT(
         bindings: Set<AnyCancellable> = [],
         dismiss: @escaping () -> Void = {},
-        dismissAll: @escaping () -> Void = {},
         reset: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line

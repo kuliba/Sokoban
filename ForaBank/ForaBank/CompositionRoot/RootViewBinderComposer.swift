@@ -74,14 +74,14 @@ private extension RootViewBinderComposer {
     
     func bindDismiss(content: RootDomain.Content) -> AnyCancellable {
         
-        let dismiss = witnesses.dismiss.reset(content)
+        let reset = witnesses.dismiss.reset(content)
         
         return witnesses.dismiss.dismissAll(content)
             .receive(on: schedulers.main)
             .sink { [unowned self] _ in
                 
                 self.dismiss()
-                dismiss()
+                reset()
             }
     }
 }
