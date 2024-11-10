@@ -14,6 +14,7 @@ enum RootViewDomain<RootViewModel> {
     // MARK: - Binder
     
     typealias Binder = PayHub.Binder<Content, Flow>
+    typealias BinderComposer = RootViewBinderComposer<RootViewModel>
     typealias GetNavigation = (RootViewDomain.Select, @escaping RootViewDomain.Notify, @escaping (RootViewDomain.Navigation) -> Void) -> Void
     
     struct Witnesses {
