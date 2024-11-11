@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LinkableText
 
 @available(iOS 15, *)
 public struct ClientInformListView: View {
@@ -102,10 +103,21 @@ public struct ClientInformListView: View {
             iconView(singleInfo.label.image)
             titleView(singleInfo.label.title)
             
-            Text(singleInfo.text)
-                .font(config.textConfig.textFont)
-                .foregroundColor(config.titleConfig.textColor)
-                .padding(.horizontal, config.paddings.horizontal)
+            if let url = singleInfo.url {
+                
+                let linkableText = "\(singleInfo.text) \(url)"
+                
+                Text(.init(linkableText))
+                    .font(config.textConfig.textFont)
+                    .foregroundColor(config.titleConfig.textColor)
+                    .padding(.horizontal, config.paddings.horizontal)
+            } else {
+                
+                Text(singleInfo.text)
+                    .font(config.textConfig.textFont)
+                    .foregroundColor(config.titleConfig.textColor)
+                    .padding(.horizontal, config.paddings.horizontal)
+            }
         }
         .frame(maxWidth: .infinity)
     }
@@ -116,7 +128,7 @@ public struct ClientInformListView: View {
             
             if !isShowNavBar {
                 iconView()
-                titleView(multipleInfo.title.title)
+                titleView(multipleInfo.label.title)
             }
             
             VStack(alignment: .leading, spacing: config.sizes.spacing) {

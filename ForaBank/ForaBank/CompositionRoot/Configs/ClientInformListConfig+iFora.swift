@@ -15,7 +15,8 @@ extension ClientInformListConfig {
             bgIconRedLight: .bgIconRedLight
         ),
         strings: .init(
-            titlePlaceholder: "Информация"
+            titlePlaceholder: "Информация",
+            foraBankLink: "https://www.forabank.ru"
         ),
         titleConfig: .init(
             textFont: .textH3Sb18240(),

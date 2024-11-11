@@ -12,7 +12,7 @@ struct GetAuthorizedZoneClientInformData: Equatable {
     
     let title: String
     let image: Image?
-    let text: AttributedString
+    let text: String
     let url: URL?
 }
 
@@ -33,7 +33,8 @@ extension ClientInformListDataState {
                     image: item.image,
                     title: item.title
                 ),
-                text: item.text
+                text: item.text,
+                url: item.url
             ))
             
         default:

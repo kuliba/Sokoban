@@ -21,20 +21,26 @@ enum ClientInformListDataState {
     struct Single {
         
         let label: Label<String>
-        let text: AttributedString
-        
-        init(label: Label<String>, text: AttributedString) {
+        let text: String
+        let url: URL?
+
+        init(
+            label: Label<String>,
+            text: String,
+            url: URL? = nil
+        ) {
             self.label = label
             self.text = text
+            self.url = url
         }
     }
     
     struct Multiple {
         
         let title: Label<String>
-        let items: [Label<AttributedString>]
+        let items: [Label<String>]
         
-        init(title: Label<String>, items: [Label<AttributedString>]) {
+        init(title: Label<String>, items: [Label<String>]) {
             self.title = title
             self.items = items
         }

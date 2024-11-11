@@ -24,7 +24,10 @@ extension Image {
 
 extension ClientInformListConfig.Strings {
     
-    static let preview: Self = .init(titlePlaceholder: "Информация")
+    static let preview: Self = .init(
+        titlePlaceholder: "Информация",
+        foraBankLink: "https://www.forabank.ru"
+    )
 }
 
 @available(iOS 15, *)

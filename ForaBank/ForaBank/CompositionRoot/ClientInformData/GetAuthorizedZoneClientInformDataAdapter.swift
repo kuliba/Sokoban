@@ -7,19 +7,30 @@
 
 import GetClientInformDataServices
 import RemoteServices
-import UIKitHelpers
 import SwiftUI
 
 extension GetAuthorizedZoneClientInformData {
     
     init(_ data: RemoteServices.ResponseMapper.GetAuthorizedZoneClientInformData) {
         
+        var infoText = data.text
+        
+        if let url = data.text.extractedURL {
+            
+            let urlString = url.absoluteString
+            
+            if let range = data.text.range(of: urlString) {
+                
+                infoText.removeSubrange(range)
+            }
+        }
+        
         self.init(
             title: data.title,
             image: .init(svg: data.svgImage),
-            text: data.text.underlinedText,
+            text: infoText,
             url: data.text.extractedURL
-            )
+        )
     }
 }
 

@@ -765,7 +765,8 @@ private extension ClientInformListDataState {
             return .single(.init(
                 
                 label: .init(image: single.label.image, title: single.label.title),
-                text: single.text
+                text: single.text, 
+                url: single.url
             ))
             
         case let .multiple(multiple):

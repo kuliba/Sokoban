@@ -16,11 +16,11 @@ struct ClientInformRowView: View {
     
     init(
         logo: Image? = nil,
-        text: AttributedString,
+        text: String,
         config: ClientInformListConfig
     ) {
         self.logo = logo
-        self.text = NSAttributedString(text).string
+        self.text = text
         self.config = config
     }
     

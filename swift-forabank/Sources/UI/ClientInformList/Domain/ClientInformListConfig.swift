@@ -82,9 +82,12 @@ public struct ClientInformListConfig {
     public struct Strings {
         
         let titlePlaceholder: String
+        let foraBankLink: String
         
-        public init(titlePlaceholder: String) {
+        public init(titlePlaceholder: String, foraBankLink: String) {
+           
             self.titlePlaceholder = titlePlaceholder
+            self.foraBankLink = foraBankLink
         }
     }
     
