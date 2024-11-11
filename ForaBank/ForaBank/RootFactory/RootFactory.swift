@@ -16,7 +16,7 @@ protocol RootFactory {
     
     func makeGetRootNavigation(
         _: FeatureFlags
-    ) -> RootViewDomain.GetNavigation
+    ) -> RootViewDomain<RootViewModel>.GetNavigation
     
     func makeRootViewFactory(
         _: FeatureFlags

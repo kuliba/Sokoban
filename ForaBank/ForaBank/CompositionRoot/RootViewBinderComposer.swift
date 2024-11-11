@@ -8,29 +8,41 @@
 import Combine
 import CombineSchedulers
 import Foundation
+import PayHub
 import PayHubUI
 
-final class RootViewBinderComposer {
+final class RootViewBinderComposer<RootViewModel> {
     
-    private let getNavigation: RootViewDomain.GetNavigation
+    private let bindings: Set<AnyCancellable>
+    private let dismiss: () -> Void
+    private let getNavigation: RootDomain.GetNavigation
     private let schedulers: Schedulers
+    private let witnesses: RootDomain.Witnesses
     
     init(
-        getNavigation: @escaping RootViewDomain.GetNavigation,
-        schedulers: Schedulers = .init()
+        bindings: Set<AnyCancellable>,
+        dismiss: @escaping () -> Void,
+        getNavigation: @escaping RootDomain.GetNavigation,
+        schedulers: Schedulers = .init(),
+        witnesses: RootDomain.Witnesses
     ) {
+        self.bindings = bindings
+        self.dismiss = dismiss
         self.getNavigation = getNavigation
         self.schedulers = schedulers
+        self.witnesses = witnesses
     }
+    
+    typealias RootDomain = RootViewDomain<RootViewModel>
 }
 
 extension RootViewBinderComposer {
     
     func compose(
         with rootViewModel: RootViewModel
-    ) -> RootViewDomain.Binder {
+    ) -> RootDomain.Binder {
         
-        let flowComposer = RootViewDomain.FlowDomain.Composer(
+        let flowComposer = RootDomain.FlowDomain.Composer(
             getNavigation: getNavigation,
             scheduler: schedulers.main,
             interactiveScheduler: schedulers.interactive
@@ -39,7 +51,7 @@ extension RootViewBinderComposer {
         return .init(
             content: rootViewModel,
             flow: flowComposer.compose(),
-            bind: bind(with: witnesses())
+            bind: bind
         )
     }
 }
@@ -47,21 +59,29 @@ extension RootViewBinderComposer {
 private extension RootViewBinderComposer {
     
     func bind(
-        with witnesses: RootViewDomain.Witnesses
-    ) -> (RootViewDomain.Content, RootViewDomain.Flow) -> Set<AnyCancellable> {
+        content: RootDomain.Content,
+        flow: RootDomain.Flow
+    ) -> Set<AnyCancellable> {
         
         let factory = ContentFlowBindingFactory(scheduler: schedulers.main)
+        let bind = factory.bind(with: witnesses.contentFlow)
         
-        return factory.bind(with: witnesses)
+        var bindings = bindings.union(bind(content, flow))
+        bindings.insert(bindDismiss(content: content))
+        
+        return bindings
     }
     
-    func witnesses() -> RootViewDomain.Witnesses {
+    func bindDismiss(content: RootDomain.Content) -> AnyCancellable {
         
-        return .init(
-            contentEmitting: { _ in Empty().eraseToAnyPublisher() },
-            contentReceiving: { _ in {}},
-            flowEmitting: { $0.$state.map(\.navigation).eraseToAnyPublisher() },
-            flowReceiving: { flow in { flow.event(.select($0)) }}
-        )
+        let reset = witnesses.dismiss.reset(content)
+        
+        return witnesses.dismiss.dismissAll(content)
+            .receive(on: schedulers.main)
+            .sink { [unowned self] _ in
+                
+                self.dismiss()
+                reset()
+            }
     }
 }

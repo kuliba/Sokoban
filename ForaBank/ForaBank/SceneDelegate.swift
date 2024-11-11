@@ -14,22 +14,32 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    private var bindings = Set<AnyCancellable>()
     
     private lazy var factory: RootFactory = ModelRootFactory.shared
     private lazy var featureFlags = loadFeatureFlags()
     
-    private lazy var binder: RootViewDomain.Binder = {
+    private typealias RootDomain = RootViewDomain<RootViewModel>
+    
+    private lazy var binder: RootDomain.Binder = {
         
+        var bindings = Set<AnyCancellable>()
         let rootViewModel = factory.makeRootViewModel(
             featureFlags,
             bindings: &bindings
         )
         
-        bind(rootViewModel: rootViewModel)
-        
         let getNavigation = factory.makeGetRootNavigation(featureFlags)
-        let composer = RootViewBinderComposer(getNavigation: getNavigation)
+        let composer = RootDomain.BinderComposer(
+            bindings: bindings,
+            dismiss: { [weak self] in
+                
+                let root = self?.window?.rootViewController
+                root?.dismiss(animated: false, completion: nil)
+            },
+            getNavigation: getNavigation,
+            schedulers: .init(),
+            witnesses: .default
+        )
         
         return composer.compose(with: rootViewModel)
     }()
@@ -39,30 +49,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+        
+        configureWindow()
+        
+        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
+        
+        if let userActivity = connectionOptions.userActivities.first {
+            
+            self.scene(scene, continue: userActivity)
+        }
+    }
+    
+    func configureWindow() {
+        
         let rootViewController = RootViewHostingViewController(
             with: binder,
             rootViewFactory: rootViewFactory
         )
+        
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
         //FIXME: remove after refactor payments
         NotificationCenter.default
             .addObserver(self,
-                         selector:#selector(dismissAll),
+                         selector: #selector(dismissAll),
                          name: .dismissAllViewAndSwitchToMainTab,
                          object: nil)
         
         legacyNavigationBarBackground()
         setAlertAppearance()
-        
-        self.scene(scene, openURLContexts: connectionOptions.urlContexts)
-        
-        if let userActivity = connectionOptions.userActivities.first {
-            self.scene(scene, continue: userActivity)
-        }
     }
     
     // FIXME: remove after refactor payments
@@ -73,7 +92,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-//MARK: - helpers
+// MARK: - helpers
 
 private extension SceneDelegate {
     
@@ -88,35 +107,16 @@ private extension SceneDelegate {
     }
 }
 
-//MARK: - Bindings
+// MARK: - appearance
 
 extension SceneDelegate {
-    
-    func bind(rootViewModel: RootViewModel) {
-        
-        rootViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as RootViewModelAction.DismissAll:
-                    window?.rootViewController?.dismiss(animated: false, completion: nil)
-                    rootViewModel.resetLink()
-                    rootViewModel.reset()
-                    
-                default:
-                    break
-                }
-            }
-            .store(in: &bindings)
-    }
     
     func legacyNavigationBarBackground() {
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().backgroundColor = .white
         UINavigationBar.appearance().titleTextAttributes =
-            [.foregroundColor: UIColor.black]
+        [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = true
     }
     
@@ -127,7 +127,7 @@ extension SceneDelegate {
     
 }
 
-//MARK: - Scene Lyfecycle
+// MARK: - Scene Lifecycle
 
 extension SceneDelegate {
     
@@ -135,7 +135,7 @@ extension SceneDelegate {
         
         self.window?.deleteBlure()
     }
-
+    
     func sceneWillResignActive(_ scene: UIScene) {
         
         self.window?.addBlure()
@@ -152,22 +152,22 @@ extension SceneDelegate {
     }
 }
 
-//MARK: - DeepLinks
+// MARK: - DeepLinks
 
 extension SceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-
+        
         guard let context = URLContexts.first, let deepLinkType = DeepLinkType(url: context.url) else { return }
-          
+        
         AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLinkType))
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-
+        
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-                   let url = userActivity.webpageURL else { return }
-
+              let url = userActivity.webpageURL else { return }
+        
         guard let deepLink = DeepLinkType(url: url) else { return }
         
         AppDelegate.shared.model.action.send(ModelAction.DeepLink.Set(type: deepLink))

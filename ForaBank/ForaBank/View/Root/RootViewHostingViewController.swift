@@ -12,7 +12,9 @@ import SwiftUI
 
 class RootViewHostingViewController: UIHostingController<RootViewBinderView> {
     
-    private let binder: RootViewDomain.Binder
+    typealias RootDomain = RootViewDomain<RootViewModel>
+    
+    private let binder: RootDomain.Binder
     private let viewModel: RootViewModel
     private var cover: Cover?
     private var informer: Informer?
@@ -21,7 +23,7 @@ class RootViewHostingViewController: UIHostingController<RootViewBinderView> {
     private var bindings = Set<AnyCancellable>()
 
     init(
-        with binder: RootViewDomain.Binder,
+        with binder: RootDomain.Binder,
         rootViewFactory: RootViewFactory
     ) {
         self.binder = binder
