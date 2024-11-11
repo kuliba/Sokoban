@@ -63,7 +63,7 @@ struct ButtonSimpleView: View {
         
         switch viewModel.style {
             
-        case .inactive:
+        case .inactive, .gray:
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 8)
@@ -73,6 +73,7 @@ struct ButtonSimpleView: View {
                     .font(.buttonLargeSb16180())
                     .foregroundColor(ViewModel.ButtonStyle.inactive.foregroundColor)
             }
+            .allowsHitTesting(false)
             
         default :
             Button {
